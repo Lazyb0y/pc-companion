@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PCCompanion.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PCCompanion.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
