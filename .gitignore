@@ -1,0 +1,34 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.rsuser
+
+# Test results and build logs
+[Tt]est[Rr]esult*/
+*.binlog
+
+# MSIX packaging output
+AppPackages/
+BundleArtifacts/
+*.msix
+*.msixbundle
+*.msixupload
+*.msixsym
+*.appx
+*.appxbundle
+*.appxupload
+*.appxsym
+Package.StoreAssociation.xml
+
+# Signing keys
+*.pfx
+*.p12
+
+# Windows shell files
+[Tt]humbs.db
+[Dd]esktop.ini
