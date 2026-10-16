@@ -1,7 +1,9 @@
 using System.Globalization;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.App.Pages;
+using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 
 namespace PCCompanion.App;
@@ -18,6 +20,26 @@ public sealed partial class MainWindow : Window
             : FlowDirection.LeftToRight;
 
         Navigation.SelectedItem = HomeItem;
+    }
+
+    /// <summary>
+    /// Shows the window, including its title bar, in <paramref name="theme"/>.
+    /// </summary>
+    public void ApplyTheme(AppTheme theme)
+    {
+        Navigation.RequestedTheme = theme switch
+        {
+            AppTheme.Light => ElementTheme.Light,
+            AppTheme.Dark => ElementTheme.Dark,
+            _ => ElementTheme.Default,
+        };
+
+        AppWindow.TitleBar.PreferredTheme = theme switch
+        {
+            AppTheme.Light => TitleBarTheme.Light,
+            AppTheme.Dark => TitleBarTheme.Dark,
+            _ => TitleBarTheme.UseDefaultAppMode,
+        };
     }
 
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

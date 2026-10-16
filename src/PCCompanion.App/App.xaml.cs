@@ -45,6 +45,7 @@ public partial class App : Application
         ApplyLanguage(settings.General.Language);
 
         _window = new MainWindow();
+        _window.ApplyTheme(settings.General.Theme);
 
         // The app exits when its window closes; disposing the services flushes the log.
         _window.Closed += (_, _) => _services.Dispose();
