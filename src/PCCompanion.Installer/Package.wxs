@@ -1,0 +1,51 @@
+<Wix
+    xmlns="http://wixtoolset.org/schemas/v4/wxs"
+    xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+      Name="PC Companion"
+      Manufacturer="PC Companion"
+      Version="0.0.1"
+      UpgradeCode="52686E02-C65A-47D6-8F24-F7A0CF243D9C"
+      Scope="perUserOrMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of PC Companion is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Install dialog with a "Just for me" / "Everyone" choice; per-user is the default. -->
+    <ui:WixUI Id="WixUI_Advanced" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <Property Id="ApplicationFolderName" Value="PCCompanion" />
+    <Property Id="WixAppFolder" Value="WixPerUserFolder" />
+    <!-- Replace the dialog's defaults (%LOCALAPPDATA%\Apps and 32-bit Program Files) before it picks the folder. -->
+    <SetProperty Id="WixPerUserFolder" Value="[LocalAppDataFolder]Programs\[ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
+    <SetProperty Id="WixPerMachineFolder" Value="[ProgramFiles64Folder][ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="APPLICATIONFOLDER" Name="PCCompanion">
+        <Files Include="!(bindpath.PCCompanion.App)\**">
+          <!-- Windows Installer validation (ICE03) doesn't recognize these language IDs. -->
+          <Exclude Files="!(bindpath.PCCompanion.App)\gd-gb\**" />
+          <Exclude Files="!(bindpath.PCCompanion.App)\mi-NZ\**" />
+          <Exclude Files="!(bindpath.PCCompanion.App)\ug-CN\**" />
+        </Files>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="StartMenuShortcut">
+        <Shortcut
+            Id="AppShortcut"
+            Name="PC Companion"
+            Target="[APPLICATIONFOLDER]PCCompanion.exe"
+            WorkingDirectory="APPLICATIONFOLDER" />
+        <RegistryValue
+            Root="HKCU"
+            Key="Software\PCCompanion"
+            Name="StartMenuShortcut"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+  </Package>
+</Wix>

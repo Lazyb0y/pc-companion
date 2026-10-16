@@ -1,0 +1,19 @@
+<Project Sdk="WixToolset.Sdk">
+  <PropertyGroup>
+    <OutputName>PCCompanion-$(Platform)</OutputName>
+    <!--
+      Warnings stay visible but don't fail the installer build: Microsoft.ui.xaml.dll and
+      Microsoft.UI.Xaml.Phone.dll declare 86 languages, which overflows the MSI Language column
+      (ICE03 string overflow, WIX1076).
+    -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PCCompanion.App\PCCompanion.App.csproj" Publish="true" />
+  </ItemGroup>
+</Project>
