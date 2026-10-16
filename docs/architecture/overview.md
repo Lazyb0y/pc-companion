@@ -1,10 +1,33 @@
 # Architecture overview
 
+## Processes
+
+- `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app; **Exit** stops the host.
+- One host runs per user session. Starting it again asks the running host to open the settings app.
+- `PCCompanion.exe` is the settings app. It opens on demand and exits when its window closes.
+- Only the settings app saves settings. The host watches the settings file and loads it again after each save.
+- Both are self-contained and install into one folder; see [Packaging](../development/packaging.md).
+
 ## UI
 
 - WinUI 3 on the Windows App SDK.
 - The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
 - Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
+- The window has a navigation pane with **Home** and, at the bottom, **General**.
+- Theme: light, dark or the Windows app mode, from the settings. The title bar follows it.
+- The host's tray icon and menu use the Windows API directly, through CsWin32; the host has no UI framework.
+
+## Settings
+
+- One file, `settings.json` in the data folder, with a `schemaVersion`.
+- Saving writes `settings.json.tmp` and then replaces `settings.json` with it, so readers never see a partly written file.
+- Without a file, the defaults are used. A file that can't be read is left as it is and the defaults are used; the next save moves it to `settings.corrupt.json`.
+- Hand-edited files may contain comments and trailing commas. Unknown properties are ignored, and missing ones get their defaults.
+
+| Setting | Values |
+|---|---|
+| `general.language` | A BCP-47 language tag, or `null` for the Windows display language |
+| `general.theme` | `System`, `Light` or `Dark` |
 
 ## Identifiers
 
@@ -20,6 +43,19 @@
 - `src/<Project>/`: projects.
 - `tests/`: test projects.
 - `docs/`: documentation.
+
+## Projects
+
+| Project | Contents |
+|---|---|
+| `PCCompanion.Core` | The settings model |
+| `PCCompanion.Infrastructure` | Data folder paths, the settings store and the settings watcher |
+| `PCCompanion.Logging` | File logging and path redaction; see [Logging](../diagnostics/logging.md) |
+| `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
+| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon and shortcut menus |
+| `PCCompanion.Host` | The background host |
+| `PCCompanion.App` | The settings app |
+| `PCCompanion.Installer` | The MSI; see [Packaging](../development/packaging.md) |
 
 ## Dependencies
 
