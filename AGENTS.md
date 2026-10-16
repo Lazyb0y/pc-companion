@@ -88,5 +88,6 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 
 - Commit messages follow Conventional Commits and reference the GitHub issue when there is one, for example `feat(<area>): <summary> (#<issue>)`.
 - Each commit is one logical unit and leaves the solution building.
-- Commits currently go directly to `main`.
+- Each task gets its own short branch from an up-to-date `main`, named `<type>/<topic>` (for example `docs/pr-workflow`). The agent creates the branch when the task is authorized; the maintainer commits, pushes and opens the pull request unless they ask the agent to.
+- `main` is protected. Pull requests merge with "Rebase and merge" once the required build checks pass and the branch is up to date with `main`.
 - Work flows from idea to issue, then through the project board (Backlog, Evaluating, Approved) into tasks. The maintainer manages the board.
