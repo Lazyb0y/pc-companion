@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 
 namespace PCCompanion.Platform.Windows.Tests;
@@ -48,6 +49,25 @@ public sealed class MessageWindowTests
     public void PostToWindowReturnsFalseWithoutTheWindow()
     {
         Assert.False(MessageWindow.PostToWindow(UniqueClassName(), TestMessage));
+    }
+
+    [Fact]
+    public void BeginInvokeRunsActionsOnTheWindowThreadInOrder()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var windowThread = Environment.CurrentManagedThreadId;
+        var calls = new List<(int Order, int Thread)>();
+
+        var otherThread = new Thread(() =>
+        {
+            window.BeginInvoke(() => calls.Add((1, Environment.CurrentManagedThreadId)));
+            window.BeginInvoke(() => calls.Add((2, Environment.CurrentManagedThreadId)));
+        });
+        otherThread.Start();
+        otherThread.Join();
+        RunPostedMessages();
+
+        Assert.Equal([(1, windowThread), (2, windowThread)], calls);
     }
 
     [Fact]

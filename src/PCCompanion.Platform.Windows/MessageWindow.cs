@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Windows.Win32;
@@ -13,9 +14,12 @@ namespace PCCompanion.Platform.Windows;
 /// </summary>
 public sealed class MessageWindow : IDisposable
 {
+    private static readonly Lazy<uint> InvokeMessage = new(() => RegisterMessage("PCCompanion.MessageWindow.Invoke"));
+
     // Kept in a field so the delegate lives as long as the window.
     private readonly WNDPROC _windowProcedure;
     private readonly string _className;
+    private readonly ConcurrentQueue<Action> _actions = new();
     private HWND _handle;
 
     /// <param name="className">A window class name that is unique to the app, so other processes can find the window.</param>
@@ -91,6 +95,17 @@ public sealed class MessageWindow : IDisposable
         }
     }
 
+    /// <summary>
+    /// Runs <paramref name="action"/> on the window's thread, from any thread. The action must not throw.
+    /// </summary>
+    public void BeginInvoke(Action action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        _actions.Enqueue(action);
+        Post(InvokeMessage.Value);
+    }
+
     public void Dispose()
     {
         if (_handle.IsNull)
@@ -105,6 +120,16 @@ public sealed class MessageWindow : IDisposable
 
     private LRESULT WindowProcedure(HWND window, uint message, WPARAM wParam, LPARAM lParam)
     {
+        if (window == _handle && message == InvokeMessage.Value)
+        {
+            while (_actions.TryDequeue(out var action))
+            {
+                action();
+            }
+
+            return (LRESULT)0;
+        }
+
         if (window == _handle && MessageReceived is { } handler)
         {
             var args = new WindowMessageEventArgs(message, wParam.Value, lParam.Value);
