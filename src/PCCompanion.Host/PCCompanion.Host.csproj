@@ -10,6 +10,8 @@
     <RuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</RuntimeIdentifier>
     <RuntimeIdentifier Condition="'$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
+    <!-- Like the settings app, so the files both install in one folder are the same. -->
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
