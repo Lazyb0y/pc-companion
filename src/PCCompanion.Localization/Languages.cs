@@ -26,6 +26,26 @@ public static class Languages
     /// </summary>
     public static IReadOnlyList<CultureInfo> Available { get; } = FindAvailable();
 
+    /// <summary>
+    /// Returns the available language that strings come from when the user interface language
+    /// is <paramref name="language"/>: the language itself, its nearest parent with strings,
+    /// or the source language.
+    /// </summary>
+    public static CultureInfo Resolve(CultureInfo language)
+    {
+        ArgumentNullException.ThrowIfNull(language);
+
+        for (var culture = language; !culture.Equals(CultureInfo.InvariantCulture); culture = culture.Parent)
+        {
+            if (Available.Contains(culture))
+            {
+                return culture;
+            }
+        }
+
+        return Source;
+    }
+
     private static List<CultureInfo> FindAvailable()
     {
         var satelliteFileName = typeof(Strings).Assembly.GetName().Name + ".resources.dll";
