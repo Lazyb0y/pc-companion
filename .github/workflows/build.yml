@@ -39,3 +39,6 @@ jobs:
 
       - name: Build
         run: dotnet build PCCompanion.slnx --no-restore -c ${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
+
+      - name: Test
+        run: dotnet test --solution PCCompanion.slnx --no-build -c ${{ matrix.configuration }} -p:Platform=${{ matrix.platform }}
