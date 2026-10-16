@@ -22,11 +22,11 @@
 
     <StandardDirectory Id="ProgramFiles6432Folder">
       <Directory Id="APPLICATIONFOLDER" Name="PCCompanion">
-        <Files Include="!(bindpath.PCCompanion.App)\**">
+        <Files Include="!(bindpath.InstallFiles)\**">
           <!-- Windows Installer validation (ICE03) doesn't recognize these language IDs. -->
-          <Exclude Files="!(bindpath.PCCompanion.App)\gd-gb\**" />
-          <Exclude Files="!(bindpath.PCCompanion.App)\mi-NZ\**" />
-          <Exclude Files="!(bindpath.PCCompanion.App)\ug-CN\**" />
+          <Exclude Files="!(bindpath.InstallFiles)\gd-gb\**" />
+          <Exclude Files="!(bindpath.InstallFiles)\mi-NZ\**" />
+          <Exclude Files="!(bindpath.InstallFiles)\ug-CN\**" />
         </Files>
       </Directory>
     </StandardDirectory>
