@@ -7,4 +7,15 @@
     <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902</WarningsNotAsErrors>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
+
+  <!--
+    A publish folder belongs to the project being published, not to the libraries it builds.
+    Without this, the installer, which publishes two projects, builds the shared libraries twice
+    at the same time into the same folders.
+  -->
+  <ItemDefinitionGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <ProjectReference>
+      <GlobalPropertiesToRemove>%(GlobalPropertiesToRemove);PublishDir</GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemDefinitionGroup>
 </Project>
