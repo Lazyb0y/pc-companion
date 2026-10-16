@@ -28,4 +28,12 @@
     <value>Funktionen werden hier angezeigt, sobald sie verfügbar sind.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_one" xml:space="preserve">
+    <value>Protokolle werden {0} Tag lang aufbewahrt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>Protokolle werden {0} Tage lang aufbewahrt.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

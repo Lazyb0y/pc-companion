@@ -28,4 +28,12 @@
     <value>বৈশিষ্ট্যগুলো উপলব্ধ হলে এখানে দেখা যাবে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_one" xml:space="preserve">
+    <value>লগগুলো {0} দিন রাখা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>লগগুলো {0} দিন রাখা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

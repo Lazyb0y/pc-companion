@@ -28,4 +28,12 @@
     <value>Las características aparecerán aquí a medida que estén disponibles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_one" xml:space="preserve">
+    <value>Los registros se conservan durante {0} día.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>Los registros se conservan durante {0} días.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

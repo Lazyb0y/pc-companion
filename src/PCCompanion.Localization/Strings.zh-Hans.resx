@@ -28,4 +28,8 @@
     <value>功能推出后将显示在此处。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>日志将保留 {0} 天。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
