@@ -15,5 +15,84 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PCCompanion.App\PCCompanion.App.csproj" Publish="true" />
+    <ProjectReference Include="..\PCCompanion.Host\PCCompanion.Host.csproj" Publish="true" />
   </ItemGroup>
+
+  <!--
+    The settings app and the host install into one folder. Both are self-contained, so their
+    published files overlap; the overlapping files must be identical and are installed once.
+  -->
+  <Target Name="MergePublishedFiles" AfterTargets="_ConvertResolvedProjectReferencesIntoWixConstructs">
+    <PropertyGroup>
+      <InstallFilesDir>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'files'))</InstallFilesDir>
+    </PropertyGroup>
+
+    <MergeFolders
+        Sources="@(BindPath->WithMetadataValue('BindName', 'PCCompanion.App'));@(BindPath->WithMetadataValue('BindName', 'PCCompanion.Host'))"
+        Destination="$(InstallFilesDir)" />
+
+    <ItemGroup>
+      <BindPath Include="$(InstallFilesDir)" BindName="InstallFiles" />
+    </ItemGroup>
+  </Target>
+
+  <UsingTask
+      TaskName="MergeFolders"
+      TaskFactory="RoslynCodeTaskFactory"
+      AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Sources ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <Destination ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        // Copies the files of every source folder into Destination. A file that several sources
+        // have must be identical in all of them. Files left from earlier builds are deleted.
+        var destination = Path.GetFullPath(Destination);
+        var firstSource = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var source in Sources)
+        {
+            var root = Path.GetFullPath(source.ItemSpec);
+            foreach (var file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories))
+            {
+                var relativePath = file.Substring(root.TrimEnd('\\').Length + 1);
+                if (firstSource.TryGetValue(relativePath, out var first))
+                {
+                    if (!File.ReadAllBytes(first).SequenceEqual(File.ReadAllBytes(file)))
+                    {
+                        Log.LogError("{0} differs between {1} and {2}.", relativePath, first, file);
+                    }
+
+                    continue;
+                }
+
+                firstSource[relativePath] = file;
+                var target = Path.Combine(destination, relativePath);
+                var targetInfo = new FileInfo(target);
+                var sourceInfo = new FileInfo(file);
+                if (!targetInfo.Exists || targetInfo.Length != sourceInfo.Length || targetInfo.LastWriteTimeUtc != sourceInfo.LastWriteTimeUtc)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(target));
+                    File.Copy(file, target, overwrite: true);
+                }
+            }
+        }
+
+        if (Directory.Exists(destination))
+        {
+            foreach (var file in Directory.EnumerateFiles(destination, "*", SearchOption.AllDirectories))
+            {
+                if (!firstSource.ContainsKey(file.Substring(destination.TrimEnd('\\').Length + 1)))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
 </Project>
