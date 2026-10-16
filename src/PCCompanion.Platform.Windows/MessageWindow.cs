@@ -97,13 +97,15 @@ public sealed class MessageWindow : IDisposable
 
     /// <summary>
     /// Runs <paramref name="action"/> on the window's thread, from any thread. The action must not throw.
+    /// Returns false, and the action doesn't run, when the window no longer exists.
     /// </summary>
-    public void BeginInvoke(Action action)
+    public bool BeginInvoke(Action action)
     {
         ArgumentNullException.ThrowIfNull(action);
 
         _actions.Enqueue(action);
-        Post(InvokeMessage.Value);
+        var handle = _handle;
+        return !handle.IsNull && PInvoke.PostMessage(handle, InvokeMessage.Value, 0, 0);
     }
 
     public void Dispose()

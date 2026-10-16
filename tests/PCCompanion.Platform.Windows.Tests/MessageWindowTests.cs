@@ -57,17 +57,31 @@ public sealed class MessageWindowTests
         using var window = new MessageWindow(UniqueClassName());
         var windowThread = Environment.CurrentManagedThreadId;
         var calls = new List<(int Order, int Thread)>();
+        var queued = new List<bool>();
 
         var otherThread = new Thread(() =>
         {
-            window.BeginInvoke(() => calls.Add((1, Environment.CurrentManagedThreadId)));
-            window.BeginInvoke(() => calls.Add((2, Environment.CurrentManagedThreadId)));
+            queued.Add(window.BeginInvoke(() => calls.Add((1, Environment.CurrentManagedThreadId))));
+            queued.Add(window.BeginInvoke(() => calls.Add((2, Environment.CurrentManagedThreadId))));
         });
         otherThread.Start();
         otherThread.Join();
         RunPostedMessages();
 
+        Assert.Equal([true, true], queued);
         Assert.Equal([(1, windowThread), (2, windowThread)], calls);
+    }
+
+    [Fact]
+    public void BeginInvokeReturnsFalseAfterTheWindowIsDisposed()
+    {
+        var window = new MessageWindow(UniqueClassName());
+        window.Dispose();
+        var called = false;
+
+        Assert.False(window.BeginInvoke(() => called = true));
+        RunPostedMessages();
+        Assert.False(called);
     }
 
     [Fact]
