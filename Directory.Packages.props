@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
     <PackageVersion Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />
     <PackageVersion Include="WixToolset.UI.wixext" Version="5.0.2" />

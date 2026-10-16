@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Settings;
 using Xunit;
@@ -10,6 +11,7 @@ namespace PCCompanion.Infrastructure.Tests;
 public sealed class SettingsStoreTests : IDisposable
 {
     private readonly TemporaryFolder _folder = new();
+    private readonly RecordingLogger<SettingsStore> _logger = new();
     private readonly AppDataPaths _paths;
     private readonly SettingsStore _store;
 
@@ -17,8 +19,10 @@ public sealed class SettingsStoreTests : IDisposable
     {
         // A data folder that does not exist yet, as on first run.
         _paths = new AppDataPaths(Path.Combine(_folder.FullPath, "Data"));
-        _store = new SettingsStore(_paths);
+        _store = new SettingsStore(_paths, _logger);
     }
+
+    private string CorruptFile => Path.Combine(_paths.Root, "settings.corrupt.json");
 
     public void Dispose() => _folder.Dispose();
 
@@ -96,6 +100,69 @@ public sealed class SettingsStoreTests : IDisposable
     {
         WriteSettingsFile("""{ "schemaVersion": 1 }""");
 
+        Assert.Equal(new AppSettings(), _store.Load());
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not json")]
+    [InlineData("""{ "general": { "theme": "Dark" """)]
+    [InlineData("""{ "schemaVersion": "one" }""")]
+    [InlineData("""{ "general": null }""")]
+    [InlineData("""{ "general": { "theme": "Purple" } }""")]
+    public void LoadReturnsDefaultsAndLogsAWarningForAnUnreadableFile(string json)
+    {
+        WriteSettingsFile(json);
+
+        Assert.Equal(new AppSettings(), _store.Load());
+        Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+    }
+
+    [Fact]
+    public void LoadLeavesAnUnreadableFileAsItIs()
+    {
+        WriteSettingsFile("not json");
+
+        _store.Load();
+
+        Assert.Equal("not json", File.ReadAllText(_paths.SettingsFile));
+        Assert.False(File.Exists(CorruptFile));
+    }
+
+    [Fact]
+    public void SaveKeepsAnUnreadableFile()
+    {
+        WriteSettingsFile("not json");
+        _store.Load();
+
+        _store.Save(new AppSettings { General = new GeneralSettings { Theme = AppTheme.Dark } });
+
+        Assert.Equal("not json", File.ReadAllText(CorruptFile));
+        Assert.Equal(AppTheme.Dark, _store.Load().General.Theme);
+    }
+
+    [Fact]
+    public void SaveKeepsAnUnreadableFileOnlyOnce()
+    {
+        WriteSettingsFile("not json");
+        _store.Load();
+        _store.Save(new AppSettings());
+
+        _store.Save(new AppSettings { General = new GeneralSettings { Theme = AppTheme.Dark } });
+
+        Assert.Equal("not json", File.ReadAllText(CorruptFile));
+    }
+
+    [Fact]
+    public void SaveWorksWhenTheUnreadableFileWasDeleted()
+    {
+        WriteSettingsFile("not json");
+        _store.Load();
+        File.Delete(_paths.SettingsFile);
+
+        _store.Save(new AppSettings());
+
+        Assert.False(File.Exists(CorruptFile));
         Assert.Equal(new AppSettings(), _store.Load());
     }
 
