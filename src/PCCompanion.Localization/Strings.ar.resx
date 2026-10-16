@@ -28,4 +28,28 @@
     <value>ستظهر الميزات هنا عندما تصبح متاحة.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_zero" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة {0} يوم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_one" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة يوم واحد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_two" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة يومين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_few" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة {0} أيام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_many" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة {0} يومًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>يتم الاحتفاظ بالسجلات لمدة {0} يوم.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -28,4 +28,12 @@
     <value>Les fonctionnalités apparaîtront ici dès qu’elles seront disponibles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLogsRetention_one" xml:space="preserve">
+    <value>Les journaux sont conservés pendant {0} jour.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsRetention_other" xml:space="preserve">
+    <value>Les journaux sont conservés pendant {0} jours.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
