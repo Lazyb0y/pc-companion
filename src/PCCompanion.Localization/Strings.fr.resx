@@ -32,6 +32,14 @@
     <value>Les fonctionnalités apparaîtront ici dès qu’elles seront disponibles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Paramètres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Quitter</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Les journaux sont conservés pendant {0} jour.</value>
     <comment>Needs native review.</comment>

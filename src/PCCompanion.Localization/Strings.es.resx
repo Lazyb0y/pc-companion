@@ -32,6 +32,14 @@
     <value>Las características aparecerán aquí a medida que estén disponibles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Configuración</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Salir</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Los registros se conservan durante {0} día.</value>
     <comment>Needs native review.</comment>

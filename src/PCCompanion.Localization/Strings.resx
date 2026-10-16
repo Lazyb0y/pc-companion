@@ -32,6 +32,14 @@
     <value>Features will appear here as they become available.</value>
     <comment>Shown on Home below HomeEmptyTitle.</comment>
   </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Tray icon menu command that opens the settings window.</comment>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Exit</value>
+    <comment>Tray icon menu command that stops PC Companion running in the background.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Logs are kept for {0} day.</value>
     <comment>Plural form "one". {0} is the number of days.</comment>

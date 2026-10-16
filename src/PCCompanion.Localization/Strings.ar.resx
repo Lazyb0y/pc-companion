@@ -32,6 +32,14 @@
     <value>ستظهر الميزات هنا عندما تصبح متاحة.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>الإعدادات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>خروج</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_zero" xml:space="preserve">
     <value>يتم الاحتفاظ بالسجلات لمدة {0} يوم.</value>
     <comment>Needs native review.</comment>
