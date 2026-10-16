@@ -24,9 +24,10 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     /// <summary>Asks the running host to open the settings, for example from a second host launch.</summary>
     public static uint OpenSettingsMessage { get; } = MessageWindow.RegisterMessage("PCCompanion.Host.OpenSettings");
 
-    public void Show()
+    /// <param name="window">The host's window, created with <see cref="WindowClassName"/>.</param>
+    public void Show(MessageWindow window)
     {
-        _window = new MessageWindow(WindowClassName);
+        _window = window;
         _window.MessageReceived += OnMessageReceived;
 
         _icon = new TrayIcon(_window, Strings.AppDisplayName);
@@ -42,7 +43,10 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     public void Dispose()
     {
         _icon?.Dispose();
-        _window?.Dispose();
+        if (_window is not null)
+        {
+            _window.MessageReceived -= OnMessageReceived;
+        }
     }
 
     private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
