@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest a new feature or an improvement.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: For early ideas or open questions, start a discussion instead.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: How should it work?
+    validations:
+      required: true
+  - type: textarea
+    id: inspiration
+    attributes:
+      label: Where does the idea come from?
+      description: Optional. For example, a feature in macOS, Linux, KDE Plasma or GNOME.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Existing alternatives
+      description: Optional. Does Windows or another tool already do this? What would be better?

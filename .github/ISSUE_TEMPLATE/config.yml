@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/Lazyb0y/pc-companion/security/advisories/new
+    about: Report security issues privately, not as public issues.
+  - name: Ask a question or discuss an idea
+    url: https://github.com/Lazyb0y/pc-companion/discussions
+    about: Use Discussions for questions and early ideas.

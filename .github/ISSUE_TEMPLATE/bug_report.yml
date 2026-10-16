@@ -1,0 +1,57 @@
+name: Bug report
+description: Report something that doesn't work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Search existing issues first. Don't include personal information, passwords or other secrets.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PC Companion version
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Run `winver` and copy the version and OS build.
+      placeholder: Windows 11 24H2 (OS build 26100.4061)
+    validations:
+      required: true
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Architecture
+      options:
+        - x64
+        - ARM64
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional information
+      description: Optional. Screenshots or logs. Review them first and remove anything personal.
