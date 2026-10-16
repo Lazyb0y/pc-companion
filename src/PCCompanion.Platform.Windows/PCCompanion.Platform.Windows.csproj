@@ -4,6 +4,8 @@
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <!-- CsWin32 generates unsafe interop code. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Some structs differ only on 32-bit x86, which isn't supported; x64 and ARM64 share the x64 layout. -->
+    <CsWin32PlatformTarget>x64</CsWin32PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
