@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.App.Pages;
@@ -11,6 +12,11 @@ public sealed partial class MainWindow : Window
     {
         InitializeComponent();
         Title = Strings.AppDisplayName;
+
+        Navigation.FlowDirection = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+
         Navigation.SelectedItem = HomeItem;
     }
 
