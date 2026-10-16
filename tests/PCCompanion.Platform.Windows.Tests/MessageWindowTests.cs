@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using Xunit;
+
+namespace PCCompanion.Platform.Windows.Tests;
+
+// Each test creates its own hidden window with a unique class name and touches no other window.
+public sealed class MessageWindowTests
+{
+    private const uint TestMessage = 0x8001; // WM_APP + 1
+
+    [Fact]
+    public void DeliversPostedMessages()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var received = new List<(uint Message, nuint WParam, nint LParam)>();
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message == TestMessage)
+            {
+                received.Add((e.Message, e.WParam, e.LParam));
+                e.Handled = true;
+            }
+        };
+
+        window.Post(TestMessage, 1, 2);
+        RunPostedMessages();
+
+        Assert.Equal([(TestMessage, (nuint)1, (nint)2)], received);
+    }
+
+    [Fact]
+    public void PostToWindowFindsTheWindowByClassName()
+    {
+        var className = UniqueClassName();
+        using var window = new MessageWindow(className);
+        var message = MessageWindow.RegisterMessage("PCCompanion.Tests.Ping");
+        var count = 0;
+        window.MessageReceived += (_, e) => count += e.Message == message ? 1 : 0;
+
+        Assert.True(MessageWindow.PostToWindow(className, message));
+        RunPostedMessages();
+
+        Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public void PostToWindowReturnsFalseWithoutTheWindow()
+    {
+        Assert.False(MessageWindow.PostToWindow(UniqueClassName(), TestMessage));
+    }
+
+    [Fact]
+    public void ADisposedWindowCanBeCreatedAgain()
+    {
+        var className = UniqueClassName();
+        new MessageWindow(className).Dispose();
+
+        using var window = new MessageWindow(className);
+
+        Assert.NotEqual(0, window.Handle);
+    }
+
+    private static string UniqueClassName() => "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
+
+    // Messages posted before Quit are delivered before the loop ends.
+    private static void RunPostedMessages()
+    {
+        MessageLoop.Quit();
+        MessageLoop.Run();
+    }
+}
