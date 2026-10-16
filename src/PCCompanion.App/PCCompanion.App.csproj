@@ -18,6 +18,8 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <!-- Needed even unpackaged: publishing then includes PCCompanion.pri with the compiled XAML embedded. -->
     <EnableMsixTooling>true</EnableMsixTooling>
+    <!-- Program.Main keeps one settings app per user session before starting WinUI. -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +39,7 @@
     <ProjectReference Include="..\PCCompanion.Infrastructure\PCCompanion.Infrastructure.csproj" />
     <ProjectReference Include="..\PCCompanion.Localization\PCCompanion.Localization.csproj" />
     <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
+    <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>
 
   <!-- Publish Properties -->

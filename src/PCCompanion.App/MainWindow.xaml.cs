@@ -26,6 +26,19 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>
+    /// Shows the window in front of other windows, restored if it was minimized.
+    /// </summary>
+    public void BringToFront()
+    {
+        if (AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Minimized } presenter)
+        {
+            presenter.Restore();
+        }
+
+        Activate();
+    }
+
+    /// <summary>
     /// Shows the window, including its title bar, in <paramref name="theme"/>.
     /// </summary>
     public void ApplyTheme(AppTheme theme)

@@ -116,6 +116,9 @@
           "Serilog.Sinks.File": "[7.0.0, )"
         }
       },
+      "pccompanion.platform.windows": {
+        "type": "Project"
+      },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "CentralTransitive",
         "requested": "[10.0.13, )",
