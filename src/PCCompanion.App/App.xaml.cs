@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
@@ -44,12 +45,16 @@ public partial class App : Application
         var settings = _services.GetRequiredService<SettingsStore>().Load();
         ApplyLanguage(settings.General.Language);
 
-        _window = new MainWindow();
-        _window.ApplyTheme(settings.General.Theme);
+        var window = new MainWindow();
+        _window = window;
+        window.ApplyTheme(settings.General.Theme);
 
         // The app exits when its window closes; disposing the services flushes the log.
-        _window.Closed += (_, _) => _services.Dispose();
-        _window.Activate();
+        window.Closed += (_, _) => _services.Dispose();
+        window.Activate();
+
+        // Raised on another thread when the settings app is started again.
+        AppInstance.GetCurrent().Activated += (_, _) => window.DispatcherQueue.TryEnqueue(window.BringToFront);
     }
 
     // Without a language setting, .NET and WinUI follow the Windows display language.
