@@ -20,3 +20,20 @@
 - `src/<Project>/`: projects.
 - `tests/`: test projects.
 - `docs/`: documentation.
+
+## Dependencies
+
+Enforced by `PCCompanion.Architecture.Tests`.
+
+| Project | May reference |
+|---|---|
+| `PCCompanion.Core`, `PCCompanion.Localization`, `PCCompanion.Platform.Windows` | No other project |
+| `PCCompanion.Logging`, `PCCompanion.Infrastructure` | Core |
+| `PCCompanion.Modules.<Name>` | Core, Platform.Windows, Localization; never another module |
+| `PCCompanion.Elevated` | Core, Platform.Windows |
+| `PCCompanion.Host`, `PCCompanion.App` | The projects above; never each other |
+| `*.Tests` | Any project except App and Host |
+
+- Nothing references `PCCompanion.App`, `PCCompanion.Host` or a test project.
+- Project references never form a cycle, and every project is in the solution.
+- A new project needs a rule here and in the tests.
