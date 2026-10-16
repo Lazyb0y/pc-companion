@@ -9,7 +9,8 @@ Output: `src/PCCompanion.Installer/bin/x64/Release/PCCompanion-x64.msi`. Platfor
 CI builds both installers on every pull request and push to `main`. Download them from the workflow run's artifacts (`PCCompanion-x64-msi`, `PCCompanion-ARM64-msi`), kept for 14 days.
 
 - WiX 5 MSI in `src/PCCompanion.Installer`. The WiX SDK version is pinned in `global.json`.
-- The installer publishes the app self-contained (Release) and installs every published file.
+- The installer publishes the settings app and the host self-contained, in Release with ReadyToRun, and installs both into one folder. A build step merges the two publish folders: the files they share are installed once and must be identical, or the build fails.
+- Settings > Apps shows the app icon.
 - One MSI for both install scopes. **Install** installs just for the current user; **Advanced** offers "Install just for you" or "Install for all users of this machine":
 
 | Scope | Folder | Start menu shortcut | Admin rights |
