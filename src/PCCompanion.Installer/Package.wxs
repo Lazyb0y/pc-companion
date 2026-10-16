@@ -11,6 +11,10 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of PC Companion is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
+    <!-- The icon shown in Settings > Apps. -->
+    <Icon Id="PCCompanion.ico" SourceFile="..\PCCompanion.App\Assets\PCCompanion.ico" />
+    <Property Id="ARPPRODUCTICON" Value="PCCompanion.ico" />
+
     <!-- Install dialog with a "Just for me" / "Everyone" choice; per-user is the default. -->
     <ui:WixUI Id="WixUI_Advanced" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
