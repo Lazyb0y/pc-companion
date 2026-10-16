@@ -23,3 +23,4 @@ dotnet test --solution PCCompanion.slnx -c Debug -p:Platform=x64
 - Vulnerability advisories: low and moderate are warnings; high and critical fail the build.
 - Release builds aren't trimmed. The default Windows SDK projection has trim warnings, and Release-only trimming breaks locked restore.
 - `.editorconfig` covers formatting only; code style isn't enforced in the build.
+- CodeQL scans the C# code and the GitHub Actions workflows with the extended security queries on pushes to `main`, pull requests and once a week. Results appear under Security → Code scanning.
