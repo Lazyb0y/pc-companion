@@ -1,3 +1,4 @@
+AllowSetForegroundWindow
 AppendMenu
 CreatePopupMenu
 CreateWindowEx
