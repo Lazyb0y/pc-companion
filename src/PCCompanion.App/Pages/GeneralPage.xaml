@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PCCompanion.App.Pages.GeneralPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,24" Spacing="24">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{app:Localized Key=NavigationGeneral}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

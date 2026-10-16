@@ -105,6 +105,9 @@
           "PCCompanion.Core": "[1.0.0, )"
         }
       },
+      "pccompanion.localization": {
+        "type": "Project"
+      },
       "pccompanion.logging": {
         "type": "Project",
         "dependencies": {

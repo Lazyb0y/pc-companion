@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PCCompanion.Infrastructure\PCCompanion.Infrastructure.csproj" />
+    <ProjectReference Include="..\PCCompanion.Localization\PCCompanion.Localization.csproj" />
     <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
   </ItemGroup>
 
