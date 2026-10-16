@@ -1,0 +1,14 @@
+CreateWindowEx
+DefWindowProc
+DestroyWindow
+DispatchMessage
+FindWindow
+GetMessage
+GetModuleHandle
+PostMessage
+PostQuitMessage
+RegisterClassEx
+RegisterWindowMessage
+TranslateMessage
+UnregisterClass
+WM_APP
