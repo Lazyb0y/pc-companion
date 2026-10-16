@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,20 +29,38 @@ internal static partial class Program
             .AddSingleton(paths)
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
-            .AddSingleton<TrayController>()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
         AppDomain.CurrentDomain.UnhandledException += (_, e) => LogCrash(logger, e.ExceptionObject as Exception);
         LogStarted(logger, Environment.OSVersion.Version);
 
-        var settings = services.GetRequiredService<SettingsStore>().Load();
-        LanguageSetting.Apply(settings.General.Language, logger);
+        var store = services.GetRequiredService<SettingsStore>();
+        LanguageSetting.Apply(store.Load().General.Language, logger);
 
-        services.GetRequiredService<TrayController>().Show();
+        // Declared after the window, so the tray icon is removed before the window is destroyed.
+        using var window = new MessageWindow(TrayController.WindowClassName);
+        using var tray = ActivatorUtilities.CreateInstance<TrayController>(services);
+        tray.Show(window);
+
+        using var watcher = new SettingsWatcher(paths);
+        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, logger));
+
         MessageLoop.Run();
-
         LogStopped(logger);
+    }
+
+    private static void ReloadSettings(SettingsStore store, ILogger logger)
+    {
+        try
+        {
+            LanguageSetting.Apply(store.Load().General.Language, logger);
+            LogSettingsReloaded(logger);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            LogCantReloadSettings(logger, exception);
+        }
     }
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Started on Windows {WindowsVersion}.")]
@@ -49,6 +68,12 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Stopped.")]
     private static partial void LogStopped(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "The settings changed and were loaded again.")]
+    private static partial void LogSettingsReloaded(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The settings changed but can't be read, so the previous settings stay in use.")]
+    private static partial void LogCantReloadSettings(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The host stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);
