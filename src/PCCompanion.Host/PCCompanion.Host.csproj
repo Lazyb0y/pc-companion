@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\PCCompanion.App\Assets\PCCompanion.ico</ApplicationIcon>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PCCompanion.Core\PCCompanion.Core.csproj" />
+    <ProjectReference Include="..\PCCompanion.Infrastructure\PCCompanion.Infrastructure.csproj" />
+    <ProjectReference Include="..\PCCompanion.Localization\PCCompanion.Localization.csproj" />
+    <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
+    <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
+  </ItemGroup>
+</Project>
