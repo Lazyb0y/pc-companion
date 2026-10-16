@@ -13,7 +13,7 @@ dotnet test --solution PCCompanion.slnx -c Debug -p:Platform=x64
 ```
 
 - xUnit v3 on Microsoft.Testing.Platform, which `global.json` selects for `dotnet test`. Test projects go in `tests/` and are included in the solution.
-- `PCCompanion.Architecture.Tests` checks that every project is in the solution and that project references have no cycles.
+- `PCCompanion.Architecture.Tests` checks that every project is in the solution, that project references have no cycles, and that they follow the [dependency rules](../architecture/overview.md#dependencies).
 
 ## Configuration
 
