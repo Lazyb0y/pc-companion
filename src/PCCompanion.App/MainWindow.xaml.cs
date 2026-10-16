@@ -1,4 +1,6 @@
+using System;
 using System.Globalization;
+using System.IO;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,6 +16,7 @@ public sealed partial class MainWindow : Window
     {
         InitializeComponent();
         Title = Strings.AppDisplayName;
+        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "PCCompanion.ico"));
 
         Navigation.FlowDirection = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft
