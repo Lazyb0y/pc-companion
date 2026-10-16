@@ -11,7 +11,7 @@ public sealed record AppSettings
     /// </summary>
     public const int CurrentSchemaVersion = 1;
 
-    public int SchemaVersion { get; init; } = CurrentSchemaVersion;
+    public int SchemaVersion { get; set; } = CurrentSchemaVersion;
 
-    public GeneralSettings General { get; init; } = new();
+    public GeneralSettings General { get; set; } = new();
 }

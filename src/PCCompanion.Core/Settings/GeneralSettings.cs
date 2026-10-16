@@ -8,7 +8,7 @@ public sealed record GeneralSettings
     /// <summary>
     /// BCP-47 tag of the user interface language, or <see langword="null"/> to follow Windows.
     /// </summary>
-    public string? Language { get; init; }
+    public string? Language { get; set; }
 
-    public AppTheme Theme { get; init; } = AppTheme.System;
+    public AppTheme Theme { get; set; } = AppTheme.System;
 }
