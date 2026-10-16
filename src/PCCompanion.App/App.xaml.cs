@@ -1,49 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using PCCompanion.Infrastructure;
+using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Logging;
 
 namespace PCCompanion.App;
 
-/// <summary>
-/// Provides application-specific behavior to supplement the default Application class.
-/// </summary>
 public partial class App : Application
 {
-    private Window? _window;
-    
-    /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
-    /// </summary>
+    private readonly ServiceProvider _services;
+    private readonly ILogger<App> _logger;
+    private MainWindow? _window;
+
     public App()
     {
+        _services = CreateServices();
+        _logger = _services.GetRequiredService<ILogger<App>>();
+
+        UnhandledException += (_, e) => LogCrash(_logger, e.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => LogCrash(_logger, e.ExceptionObject as Exception);
+        TaskScheduler.UnobservedTaskException += (_, e) => LogUnobservedTaskException(_logger, e.Exception);
+
         InitializeComponent();
     }
 
-    /// <summary>
-    /// Invoked when the application is launched.
-    /// </summary>
-    /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    public static new App Current => (App)Application.Current;
+
+    public IServiceProvider Services => _services;
+
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        LogStarted(
+            _logger,
+            typeof(App).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
+            Environment.OSVersion.Version);
+
         _window = new MainWindow();
+
+        // The app exits when its window closes; disposing the services flushes the log.
+        _window.Closed += (_, _) => _services.Dispose();
         _window.Activate();
     }
+
+    private static ServiceProvider CreateServices()
+    {
+        var paths = AppDataPaths.ForCurrentUser();
+
+        return new ServiceCollection()
+            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "app"))
+            .AddSingleton(paths)
+            .AddSingleton<SettingsStore>()
+            .BuildServiceProvider();
+    }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Started version {Version} on Windows {WindowsVersion}.")]
+    private static partial void LogStarted(ILogger logger, string? version, Version windowsVersion);
+
+    [LoggerMessage(Level = LogLevel.Critical, Message = "The app stopped because of an unhandled exception.")]
+    private static partial void LogCrash(ILogger logger, Exception? exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "A background task failed and nothing handled the exception.")]
+    private static partial void LogUnobservedTaskException(ILogger logger, Exception exception);
 }
