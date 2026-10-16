@@ -4,7 +4,7 @@
 
 - WinUI 3 on the Windows App SDK.
 - The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
-- The Windows App SDK version is set in `Directory.Packages.props`.
+- Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
 
 ## Identifiers
 
