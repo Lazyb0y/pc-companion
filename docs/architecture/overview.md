@@ -3,7 +3,7 @@
 ## UI
 
 - WinUI 3 on the Windows App SDK.
-- The settings app is a packaged, single-project MSIX app. It depends on the Windows App Runtime framework package.
+- The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
 - The Windows App SDK version is set in `Directory.Packages.props`.
 
 ## Identifiers

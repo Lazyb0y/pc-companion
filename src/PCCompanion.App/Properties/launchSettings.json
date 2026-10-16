@@ -1,7 +1,0 @@
-{
-  "profiles": {
-    "PCCompanion.App (Package)": {
-      "commandName": "MsixPackage"
-    }
-  }
-}
