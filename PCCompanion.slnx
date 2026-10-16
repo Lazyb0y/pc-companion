@@ -8,5 +8,7 @@
     <Platform Solution="*|x64" Project="x64" />
   </Project>
   <Project Path="src/PCCompanion.Core/PCCompanion.Core.csproj" />
+  <Project Path="src/PCCompanion.Infrastructure/PCCompanion.Infrastructure.csproj" />
   <Project Path="tests/PCCompanion.Architecture.Tests/PCCompanion.Architecture.Tests.csproj" />
+  <Project Path="tests/PCCompanion.Infrastructure.Tests/PCCompanion.Infrastructure.Tests.csproj" />
 </Solution>
