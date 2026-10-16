@@ -32,6 +32,14 @@
     <value>功能推出后将显示在此处。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>退出</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_other" xml:space="preserve">
     <value>日志将保留 {0} 天。</value>
     <comment>Needs native review.</comment>
