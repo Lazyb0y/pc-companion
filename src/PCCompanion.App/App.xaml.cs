@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
+using PCCompanion.App.ViewModels;
+using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Logging;
@@ -35,14 +37,17 @@ public partial class App : Application
 
     public IServiceProvider Services => _services;
 
+    public MainWindow? MainWindow => _window;
+
+    /// <summary>The app's version, including the commit it was built from, such as <c>1.2.0+3f7bd98</c>.</summary>
+    public static string InformationalVersion { get; } =
+        typeof(App).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty;
+
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        LogStarted(
-            _logger,
-            typeof(App).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
-            Environment.OSVersion.Version);
+        LogStarted(_logger, InformationalVersion, Environment.OSVersion.Version);
 
-        var settings = _services.GetRequiredService<SettingsStore>().Load();
+        var settings = _services.GetRequiredService<AppSettings>();
         ApplyLanguage(settings.General.Language);
 
         var window = new MainWindow();
@@ -93,12 +98,14 @@ public partial class App : Application
             .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "app"))
             .AddSingleton(paths)
             .AddSingleton<SettingsStore>()
+            .AddSingleton(provider => provider.GetRequiredService<SettingsStore>().Load())
             .AddSingleton<HostLauncher>()
+            .AddTransient<GeneralViewModel>()
             .BuildServiceProvider();
     }
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Started version {Version} on Windows {WindowsVersion}.")]
-    private static partial void LogStarted(ILogger logger, string? version, Version windowsVersion);
+    private static partial void LogStarted(ILogger logger, string version, Version windowsVersion);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The language setting {Language} is not a known language, so the Windows display language is used.")]
     private static partial void LogUnknownLanguage(ILogger logger, Exception exception, string language);
