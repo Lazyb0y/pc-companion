@@ -108,6 +108,18 @@ public sealed class MessageWindow : IDisposable
         return !handle.IsNull && PInvoke.PostMessage(handle, InvokeMessage.Value, 0, 0);
     }
 
+    /// <summary>
+    /// Lets processes without admin rights post <paramref name="message"/> to this window while
+    /// this process runs as administrator; Windows blocks their messages otherwise. Returns false
+    /// when Windows refuses.
+    /// </summary>
+    public unsafe bool AllowFromLowerIntegrity(uint message)
+    {
+        ObjectDisposedException.ThrowIf(_handle.IsNull, this);
+
+        return PInvoke.ChangeWindowMessageFilterEx(_handle, message, WINDOW_MESSAGE_FILTER_ACTION.MSGFLT_ALLOW, null);
+    }
+
     public void Dispose()
     {
         if (_handle.IsNull)
