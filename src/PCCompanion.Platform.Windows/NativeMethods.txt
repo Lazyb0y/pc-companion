@@ -12,6 +12,7 @@ GetMessage
 GetModuleHandle
 GetSystemMetrics
 LoadIconMetric
+MUI_LANGUAGE_NAME
 NINF_KEY
 NIN_SELECT
 NOTIFYICON_VERSION_4
@@ -19,6 +20,7 @@ PostMessage
 PostQuitMessage
 RegisterClassEx
 RegisterWindowMessage
+SetProcessPreferredUILanguages
 SetForegroundWindow
 Shell_NotifyIcon
 TRACK_POPUP_MENU_FLAGS
