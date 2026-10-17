@@ -208,6 +208,10 @@
     <value>Bildschirmschoner</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>Programm ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>Keine Taste</value>
     <comment>Needs native review.</comment>
@@ -226,6 +230,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>Windows-Logo-Taste gedrückt halten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>Programm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>Argumente (optional)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>Durchsuchen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>Programm: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>Argumente: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>Programm durchsuchen: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>Programm auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>Programme</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>Wählen Sie ein Programm aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>Geben Sie den vollständigen Pfad ein, z. B. C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>Wählen Sie eine Programmdatei (.exe) aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>Dieses Programm wurde nicht gefunden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>Wird mit Ihren Rechten gestartet. Wird nicht ausgeführt, solange PC Companion als Administrator ausgeführt wird.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -253,7 +309,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen. Speichert und sendet nichts.</value>
+    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

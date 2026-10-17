@@ -200,6 +200,10 @@
     <value>屏幕保护程序</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>运行程序</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>无按键</value>
     <comment>Needs native review.</comment>
@@ -218,6 +222,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>按住 Windows 徽标键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>参数(可选)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>浏览</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>{0}程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>{0}参数</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>浏览{0}程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>选择程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>选择要运行的程序。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>输入完整路径，例如 C:\Program Files\App\App.exe。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>选择程序文件(.exe)。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>找不到此程序。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>以你的权限启动。PC Companion 以管理员身份运行时不会运行。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -245,7 +301,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。仅发送所选操作的 Windows 快捷键。不存储也不发送任何内容。</value>
+    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

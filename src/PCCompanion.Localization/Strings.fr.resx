@@ -208,6 +208,10 @@
     <value>Écran de veille</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>Exécuter un programme</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>Aucune touche</value>
     <comment>Needs native review.</comment>
@@ -226,6 +230,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>Maintenir la touche du logo Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>Programme</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>Arguments (facultatif)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>Parcourir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>Programme : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>Arguments : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>Parcourir le programme : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>Choisir un programme</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>Programmes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>Choisissez un programme à exécuter.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>Entrez le chemin complet, par exemple C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>Choisissez un fichier de programme (.exe).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>Ce programme est introuvable.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>Démarre avec vos droits. Ne s’exécute pas tant que PC Companion est exécuté en tant qu’administrateur.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -253,7 +309,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Envoie uniquement les raccourcis Windows des actions choisies. N’enregistre et n’envoie rien.</value>
+    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

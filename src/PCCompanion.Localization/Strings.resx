@@ -208,6 +208,10 @@
     <value>Screen saver</value>
     <comment>Hot Corners action: starts the screen saver chosen in Windows settings.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>Run a program</value>
+    <comment>Hot Corners action: starts the program chosen for the corner.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>No key</value>
     <comment>Hot Corners page: the corner doesn't need a key.</comment>
@@ -227,6 +231,58 @@
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>Hold the Windows logo key</value>
     <comment>Hot Corners page: the corner runs its action only while the key is held. Use the Windows term for the key.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>Program</value>
+    <comment>Hot Corners page, Run a program: label of the box with the program's full path.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>Arguments (optional)</value>
+    <comment>Hot Corners page, Run a program: label of the box with the program's arguments.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Hot Corners page, Run a program: button that opens the Open dialog. Use the Windows term.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>{0} program</value>
+    <comment>Hot Corners page: screen reader name of a corner's program box. {0} is a corner, such as HotCornersTopLeft.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>{0} arguments</value>
+    <comment>Hot Corners page: screen reader name of a corner's arguments box. {0} is a corner, such as HotCornersTopLeft.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>{0} program: Browse</value>
+    <comment>Hot Corners page: screen reader name of a corner's Browse button. {0} is a corner, such as HotCornersTopLeft.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>Choose a program</value>
+    <comment>Title of the Open dialog for a corner's program.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>Programs</value>
+    <comment>Open dialog: the name of the .exe file type.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>Choose a program to run.</value>
+    <comment>Hot Corners page: shown below a corner's program box while it's empty.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>Enter the full path, such as C:\Program Files\App\App.exe.</value>
+    <comment>Hot Corners page: shown when the program isn't a full path. Keep the example path as it is.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>Choose a program file (.exe).</value>
+    <comment>Hot Corners page: shown when the program isn't an .exe file.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>This program wasn't found.</value>
+    <comment>Hot Corners page: shown when the program's file doesn't exist.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>Starts with your rights. Doesn't run while PC Companion runs as administrator.</value>
+    <comment>Hot Corners page: below a corner's program and arguments.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
     <value>Activation delay</value>
@@ -253,7 +309,7 @@
     <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. Sends only the Windows shortcuts of the chosen actions. Stores and sends nothing.</value>
+    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
     <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
   </data>
 </root>

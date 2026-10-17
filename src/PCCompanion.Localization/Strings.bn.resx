@@ -208,6 +208,10 @@
     <value>স্ক্রিন সেভার</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>একটি প্রোগ্রাম চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>কোনো কী নেই</value>
     <comment>Needs native review.</comment>
@@ -226,6 +230,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>Windows লোগো কী চেপে ধরুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>প্রোগ্রাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>আর্গুমেন্ট (ঐচ্ছিক)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>{0} প্রোগ্রাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>{0} আর্গুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>{0} প্রোগ্রাম: ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>একটি প্রোগ্রাম বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>প্রোগ্রাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>চালানোর জন্য একটি প্রোগ্রাম বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>পুরো পাথ লিখুন, যেমন C:\Program Files\App\App.exe।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>একটি প্রোগ্রাম ফাইল (.exe) বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>এই প্রোগ্রামটি পাওয়া যায়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>আপনার অধিকার নিয়ে চালু হয়। PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললে এটি চলে না।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -253,7 +309,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>হট কর্নার চালু থাকলেই কেবল পয়েন্টারের অবস্থান, এবং কোনো মাউস বোতাম বা বেছে নেওয়া কী চেপে ধরা আছে কিনা, তা পড়ে। কেবল বেছে নেওয়া অ্যাকশনগুলোর Windows শর্টকাট পাঠায়। কিছুই সংরক্ষণ বা পাঠায় না।</value>
+    <value>হট কর্নার চালু থাকলেই কেবল পয়েন্টারের অবস্থান, এবং কোনো মাউস বোতাম বা বেছে নেওয়া কী চেপে ধরা আছে কিনা, তা পড়ে। কেবল বেছে নেওয়া অ্যাকশনগুলোর Windows শর্টকাট পাঠায় এবং কেবল আপনার বেছে নেওয়া প্রোগ্রামগুলো চালু করে। কিছুই সংরক্ষণ বা পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
