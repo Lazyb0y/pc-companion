@@ -41,6 +41,15 @@ powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
 - Writes the report, screenshots and logs to `TestResults\sandbox`, and exits with an error when a check fails.
 - Needs the Windows Sandbox feature; only one Sandbox can run at a time. `-NoBuild` uses the installer already built.
 
+```
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Installer
+```
+
+- Checks the installer's dialogs instead, with `scripts\sandbox\installer-checks.ps1`; run it when the installer changes. It takes about 12 minutes.
+- Clicks through **Advanced** with the mouse, just for you and for all users: the license, scope and folder pages, that no feature page opens, Back and Next, then the install folder, startup entry, Start menu shortcut and Settings > Apps entry. Then it removes PC Companion through the maintenance dialog, where Change is turned off, and checks that everything is gone.
+- Also checks a silent install and uninstall for all users.
+- Writes the report, a screenshot of each page and the install logs to `TestResults\sandbox-installer`.
+
 ## Inspecting an installer
 
 ```
