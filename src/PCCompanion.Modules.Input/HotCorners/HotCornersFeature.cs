@@ -183,7 +183,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     [LoggerMessage(Level = LogLevel.Debug, Message = "Hot Corners stopped.")]
     private static partial void LogStopped(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Hot Corners uses {DisplayCount} displays and a {DelayMilliseconds} ms delay.")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Hot Corners applied its settings: displays {DisplayCount}, delay {DelayMilliseconds} ms.")]
     private static partial void LogConfigured(ILogger logger, int displayCount, int delayMilliseconds);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The {Corner} corner ran {Action}.")]
