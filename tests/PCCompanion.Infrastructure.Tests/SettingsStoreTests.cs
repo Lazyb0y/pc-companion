@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Settings;
@@ -44,6 +45,18 @@ public sealed class SettingsStoreTests : IDisposable
         _store.Save(settings);
 
         Assert.Equal(settings, _store.Load());
+    }
+
+    [Fact]
+    public void LoadAndSaveAddDebugEntries()
+    {
+        _store.Load();
+        _store.Save(new AppSettings());
+        _store.Load();
+
+        Assert.Equal(
+            ["There is no settings file yet, so the default settings are used.", "Saved the settings.", "Loaded the settings (schema version 1)."],
+            _logger.Entries.Where(entry => entry.Level == LogLevel.Debug).Select(entry => entry.Message));
     }
 
     [Fact]
