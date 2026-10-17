@@ -35,7 +35,7 @@ public sealed class SettingsStoreTests : IDisposable
     [Fact]
     public void SaveThenLoadReturnsTheSameSettings()
     {
-        var settings = new AppSettings { General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark } };
+        var settings = new AppSettings { General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark, StartWithWindows = true } };
 
         _store.Save(settings);
 
