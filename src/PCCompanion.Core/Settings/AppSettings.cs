@@ -14,4 +14,6 @@ public sealed record AppSettings
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
 
     public GeneralSettings General { get; set; } = new();
+
+    public DiagnosticsSettings Diagnostics { get; set; } = new();
 }
