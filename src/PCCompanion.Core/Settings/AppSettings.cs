@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+
 namespace PCCompanion.Core.Settings;
 
 /// <summary>
@@ -16,4 +21,20 @@ public sealed record AppSettings
     public GeneralSettings General { get; set; } = new();
 
     public DiagnosticsSettings Diagnostics { get; set; } = new();
+
+    /// <summary>
+    /// Each feature's section, by feature ID, in the feature's own format. Sections of features
+    /// this build doesn't know are kept.
+    /// </summary>
+    public Dictionary<string, JsonElement> Features { get; set; } = [];
+
+    public bool Equals(AppSettings? other) =>
+        other is not null
+        && SchemaVersion == other.SchemaVersion
+        && General == other.General
+        && Diagnostics == other.Diagnostics
+        && Features.Count == other.Features.Count
+        && Features.All(section => other.Features.TryGetValue(section.Key, out var value) && JsonElement.DeepEquals(section.Value, value));
+
+    public override int GetHashCode() => HashCode.Combine(SchemaVersion, General, Diagnostics, Features.Count);
 }
