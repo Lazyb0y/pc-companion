@@ -39,3 +39,11 @@ powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
 - Checks a per-user install and uninstall, the startup entry and **Start with Windows**, that the settings app starts the host and opens once, the tray menu, Arabic (right to left, dark) and Bangla (light), that the host follows settings changes, and the logs.
 - Writes the report, screenshots and logs to `TestResults\sandbox`, and exits with an error when a check fails.
 - Needs the Windows Sandbox feature; only one Sandbox can run at a time. `-NoBuild` uses the installer already built.
+
+## Inspecting an installer
+
+```
+powershell -ExecutionPolicy Bypass -File scripts\inspect-msi.ps1 src\PCCompanion.Installer\bin\x64\Release\PCCompanion-x64.msi
+```
+
+- Shows the main properties, the number and size of the files, the executables, the registry values and the shortcuts, without installing anything. `-Table <name>` returns every row of one Windows Installer table, such as `File` or `Registry`.
