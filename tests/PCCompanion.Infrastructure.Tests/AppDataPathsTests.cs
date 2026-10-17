@@ -35,4 +35,14 @@ public sealed class AppDataPathsTests
     {
         Assert.ThrowsAny<ArgumentException>(() => new AppDataPaths(root));
     }
+
+    [Fact]
+    public void ProtectedLogsAreInProgramDataPerUser()
+    {
+        var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+
+        Assert.Equal(
+            Path.Combine(programData, "PCCompanion", "Logs", "S-1-5-21-1-2-3-1001"),
+            AppDataPaths.ProtectedLogsFolder("S-1-5-21-1-2-3-1001"));
+    }
 }

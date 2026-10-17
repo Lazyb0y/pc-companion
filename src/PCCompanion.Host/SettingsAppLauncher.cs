@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
 
@@ -17,6 +18,14 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
     {
         try
         {
+            // The settings app never runs as administrator.
+            if (Elevation.IsElevated)
+            {
+                UnelevatedProcess.Start(SettingsAppPath);
+                LogStartedWithoutAdminRights(logger);
+                return;
+            }
+
             using var process = Process.Start(new ProcessStartInfo(SettingsAppPath) { UseShellExecute = false });
             LogStarted(logger, process?.Id);
         }
@@ -25,6 +34,9 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
             LogCantStart(logger, exception, SettingsAppPath);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Started the settings app without admin rights.")]
+    private static partial void LogStartedWithoutAdminRights(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Started the settings app (process {ProcessId}).")]
     private static partial void LogStarted(ILogger logger, int? processId);

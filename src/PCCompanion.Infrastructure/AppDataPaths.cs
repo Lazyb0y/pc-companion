@@ -29,6 +29,19 @@ public sealed class AppDataPaths
     public string LogsFolder => Path.Combine(Root, "Logs");
 
     /// <summary>
+    /// The folder of the host's logs while it runs as administrator,
+    /// <c>%ProgramData%\PCCompanion\Logs\</c> and the user's security identifier, which only
+    /// administrators can change.
+    /// </summary>
+    public static string ProtectedLogsFolder(string userSid)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(userSid);
+
+        var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData, Environment.SpecialFolderOption.DoNotVerify);
+        return Path.Combine(programData, FolderName, "Logs", userSid);
+    }
+
+    /// <summary>
     /// The paths under <c>%LOCALAPPDATA%\PCCompanion</c>.
     /// </summary>
     public static AppDataPaths ForCurrentUser()
