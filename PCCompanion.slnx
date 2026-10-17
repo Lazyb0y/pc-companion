@@ -15,10 +15,12 @@
   <Project Path="src/PCCompanion.Infrastructure/PCCompanion.Infrastructure.csproj" />
   <Project Path="src/PCCompanion.Localization/PCCompanion.Localization.csproj" />
   <Project Path="src/PCCompanion.Logging/PCCompanion.Logging.csproj" />
+  <Project Path="src/PCCompanion.Modules.Input/PCCompanion.Modules.Input.csproj" />
   <Project Path="src/PCCompanion.Platform.Windows/PCCompanion.Platform.Windows.csproj" />
   <Project Path="tests/PCCompanion.Architecture.Tests/PCCompanion.Architecture.Tests.csproj" />
   <Project Path="tests/PCCompanion.Infrastructure.Tests/PCCompanion.Infrastructure.Tests.csproj" />
   <Project Path="tests/PCCompanion.Localization.Tests/PCCompanion.Localization.Tests.csproj" />
   <Project Path="tests/PCCompanion.Logging.Tests/PCCompanion.Logging.Tests.csproj" />
+  <Project Path="tests/PCCompanion.Modules.Input.Tests/PCCompanion.Modules.Input.Tests.csproj" />
   <Project Path="tests/PCCompanion.Platform.Windows.Tests/PCCompanion.Platform.Windows.Tests.csproj" />
 </Solution>
