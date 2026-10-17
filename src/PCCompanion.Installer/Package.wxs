@@ -24,6 +24,20 @@
     <SetProperty Id="WixPerUserFolder" Value="[LocalAppDataFolder]Programs\[ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
     <SetProperty Id="WixPerMachineFolder" Value="[ProgramFiles64Folder][ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
 
+    <!--
+      There are no optional features, so Advanced skips the dialog's feature page: the scope page
+      (just for you) and the folder page (all users) go straight to the Ready to install page.
+      Windows Installer opens the last NewDialog whose condition is true, so these rows override the
+      dialog's own ones. Without features, Settings > Apps and the maintenance page offer no Change.
+    -->
+    <UI>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="8" Condition="WixAppFolder = &quot;WixPerUserFolder&quot;" />
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="5" Condition="WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID=&quot;1&quot;" />
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg" Order="4" Condition="NOT Installed AND WixAppFolder = &quot;WixPerUserFolder&quot;" />
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="5" Condition="NOT Installed AND WixAppFolder = &quot;WixPerMachineFolder&quot;" />
+    </UI>
+    <Property Id="ARPNOMODIFY" Value="1" />
+
     <StandardDirectory Id="ProgramFiles6432Folder">
       <Directory Id="APPLICATIONFOLDER" Name="PCCompanion">
         <Files Include="!(bindpath.InstallFiles)\**">
