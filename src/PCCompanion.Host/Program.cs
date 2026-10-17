@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using PCCompanion.Core;
+using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Logging;
@@ -37,8 +38,9 @@ internal static partial class Program
             return;
         }
 
+        using var detailedLogging = new DetailedLogging();
         using var services = new ServiceCollection()
-            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "host"))
+            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "host", detailedLogging: detailedLogging))
             .AddSingleton(paths)
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
@@ -49,7 +51,7 @@ internal static partial class Program
         LogStarted(logger, Environment.OSVersion.Version);
 
         var store = services.GetRequiredService<SettingsStore>();
-        LanguageSetting.Apply(store.Load().General.Language, logger);
+        ApplySettings(store.Load(), detailedLogging, logger);
 
         // Declared after the window, so the tray icon is removed before the window is destroyed.
         using var window = new MessageWindow(TrayController.WindowClassName);
@@ -57,7 +59,7 @@ internal static partial class Program
         tray.Show(window);
 
         using var watcher = new SettingsWatcher(paths);
-        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, logger));
+        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, logger));
 
         MessageLoop.Run();
         LogStopped(logger);
@@ -77,11 +79,17 @@ internal static partial class Program
         }
     }
 
-    private static void ReloadSettings(SettingsStore store, ILogger logger)
+    private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, ILogger logger)
+    {
+        LanguageSetting.Apply(settings.General.Language, logger);
+        detailedLogging.TurnOnUntil(settings.Diagnostics.DetailedLoggingUntil);
+    }
+
+    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, ILogger logger)
     {
         try
         {
-            LanguageSetting.Apply(store.Load().General.Language, logger);
+            ApplySettings(store.Load(), detailedLogging, logger);
             LogSettingsReloaded(logger);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
