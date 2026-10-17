@@ -88,6 +88,38 @@
     <value>فتح مجلد السجلات</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>التسجيل المفصّل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_zero" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة {0} ساعة للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_one" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة ساعة واحدة للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_two" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة ساعتين للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_few" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة {0} ساعات للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_many" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة {0} ساعة للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>يضيف مزيدًا من التفاصيل إلى السجلات لمدة {0} ساعة للمساعدة في العثور على مشكلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>قيد التشغيل حتى {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>حول</value>
     <comment>Needs native review.</comment>

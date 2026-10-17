@@ -88,6 +88,18 @@
     <value>打开日志文件夹</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>详细日志记录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>在 {0} 小时内向日志添加更多详细信息，以帮助查找问题。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>已开启，直到 {0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>关于</value>
     <comment>Needs native review.</comment>
