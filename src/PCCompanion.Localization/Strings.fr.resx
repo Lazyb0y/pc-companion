@@ -88,6 +88,22 @@
     <value>Ouvrir le dossier des journaux</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>Journalisation détaillée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_one" xml:space="preserve">
+    <value>Ajoute plus de détails aux journaux pendant {0} heure pour aider à trouver un problème.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>Ajoute plus de détails aux journaux pendant {0} heures pour aider à trouver un problème.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>Activé jusqu’à {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>À propos</value>
     <comment>Needs native review.</comment>

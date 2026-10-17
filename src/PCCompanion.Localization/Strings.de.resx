@@ -88,6 +88,22 @@
     <value>Protokollordner öffnen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>Ausführliche Protokollierung</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_one" xml:space="preserve">
+    <value>Fügt den Protokollen {0} Stunde lang mehr Details hinzu, um ein Problem zu finden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>Fügt den Protokollen {0} Stunden lang mehr Details hinzu, um ein Problem zu finden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>Aktiviert bis {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>Info</value>
     <comment>Needs native review.</comment>

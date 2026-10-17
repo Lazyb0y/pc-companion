@@ -88,6 +88,22 @@
     <value>Abrir la carpeta de registros</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>Registro detallado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_one" xml:space="preserve">
+    <value>Agrega más detalles a los registros durante {0} hora para ayudar a encontrar un problema.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>Agrega más detalles a los registros durante {0} horas para ayudar a encontrar un problema.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>Activado hasta {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>Acerca de</value>
     <comment>Needs native review.</comment>

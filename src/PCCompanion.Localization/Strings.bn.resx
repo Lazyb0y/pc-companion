@@ -88,6 +88,22 @@
     <value>লগ ফোল্ডার খুলুন</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
+    <value>বিস্তারিত লগিং</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_one" xml:space="preserve">
+    <value>কোনো সমস্যা খুঁজে পেতে সাহায্য করার জন্য {0} ঘণ্টা লগে আরও বিস্তারিত তথ্য যোগ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingDescription_other" xml:space="preserve">
+    <value>কোনো সমস্যা খুঁজে পেতে সাহায্য করার জন্য {0} ঘণ্টা লগে আরও বিস্তারিত তথ্য যোগ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralDetailedLoggingOnUntil" xml:space="preserve">
+    <value>{0} পর্যন্ত চালু।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>সম্পর্কে</value>
     <comment>Needs native review.</comment>
