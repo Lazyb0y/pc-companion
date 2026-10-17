@@ -38,8 +38,17 @@ if (-not (Test-Path $sandbox)) {
     throw 'Windows Sandbox is not turned on. Turn on the "Windows Sandbox" Windows feature and restart.'
 }
 
-if (Get-Process -Name 'WindowsSandbox*' -ErrorAction SilentlyContinue) {
-    throw 'Windows Sandbox is already running. Close it first; only one Sandbox can run at a time.'
+# Newer versions of Windows Sandbox keep a server process running when no Sandbox is, and list the
+# running Sandboxes with wsb.exe.
+function Test-SandboxRunning {
+    if (Get-Command wsb.exe -ErrorAction SilentlyContinue) {
+        return @(& wsb.exe list | Where-Object { $_.Trim() }).Count -gt 0
+    }
+    return [bool] (Get-Process -Name 'WindowsSandbox*' -ErrorAction SilentlyContinue)
+}
+
+if (Test-SandboxRunning) {
+    throw 'Windows Sandbox is already running. Close it first; only one Sandbox can run at a time. A Sandbox that was just closed can take a minute to shut down.'
 }
 
 if (-not $NoBuild) {
@@ -55,7 +64,11 @@ if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction Sile
 }
 
 if (Test-Path $results) {
-    Remove-Item -Recurse -Force $results
+    try {
+        Remove-Item -Recurse -Force $results
+    } catch {
+        throw "Can't clear $results. A Sandbox that was closed before it finished can keep it locked for a few minutes; try again then. $($_.Exception.Message)"
+    }
 }
 
 New-Item -ItemType Directory -Force -Path $results | Out-Null
