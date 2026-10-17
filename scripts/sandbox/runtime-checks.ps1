@@ -193,6 +193,20 @@ function Find-AppDialog([string] $Name) {
     return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
 }
 
+# A tooltip or text of the settings app whose name is exactly $Name.
+function Find-AppText([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.OrCondition(
+            (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ToolTip)),
+            (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Text)))))
+    $found = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if ($found) { return $found }
+    return [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+
 function Get-PointerText { "pointer at $([System.Windows.Forms.Cursor]::Position)" }
 
 # Presses and releases a key as a keyboard does. Unlike UI Automation's Invoke, it doesn't wait
@@ -458,6 +472,18 @@ $shown = Get-BoxText 'Top left program'
 Test-Check 'the program box shows the program' ($shown -eq $program) "shown: $shown"
 Test-Check 'the arguments box shows the arguments' ((Get-BoxText 'Top left arguments') -eq '/A')
 Save-Screenshot '12-hot-corners-run-program'
+# A path that doesn't fit shows its end after an ellipsis; the tooltip and the box while editing show all of it.
+$programBox = Find-AppElement 'Top left program'
+if ($programBox) {
+    $bounds = $programBox.Current.BoundingRectangle
+    [void] (Move-Pointer ([int]($bounds.X + $bounds.Width / 2)) ([int]($bounds.Y + $bounds.Height / 2)))
+}
+Test-Check 'the program box shows the whole path in its tooltip' (Wait-Until { Find-AppText $program } 5)
+Save-Screenshot '12b-hot-corners-program-tooltip'
+if ($programBox) { $programBox.SetFocus() }
+Start-Sleep -Seconds 1
+Save-Screenshot '12c-hot-corners-program-editing'
+[void] (Move-Pointer $middleX $middleY)
 $browse = Find-AppElement 'Top left program: Browse'
 if ($browse) { $browse.SetFocus(); Start-Sleep -Milliseconds 300; Send-Key 0x20 }
 Test-Check 'Browse opens the Open dialog' (Wait-Until { Find-AppDialog 'Choose a program' } 10)
