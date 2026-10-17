@@ -1,5 +1,7 @@
 <Project>
   <PropertyGroup>
+    <!-- The version of every executable, library and the installer. -->
+    <Version>0.0.1</Version>
     <Nullable>enable</Nullable>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
