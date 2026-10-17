@@ -17,10 +17,11 @@
   <ItemGroup>
     <ProjectReference Include="..\PCCompanion.App\PCCompanion.App.csproj" Publish="true" />
     <ProjectReference Include="..\PCCompanion.Host\PCCompanion.Host.csproj" Publish="true" />
+    <ProjectReference Include="..\PCCompanion.Elevated\PCCompanion.Elevated.csproj" Publish="true" />
   </ItemGroup>
 
   <!--
-    The settings app and the host install into one folder. Both are self-contained, so their
+    The settings app, the host and the elevated helper install into one folder. Both are self-contained, so their
     published files overlap; the overlapping files must be identical and are installed once.
   -->
   <Target Name="MergePublishedFiles" AfterTargets="_ConvertResolvedProjectReferencesIntoWixConstructs">
@@ -29,7 +30,7 @@
     </PropertyGroup>
 
     <MergeFolders
-        Sources="@(BindPath->WithMetadataValue('BindName', 'PCCompanion.App'));@(BindPath->WithMetadataValue('BindName', 'PCCompanion.Host'))"
+        Sources="@(BindPath->WithMetadataValue('BindName', 'PCCompanion.App'));@(BindPath->WithMetadataValue('BindName', 'PCCompanion.Host'));@(BindPath->WithMetadataValue('BindName', 'PCCompanion.Elevated'))"
         Destination="$(InstallFilesDir)" />
 
     <ItemGroup>
