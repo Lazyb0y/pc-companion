@@ -111,6 +111,7 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
 "@
 
 Write-Host 'Starting Windows Sandbox. Its window closes when the checks finish.'
+Write-Host "Keep it visible until then: while it's minimized, its screenshots come out blank."
 Start-Process -FilePath $sandbox -ArgumentList "`"$configuration`""
 
 $done = Join-Path $results 'done.txt'
