@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using PCCompanion.Core;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
@@ -14,17 +16,27 @@ namespace PCCompanion.Host;
 internal static partial class Program
 {
     [STAThread]
-    private static void Main()
+    private static void Main(string[] args)
     {
-        // One host per user session. A second launch asks the running host to open the settings.
-        using var instanceLock = new Mutex(initiallyOwned: true, HostProcess.InstanceLockName, out var isFirstInstance);
-        if (!isFirstInstance)
+        var paths = AppDataPaths.ForCurrentUser();
+        var startedAtSignIn = args.Contains(HostProcess.StartupArgument, StringComparer.OrdinalIgnoreCase);
+        if (startedAtSignIn && !IsSetToStartWithWindows(paths))
         {
-            MessageWindow.PostToWindow(TrayController.WindowClassName, TrayController.OpenSettingsMessage);
             return;
         }
 
-        var paths = AppDataPaths.ForCurrentUser();
+        // One host per user session. Started again by the user, it asks the running host to open the settings.
+        using var instanceLock = new Mutex(initiallyOwned: true, HostProcess.InstanceLockName, out var isFirstInstance);
+        if (!isFirstInstance)
+        {
+            if (!startedAtSignIn)
+            {
+                MessageWindow.PostToWindow(TrayController.WindowClassName, TrayController.OpenSettingsMessage);
+            }
+
+            return;
+        }
+
         using var services = new ServiceCollection()
             .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "host"))
             .AddSingleton(paths)
@@ -49,6 +61,20 @@ internal static partial class Program
 
         MessageLoop.Run();
         LogStopped(logger);
+    }
+
+    // Windows starts the host at every sign-in, for every user of an all-users install. This runs
+    // before any logging, so users who haven't turned the setting on get no files.
+    private static bool IsSetToStartWithWindows(AppDataPaths paths)
+    {
+        try
+        {
+            return new SettingsStore(paths, NullLogger<SettingsStore>.Instance).Load().General.StartWithWindows;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     private static void ReloadSettings(SettingsStore store, ILogger logger)
