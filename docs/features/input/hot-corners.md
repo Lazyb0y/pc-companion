@@ -30,11 +30,22 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 | Lock | Locks the PC | `LockWorkStation` |
 | Turn off displays | Turns the displays off until the pointer moves | `SC_MONITORPOWER` |
 | Screen saver | Starts the screen saver | `SC_SCREENSAVE` |
+| Run a program | Starts the program chosen for the corner | Started directly, without a shell; see [Run a program](#run-a-program) |
 
 - Shortcuts are sent as keyboard input only where Windows has no API for the action.
 - A modifier the user is holding, such as the key a corner requires, is released before the shortcut is sent: Ctrl + Windows + D would add a virtual desktop. An unassigned key is pressed first, so releasing the Windows key or Alt doesn't open Start or the menu bar.
 - Screen saver does nothing when no screen saver is chosen in Windows settings.
-- Not included: running an app or a command, custom shortcuts, per-app settings, and screen edges.
+- Not included: command lines in cmd or PowerShell syntax, such as pipes, custom shortcuts, per-app settings, and screen edges.
+
+## Run a program
+
+- Close to the custom command in KDE Plasma, Cinnamon and XFCE. Each corner with this action has its own program and arguments.
+- **Program:** the full path of an `.exe` file, typed or chosen with **Browse**. A name without a folder, a relative path or another type of file doesn't run: Windows would otherwise search folders for a program of that name, and it runs `.bat` and `.cmd` files through cmd, which reads arguments differently. The path is used as written; environment variables aren't expanded.
+- **Arguments:** optional, in one box. They're split by the Windows command-line rules and passed to the program one by one (`ProcessStartInfo.ArgumentList`), never through a shell, so pipes and redirection don't apply. To run a script, choose `powershell.exe` or `cmd.exe` as the program.
+- The program starts in its own folder, with the user's rights, and runs on its own: PC Companion doesn't wait for it, watch it or stop it.
+- A program that needs admin rights doesn't start, because Windows refuses it without asking; a warning is logged.
+- **While PC Companion runs as administrator, Run a program does nothing** and a warning is logged; the feature page says so. Any program running as the user can change the settings file, so that file must never make PC Companion run code as administrator.
+- A corner without a program, or whose program is missing or isn't an `.exe`, does nothing and logs a warning when it triggers. The feature page shows the problem below the box.
 
 ## Multiple displays
 
@@ -43,10 +54,11 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 ## Settings
 
-- **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key; the activation delay; **Don't trigger when an app is full screen** (on by default); and a **Permissions & data** card.
+- **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key, and for **Run a program**, the program with **Browse** and its arguments; the activation delay; **Don't trigger when an app is full screen** (on by default); and a **Permissions & data** card.
 - The picture shows physical corners, so it isn't mirrored for right-to-left languages.
 - When the feature is first turned on, the top-left corner shows Task View and the others do nothing, close to GNOME's Activities corner.
 - The switch on Home changes only `enabled` and keeps the other settings.
+- A corner keeps its `program` and `arguments` when its action changes, so choosing Run a program again brings them back.
 - A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing.
 
 ```json
@@ -55,7 +67,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
     "enabled": true,
     "topLeft": { "action": "TaskView", "key": "None" },
     "topRight": { "action": "None", "key": "None" },
-    "bottomLeft": { "action": "None", "key": "None" },
+    "bottomLeft": { "action": "RunProgram", "key": "None", "program": "C:\\Windows\\System32\\notepad.exe", "arguments": "" },
     "bottomRight": { "action": "None", "key": "Control" },
     "activationDelayMilliseconds": 150,
     "ignoreFullScreenApps": true
@@ -76,10 +88,11 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 ## Security and privacy
 
-- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. Nothing is stored or sent, and only which corner ran which action is logged, as a Debug entry.
+- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. Nothing is stored or sent, and only which corner ran which action is logged, as a Debug entry. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
 - **Keyboard:** reads only the state of the chosen key, when a corner is reached; no keyboard hook.
-- **Changes:** sends only the fixed Windows shortcuts in the table; nothing the user types or configures is sent as input.
-- **Rights:** runs without admin rights. Turning the feature off stops reading the pointer.
+- **Changes:** sends only the fixed Windows shortcuts in the table, and starts only the program the user chose for a corner; nothing the user types or configures is sent as input.
+- **Programs:** the program and its arguments are stored in `settings.json` and used only to start that program. Any program running as the user can change that file, but it could also start the same program itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so the action doesn't run then. Programs start directly from a full path to an `.exe`, without a shell or a search of folders.
+- **Rights:** runs without admin rights, and never starts a program with them. Turning the feature off stops reading the pointer.
 
 ## Performance
 
@@ -89,9 +102,11 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 - Every list, switch and slider has a label for screen readers, and the page works with the keyboard alone.
 - Corner names are physical ("Top left") in every language.
+- The program and arguments boxes and **Browse** carry their corner's name for screen readers, such as "Top left program".
 
 ## Testing
 
 - **Unit tests** with fake displays, a fake clock and fake pointer events: the activation delay, leaving and coming back, held buttons, required keys, full-screen apps, and display layouts (side by side, stacked, different sizes and scaling, displays left of or above the main one).
-- **Sandbox checks** (`scripts/sandbox/runtime-checks.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops.
-- **By hand:** a real mouse on one and several displays, a full-screen game or video, and an app running as administrator in the foreground.
+- **Unit tests for Run a program**, with a fake process starter: splitting the arguments, which paths are accepted, the program and arguments in the settings, and that nothing starts while PC Companion runs as administrator.
+- **Sandbox checks** (`scripts/sandbox/runtime-checks.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. Everything in Windows Sandbox runs as administrator, so there the checks confirm that Run a program does nothing and logs a warning.
+- **By hand:** a real mouse on one and several displays, a full-screen game or video, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights.
