@@ -8,6 +8,7 @@ using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Dispatching;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
@@ -24,26 +25,41 @@ public sealed record ThemeOption(AppTheme Theme, string DisplayName);
 /// <summary>
 /// The General page. Every change is saved right away.
 /// </summary>
-public sealed partial class GeneralViewModel : ObservableObject
+public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 {
     // The language only changes when the app restarts.
     private static readonly CompositeFormat VersionFormat = CompositeFormat.Parse(Strings.GeneralAboutVersion);
+    private static readonly CompositeFormat DetailedLoggingOnUntilFormat = CompositeFormat.Parse(Strings.GeneralDetailedLoggingOnUntil);
 
     private readonly AppSettings _settings;
     private readonly SettingsStore _store;
     private readonly AppDataPaths _paths;
+    private readonly DetailedLogging _detailedLogging;
+    private readonly TimeProvider _time;
     private readonly ILogger<GeneralViewModel> _logger;
+    private readonly DispatcherQueue? _dispatcher = DispatcherQueue.GetForCurrentThread();
     private LanguageOption _selectedLanguage;
     private ThemeOption _selectedTheme;
     private bool _startWithWindows;
     private bool _saveFailed;
 
-    public GeneralViewModel(AppSettings settings, SettingsStore store, AppDataPaths paths, ILogger<GeneralViewModel> logger)
+    public GeneralViewModel(
+        AppSettings settings,
+        SettingsStore store,
+        AppDataPaths paths,
+        DetailedLogging detailedLogging,
+        TimeProvider time,
+        ILogger<GeneralViewModel> logger)
     {
         _settings = settings;
         _store = store;
         _paths = paths;
+        _detailedLogging = detailedLogging;
+        _time = time;
         _logger = logger;
+
+        // Detailed logging also turns off by itself, on a timer thread.
+        _detailedLogging.Changed += OnDetailedLoggingChanged;
 
         // Each language is shown in its own language.
         Languages =
@@ -115,6 +131,28 @@ public sealed partial class GeneralViewModel : ObservableObject
         }
     }
 
+    public bool DetailedLoggingOn
+    {
+        get => _detailedLogging.IsOn;
+        set
+        {
+            if (value == _detailedLogging.IsOn)
+            {
+                return;
+            }
+
+            DateTimeOffset? until = value ? _time.GetLocalNow() + DetailedLogging.Duration : null;
+            _settings.Diagnostics.DetailedLoggingUntil = until;
+            Save();
+            _detailedLogging.TurnOnUntil(until);
+        }
+    }
+
+    /// <summary>When detailed logging is on, when it turns off; otherwise what it does.</summary>
+    public string DetailedLoggingDescription => _detailedLogging.Until is { } until
+        ? string.Format(CultureInfo.CurrentCulture, DetailedLoggingOnUntilFormat, until.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
+        : PluralStrings.Format("GeneralDetailedLoggingDescription", (int)DetailedLogging.Duration.TotalHours);
+
     /// <summary>True when the last change couldn't be saved.</summary>
     public bool SaveFailed
     {
@@ -128,6 +166,26 @@ public sealed partial class GeneralViewModel : ObservableObject
         Directory.CreateDirectory(_paths.LogsFolder);
         var explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
         using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { _paths.LogsFolder } });
+    }
+
+    public void Dispose() => _detailedLogging.Changed -= OnDetailedLoggingChanged;
+
+    private void OnDetailedLoggingChanged(object? sender, EventArgs e)
+    {
+        void Update()
+        {
+            OnPropertyChanged(nameof(DetailedLoggingOn));
+            OnPropertyChanged(nameof(DetailedLoggingDescription));
+        }
+
+        if (_dispatcher is null)
+        {
+            Update();
+        }
+        else
+        {
+            _dispatcher.TryEnqueue(Update);
+        }
     }
 
     private void Save()
