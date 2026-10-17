@@ -90,6 +90,19 @@ function Select-NavigationItem([string] $Name) {
     return $false
 }
 
+function Set-Toggle([string] $Name, [bool] $On) {
+    $window = Get-AppWindow
+    if (-not $window) { return $false }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::IsTogglePatternAvailableProperty, $true)))
+    $toggle = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if (-not $toggle) { return $false }
+    $pattern = $toggle.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+    if (($pattern.Current.ToggleState -eq [System.Windows.Automation.ToggleState]::On) -ne $On) { $pattern.Toggle() }
+    return $true
+}
+
 function Get-WindowText {
     $window = Get-AppWindow
     if (-not $window) { return @() }
@@ -203,7 +216,38 @@ Test-Check 'select General in Bangla' (Select-NavigationItem 'সাধারণ
 Start-Sleep -Seconds 2
 Save-Screenshot '07-general-bangla-light'
 
-# 9. Start with Windows on.
+# 9. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
+[void] (Close-SettingsApp)
+Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+[void] (Select-NavigationItem 'General')
+Start-Sleep -Seconds 2
+Test-Check 'turn on detailed logging' (Set-Toggle 'Detailed logging' $true)
+Start-Sleep -Seconds 3
+$saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).diagnostics.detailedLoggingUntil
+$hoursLeft = if ($saved) { ([DateTimeOffset]::Parse([string] $saved) - [DateTimeOffset]::Now).TotalHours } else { 0 }
+Test-Check 'the switch saves an end time 24 hours ahead' (($hoursLeft -gt 23.9) -and ($hoursLeft -le 24)) "saved: $saved"
+$text = Get-WindowText
+Test-Check 'General shows when detailed logging turns off' (@($text | Where-Object { $_ -like 'On until *' }).Count -ge 1) ($text -join ' | ')
+Save-Screenshot '08-general-detailed-logging'
+Test-Check 'tray menu requested with detailed logging on' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+Start-Sleep -Seconds 2
+[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
+Start-Sleep -Seconds 1
+[void] (Close-SettingsApp)
+# As if the 24 hours were nearly over.
+$soon = [DateTimeOffset]::Now.AddSeconds(20).ToString('o')
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$soon"" } }"
+Start-Sleep -Seconds 25
+Test-Check 'tray menu requested after detailed logging ended' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+Start-Sleep -Seconds 2
+[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
+Start-Sleep -Seconds 1
+
+# 10. Start with Windows on.
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "bn", "theme": "Light", "startWithWindows": true } }'
 Start-Sleep -Seconds 2
 [void] (Close-SettingsApp)
@@ -216,7 +260,7 @@ $process = Start-Process $hostExe -ArgumentList '--startup' -PassThru
 Start-Sleep -Seconds 5
 Test-Check 'host --startup keeps running when Start with Windows is on' (-not $process.HasExited)
 
-# 10. Logs.
+# 11. Logs.
 Stop-All
 $logs = Join-Path $dataFolder 'Logs'
 Copy-Item -Path (Join-Path $logs '*') -Destination $results -ErrorAction SilentlyContinue
@@ -226,7 +270,17 @@ Test-Check 'logs have no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
 Test-Check 'logs don''t show the user name' (-not ($logText -match [regex]::Escape($env:USERNAME)))
 Test-Check 'host loaded the changed settings' ($logText -match 'The settings changed and were loaded again')
 
-# 11. Uninstall.
+$appLog = (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+$hostLines = @(Get-ChildItem $logs -Filter 'host-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName })
+$turnedOff = @(0..($hostLines.Count - 1) | Where-Object { $hostLines[$_] -match 'Detailed logging is off\.' })
+$debugLines = @(0..($hostLines.Count - 1) | Where-Object { $hostLines[$_] -match '\[DBG\]' })
+Test-Check 'settings app turned detailed logging on' ($appLog -match 'Detailed logging is on until')
+Test-Check 'host turned detailed logging on' (@($hostLines | Where-Object { $_ -match 'Detailed logging is on until' }).Count -ge 1)
+Test-Check 'host wrote Debug entries while detailed logging was on' (@($hostLines | Where-Object { $_ -match '\[DBG\] PCCompanion\.Host\.TrayController: Opened the tray menu' }).Count -ge 1)
+Test-Check 'detailed logging turned itself off in the host' ($turnedOff.Count -ge 1)
+Test-Check 'host wrote no Debug entries after detailed logging turned off' (($turnedOff.Count -ge 1) -and (@($debugLines | Where-Object { $_ -gt $turnedOff[-1] }).Count -eq 0))
+
+# 12. Uninstall.
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall' ($code -eq 0) "exit code $code"
 Test-Check 'startup entry removed' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))
