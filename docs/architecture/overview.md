@@ -16,6 +16,7 @@
 - Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
 - The window has a navigation pane with **Home** and, at the bottom, **General**: language, app theme, start with Windows, logs, detailed logging and the version. Changes are saved right away.
 - Theme: light, dark or the Windows app mode, from the settings. The title bar follows it.
+- Backdrop: Mica on Windows 11, desktop acrylic on Windows 10. Windows turns Mica off while the window isn't in focus.
 - The host's tray icon and menu use the Windows API directly, through CsWin32; the host has no UI framework.
 
 ## Settings
