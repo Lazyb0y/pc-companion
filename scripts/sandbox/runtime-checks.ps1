@@ -44,6 +44,19 @@ function Save-Screenshot([string] $Name) {
     $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
     $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size)
     $bitmap.Save((Join-Path $results "$Name.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+
+    # The Sandbox draws nothing while its window is minimized, so screenshots come out blank.
+    $first = $bitmap.GetPixel(0, 0)
+    $blank = $true
+    for ($x = 0; $x -lt $bounds.Width -and $blank; $x += 50) {
+        for ($y = 0; $y -lt $bounds.Height -and $blank; $y += 50) {
+            if ($bitmap.GetPixel($x, $y) -ne $first) { $blank = $false }
+        }
+    }
+    if ($blank) {
+        Write-Report "[NOTE] Screenshot $Name is blank; keep the Sandbox window open and visible while the checks run."
+    }
+
     $graphics.Dispose()
     $bitmap.Dispose()
 }
@@ -142,6 +155,7 @@ Write-Report "msi: $msi; user: $env:USERNAME; screen: $($screen.Width)x$($screen
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install for the current user' ($code -eq 0) "exit code $code"
 Test-Check 'settings app and host installed' ((Test-Path $appExe) -and (Test-Path $hostExe))
+Test-Check 'third-party notices installed' (Test-Path (Join-Path $installFolder 'ThirdPartyNotices.txt'))
 $run = (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
 Test-Check 'startup entry in HKCU Run' ($run -eq "`"$hostExe`" --startup") "value: $run"
 
