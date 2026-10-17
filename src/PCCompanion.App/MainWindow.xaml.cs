@@ -1,9 +1,12 @@
 using System;
 using System.Globalization;
 using System.IO;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 using PCCompanion.App.Pages;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
@@ -23,6 +26,7 @@ public sealed partial class MainWindow : Window
             : FlowDirection.LeftToRight;
 
         Navigation.SelectedItem = HomeItem;
+        SetBackdrop();
     }
 
     /// <summary>
@@ -57,6 +61,30 @@ public sealed partial class MainWindow : Window
             _ => TitleBarTheme.UseDefaultAppMode,
         };
     }
+
+    // Mica needs Windows 11; Windows 10 has desktop acrylic. Without either, for example in some
+    // remote sessions, the window gets the solid colors Mica itself falls back to.
+    private void SetBackdrop()
+    {
+        if (MicaController.IsSupported())
+        {
+            SystemBackdrop = new MicaBackdrop();
+        }
+        else if (DesktopAcrylicController.IsSupported())
+        {
+            SystemBackdrop = new DesktopAcrylicBackdrop();
+        }
+        else
+        {
+            SetSolidBackground();
+            Navigation.ActualThemeChanged += (_, _) => SetSolidBackground();
+        }
+    }
+
+    private void SetSolidBackground() =>
+        Navigation.Background = new SolidColorBrush(Navigation.ActualTheme == ElementTheme.Dark
+            ? Color.FromArgb(255, 0x20, 0x20, 0x20)
+            : Color.FromArgb(255, 0xF3, 0xF3, 0xF3));
 
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {

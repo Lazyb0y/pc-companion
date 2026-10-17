@@ -5,10 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
-
+    <!-- The backdrop is set in code: Mica on Windows 11, desktop acrylic on Windows 10. -->
     <NavigationView
         x:Name="Navigation"
         IsBackButtonVisible="Collapsed"
