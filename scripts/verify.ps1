@@ -33,20 +33,22 @@ function Invoke-Dotnet([string] $Description, [string[]] $Arguments) {
 
 Push-Location $root
 try {
+    # Like CI: build each configuration, then run the tests of that build.
     foreach ($configuration in $configurations) {
         foreach ($platform in $platforms) {
             $result = Invoke-Dotnet "Building $configuration $platform" @('build', 'PCCompanion.slnx', '-c', $configuration, "-p:Platform=$platform")
             if ($result.ExitCode -ne 0 -or $result.Diagnostics.Count -gt 0) {
                 $failures.Add("Build $configuration $platform")
                 $result.Diagnostics | ForEach-Object { Write-Host "  $_" }
+                continue
+            }
+
+            $result = Invoke-Dotnet "Testing $configuration $platform" @('test', '--solution', 'PCCompanion.slnx', '--no-build', '-c', $configuration, "-p:Platform=$platform")
+            $result.Output | Where-Object { $_ -match '^\s*(failed|total:|succeeded:|skipped:)' } | ForEach-Object { Write-Host "  $($_.Trim())" }
+            if ($result.ExitCode -ne 0) {
+                $failures.Add("Tests $configuration $platform")
             }
         }
-    }
-
-    $result = Invoke-Dotnet 'Running the tests' @('test', '--solution', 'PCCompanion.slnx', '-c', 'Debug', '-p:Platform=x64')
-    $result.Output | Where-Object { $_ -match '^\s*(failed|total:|succeeded:|skipped:)' } | ForEach-Object { Write-Host "  $($_.Trim())" }
-    if ($result.ExitCode -ne 0) {
-        $failures.Add('Tests')
     }
 
     if ($Installer) {
