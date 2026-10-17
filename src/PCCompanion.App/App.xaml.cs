@@ -48,9 +48,9 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        LogStarted(_logger, InformationalVersion, Environment.OSVersion.Version);
-
         var settings = _services.GetRequiredService<AppSettings>();
+        _services.GetRequiredService<DetailedLogging>().TurnOnUntil(settings.Diagnostics.DetailedLoggingUntil);
+        LogStarted(_logger, InformationalVersion, Environment.OSVersion.Version);
         ApplyLanguage(settings.General.Language);
 
         var window = new MainWindow();
@@ -105,9 +105,13 @@ public partial class App : Application
     private static ServiceProvider CreateServices()
     {
         var paths = AppDataPaths.ForCurrentUser();
+        var detailedLogging = new DetailedLogging();
 
+        // Registered with a factory, so the service provider disposes it.
         return new ServiceCollection()
-            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "app"))
+            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "app", detailedLogging: detailedLogging))
+            .AddSingleton(_ => detailedLogging)
+            .AddSingleton(TimeProvider.System)
             .AddSingleton(paths)
             .AddSingleton<SettingsStore>()
             .AddSingleton(provider => provider.GetRequiredService<SettingsStore>().Load())

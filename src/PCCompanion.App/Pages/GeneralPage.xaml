@@ -66,6 +66,13 @@
                 <Button Command="{x:Bind ViewModel.OpenLogsFolderCommand}" Content="{app:Localized Key=GeneralLogsOpen}" />
             </toolkit:SettingsCard>
 
+            <toolkit:SettingsCard Description="{x:Bind ViewModel.DetailedLoggingDescription, Mode=OneWay}" Header="{app:Localized Key=GeneralDetailedLoggingHeader}">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xEBE8;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralDetailedLoggingHeader}" IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
+            </toolkit:SettingsCard>
+
             <toolkit:SettingsCard Description="{x:Bind ViewModel.Version}" Header="{app:Localized Key=GeneralAboutHeader}">
                 <toolkit:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE946;" />

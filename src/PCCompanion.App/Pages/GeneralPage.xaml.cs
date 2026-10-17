@@ -19,6 +19,7 @@ public sealed partial class GeneralPage : Page
             }
         };
 
+        Unloaded += (_, _) => ViewModel.Dispose();
         InitializeComponent();
     }
 
