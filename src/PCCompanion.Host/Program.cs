@@ -23,23 +23,13 @@ internal static partial class Program
     {
         var paths = AppDataPaths.ForCurrentUser();
         var startedAtSignIn = args.Contains(HostProcess.StartupArgument, StringComparer.OrdinalIgnoreCase);
-        var general = LoadGeneralSettings(paths);
-        if (startedAtSignIn && !general.StartWithWindows)
+        // At sign-in with Start with Windows off, or with Always run as administrator on and no
+        // admin rights, the host exits; the copy the scheduled tasks start runs instead.
+        var start = HostProcess.DecideStart(LoadGeneralSettings(paths), startedAtSignIn, Elevation.IsElevated, IsHostRunning());
+        if (start == HostStart.Exit
+            || (start == HostStart.RunTask && ScheduledTasks.RunNow(ElevatedStartup.TaskFolder + ElevatedStartup.StartTaskName(Elevation.CurrentUserSid))))
         {
             return;
-        }
-
-        // Always run as administrator: a host without admin rights leaves the work to the one the
-        // scheduled tasks start. At sign-in, the sign-in task starts it; otherwise this asks for it.
-        var handOverFailed = false;
-        if (general.AlwaysRunAsAdministrator && !Elevation.IsElevated && !IsHostRunning())
-        {
-            if (startedAtSignIn || ScheduledTasks.RunNow(ElevatedStartup.TaskFolder + ElevatedStartup.StartTaskName(Elevation.CurrentUserSid)))
-            {
-                return;
-            }
-
-            handOverFailed = true;
         }
 
         // One host per user session. Started again by the user, it asks the running host to open the settings.
@@ -75,7 +65,7 @@ internal static partial class Program
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
         AppDomain.CurrentDomain.UnhandledException += (_, e) => LogCrash(logger, e.ExceptionObject as Exception);
         LogStarted(logger, Environment.OSVersion.Version, Elevation.IsElevated);
-        if (handOverFailed)
+        if (start == HostStart.RunTask)
         {
             LogCantRunAsAdministrator(logger);
         }
