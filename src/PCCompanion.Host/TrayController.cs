@@ -31,7 +31,11 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         _window.MessageReceived += OnMessageReceived;
 
         _icon = new TrayIcon(_window, Strings.AppDisplayName);
-        _icon.Selected += (_, _) => settingsApp.Open();
+        _icon.Selected += (_, _) =>
+        {
+            LogIconSelected(logger);
+            settingsApp.Open();
+        };
         _icon.MenuRequested += (_, e) => ShowMenu(e.X, e.Y);
 
         if (!_icon.IsShown)
@@ -53,6 +57,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     {
         if (e.Message == OpenSettingsMessage)
         {
+            LogOpenSettingsRequested(logger);
             settingsApp.Open();
             e.Handled = true;
         }
@@ -63,7 +68,11 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
         PopupMenuItem[] items = [new(SettingsCommand, Strings.TraySettings), new(ExitCommand, Strings.TrayExit)];
 
-        switch (PopupMenu.Show(_window!, items, x, y, rightToLeft))
+        LogMenuOpened(logger, rightToLeft);
+        var command = PopupMenu.Show(_window!, items, x, y, rightToLeft);
+        LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", _ => "nothing" });
+
+        switch (command)
         {
             case SettingsCommand:
                 settingsApp.Open();
@@ -73,6 +82,18 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
                 break;
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon was selected.")]
+    private static partial void LogIconSelected(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Another host launch asked to open the settings.")]
+    private static partial void LogOpenSettingsRequested(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Opened the tray menu (right to left: {RightToLeft}).")]
+    private static partial void LogMenuOpened(ILogger logger, bool rightToLeft);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Closed the tray menu; chose {Command}.")]
+    private static partial void LogMenuClosed(ILogger logger, string command);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The tray icon couldn't be added yet; it is added when the taskbar starts.")]
     private static partial void LogIconNotShown(ILogger logger);
