@@ -32,6 +32,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 ## Build
 
 - Build with `dotnet build PCCompanion.slnx -c Debug -p:Platform=x64`. Platforms are `x64` and `ARM64`.
+- `scripts/verify.ps1` builds every configuration, runs the tests and checks the lock files, as CI does; use it to validate a task.
 - The .NET SDK is pinned in `global.json`. Package versions are managed centrally in `Directory.Packages.props`, and `packages.lock.json` files are committed.
 - `Directory.Build.props` enables nullable reference types, `latest-recommended` analyzers and warnings as errors. Fix warnings; don't suppress them without approval.
 - New projects and new packages need maintainer approval. Don't add a library when only one or two simple methods are needed; write them.
@@ -82,6 +83,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 - Automate testing as much as practical, and run the applicable validation (build, tests) for every task.
 - Tests use isolated data and never touch windows or files they didn't create.
 - Ask before UI tests that move the mouse or take focus, and before disruptive, elevated or system-changing tests (use Windows Sandbox or a VM). Don't install software without approval.
+- `scripts/sandbox-test.ps1` runs the installer, settings app and host checks in Windows Sandbox. Extend `scripts/sandbox/runtime-checks.ps1` when a feature adds runtime behavior worth checking.
 - Report what was and wasn't tested. Never claim that a test passed if you didn't run it.
 
 ## Git and GitHub
