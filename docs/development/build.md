@@ -21,7 +21,7 @@ dotnet test --solution PCCompanion.slnx -c Debug -p:Platform=x64
 powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
 ```
 
-- Builds Debug and Release for x64 and ARM64 and fails on any warning, runs the tests, and checks the lock files with a locked restore, as CI does. It lists lock files the build changed, which belong in the commit.
+- Builds Debug and Release for x64 and ARM64 and fails on any warning, runs the tests of each build, and checks the lock files with a locked restore, as CI does. It lists lock files the build changed, which belong in the commit.
 - `-Quick` builds only Debug x64; `-Installer` also builds the installers.
 
 ## Configuration
