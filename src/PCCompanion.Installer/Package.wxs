@@ -35,6 +35,20 @@
       </Directory>
     </StandardDirectory>
 
+    <!--
+      Windows starts the host at every sign-in: HKCU for a per-user install, HKLM for all users.
+      The host exits at once unless the user turned on Start with Windows. Uninstalling removes the entry.
+    -->
+    <Component Id="StartupEntry" Directory="APPLICATIONFOLDER">
+      <RegistryValue
+          Root="HKMU"
+          Key="Software\Microsoft\Windows\CurrentVersion\Run"
+          Name="PCCompanion"
+          Type="string"
+          Value="&quot;[APPLICATIONFOLDER]PCCompanion.Host.exe&quot; --startup"
+          KeyPath="yes" />
+    </Component>
+
     <StandardDirectory Id="ProgramMenuFolder">
       <Component Id="StartMenuShortcut">
         <Shortcut
