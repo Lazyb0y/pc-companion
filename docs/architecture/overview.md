@@ -14,7 +14,7 @@
 - WinUI 3 on the Windows App SDK.
 - The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
 - Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
-- The window has a navigation pane with **Home** and, at the bottom, **General**: language, app theme, start with Windows, logs and the version. Changes are saved right away.
+- The window has a navigation pane with **Home** and, at the bottom, **General**: language, app theme, start with Windows, logs, detailed logging and the version. Changes are saved right away.
 - Theme: light, dark or the Windows app mode, from the settings. The title bar follows it.
 - The host's tray icon and menu use the Windows API directly, through CsWin32; the host has no UI framework.
 
@@ -30,6 +30,7 @@
 | `general.language` | A BCP-47 language tag, or `null` for the Windows display language |
 | `general.theme` | `System`, `Light` or `Dark` |
 | `general.startWithWindows` | `true` or `false` (default) |
+| `diagnostics.detailedLoggingUntil` | When detailed logging turns off, as a date and time with an offset, or `null` (default) when it is off |
 
 ## Identifiers
 
