@@ -171,7 +171,7 @@ Test-Check 'settings app starts the host' (Wait-Until { (Get-Processes 'PCCompan
 Start-Sleep -Seconds 3
 Save-Screenshot '01-home-english'
 $text = Get-WindowText
-Test-Check 'Home shows its text' (($text -contains 'Home') -and ($text -contains 'No features yet')) ($text -join ' | ')
+Test-Check 'Home shows the feature cards' (($text -contains 'Home') -and ($text -contains 'Input & Triggers') -and ($text -contains 'Hot Corners')) ($text -join ' | ')
 
 # 4. The General page.
 Test-Check 'select General' (Select-NavigationItem 'General')

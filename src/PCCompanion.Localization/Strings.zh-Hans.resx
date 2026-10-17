@@ -24,14 +24,6 @@
     <value>常规</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HomeEmptyTitle" xml:space="preserve">
-    <value>暂无功能</value>
-    <comment>Needs native review.</comment>
-  </data>
-  <data name="HomeEmptyDescription" xml:space="preserve">
-    <value>功能推出后将显示在此处。</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="TraySettings" xml:space="preserve">
     <value>设置</value>
     <comment>Needs native review.</comment>
@@ -122,6 +114,10 @@
   </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>无法保存你的更改。请重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureNotAvailable" xml:space="preserve">
+    <value>在此电脑上不可用。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="FeaturePermissionsHeader" xml:space="preserve">

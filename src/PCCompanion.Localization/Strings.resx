@@ -24,14 +24,6 @@
     <value>General</value>
     <comment>Navigation item for the app-wide settings page.</comment>
   </data>
-  <data name="HomeEmptyTitle" xml:space="preserve">
-    <value>No features yet</value>
-    <comment>Shown on Home while the app has no features.</comment>
-  </data>
-  <data name="HomeEmptyDescription" xml:space="preserve">
-    <value>Features will appear here as they become available.</value>
-    <comment>Shown on Home below HomeEmptyTitle.</comment>
-  </data>
   <data name="TraySettings" xml:space="preserve">
     <value>Settings</value>
     <comment>Tray icon menu command that opens the settings window.</comment>
@@ -131,6 +123,10 @@
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>Your change couldn't be saved. Try again.</value>
     <comment>Home and feature pages: shown when the settings file can't be written.</comment>
+  </data>
+  <data name="FeatureNotAvailable" xml:space="preserve">
+    <value>Not available on this PC.</value>
+    <comment>Home: instead of a feature's description when this PC can't run the feature.</comment>
   </data>
   <data name="FeaturePermissionsHeader" xml:space="preserve">
     <value>Permissions &amp; data</value>

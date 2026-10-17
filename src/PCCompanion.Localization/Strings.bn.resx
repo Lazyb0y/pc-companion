@@ -24,14 +24,6 @@
     <value>সাধারণ</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HomeEmptyTitle" xml:space="preserve">
-    <value>এখনও কোনো বৈশিষ্ট্য নেই</value>
-    <comment>Needs native review.</comment>
-  </data>
-  <data name="HomeEmptyDescription" xml:space="preserve">
-    <value>বৈশিষ্ট্যগুলো উপলব্ধ হলে এখানে দেখা যাবে।</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="TraySettings" xml:space="preserve">
     <value>সেটিংস</value>
     <comment>Needs native review.</comment>
@@ -130,6 +122,10 @@
   </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>আপনার পরিবর্তন সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureNotAvailable" xml:space="preserve">
+    <value>এই পিসিতে উপলভ্য নয়।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="FeaturePermissionsHeader" xml:space="preserve">

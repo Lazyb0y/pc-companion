@@ -24,14 +24,6 @@
     <value>Général</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HomeEmptyTitle" xml:space="preserve">
-    <value>Aucune fonctionnalité pour le moment</value>
-    <comment>Needs native review.</comment>
-  </data>
-  <data name="HomeEmptyDescription" xml:space="preserve">
-    <value>Les fonctionnalités apparaîtront ici dès qu’elles seront disponibles.</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="TraySettings" xml:space="preserve">
     <value>Paramètres</value>
     <comment>Needs native review.</comment>
@@ -130,6 +122,10 @@
   </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>Impossible d’enregistrer votre modification. Réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureNotAvailable" xml:space="preserve">
+    <value>Non disponible sur ce PC.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="FeaturePermissionsHeader" xml:space="preserve">
