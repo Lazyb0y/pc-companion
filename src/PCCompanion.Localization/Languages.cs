@@ -46,6 +46,30 @@ public static class Languages
         return Source;
     }
 
+    /// <summary>
+    /// Returns the language names to load Windows language resource files (MUI) in, which exist
+    /// per region: the language's main region, the language itself, then its other regions,
+    /// so that a language with resources for any region gets them. At most five names.
+    /// </summary>
+    public static IReadOnlyList<string> ForWindowsResources(CultureInfo language)
+    {
+        ArgumentNullException.ThrowIfNull(language);
+
+        var neutral = language.IsNeutralCulture ? language : language.Parent;
+        var otherRegions = CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+            .Where(culture => culture.Parent.Equals(neutral))
+            .Select(culture => culture.Name)
+            .Order(StringComparer.Ordinal);
+
+        return otherRegions
+            .Prepend(neutral.Name)
+            .Prepend(CultureInfo.CreateSpecificCulture(language.Name).Name)
+            .Where(name => name.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(5)
+            .ToList();
+    }
+
     private static List<CultureInfo> FindAvailable()
     {
         var satelliteFileName = typeof(Strings).Assembly.GetName().Name + ".resources.dll";
