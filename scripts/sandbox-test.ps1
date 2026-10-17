@@ -10,6 +10,10 @@ finish. The report, screenshots and logs are written to TestResults\sandbox.
 
 Needs the Windows Sandbox feature. Only one Sandbox can run at a time.
 
+.PARAMETER Installer
+Checks the installer's dialogs instead, with scripts\sandbox\installer-checks.ps1, and writes the
+results to TestResults\sandbox-installer.
+
 .PARAMETER NoBuild
 Uses the installer that is already built.
 
@@ -18,9 +22,13 @@ How long to wait for the checks to finish.
 
 .EXAMPLE
 powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Installer
 #>
 [CmdletBinding()]
 param(
+    [switch] $Installer,
     [switch] $NoBuild,
     [int] $TimeoutMinutes = 15
 )
@@ -31,7 +39,8 @@ $platform = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'ARM64' } else { 'x64
 $msiFolder = Join-Path $root "src\PCCompanion.Installer\bin\$platform\Release"
 $sandbox = Join-Path $env:WINDIR 'System32\WindowsSandbox.exe'
 $testResults = Join-Path $root 'TestResults'
-$results = Join-Path $testResults 'sandbox'
+$checks = if ($Installer) { 'installer-checks.ps1' } else { 'runtime-checks.ps1' }
+$results = Join-Path $testResults $(if ($Installer) { 'sandbox-installer' } else { 'sandbox' })
 $configuration = Join-Path $testResults 'sandbox.wsb'
 
 if (-not (Test-Path $sandbox)) {
@@ -96,7 +105,7 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
     </MappedFolder>
   </MappedFolders>
   <LogonCommand>
-    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Test\scripts\runtime-checks.ps1</Command>
+    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Test\scripts\$checks</Command>
   </LogonCommand>
 </Configuration>
 "@
