@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,7 +12,9 @@ using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Localization;
 using PCCompanion.Logging;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App;
 
@@ -86,8 +89,17 @@ public partial class App : Application
         CultureInfo.DefaultThreadCurrentUICulture = culture;
         CultureInfo.CurrentUICulture = culture;
 
-        // The text of WinUI's own controls, such as tooltips.
+        // WinUI's own text comes from resource files that follow PrimaryLanguageOverride, such as
+        // tooltips, and from Windows language resource files per region, such as "On" and "Off".
         ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
+        try
+        {
+            ResourceLanguages.SetForProcess(Languages.ForWindowsResources(culture));
+        }
+        catch (Win32Exception exception)
+        {
+            LogCantSetResourceLanguages(_logger, exception, culture.Name);
+        }
     }
 
     private static ServiceProvider CreateServices()
@@ -109,6 +121,9 @@ public partial class App : Application
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The language setting {Language} is not a known language, so the Windows display language is used.")]
     private static partial void LogUnknownLanguage(ILogger logger, Exception exception, string language);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows can't load its text for the language {Language}, so some built-in control text keeps the Windows display language.")]
+    private static partial void LogCantSetResourceLanguages(ILogger logger, Win32Exception exception, string language);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The app stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);
