@@ -53,11 +53,12 @@
 
 | Project | Contents |
 |---|---|
-| `PCCompanion.Core` | The settings model |
-| `PCCompanion.Infrastructure` | Data folder paths, the settings store and the settings watcher |
+| `PCCompanion.Core` | The settings model and the feature contract; see [Features](features.md) |
+| `PCCompanion.Infrastructure` | Data folder paths, the settings store, the settings watcher and the feature runner |
 | `PCCompanion.Logging` | File logging and path redaction; see [Logging](../diagnostics/logging.md) |
 | `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
-| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon and shortcut menus |
+| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, and shell actions |
+| `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
 | `PCCompanion.Host` | The background host |
 | `PCCompanion.App` | The settings app |
 | `PCCompanion.Installer` | The MSI; see [Packaging](../development/packaging.md) |

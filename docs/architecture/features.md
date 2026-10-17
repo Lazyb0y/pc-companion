@@ -16,6 +16,7 @@
 - Each feature owns one section in `settings.json`, under `features`, named after the feature's ID: `features.hotCorners`. Its module defines the settings record, the defaults and a JSON source-generation context; Infrastructure stores each section as JSON. Adding a feature changes no shared project, and sections of unknown features are kept when the file is saved.
 - Every section has `enabled`, `false` by default. A missing section means the feature is off with its defaults.
 - Only the settings app saves. The host loads the sections at startup and after every save.
+- `FeatureSettings` in Core reads and writes a section with the feature's JSON context. Home changes only `enabled`, with `FeatureSettings.SetEnabled`, so it needs no feature's format.
 
 ## Running in the host
 
@@ -38,7 +39,8 @@ public interface IFeature : IDisposable
 
 - Each module registers its features with the host: `services.AddInputModule()`.
 - `Apply` runs on the host's UI thread, which runs the message loop that input monitoring and hidden windows need. Long work goes to the thread pool; nothing blocks the message loop.
-- **Isolation:** the host calls each feature inside its own error boundary. When `Apply` throws, the host logs the error, stops that feature for the rest of the session, and the other features keep running.
+- **Isolation:** the host's `FeatureRunner` calls each feature inside its own error boundary. When `Apply` throws, it logs the error, stops that feature for the rest of the session, and the other features keep running.
+- A feature guards its own handlers of window messages, input and timers the same way: an exception there would end the host.
 - A feature that isn't supported on this PC is never started.
 
 ## In the settings app
@@ -46,7 +48,8 @@ public interface IFeature : IDisposable
 - The navigation pane has a section per module with an item per feature, above **General**.
 - **Home** shows a card per feature: icon, name, description, on/off switch, and **Not available on this PC** when it isn't supported.
 - A feature page has a header (icon, name, description, on/off switch), then its settings in cards, then a **Permissions & data** card that says what the feature reads and changes.
-- The settings app maps each `FeatureInfo` to its page in one place, `Features/FeatureCatalog.cs`.
+- The settings app maps each `FeatureInfo` to its page in one place, `Features/FeatureCatalog.cs`, which the navigation pane and Home are built from.
+- A feature class has a static `Definition` (its `FeatureInfo`) and `CurrentSupport`, so the settings app doesn't create the feature.
 
 ## Strings, logging and tests
 

@@ -13,9 +13,10 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - After it triggers, a corner doesn't trigger again until the pointer has left it.
 - A corner can require a key: hold Ctrl, Alt, Shift or the Windows key while the pointer reaches it. This avoids accidental triggers, as in macOS.
 - A corner doesn't trigger:
-  - while a mouse button is held, because dragging a window into a corner snaps it there;
+  - when a mouse button is held as the pointer reaches it or when the delay ends, because dragging a window into a corner snaps it there;
   - while an app is full screen, such as a game, a video or a presentation, unless the user turns this off;
   - on the lock screen or a UAC prompt, which Windows shows on a separate desktop.
+- A corner the pointer is already in when Hot Corners starts, or when its settings or the displays change, triggers only after the pointer leaves it and comes back.
 
 ## Actions
 
@@ -31,6 +32,8 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 | Screen saver | Starts the screen saver | `SC_SCREENSAVE` |
 
 - Shortcuts are sent as keyboard input only where Windows has no API for the action.
+- A modifier the user is holding, such as the key a corner requires, is released before the shortcut is sent: Ctrl + Windows + D would add a virtual desktop. An unassigned key is pressed first, so releasing the Windows key or Alt doesn't open Start or the menu bar.
+- Screen saver does nothing when no screen saver is chosen in Windows settings.
 - Not included: running an app or a command, custom shortcuts, per-app settings, and screen edges.
 
 ## Multiple displays
@@ -43,6 +46,8 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key; the activation delay; **Don't trigger when an app is full screen** (on by default); and a **Permissions & data** card.
 - The picture shows physical corners, so it isn't mirrored for right-to-left languages.
 - When the feature is first turned on, the top-left corner shows Task View and the others do nothing, close to GNOME's Activities corner.
+- The switch on Home changes only `enabled` and keeps the other settings.
+- A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing.
 
 ```json
 "features": {
@@ -88,5 +93,5 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 ## Testing
 
 - **Unit tests** with fake displays, a fake clock and fake pointer events: the activation delay, leaving and coming back, held buttons, required keys, full-screen apps, and display layouts (side by side, stacked, different sizes and scaling, displays left of or above the main one).
-- **Sandbox checks:** turn the feature on through the settings file, move the pointer into a corner, and check the host's Debug entry and that the action ran where that can be detected.
+- **Sandbox checks** (`scripts/sandbox/runtime-checks.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops.
 - **By hand:** a real mouse on one and several displays, a full-screen game or video, and an app running as administrator in the foreground.
