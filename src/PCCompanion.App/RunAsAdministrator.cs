@@ -91,12 +91,7 @@ public sealed partial class RunAsAdministrator(AppSettings settings, SettingsSto
     // Folders that programs without admin rights can change would let them replace the host the
     // tasks start as administrator. A per-user install, or a build run from its output folder, is one.
     private static bool IsInstalledForAllUsers() =>
-        File.Exists(Helper)
-        && Path.GetDirectoryName(Folder) is { } parent
-        && ProtectedFiles.IsProtected(parent)
-        && ProtectedFiles.IsProtected(Folder)
-        && ProtectedFiles.IsProtected(Path.Combine(Folder, HostProcess.FileName))
-        && ProtectedFiles.IsProtected(Helper);
+        ProtectedFiles.IsProtectedInstall(Folder, HostProcess.FileName, ElevatedStartup.HelperFileName);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Always run as administrator is now {On}.")]
     private static partial void LogChanged(ILogger logger, bool on);

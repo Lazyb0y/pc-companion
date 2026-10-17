@@ -65,6 +65,31 @@ public static class ProtectedFiles
     }
 
     /// <summary>
+    /// Whether <paramref name="folder"/>, the folder that contains it, and the files named
+    /// <paramref name="fileNames"/> in it can be changed only by administrators, as in an
+    /// all-users install in Program Files. Otherwise, any program could replace those files.
+    /// </summary>
+    public static bool IsProtectedInstall(string folder, params ReadOnlySpan<string> fileNames)
+    {
+        ArgumentNullException.ThrowIfNull(folder);
+        folder = Path.TrimEndingDirectorySeparator(folder);
+        if (Path.GetDirectoryName(folder) is not { } parent || !IsProtected(parent) || !IsProtected(folder))
+        {
+            return false;
+        }
+
+        foreach (var fileName in fileNames)
+        {
+            if (!IsProtected(Path.Combine(folder, fileName)))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// Whether <paramref name="path"/>, a file or a folder, is owned by and can be changed only
     /// by SYSTEM, Administrators or TrustedInstaller. A missing path isn't protected.
     /// </summary>

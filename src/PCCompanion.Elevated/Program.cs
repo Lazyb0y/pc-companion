@@ -31,8 +31,7 @@ internal static class Program
         // A folder others can change would let them replace the host the tasks start as administrator.
         var folder = Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory);
         var host = Path.Combine(folder, HostProcess.FileName);
-        if (!ProtectedFiles.IsProtected(folder) || !ProtectedFiles.IsProtected(host)
-            || Path.GetDirectoryName(folder) is not { } parent || !ProtectedFiles.IsProtected(parent))
+        if (!ProtectedFiles.IsProtectedInstall(folder, HostProcess.FileName, ElevatedStartup.HelperFileName))
         {
             return NotProtected;
         }
