@@ -66,14 +66,49 @@
           <Exclude Files="!(bindpath.InstallFiles)\mi-NZ\**" />
           <Exclude Files="!(bindpath.InstallFiles)\ug-CN\**" />
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.exe" />
+          <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Elevated.exe" />
         </Files>
 
         <!-- Named, so the last page can open it. -->
         <Component Id="SettingsApp">
           <File Id="SettingsApp" Source="!(bindpath.InstallFiles)\PCCompanion.exe" KeyPath="yes" />
         </Component>
+
+        <!-- Named, so uninstalling can run it. -->
+        <Component Id="ElevatedHelper">
+          <File Id="ElevatedHelper" Source="!(bindpath.InstallFiles)\PCCompanion.Elevated.exe" KeyPath="yes" />
+        </Component>
       </Directory>
     </StandardDirectory>
+
+    <!--
+      All-users installs only: where the host writes its logs while it runs as administrator
+      (docs/features/general/run-as-administrator.md). Only SYSTEM and Administrators can change
+      these folders; users can read them.
+    -->
+    <StandardDirectory Id="CommonAppDataFolder">
+      <Directory Id="ProgramDataFolder" Name="PCCompanion">
+        <Directory Id="ProtectedLogsFolder" Name="Logs">
+          <Component Id="ProtectedLogsFolder" Guid="6E794474-9C7F-4D3F-A2D1-21776D26CBEF" Condition="ALLUSERS=1">
+            <CreateFolder Directory="ProgramDataFolder">
+              <PermissionEx Sddl="O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" />
+            </CreateFolder>
+            <CreateFolder>
+              <PermissionEx Sddl="O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" />
+            </CreateFolder>
+          </Component>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <!--
+      Uninstalling deletes the scheduled tasks of Always run as administrator, for every user. An
+      upgrade keeps them, since the new host is in the same place. It never fails the uninstall.
+    -->
+    <CustomAction Id="DeleteStartupTasks" FileRef="ElevatedHelper" ExeCommand="delete-all-startup-tasks" Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="DeleteStartupTasks" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND ALLUSERS=1" />
+    </InstallExecuteSequence>
 
     <!--
       Windows starts the host at every sign-in: HKCU for a per-user install, HKLM for all users.
