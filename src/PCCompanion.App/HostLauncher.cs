@@ -20,6 +20,7 @@ internal sealed partial class HostLauncher(ILogger<HostLauncher> logger)
         if (Mutex.TryOpenExisting(HostProcess.InstanceLockName, out var instanceLock))
         {
             instanceLock.Dispose();
+            LogAlreadyRunning(logger);
             return;
         }
 
@@ -33,6 +34,9 @@ internal sealed partial class HostLauncher(ILogger<HostLauncher> logger)
             LogCantStart(logger, exception, HostPath);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The background host is already running.")]
+    private static partial void LogAlreadyRunning(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Started the background host.")]
     private static partial void LogStarted(ILogger logger);
