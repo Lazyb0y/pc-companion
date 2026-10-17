@@ -20,9 +20,13 @@
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <Property Id="ApplicationFolderName" Value="PCCompanion" />
     <Property Id="WixAppFolder" Value="WixPerUserFolder" />
-    <!-- Replace the dialog's defaults (%LOCALAPPDATA%\Apps and 32-bit Program Files) before it picks the folder. -->
+    <!--
+      Replace the dialog's defaults (%LOCALAPPDATA%\Apps and 32-bit Program Files) before it picks the folder.
+      The dialog starts per-user, when ProgramFiles64Folder points at %LOCALAPPDATA%\Programs, so the
+      all-users folder comes from ProgramW6432, which always holds the 64-bit Program Files folder.
+    -->
     <SetProperty Id="WixPerUserFolder" Value="[LocalAppDataFolder]Programs\[ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
-    <SetProperty Id="WixPerMachineFolder" Value="[ProgramFiles64Folder][ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
+    <SetProperty Id="WixPerMachineFolder" Value="[%ProgramW6432]\[ApplicationFolderName]" Before="WixSetPerUserFolder" Sequence="both" />
 
     <!--
       There are no optional features, so Advanced skips the dialog's feature page: the scope page
