@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
     xmlns:local="using:PCCompanion.App.Features.HotCorners"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
@@ -34,18 +35,16 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <StackPanel Spacing="8" Visibility="{x:Bind IsProgramShown, Mode=OneWay}">
+                    <TextBlock Text="{app:Localized Key=HotCornersProgramHeader}" />
                     <Grid ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox
-                            AutomationProperties.Name="{x:Bind ProgramName}"
-                            Header="{app:Localized Key=HotCornersProgramHeader}"
-                            Text="{x:Bind Program, Mode=TwoWay}" />
+                        <controls:PathBox AccessibleName="{x:Bind ProgramName}" Path="{x:Bind Program, Mode=TwoWay}" />
                         <Button
                             Grid.Column="1"
-                            VerticalAlignment="Bottom"
+                            VerticalAlignment="Top"
                             AutomationProperties.Name="{x:Bind BrowseName}"
                             Click="OnBrowseClick"
                             Content="{app:Localized Key=HotCornersBrowse}" />
