@@ -40,6 +40,66 @@
     <value>Salir</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLanguageHeader" xml:space="preserve">
+    <value>Idioma</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageDescription" xml:space="preserve">
+    <value>Reinicia la aplicación para ver el nuevo idioma.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageWindows" xml:space="preserve">
+    <value>Usar el idioma para mostrar de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeHeader" xml:space="preserve">
+    <value>Tema de la aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDescription" xml:space="preserve">
+    <value>Elige el tema que usa la aplicación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeSystem" xml:space="preserve">
+    <value>Usar la configuración del sistema</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeLight" xml:space="preserve">
+    <value>Claro</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDark" xml:space="preserve">
+    <value>Oscuro</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupHeader" xml:space="preserve">
+    <value>Iniciar con Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupDescription" xml:space="preserve">
+    <value>Ejecuta PC Companion en segundo plano al iniciar sesión.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsHeader" xml:space="preserve">
+    <value>Registros</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpen" xml:space="preserve">
+    <value>Abrir la carpeta de registros</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutHeader" xml:space="preserve">
+    <value>Acerca de</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutVersion" xml:space="preserve">
+    <value>Versión {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralSaveFailed" xml:space="preserve">
+    <value>No se pudo guardar el cambio. Inténtalo de nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Los registros se conservan durante {0} día.</value>
     <comment>Needs native review.</comment>

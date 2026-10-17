@@ -40,6 +40,66 @@
     <value>প্রস্থান</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLanguageHeader" xml:space="preserve">
+    <value>ভাষা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageDescription" xml:space="preserve">
+    <value>নতুন ভাষা দেখতে অ্যাপটি আবার চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageWindows" xml:space="preserve">
+    <value>Windows-এর প্রদর্শন ভাষা ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeHeader" xml:space="preserve">
+    <value>অ্যাপের থিম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDescription" xml:space="preserve">
+    <value>অ্যাপটি কোন থিম ব্যবহার করবে তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeSystem" xml:space="preserve">
+    <value>সিস্টেম সেটিং ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeLight" xml:space="preserve">
+    <value>হালকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDark" xml:space="preserve">
+    <value>গাঢ়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupHeader" xml:space="preserve">
+    <value>Windows-এর সাথে চালু করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupDescription" xml:space="preserve">
+    <value>সাইন ইন করার পর PC Companion পটভূমিতে চালান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsHeader" xml:space="preserve">
+    <value>লগ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpen" xml:space="preserve">
+    <value>লগ ফোল্ডার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutHeader" xml:space="preserve">
+    <value>সম্পর্কে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutVersion" xml:space="preserve">
+    <value>সংস্করণ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralSaveFailed" xml:space="preserve">
+    <value>আপনার পরিবর্তন সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>লগগুলো {0} দিন রাখা হয়।</value>
     <comment>Needs native review.</comment>

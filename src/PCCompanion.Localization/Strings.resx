@@ -40,6 +40,66 @@
     <value>Exit</value>
     <comment>Tray icon menu command that stops PC Companion running in the background.</comment>
   </data>
+  <data name="GeneralLanguageHeader" xml:space="preserve">
+    <value>Language</value>
+    <comment>General page: setting for the user interface language.</comment>
+  </data>
+  <data name="GeneralLanguageDescription" xml:space="preserve">
+    <value>Restart the app to see a new language.</value>
+    <comment>General page: below GeneralLanguageHeader.</comment>
+  </data>
+  <data name="GeneralLanguageWindows" xml:space="preserve">
+    <value>Use Windows display language</value>
+    <comment>General page: language choice that follows the Windows display language.</comment>
+  </data>
+  <data name="GeneralThemeHeader" xml:space="preserve">
+    <value>App theme</value>
+    <comment>General page: setting for light or dark colors.</comment>
+  </data>
+  <data name="GeneralThemeDescription" xml:space="preserve">
+    <value>Choose which theme the app uses.</value>
+    <comment>General page: below GeneralThemeHeader.</comment>
+  </data>
+  <data name="GeneralThemeSystem" xml:space="preserve">
+    <value>Use system setting</value>
+    <comment>General page: theme choice that follows the Windows app mode.</comment>
+  </data>
+  <data name="GeneralThemeLight" xml:space="preserve">
+    <value>Light</value>
+    <comment>General page: theme choice.</comment>
+  </data>
+  <data name="GeneralThemeDark" xml:space="preserve">
+    <value>Dark</value>
+    <comment>General page: theme choice.</comment>
+  </data>
+  <data name="GeneralStartupHeader" xml:space="preserve">
+    <value>Start with Windows</value>
+    <comment>General page: on/off setting.</comment>
+  </data>
+  <data name="GeneralStartupDescription" xml:space="preserve">
+    <value>Run PC Companion in the background when you sign in.</value>
+    <comment>General page: below GeneralStartupHeader. "PC Companion" is the product name.</comment>
+  </data>
+  <data name="GeneralLogsHeader" xml:space="preserve">
+    <value>Logs</value>
+    <comment>General page: diagnostic log files.</comment>
+  </data>
+  <data name="GeneralLogsOpen" xml:space="preserve">
+    <value>Open logs folder</value>
+    <comment>General page: button that opens the folder with the log files.</comment>
+  </data>
+  <data name="GeneralAboutHeader" xml:space="preserve">
+    <value>About</value>
+    <comment>General page: information about the app.</comment>
+  </data>
+  <data name="GeneralAboutVersion" xml:space="preserve">
+    <value>Version {0}</value>
+    <comment>General page: {0} is the version number, for example 1.2.0.</comment>
+  </data>
+  <data name="GeneralSaveFailed" xml:space="preserve">
+    <value>Your change couldn't be saved. Try again.</value>
+    <comment>General page: shown when the settings file can't be written.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Logs are kept for {0} day.</value>
     <comment>Plural form "one". {0} is the number of days.</comment>
