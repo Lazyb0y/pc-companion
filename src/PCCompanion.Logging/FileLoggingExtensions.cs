@@ -3,6 +3,8 @@ using System.Globalization;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Serilog.Formatting.Display;
 
 namespace PCCompanion.Logging;
@@ -25,11 +27,13 @@ public static class FileLoggingExtensions
     /// </summary>
     /// <param name="fileName">The start of the file names, for example <c>app</c>.</param>
     /// <param name="redactor">Redacts the text written; by default the current user's profile folder.</param>
+    /// <param name="detailedLogging">Turns Debug entries on and off; without it, only Information and above are written.</param>
     public static ILoggingBuilder AddFileLog(
         this ILoggingBuilder builder,
         string logsFolder,
         string fileName,
-        PathRedactor? redactor = null)
+        PathRedactor? redactor = null,
+        DetailedLogging? detailedLogging = null)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentException.ThrowIfNullOrEmpty(logsFolder);
@@ -40,7 +44,7 @@ public static class FileLoggingExtensions
             redactor ?? PathRedactor.ForCurrentUser());
 
         var logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
+            .MinimumLevel.ControlledBy(detailedLogging?.LevelSwitch ?? new LoggingLevelSwitch(LogEventLevel.Information))
             .WriteTo.File(
                 formatter,
                 Path.Combine(logsFolder, fileName + "-.log"),
@@ -51,6 +55,23 @@ public static class FileLoggingExtensions
                 retainedFileTimeLimit: RetainedFileTimeLimit)
             .CreateLogger();
 
-        return builder.AddSerilog(logger, dispose: true);
+        if (detailedLogging is not null)
+        {
+            var changes = logger.ForContext(Constants.SourceContextPropertyName, typeof(DetailedLogging).FullName);
+            detailedLogging.Changed += (_, _) =>
+            {
+                if (detailedLogging.Until is { } until)
+                {
+                    changes.Information("Detailed logging is on until {Until}.", until);
+                }
+                else
+                {
+                    changes.Information("Detailed logging is off.");
+                }
+            };
+        }
+
+        // Debug entries pass this filter and reach the file log while detailed logging is on.
+        return builder.SetMinimumLevel(LogLevel.Debug).AddSerilog(logger, dispose: true);
     }
 }

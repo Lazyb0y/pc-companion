@@ -37,14 +37,42 @@ public sealed partial class FileLoggingTests : IDisposable
         Assert.Contains(@"Could not find file '%USERPROFILE%\settings.json'.", text, StringComparison.Ordinal);
     }
 
-    private void Log(Action<ILogger> write)
+    [Fact]
+    public void WritesDebugEntriesOnlyWhileDetailedLoggingIsOn()
+    {
+        var clock = new ManualTimeProvider();
+        using var detailedLogging = new DetailedLogging(clock);
+
+        Log(
+            logger =>
+            {
+                LogDetail(logger, "before");
+                detailedLogging.TurnOnUntil(clock.Now.AddHours(1));
+                LogDetail(logger, "during");
+                clock.Advance(TimeSpan.FromHours(1));
+                LogDetail(logger, "after");
+            },
+            detailedLogging);
+
+        var text = File.ReadAllText(Assert.Single(Directory.GetFiles(_folder.FullPath)));
+        Assert.DoesNotContain("Detail before", text, StringComparison.Ordinal);
+        Assert.Contains("[DBG] Tests: Detail during", text, StringComparison.Ordinal);
+        Assert.DoesNotContain("Detail after", text, StringComparison.Ordinal);
+        Assert.Contains("[INF] PCCompanion.Logging.DetailedLogging: Detailed logging is on until", text, StringComparison.Ordinal);
+        Assert.Contains("[INF] PCCompanion.Logging.DetailedLogging: Detailed logging is off.", text, StringComparison.Ordinal);
+    }
+
+    private void Log(Action<ILogger> write, DetailedLogging? detailedLogging = null)
     {
         // Disposing the factory flushes and closes the file.
         using var factory = LoggerFactory.Create(builder =>
-            builder.AddFileLog(_folder.FullPath, "test", new PathRedactor(Profile)));
+            builder.AddFileLog(_folder.FullPath, "test", new PathRedactor(Profile), detailedLogging));
 
         write(factory.CreateLogger("Tests"));
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Detail {Name}.")]
+    private static partial void LogDetail(ILogger logger, string name);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Started {Version}.")]
     private static partial void LogStarted(ILogger logger, string version);
