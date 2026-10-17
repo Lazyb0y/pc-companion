@@ -46,6 +46,14 @@ public sealed class MessageWindowTests
     }
 
     [Fact]
+    public void AMessageCanBeAllowedFromLowerIntegrityProcesses()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.True(window.AllowFromLowerIntegrity(TestMessage));
+    }
+
+    [Fact]
     public void PostToWindowReturnsFalseWithoutTheWindow()
     {
         Assert.False(MessageWindow.PostToWindow(UniqueClassName(), TestMessage));
