@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -40,6 +41,7 @@ public sealed partial class HotCornersViewModel : ObservableObject
             new(HotCornerAction.Lock, Strings.HotCornersActionLock),
             new(HotCornerAction.TurnOffDisplays, Strings.HotCornersActionTurnOffDisplays),
             new(HotCornerAction.ScreenSaver, Strings.HotCornersActionScreenSaver),
+            new(HotCornerAction.RunProgram, Strings.HotCornersActionRunProgram),
         ];
 
         Keys =
@@ -147,6 +149,9 @@ public sealed partial class CornerViewModel : ObservableObject
 {
     private static readonly CompositeFormat ActionNameFormat = CompositeFormat.Parse(Strings.HotCornersActionName);
     private static readonly CompositeFormat KeyNameFormat = CompositeFormat.Parse(Strings.HotCornersKeyName);
+    private static readonly CompositeFormat ProgramNameFormat = CompositeFormat.Parse(Strings.HotCornersProgramName);
+    private static readonly CompositeFormat ArgumentsNameFormat = CompositeFormat.Parse(Strings.HotCornersArgumentsName);
+    private static readonly CompositeFormat BrowseNameFormat = CompositeFormat.Parse(Strings.HotCornersBrowseName);
 
     private readonly HotCornersViewModel _page;
     private readonly ScreenCorner _corner;
@@ -162,6 +167,9 @@ public sealed partial class CornerViewModel : ObservableObject
         Name = name;
         ActionName = string.Format(CultureInfo.CurrentCulture, ActionNameFormat, name);
         KeyName = string.Format(CultureInfo.CurrentCulture, KeyNameFormat, name);
+        ProgramName = string.Format(CultureInfo.CurrentCulture, ProgramNameFormat, name);
+        ArgumentsName = string.Format(CultureInfo.CurrentCulture, ArgumentsNameFormat, name);
+        BrowseName = string.Format(CultureInfo.CurrentCulture, BrowseNameFormat, name);
 
         var settings = page.GetCorner(corner);
         _selectedAction = page.Actions.First(option => option.Action == settings.Action);
@@ -176,6 +184,15 @@ public sealed partial class CornerViewModel : ObservableObject
     /// <summary>The screen reader name of the key list.</summary>
     public string KeyName { get; }
 
+    /// <summary>The screen reader name of the program box.</summary>
+    public string ProgramName { get; }
+
+    /// <summary>The screen reader name of the arguments box.</summary>
+    public string ArgumentsName { get; }
+
+    /// <summary>The screen reader name of the Browse button.</summary>
+    public string BrowseName { get; }
+
     public IReadOnlyList<ActionOption> Actions => _page.Actions;
 
     public IReadOnlyList<KeyOption> Keys => _page.Keys;
@@ -188,6 +205,7 @@ public sealed partial class CornerViewModel : ObservableObject
             if (value is not null && SetProperty(ref _selectedAction, value))
             {
                 _page.SetCorner(_corner, _page.GetCorner(_corner) with { Action = value.Action });
+                OnPropertyChanged(nameof(IsProgramShown));
             }
         }
     }
@@ -203,4 +221,54 @@ public sealed partial class CornerViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>Whether the program and its arguments are shown, for Run a program.</summary>
+    public bool IsProgramShown => _selectedAction.Action == HotCornerAction.RunProgram;
+
+    /// <summary>
+    /// The full path of the program. Quotes around it are removed, as File Explorer's
+    /// Copy as path adds them.
+    /// </summary>
+    public string Program
+    {
+        get => _page.GetCorner(_corner).Program ?? string.Empty;
+        set
+        {
+            var program = value?.Trim().Trim('"').Trim();
+            program = string.IsNullOrEmpty(program) ? null : program;
+            if (program != _page.GetCorner(_corner).Program)
+            {
+                _page.SetCorner(_corner, _page.GetCorner(_corner) with { Program = program });
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ProgramProblem));
+                OnPropertyChanged(nameof(HasProgramProblem));
+            }
+        }
+    }
+
+    public string Arguments
+    {
+        get => _page.GetCorner(_corner).Arguments ?? string.Empty;
+        set
+        {
+            var arguments = string.IsNullOrWhiteSpace(value) ? null : value;
+            if (arguments != _page.GetCorner(_corner).Arguments)
+            {
+                _page.SetCorner(_corner, _page.GetCorner(_corner) with { Arguments = arguments });
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>What keeps the program from starting, or an empty string.</summary>
+    public string ProgramProblem => ProgramRunner.Check(_page.GetCorner(_corner).Program, File.Exists) switch
+    {
+        Modules.Input.HotCorners.ProgramProblem.NotChosen => Strings.HotCornersProgramNotChosen,
+        Modules.Input.HotCorners.ProgramProblem.NotFullPath => Strings.HotCornersProgramNotFullPath,
+        Modules.Input.HotCorners.ProgramProblem.NotExe => Strings.HotCornersProgramNotExe,
+        Modules.Input.HotCorners.ProgramProblem.NotFound => Strings.HotCornersProgramNotFound,
+        _ => string.Empty,
+    };
+
+    public bool HasProgramProblem => ProgramProblem.Length > 0;
 }

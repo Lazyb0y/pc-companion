@@ -208,6 +208,10 @@
     <value>Protector de pantalla</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>Ejecutar un programa</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>Sin tecla</value>
     <comment>Needs native review.</comment>
@@ -226,6 +230,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>Mantener presionada la tecla del logotipo de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>Programa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>Argumentos (opcional)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>Examinar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>Programa: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>Argumentos: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>Examinar programa: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>Elegir un programa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>Programas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>Elige un programa para ejecutar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>Escribe la ruta completa, como C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>Elige un archivo de programa (.exe).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>No se encontró este programa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>Se inicia con tus permisos. No se ejecuta mientras PC Companion se ejecuta como administrador.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -253,7 +309,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Solo envía los métodos abreviados de Windows de las acciones elegidas. No guarda ni envía nada.</value>
+    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

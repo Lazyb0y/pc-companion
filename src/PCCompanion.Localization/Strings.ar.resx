@@ -240,6 +240,10 @@
     <value>شاشة التوقف</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionRunProgram" xml:space="preserve">
+    <value>تشغيل برنامج</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersKeyNone" xml:space="preserve">
     <value>بلا مفتاح</value>
     <comment>Needs native review.</comment>
@@ -258,6 +262,58 @@
   </data>
   <data name="HotCornersKeyWindows" xml:space="preserve">
     <value>اضغط باستمرار على مفتاح شعار Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramHeader" xml:space="preserve">
+    <value>البرنامج</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsHeader" xml:space="preserve">
+    <value>الوسيطات (اختياري)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowse" xml:space="preserve">
+    <value>استعراض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramName" xml:space="preserve">
+    <value>برنامج {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersArgumentsName" xml:space="preserve">
+    <value>وسيطات {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBrowseName" xml:space="preserve">
+    <value>استعراض برنامج {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+    <value>اختيار برنامج</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramFilter" xml:space="preserve">
+    <value>البرامج</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotChosen" xml:space="preserve">
+    <value>اختر برنامجاً لتشغيله.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFullPath" xml:space="preserve">
+    <value>أدخل المسار الكامل، مثل C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotExe" xml:space="preserve">
+    <value>اختر ملف برنامج (.exe).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNotFound" xml:space="preserve">
+    <value>لم يتم العثور على هذا البرنامج.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersProgramNote" xml:space="preserve">
+    <value>يبدأ بأذوناتك. لا يعمل أثناء تشغيل PC Companion كمسؤول.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -285,7 +341,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. يرسل فقط اختصارات Windows للإجراءات المختارة. لا يخزّن أي شيء ولا يرسله.</value>
+    <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. يرسل فقط اختصارات Windows للإجراءات المختارة، ويبدأ فقط البرامج التي تختارها. لا يخزّن أي شيء ولا يرسله.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

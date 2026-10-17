@@ -33,6 +33,39 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <StackPanel Spacing="8" Visibility="{x:Bind IsProgramShown, Mode=OneWay}">
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            AutomationProperties.Name="{x:Bind ProgramName}"
+                            Header="{app:Localized Key=HotCornersProgramHeader}"
+                            Text="{x:Bind Program, Mode=TwoWay}" />
+                        <Button
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            AutomationProperties.Name="{x:Bind BrowseName}"
+                            Click="OnBrowseClick"
+                            Content="{app:Localized Key=HotCornersBrowse}" />
+                    </Grid>
+                    <TextBox
+                        AutomationProperties.Name="{x:Bind ArgumentsName}"
+                        Header="{app:Localized Key=HotCornersArgumentsHeader}"
+                        Text="{x:Bind Arguments, Mode=TwoWay}" />
+                    <TextBlock
+                        Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{x:Bind ProgramProblem, Mode=OneWay}"
+                        TextWrapping="Wrap"
+                        Visibility="{x:Bind HasProgramProblem, Mode=OneWay}" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{app:Localized Key=HotCornersProgramNote}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
