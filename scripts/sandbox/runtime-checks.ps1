@@ -50,6 +50,15 @@ public static class Win32 {
         return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
     }
 
+    // Moves the pointer by (dx, dy), as a mouse does.
+    public static bool PushPointer(int dx, int dy) {
+        var input = new INPUT { type = 0 };
+        input.mi.dx = dx;
+        input.mi.dy = dy;
+        input.mi.dwFlags = 0x0001; // MOUSEEVENTF_MOVE
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
+
     public static bool LeftButton(bool down) {
         var input = new INPUT { type = 0 };
         input.mi.dwFlags = down ? 0x0002u : 0x0004u; // MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP
@@ -159,6 +168,40 @@ function Get-SelectedItemName([string] $ListName) {
     return ($selected -join ', ')
 }
 
+function Find-AppElement([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+
+function Get-BoxText([string] $Name) {
+    $box = Find-AppElement $Name
+    if (-not $box) { return $null }
+    return $box.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+}
+
+# A dialog of the settings app, which UI Automation lists on the desktop or under the app's window.
+function Find-AppDialog([string] $Name) {
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Window)))
+    $dialog = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
+    if ($dialog) { return $dialog }
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+
+function Get-PointerText { "pointer at $([System.Windows.Forms.Cursor]::Position)" }
+
+# Presses and releases a key as a keyboard does. Unlike UI Automation's Invoke, it doesn't wait
+# for what the key opens, such as a dialog.
+function Send-Key([uint16] $Key) {
+    [void] [Win32]::Key($Key, $false)
+    [void] [Win32]::Key($Key, $true)
+}
+
 function Get-WindowText {
     $window = Get-AppWindow
     if (-not $window) { return @() }
@@ -191,6 +234,17 @@ function Move-Pointer([int] $X, [int] $Y) {
     Start-Sleep -Milliseconds 1000
     $position = [System.Windows.Forms.Cursor]::Position
     return ($position.X -eq $X) -and ($position.Y -eq $Y)
+}
+
+# Moves the pointer into the top-left corner and pushes it against the edges, as a mouse does.
+# Windows reports no mouse input for an absolute move to exactly (0, 0), so the push makes the
+# host see the pointer arrive.
+function Move-IntoTopLeftCorner {
+    [void] (Move-Pointer 0 0)
+    [void] [Win32]::PushPointer(-10, -10)
+    Start-Sleep -Milliseconds 1000
+    $position = [System.Windows.Forms.Cursor]::Position
+    return ($position.X -eq 0) -and ($position.Y -eq 0)
 }
 
 function Get-HostLog {
@@ -340,42 +394,74 @@ Start-Sleep -Seconds 3
 $appWindow = (Get-Processes 'PCCompanion' | Select-Object -First 1).MainWindowHandle
 Test-Check 'the pointer can be moved in the Sandbox' (Move-Pointer 100 100) "at $([System.Windows.Forms.Cursor]::Position); keep the Sandbox window open and the mouse outside it"
 [void] (Move-Pointer $middleX $middleY)
-[void] (Move-Pointer 0 0)
-Test-Check 'the top-left corner shows the desktop' (Wait-Until { [Win32]::IsIconic($appWindow) } 5)
-Test-Check 'the host logs which corner ran which action' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 1 } 5)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'the top-left corner shows the desktop' (Wait-Until { [Win32]::IsIconic($appWindow) } 5) (Get-PointerText)
+Test-Check 'the host logs which corner ran which action' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 1 } 5) (Get-PointerText)
 Save-Screenshot '10-hot-corners-show-desktop'
 
 # A mouse button held as the pointer reaches the corner, as when dragging a window there.
 [void] (Move-Pointer $middleX $middleY)
 [void] [Win32]::LeftButton($true)
-[void] (Move-Pointer 0 0)
+[void] (Move-IntoTopLeftCorner)
 Start-Sleep -Seconds 1
 [void] [Win32]::LeftButton($false)
-Test-Check 'a held mouse button skips the corner' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?MouseButtonHeld`"?\." } 5)
+Test-Check 'a held mouse button skips the corner' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?MouseButtonHeld`"?\." } 5) (Get-PointerText)
 
 # The corner requires Ctrl. Holding it must not change the shortcut: Ctrl + Windows + D adds a virtual desktop.
 Write-HotCornersSettings $true 'Control'
 [void] (Move-Pointer $middleX $middleY)
-[void] (Move-Pointer 0 0)
-Test-Check 'without the required key the corner is skipped' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?KeyNotHeld`"?\." } 5)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'without the required key the corner is skipped' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?KeyNotHeld`"?\." } 5) (Get-PointerText)
 $desktops = Get-VirtualDesktopCount
 [void] (Move-Pointer $middleX $middleY)
 [void] [Win32]::Key(0xA2, $false)
-[void] (Move-Pointer 0 0)
+[void] (Move-IntoTopLeftCorner)
 Start-Sleep -Seconds 1
 [void] [Win32]::Key(0xA2, $true)
-Test-Check 'with the required key the corner runs' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 2 } 5)
+Test-Check 'with the required key the corner runs' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 2 } 5) (Get-PointerText)
 Test-Check 'the held key adds no virtual desktop' ((Get-VirtualDesktopCount) -eq $desktops) "before: $desktops, after: $(Get-VirtualDesktopCount)"
 
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
 Test-Check 'turning Hot Corners off stops it' ((Get-HostLog) -match 'Hot Corners stopped\.')
 [void] (Move-Pointer $middleX $middleY)
-[void] (Move-Pointer 0 0)
+[void] (Move-IntoTopLeftCorner)
 Start-Sleep -Seconds 1
 Test-Check 'a corner does nothing while Hot Corners is off' ((Get-MatchCount (Get-HostLog) $ran) -eq 2)
 [void] (Move-Pointer $middleX $middleY)
 Save-Screenshot '11-hot-corners-off'
+
+# Run a program: the page shows the program, and Browse opens the Open dialog. Everything in the
+# Sandbox runs as administrator, so the program must not start; the host logs why.
+[void] (Close-SettingsApp)
+$program = Join-Path $env:WINDIR 'System32\charmap.exe'
+Test-Check 'the test program exists' (Test-Path $program) $program
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": true, ""topLeft"": { ""action"": ""RunProgram"", ""key"": ""None"", ""program"": ""$($program.Replace('\', '\\'))"", ""arguments"": ""/A"" } } } }"
+Start-Sleep -Seconds 3
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Hot Corners for Run a program' (Select-NavigationItem 'Hot Corners')
+Start-Sleep -Seconds 2
+$selected = Get-SelectedItemName 'Top left action'
+Test-Check 'the top-left corner shows Run a program' ($selected -eq 'Run a program') "selected: $selected"
+$shown = Get-BoxText 'Top left program'
+Test-Check 'the program box shows the program' ($shown -eq $program) "shown: $shown"
+Test-Check 'the arguments box shows the arguments' ((Get-BoxText 'Top left arguments') -eq '/A')
+Save-Screenshot '12-hot-corners-run-program'
+$browse = Find-AppElement 'Top left program: Browse'
+if ($browse) { $browse.SetFocus(); Start-Sleep -Milliseconds 300; Send-Key 0x20 }
+Test-Check 'Browse opens the Open dialog' (Wait-Until { Find-AppDialog 'Choose a program' } 10)
+Save-Screenshot '13-hot-corners-open-dialog'
+Send-Key 0x1B
+Test-Check 'the Open dialog closes' (Wait-Until { -not (Find-AppDialog 'Choose a program') } 10)
+Test-Check 'cancelling the Open dialog keeps the program' ((Get-BoxText 'Top left program') -eq $program)
+$running = (Get-Processes 'charmap').Count
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'Run a program logs that it doesn''t run as administrator' (Wait-Until { (Get-HostLog) -match "Run a program doesn't run while PC Companion runs as administrator\." } 5) (Get-PointerText)
+Test-Check 'no program starts while PC Companion runs as administrator' ((Get-Processes 'charmap').Count -eq $running) "charmap processes before: $running, after: $((Get-Processes 'charmap').Count)"
+[void] (Move-Pointer $middleX $middleY)
 
 # 10. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
 [void] (Close-SettingsApp)
