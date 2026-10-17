@@ -17,6 +17,24 @@ public sealed class ElevationTests
         Assert.True(!Elevation.IsElevated || Elevation.CanElevate);
     }
 
+    [Theory]
+    [InlineData("S-1-5-21-1111111111-2222222222-3333333333-1001", true)]
+    [InlineData("S-1-5-32-544", false)]
+    [InlineData("S-1-5-18", false)]
+    [InlineData("not a sid", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void OnlyUserAccountsAreAccounts(string? sid, bool expected)
+    {
+        Assert.Equal(expected, Elevation.IsAccountSid(sid));
+    }
+
+    [Fact]
+    public void TheCurrentUserIsAnAccount()
+    {
+        Assert.True(Elevation.IsAccountSid(Elevation.CurrentUserSid));
+    }
+
     [Fact]
     public void TheCurrentUserHasASecurityIdentifier()
     {
