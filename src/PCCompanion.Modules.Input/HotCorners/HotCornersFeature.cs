@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -15,6 +17,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     private const string WindowClassName = "PCCompanion.HotCorners";
 
     private readonly CornerDetector _detector = new(new WindowsHotCornerEnvironment(), time);
+    private readonly ProgramRunner _programs = new(logger, () => Environment.IsPrivilegedProcess, File.Exists, StartProcess);
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
     private RawPointerMonitor? _monitor;
@@ -136,7 +139,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 break;
             case CornerOutcome.Triggered:
                 LogTriggered(logger, decision.Corner, decision.Action);
-                if (!Run(decision.Action, window))
+                if (!Run(decision, window))
                 {
                     LogActionRefused(logger, decision.Action);
                 }
@@ -148,7 +151,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         }
     });
 
-    private static bool Run(HotCornerAction action, MessageWindow window) => action switch
+    private bool Run(CornerDecision decision, MessageWindow window) => decision.Action switch
     {
         HotCornerAction.TaskView => ShellActions.ShowTaskView(),
         HotCornerAction.ShowDesktop => ShellActions.ShowDesktop(),
@@ -158,8 +161,21 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         HotCornerAction.Lock => ShellActions.Lock(),
         HotCornerAction.TurnOffDisplays => ShellActions.TurnOffDisplays(window),
         HotCornerAction.ScreenSaver => ShellActions.StartScreenSaver(window),
+        HotCornerAction.RunProgram => RunProgram(decision.Corner),
         _ => true,
     };
+
+    // The runner logs its own problems.
+    private bool RunProgram(ScreenCorner corner)
+    {
+        _programs.Run(_settings.For(corner));
+        return true;
+    }
+
+    private static void StartProcess(ProcessStartInfo startInfo)
+    {
+        using var process = Process.Start(startInfo);
+    }
 
     // Runs on the window's thread, where an exception would end the host. Like a failing Apply,
     // a failure stops the feature until the host restarts.
