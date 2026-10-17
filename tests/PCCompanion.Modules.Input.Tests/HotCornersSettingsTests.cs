@@ -54,7 +54,7 @@ public sealed class HotCornersSettingsTests
             TopLeft = new CornerSettings(),
             TopRight = new CornerSettings { Action = HotCornerAction.Lock, Key = HotCornerKey.Windows },
             BottomLeft = new CornerSettings { Action = HotCornerAction.ShowDesktop },
-            BottomRight = new CornerSettings { Action = HotCornerAction.ScreenSaver, Key = HotCornerKey.Shift },
+            BottomRight = new CornerSettings { Action = HotCornerAction.RunProgram, Key = HotCornerKey.Shift, Program = @"C:\Windows\System32\notepad.exe", Arguments = "" },
             ActivationDelayMilliseconds = 0,
             IgnoreFullScreenApps = false,
         };
@@ -63,6 +63,27 @@ public sealed class HotCornersSettingsTests
 
         Assert.Equal(settings, HotCornersSettings.Read(section));
         Assert.Equal("""{"action":"Lock","key":"Windows"}""", section.GetProperty("topRight").GetRawText());
+    }
+
+    [Fact]
+    public void ACornerKeepsItsProgramAndArguments()
+    {
+        var settings = new HotCornersSettings
+        {
+            TopRight = new CornerSettings { Action = HotCornerAction.RunProgram, Program = @"C:\Program Files\App\App.exe", Arguments = "--new \"two words\"" },
+            BottomLeft = new CornerSettings { Action = HotCornerAction.Lock, Program = @"C:\Tools\Old.exe" },
+        };
+
+        var section = settings.Write();
+
+        Assert.Equal(settings, HotCornersSettings.Read(section));
+        Assert.Equal("""{"action":"RunProgram","key":"None","program":"C:\\Program Files\\App\\App.exe","arguments":"--new \u0022two words\u0022"}""", section.GetProperty("topRight").GetRawText());
+    }
+
+    [Fact]
+    public void ACornerWithoutAProgramWritesNone()
+    {
+        Assert.Equal("""{"action":"Lock","key":"None"}""", new HotCornersSettings { TopLeft = new CornerSettings { Action = HotCornerAction.Lock } }.Write().GetProperty("topLeft").GetRawText());
     }
 
     [Theory]
