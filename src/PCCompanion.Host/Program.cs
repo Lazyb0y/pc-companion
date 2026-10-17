@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Logging;
@@ -16,7 +17,7 @@ internal static partial class Program
     private static void Main()
     {
         // One host per user session. A second launch asks the running host to open the settings.
-        using var instanceLock = new Mutex(initiallyOwned: true, @"Local\PCCompanion.Host", out var isFirstInstance);
+        using var instanceLock = new Mutex(initiallyOwned: true, HostProcess.InstanceLockName, out var isFirstInstance);
         if (!isFirstInstance)
         {
             MessageWindow.PostToWindow(TrayController.WindowClassName, TrayController.OpenSettingsMessage);
