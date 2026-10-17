@@ -39,7 +39,7 @@ public sealed class SettingsStoreTests : IDisposable
     {
         var settings = new AppSettings
         {
-            General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark, StartWithWindows = true },
+            General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark, StartWithWindows = true, AlwaysRunAsAdministrator = true },
             Diagnostics = new DiagnosticsSettings { DetailedLoggingUntil = new DateTimeOffset(2026, 10, 18, 7, 30, 0, TimeSpan.FromHours(6)) },
         };
 
