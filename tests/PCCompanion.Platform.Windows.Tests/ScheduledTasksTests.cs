@@ -5,7 +5,7 @@ using Xunit;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
-// Only reads Task Scheduler; creating and deleting tasks is checked in Windows Sandbox.
+// Creates no tasks; creating and deleting them is checked in Windows Sandbox.
 public sealed class ScheduledTasksTests
 {
     private const string Sid = "S-1-5-21-1111111111-2222222222-3333333333-1001";
@@ -52,6 +52,19 @@ public sealed class ScheduledTasksTests
 
         Assert.False(ScheduledTasks.Exists(folder + "Missing"));
         Assert.Empty(ScheduledTasks.List(folder));
+    }
+
+    // A malformed definition creates no task. schtasks reports where the XML is malformed only
+    // when it could read the file.
+    [Fact]
+    public void RegisterHandsTheDefinitionToTaskScheduler()
+    {
+        var task = $@"\PCCompanion.Tests.{Guid.NewGuid():N}\Task";
+
+        var exception = Assert.Throws<InvalidOperationException>(() => ScheduledTasks.Register(task, "not a task"));
+
+        Assert.Contains("(1,", exception.Message, StringComparison.Ordinal);
+        Assert.False(ScheduledTasks.Exists(task));
     }
 
     private static string? Value(XDocument task, string parent, string name) =>
