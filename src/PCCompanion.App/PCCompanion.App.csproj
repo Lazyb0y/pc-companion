@@ -25,6 +25,8 @@
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
     <Content Include="Assets\PCCompanion.ico" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Installed next to the executables, with the license texts of the third-party components. -->
+    <Content Include="..\..\ThirdPartyNotices.txt" Link="ThirdPartyNotices.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

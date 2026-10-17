@@ -14,3 +14,5 @@ PC Companion is licensed under the [MIT License](LICENSE). The installer also in
 | [Serilog](https://github.com/serilog/serilog), [Serilog.Extensions.Logging](https://github.com/serilog/serilog-extensions-logging) and [Serilog.Sinks.File](https://github.com/serilog/serilog-sinks-file) | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 
 Tools used only to build PC Companion, such as WiX and CsWin32, aren't installed and aren't listed.
+
+The full license texts are in [ThirdPartyNotices.txt](ThirdPartyNotices.txt), which is installed next to the app. When a package that ships with the app is added, add it to both files; a test fails when a shipped package is missing from `ThirdPartyNotices.txt`.
