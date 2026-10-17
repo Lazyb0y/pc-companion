@@ -24,14 +24,6 @@
     <value>عام</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HomeEmptyTitle" xml:space="preserve">
-    <value>لا توجد ميزات بعد</value>
-    <comment>Needs native review.</comment>
-  </data>
-  <data name="HomeEmptyDescription" xml:space="preserve">
-    <value>ستظهر الميزات هنا عندما تصبح متاحة.</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="TraySettings" xml:space="preserve">
     <value>الإعدادات</value>
     <comment>Needs native review.</comment>
@@ -162,6 +154,10 @@
   </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>تعذّر حفظ التغيير. حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureNotAvailable" xml:space="preserve">
+    <value>غير متوفر على هذا الكمبيوتر الشخصي.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="FeaturePermissionsHeader" xml:space="preserve">

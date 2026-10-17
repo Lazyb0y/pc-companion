@@ -120,6 +120,7 @@ public partial class App : Application
             .AddSingleton<HostLauncher>()
             .AddSingleton<FeatureSettingsEditor>()
             .AddTransient<GeneralViewModel>()
+            .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()
             .BuildServiceProvider();
     }
