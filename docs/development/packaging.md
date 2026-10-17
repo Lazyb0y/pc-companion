@@ -19,7 +19,8 @@ CI builds both installers on every pull request and push to `main`. Download the
 | All users | `C:\Program Files\PCCompanion` | All users | Yes |
 
 - Silent install: `msiexec /i PCCompanion-x64.msi /qn` installs just for the current user; add `ALLUSERS=2 MSIINSTALLPERUSER=""` to install for all users.
-- The dialog's default folders are replaced in `Package.wxs` so both scopes use the folders above.
+- The dialog's default folders are replaced in `Package.wxs` so both scopes use the folders above. The all-users folder comes from the `ProgramW6432` environment variable: the dialog starts per-user, when Windows Installer points `ProgramFiles64Folder` at `%LOCALAPPDATA%\Programs`.
+- **Advanced** then shows the folder (all users only) and the Ready to install page. The installer has no optional features, so `Package.wxs` skips the dialog's feature page and sets `ARPNOMODIFY`: Settings > Apps offers no Modify, and running the MSI again offers only Repair and Remove.
 - The installer adds a startup entry (`Run` key, in HKCU for a per-user install and in HKLM for all users) that starts `PCCompanion.Host.exe --startup` at sign-in. The host exits at once unless the user turned on **Start with Windows**, so changing it needs no admin rights. Uninstalling removes the entry. Windows' Startup apps page lists PC Companion as on either way.
 - Features that run elevated (always running as administrator, the elevated helper) require an "all users" install. The per-user folder is writable by the user, so an elevated process started from it could be replaced.
 - Anything the app adds outside its install folder, such as startup entries or scheduled tasks, must be removed on uninstall. Windows Installer only removes what it installed.
