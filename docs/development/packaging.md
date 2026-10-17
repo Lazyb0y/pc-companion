@@ -28,3 +28,14 @@ CI builds both installers on every pull request and push to `main`. Download the
 - The installer build shows four WIX1076 warnings (ICE03 string overflow) and doesn't fail on warnings: `Microsoft.ui.xaml.dll` and `Microsoft.UI.Xaml.Phone.dll` declare 86 languages, more than the MSI Language column holds.
 - Build from a short path; WiX 5's native helper fails on very long paths.
 - Installers are currently unsigned.
+
+## Testing in Windows Sandbox
+
+```
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
+```
+
+- Builds the installer for this PC's architecture and runs `scripts\sandbox\runtime-checks.ps1` in Windows Sandbox with networking off, so this PC isn't changed. The Sandbox window closes when the checks finish.
+- Checks a per-user install and uninstall, the startup entry and **Start with Windows**, that the settings app starts the host and opens once, the tray menu, Arabic (right to left, dark) and Bangla (light), that the host follows settings changes, and the logs.
+- Writes the report, screenshots and logs to `TestResults\sandbox`, and exits with an error when a check fails.
+- Needs the Windows Sandbox feature; only one Sandbox can run at a time. `-NoBuild` uses the installer already built.
