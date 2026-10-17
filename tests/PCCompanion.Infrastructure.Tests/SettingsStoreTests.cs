@@ -35,11 +35,23 @@ public sealed class SettingsStoreTests : IDisposable
     [Fact]
     public void SaveThenLoadReturnsTheSameSettings()
     {
-        var settings = new AppSettings { General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark, StartWithWindows = true } };
+        var settings = new AppSettings
+        {
+            General = new GeneralSettings { Language = "bn", Theme = AppTheme.Dark, StartWithWindows = true },
+            Diagnostics = new DiagnosticsSettings { DetailedLoggingUntil = new DateTimeOffset(2026, 10, 18, 7, 30, 0, TimeSpan.FromHours(6)) },
+        };
 
         _store.Save(settings);
 
         Assert.Equal(settings, _store.Load());
+    }
+
+    [Fact]
+    public void LoadReadsTheDetailedLoggingEndTime()
+    {
+        WriteSettingsFile("""{ "diagnostics": { "detailedLoggingUntil": "2026-10-18T07:30:00+06:00" } }""");
+
+        Assert.Equal(new DateTimeOffset(2026, 10, 18, 7, 30, 0, TimeSpan.FromHours(6)), _store.Load().Diagnostics.DetailedLoggingUntil);
     }
 
     [Fact]
