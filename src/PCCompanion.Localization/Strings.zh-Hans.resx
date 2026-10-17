@@ -116,4 +116,140 @@
     <value>日志将保留 {0} 天。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>输入和触发器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>无法保存你的更改。请重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>权限和数据</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>触发角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>将指针移到屏幕的一角即可运行操作，例如显示所有窗口或锁定电脑。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>选择每个角的操作。为避免误操作，可以选择需要按住的键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>左上角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>右上角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>左下角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>右下角</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>{0}操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>{0}按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>任务视图</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>显示桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>开始</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>搜索</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>通知</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>锁定</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>关闭显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>屏幕保护程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>无按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>按住 Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>按住 Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>按住 Shift</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>按住 Windows 徽标键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>激活延迟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>指针在角落停留多长时间后运行操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} 毫秒</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>应用全屏时不触发</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>例如游戏、视频或演示文稿。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>以管理员身份运行的应用位于前台时，触发角不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。仅发送所选操作的 Windows 快捷键。不存储也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

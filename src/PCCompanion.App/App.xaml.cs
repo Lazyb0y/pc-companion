@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
+using PCCompanion.App.Features;
+using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
@@ -116,7 +118,9 @@ public partial class App : Application
             .AddSingleton<SettingsStore>()
             .AddSingleton(provider => provider.GetRequiredService<SettingsStore>().Load())
             .AddSingleton<HostLauncher>()
+            .AddSingleton<FeatureSettingsEditor>()
             .AddTransient<GeneralViewModel>()
+            .AddTransient<HotCornersViewModel>()
             .BuildServiceProvider();
     }
 

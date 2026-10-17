@@ -13,6 +13,11 @@ public sealed partial class Localized : MarkupExtension
 {
     public string Key { get; set; } = string.Empty;
 
-    protected override object ProvideValue() =>
-        Strings.ResourceManager.GetString(Key, CultureInfo.CurrentUICulture) ?? Key;
+    /// <summary>
+    /// Returns the string named <paramref name="key"/>, or the key when there is no such string.
+    /// </summary>
+    public static string GetString(string key) =>
+        Strings.ResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+
+    protected override object ProvideValue() => GetString(Key);
 }

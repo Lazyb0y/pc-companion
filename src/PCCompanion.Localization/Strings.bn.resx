@@ -124,4 +124,140 @@
     <value>লগগুলো {0} দিন রাখা হয়।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>ইনপুট ও ট্রিগার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>আপনার পরিবর্তন সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>অনুমতি ও ডেটা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>হট কর্নার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>কোনো অ্যাকশন চালাতে পয়েন্টারটি স্ক্রিনের একটি কোণে নিয়ে যান, যেমন সব উইন্ডো দেখানো বা পিসি লক করা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>কোণ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>প্রতিটি কোণ কী করবে তা বেছে নিন। ভুল করে কোনো অ্যাকশন চালানো এড়াতে, চেপে ধরে রাখার জন্য একটি কী বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>উপরে বাঁয়ে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>উপরে ডানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>নিচে বাঁয়ে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>নিচে ডানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>{0} অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>{0} কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>কিছুই না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>টাস্ক ভিউ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>ডেস্কটপ দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>স্টার্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>অনুসন্ধান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>বিজ্ঞপ্তি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>লক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>ডিসপ্লে বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>স্ক্রিন সেভার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>কোনো কী নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>Ctrl চেপে ধরুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>Alt চেপে ধরুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>Shift চেপে ধরুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>Windows লোগো কী চেপে ধরুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>সক্রিয় হওয়ার বিলম্ব</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>অ্যাকশন চালানোর আগে পয়েন্টার কতক্ষণ একটি কোণে থাকবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} মি.সে.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>কোনো অ্যাপ পূর্ণ স্ক্রিনে থাকলে চালু হবে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>যেমন, একটি গেম, ভিডিও বা উপস্থাপনা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে কোণগুলো কাজ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>হট কর্নার চালু থাকলেই কেবল পয়েন্টারের অবস্থান, এবং কোনো মাউস বোতাম বা বেছে নেওয়া কী চেপে ধরা আছে কিনা, তা পড়ে। কেবল বেছে নেওয়া অ্যাকশনগুলোর Windows শর্টকাট পাঠায়। কিছুই সংরক্ষণ বা পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

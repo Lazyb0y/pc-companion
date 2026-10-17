@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PCCompanion.App.Features.HotCorners.HotCornersPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:local="using:PCCompanion.App.Features.HotCorners"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <Page.Resources>
+        <DataTemplate x:Key="CornerTemplate" x:DataType="local:CornerViewModel">
+            <StackPanel Width="220" Spacing="8">
+                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Name}" />
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind ActionName}"
+                    ItemsSource="{x:Bind Actions}"
+                    SelectedItem="{x:Bind SelectedAction, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:ActionOption">
+                            <TextBlock Text="{x:Bind DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind KeyName}"
+                    ItemsSource="{x:Bind Keys}"
+                    SelectedItem="{x:Bind SelectedKey, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:KeyOption">
+                            <TextBlock Text="{x:Bind DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel MaxWidth="1000" Padding="36,24" Spacing="4">
+            <Grid Margin="0,0,0,20" ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <FontIcon
+                    VerticalAlignment="Top"
+                    AutomationProperties.AccessibilityView="Raw"
+                    FontSize="32"
+                    Glyph="{x:Bind local:HotCornersViewModel.Glyph}" />
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{app:Localized Key=HotCornersName}" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{app:Localized Key=HotCornersDescription}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+                <ToggleSwitch
+                    Grid.Column="2"
+                    VerticalAlignment="Top"
+                    AutomationProperties.Name="{app:Localized Key=HotCornersName}"
+                    IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}" />
+            </Grid>
+
+            <InfoBar
+                IsClosable="False"
+                IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
+                Message="{app:Localized Key=FeatureSaveFailed}"
+                Severity="Error" />
+
+            <Border
+                Padding="16"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{ThemeResource OverlayCornerRadius}">
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="2">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=HotCornersCornersHeader}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{app:Localized Key=HotCornersCornersDescription}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Physical corners: the picture isn't mirrored for right-to-left languages, the text in it is. -->
+                    <Grid
+                        HorizontalAlignment="Center"
+                        ColumnSpacing="12"
+                        FlowDirection="LeftToRight"
+                        RowSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ContentControl
+                            x:Name="TopLeftCorner"
+                            Content="{x:Bind ViewModel.TopLeft}"
+                            ContentTemplate="{StaticResource CornerTemplate}"
+                            IsTabStop="False" />
+                        <ContentControl
+                            x:Name="TopRightCorner"
+                            Grid.Column="2"
+                            Content="{x:Bind ViewModel.TopRight}"
+                            ContentTemplate="{StaticResource CornerTemplate}"
+                            IsTabStop="False" />
+                        <Border
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="200"
+                            Height="112"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Background="{ThemeResource LayerFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource TextFillColorSecondaryBrush}"
+                            BorderThickness="2"
+                            CornerRadius="4" />
+                        <ContentControl
+                            x:Name="BottomLeftCorner"
+                            Grid.Row="2"
+                            Content="{x:Bind ViewModel.BottomLeft}"
+                            ContentTemplate="{StaticResource CornerTemplate}"
+                            IsTabStop="False" />
+                        <ContentControl
+                            x:Name="BottomRightCorner"
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Content="{x:Bind ViewModel.BottomRight}"
+                            ContentTemplate="{StaticResource CornerTemplate}"
+                            IsTabStop="False" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <toolkit:SettingsCard Description="{app:Localized Key=HotCornersDelayDescription}" Header="{app:Localized Key=HotCornersDelayHeader}">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE916;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind ViewModel.ActivationDelayText, Mode=OneWay}" />
+                    <Slider
+                        Width="200"
+                        AutomationProperties.Name="{app:Localized Key=HotCornersDelayHeader}"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="{x:Bind local:HotCornersViewModel.MaximumActivationDelay}"
+                        Minimum="0"
+                        SnapsTo="StepValues"
+                        StepFrequency="50"
+                        Value="{x:Bind ViewModel.ActivationDelay, Mode=TwoWay}" />
+                </StackPanel>
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard Description="{app:Localized Key=HotCornersFullScreenDescription}" Header="{app:Localized Key=HotCornersFullScreenHeader}">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE740;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ToggleSwitch AutomationProperties.Name="{app:Localized Key=HotCornersFullScreenHeader}" IsOn="{x:Bind ViewModel.IgnoreFullScreenApps, Mode=TwoWay}" />
+            </toolkit:SettingsCard>
+
+            <InfoBar
+                Margin="0,16,0,0"
+                IsClosable="False"
+                IsOpen="True"
+                Message="{app:Localized Key=HotCornersAdministratorInfo}"
+                Severity="Informational" />
+
+            <toolkit:SettingsCard Description="{app:Localized Key=HotCornersPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE72E;" />
+                </toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
