@@ -13,9 +13,6 @@ namespace PCCompanion.Host;
 /// </summary>
 internal sealed partial class TrayController(SettingsAppLauncher settingsApp, ILogger<TrayController> logger) : IDisposable
 {
-    /// <summary>The class name of the host's hidden window, which a second host launch looks for.</summary>
-    public const string WindowClassName = "PCCompanion.Host";
-
     private const uint SettingsCommand = 1;
     private const uint ExitCommand = 2;
 
@@ -25,11 +22,21 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     /// <summary>Asks the running host to open the settings, for example from a second host launch.</summary>
     public static uint OpenSettingsMessage { get; } = MessageWindow.RegisterMessage("PCCompanion.Host.OpenSettings");
 
-    /// <param name="window">The host's window, created with <see cref="WindowClassName"/>.</param>
+    /// <summary>Asks the running host to exit, for example from the settings app.</summary>
+    public static uint ExitMessage { get; } = MessageWindow.RegisterMessage(HostProcess.ExitMessageName);
+
+    /// <param name="window">The host's window, created with <see cref="HostProcess.WindowClassName"/>.</param>
     public void Show(MessageWindow window)
     {
         _window = window;
         _window.MessageReceived += OnMessageReceived;
+
+        // The settings app and a second host launch run without admin rights.
+        if (Elevation.IsElevated)
+        {
+            _window.AllowFromLowerIntegrity(OpenSettingsMessage);
+            _window.AllowFromLowerIntegrity(ExitMessage);
+        }
 
         _icon = new TrayIcon(_window, Strings.AppDisplayName);
         _icon.Selected += (_, _) =>
@@ -62,6 +69,12 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
             settingsApp.Open();
             e.Handled = true;
         }
+        else if (e.Message == ExitMessage)
+        {
+            LogExitRequested(logger);
+            MessageLoop.Quit();
+            e.Handled = true;
+        }
     }
 
     private void ShowMenu(int x, int y)
@@ -92,6 +105,9 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon was selected.")]
     private static partial void LogIconSelected(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "The settings app asked the host to exit.")]
+    private static partial void LogExitRequested(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Another host launch asked to open the settings.")]
     private static partial void LogOpenSettingsRequested(ILogger logger);

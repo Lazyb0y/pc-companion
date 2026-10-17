@@ -23,26 +23,47 @@ internal static partial class Program
     {
         var paths = AppDataPaths.ForCurrentUser();
         var startedAtSignIn = args.Contains(HostProcess.StartupArgument, StringComparer.OrdinalIgnoreCase);
-        if (startedAtSignIn && !IsSetToStartWithWindows(paths))
+        var general = LoadGeneralSettings(paths);
+        if (startedAtSignIn && !general.StartWithWindows)
         {
             return;
         }
 
+        // Always run as administrator: a host without admin rights leaves the work to the one the
+        // scheduled tasks start. At sign-in, the sign-in task starts it; otherwise this asks for it.
+        var handOverFailed = false;
+        if (general.AlwaysRunAsAdministrator && !Elevation.IsElevated && !IsHostRunning())
+        {
+            if (startedAtSignIn || ScheduledTasks.RunNow(ElevatedStartup.TaskFolder + ElevatedStartup.StartTaskName(Elevation.CurrentUserSid)))
+            {
+                return;
+            }
+
+            handOverFailed = true;
+        }
+
         // One host per user session. Started again by the user, it asks the running host to open the settings.
-        using var instanceLock = new Mutex(initiallyOwned: true, HostProcess.InstanceLockName, out var isFirstInstance);
-        if (!isFirstInstance)
+        using var instanceLock = TryTakeInstanceLock();
+        if (instanceLock is null)
         {
             if (!startedAtSignIn)
             {
-                MessageWindow.PostToWindow(TrayController.WindowClassName, TrayController.OpenSettingsMessage);
+                MessageWindow.PostToWindow(HostProcess.WindowClassName, TrayController.OpenSettingsMessage);
             }
 
             return;
         }
 
         using var detailedLogging = new DetailedLogging();
+        var logsFolder = GetLogsFolder(paths);
         using var services = new ServiceCollection()
-            .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "host", detailedLogging: detailedLogging))
+            .AddLogging(builder =>
+            {
+                if (logsFolder is not null)
+                {
+                    builder.AddFileLog(logsFolder, "host", detailedLogging: detailedLogging);
+                }
+            })
             .AddSingleton(paths)
             .AddSingleton(TimeProvider.System)
             .AddSingleton<SettingsStore>()
@@ -53,7 +74,11 @@ internal static partial class Program
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
         AppDomain.CurrentDomain.UnhandledException += (_, e) => LogCrash(logger, e.ExceptionObject as Exception);
-        LogStarted(logger, Environment.OSVersion.Version);
+        LogStarted(logger, Environment.OSVersion.Version, Elevation.IsElevated);
+        if (handOverFailed)
+        {
+            LogCantRunAsAdministrator(logger);
+        }
 
         // Features run on this thread, whose message loop they need.
         var store = services.GetRequiredService<SettingsStore>();
@@ -61,7 +86,7 @@ internal static partial class Program
         ApplySettings(store.Load(), detailedLogging, features, logger);
 
         // Declared after the window, so the tray icon is removed before the window is destroyed.
-        using var window = new MessageWindow(TrayController.WindowClassName);
+        using var window = new MessageWindow(HostProcess.WindowClassName);
         using var tray = ActivatorUtilities.CreateInstance<TrayController>(services);
         tray.Show(window);
 
@@ -73,17 +98,71 @@ internal static partial class Program
     }
 
     // Windows starts the host at every sign-in, for every user of an all-users install. This runs
-    // before any logging, so users who haven't turned the setting on get no files.
-    private static bool IsSetToStartWithWindows(AppDataPaths paths)
+    // before any logging, so users who haven't turned the settings on get no files.
+    private static GeneralSettings LoadGeneralSettings(AppDataPaths paths)
     {
         try
         {
-            return new SettingsStore(paths, NullLogger<SettingsStore>.Instance).Load().General.StartWithWindows;
+            return new SettingsStore(paths, NullLogger<SettingsStore>.Instance).Load().General;
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
-            return false;
+            return new GeneralSettings();
         }
+    }
+
+    // A host running as administrator holds a lock that processes without admin rights may not open.
+    private static bool IsHostRunning()
+    {
+        try
+        {
+            if (!Mutex.TryOpenExisting(HostProcess.InstanceLockName, out var instanceLock))
+            {
+                return false;
+            }
+
+            instanceLock.Dispose();
+            return true;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return true;
+        }
+    }
+
+    // Returns null when another host holds the lock.
+    private static Mutex? TryTakeInstanceLock()
+    {
+        try
+        {
+            var instanceLock = new Mutex(initiallyOwned: true, HostProcess.InstanceLockName, out var isFirstInstance);
+            if (isFirstInstance)
+            {
+                return instanceLock;
+            }
+
+            instanceLock.Dispose();
+            return null;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    // A host elevated through UAC writes its logs where only administrators can change them:
+    // programs without admin rights could otherwise redirect its writes with a link. Without such
+    // a folder, it writes no log file.
+    private static string? GetLogsFolder(AppDataPaths paths)
+    {
+        if (!Elevation.IsUacElevated)
+        {
+            return paths.LogsFolder;
+        }
+
+        var sid = Elevation.CurrentUserSid;
+        var folder = AppDataPaths.ProtectedLogsFolder(sid);
+        return ProtectedFiles.CreateUserFolder(folder, sid) ? folder : null;
     }
 
     private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, FeatureRunner features, ILogger logger)
@@ -106,8 +185,11 @@ internal static partial class Program
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Started on Windows {WindowsVersion}.")]
-    private static partial void LogStarted(ILogger logger, Version windowsVersion);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Started on Windows {WindowsVersion}; running as administrator: {Elevated}.")]
+    private static partial void LogStarted(ILogger logger, Version windowsVersion, bool elevated);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Always run as administrator is on, but its task didn't start, so the host runs without admin rights.")]
+    private static partial void LogCantRunAsAdministrator(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Stopped.")]
     private static partial void LogStopped(ILogger logger);
