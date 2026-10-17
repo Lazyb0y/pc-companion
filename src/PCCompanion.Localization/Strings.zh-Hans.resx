@@ -40,6 +40,66 @@
     <value>退出</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLanguageHeader" xml:space="preserve">
+    <value>语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageDescription" xml:space="preserve">
+    <value>重启应用以显示新的语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageWindows" xml:space="preserve">
+    <value>使用 Windows 显示语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeHeader" xml:space="preserve">
+    <value>应用主题</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDescription" xml:space="preserve">
+    <value>选择应用使用的主题。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeSystem" xml:space="preserve">
+    <value>使用系统设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeLight" xml:space="preserve">
+    <value>浅色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDark" xml:space="preserve">
+    <value>深色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupHeader" xml:space="preserve">
+    <value>随 Windows 启动</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupDescription" xml:space="preserve">
+    <value>登录时在后台运行 PC Companion。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsHeader" xml:space="preserve">
+    <value>日志</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpen" xml:space="preserve">
+    <value>打开日志文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutHeader" xml:space="preserve">
+    <value>关于</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutVersion" xml:space="preserve">
+    <value>版本 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralSaveFailed" xml:space="preserve">
+    <value>无法保存你的更改。请重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_other" xml:space="preserve">
     <value>日志将保留 {0} 天。</value>
     <comment>Needs native review.</comment>

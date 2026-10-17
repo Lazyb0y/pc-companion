@@ -40,6 +40,66 @@
     <value>Quitter</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralLanguageHeader" xml:space="preserve">
+    <value>Langue</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageDescription" xml:space="preserve">
+    <value>Redémarrez l’application pour afficher la nouvelle langue.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLanguageWindows" xml:space="preserve">
+    <value>Utiliser la langue d’affichage de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeHeader" xml:space="preserve">
+    <value>Thème de l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDescription" xml:space="preserve">
+    <value>Choisissez le thème utilisé par l’application.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeSystem" xml:space="preserve">
+    <value>Utiliser le paramètre système</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeLight" xml:space="preserve">
+    <value>Clair</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralThemeDark" xml:space="preserve">
+    <value>Sombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupHeader" xml:space="preserve">
+    <value>Démarrer avec Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralStartupDescription" xml:space="preserve">
+    <value>Exécuter PC Companion en arrière-plan à l’ouverture de session.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsHeader" xml:space="preserve">
+    <value>Journaux</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpen" xml:space="preserve">
+    <value>Ouvrir le dossier des journaux</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutHeader" xml:space="preserve">
+    <value>À propos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralAboutVersion" xml:space="preserve">
+    <value>Version {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralSaveFailed" xml:space="preserve">
+    <value>Impossible d’enregistrer votre modification. Réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsRetention_one" xml:space="preserve">
     <value>Les journaux sont conservés pendant {0} jour.</value>
     <comment>Needs native review.</comment>
