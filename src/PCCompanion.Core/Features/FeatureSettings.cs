@@ -1,0 +1,26 @@
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+
+namespace PCCompanion.Core.Features;
+
+/// <summary>
+/// Reads and writes a feature's section of the settings with the feature's own JSON format.
+/// </summary>
+public static class FeatureSettings
+{
+    /// <summary>
+    /// Returns the settings in <paramref name="section"/>, or <paramref name="defaults"/> when there is none.
+    /// </summary>
+    /// <exception cref="JsonException">The section doesn't match the format.</exception>
+    public static T Read<T>(JsonElement? section, JsonTypeInfo<T> format, Func<T> defaults)
+    {
+        ArgumentNullException.ThrowIfNull(format);
+        ArgumentNullException.ThrowIfNull(defaults);
+
+        return section is { } value ? value.Deserialize(format) ?? defaults() : defaults();
+    }
+
+    public static JsonElement Write<T>(T settings, JsonTypeInfo<T> format) =>
+        JsonSerializer.SerializeToElement(settings, format);
+}
