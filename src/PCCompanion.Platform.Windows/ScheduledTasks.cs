@@ -76,14 +76,25 @@ public static class ScheduledTasks
         ArgumentException.ThrowIfNullOrEmpty(taskPath);
         ArgumentNullException.ThrowIfNull(definition);
 
-        // Kept open, readable but not changeable by others, until schtasks has read it.
+        // schtasks can't read a file that another handle may write to. Others can change the temp
+        // folder, so the file is opened again read-only, which keeps anyone from writing, deleting
+        // or renaming it until schtasks has read it, and checked to be the one written.
         var file = Path.Combine(Path.GetTempPath(), $"PCCompanion-{Guid.NewGuid():N}.xml");
+        var bytes = Encoding.Unicode.GetPreamble().Concat(Encoding.Unicode.GetBytes(definition)).ToArray();
         try
         {
-            using var stream = new FileStream(file, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
-            var bytes = Encoding.Unicode.GetPreamble().Concat(Encoding.Unicode.GetBytes(definition)).ToArray();
-            stream.Write(bytes);
-            stream.Flush(flushToDisk: true);
+            using (var writer = new FileStream(file, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                writer.Write(bytes);
+            }
+
+            using var reader = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var read = new byte[bytes.Length + 1];
+            if (reader.ReadAtLeast(read, read.Length, throwOnEndOfStream: false) != bytes.Length || !read.AsSpan(0, bytes.Length).SequenceEqual(bytes))
+            {
+                throw new InvalidOperationException("The task file changed before Task Scheduler read it.");
+            }
+
             Run(["/Create", "/TN", taskPath, "/XML", file, "/F"]);
         }
         finally
