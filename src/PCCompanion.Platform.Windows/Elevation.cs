@@ -14,28 +14,32 @@ public static class Elevation
     public static bool IsElevated => Environment.IsPrivilegedProcess;
 
     /// <summary>
+    /// Whether this process got admin rights through UAC, so the user's other programs run
+    /// without them. With UAC off, an administrator's programs all have admin rights.
+    /// </summary>
+    public static bool IsUacElevated => ElevationType == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull;
+
+    /// <summary>
     /// Whether the user can get admin rights by confirming a UAC prompt: an administrator
     /// account, rather than a standard account that would need another account's password.
     /// </summary>
-    public static unsafe bool CanElevate
+    public static bool CanElevate => IsElevated || ElevationType == TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited;
+
+    private static unsafe TOKEN_ELEVATION_TYPE? ElevationType
     {
         get
         {
-            if (IsElevated)
-            {
-                return true;
-            }
-
             if (!PInvoke.OpenProcessToken(PInvoke.GetCurrentProcess_SafeHandle(), TOKEN_ACCESS_MASK.TOKEN_QUERY, out var token))
             {
-                return false;
+                return null;
             }
 
             using (token)
             {
                 TOKEN_ELEVATION_TYPE type;
                 return PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenElevationType, &type, (uint)sizeof(TOKEN_ELEVATION_TYPE), out _)
-                    && type == TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited;
+                    ? type
+                    : null;
             }
         }
     }

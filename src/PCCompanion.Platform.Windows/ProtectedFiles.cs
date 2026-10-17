@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
@@ -23,6 +24,45 @@ public static class ProtectedFiles
         "S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464",
         "S-1-3-0",
     ];
+
+    /// <summary>
+    /// Creates <paramref name="path"/>, inside a protected folder, so that only SYSTEM and
+    /// Administrators can change it and the user with the security identifier
+    /// <paramref name="userSid"/> can read it. Returns false, and the folder mustn't be used,
+    /// when it can't be created that way or already exists and isn't protected.
+    /// </summary>
+    public static bool CreateUserFolder(string path, string userSid)
+    {
+        if (Path.GetDirectoryName(path) is not { } parent || !IsProtected(parent))
+        {
+            return false;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            var security = new DirectorySecurity();
+            security.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
+            security.SetOwner(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null));
+            foreach (var trusted in new[] { WellKnownSidType.LocalSystemSid, WellKnownSidType.BuiltinAdministratorsSid })
+            {
+                security.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(trusted, null), FileSystemRights.FullControl,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+            }
+
+            security.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(userSid), FileSystemRights.ReadAndExecute,
+                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+            try
+            {
+                new DirectoryInfo(path).Create(security);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
+            {
+                return false;
+            }
+        }
+
+        return IsProtected(path);
+    }
 
     /// <summary>
     /// Whether <paramref name="path"/>, a file or a folder, is owned by and can be changed only

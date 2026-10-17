@@ -38,6 +38,14 @@ public sealed class TrayIcon : IDisposable
         _toolTip = toolTip;
         _icon = LoadApplicationIcon();
         _taskbarCreatedMessage = MessageWindow.RegisterMessage("TaskbarCreated");
+
+        // The taskbar runs without admin rights; Windows would block its messages to an elevated window.
+        if (Elevation.IsElevated)
+        {
+            window.AllowFromLowerIntegrity(CallbackMessage);
+            window.AllowFromLowerIntegrity(_taskbarCreatedMessage);
+        }
+
         _window.MessageReceived += OnMessageReceived;
         IsShown = Add();
     }
