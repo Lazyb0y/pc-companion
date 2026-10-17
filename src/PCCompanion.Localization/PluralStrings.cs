@@ -23,24 +23,15 @@ public static class PluralStrings
         ArgumentException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNull(language);
 
-        var otherKey = key + "_other";
-
         // Use the plural rules of the language the string comes from. Without a translation,
-        // that is the source language rather than the user interface language.
-        for (var culture = language; ; culture = culture.Parent)
-        {
-            var strings = Strings.ResourceManager.GetResourceSet(culture, createIfNotExists: true, tryParents: false);
-            if (strings?.GetString(otherKey) is { } other)
-            {
-                var rules = culture.Equals(CultureInfo.InvariantCulture) ? Languages.Source : culture;
-                var form = strings.GetString($"{key}_{PluralRules.Select(rules, count)}") ?? other;
-                return string.Format(formatting, form, count.ToString("N0", formatting));
-            }
+        // that is the source language rather than the user interface language. The resource
+        // manager can't tell: it caches the source language's strings under every language
+        // that falls back to them.
+        var source = Languages.Resolve(language);
+        var form = Strings.ResourceManager.GetString($"{key}_{PluralRules.Select(source, count)}", source)
+            ?? Strings.ResourceManager.GetString(key + "_other", source)
+            ?? throw new ArgumentException($"There is no string named {key}_other.", nameof(key));
 
-            if (culture.Equals(CultureInfo.InvariantCulture))
-            {
-                throw new ArgumentException($"There is no string named {otherKey}.", nameof(key));
-            }
-        }
+        return string.Format(formatting, form, count.ToString("N0", formatting));
     }
 }

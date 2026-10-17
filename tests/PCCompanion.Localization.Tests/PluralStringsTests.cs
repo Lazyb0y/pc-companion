@@ -29,6 +29,15 @@ public sealed class PluralStringsTests
     }
 
     [Fact]
+    public void FormatUsesTheSourceLanguageRulesAfterOtherStringsWereRead()
+    {
+        // Reading a string caches the English strings under Japanese too.
+        Assert.Equal("Home", Strings.ResourceManager.GetString(nameof(Strings.NavigationHome), CultureInfo.GetCultureInfo("ja")));
+
+        Assert.Equal("Logs are kept for 1 day.", PluralStrings.Format(Key, 1, CultureInfo.GetCultureInfo("ja"), CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
     public void FormatUsesTheRegionalFormatForTheNumber()
     {
         Assert.Equal(
