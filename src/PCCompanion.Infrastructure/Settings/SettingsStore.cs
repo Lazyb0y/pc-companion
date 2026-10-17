@@ -31,6 +31,7 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
         }
         catch (Exception exception) when (exception is FileNotFoundException or DirectoryNotFoundException)
         {
+            LogNoSettingsFile(logger);
             return new AppSettings();
         }
 
@@ -38,7 +39,9 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
         {
             try
             {
-                return JsonSerializer.Deserialize(stream, SettingsJsonContext.Default.AppSettings) ?? new AppSettings();
+                var settings = JsonSerializer.Deserialize(stream, SettingsJsonContext.Default.AppSettings) ?? new AppSettings();
+                LogLoaded(logger, settings.SchemaVersion);
+                return settings;
             }
             catch (JsonException exception)
             {
@@ -82,6 +85,7 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
         }
 
         Replace(temporaryFile, paths.SettingsFile);
+        LogSaved(logger);
     }
 
     // The move fails while another process is reading the file, which only takes a moment.
@@ -102,6 +106,15 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
             }
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "There is no settings file yet, so the default settings are used.")]
+    private static partial void LogNoSettingsFile(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Loaded the settings (schema version {SchemaVersion}).")]
+    private static partial void LogLoaded(ILogger logger, int schemaVersion);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Saved the settings.")]
+    private static partial void LogSaved(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The settings file can't be read, so the default settings are used. It will be kept as {CorruptFileName} when settings are saved.")]
     private static partial void LogUnreadableFile(ILogger logger, Exception exception, string corruptFileName);
