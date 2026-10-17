@@ -124,4 +124,140 @@
     <value>Los registros se conservan durante {0} días.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>Entrada y desencadenadores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>No se pudo guardar el cambio. Inténtalo de nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>Permisos y datos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>Esquinas activas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>Mueve el puntero a una esquina de la pantalla para ejecutar una acción, como mostrar todas las ventanas o bloquear el equipo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>Esquinas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>Elige qué hace cada esquina. Para no ejecutar una acción por accidente, elige una tecla que mantener presionada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>Superior izquierda</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>Superior derecha</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>Inferior izquierda</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>Inferior derecha</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>Acción: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>Tecla: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>Nada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>Vista de tareas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>Mostrar escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>Inicio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>Buscar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>Notificaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>Bloquear</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>Apagar las pantallas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>Protector de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>Sin tecla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>Mantener presionada Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>Mantener presionada Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>Mantener presionada Mayús</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>Mantener presionada la tecla del logotipo de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>Retraso de activación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>Cuánto tiempo permanece el puntero en una esquina antes de que se ejecute la acción.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} ms</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>No activar cuando una aplicación está en pantalla completa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>Por ejemplo, un juego, un vídeo o una presentación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>Las esquinas no funcionan mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Solo envía los métodos abreviados de Windows de las acciones elegidas. No guarda ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

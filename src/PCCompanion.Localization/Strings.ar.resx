@@ -156,4 +156,140 @@
     <value>يتم الاحتفاظ بالسجلات لمدة {0} يوم.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>الإدخال والمشغّلات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>تعذّر حفظ التغيير. حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>الأذونات والبيانات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>الزوايا النشطة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>حرّك المؤشر إلى زاوية من الشاشة لتشغيل إجراء، مثل عرض كل النوافذ أو تأمين الكمبيوتر الشخصي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>الزوايا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>اختر ما تفعله كل زاوية. لتجنب تشغيل إجراء عن طريق الخطأ، اختر مفتاحاً للضغط عليه باستمرار.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>أعلى اليسار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>أعلى اليمين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>أسفل اليسار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>أسفل اليمين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>إجراء {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>مفتاح {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>لا شيء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>طريقة عرض المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>إظهار سطح المكتب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>البدء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>البحث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>تأمين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>إيقاف تشغيل الشاشات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>شاشة التوقف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>بلا مفتاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>اضغط باستمرار على Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>اضغط باستمرار على Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>اضغط باستمرار على Shift</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>اضغط باستمرار على مفتاح شعار Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>مهلة التنشيط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>المدة التي يبقى فيها المؤشر في الزاوية قبل تشغيل الإجراء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} مللي ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>عدم التشغيل عندما يكون أحد التطبيقات بملء الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>على سبيل المثال، لعبة أو فيديو أو عرض تقديمي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>لا تعمل الزوايا عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. يرسل فقط اختصارات Windows للإجراءات المختارة. لا يخزّن أي شيء ولا يرسله.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

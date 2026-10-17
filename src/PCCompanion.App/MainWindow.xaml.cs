@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using PCCompanion.App.Features;
 using PCCompanion.App.Pages;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
@@ -25,8 +26,24 @@ public sealed partial class MainWindow : Window
             ? FlowDirection.RightToLeft
             : FlowDirection.LeftToRight;
 
+        AddFeatures();
         Navigation.SelectedItem = HomeItem;
         SetBackdrop();
+    }
+
+    /// <summary>
+    /// Shows the page of the feature with the ID <paramref name="featureId"/>.
+    /// </summary>
+    public void ShowFeature(string featureId)
+    {
+        foreach (var item in Navigation.MenuItems)
+        {
+            if (item is NavigationViewItem { Tag: CatalogFeature feature } && feature.Info.Id == featureId)
+            {
+                Navigation.SelectedItem = item;
+                return;
+            }
+        }
     }
 
     /// <summary>
@@ -86,10 +103,29 @@ public sealed partial class MainWindow : Window
             ? Color.FromArgb(255, 0x20, 0x20, 0x20)
             : Color.FromArgb(255, 0xF3, 0xF3, 0xF3));
 
+    // A section per module, with an item per feature, below Home.
+    private void AddFeatures()
+    {
+        foreach (var module in FeatureCatalog.Modules)
+        {
+            Navigation.MenuItems.Add(new NavigationViewItemHeader { Content = Localized.GetString(module.NameKey) });
+            foreach (var feature in module.Features)
+            {
+                Navigation.MenuItems.Add(new NavigationViewItem
+                {
+                    Content = Localized.GetString(feature.Info.NameKey),
+                    Icon = new FontIcon { Glyph = feature.Info.Glyph },
+                    Tag = feature,
+                });
+            }
+        }
+    }
+
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         var page = args.SelectedItemContainer == HomeItem ? typeof(HomePage)
             : args.SelectedItemContainer == GeneralItem ? typeof(GeneralPage)
+            : args.SelectedItemContainer?.Tag is CatalogFeature feature ? feature.PageType
             : null;
 
         if (page is not null && ContentFrame.CurrentSourcePageType != page)

@@ -23,9 +23,14 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
     public static FeatureInfo Definition { get; } = new("hotCorners", InputModule.Id, "HotCornersName", "HotCornersDescription", "");
 
+    /// <summary>
+    /// Whether this PC can run Hot Corners, for the settings app, which doesn't create the feature.
+    /// </summary>
+    public static FeatureSupport CurrentSupport => FeatureSupport.Supported;
+
     public FeatureInfo Info => Definition;
 
-    public FeatureSupport Support => FeatureSupport.Supported;
+    public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _window is not null;
 

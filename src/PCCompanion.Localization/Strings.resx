@@ -124,4 +124,140 @@
     <value>Logs are kept for {0} days.</value>
     <comment>Plural form "other". {0} is the number of days.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>Input &amp; Triggers</value>
+    <comment>Navigation pane and Home: the group of features that respond to the mouse and keyboard.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>Your change couldn't be saved. Try again.</value>
+    <comment>Home and feature pages: shown when the settings file can't be written.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>Permissions &amp; data</value>
+    <comment>Feature pages: card that says what the feature reads and changes.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>Hot Corners</value>
+    <comment>Feature name: navigation pane, Home and the Hot Corners page.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>Move the pointer into a corner of the screen to run an action, such as showing all windows or locking the PC.</value>
+    <comment>Hot Corners: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>Corners</value>
+    <comment>Hot Corners page: card with a picture of a screen and a list of actions for each of its corners.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>Choose what each corner does. To avoid running an action by accident, choose a key to hold.</value>
+    <comment>Hot Corners page: below HotCornersCornersHeader.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>Top left</value>
+    <comment>Hot Corners page: a physical corner of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>Top right</value>
+    <comment>Hot Corners page: a physical corner of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>Bottom left</value>
+    <comment>Hot Corners page: a physical corner of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>Bottom right</value>
+    <comment>Hot Corners page: a physical corner of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>{0} action</value>
+    <comment>Hot Corners page: screen reader name of a corner's list of actions. {0} is a corner, such as HotCornersTopLeft.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>{0} key</value>
+    <comment>Hot Corners page: screen reader name of a corner's list of keys to hold. {0} is a corner, such as HotCornersTopLeft.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>Nothing</value>
+    <comment>Hot Corners page: the corner does nothing.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>Task View</value>
+    <comment>Hot Corners action: the Windows feature that shows all open windows and virtual desktops. Use the Windows term.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>Show desktop</value>
+    <comment>Hot Corners action: use the Windows term.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>Start</value>
+    <comment>Hot Corners action: opens Start. Use the Windows term.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>Search</value>
+    <comment>Hot Corners action: opens Windows search. Use the Windows term.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>Notifications</value>
+    <comment>Hot Corners action: opens the notification center (Windows 11) or the Action center (Windows 10).</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>Lock</value>
+    <comment>Hot Corners action: locks the PC, as the Lock command in Start does.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>Turn off displays</value>
+    <comment>Hot Corners action: the displays stay off until the pointer moves or a key is pressed.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>Screen saver</value>
+    <comment>Hot Corners action: starts the screen saver chosen in Windows settings.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>No key</value>
+    <comment>Hot Corners page: the corner doesn't need a key.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>Hold Ctrl</value>
+    <comment>Hot Corners page: the corner runs its action only while the key is held. Use the key name printed on keyboards in the language.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>Hold Alt</value>
+    <comment>Hot Corners page: the corner runs its action only while the key is held. Use the key name printed on keyboards in the language.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>Hold Shift</value>
+    <comment>Hot Corners page: the corner runs its action only while the key is held. Use the key name printed on keyboards in the language.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>Hold the Windows logo key</value>
+    <comment>Hot Corners page: the corner runs its action only while the key is held. Use the Windows term for the key.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>Activation delay</value>
+    <comment>Hot Corners page: setting name.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>How long the pointer stays in a corner before the action runs.</value>
+    <comment>Hot Corners page: below HotCornersDelayHeader.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} ms</value>
+    <comment>Hot Corners page: the activation delay. {0} is a number of milliseconds; use the usual abbreviation.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>Don't trigger when an app is full screen</value>
+    <comment>Hot Corners page: setting name. On by default.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>For example, a game, a video or a presentation.</value>
+    <comment>Hot Corners page: below HotCornersFullScreenHeader.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>Corners don't work while an app running as administrator is in front.</value>
+    <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. Sends only the Windows shortcuts of the chosen actions. Stores and sends nothing.</value>
+    <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

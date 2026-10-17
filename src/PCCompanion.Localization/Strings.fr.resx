@@ -124,4 +124,140 @@
     <value>Les journaux sont conservés pendant {0} jours.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleInputName" xml:space="preserve">
+    <value>Saisie et déclencheurs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeatureSaveFailed" xml:space="preserve">
+    <value>Impossible d’enregistrer votre modification. Réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FeaturePermissionsHeader" xml:space="preserve">
+    <value>Autorisations et données</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersName" xml:space="preserve">
+    <value>Coins actifs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDescription" xml:space="preserve">
+    <value>Placez le pointeur dans un coin de l’écran pour exécuter une action, par exemple afficher toutes les fenêtres ou verrouiller le PC.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersHeader" xml:space="preserve">
+    <value>Coins</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersCornersDescription" xml:space="preserve">
+    <value>Choisissez l’action de chaque coin. Pour éviter de lancer une action par erreur, choisissez une touche à maintenir enfoncée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopLeft" xml:space="preserve">
+    <value>En haut à gauche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopRight" xml:space="preserve">
+    <value>En haut à droite</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomLeft" xml:space="preserve">
+    <value>En bas à gauche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomRight" xml:space="preserve">
+    <value>En bas à droite</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionName" xml:space="preserve">
+    <value>Action : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyName" xml:space="preserve">
+    <value>Touche : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNone" xml:space="preserve">
+    <value>Rien</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTaskView" xml:space="preserve">
+    <value>Affichage des tâches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionShowDesktop" xml:space="preserve">
+    <value>Afficher le Bureau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionStart" xml:space="preserve">
+    <value>Démarrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionSearch" xml:space="preserve">
+    <value>Rechercher</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNotifications" xml:space="preserve">
+    <value>Notifications</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionLock" xml:space="preserve">
+    <value>Verrouiller</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionTurnOffDisplays" xml:space="preserve">
+    <value>Éteindre les écrans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionScreenSaver" xml:space="preserve">
+    <value>Écran de veille</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyNone" xml:space="preserve">
+    <value>Aucune touche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyControl" xml:space="preserve">
+    <value>Maintenir Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyAlt" xml:space="preserve">
+    <value>Maintenir Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyShift" xml:space="preserve">
+    <value>Maintenir Maj</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeyWindows" xml:space="preserve">
+    <value>Maintenir la touche du logo Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayHeader" xml:space="preserve">
+    <value>Délai d’activation</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayDescription" xml:space="preserve">
+    <value>Durée pendant laquelle le pointeur reste dans un coin avant que l’action s’exécute.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersDelayValue" xml:space="preserve">
+    <value>{0} ms</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenHeader" xml:space="preserve">
+    <value>Ne pas déclencher quand une application est en plein écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersFullScreenDescription" xml:space="preserve">
+    <value>Par exemple, un jeu, une vidéo ou une présentation.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfo" xml:space="preserve">
+    <value>Les coins ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPermissions" xml:space="preserve">
+    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Envoie uniquement les raccourcis Windows des actions choisies. N’enregistre et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

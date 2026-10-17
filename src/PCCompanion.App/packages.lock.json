@@ -159,6 +159,15 @@
           "Serilog.Sinks.File": "[7.0.0, )"
         }
       },
+      "pccompanion.modules.input": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
+          "PCCompanion.Core": "[0.0.1, )",
+          "PCCompanion.Platform.Windows": "[0.0.1, )"
+        }
+      },
       "pccompanion.platform.windows": {
         "type": "Project"
       },
