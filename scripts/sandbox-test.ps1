@@ -137,4 +137,10 @@ if (Select-String -Path $report -Pattern '^\[FAIL\]' -Quiet) {
     exit 1
 }
 
+# A report without its last line lost results, for example while another program held it open.
+if (-not (Select-String -Path $report -Pattern '^finished ' -Quiet)) {
+    Write-Host "The report is incomplete. Don't open it during a run. Screenshots and logs are in $results." -ForegroundColor Red
+    exit 1
+}
+
 Write-Host "All checks passed. Screenshots and logs are in $results." -ForegroundColor Green
