@@ -32,6 +32,30 @@ public sealed class ProtectedFilesTests
     }
 
     [Fact]
+    public void TheWindowsSystemFolderIsAProtectedInstall()
+    {
+        Assert.True(ProtectedFiles.IsProtectedInstall(Environment.SystemDirectory, "schtasks.exe", "cmd.exe"));
+        Assert.True(ProtectedFiles.IsProtectedInstall(Environment.SystemDirectory + Path.DirectorySeparatorChar));
+    }
+
+    [Fact]
+    public void AFolderTheUserCreatedOrAMissingFileIsNotAProtectedInstall()
+    {
+        var folder = Directory.CreateTempSubdirectory("PCCompanion.Tests.").FullName;
+        try
+        {
+            File.WriteAllBytes(Path.Combine(folder, "Host.exe"), []);
+
+            Assert.False(ProtectedFiles.IsProtectedInstall(folder, "Host.exe"));
+            Assert.False(ProtectedFiles.IsProtectedInstall(Environment.SystemDirectory, "schtasks.exe", $"PCCompanion.Tests.{Guid.NewGuid():N}.exe"));
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Fact]
     public void AUserFolderIsNotCreatedInAFolderOthersCanChange()
     {
         var parent = Directory.CreateTempSubdirectory("PCCompanion.Tests.").FullName;
