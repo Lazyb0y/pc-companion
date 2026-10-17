@@ -1,5 +1,6 @@
 AllowSetForegroundWindow
 AppendMenu
+COMDLG_FILTERSPEC
 CommandLineToArgv
 CreatePopupMenu
 CreateWindowEx
@@ -9,12 +10,16 @@ DestroyMenu
 DestroyWindow
 DispatchMessage
 EnumDisplayMonitors
+FileOpenDialog
+FILEOPENDIALOGOPTIONS
 FindWindow
 GetAsyncKeyState
 GetCursorPos
 GetMessage
 GetModuleHandle
 GetSystemMetrics
+IFileOpenDialog
+IShellItem
 LoadIconMetric
 LocalFree
 LockWorkStation
@@ -34,6 +39,7 @@ SetProcessPreferredUILanguages
 SetForegroundWindow
 Shell_NotifyIcon
 SHQueryUserNotificationState
+SIGDN
 TRACK_POPUP_MENU_FLAGS
 TrackPopupMenuEx
 TranslateMessage
