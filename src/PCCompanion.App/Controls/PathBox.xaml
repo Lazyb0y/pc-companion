@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="PCCompanion.App.Controls.PathBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Paths read left to right in every language. -->
+    <Grid FlowDirection="LeftToRight">
+        <TextBox x:Name="Box" />
+        <TextBlock
+            x:Name="Trimmed"
+            VerticalAlignment="Top"
+            AutomationProperties.AccessibilityView="Raw"
+            Foreground="{ThemeResource TextControlForeground}"
+            IsHitTestVisible="False"
+            TextWrapping="NoWrap"
+            Visibility="Collapsed" />
+    </Grid>
+</UserControl>
