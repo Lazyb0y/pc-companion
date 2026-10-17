@@ -4,7 +4,7 @@
   <Package
       Name="PC Companion"
       Manufacturer="PC Companion"
-      Version="0.0.1"
+      Version="$(var.Version)"
       UpgradeCode="52686E02-C65A-47D6-8F24-F7A0CF243D9C"
       Scope="perUserOrMachine">
 
