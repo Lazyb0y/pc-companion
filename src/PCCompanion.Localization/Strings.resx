@@ -72,6 +72,26 @@
     <value>Run PC Companion in the background when you sign in.</value>
     <comment>General page: below GeneralStartupHeader. "PC Companion" is the product name.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>Always run as administrator</value>
+    <comment>General page: setting name.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>Lets features work while an app running as administrator is in front. Windows asks for permission when you turn this on or off.</value>
+    <comment>General page: below GeneralRunAsAdministratorHeader.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>Available when PC Companion is installed for all users.</value>
+    <comment>General page: instead of GeneralRunAsAdministratorDescription when PC Companion is installed for one user only.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>Needs an administrator account.</value>
+    <comment>General page: instead of GeneralRunAsAdministratorDescription when the user's account isn't an administrator.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>Always run as administrator couldn't be changed. Try again.</value>
+    <comment>General page: shown when turning the setting on or off failed.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Logs</value>
     <comment>General page: diagnostic log files.</comment>
@@ -79,6 +99,10 @@
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>Open logs folder</value>
     <comment>General page: button that opens the folder with the log files.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>Open host logs</value>
+    <comment>General page: button that opens the folder of the background host's logs, shown while Always run as administrator is on.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
     <value>Detailed logging</value>
@@ -307,6 +331,10 @@
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Corners don't work while an app running as administrator is in front.</value>
     <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so corners also work while an app running as administrator is in front. Run a program doesn't run.</value>
+    <comment>Hot Corners page: replaces HotCornersAdministratorInfo while Always run as administrator is on. "Run a program" is HotCornersActionRunProgram.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>

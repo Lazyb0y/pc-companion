@@ -72,12 +72,36 @@
     <value>সাইন ইন করার পর PC Companion পটভূমিতে চালান।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও বৈশিষ্ট্যগুলো কাজ করে। এটি চালু বা বন্ধ করার সময় Windows অনুমতি চায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>PC Companion সব ব্যবহারকারীর জন্য ইনস্টল করা থাকলে উপলভ্য।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>একটি অ্যাডমিনিস্ট্রেটর অ্যাকাউন্ট প্রয়োজন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান পরিবর্তন করা যায়নি। আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>লগ</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>লগ ফোল্ডার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>হোস্ট লগ খুলুন</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -306,6 +330,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে কোণগুলো কাজ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও কোণগুলো কাজ করে। একটি প্রোগ্রাম চালান কাজ করে না।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
