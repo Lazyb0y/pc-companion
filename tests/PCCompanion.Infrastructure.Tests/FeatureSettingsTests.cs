@@ -30,6 +30,34 @@ public sealed partial class FeatureSettingsTests
         Assert.ThrowsAny<JsonException>(() => FeatureSettings.Read(document.RootElement, SampleJsonContext.Default.SampleSettings, () => new SampleSettings(false, 0)));
     }
 
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("""{ "enabled": true }""", true)]
+    [InlineData("""{ "enabled": false }""", false)]
+    [InlineData("""{ "enabled": "yes" }""", false)]
+    [InlineData("""{ "other": 1 }""", false)]
+    [InlineData("""[true]""", false)]
+    public void IsEnabledReadsTheEnabledFlag(string? json, bool expected)
+    {
+        Assert.Equal(expected, FeatureSettings.IsEnabled(json is null ? null : Section(json)));
+    }
+
+    [Fact]
+    public void SetEnabledKeepsTheOtherSettings()
+    {
+        var section = FeatureSettings.SetEnabled(Section("""{ "enabled": false, "delay": 300, "corner": { "action": "Lock" } }"""), enabled: true);
+
+        Assert.Equal("""{"enabled":true,"delay":300,"corner":{"action":"Lock"}}""", section.GetRawText());
+    }
+
+    [Fact]
+    public void SetEnabledCreatesASectionWhenThereIsNone()
+    {
+        Assert.Equal("""{"enabled":true}""", FeatureSettings.SetEnabled(null, enabled: true).GetRawText());
+    }
+
+    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
+
     internal sealed record SampleSettings(bool Enabled, int Delay);
 
     [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
