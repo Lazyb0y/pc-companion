@@ -1,0 +1,112 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Input.KeyboardAndMouse;
+
+namespace PCCompanion.Platform.Windows;
+
+/// <summary>
+/// Opens parts of Windows and changes the session. Each method returns false when Windows
+/// refused the request. Windows drops shortcuts without an error while an app running as
+/// administrator is in front.
+/// </summary>
+public static class ShellActions
+{
+    private const nint MonitorOff = 2;
+
+    // Unassigned, so pressing it does nothing.
+    private const VIRTUAL_KEY MaskKey = (VIRTUAL_KEY)0xE8;
+
+    private static readonly VIRTUAL_KEY[] Modifiers =
+    [
+        VIRTUAL_KEY.VK_LCONTROL, VIRTUAL_KEY.VK_RCONTROL, VIRTUAL_KEY.VK_LSHIFT, VIRTUAL_KEY.VK_RSHIFT,
+        VIRTUAL_KEY.VK_LMENU, VIRTUAL_KEY.VK_RMENU, VIRTUAL_KEY.VK_LWIN, VIRTUAL_KEY.VK_RWIN,
+    ];
+
+    public static bool ShowTaskView() => SendShortcut(VIRTUAL_KEY.VK_LWIN, VIRTUAL_KEY.VK_TAB);
+
+    public static bool ShowDesktop() => SendShortcut(VIRTUAL_KEY.VK_LWIN, VIRTUAL_KEY.VK_D);
+
+    public static bool OpenStart() => SendShortcut(VIRTUAL_KEY.VK_LWIN);
+
+    public static bool OpenSearch() => SendShortcut(VIRTUAL_KEY.VK_LWIN, VIRTUAL_KEY.VK_S);
+
+    /// <summary>
+    /// Opens the notification center on Windows 11 and the Action center on Windows 10.
+    /// </summary>
+    public static bool OpenNotifications() =>
+        SendShortcut(VIRTUAL_KEY.VK_LWIN, OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000) ? VIRTUAL_KEY.VK_N : VIRTUAL_KEY.VK_A);
+
+    public static bool Lock() => PInvoke.LockWorkStation();
+
+    /// <summary>
+    /// Turns the displays off until the pointer moves or a key is pressed.
+    /// </summary>
+    /// <param name="window">A window of the calling thread, which passes the request to Windows.</param>
+    public static bool TurnOffDisplays(MessageWindow window) => PostSystemCommand(window, PInvoke.SC_MONITORPOWER, MonitorOff);
+
+    /// <summary>
+    /// Starts the screen saver chosen in Windows settings, if there is one.
+    /// </summary>
+    /// <param name="window">A window of the calling thread, which passes the request to Windows.</param>
+    public static bool StartScreenSaver(MessageWindow window) => PostSystemCommand(window, PInvoke.SC_SCREENSAVE, 0);
+
+    private static bool PostSystemCommand(MessageWindow window, uint command, nint parameter)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+
+        return PInvoke.PostMessage((HWND)window.Handle, PInvoke.WM_SYSCOMMAND, command, parameter);
+    }
+
+    // A modifier the user is holding, such as the key a hot corner requires, would change the
+    // shortcut: Ctrl + Windows + D adds a virtual desktop. Those keys are released first, after a
+    // key that does nothing, because releasing the Windows key or Alt on its own opens Start or
+    // the menu bar.
+    private static bool SendShortcut(params ReadOnlySpan<VIRTUAL_KEY> keys)
+    {
+        var inputs = new List<INPUT>();
+
+        foreach (var modifier in Modifiers)
+        {
+            if (InputState.IsDown(modifier))
+            {
+                if (inputs.Count == 0)
+                {
+                    inputs.Add(Key(MaskKey, up: false));
+                    inputs.Add(Key(MaskKey, up: true));
+                }
+
+                inputs.Add(Key(modifier, up: true));
+            }
+        }
+
+        foreach (var key in keys)
+        {
+            inputs.Add(Key(key, up: false));
+        }
+
+        for (var index = keys.Length - 1; index >= 0; index--)
+        {
+            inputs.Add(Key(keys[index], up: true));
+        }
+
+        return PInvoke.SendInput(CollectionsMarshal.AsSpan(inputs), Marshal.SizeOf<INPUT>()) == inputs.Count;
+    }
+
+    private static INPUT Key(VIRTUAL_KEY key, bool up)
+    {
+        var flags = up ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
+        if (key is VIRTUAL_KEY.VK_RCONTROL or VIRTUAL_KEY.VK_RMENU or VIRTUAL_KEY.VK_LWIN or VIRTUAL_KEY.VK_RWIN)
+        {
+            flags |= KEYBD_EVENT_FLAGS.KEYEVENTF_EXTENDEDKEY;
+        }
+
+        return new INPUT
+        {
+            type = INPUT_TYPE.INPUT_KEYBOARD,
+            Anonymous = new INPUT._Anonymous_e__Union { ki = new KEYBDINPUT { wVk = key, dwFlags = flags } },
+        };
+    }
+}
