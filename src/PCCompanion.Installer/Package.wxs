@@ -18,6 +18,9 @@
     <!-- Install dialog with a "Just for me" / "Everyone" choice; per-user is the default. -->
     <ui:WixUI Id="WixUI_Advanced" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <!-- Drawn from the app icon by scripts\installer-images.ps1. -->
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
     <Property Id="ApplicationFolderName" Value="PCCompanion" />
     <Property Id="WixAppFolder" Value="WixPerUserFolder" />
     <!--
