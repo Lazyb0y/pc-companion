@@ -8,8 +8,10 @@ using Microsoft.Extensions.Logging.Abstractions;
 using PCCompanion.Core;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
+using PCCompanion.Infrastructure.Features;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Logging;
+using PCCompanion.Modules.Input;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
@@ -42,16 +44,21 @@ internal static partial class Program
         using var services = new ServiceCollection()
             .AddLogging(builder => builder.AddFileLog(paths.LogsFolder, "host", detailedLogging: detailedLogging))
             .AddSingleton(paths)
+            .AddSingleton(TimeProvider.System)
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
+            .AddSingleton<FeatureRunner>()
+            .AddInputModule()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
         AppDomain.CurrentDomain.UnhandledException += (_, e) => LogCrash(logger, e.ExceptionObject as Exception);
         LogStarted(logger, Environment.OSVersion.Version);
 
+        // Features run on this thread, whose message loop they need.
         var store = services.GetRequiredService<SettingsStore>();
-        ApplySettings(store.Load(), detailedLogging, logger);
+        var features = services.GetRequiredService<FeatureRunner>();
+        ApplySettings(store.Load(), detailedLogging, features, logger);
 
         // Declared after the window, so the tray icon is removed before the window is destroyed.
         using var window = new MessageWindow(TrayController.WindowClassName);
@@ -59,7 +66,7 @@ internal static partial class Program
         tray.Show(window);
 
         using var watcher = new SettingsWatcher(paths);
-        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, logger));
+        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, logger));
 
         MessageLoop.Run();
         LogStopped(logger);
@@ -79,17 +86,18 @@ internal static partial class Program
         }
     }
 
-    private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, ILogger logger)
+    private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, FeatureRunner features, ILogger logger)
     {
         LanguageSetting.Apply(settings.General.Language, logger);
         detailedLogging.TurnOnUntil(settings.Diagnostics.DetailedLoggingUntil);
+        features.Apply(settings);
     }
 
-    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, ILogger logger)
+    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, FeatureRunner features, ILogger logger)
     {
         try
         {
-            ApplySettings(store.Load(), detailedLogging, logger);
+            ApplySettings(store.Load(), detailedLogging, features, logger);
             LogSettingsReloaded(logger);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
