@@ -50,8 +50,8 @@ public sealed class HotCornersFeatureTests : IDisposable
         Assert.False(_feature.IsRunning);
 
         Assert.Equal(
-            ["Hot Corners started.", "Hot Corners uses", "Hot Corners uses", "Hot Corners stopped."],
-            _logger.Entries.Select(entry => entry.Message.StartsWith("Hot Corners uses", StringComparison.Ordinal) ? "Hot Corners uses" : entry.Message));
+            ["Hot Corners started.", "Hot Corners applied its settings", "Hot Corners applied its settings", "Hot Corners stopped."],
+            _logger.Entries.Select(entry => entry.Message.StartsWith("Hot Corners applied its settings", StringComparison.Ordinal) ? "Hot Corners applied its settings" : entry.Message));
     }
 
     [Fact]
