@@ -34,6 +34,34 @@ public static class Win32 {
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern IntPtr FindWindow(string className, string title);
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam);
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+    [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
+    [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
+
+    [StructLayout(LayoutKind.Sequential)] private struct MOUSEINPUT { public int dx, dy; public uint mouseData, dwFlags, time; public IntPtr extra; }
+    [StructLayout(LayoutKind.Sequential)] private struct KEYBDINPUT { public ushort wVk, wScan; public uint dwFlags, time; public IntPtr extra; }
+    [StructLayout(LayoutKind.Explicit)] private struct INPUT { [FieldOffset(0)] public uint type; [FieldOffset(8)] public MOUSEINPUT mi; [FieldOffset(8)] public KEYBDINPUT ki; }
+
+    // Moves the pointer as a mouse does, so raw input reports it; (x, y) is on the main display.
+    public static bool MovePointer(int x, int y, int width, int height) {
+        var input = new INPUT { type = 0 };
+        input.mi.dx = (int)((long)x * 65535 / (width - 1));
+        input.mi.dy = (int)((long)y * 65535 / (height - 1));
+        input.mi.dwFlags = 0x8001; // MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
+
+    public static bool LeftButton(bool down) {
+        var input = new INPUT { type = 0 };
+        input.mi.dwFlags = down ? 0x0002u : 0x0004u; // MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
+
+    public static bool Key(ushort key, bool up) {
+        var input = new INPUT { type = 1 };
+        input.ki.wVk = key;
+        input.ki.dwFlags = up ? 0x0002u : 0u; // KEYEVENTF_KEYUP
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
 }
 '@
 [void] [Win32]::SetProcessDPIAware()
@@ -116,6 +144,21 @@ function Set-Toggle([string] $Name, [bool] $On) {
     return $true
 }
 
+# Opens a list to read the name a screen reader gives its selected item, then closes it.
+function Get-SelectedItemName([string] $ListName) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $ListName)
+    $list = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if (-not $list) { return $null }
+    $expand = $list.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $expand.Expand()
+    Start-Sleep -Milliseconds 500
+    $selected = @($list.GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).Current.GetSelection() | ForEach-Object { $_.Current.Name })
+    $expand.Collapse()
+    return ($selected -join ', ')
+}
+
 function Get-WindowText {
     $window = Get-AppWindow
     if (-not $window) { return @() }
@@ -135,6 +178,32 @@ function Send-TrayEvent([int] $TrayEvent, [int] $X = 0, [int] $Y = 0) {
 $WM_CONTEXTMENU = 0x007B
 $NIN_SELECT = 0x0400
 
+# Moves the pointer in steps from where it is to (X, Y), then waits. Returns whether it got there:
+# it doesn't while the Sandbox window is minimized or the mouse is moving over it.
+function Move-Pointer([int] $X, [int] $Y) {
+    $start = [System.Windows.Forms.Cursor]::Position
+    for ($step = 1; $step -le 10; $step++) {
+        $stepX = $start.X + [int](($X - $start.X) * $step / 10)
+        $stepY = $start.Y + [int](($Y - $start.Y) * $step / 10)
+        [void] [Win32]::MovePointer($stepX, $stepY, $screen.Width, $screen.Height)
+        Start-Sleep -Milliseconds 15
+    }
+    Start-Sleep -Milliseconds 1000
+    $position = [System.Windows.Forms.Cursor]::Position
+    return ($position.X -eq $X) -and ($position.Y -eq $Y)
+}
+
+function Get-HostLog {
+    (Get-ChildItem $logs -Filter 'host-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+}
+
+function Get-MatchCount([string] $Text, [string] $Pattern) { ([regex]::Matches($Text, $Pattern)).Count }
+
+function Get-VirtualDesktopCount {
+    $ids = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops' -Name VirtualDesktopIDs -ErrorAction SilentlyContinue).VirtualDesktopIDs
+    if ($ids) { $ids.Length / 16 } else { 1 }
+}
+
 function Write-Settings([string] $Json) {
     New-Item -ItemType Directory -Force -Path $dataFolder | Out-Null
     Set-Content -Path (Join-Path $dataFolder 'settings.json') -Value $Json -Encoding utf8
@@ -145,6 +214,7 @@ $installFolder = Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion'
 $appExe = Join-Path $installFolder 'PCCompanion.exe'
 $hostExe = Join-Path $installFolder 'PCCompanion.Host.exe'
 $dataFolder = Join-Path $env:LOCALAPPDATA 'PCCompanion'
+$logs = Join-Path $dataFolder 'Logs'
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
 $menuX = $screen.Width - 300
@@ -213,6 +283,9 @@ Test-Check 'Home in Arabic' ($text -contains 'الصفحة الرئيسية') ($
 Test-Check 'select General in Arabic' (Select-NavigationItem 'عام')
 Start-Sleep -Seconds 2
 Save-Screenshot '05-general-arabic-dark'
+Test-Check 'select Hot Corners in Arabic' (Select-NavigationItem 'الزوايا النشطة')
+Start-Sleep -Seconds 2
+Save-Screenshot '05b-hot-corners-arabic-dark'
 Test-Check 'tray menu requested in Arabic' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
 Save-Screenshot '06-tray-menu-arabic'
@@ -230,7 +303,81 @@ Test-Check 'select General in Bangla' (Select-NavigationItem 'সাধারণ
 Start-Sleep -Seconds 2
 Save-Screenshot '07-general-bangla-light'
 
-# 9. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
+# 9. Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
+#    it, not while a mouse button is held, and only with the key it requires.
+[void] (Close-SettingsApp)
+Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'turn on Hot Corners on Home' (Set-Toggle 'Hot Corners' $true)
+Start-Sleep -Seconds 2
+$saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners
+Test-Check 'the Home switch saves Hot Corners as on' ($saved.enabled -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'select Hot Corners' (Select-NavigationItem 'Hot Corners')
+Start-Sleep -Seconds 2
+Save-Screenshot '09-hot-corners-english'
+$text = Get-WindowText
+Test-Check 'Hot Corners shows its settings' (($text -contains 'Top left') -and ($text -contains 'Activation delay') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+$selected = Get-SelectedItemName 'Top left action'
+Test-Check 'the top-left corner shows Task View when first turned on' ($selected -eq 'Task View') "selected: $selected"
+[void] (Close-SettingsApp)
+
+# The top-left corner shows the desktop; detailed logging is on for the host's Debug entries.
+$detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
+function Write-HotCornersSettings([bool] $Enabled, [string] $Key) {
+    Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": $($Enabled.ToString().ToLowerInvariant()), ""topLeft"": { ""action"": ""ShowDesktop"", ""key"": ""$Key"" } } } }"
+    Start-Sleep -Seconds 3
+}
+$middleX = [int]($screen.Width / 2)
+$middleY = [int]($screen.Height / 2)
+$ran = 'The "?TopLeft"? corner ran "?ShowDesktop"?\.'
+Write-HotCornersSettings $true 'None'
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+$appWindow = (Get-Processes 'PCCompanion' | Select-Object -First 1).MainWindowHandle
+Test-Check 'the pointer can be moved in the Sandbox' (Move-Pointer 100 100) "at $([System.Windows.Forms.Cursor]::Position); keep the Sandbox window open and the mouse outside it"
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-Pointer 0 0)
+Test-Check 'the top-left corner shows the desktop' (Wait-Until { [Win32]::IsIconic($appWindow) } 5)
+Test-Check 'the host logs which corner ran which action' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 1 } 5)
+Save-Screenshot '10-hot-corners-show-desktop'
+
+# A mouse button held as the pointer reaches the corner, as when dragging a window there.
+[void] (Move-Pointer $middleX $middleY)
+[void] [Win32]::LeftButton($true)
+[void] (Move-Pointer 0 0)
+Start-Sleep -Seconds 1
+[void] [Win32]::LeftButton($false)
+Test-Check 'a held mouse button skips the corner' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?MouseButtonHeld`"?\." } 5)
+
+# The corner requires Ctrl. Holding it must not change the shortcut: Ctrl + Windows + D adds a virtual desktop.
+Write-HotCornersSettings $true 'Control'
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-Pointer 0 0)
+Test-Check 'without the required key the corner is skipped' (Wait-Until { (Get-HostLog) -match "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?KeyNotHeld`"?\." } 5)
+$desktops = Get-VirtualDesktopCount
+[void] (Move-Pointer $middleX $middleY)
+[void] [Win32]::Key(0xA2, $false)
+[void] (Move-Pointer 0 0)
+Start-Sleep -Seconds 1
+[void] [Win32]::Key(0xA2, $true)
+Test-Check 'with the required key the corner runs' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 2 } 5)
+Test-Check 'the held key adds no virtual desktop' ((Get-VirtualDesktopCount) -eq $desktops) "before: $desktops, after: $(Get-VirtualDesktopCount)"
+
+# Turned off, Hot Corners stops reading the pointer.
+Write-HotCornersSettings $false 'None'
+Test-Check 'turning Hot Corners off stops it' ((Get-HostLog) -match 'Hot Corners stopped\.')
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-Pointer 0 0)
+Start-Sleep -Seconds 1
+Test-Check 'a corner does nothing while Hot Corners is off' ((Get-MatchCount (Get-HostLog) $ran) -eq 2)
+[void] (Move-Pointer $middleX $middleY)
+Save-Screenshot '11-hot-corners-off'
+
+# 10. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
@@ -261,7 +408,7 @@ Start-Sleep -Seconds 2
 [System.Windows.Forms.SendKeys]::SendWait('{ESC}')
 Start-Sleep -Seconds 1
 
-# 10. Start with Windows on.
+# 11. Start with Windows on.
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "bn", "theme": "Light", "startWithWindows": true } }'
 Start-Sleep -Seconds 2
 [void] (Close-SettingsApp)
@@ -274,9 +421,8 @@ $process = Start-Process $hostExe -ArgumentList '--startup' -PassThru
 Start-Sleep -Seconds 5
 Test-Check 'host --startup keeps running when Start with Windows is on' (-not $process.HasExited)
 
-# 11. Logs.
+# 12. Logs.
 Stop-All
-$logs = Join-Path $dataFolder 'Logs'
 Copy-Item -Path (Join-Path $logs '*') -Destination $results -ErrorAction SilentlyContinue
 $logText = (Get-ChildItem $logs -File -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 Test-Check 'settings app and host logs written' ((Test-Path (Join-Path $logs 'app-*.log')) -and (Test-Path (Join-Path $logs 'host-*.log')))
@@ -294,7 +440,7 @@ Test-Check 'host wrote Debug entries while detailed logging was on' (@($hostLine
 Test-Check 'detailed logging turned itself off in the host' ($turnedOff.Count -ge 1)
 Test-Check 'host wrote no Debug entries after detailed logging turned off' (($turnedOff.Count -ge 1) -and (@($debugLines | Where-Object { $_ -gt $turnedOff[-1] }).Count -eq 0))
 
-# 12. Uninstall.
+# 13. Uninstall.
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall' ($code -eq 0) "exit code $code"
 Test-Check 'startup entry removed' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))

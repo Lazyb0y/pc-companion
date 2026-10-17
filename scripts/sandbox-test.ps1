@@ -8,7 +8,9 @@ Builds the installer for this PC's architecture, starts Windows Sandbox with net
 runs scripts\sandbox\runtime-checks.ps1 inside it. The Sandbox window closes when the checks
 finish. The report, screenshots and logs are written to TestResults\sandbox.
 
-Needs the Windows Sandbox feature. Only one Sandbox can run at a time.
+Needs the Windows Sandbox feature. Only one Sandbox can run at a time. Keep the Sandbox window open
+and the mouse outside it: some checks move the pointer inside the Sandbox, which doesn't work while
+the window is minimized.
 
 .PARAMETER Installer
 Checks the installer's dialogs instead, with scripts\sandbox\installer-checks.ps1, and writes the
