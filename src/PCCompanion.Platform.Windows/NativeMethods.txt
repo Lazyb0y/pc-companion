@@ -1,5 +1,6 @@
 AllowSetForegroundWindow
 AppendMenu
+CommandLineToArgv
 CreatePopupMenu
 CreateWindowEx
 DefWindowProc
@@ -15,6 +16,7 @@ GetMessage
 GetModuleHandle
 GetSystemMetrics
 LoadIconMetric
+LocalFree
 LockWorkStation
 MUI_LANGUAGE_NAME
 NINF_KEY
