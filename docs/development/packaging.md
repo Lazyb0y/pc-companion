@@ -20,6 +20,7 @@ CI builds both installers on every pull request and push to `main`. Download the
 
 - Silent install: `msiexec /i PCCompanion-x64.msi /qn` installs just for the current user; add `ALLUSERS=2 MSIINSTALLPERUSER=""` to install for all users.
 - The dialog's default folders are replaced in `Package.wxs` so both scopes use the folders above.
+- The installer adds a startup entry (`Run` key, in HKCU for a per-user install and in HKLM for all users) that starts `PCCompanion.Host.exe --startup` at sign-in. The host exits at once unless the user turned on **Start with Windows**, so changing it needs no admin rights. Uninstalling removes the entry. Windows' Startup apps page lists PC Companion as on either way.
 - Features that run elevated (always running as administrator, the elevated helper) require an "all users" install. The per-user folder is writable by the user, so an elevated process started from it could be replaced.
 - Anything the app adds outside its install folder, such as startup entries or scheduled tasks, must be removed on uninstall. Windows Installer only removes what it installed.
 - The app project sets `EnableMsixTooling` although the app is unpackaged: publishing then includes `PCCompanion.pri` with the compiled XAML embedded. Without it, the installed app crashes on start.

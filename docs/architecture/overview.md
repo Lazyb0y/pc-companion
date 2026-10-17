@@ -4,7 +4,8 @@
 
 - `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app; **Exit** stops the host.
 - One host runs per user session. Starting it again asks the running host to open the settings app.
-- `PCCompanion.exe` is the settings app. It opens on demand and exits when its window closes.
+- `PCCompanion.exe` is the settings app. It opens on demand and exits when its window closes. It starts the host when the host isn't running, and only one settings window opens per user session.
+- Windows starts the host at every sign-in. It keeps running only for users who turned on **Start with Windows**.
 - Only the settings app saves settings. The host watches the settings file and loads it again after each save.
 - Both are self-contained and install into one folder; see [Packaging](../development/packaging.md).
 
@@ -13,7 +14,7 @@
 - WinUI 3 on the Windows App SDK.
 - The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
 - Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
-- The window has a navigation pane with **Home** and, at the bottom, **General**.
+- The window has a navigation pane with **Home** and, at the bottom, **General**: language, app theme, start with Windows, logs and the version. Changes are saved right away.
 - Theme: light, dark or the Windows app mode, from the settings. The title bar follows it.
 - The host's tray icon and menu use the Windows API directly, through CsWin32; the host has no UI framework.
 
@@ -28,6 +29,7 @@
 |---|---|
 | `general.language` | A BCP-47 language tag, or `null` for the Windows display language |
 | `general.theme` | `System`, `Light` or `Dark` |
+| `general.startWithWindows` | `true` or `false` (default) |
 
 ## Identifiers
 
