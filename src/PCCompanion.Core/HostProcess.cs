@@ -10,4 +10,10 @@ public static class HostProcess
 
     /// <summary>The lock the running host holds, one per user session.</summary>
     public const string InstanceLockName = @"Local\PCCompanion.Host";
+
+    /// <summary>
+    /// The argument of the startup entry the installer adds. The host started with it exits
+    /// unless the user turned on <see cref="Settings.GeneralSettings.StartWithWindows"/>.
+    /// </summary>
+    public const string StartupArgument = "--startup";
 }
