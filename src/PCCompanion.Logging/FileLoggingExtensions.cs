@@ -9,16 +9,19 @@ namespace PCCompanion.Logging;
 
 public static class FileLoggingExtensions
 {
+    /// <summary>How many days log files are kept.</summary>
+    public const int RetentionDays = 14;
+
     private const string OutputTemplate =
         "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}";
 
     private const long FileSizeLimitBytes = 5 * 1024 * 1024;
     private const int RetainedFileCountLimit = 30;
-    private static readonly TimeSpan RetainedFileTimeLimit = TimeSpan.FromDays(14);
+    private static readonly TimeSpan RetainedFileTimeLimit = TimeSpan.FromDays(RetentionDays);
 
     /// <summary>
     /// Writes log entries to <c>{fileName}-yyyyMMdd.log</c> in <paramref name="logsFolder"/>.
-    /// A new file starts every day and at 5 MB; files older than 14 days are deleted.
+    /// A new file starts every day and at 5 MB; files older than <see cref="RetentionDays"/> days are deleted.
     /// </summary>
     /// <param name="fileName">The start of the file names, for example <c>app</c>.</param>
     /// <param name="redactor">Redacts the text written; by default the current user's profile folder.</param>
