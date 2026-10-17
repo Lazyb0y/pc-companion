@@ -18,12 +18,16 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
         try
         {
             using var process = Process.Start(new ProcessStartInfo(SettingsAppPath) { UseShellExecute = false });
+            LogStarted(logger, process?.Id);
         }
         catch (Win32Exception exception)
         {
             LogCantStart(logger, exception, SettingsAppPath);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Started the settings app (process {ProcessId}).")]
+    private static partial void LogStarted(ILogger logger, int? processId);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Can't start the settings app at {Path}.")]
     private static partial void LogCantStart(ILogger logger, Win32Exception exception, string path);
