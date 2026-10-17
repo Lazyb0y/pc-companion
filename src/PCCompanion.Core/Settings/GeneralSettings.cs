@@ -11,4 +11,9 @@ public sealed record GeneralSettings
     public string? Language { get; set; }
 
     public AppTheme Theme { get; set; } = AppTheme.System;
+
+    /// <summary>
+    /// Whether the background host keeps running after the user signs in to Windows.
+    /// </summary>
+    public bool StartWithWindows { get; set; }
 }
