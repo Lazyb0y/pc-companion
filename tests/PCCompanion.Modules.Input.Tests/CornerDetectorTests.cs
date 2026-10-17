@@ -92,6 +92,16 @@ public sealed class CornerDetectorTests
     }
 
     [Fact]
+    public void AnUnknownPointerPositionIsNoCorner()
+    {
+        MoveTo(TopLeft);
+        Assert.Equal(CornerDecision.Nothing, MoveTo(null));
+
+        _clock.Advance(TimeSpan.FromMilliseconds(150));
+        Assert.Equal(CornerDecision.Nothing, _detector.Update());
+    }
+
+    [Fact]
     public void AButtonHeldWhenThePointerArrivesSkipsTheCornerUntilThePointerLeaves()
     {
         _environment.IsMouseButtonHeld = true;
@@ -220,7 +230,7 @@ public sealed class CornerDetectorTests
     private static CornerDecision Waiting(TimeSpan wait) =>
         new(CornerOutcome.Waiting, ScreenCorner.TopLeft, HotCornerAction.TaskView, wait);
 
-    private CornerDecision MoveTo(Point position)
+    private CornerDecision MoveTo(Point? position)
     {
         _environment.PointerPosition = position;
         return _detector.Update();
@@ -262,7 +272,7 @@ public sealed class CornerDetectorTests
 
     private sealed class FakeEnvironment : IHotCornerEnvironment
     {
-        public Point PointerPosition { get; set; }
+        public Point? PointerPosition { get; set; }
 
         public bool IsMouseButtonHeld { get; set; }
 

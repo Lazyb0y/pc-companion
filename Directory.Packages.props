@@ -7,6 +7,7 @@
     <!-- Preview: 8.2, the latest stable, needs the full Windows App SDK 1.6 package. -->
     <PackageVersion Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.3.260402-preview2" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.363" />

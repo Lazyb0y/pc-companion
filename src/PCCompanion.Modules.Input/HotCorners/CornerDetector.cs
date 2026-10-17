@@ -78,7 +78,7 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
         return new CornerDecision(outcome, corner.Position, _settings.For(corner.Position).Action, TimeSpan.Zero);
     }
 
-    private Corner? Find(Point position)
+    private Corner? Find(Point? position)
     {
         foreach (var corner in _corners)
         {

@@ -8,9 +8,10 @@ namespace PCCompanion.Modules.Input.HotCorners;
 public interface IHotCornerEnvironment
 {
     /// <summary>
-    /// The pointer position in physical pixels.
+    /// The pointer position in physical pixels, or <see langword="null"/> when it can't be read,
+    /// for example on the lock screen.
     /// </summary>
-    Point PointerPosition { get; }
+    Point? PointerPosition { get; }
 
     bool IsMouseButtonHeld { get; }
 
