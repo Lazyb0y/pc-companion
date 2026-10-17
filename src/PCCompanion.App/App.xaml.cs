@@ -135,6 +135,7 @@ public partial class App : Application
             .AddSingleton<SettingsStore>()
             .AddSingleton(provider => provider.GetRequiredService<SettingsStore>().Load())
             .AddSingleton<HostLauncher>()
+            .AddSingleton<RunAsAdministrator>()
             .AddSingleton<FeatureSettingsEditor>()
             .AddTransient<GeneralViewModel>()
             .AddTransient<HomeViewModel>()

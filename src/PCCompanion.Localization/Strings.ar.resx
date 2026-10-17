@@ -72,12 +72,36 @@
     <value>تشغيل PC Companion في الخلفية عند تسجيل الدخول.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>التشغيل دائماً كمسؤول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>يتيح عمل الميزات أثناء وجود تطبيق يعمل كمسؤول في المقدمة. يطلب Windows الإذن عند تشغيل هذا الإعداد أو إيقاف تشغيله.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>متوفر عند تثبيت PC Companion لجميع المستخدمين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>يتطلب حساب مسؤول.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>تعذّر تغيير التشغيل دائماً كمسؤول. حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>السجلات</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>فتح مجلد السجلات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>فتح سجلات المضيف</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -338,6 +362,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>لا تعمل الزوايا عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا تعمل الزوايا أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة. لا يعمل تشغيل برنامج.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

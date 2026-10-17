@@ -203,7 +203,7 @@
                 Margin="0,16,0,0"
                 IsClosable="False"
                 IsOpen="True"
-                Message="{app:Localized Key=HotCornersAdministratorInfo}"
+                Message="{x:Bind ViewModel.AdministratorInfo}"
                 Severity="Informational" />
 
             <toolkit:SettingsCard Description="{app:Localized Key=HotCornersPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">

@@ -72,12 +72,36 @@
     <value>登录时在后台运行 PC Companion。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>始终以管理员身份运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>以管理员身份运行的应用位于前台时，功能也能正常工作。打开或关闭此设置时，Windows 会请求权限。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>为所有用户安装 PC Companion 后可用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>需要管理员帐户。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>无法更改“始终以管理员身份运行”。请重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>日志</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>打开日志文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>打开主机日志</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -298,6 +322,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>以管理员身份运行的应用位于前台时，触发角不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，触发角也能工作。“运行程序”不会运行。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

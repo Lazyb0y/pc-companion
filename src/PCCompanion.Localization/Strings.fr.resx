@@ -72,12 +72,36 @@
     <value>Exécuter PC Companion en arrière-plan à l’ouverture de session.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>Toujours exécuter en tant qu’administrateur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>Permet aux fonctionnalités de fonctionner quand une application exécutée en tant qu’administrateur est au premier plan. Windows demande l’autorisation quand vous activez ou désactivez cette option.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>Disponible quand PC Companion est installé pour tous les utilisateurs.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>Nécessite un compte administrateur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>Impossible de modifier Toujours exécuter en tant qu’administrateur. Réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Journaux</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>Ouvrir le dossier des journaux</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>Ouvrir les journaux de l’hôte</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -306,6 +330,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Les coins ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion est exécuté en tant qu’administrateur : les coins fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan. Exécuter un programme ne s’exécute pas.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

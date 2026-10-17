@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
+using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.HotCorners;
 
@@ -22,12 +23,14 @@ public sealed partial class HotCornersViewModel : ObservableObject
     private static readonly CompositeFormat DelayFormat = CompositeFormat.Parse(Strings.HotCornersDelayValue);
 
     private readonly FeatureSettingsEditor _editor;
+    private readonly AppSettings _appSettings;
     private HotCornersSettings _settings;
     private bool _saveFailed;
 
-    public HotCornersViewModel(FeatureSettingsEditor editor)
+    public HotCornersViewModel(FeatureSettingsEditor editor, AppSettings appSettings)
     {
         _editor = editor;
+        _appSettings = appSettings;
         _settings = editor.Read(HotCornersFeature.Definition.Id, HotCornersSettings.Read);
 
         Actions =
@@ -60,6 +63,11 @@ public sealed partial class HotCornersViewModel : ObservableObject
     }
 
     public static string Glyph => HotCornersFeature.Definition.Glyph;
+
+    /// <summary>What happens while an app running as administrator is in front.</summary>
+    public string AdministratorInfo => _appSettings.General.AlwaysRunAsAdministrator
+        ? Strings.HotCornersAdministratorInfoOn
+        : Strings.HotCornersAdministratorInfo;
 
     public IReadOnlyList<ActionOption> Actions { get; }
 

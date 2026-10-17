@@ -72,12 +72,36 @@
     <value>Ejecuta PC Companion en segundo plano al iniciar sesión.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>Ejecutar siempre como administrador</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>Permite que las características funcionen mientras una aplicación que se ejecuta como administrador está en primer plano. Windows pide permiso cuando activas o desactivas esta opción.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>Disponible cuando PC Companion está instalado para todos los usuarios.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>Requiere una cuenta de administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>No se pudo cambiar Ejecutar siempre como administrador. Inténtalo de nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Registros</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>Abrir la carpeta de registros</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>Abrir registros del host</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -306,6 +330,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Las esquinas no funcionan mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que las esquinas también funcionan mientras una aplicación que se ejecuta como administrador está en primer plano. Ejecutar un programa no se ejecuta.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

@@ -72,12 +72,36 @@
     <value>PC Companion bei der Anmeldung im Hintergrund ausführen.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHeader" xml:space="preserve">
+    <value>Immer als Administrator ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorDescription" xml:space="preserve">
+    <value>Damit Funktionen auch funktionieren, wenn eine als Administrator ausgeführte App im Vordergrund ist. Windows fragt beim Ein- und Ausschalten nach der Berechtigung.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAllUsers" xml:space="preserve">
+    <value>Verfügbar, wenn PC Companion für alle Benutzer installiert ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorNeedsAdministrator" xml:space="preserve">
+    <value>Erfordert ein Administratorkonto.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralRunAsAdministratorFailed" xml:space="preserve">
+    <value>„Immer als Administrator ausführen“ konnte nicht geändert werden. Versuchen Sie es erneut.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Protokolle</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralLogsOpen" xml:space="preserve">
     <value>Protokollordner öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralLogsOpenHost" xml:space="preserve">
+    <value>Host-Protokolle öffnen</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="GeneralDetailedLoggingHeader" xml:space="preserve">
@@ -306,6 +330,10 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Die Ecken funktionieren nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren die Ecken auch, wenn eine als Administrator ausgeführte App im Vordergrund ist. „Programm ausführen“ wird nicht ausgeführt.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

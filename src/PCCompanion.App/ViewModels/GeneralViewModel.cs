@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Logging;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.ViewModels;
 
@@ -37,11 +39,15 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     private readonly DetailedLogging _detailedLogging;
     private readonly TimeProvider _time;
     private readonly ILogger<GeneralViewModel> _logger;
+    private readonly RunAsAdministrator _runAsAdministrator;
     private readonly DispatcherQueue? _dispatcher = DispatcherQueue.GetForCurrentThread();
     private LanguageOption _selectedLanguage;
     private ThemeOption _selectedTheme;
     private bool _startWithWindows;
     private bool _saveFailed;
+    private bool _runAsAdministratorOn;
+    private bool _changingRunAsAdministrator;
+    private bool _runAsAdministratorFailed;
 
     public GeneralViewModel(
         AppSettings settings,
@@ -49,6 +55,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         AppDataPaths paths,
         DetailedLogging detailedLogging,
         TimeProvider time,
+        RunAsAdministrator runAsAdministrator,
         ILogger<GeneralViewModel> logger)
     {
         _settings = settings;
@@ -57,6 +64,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         _detailedLogging = detailedLogging;
         _time = time;
         _logger = logger;
+        _runAsAdministrator = runAsAdministrator;
+        _runAsAdministratorOn = runAsAdministrator.IsOn;
 
         // Detailed logging also turns off by itself, on a timer thread.
         _detailedLogging.Changed += OnDetailedLoggingChanged;
@@ -131,6 +140,39 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Always run as administrator. Changing it asks for admin rights; when the user declines or
+    /// it fails, the switch goes back.
+    /// </summary>
+    public bool RunAsAdministratorOn
+    {
+        get => _runAsAdministratorOn;
+        set
+        {
+            if (value != _runAsAdministratorOn && !_changingRunAsAdministrator)
+            {
+                _runAsAdministratorOn = value;
+                OnPropertyChanged();
+                _ = ChangeRunAsAdministratorAsync(value);
+            }
+        }
+    }
+
+    public bool RunAsAdministratorAvailable => _runAsAdministrator.UnavailableReason is null && !_changingRunAsAdministrator;
+
+    /// <summary>What the setting does, or why it isn't available.</summary>
+    public string RunAsAdministratorDescription => _runAsAdministrator.UnavailableReason ?? Strings.GeneralRunAsAdministratorDescription;
+
+    /// <summary>True when the last change of Always run as administrator failed.</summary>
+    public bool RunAsAdministratorFailed
+    {
+        get => _runAsAdministratorFailed;
+        private set => SetProperty(ref _runAsAdministratorFailed, value);
+    }
+
+    /// <summary>The host writes its logs to another folder while it runs as administrator.</summary>
+    public bool HostLogsShown => _runAsAdministrator.IsOn;
+
     public bool DetailedLoggingOn
     {
         get => _detailedLogging.IsOn;
@@ -168,7 +210,36 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { _paths.LogsFolder } });
     }
 
+    [RelayCommand]
+    private void OpenHostLogsFolder()
+    {
+        var folder = AppDataPaths.ProtectedLogsFolder(Elevation.CurrentUserSid);
+        if (!Directory.Exists(folder))
+        {
+            LogNoHostLogs(_logger);
+            return;
+        }
+
+        var explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+        using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { folder } });
+    }
+
     public void Dispose() => _detailedLogging.Changed -= OnDetailedLoggingChanged;
+
+    private async Task ChangeRunAsAdministratorAsync(bool on)
+    {
+        _changingRunAsAdministrator = true;
+        OnPropertyChanged(nameof(RunAsAdministratorAvailable));
+
+        var result = await _runAsAdministrator.SetAsync(on).ConfigureAwait(true);
+
+        _changingRunAsAdministrator = false;
+        _runAsAdministratorOn = _runAsAdministrator.IsOn;
+        RunAsAdministratorFailed = result == RunAsAdministratorResult.Failed;
+        OnPropertyChanged(nameof(RunAsAdministratorOn));
+        OnPropertyChanged(nameof(RunAsAdministratorAvailable));
+        OnPropertyChanged(nameof(HostLogsShown));
+    }
 
     private void OnDetailedLoggingChanged(object? sender, EventArgs e)
     {
@@ -201,6 +272,9 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
             SaveFailed = true;
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "The host hasn't written logs as administrator yet.")]
+    private static partial void LogNoHostLogs(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Can't save the settings.")]
     private static partial void LogSaveFailed(ILogger logger, Exception exception);
