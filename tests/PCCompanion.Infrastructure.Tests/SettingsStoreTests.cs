@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Settings;
@@ -57,6 +58,31 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.Equal(
             ["There is no settings file yet, so the default settings are used.", "Saved the settings.", "Loaded the settings (schema version 1)."],
             _logger.Entries.Where(entry => entry.Level == LogLevel.Debug).Select(entry => entry.Message));
+    }
+
+    [Fact]
+    public void SaveThenLoadKeepsFeatureSectionsAsTheyAre()
+    {
+        var settings = new AppSettings();
+        settings.Features["hotCorners"] = JsonDocument.Parse("""{ "enabled": true, "topLeft": { "action": "TaskView" } }""").RootElement.Clone();
+        settings.Features["someFutureFeature"] = JsonDocument.Parse("""{ "enabled": false, "anything": [1, 2] }""").RootElement.Clone();
+
+        _store.Save(settings);
+
+        Assert.Equal(settings, _store.Load());
+        Assert.Contains("\"features\": {", File.ReadAllText(_paths.SettingsFile), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SettingsWithDifferentFeatureSectionsAreNotEqual()
+    {
+        var first = new AppSettings();
+        first.Features["hotCorners"] = JsonDocument.Parse("""{ "enabled": true }""").RootElement.Clone();
+        var second = new AppSettings();
+        second.Features["hotCorners"] = JsonDocument.Parse("""{ "enabled": false }""").RootElement.Clone();
+
+        Assert.NotEqual(first, second);
+        Assert.Equal(first, first with { });
     }
 
     [Fact]
