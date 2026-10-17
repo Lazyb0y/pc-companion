@@ -1,0 +1,39 @@
+using System;
+using System.IO;
+using Xunit;
+
+namespace PCCompanion.Platform.Windows.Tests;
+
+public sealed class ProtectedFilesTests
+{
+    [Fact]
+    public void TheWindowsSystemFolderAndItsProgramsAreProtected()
+    {
+        Assert.True(ProtectedFiles.IsProtected(Environment.SystemDirectory));
+        Assert.True(ProtectedFiles.IsProtected(Path.Combine(Environment.SystemDirectory, "schtasks.exe")));
+    }
+
+    [Fact]
+    public void AFolderTheUserCreatedIsNotProtected()
+    {
+        var folder = Directory.CreateTempSubdirectory("PCCompanion.Tests.").FullName;
+        try
+        {
+            var file = Path.Combine(folder, "Host.exe");
+            File.WriteAllBytes(file, []);
+
+            Assert.False(ProtectedFiles.IsProtected(folder));
+            Assert.False(ProtectedFiles.IsProtected(file));
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void AMissingPathIsNotProtected()
+    {
+        Assert.False(ProtectedFiles.IsProtected(Path.Combine(Path.GetTempPath(), $"PCCompanion.Tests.{Guid.NewGuid():N}")));
+    }
+}

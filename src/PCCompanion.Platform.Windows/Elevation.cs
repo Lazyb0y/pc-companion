@@ -42,4 +42,25 @@ public static class Elevation
 
     /// <summary>The security identifier of the user this process runs as, such as <c>S-1-5-21-…</c>.</summary>
     public static string CurrentUserSid => WindowsIdentity.GetCurrent().User?.Value ?? string.Empty;
+
+    /// <summary>
+    /// Whether <paramref name="sid"/> is the security identifier of a user account, rather than
+    /// of a group, a built-in account or anything that isn't one.
+    /// </summary>
+    public static bool IsAccountSid(string? sid)
+    {
+        if (string.IsNullOrEmpty(sid))
+        {
+            return false;
+        }
+
+        try
+        {
+            return new SecurityIdentifier(sid).IsAccountSid();
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
 }
