@@ -9,12 +9,12 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 ## Behavior
 
 - **Alt + the key above Tab** brings the app's window that is furthest back to the front. Pressing it again goes on to the next one, so repeated presses visit every window of the app and then come back to the first, as in macOS.
-- **Alt + Shift + the key above Tab** goes the other way: the app's second window comes to the front, and the one that was in front goes behind the app's other windows. One press each way leaves the windows as they were.
+- **Alt + Shift + the key above Tab** goes the other way: the app's second window comes to the front, and the one that was in front goes behind all windows, as with Alt + Esc. One press each way leaves the app's windows in the order they were.
 - Each press switches right away, whether Alt is still held or not. No list or preview appears.
 - The app in front is the app of the window in front, or of the window that owns it, such as a dialog's main window.
 - With only one window, or when no app is in front, such as the desktop or the taskbar, the shortcut does nothing.
 - A window with an open dialog comes to the front with its dialog, as with Alt + Tab.
-- No window moves or changes size, windows of other apps keep their places, and always-on-top windows stay on top.
+- No window moves or changes size, and always-on-top windows stay on top. Windows of other apps keep their places, except that going back puts the app's old front window behind them.
 - Holding the key down switches once; it doesn't repeat.
 
 ## Which windows
@@ -40,6 +40,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 - **Shortcut** offers Alt, the default, or the Windows key with the key above Tab, as GNOME does. Shift goes the other way with either.
 - **How:** `RegisterHotKey`, the Windows API for global shortcuts, with `MOD_NOREPEAT`. No keyboard hook: Windows tells PC Companion only when the shortcut is pressed.
 - Windows matches shortcuts by virtual key, which depends on the keyboard layout of the window in front: the key above Tab is `VK_OEM_3` in US English, `VK_OEM_5` in German and `VK_OEM_7` in French. The host maps the key (scan code `0x29`) to its virtual key in that layout (`MapVirtualKeyEx`), and registers the shortcut again when the virtual key differs.
+- The layout is read from the window with the keyboard focus. A Store app's frame, which is the window in front, belongs to a shared process whose layout doesn't follow layout switches.
 - The host checks each time another window comes to the front, which an out-of-context WinEvent hook (`EVENT_SYSTEM_FOREGROUND`) reports without running code in other programs.
 - Windows reports no layout change within the same window, such as with Left Alt + Shift or Windows + Space. So while the installed layouts don't all put the same virtual key above Tab, as with US English and German, the host also checks the front window's layout once a second. With one layout, or layouts that agree, no timer runs; whether they agree is checked again each time another window comes to the front.
 - While the feature is on, other apps don't get the shortcut. JetBrains IDEs, for example, use Alt + `` ` `` for their version control menu. The feature page says so.
@@ -55,6 +56,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 A spike in Windows Sandbox, with keys sent by scan code, confirmed:
 
 - Each press brings the next window to the front, whether Alt is held or released between presses, and with the Windows key too. A minimized window is restored when its turn comes. One press each way leaves the order as it was.
+- Putting the old front window right behind the app's last window, with `SetWindowPos`, reports success but leaves File Explorer's windows, each in its own process, where they were. Putting it behind all windows works, and it stays in front of the desktop.
 - Releasing Alt or the Windows key after the shortcut opens no menu bar and no Start, while Alt or the Windows key pressed alone does.
 - On the German layout, the shortcut takes the `^` dead key without changing the next character: an `e` typed after it stays `e`.
 - Settings, a Store app in the shared frame process, has its app ID on its frame window. File Explorer windows have none and are grouped by program file.
