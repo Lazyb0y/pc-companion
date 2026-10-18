@@ -13,6 +13,8 @@ DestroyMenu
 DestroyWindow
 DispatchMessage
 DuplicateTokenEx
+DwmSetWindowAttribute
+DWMWINDOWATTRIBUTE
 EnumDisplayMonitors
 FileOpenDialog
 FILEOPENDIALOGOPTIONS
