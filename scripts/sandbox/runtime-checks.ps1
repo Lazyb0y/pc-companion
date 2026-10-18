@@ -264,6 +264,27 @@ function Move-Pointer([int] $X, [int] $Y) {
     return ($position.X -eq $X) -and ($position.Y -eq $Y)
 }
 
+# Chooses an item of the host's open tray menu with the mouse, as a user does. Keys would go to
+# the window in front, which needn't be the menu when the menu was opened by a posted message.
+function Select-TrayMenuItem([string] $Name) {
+    $menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
+    $itemCondition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::MenuItem)))
+    $script:menuItem = $null
+    $found = Wait-Until {
+        $menu = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $menuCondition)
+        $script:menuItem = if ($menu) { $menu.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $itemCondition) }
+        $null -ne $script:menuItem
+    } 10
+    if (-not $found) { return $false }
+    $rectangle = $script:menuItem.Current.BoundingRectangle
+    if (-not (Move-Pointer ([int] ($rectangle.X + $rectangle.Width / 2)) ([int] ($rectangle.Y + $rectangle.Height / 2)))) { return $false }
+    [void] [Win32]::LeftButton($true)
+    [void] [Win32]::LeftButton($false)
+    return $true
+}
+
 # Moves the pointer into the top-left corner and pushes it against the edges, as a mouse does.
 # Windows reports no mouse input for an absolute move to exactly (0, 0), so the push makes the
 # host see the pointer arrive.
@@ -356,9 +377,7 @@ Start-Process $hostExe -Wait
 Test-Check 'a second host launch keeps one host' ((Get-Processes 'PCCompanion.Host').Count -eq 1)
 Test-Check 'the settings app is open before Exit' ((Get-Processes 'PCCompanion').Count -eq 1)
 Test-Check 'tray menu requested for Exit' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
-Start-Sleep -Seconds 2
-# The menu opens with nothing selected: Settings, then Exit.
-[System.Windows.Forms.SendKeys]::SendWait('{DOWN}{DOWN}{ENTER}')
+Test-Check 'choose Exit in the tray menu' (Select-TrayMenuItem 'Exit')
 Test-Check 'Exit in the tray menu stops the host' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 0 } 15)
 Test-Check 'Exit in the tray menu closes the settings app' (Wait-Until { (Get-Processes 'PCCompanion').Count -eq 0 } 15)
 Start-Process $hostExe
