@@ -17,7 +17,7 @@ Runs the background host as administrator, so features also work while an app ru
 - **Turning it on:** Windows asks for admin rights once, with a UAC prompt. The elevated helper (`PCCompanion.Elevated.exe`, started on demand for this one command) then creates the scheduled tasks for the current user, and the host restarts as administrator.
 - **The tasks:** two per user who turned the setting on, in a `\PCCompanion\` folder in Task Scheduler. One starts `PCCompanion.Host.exe --startup` from Program Files when the user signs in; the other starts the host, without arguments, on request. Both run with the highest rights the user has. Only administrators can change them; the user can read and run them.
 - **At sign-in:** the Run entry and the sign-in task both start the host. Without admin rights, the host checks the setting and exits, so the copy started by the task runs. Both copies still exit unless **Start with Windows** is on.
-- **Other starts:** a host started without admin rights, for example by the settings app, runs the on-request task, which needs no prompt, and exits. If the task doesn't start, it keeps running without admin rights and logs a warning.
+- **Other starts:** a host started without admin rights, for example by the settings app, runs the on-request task, which needs no prompt, and exits. If the task doesn't start, it keeps running without admin rights and logs a warning, and the General page says so.
 - **The settings app:** always runs without admin rights. When the host opens it from its tray icon, it starts it with the token of the Windows shell, which runs without admin rights.
 - **Turning it off:** Windows asks for admin rights again. The helper deletes the tasks, and the host restarts without admin rights.
 - **Uninstalling** removes the tasks of every user.
@@ -25,7 +25,7 @@ Runs the background host as administrator, so features also work while an app ru
 ## Between the host and other programs
 
 - Windows blocks messages from programs without admin rights to windows of programs with them. The host allows only its own messages through: the tray icon's events, the taskbar's restart message, and "open the settings app" from a second host launch.
-- The host's single-instance lock must stay checkable by the settings app without admin rights.
+- The host's single-instance lock must stay checkable by the settings app without admin rights. The lock only says whether a host runs: programs without admin rights can open it whether or not the host runs as administrator. Whether it does, the settings app reads from the token of the process that owns the host's window, which programs of the same user may read without admin rights.
 - The settings file is written by the settings app without admin rights, and any program running as the user can change it. The host treats it as untrusted. No setting may make the host run code, or read or write files, as administrator. Run a program already does nothing while the host runs as administrator.
 - While the host runs as administrator after a UAC prompt, its logs go to `%ProgramData%\PCCompanion\Logs\<user SID>`, which only administrators can change, and the user can read. Writing them to the user's data folder would let a program redirect the writes elsewhere with a link. All-users installs create the `Logs` folder; when it's missing or others can change it, the host writes no log file. With UAC off, every program already has admin rights, so the logs stay in the user's folder.
 
@@ -34,7 +34,8 @@ Runs the background host as administrator, so features also work while an app ru
 - General page: **Always run as administrator**, with the description "Lets features work while an app running as administrator is in front. Windows asks for permission when you turn it on or off."
 - When turned on, the Hot Corners page's note changes to say that corners work in front of apps running as administrator, and that Run a program doesn't run.
 - If the user cancels the UAC prompt, the switch goes back and nothing changes. If the change fails, the page says so.
-- While it's on, and UAC is on, the Logs card also has **Open host logs**. With UAC off, the host's logs stay in the user's logs folder, which **Open logs folder** opens.
+- While it's on and UAC is on, if the host runs without admin rights, a warning above the switch says so: features don't work while an app running as administrator is in front; to fix it, turn the setting off and on again, or sign out and back in. The page checks when it opens and after the switch changes. With UAC off, every program runs with the user's full rights, so the page shows no warning. When no host runs, or its rights can't be read, the page shows no warning either.
+- While it's on, and UAC is on, the Logs card also has **Open host logs**, unless the warning shows. With UAC off, or while the host runs without admin rights, the host's logs are in the user's logs folder, which **Open logs folder** opens.
 - The helper logs what it did, and why it failed, to `elevated-yyyyMMdd.log` in the user's protected logs folder: the settings app starts it through UAC, so it can't read its output.
 
 ## Compatibility
@@ -50,7 +51,7 @@ Runs the background host as administrator, so features also work while an app ru
 
 ## Testing
 
-- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, and the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task).
+- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task), when the General page warns that the host runs without admin rights, reading a process's elevation, and finding the process that owns a window.
 - **Sandbox checks:** UAC is off in Windows Sandbox and everything runs as administrator, so the checks cover:
   - creating and deleting the tasks, and their definitions;
   - the host started through the on-request task;
@@ -62,4 +63,5 @@ Runs the background host as administrator, so features also work while an app ru
   - signing out and in, and the host starting as administrator from the settings app;
   - the tray icon opening the settings app without admin rights;
   - Hot Corners in front of an app running as administrator;
-  - the host's logs in the protected folder, and **Open host logs**.
+  - the host's logs in the protected folder, and **Open host logs**;
+  - a failed hand-off, forced by deleting the on-request task: the General page warning, with **Open host logs** hidden, and no warning once the host runs as administrator.
