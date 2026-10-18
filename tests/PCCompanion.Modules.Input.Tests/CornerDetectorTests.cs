@@ -13,7 +13,7 @@ public sealed class CornerDetectorTests
     private static readonly Point Middle = new(960, 540);
     private static readonly Point TopLeft = new(0, 0);
 
-    private readonly FakeEnvironment _environment = new() { PointerPosition = Middle };
+    private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
     private readonly ManualClock _clock = new();
     private readonly CornerDetector _detector;
 
@@ -224,6 +224,31 @@ public sealed class CornerDetectorTests
             CornersThatTrigger([Main, Rectangle.FromLTRB(1920, 1080, 3840, 2160)]));
     }
 
+    [Fact]
+    public void TheCurrentCornerIsTheCornerWithAnActionThePointerIsIn()
+    {
+        Assert.Null(_detector.CurrentCorner);
+
+        MoveTo(TopLeft);
+        Assert.Equal(ScreenCorner.TopLeft, _detector.CurrentCorner);
+
+        // The top-right corner has no action.
+        MoveTo(new Point(1919, 0));
+        Assert.Null(_detector.CurrentCorner);
+    }
+
+    [Fact]
+    public void ConfiguringFindsTheCornerThePointerIsIn()
+    {
+        _environment.PointerPosition = TopLeft;
+
+        _detector.Configure(new HotCornersSettings(), [Main]);
+        Assert.Equal(ScreenCorner.TopLeft, _detector.CurrentCorner);
+
+        _detector.Configure(new HotCornersSettings { TopLeft = new CornerSettings() }, [Main]);
+        Assert.Null(_detector.CurrentCorner);
+    }
+
     private static CornerDecision Decision(CornerOutcome outcome) =>
         new(outcome, ScreenCorner.TopLeft, HotCornerAction.TaskView, TimeSpan.Zero);
 
@@ -268,29 +293,5 @@ public sealed class CornerDetectorTests
                 MoveTo(Middle);
                 return MoveTo(point).Outcome == CornerOutcome.Triggered;
             })];
-    }
-
-    private sealed class FakeEnvironment : IHotCornerEnvironment
-    {
-        public Point? PointerPosition { get; set; }
-
-        public bool IsMouseButtonHeld { get; set; }
-
-        public bool IsFullScreenAppInFront { get; set; }
-
-        public HotCornerKey HeldKey { get; set; }
-
-        public bool IsKeyHeld(HotCornerKey key) => key == HeldKey;
-    }
-
-    private sealed class ManualClock : TimeProvider
-    {
-        private long _ticks;
-
-        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
-
-        public override long GetTimestamp() => _ticks;
-
-        public void Advance(TimeSpan time) => _ticks += time.Ticks;
     }
 }

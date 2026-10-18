@@ -232,6 +232,14 @@
     <value>Écran de veille</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>Garder les écrans allumés</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>Coins actifs : le pointeur est dans un coin qui garde les écrans allumés.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>Exécuter un programme</value>
     <comment>Needs native review.</comment>

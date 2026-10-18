@@ -224,6 +224,14 @@
     <value>屏幕保护程序</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>保持显示器开启</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>触发角：指针位于保持显示器开启的角落。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>运行程序</value>
     <comment>Needs native review.</comment>

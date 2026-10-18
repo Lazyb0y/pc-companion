@@ -232,6 +232,14 @@
     <value>স্ক্রিন সেভার</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>ডিসপ্লে চালু রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>হট কর্নার: পয়েন্টারটি এমন একটি কোণে আছে যা ডিসপ্লে চালু রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>একটি প্রোগ্রাম চালান</value>
     <comment>Needs native review.</comment>
