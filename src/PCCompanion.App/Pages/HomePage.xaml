@@ -7,51 +7,59 @@
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:viewModels="using:PCCompanion.App.ViewModels">
 
-    <ScrollViewer>
-        <StackPanel MaxWidth="1000" Padding="36,24" Spacing="4">
-            <TextBlock
-                Margin="0,0,0,20"
-                Style="{StaticResource TitleTextBlockStyle}"
-                Text="{app:Localized Key=NavigationHome}" />
+    <!--
+        As in Windows Settings: the content is a column in the middle of the page, at most 1,000
+        pixels wide (1,072 with the padding). The Grid takes the page's visible width and centers
+        the column in it; directly in the ScrollViewer, the column would be centered in the width
+        of its unwrapped text, off to the right and past the window's edge.
+    -->
+    <ScrollViewer HorizontalScrollMode="Disabled">
+        <Grid>
+            <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
+                <TextBlock
+                    Margin="0,0,0,20"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{app:Localized Key=NavigationHome}" />
 
-            <InfoBar
-                IsClosable="False"
-                IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
-                Message="{app:Localized Key=FeatureSaveFailed}"
-                Severity="Error" />
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
+                    Message="{app:Localized Key=FeatureSaveFailed}"
+                    Severity="Error" />
 
-            <ItemsControl IsTabStop="False" ItemsSource="{x:Bind ViewModel.Modules}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:ModuleGroup">
-                        <StackPanel Spacing="4">
-                            <TextBlock
-                                Margin="0,0,0,4"
-                                Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{x:Bind Name}" />
-                            <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Features}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="viewModels:FeatureCardViewModel">
-                                        <toolkit:SettingsCard
-                                            Margin="0,0,0,4"
-                                            Click="OnFeatureCardClick"
-                                            Description="{x:Bind Description}"
-                                            Header="{x:Bind Name}"
-                                            IsClickEnabled="True">
-                                            <toolkit:SettingsCard.HeaderIcon>
-                                                <FontIcon Glyph="{x:Bind Glyph}" />
-                                            </toolkit:SettingsCard.HeaderIcon>
-                                            <ToggleSwitch
-                                                AutomationProperties.Name="{x:Bind Name}"
-                                                IsEnabled="{x:Bind IsSupported}"
-                                                IsOn="{x:Bind IsOn, Mode=TwoWay}" />
-                                        </toolkit:SettingsCard>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+                <ItemsControl IsTabStop="False" ItemsSource="{x:Bind ViewModel.Modules}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:ModuleGroup">
+                            <StackPanel Spacing="4">
+                                <TextBlock
+                                    Margin="0,0,0,4"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                                    Text="{x:Bind Name}" />
+                                <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Features}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="viewModels:FeatureCardViewModel">
+                                            <toolkit:SettingsCard
+                                                Margin="0,0,0,4"
+                                                Click="OnFeatureCardClick"
+                                                Description="{x:Bind Description}"
+                                                Header="{x:Bind Name}"
+                                                IsClickEnabled="True">
+                                                <toolkit:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="{x:Bind Glyph}" />
+                                                </toolkit:SettingsCard.HeaderIcon>
+                                                <ToggleSwitch
+                                                    AutomationProperties.Name="{x:Bind Name}"
+                                                    IsEnabled="{x:Bind IsSupported}"
+                                                    IsOn="{x:Bind IsOn, Mode=TwoWay}" />
+                                            </toolkit:SettingsCard>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>

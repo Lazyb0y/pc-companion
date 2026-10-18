@@ -7,99 +7,107 @@
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:viewModels="using:PCCompanion.App.ViewModels">
 
-    <ScrollViewer>
-        <StackPanel MaxWidth="1000" Padding="36,24" Spacing="4">
-            <TextBlock
-                Margin="0,0,0,20"
-                Style="{StaticResource TitleTextBlockStyle}"
-                Text="{app:Localized Key=NavigationGeneral}" />
+    <!--
+        As in Windows Settings: the content is a column in the middle of the page, at most 1,000
+        pixels wide (1,072 with the padding). The Grid takes the page's visible width and centers
+        the column in it; directly in the ScrollViewer, the column would be centered in the width
+        of its unwrapped text, off to the right and past the window's edge.
+    -->
+    <ScrollViewer HorizontalScrollMode="Disabled">
+        <Grid>
+            <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
+                <TextBlock
+                    Margin="0,0,0,20"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{app:Localized Key=NavigationGeneral}" />
 
-            <InfoBar
-                IsClosable="False"
-                IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
-                Message="{app:Localized Key=GeneralSaveFailed}"
-                Severity="Error" />
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
+                    Message="{app:Localized Key=GeneralSaveFailed}"
+                    Severity="Error" />
 
-            <toolkit:SettingsCard Description="{app:Localized Key=GeneralLanguageDescription}" Header="{app:Localized Key=GeneralLanguageHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xF2B7;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ComboBox
-                    AutomationProperties.Name="{app:Localized Key=GeneralLanguageHeader}"
-                    ItemsSource="{x:Bind ViewModel.Languages}"
-                    SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:LanguageOption">
-                            <TextBlock Text="{x:Bind DisplayName}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{app:Localized Key=GeneralLanguageDescription}" Header="{app:Localized Key=GeneralLanguageHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF2B7;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        AutomationProperties.Name="{app:Localized Key=GeneralLanguageHeader}"
+                        ItemsSource="{x:Bind ViewModel.Languages}"
+                        SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:LanguageOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard Description="{app:Localized Key=GeneralThemeDescription}" Header="{app:Localized Key=GeneralThemeHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE790;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ComboBox
-                    AutomationProperties.Name="{app:Localized Key=GeneralThemeHeader}"
-                    ItemsSource="{x:Bind ViewModel.Themes}"
-                    SelectedItem="{x:Bind ViewModel.SelectedTheme, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:ThemeOption">
-                            <TextBlock Text="{x:Bind DisplayName}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{app:Localized Key=GeneralThemeDescription}" Header="{app:Localized Key=GeneralThemeHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE790;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        AutomationProperties.Name="{app:Localized Key=GeneralThemeHeader}"
+                        ItemsSource="{x:Bind ViewModel.Themes}"
+                        SelectedItem="{x:Bind ViewModel.SelectedTheme, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:ThemeOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard Description="{app:Localized Key=GeneralStartupDescription}" Header="{app:Localized Key=GeneralStartupHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE7E8;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralStartupHeader}" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{app:Localized Key=GeneralStartupDescription}" Header="{app:Localized Key=GeneralStartupHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE7E8;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralStartupHeader}" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
+                </toolkit:SettingsCard>
 
-            <InfoBar
-                IsClosable="False"
-                IsOpen="{x:Bind ViewModel.RunAsAdministratorFailed, Mode=OneWay}"
-                Message="{app:Localized Key=GeneralRunAsAdministratorFailed}"
-                Severity="Error" />
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.RunAsAdministratorFailed, Mode=OneWay}"
+                    Message="{app:Localized Key=GeneralRunAsAdministratorFailed}"
+                    Severity="Error" />
 
-            <toolkit:SettingsCard Description="{x:Bind ViewModel.RunAsAdministratorDescription}" Header="{app:Localized Key=GeneralRunAsAdministratorHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE7EF;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch
-                    AutomationProperties.Name="{app:Localized Key=GeneralRunAsAdministratorHeader}"
-                    IsEnabled="{x:Bind ViewModel.RunAsAdministratorAvailable, Mode=OneWay}"
-                    IsOn="{x:Bind ViewModel.RunAsAdministratorOn, Mode=TwoWay}" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{x:Bind ViewModel.RunAsAdministratorDescription}" Header="{app:Localized Key=GeneralRunAsAdministratorHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE7EF;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch
+                        AutomationProperties.Name="{app:Localized Key=GeneralRunAsAdministratorHeader}"
+                        IsEnabled="{x:Bind ViewModel.RunAsAdministratorAvailable, Mode=OneWay}"
+                        IsOn="{x:Bind ViewModel.RunAsAdministratorOn, Mode=TwoWay}" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard Description="{x:Bind ViewModel.LogsRetention}" Header="{app:Localized Key=GeneralLogsHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE9F9;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button
-                        Command="{x:Bind ViewModel.OpenHostLogsFolderCommand}"
-                        Content="{app:Localized Key=GeneralLogsOpenHost}"
-                        Visibility="{x:Bind ViewModel.HostLogsShown, Mode=OneWay}" />
-                    <Button Command="{x:Bind ViewModel.OpenLogsFolderCommand}" Content="{app:Localized Key=GeneralLogsOpen}" />
-                </StackPanel>
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{x:Bind ViewModel.LogsRetention}" Header="{app:Localized Key=GeneralLogsHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE9F9;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button
+                            Command="{x:Bind ViewModel.OpenHostLogsFolderCommand}"
+                            Content="{app:Localized Key=GeneralLogsOpenHost}"
+                            Visibility="{x:Bind ViewModel.HostLogsShown, Mode=OneWay}" />
+                        <Button Command="{x:Bind ViewModel.OpenLogsFolderCommand}" Content="{app:Localized Key=GeneralLogsOpen}" />
+                    </StackPanel>
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard Description="{x:Bind ViewModel.DetailedLoggingDescription, Mode=OneWay}" Header="{app:Localized Key=GeneralDetailedLoggingHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xEBE8;" />
-                </toolkit:SettingsCard.HeaderIcon>
-                <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralDetailedLoggingHeader}" IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
-            </toolkit:SettingsCard>
+                <toolkit:SettingsCard Description="{x:Bind ViewModel.DetailedLoggingDescription, Mode=OneWay}" Header="{app:Localized Key=GeneralDetailedLoggingHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEBE8;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralDetailedLoggingHeader}" IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
+                </toolkit:SettingsCard>
 
-            <toolkit:SettingsCard Description="{x:Bind ViewModel.Version}" Header="{app:Localized Key=GeneralAboutHeader}">
-                <toolkit:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE946;" />
-                </toolkit:SettingsCard.HeaderIcon>
-            </toolkit:SettingsCard>
-        </StackPanel>
+                <toolkit:SettingsCard Description="{x:Bind ViewModel.Version}" Header="{app:Localized Key=GeneralAboutHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE946;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                </toolkit:SettingsCard>
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>
