@@ -1,7 +1,7 @@
 # Logging
 
 - Logs are in `%LOCALAPPDATA%\PCCompanion\Logs`: `app-yyyyMMdd.log` for the settings app and `host-yyyyMMdd.log` for the host.
-- While the host runs as administrator after a UAC prompt ([Always run as administrator](../features/general/run-as-administrator.md)), its logs are in `%ProgramData%\PCCompanion\Logs\<user SID>`, which only administrators can change; **Open host logs** on the General page opens them.
+- While the host runs as administrator after a UAC prompt ([Always run as administrator](../features/general/run-as-administrator.md)), its logs are in `%ProgramData%\PCCompanion\Logs\<user SID>`, which only administrators can change, with the elevated helper's, `elevated-yyyyMMdd.log`; **Open host logs** on the General page opens them.
 - A new file starts every day and at 5 MB. Files older than 14 days are deleted, and at most 30 are kept.
 - Entries at Information level and above are written.
 - **Detailed logging** on the General page adds Debug entries for 24 hours, then turns itself off. The settings store the end time (`diagnostics.detailedLoggingUntil`), so it also turns off on time after a restart; an end time more than 24 hours ahead counts as 24 hours. Both processes log when it turns on and off.

@@ -15,7 +15,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Directly, like the host's, so the files they share in one folder are the same version. -->
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PCCompanion.Core\PCCompanion.Core.csproj" />
+    <ProjectReference Include="..\PCCompanion.Infrastructure\PCCompanion.Infrastructure.csproj" />
+    <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
     <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>
 </Project>

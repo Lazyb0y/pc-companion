@@ -35,6 +35,7 @@ Runs the background host as administrator, so features also work while an app ru
 - When turned on, the Hot Corners page's note changes to say that corners work in front of apps running as administrator, and that Run a program doesn't run.
 - If the user cancels the UAC prompt, the switch goes back and nothing changes. If the change fails, the page says so.
 - While it's on, and UAC is on, the Logs card also has **Open host logs**. With UAC off, the host's logs stay in the user's logs folder, which **Open logs folder** opens.
+- The helper logs what it did, and why it failed, to `elevated-yyyyMMdd.log` in the user's protected logs folder: the settings app starts it through UAC, so it can't read its output.
 
 ## Compatibility
 

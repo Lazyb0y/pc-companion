@@ -27,7 +27,7 @@ internal static class DependencyRules
         [PlatformWindows] = [],
         [Logging] = [Core],
         [Infrastructure] = [Core],
-        [Elevated] = [Core, PlatformWindows],
+        [Elevated] = [Core, Infrastructure, Logging, PlatformWindows],
     };
 
     private static readonly string[] ModuleReferences = [Core, PlatformWindows, Localization];
