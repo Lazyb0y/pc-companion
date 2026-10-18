@@ -595,6 +595,23 @@ Test-Check 'the tray icon brings the settings window in front of the other windo
 [void] [Win32]::Key(0x12, $true)
 Test-Check 'select the tray icon while the settings app is closed and another window is in front' (Select-TrayIcon)
 Test-Check 'the tray icon opens the settings window in front of the other window' (Wait-Until { (Get-AppWindow) -and [Win32]::GetForegroundWindow() -eq [IntPtr] (Get-AppWindow).Current.NativeWindowHandle } 15) "in front: $([Win32]::GetForegroundWindow())"
+
+# 6c. Starting the host again, as a user does from the Run dialog, brings the open settings window
+#     in front of another window: the new launch passes its right to do that on to the running host.
+[void] [Win32]::Key(0x12, $false)
+[void] [Win32]::SetForegroundWindow($other.MainWindowHandle)
+[void] [Win32]::Key(0x12, $true)
+Test-Check 'another window is in front of the settings window again' (Wait-Until { [Win32]::GetForegroundWindow() -eq $other.MainWindowHandle } 5)
+[void] [Win32]::Key(0x5B, $false) # Windows key
+Send-Key 0x52                     # R
+[void] [Win32]::Key(0x5B, $true)
+$runCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'Run')
+Test-Check 'the Run dialog opens' (Wait-Until { $null -ne [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $runCondition) } 10)
+Start-Sleep -Milliseconds 500
+[System.Windows.Forms.SendKeys]::SendWait($hostExe)
+[System.Windows.Forms.SendKeys]::SendWait('{ENTER}')
+Test-Check 'starting the host again brings the settings window in front of the other window' (Wait-Until { (Get-AppWindow) -and [Win32]::GetForegroundWindow() -eq [IntPtr] (Get-AppWindow).Current.NativeWindowHandle } 15) "in front: $([Win32]::GetForegroundWindow())"
+Test-Check 'starting the host again keeps one host' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 10)
 Stop-Process -Id $other.Id -Force -ErrorAction SilentlyContinue
 Test-Check 'the settings app is open before Exit' ((Get-Processes 'PCCompanion').Count -eq 1)
 Test-Check 'tray menu requested for Exit' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
@@ -877,6 +894,18 @@ Test-Check 'turning it on creates the user''s two tasks' (Wait-Until { (Get-Star
 Save-Screenshot '14-general-run-as-administrator'
 $saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).general.alwaysRunAsAdministrator
 Test-Check 'the setting is saved' ($saved -eq $true)
+# The helper logs to the user's protected logs folder, which the settings app can't get from
+# it directly; a failure says why, with Task Scheduler's own message.
+$helperLogs = Join-Path $env:ProgramData "PCCompanion\Logs\$sid"
+$helperLog = (Get-ChildItem $helperLogs -Filter 'elevated-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+Test-Check 'the elevated helper logs that it created the tasks' ($helperLog -match 'Created the Always run as administrator tasks') "folder: $((Get-ChildItem $helperLogs -Name -ErrorAction SilentlyContinue) -join ', ')"
+$missingSid = 'S-1-5-21-1111111111-2222222222-3333333333-1001'
+$helper = Join-Path $allUsersFolder 'PCCompanion.Elevated.exe'
+$code = (Start-Process $helper -ArgumentList @('create-startup-tasks', $missingSid) -Wait -PassThru).ExitCode
+$failureLog = (Get-ChildItem (Join-Path $env:ProgramData "PCCompanion\Logs\$missingSid") -Filter 'elevated-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+Test-Check 'the elevated helper fails for a user that doesn''t exist' ($code -eq 1) "exit code $code"
+Test-Check 'the elevated helper logs why it failed' (($failureLog -match '\[ERR\].*create-startup-tasks failed') -and ($failureLog -match 'schtasks')) ($failureLog -replace '\s+', ' ')
+[void] (Start-Process $helper -ArgumentList @('delete-startup-tasks', $missingSid) -Wait -PassThru)
 $signInTask = [xml] ((schtasks.exe /Query /TN "\PCCompanion\Host at sign-in $sid" /XML) -join "`n")
 $exec = $signInTask.Task.Actions.Exec
 $triggerUser = [string] $signInTask.Task.Triggers.LogonTrigger.UserId
@@ -886,6 +915,9 @@ $triggerSid = try { ([System.Security.Principal.NTAccount] $triggerUser).Transla
 Test-Check 'the sign-in task starts the host from Program Files at sign-in with highest rights' (
     ($exec.Command -eq "`"$allUsersFolder\PCCompanion.Host.exe`"") -and ($exec.Arguments -eq '--startup') -and ($triggerSid -eq $sid) -and ($runLevel -eq 'HighestAvailable')) "$($exec.Command) $($exec.Arguments); user: $triggerUser; run level: $runLevel"
 Test-Check 'the host restarts after the change' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 20)
+# With UAC off, the host keeps its logs in the user's logs folder, so there are no host logs to open.
+[void] (Wait-Until { (Find-Toggle 'Always run as administrator').Current.IsEnabled } 20)
+Test-Check 'with UAC off, the General page doesn''t offer to open host logs' (-not (Find-AppElement 'Open host logs')) ((Get-WindowText) -join ' | ')
 [void] (Close-SettingsApp)
 Get-Processes 'PCCompanion.Host' | ForEach-Object { Stop-Process -Id $_.Id -Force }
 [void] (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 0 } 10)
