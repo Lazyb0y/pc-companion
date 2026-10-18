@@ -11,6 +11,8 @@ using PCCompanion.App.Features;
 using PCCompanion.App.Pages;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
+using PCCompanion.Platform.Windows;
+using WinRT.Interop;
 
 namespace PCCompanion.App;
 
@@ -62,6 +64,9 @@ public sealed partial class MainWindow : Window
         }
 
         Activate();
+
+        // Activate alone leaves a window that's already active in this app behind other apps' windows.
+        Foreground.Bring(WindowNative.GetWindowHandle(this));
     }
 
     /// <summary>

@@ -2,7 +2,7 @@
 
 ## Processes
 
-- `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app; **Exit** stops the host and closes the settings app.
+- `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app, or brings it to the front, restored, when it's already open; **Exit** stops the host and closes the settings app.
 - One host runs per user session. Starting it again asks the running host to open the settings app.
 - `PCCompanion.exe` is the settings app. It opens on demand and exits when its window closes. It starts the host when the host isn't running, and only one settings window opens per user session.
 - **Exit** asks the settings app to close through a named event in the user session, `Local\PCCompanion.App.Exit`. Nothing else sends it, so the settings app stays open when the host stops any other way.

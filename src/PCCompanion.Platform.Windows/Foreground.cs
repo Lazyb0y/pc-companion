@@ -1,10 +1,11 @@
 using Windows.Win32;
+using Windows.Win32.Foundation;
 using Windows.Win32.UI.Shell;
 
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Which window is in the foreground.
+/// Which window is in the foreground, and bringing one there.
 /// </summary>
 public static class Foreground
 {
@@ -22,4 +23,11 @@ public static class Foreground
     /// that this process hands its launch to. Returns false when this process may not pass that on.
     /// </summary>
     public static bool AllowProcess(uint processId) => PInvoke.AllowSetForegroundWindow(processId);
+
+    /// <summary>
+    /// Brings <paramref name="window"/>, one of this process's windows, in front of other apps'
+    /// windows. Returns false when this process may not, for example while another app is in use
+    /// and nothing let this process come to the front.
+    /// </summary>
+    public static bool Bring(nint window) => PInvoke.SetForegroundWindow(new HWND(window));
 }
