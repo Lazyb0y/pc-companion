@@ -92,6 +92,10 @@
     <value>تعذّر تغيير التشغيل دائماً كمسؤول. حاول مرة أخرى.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>يعمل PC Companion في الخلفية دون صلاحيات المسؤول، لذلك لا تعمل الميزات أثناء وجود تطبيق يعمل كمسؤول في المقدمة. لإصلاح ذلك، أوقف تشغيل التشغيل دائماً كمسؤول ثم شغّله مرة أخرى، أو سجّل الخروج ثم سجّل الدخول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>السجلات</value>
     <comment>Needs native review.</comment>

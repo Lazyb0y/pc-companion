@@ -92,6 +92,10 @@
     <value>সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান পরিবর্তন করা যায়নি। আবার চেষ্টা করুন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion ব্যাকগ্রাউন্ডে অ্যাডমিনিস্ট্রেটর অধিকার ছাড়াই চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে বৈশিষ্ট্যগুলো কাজ করে না। এটি ঠিক করতে, সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান বন্ধ করে আবার চালু করুন, অথবা সাইন আউট করে আবার সাইন ইন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>লগ</value>
     <comment>Needs native review.</comment>

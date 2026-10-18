@@ -92,6 +92,10 @@
     <value>No se pudo cambiar Ejecutar siempre como administrador. Inténtalo de nuevo.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion se está ejecutando en segundo plano sin derechos de administrador, por lo que las características no funcionan mientras una aplicación que se ejecuta como administrador está en primer plano. Para solucionarlo, desactiva y vuelve a activar Ejecutar siempre como administrador, o cierra la sesión y vuelve a iniciarla.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Registros</value>
     <comment>Needs native review.</comment>

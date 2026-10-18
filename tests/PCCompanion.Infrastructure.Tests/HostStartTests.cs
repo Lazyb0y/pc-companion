@@ -53,4 +53,17 @@ public sealed class HostStartTests
 
         Assert.Equal(HostStart.Run, HostProcess.DecideStart(general, startedAtSignIn: false, elevated: false, hostRunning: true));
     }
+
+    [Theory]
+    [InlineData(true, true, false, true)]
+    [InlineData(false, true, false, false)] // Always run as administrator is off.
+    [InlineData(true, false, false, false)] // UAC is off, or the settings app runs as administrator.
+    [InlineData(true, true, true, false)] // The host runs as administrator.
+    [InlineData(true, true, null, false)] // No host runs, or its rights can't be read.
+    public void AHostWithoutAdminRightsIsReportedOnlyWhenItsRightsAreKnown(bool runAsAdministrator, bool uacLimited, bool? hostElevated, bool expected)
+    {
+        var general = new GeneralSettings { AlwaysRunAsAdministrator = runAsAdministrator };
+
+        Assert.Equal(expected, HostProcess.RunsWithoutAdminRights(general, uacLimited, hostElevated));
+    }
 }

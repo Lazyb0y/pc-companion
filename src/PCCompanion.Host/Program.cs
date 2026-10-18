@@ -104,24 +104,7 @@ internal static partial class Program
         }
     }
 
-    // A host running as administrator holds a lock that processes without admin rights may not open.
-    private static bool IsHostRunning()
-    {
-        try
-        {
-            if (!Mutex.TryOpenExisting(HostProcess.InstanceLockName, out var instanceLock))
-            {
-                return false;
-            }
-
-            instanceLock.Dispose();
-            return true;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return true;
-        }
-    }
+    private static bool IsHostRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
 
     // Returns null when another host holds the lock.
     private static Mutex? TryTakeInstanceLock()
