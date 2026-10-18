@@ -37,10 +37,15 @@ MUI_LANGUAGE_NAME
 NINF_KEY
 NIN_SELECT
 NOTIFYICON_VERSION_4
+NOTIFY_FOR_THIS_SESSION
 OpenProcess
 OpenProcessToken
 PostMessage
 PostQuitMessage
+POWER_REQUEST_CONTEXT_VERSION
+PowerClearRequest
+PowerCreateRequest
+PowerSetRequest
 RegisterClassEx
 RegisterRawInputDevices
 RegisterWindowMessage
@@ -64,3 +69,9 @@ WM_DISPLAYCHANGE
 WM_INPUT
 WM_NULL
 WM_SYSCOMMAND
+WM_WTSSESSION_CHANGE
+WTS_CONSOLE_DISCONNECT
+WTS_REMOTE_DISCONNECT
+WTS_SESSION_LOCK
+WTSRegisterSessionNotification
+WTSUnRegisterSessionNotification
