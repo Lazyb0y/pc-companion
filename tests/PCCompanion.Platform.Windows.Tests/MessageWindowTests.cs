@@ -93,6 +93,16 @@ public sealed class MessageWindowTests
     }
 
     [Fact]
+    public void FindOwnerProcessFindsTheProcessThatCreatedTheWindow()
+    {
+        var className = UniqueClassName();
+        using var window = new MessageWindow(className);
+
+        Assert.Equal((uint)Environment.ProcessId, MessageWindow.FindOwnerProcess(className));
+        Assert.Null(MessageWindow.FindOwnerProcess(UniqueClassName()));
+    }
+
+    [Fact]
     public void ADisposedWindowCanBeCreatedAgain()
     {
         var className = UniqueClassName();

@@ -29,6 +29,19 @@ public sealed class ElevationTests
         Assert.True(!Elevation.IsElevated || Elevation.CanElevate);
     }
 
+    [Fact]
+    public void TheElevationOfAProcessIsReadFromItsToken()
+    {
+        Assert.Equal(Elevation.IsElevated, Elevation.IsProcessElevated((uint)Environment.ProcessId));
+    }
+
+    // Windows lets no program open the System Idle Process, whose ID is 0.
+    [Fact]
+    public void AProcessThatCantBeOpenedHasNoKnownElevation()
+    {
+        Assert.Null(Elevation.IsProcessElevated(0));
+    }
+
     [Theory]
     [InlineData("S-1-5-21-1111111111-2222222222-3333333333-1001", true)]
     [InlineData("S-1-5-32-544", false)]

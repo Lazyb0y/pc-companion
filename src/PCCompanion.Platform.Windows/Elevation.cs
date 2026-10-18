@@ -2,11 +2,12 @@ using System;
 using System.Security.Principal;
 using Windows.Win32;
 using Windows.Win32.Security;
+using Windows.Win32.System.Threading;
 
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Whether this process runs as administrator, and whether its user can.
+/// Whether this process, or another one, runs as administrator, and whether its user can.
 /// </summary>
 public static class Elevation
 {
@@ -31,6 +32,28 @@ public static class Elevation
     /// account, rather than a standard account that would need another account's password.
     /// </summary>
     public static bool CanElevate => IsElevated || IsUacLimited;
+
+    /// <summary>
+    /// Whether the process with ID <paramref name="processId"/> runs as administrator, or
+    /// <see langword="null"/> when that can't be read, for example because the process has ended.
+    /// Processes of the same user can read it without admin rights.
+    /// </summary>
+    public static unsafe bool? IsProcessElevated(uint processId)
+    {
+        using var process = PInvoke.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
+        if (process.IsInvalid || !PInvoke.OpenProcessToken(process, TOKEN_ACCESS_MASK.TOKEN_QUERY, out var token))
+        {
+            return null;
+        }
+
+        using (token)
+        {
+            TOKEN_ELEVATION elevation;
+            return PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenElevation, &elevation, (uint)sizeof(TOKEN_ELEVATION), out _)
+                ? elevation.TokenIsElevated != 0
+                : null;
+        }
+    }
 
     private static unsafe TOKEN_ELEVATION_TYPE? ElevationType
     {
