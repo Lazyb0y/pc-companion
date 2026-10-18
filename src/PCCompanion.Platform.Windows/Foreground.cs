@@ -9,6 +9,9 @@ namespace PCCompanion.Platform.Windows;
 /// </summary>
 public static class Foreground
 {
+    /// <summary>The window in front, or 0 when there is none, for example while windows are switching.</summary>
+    public static nint Window => PInvoke.GetForegroundWindow();
+
     /// <summary>
     /// Whether the app in front is full screen, such as a game, a video or a presentation.
     /// </summary>
