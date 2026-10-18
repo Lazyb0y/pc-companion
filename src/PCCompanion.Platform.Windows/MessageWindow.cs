@@ -84,6 +84,21 @@ public sealed class MessageWindow : IDisposable
         return !window.IsNull && PInvoke.PostMessage(window, message, 0, 0);
     }
 
+    /// <summary>
+    /// Lets the process that owns the window created with <paramref name="className"/> bring a
+    /// window to the front, when this process may: for example, so that a running instance this
+    /// launch hands over to can show its window. Returns false when there is no such window or this
+    /// process may not pass the right on.
+    /// </summary>
+    public static unsafe bool AllowOwnerToComeToFront(string className)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(className);
+
+        var window = PInvoke.FindWindow(className, null);
+        uint processId;
+        return !window.IsNull && PInvoke.GetWindowThreadProcessId(window, &processId) != 0 && PInvoke.AllowSetForegroundWindow(processId);
+    }
+
     /// <summary>Posts a message to this window; it is received by the window's message loop.</summary>
     public void Post(uint message, nuint wParam = 0, nint lParam = 0)
     {

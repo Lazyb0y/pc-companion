@@ -38,6 +38,9 @@ internal static partial class Program
         {
             if (!startedAtSignIn)
             {
+                // As the program the user just started, this launch may bring a window to the front;
+                // the running host needs that right to bring the settings window forward.
+                MessageWindow.AllowOwnerToComeToFront(HostProcess.WindowClassName);
                 MessageWindow.PostToWindow(HostProcess.WindowClassName, TrayController.OpenSettingsMessage);
             }
 
