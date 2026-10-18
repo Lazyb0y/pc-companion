@@ -21,6 +21,9 @@ public sealed partial class MainWindow : Window
     // The height of the row the pane's button takes at the top of a folded-away pane.
     private const double PaneButtonRowHeight = 48;
 
+    // How long the window may stay out of sight while its content is drawn, in case it never is.
+    private static readonly TimeSpan LongestHiddenStart = TimeSpan.FromSeconds(1);
+
     public MainWindow()
     {
         InitializeComponent();
@@ -36,6 +39,7 @@ public sealed partial class MainWindow : Window
         Navigation.Loaded += (_, _) => PlacePageBelowPaneButton(Navigation.DisplayMode);
         Navigation.DisplayModeChanged += (_, e) => PlacePageBelowPaneButton(e.DisplayMode);
         SetBackdrop();
+        HideWhileNotDrawn();
     }
 
     /// <summary>
@@ -87,6 +91,45 @@ public sealed partial class MainWindow : Window
             AppTheme.Dark => TitleBarTheme.Dark,
             _ => TitleBarTheme.UseDefaultAppMode,
         };
+    }
+
+    // Windows shows the window when it's activated, but WinUI draws its content only after its first
+    // layout pass, about 160 ms later on a typical PC, so the window would show empty until then.
+    // It stays cloaked until its content has been drawn, or LongestHiddenStart has passed. When it
+    // closes, it's cloaked first, so it isn't seen empty while its content is taken down.
+    private void HideWhileNotDrawn()
+    {
+        var handle = WindowNative.GetWindowHandle(this);
+        if (!WindowCloak.Set(handle, cloaked: true))
+        {
+            return;
+        }
+
+        var framesDrawn = 0;
+        var timer = DispatcherQueue.CreateTimer();
+        timer.Interval = LongestHiddenStart;
+        timer.IsRepeating = false;
+
+        void Show()
+        {
+            CompositionTarget.Rendering -= OnRendering;
+            timer.Stop();
+            WindowCloak.Set(handle, cloaked: false);
+        }
+
+        // One frame more than the first after the layout pass, so the content is on screen before the window.
+        void OnRendering(object? sender, object e)
+        {
+            if (Navigation.IsLoaded && ++framesDrawn == 2)
+            {
+                Show();
+            }
+        }
+
+        CompositionTarget.Rendering += OnRendering;
+        timer.Tick += (_, _) => Show();
+        timer.Start();
+        Closed += (_, _) => WindowCloak.Set(handle, cloaked: true);
     }
 
     // While the pane is folded away, its button sits over the top-left of the page, so the page
