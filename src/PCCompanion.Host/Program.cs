@@ -12,6 +12,7 @@ using PCCompanion.Infrastructure.Features;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Logging;
 using PCCompanion.Modules.Input;
+using PCCompanion.Modules.Windows;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
@@ -63,6 +64,7 @@ internal static partial class Program
             .AddSingleton<SettingsAppLauncher>()
             .AddSingleton<FeatureRunner>()
             .AddInputModule()
+            .AddWindowsModule()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
