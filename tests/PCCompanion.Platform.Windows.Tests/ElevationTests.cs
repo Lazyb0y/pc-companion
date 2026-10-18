@@ -18,6 +18,12 @@ public sealed class ElevationTests
     }
 
     [Fact]
+    public void AProcessLimitedByUacIsNotElevatedAndCanElevate()
+    {
+        Assert.True(!Elevation.IsUacLimited || (!Elevation.IsElevated && Elevation.CanElevate && !Elevation.IsUacElevated));
+    }
+
+    [Fact]
     public void AnElevatedProcessCanElevate()
     {
         Assert.True(!Elevation.IsElevated || Elevation.CanElevate);

@@ -171,7 +171,10 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     }
 
     /// <summary>The host writes its logs to another folder while it runs as administrator.</summary>
-    public bool HostLogsShown => _runAsAdministrator.IsOn;
+    // The host keeps its logs in the protected folder only when it got admin rights through UAC,
+    // as it does when this app runs without them only because of UAC. With UAC off, the host's
+    // logs stay in the user's logs folder, which Open logs folder opens.
+    public bool HostLogsShown => _runAsAdministrator.IsOn && Elevation.IsUacLimited;
 
     public bool DetailedLoggingOn
     {

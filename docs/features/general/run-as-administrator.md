@@ -34,7 +34,7 @@ Runs the background host as administrator, so features also work while an app ru
 - General page: **Always run as administrator**, with the description "Lets features work while an app running as administrator is in front. Windows asks for permission when you turn it on or off."
 - When turned on, the Hot Corners page's note changes to say that corners work in front of apps running as administrator, and that Run a program doesn't run.
 - If the user cancels the UAC prompt, the switch goes back and nothing changes. If the change fails, the page says so.
-- While it's on, the Logs card also has **Open host logs**.
+- While it's on, and UAC is on, the Logs card also has **Open host logs**. With UAC off, the host's logs stay in the user's logs folder, which **Open logs folder** opens.
 
 ## Compatibility
 
