@@ -90,13 +90,20 @@ public sealed class MessageWindow : IDisposable
     /// launch hands over to can show its window. Returns false when there is no such window or this
     /// process may not pass the right on.
     /// </summary>
-    public static unsafe bool AllowOwnerToComeToFront(string className)
+    public static bool AllowOwnerToComeToFront(string className) =>
+        FindOwnerProcess(className) is { } processId && PInvoke.AllowSetForegroundWindow(processId);
+
+    /// <summary>
+    /// Returns the ID of the process that owns the window created with <paramref name="className"/>,
+    /// or <see langword="null"/> when there is no such window.
+    /// </summary>
+    public static unsafe uint? FindOwnerProcess(string className)
     {
         ArgumentException.ThrowIfNullOrEmpty(className);
 
         var window = PInvoke.FindWindow(className, null);
         uint processId;
-        return !window.IsNull && PInvoke.GetWindowThreadProcessId(window, &processId) != 0 && PInvoke.AllowSetForegroundWindow(processId);
+        return !window.IsNull && PInvoke.GetWindowThreadProcessId(window, &processId) != 0 ? processId : null;
     }
 
     /// <summary>Posts a message to this window; it is received by the window's message loop.</summary>

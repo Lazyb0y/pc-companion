@@ -57,6 +57,7 @@ SetForegroundWindow
 Shell_NotifyIcon
 SHQueryUserNotificationState
 SIGDN
+TOKEN_ELEVATION
 TOKEN_ELEVATION_TYPE
 TRACK_POPUP_MENU_FLAGS
 TrackPopupMenuEx
