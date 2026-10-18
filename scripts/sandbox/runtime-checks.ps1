@@ -35,6 +35,15 @@ public static class Win32 {
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam);
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool IsWindow(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr window);
+    [DllImport("dwmapi.dll")] private static extern int DwmGetWindowAttribute(IntPtr window, int attribute, out int value, int size);
+
+    // Whether Windows keeps the window out of sight (DWMWA_CLOAKED).
+    public static bool IsCloaked(IntPtr window) {
+        int value;
+        return DwmGetWindowAttribute(window, 14, out value, 4) == 0 && value != 0;
+    }
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
     [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
@@ -490,6 +499,49 @@ foreach ($width in 600, 1000, 1300, $screen.Width) {
 }
 Restore-AppWindow $windowBounds
 [void] (Select-NavigationItem 'General')
+
+# 4c. The settings window isn't seen empty: it's out of sight (cloaked) when it first shows, until
+#     its page is there, and it's cloaked before it's taken down when it closes.
+$windowClass = 'WinUIDesktopWin32WindowClass'
+$closing = [Win32]::FindWindow($windowClass, 'PC Companion')
+$process = Get-Processes 'PCCompanion' | Select-Object -First 1
+$cloakedBeforeGone = $false
+[void] [Win32]::PostMessage($closing, 0x0010, [UIntPtr]::Zero, [IntPtr]::Zero) # WM_CLOSE
+$watch = [System.Diagnostics.Stopwatch]::StartNew()
+while ([Win32]::IsWindow($closing) -and $watch.Elapsed.TotalSeconds -lt 10) {
+    if ([Win32]::IsCloaked($closing)) { $cloakedBeforeGone = $true }
+    [System.Threading.Thread]::Sleep(1)
+}
+Test-Check 'closing hides the settings window before it''s taken down' $cloakedBeforeGone
+[void] (Wait-Until { (Get-Processes 'PCCompanion').Count -eq 0 } 10)
+
+Start-Process $appExe
+$firstShownCloaked = $null
+$pageWhenShown = $false
+$shownAfter = $null
+$watch = [System.Diagnostics.Stopwatch]::StartNew()
+while ($watch.Elapsed.TotalSeconds -lt 20) {
+    $opening = [Win32]::FindWindow($windowClass, 'PC Companion')
+    if ($opening -ne [IntPtr]::Zero -and [Win32]::IsWindowVisible($opening)) {
+        $cloaked = [Win32]::IsCloaked($opening)
+        if ($null -eq $firstShownCloaked) { $firstShownCloaked = $cloaked; $firstShown = $watch.ElapsedMilliseconds }
+        if (-not $cloaked) {
+            $shownAfter = $watch.ElapsedMilliseconds - $firstShown
+            $condition = New-Object System.Windows.Automation.AndCondition(
+                (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'Home')),
+                (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Text)))
+            $titles = @([System.Windows.Automation.AutomationElement]::FromHandle($opening).FindAll([System.Windows.Automation.TreeScope]::Descendants, $condition))
+            $pageWhenShown = @($titles | Where-Object { $_.Current.BoundingRectangle.Height -ge 30 }).Count -gt 0
+            break
+        }
+    }
+    [System.Threading.Thread]::Sleep(1)
+}
+Test-Check 'the settings window is out of sight when it first shows' ($firstShownCloaked -eq $true) "cloaked when first shown: $firstShownCloaked"
+Test-Check 'the settings window comes into sight within a second' (($null -ne $shownAfter) -and ($shownAfter -le 1000)) "after $shownAfter ms"
+Test-Check 'the settings window comes into sight with its page' $pageWhenShown
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 2
 
 # 5. One settings app per user session.
 Start-Process $appExe
