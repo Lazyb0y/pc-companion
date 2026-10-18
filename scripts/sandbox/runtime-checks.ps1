@@ -35,6 +35,10 @@ public static class Win32 {
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam);
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool AllowSetForegroundWindow(uint processId);
     [DllImport("user32.dll")] public static extern bool MoveWindow(IntPtr window, int x, int y, int width, int height, bool repaint);
     [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
 
@@ -504,6 +508,41 @@ Test-Check 'tray icon selected' (Send-TrayEvent $NIN_SELECT)
 Test-Check 'selecting the tray icon opens the settings app' (Wait-Until { Get-AppWindow } 20)
 Start-Process $hostExe -Wait
 Test-Check 'a second host launch keeps one host' ((Get-Processes 'PCCompanion.Host').Count -eq 1)
+
+# 6b. Selecting the tray icon brings an open settings window to the front, from minimized and from
+#     behind another window. When the user clicks the icon, Explorer lets the host bring a window to
+#     the front; a posted message doesn't, so Select-TrayIcon passes the right on as Explorer does.
+#     Pressing Alt lets this script do that.
+function Select-TrayIcon {
+    $hostProcess = Get-Processes 'PCCompanion.Host' | Select-Object -First 1
+    if (-not $hostProcess) { return $false }
+    [void] [Win32]::Key(0x12, $false)
+    [void] [Win32]::Key(0x12, $true)
+    $granted = [Win32]::AllowSetForegroundWindow([uint32] $hostProcess.Id)
+    $sent = Send-TrayEvent $NIN_SELECT
+    return $granted -and $sent
+}
+
+$appWindow = [IntPtr] (Get-AppWindow).Current.NativeWindowHandle
+[void] [Win32]::ShowWindow($appWindow, 6) # SW_MINIMIZE
+Test-Check 'the settings window is minimized' (Wait-Until { [Win32]::IsIconic($appWindow) } 5)
+Test-Check 'select the tray icon while the settings window is minimized' (Select-TrayIcon)
+Test-Check 'the tray icon brings the minimized settings window to the front' (Wait-Until { -not [Win32]::IsIconic($appWindow) -and [Win32]::GetForegroundWindow() -eq $appWindow } 10) "minimized: $([Win32]::IsIconic($appWindow)); in front: $([Win32]::GetForegroundWindow() -eq $appWindow)"
+$other = Start-Process (Join-Path $env:WINDIR 'System32\charmap.exe') -PassThru
+[void] (Wait-Until { $other.Refresh(); $other.MainWindowHandle -ne [IntPtr]::Zero } 10)
+[void] [Win32]::Key(0x12, $false)
+[void] [Win32]::SetForegroundWindow($other.MainWindowHandle)
+[void] [Win32]::Key(0x12, $true)
+Test-Check 'another window is in front of the settings window' (Wait-Until { [Win32]::GetForegroundWindow() -eq $other.MainWindowHandle } 5)
+Test-Check 'select the tray icon while another window is in front' (Select-TrayIcon)
+Test-Check 'the tray icon brings the settings window in front of the other window' (Wait-Until { [Win32]::GetForegroundWindow() -eq $appWindow } 10) "in front: $([Win32]::GetForegroundWindow())"
+[void] (Close-SettingsApp)
+[void] [Win32]::Key(0x12, $false)
+[void] [Win32]::SetForegroundWindow($other.MainWindowHandle)
+[void] [Win32]::Key(0x12, $true)
+Test-Check 'select the tray icon while the settings app is closed and another window is in front' (Select-TrayIcon)
+Test-Check 'the tray icon opens the settings window in front of the other window' (Wait-Until { (Get-AppWindow) -and [Win32]::GetForegroundWindow() -eq [IntPtr] (Get-AppWindow).Current.NativeWindowHandle } 15) "in front: $([Win32]::GetForegroundWindow())"
+Stop-Process -Id $other.Id -Force -ErrorAction SilentlyContinue
 Test-Check 'the settings app is open before Exit' ((Get-Processes 'PCCompanion').Count -eq 1)
 Test-Check 'tray menu requested for Exit' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Test-Check 'choose Exit in the tray menu' (Select-TrayMenuItem 'Exit')
