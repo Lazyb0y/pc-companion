@@ -323,6 +323,15 @@ Test-Check 'tray icon selected' (Send-TrayEvent $NIN_SELECT)
 Test-Check 'selecting the tray icon opens the settings app' (Wait-Until { Get-AppWindow } 20)
 Start-Process $hostExe -Wait
 Test-Check 'a second host launch keeps one host' ((Get-Processes 'PCCompanion.Host').Count -eq 1)
+Test-Check 'the settings app is open before Exit' ((Get-Processes 'PCCompanion').Count -eq 1)
+Test-Check 'tray menu requested for Exit' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+Start-Sleep -Seconds 2
+# The menu opens with nothing selected: Settings, then Exit.
+[System.Windows.Forms.SendKeys]::SendWait('{DOWN}{DOWN}{ENTER}')
+Test-Check 'Exit in the tray menu stops the host' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 0 } 15)
+Test-Check 'Exit in the tray menu closes the settings app' (Wait-Until { (Get-Processes 'PCCompanion').Count -eq 0 } 15)
+Start-Process $hostExe
+[void] (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 10)
 
 # 7. Arabic with the dark theme, as the General page saves them; the host follows the change.
 [void] (Close-SettingsApp)
@@ -515,6 +524,7 @@ Test-Check 'settings app and host logs written' ((Test-Path (Join-Path $logs 'ap
 Test-Check 'logs have no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
 Test-Check 'logs don''t show the user name' (-not ($logText -match [regex]::Escape($env:USERNAME)))
 Test-Check 'host loaded the changed settings' ($logText -match 'The settings changed and were loaded again')
+Test-Check 'the settings app logged that Exit closed it' ($logText -match 'Exit was chosen in the tray menu, so the settings app closes')
 
 $appLog = (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 $hostLines = @(Get-ChildItem $logs -Filter 'host-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName })

@@ -2,9 +2,10 @@
 
 ## Processes
 
-- `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app; **Exit** stops the host.
+- `PCCompanion.Host.exe` runs in the background with a tray icon. Selecting the icon, or **Settings** in its menu, opens the settings app; **Exit** stops the host and closes the settings app.
 - One host runs per user session. Starting it again asks the running host to open the settings app.
 - `PCCompanion.exe` is the settings app. It opens on demand and exits when its window closes. It starts the host when the host isn't running, and only one settings window opens per user session.
+- **Exit** asks the settings app to close through a named event in the user session, `Local\PCCompanion.App.Exit`. Nothing else sends it, so the settings app stays open when the host stops any other way.
 - Windows starts the host at every sign-in. It keeps running only for users who turned on **Start with Windows**.
 - Only the settings app saves settings. The host watches the settings file and loads it again after each save.
 - Both are self-contained and install into one folder; see [Packaging](../development/packaging.md).
@@ -57,7 +58,7 @@
 | `PCCompanion.Infrastructure` | Data folder paths, the settings store, the settings watcher and the feature runner |
 | `PCCompanion.Logging` | File logging and path redaction; see [Logging](../diagnostics/logging.md) |
 | `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
-| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, shell actions, command-line arguments and the Open dialog |
+| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, shell actions, command-line arguments, the Open dialog and signals between processes |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
 | `PCCompanion.Host` | The background host |
 | `PCCompanion.App` | The settings app |

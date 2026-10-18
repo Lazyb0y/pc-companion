@@ -11,6 +11,7 @@ using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.ViewModels;
+using PCCompanion.Core;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
@@ -25,6 +26,7 @@ public partial class App : Application
     private readonly ServiceProvider _services;
     private readonly ILogger<App> _logger;
     private MainWindow? _window;
+    private SessionSignal? _exitSignal;
 
     public App()
     {
@@ -60,8 +62,23 @@ public partial class App : Application
         window.ApplyTheme(settings.General.Theme);
 
         // The app exits when its window closes; disposing the services flushes the log.
-        window.Closed += (_, _) => _services.Dispose();
+        window.Closed += (_, _) =>
+        {
+            _exitSignal?.Dispose();
+            _services.Dispose();
+        };
         window.Activate();
+
+        // Exit in the host's tray menu closes the settings app too.
+        _exitSignal = SessionSignal.Listen(SettingsAppProcess.ExitSignalName, () => window.DispatcherQueue.TryEnqueue(() =>
+        {
+            LogExitRequested(_logger);
+            window.Close();
+        }));
+        if (_exitSignal is null)
+        {
+            LogCantListenForExit(_logger);
+        }
 
         // Raised on another thread when the settings app is started again.
         AppInstance.GetCurrent().Activated += (_, _) => window.DispatcherQueue.TryEnqueue(window.BringToFront);
@@ -133,6 +150,12 @@ public partial class App : Application
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows can't load its text for the language {Language}, so some built-in control text keeps the Windows display language.")]
     private static partial void LogCantSetResourceLanguages(ILogger logger, Win32Exception exception, string language);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Exit was chosen in the tray menu, so the settings app closes.")]
+    private static partial void LogExitRequested(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't listen for Exit in the tray menu, so choosing it leaves the settings app open.")]
+    private static partial void LogCantListenForExit(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The app stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);

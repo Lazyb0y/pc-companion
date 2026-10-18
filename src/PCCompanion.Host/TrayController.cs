@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
@@ -78,6 +79,12 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
                 settingsApp.Open();
                 break;
             case ExitCommand:
+                // Exit closes the whole app, the settings app included.
+                if (SessionSignal.Send(SettingsAppProcess.ExitSignalName))
+                {
+                    LogClosingSettingsApp(logger);
+                }
+
                 MessageLoop.Quit();
                 break;
         }
@@ -94,6 +101,9 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Closed the tray menu; chose {Command}.")]
     private static partial void LogMenuClosed(ILogger logger, string command);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Asked the settings app to close.")]
+    private static partial void LogClosingSettingsApp(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The tray icon couldn't be added yet; it is added when the taskbar starts.")]
     private static partial void LogIconNotShown(ILogger logger);
