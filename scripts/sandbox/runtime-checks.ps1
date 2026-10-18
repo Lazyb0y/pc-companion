@@ -35,6 +35,7 @@ public static class Win32 {
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam);
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
+    [DllImport("user32.dll")] public static extern bool MoveWindow(IntPtr window, int x, int y, int width, int height, bool repaint);
     [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
 
     [StructLayout(LayoutKind.Sequential)] private struct MOUSEINPUT { public int dx, dy; public uint mouseData, dwFlags, time; public IntPtr extra; }
@@ -165,6 +166,116 @@ function Set-Toggle([string] $Name, [bool] $On) {
     $pattern = $toggle.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
     if (($pattern.Current.ToggleState -eq [System.Windows.Automation.ToggleState]::On) -ne $On) { $pattern.Toggle() }
     return $true
+}
+
+# Where the page titled $Title and its content are: the page's scrolling area, and the leftmost
+# and rightmost edges of everything in it except its scroll bars. The title is the tallest text
+# with that name, since a navigation item can have the same one.
+function Get-PageLayout([string] $Title) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Title)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Text)))
+    $titleElement = @($window.FindAll([System.Windows.Automation.TreeScope]::Descendants, $condition)) |
+        Sort-Object { $_.Current.BoundingRectangle.Height } -Descending | Select-Object -First 1
+    if (-not $titleElement -or $titleElement.Current.BoundingRectangle.Height -lt 30) { return $null }
+    $walker = [System.Windows.Automation.TreeWalker]::RawViewWalker
+    $area = $walker.GetParent($titleElement)
+    while ($area -and -not [bool] $area.GetCurrentPropertyValue([System.Windows.Automation.AutomationElement]::IsScrollPatternAvailableProperty)) {
+        $area = $walker.GetParent($area)
+    }
+    if (-not $area) { return $null }
+    $edges = @($area.FindAll([System.Windows.Automation.TreeScope]::Descendants, [System.Windows.Automation.Condition]::TrueCondition) |
+        Where-Object {
+            $_.Current.ControlType -ne [System.Windows.Automation.ControlType]::ScrollBar -and
+            $_.Current.AutomationId -notmatch '^(Vertical|Horizontal)' -and
+            -not $_.Current.BoundingRectangle.IsEmpty -and $_.Current.BoundingRectangle.Width -gt 0
+        } | ForEach-Object { $_.Current.BoundingRectangle })
+    if ($edges.Count -eq 0) { return $null }
+    $paneButton = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'TogglePaneButton')))
+    return [pscustomobject] @{
+        Window = $window.Current.BoundingRectangle
+        Area = $area.Current.BoundingRectangle
+        Title = $titleElement.Current.BoundingRectangle
+        PaneButton = if ($paneButton) { $paneButton.Current.BoundingRectangle } else { [System.Windows.Rect]::Empty }
+        Left = ($edges | ForEach-Object { $_.Left } | Measure-Object -Minimum).Minimum
+        Right = ($edges | ForEach-Object { $_.Right } | Measure-Object -Maximum).Maximum
+    }
+}
+
+# Checks the page as Windows Settings lays out its pages: the content is a column in the middle of
+# the page's area, at most 1,000 pixels wide, with at least 36 pixels on each side; it never runs
+# past the area or the window, and the page's title stays clear of the pane's button.
+function Test-PageLayout([string] $Name, [string] $Title, [int] $Width) {
+    $check = "$Name at $Width pixels: the page's content is centered and fits in the window"
+    $layout = Get-PageLayout $Title
+    if (-not $layout) {
+        Test-Check $check $false 'the page or its title isn''t shown'
+        return
+    }
+    $window = $layout.Window
+    $area = $layout.Area
+    $inWindow = ($area.Left -ge $window.Left - 1) -and ($area.Right -le $window.Right + 1)
+    $inArea = ($layout.Left -ge $area.Left - 1) -and ($layout.Right -le $area.Right + 1)
+    $gap = [math]::Max(36, ($area.Width - 1000) / 2)
+    $leftGap = $layout.Left - $area.Left
+    $rightGap = $area.Right - $layout.Right
+    $contentWidth = $layout.Right - $layout.Left
+    $centered = ([math]::Abs($leftGap - $gap) -le 3) -and ([math]::Abs($rightGap - $gap) -le 3)
+    $clearOfButton = $layout.PaneButton.IsEmpty -or -not $layout.Title.IntersectsWith($layout.PaneButton)
+    $passed = $inWindow -and $inArea -and $centered -and ($contentWidth -le 1002) -and $clearOfButton
+    $detail = "window $([int] $window.Left)..$([int] $window.Right), page area $([int] $area.Left)..$([int] $area.Right), content $([int] $layout.Left)..$([int] $layout.Right), $([int] $contentWidth) wide, $([int] $leftGap) and $([int] $rightGap) from the area's edges (expected $([int] $gap)), title clear of the pane button: $clearOfButton"
+    Test-Check $check $passed $detail
+}
+
+# Shows the page of navigation item $Name. In a narrow window the pane folds away, so if the item
+# can't be selected, this opens the pane with its button first.
+function Show-Page([string] $Name) {
+    if (Select-PaneItem $Name) { return $true }
+    $window = Get-AppWindow
+    if (-not $window) { return $false }
+    $button = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants,
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'TogglePaneButton')))
+    $pattern = $null
+    if (-not $button -or -not $button.TryGetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern, [ref] $pattern)) { return $false }
+    $pattern.Invoke()
+    Start-Sleep -Milliseconds 800
+    return (Select-PaneItem $Name)
+}
+
+# Selects the navigation pane's item $Name, and only that: a page can have text or a card with the
+# same name, such as Home's Hot Corners card.
+function Select-PaneItem([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $false }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
+    $item = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    $pattern = $null
+    if (-not $item -or -not $item.TryGetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern, [ref] $pattern)) { return $false }
+    $pattern.Select()
+    return $true
+}
+
+# Resizes the settings app's window to $Width pixels, as tall as it fits.
+function Set-AppWindowWidth([int] $Width) {
+    $window = Get-AppWindow
+    if (-not $window) { return $false }
+    $handle = [IntPtr] $window.Current.NativeWindowHandle
+    $result = [Win32]::MoveWindow($handle, 0, 0, [math]::Min($Width, $screen.Width), [math]::Min(780, $screen.Height - 40), $true)
+    Start-Sleep -Milliseconds 1500
+    return $result
+}
+
+# Puts the settings app's window back at $Bounds, from its BoundingRectangle.
+function Restore-AppWindow($Bounds) {
+    $window = Get-AppWindow
+    if (-not $window) { return }
+    [void] [Win32]::MoveWindow([IntPtr] $window.Current.NativeWindowHandle, [int] $Bounds.X, [int] $Bounds.Y, [int] $Bounds.Width, [int] $Bounds.Height, $true)
+    Start-Sleep -Milliseconds 1500
 }
 
 # Opens a list to read the name a screen reader gives its selected item, then closes it.
@@ -358,6 +469,24 @@ $adminToggle = Find-Toggle 'Always run as administrator'
 Test-Check 'Always run as administrator is unavailable for a per-user install' (($null -ne $adminToggle) -and -not $adminToggle.Current.IsEnabled)
 Test-Check 'General says why' ($text -contains 'Available when PC Companion is installed for all users.') ($text -join ' | ')
 
+# 4b. Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
+#     Hot Corners and General: a centered column, as Windows Settings lays out its pages.
+$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'General'; Title = 'General' })
+$windowBounds = (Get-AppWindow).Current.BoundingRectangle
+foreach ($width in 600, 1000, 1300, $screen.Width) {
+    [void] (Set-AppWindowWidth $width)
+    foreach ($page in $pages) {
+        [void] (Show-Page $page.Name)
+        Start-Sleep -Milliseconds 1500
+        Test-PageLayout $page.Name $page.Title $width
+        if ($width -eq $screen.Width -or $width -eq 600) {
+            Save-Screenshot "02b-layout-$($page.Name.ToLowerInvariant() -replace ' ', '-')-$width"
+        }
+    }
+}
+Restore-AppWindow $windowBounds
+[void] (Select-NavigationItem 'General')
+
 # 5. One settings app per user session.
 Start-Process $appExe
 Start-Sleep -Seconds 5
@@ -399,6 +528,16 @@ Save-Screenshot '05-general-arabic-dark'
 Test-Check 'select Hot Corners in Arabic' (Select-NavigationItem 'الزوايا النشطة')
 Start-Sleep -Seconds 2
 Save-Screenshot '05b-hot-corners-arabic-dark'
+$windowBounds = (Get-AppWindow).Current.BoundingRectangle
+foreach ($width in 1000, $screen.Width) {
+    [void] (Set-AppWindowWidth $width)
+    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'عام') {
+        [void] (Show-Page $page)
+        Start-Sleep -Milliseconds 1500
+        Test-PageLayout "$page (right to left)" $page $width
+    }
+}
+Restore-AppWindow $windowBounds
 Test-Check 'tray menu requested in Arabic' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
 Save-Screenshot '06-tray-menu-arabic'
