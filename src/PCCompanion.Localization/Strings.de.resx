@@ -92,6 +92,10 @@
     <value>„Immer als Administrator ausführen“ konnte nicht geändert werden. Versuchen Sie es erneut.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion wird im Hintergrund ohne Administratorrechte ausgeführt. Daher funktionieren Funktionen nicht, solange eine als Administrator ausgeführte App im Vordergrund ist. Schalten Sie zur Behebung „Immer als Administrator ausführen“ aus und wieder ein, oder melden Sie sich ab und wieder an.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Protokolle</value>
     <comment>Needs native review.</comment>

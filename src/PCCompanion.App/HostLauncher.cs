@@ -2,10 +2,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
+using PCCompanion.Core.Settings;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App;
@@ -56,24 +56,18 @@ public sealed partial class HostLauncher(ILogger<HostLauncher> logger)
         StartIfNotRunning();
     }
 
-    // A host running as administrator holds a lock that this process may not open.
-    private static bool IsRunning()
-    {
-        try
-        {
-            if (!Mutex.TryOpenExisting(HostProcess.InstanceLockName, out var instanceLock))
-            {
-                return false;
-            }
+    /// <summary>
+    /// Whether the host runs without the admin rights that Always run as administrator gives it,
+    /// because its hand-off to the scheduled task failed. See <see cref="HostProcess.RunsWithoutAdminRights"/>.
+    /// </summary>
+    public static bool RunsWithoutAdminRights(GeneralSettings general) =>
+        HostProcess.RunsWithoutAdminRights(general, Elevation.IsUacLimited, IsHostElevated());
 
-            instanceLock.Dispose();
-            return true;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return true;
-        }
-    }
+    private static bool IsRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
+
+    // Read from the process that owns the host's window; null when no host runs or it can't be read.
+    private static bool? IsHostElevated() =>
+        MessageWindow.FindOwnerProcess(HostProcess.WindowClassName) is { } processId ? Elevation.IsProcessElevated(processId) : null;
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The background host is already running.")]
     private static partial void LogAlreadyRunning(ILogger logger);

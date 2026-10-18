@@ -92,6 +92,10 @@
     <value>无法更改“始终以管理员身份运行”。请重试。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion 正在后台运行，但没有管理员权限，因此以管理员身份运行的应用位于前台时，功能不起作用。若要解决此问题，请关闭“始终以管理员身份运行”后再重新打开，或者注销后重新登录。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>日志</value>
     <comment>Needs native review.</comment>

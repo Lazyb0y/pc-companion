@@ -92,6 +92,10 @@
     <value>Impossible de modifier Toujours exécuter en tant qu’administrateur. Réessayez.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion s’exécute en arrière-plan sans droits d’administrateur, donc les fonctionnalités ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan. Pour corriger ce problème, désactivez puis réactivez Toujours exécuter en tant qu’administrateur, ou déconnectez-vous puis reconnectez-vous.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Journaux</value>
     <comment>Needs native review.</comment>

@@ -53,4 +53,23 @@ public static class HostProcess
 
         return HostStart.Run;
     }
+
+    /// <summary>
+    /// Whether the running host lacks the admin rights that Always run as administrator gives it:
+    /// its hand-off to the scheduled task failed, so features don't work in front of apps running
+    /// as administrator. The settings app checks only while it runs without admin rights because of
+    /// UAC; with UAC off, an administrator's programs all have admin rights. When it can't tell,
+    /// for example because no host runs, it doesn't warn.
+    /// </summary>
+    /// <param name="general">The user's general settings.</param>
+    /// <param name="uacLimited">Whether the settings app runs without admin rights because of UAC.</param>
+    /// <param name="hostElevated">
+    /// Whether the running host runs as administrator, read from its process, or
+    /// <see langword="null"/> when no host runs or that can't be read.
+    /// </param>
+    public static bool RunsWithoutAdminRights(GeneralSettings general, bool uacLimited, bool? hostElevated)
+    {
+        ArgumentNullException.ThrowIfNull(general);
+        return general.AlwaysRunAsAdministrator && uacLimited && hostElevated == false;
+    }
 }

@@ -170,11 +170,18 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         private set => SetProperty(ref _runAsAdministratorFailed, value);
     }
 
+    /// <summary>
+    /// True when Always run as administrator is on but the host runs without admin rights, so
+    /// features don't work in front of apps running as administrator.
+    /// </summary>
+    public bool HostWithoutAdminRights => HostLauncher.RunsWithoutAdminRights(_settings.General);
+
     /// <summary>The host writes its logs to another folder while it runs as administrator.</summary>
     // The host keeps its logs in the protected folder only when it got admin rights through UAC,
-    // as it does when this app runs without them only because of UAC. With UAC off, the host's
-    // logs stay in the user's logs folder, which Open logs folder opens.
-    public bool HostLogsShown => _runAsAdministrator.IsOn && Elevation.IsUacLimited;
+    // as it does when this app runs without them only because of UAC. With UAC off, or while the
+    // host runs without admin rights, its logs are in the user's logs folder, which Open logs
+    // folder opens.
+    public bool HostLogsShown => _runAsAdministrator.IsOn && Elevation.IsUacLimited && !HostWithoutAdminRights;
 
     public bool DetailedLoggingOn
     {
@@ -242,6 +249,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(RunAsAdministratorOn));
         OnPropertyChanged(nameof(RunAsAdministratorAvailable));
         OnPropertyChanged(nameof(HostLogsShown));
+        OnPropertyChanged(nameof(HostWithoutAdminRights));
     }
 
     private void OnDetailedLoggingChanged(object? sender, EventArgs e)

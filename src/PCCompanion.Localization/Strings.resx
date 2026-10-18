@@ -92,6 +92,10 @@
     <value>Always run as administrator couldn't be changed. Try again.</value>
     <comment>General page: shown when turning the setting on or off failed.</comment>
   </data>
+  <data name="GeneralRunAsAdministratorHostWithoutAdminRights" xml:space="preserve">
+    <value>PC Companion is running in the background without admin rights, so features don't work while an app running as administrator is in front. To fix this, turn Always run as administrator off and on again, or sign out and back in.</value>
+    <comment>General page warning: Always run as administrator is on, but the background host couldn't start as administrator.</comment>
+  </data>
   <data name="GeneralLogsHeader" xml:space="preserve">
     <value>Logs</value>
     <comment>General page: diagnostic log files.</comment>

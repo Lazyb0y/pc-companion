@@ -72,6 +72,12 @@
                     Message="{app:Localized Key=GeneralRunAsAdministratorFailed}"
                     Severity="Error" />
 
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.HostWithoutAdminRights, Mode=OneWay}"
+                    Message="{app:Localized Key=GeneralRunAsAdministratorHostWithoutAdminRights}"
+                    Severity="Warning" />
+
                 <toolkit:SettingsCard Description="{x:Bind ViewModel.RunAsAdministratorDescription}" Header="{app:Localized Key=GeneralRunAsAdministratorHeader}">
                     <toolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7EF;" />
