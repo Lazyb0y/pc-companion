@@ -96,7 +96,7 @@ public sealed partial class RunAsAdministrator(AppSettings settings, SettingsSto
     [LoggerMessage(Level = LogLevel.Information, Message = "Always run as administrator is now {On}.")]
     private static partial void LogChanged(ILogger logger, bool on);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "The elevated helper failed with exit code {ExitCode}.")]
+    [LoggerMessage(Level = LogLevel.Error, Message = "The elevated helper failed with exit code {ExitCode}. Its log, elevated-*.log with the host's logs as administrator, says why.")]
     private static partial void LogHelperFailed(ILogger logger, int exitCode);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Can't start the elevated helper.")]

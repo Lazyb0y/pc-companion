@@ -64,7 +64,7 @@
 | `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks and protected files |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
 | `PCCompanion.Host` | The background host |
-| `PCCompanion.Elevated` | The elevated helper: creates and deletes the scheduled tasks of [Always run as administrator](../features/general/run-as-administrator.md) |
+| `PCCompanion.Elevated` | The elevated helper: creates and deletes the scheduled tasks of [Always run as administrator](../features/general/run-as-administrator.md), and logs to the user's protected logs folder |
 | `PCCompanion.App` | The settings app |
 | `PCCompanion.Installer` | The MSI; see [Packaging](../development/packaging.md) |
 
@@ -77,7 +77,7 @@ Enforced by `PCCompanion.Architecture.Tests`.
 | `PCCompanion.Core`, `PCCompanion.Localization`, `PCCompanion.Platform.Windows` | No other project |
 | `PCCompanion.Logging`, `PCCompanion.Infrastructure` | Core |
 | `PCCompanion.Modules.<Name>` | Core, Platform.Windows, Localization; never another module |
-| `PCCompanion.Elevated` | Core, Platform.Windows |
+| `PCCompanion.Elevated` | Core, Infrastructure, Logging, Platform.Windows |
 | `PCCompanion.Host`, `PCCompanion.App` | The projects above; never each other |
 | `*.Tests` | Any project except App and Host |
 
