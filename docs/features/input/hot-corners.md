@@ -56,6 +56,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 - **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key, and for **Run a program**, the program with **Browse** and its arguments; the activation delay; **Don't trigger when an app is full screen** (on by default); and a **Permissions & data** card.
 - The picture shows physical corners, so it isn't mirrored for right-to-left languages.
+- Without room for the picture, as in a narrow window, the corners are listed one below another, without the screen, in the language's direction.
 - When the feature is first turned on, the top-left corner shows Task View and the others do nothing, close to GNOME's Activities corner.
 - The switch on Home changes only `enabled` and keeps the other settings.
 - A corner keeps its `program` and `arguments` when its action changes, so choosing Run a program again brings them back.

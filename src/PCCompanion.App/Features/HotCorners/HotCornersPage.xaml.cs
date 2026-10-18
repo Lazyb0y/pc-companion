@@ -9,6 +9,11 @@ namespace PCCompanion.App.Features.HotCorners;
 
 public sealed partial class HotCornersPage : Page
 {
+    // The width the corner picture needs: two corners and the screen between them, with the spacing.
+    private const double PictureWidth = 220 + 12 + 200 + 12 + 220;
+
+    private bool _cornersListed;
+
     public HotCornersPage()
     {
         ViewModel = App.Current.Services.GetRequiredService<HotCornersViewModel>();
@@ -25,6 +30,41 @@ public sealed partial class HotCornersPage : Page
     }
 
     public HotCornersViewModel ViewModel { get; }
+
+    // Without room for the picture, as in a narrow window, the corners are listed one below another,
+    // without the screen, and follow the language's direction.
+    private void OnCornersPanelSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var listed = e.NewSize.Width < PictureWidth;
+        if (listed == _cornersListed)
+        {
+            return;
+        }
+
+        _cornersListed = listed;
+        if (listed)
+        {
+            Corners.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        }
+        else
+        {
+            Corners.RowDefinitions.RemoveAt(Corners.RowDefinitions.Count - 1);
+        }
+
+        Corners.HorizontalAlignment = listed ? HorizontalAlignment.Left : HorizontalAlignment.Center;
+        Corners.FlowDirection = listed ? FlowDirection : FlowDirection.LeftToRight;
+        Screen.Visibility = listed ? Visibility.Collapsed : Visibility.Visible;
+        Place(TopLeftCorner, 0, 0);
+        Place(TopRightCorner, listed ? 1 : 0, listed ? 0 : 2);
+        Place(BottomLeftCorner, 2, 0);
+        Place(BottomRightCorner, listed ? 3 : 2, listed ? 0 : 2);
+    }
+
+    private static void Place(FrameworkElement corner, int row, int column)
+    {
+        Grid.SetRow(corner, row);
+        Grid.SetColumn(corner, column);
+    }
 
     private void OnBrowseClick(object sender, RoutedEventArgs e)
     {
