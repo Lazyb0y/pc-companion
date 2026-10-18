@@ -5,12 +5,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App">
 
-    <!-- The backdrop is set in code: Mica on Windows 11, desktop acrylic on Windows 10. -->
+    <!--
+        The backdrop is set in code: Mica on Windows 11, desktop acrylic on Windows 10.
+        As in Windows Settings, the pane is open beside the page in windows at least 1,008 pixels
+        wide, and folds away behind its button in narrower ones, with no compact strip of icons.
+    -->
     <NavigationView
         x:Name="Navigation"
         IsBackButtonVisible="Collapsed"
+        CompactModeThresholdWidth="1008"
         IsSettingsVisible="False"
-        PaneDisplayMode="Left"
+        PaneDisplayMode="Auto"
         SelectionChanged="OnNavigationSelectionChanged">
         <NavigationView.MenuItems>
             <NavigationViewItem x:Name="HomeItem" Content="{app:Localized Key=NavigationHome}">

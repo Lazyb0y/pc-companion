@@ -16,6 +16,9 @@ namespace PCCompanion.App;
 
 public sealed partial class MainWindow : Window
 {
+    // The height of the row the pane's button takes at the top of a folded-away pane.
+    private const double PaneButtonRowHeight = 48;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -28,6 +31,8 @@ public sealed partial class MainWindow : Window
 
         AddFeatures();
         Navigation.SelectedItem = HomeItem;
+        Navigation.Loaded += (_, _) => PlacePageBelowPaneButton(Navigation.DisplayMode);
+        Navigation.DisplayModeChanged += (_, e) => PlacePageBelowPaneButton(e.DisplayMode);
         SetBackdrop();
     }
 
@@ -78,6 +83,11 @@ public sealed partial class MainWindow : Window
             _ => TitleBarTheme.UseDefaultAppMode,
         };
     }
+
+    // While the pane is folded away, its button sits over the top-left of the page, so the page
+    // starts below the button's row, as in Windows Settings.
+    private void PlacePageBelowPaneButton(NavigationViewDisplayMode displayMode) =>
+        ContentFrame.Margin = displayMode == NavigationViewDisplayMode.Minimal ? new Thickness(0, PaneButtonRowHeight, 0, 0) : default;
 
     // Mica needs Windows 11; Windows 10 has desktop acrylic. Without either, for example in some
     // remote sessions, the window gets the solid colors Mica itself falls back to.

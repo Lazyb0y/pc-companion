@@ -16,6 +16,7 @@
 - The app is unpackaged and self-contained: the .NET and Windows App SDK runtimes ship with it, so it needs no separate runtime install.
 - Only the Windows App SDK components the app uses are referenced: `Microsoft.WindowsAppSDK.WinUI` and its dependencies, not the full `Microsoft.WindowsAppSDK` package. Versions are set in `Directory.Packages.props`.
 - The window has a navigation pane with **Home** and, at the bottom, **General**: language, app theme, start with Windows, logs, detailed logging and the version. Changes are saved right away.
+- Layout follows Windows Settings. In windows at least 1,008 pixels wide, the pane is open beside the page; in narrower ones it folds away behind its button, and the page starts below the button's row.
 - Each page's content is a column in the middle of the page, at most 1,000 pixels wide, with at least 36 pixels on each side; its title lines up with its cards. Pages scroll only up and down, and nothing in them may need more width than a narrow window has.
 - Theme: light, dark or the Windows app mode, from the settings. The title bar follows it.
 - Backdrop: Mica on Windows 11, desktop acrylic on Windows 10. Windows turns Mica off while the window isn't in focus.
