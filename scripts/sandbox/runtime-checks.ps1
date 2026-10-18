@@ -728,6 +728,37 @@ Start-Sleep -Seconds 1
 Test-Check 'with the required key the corner runs' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 2 } 5) (Get-PointerText)
 Test-Check 'the held key adds no virtual desktop' ((Get-VirtualDesktopCount) -eq $desktops) "before: $desktops, after: $(Get-VirtualDesktopCount)"
 
+# Keep displays on: while the pointer stays in the corner, powercfg lists the host's display and
+# system requests with their reason; once it leaves, neither. Windows Sandbox runs no screen saver,
+# so whether it starts is checked by hand.
+function Get-HostPowerRequests {
+    $requests = @{}
+    $section = ''
+    foreach ($line in @(& powercfg.exe /requests)) {
+        if ($line -match '^([A-Z]+):$') { $section = $Matches[1]; $requests[$section] = '' }
+        elseif ($section) { $requests[$section] += "$line`n" }
+    }
+    $reason = [regex]::Escape('Hot Corners: the pointer is in a corner that keeps the displays on.')
+    return @{
+        Display = $requests['DISPLAY'] -match "PCCompanion\.Host\.exe\s*\n$reason"
+        System = $requests['SYSTEM'] -match "PCCompanion\.Host\.exe\s*\n$reason"
+        Any = ($requests['DISPLAY'] + $requests['SYSTEM']) -match 'PCCompanion\.Host\.exe'
+        Text = (($requests.Keys | ForEach-Object { "$_ $($requests[$_].Trim() -replace '\s*\n\s*', ' ')" }) -join ' | ')
+    }
+}
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": true, ""topLeft"": { ""action"": ""KeepDisplaysOn"", ""key"": ""None"" } } } }"
+Start-Sleep -Seconds 3
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'the top-left corner keeps the displays on' (Wait-Until { (Get-HostLog) -match 'The "?TopLeft"? corner ran "?KeepDisplaysOn"?\.' } 5) (Get-PointerText)
+$requests = Get-HostPowerRequests
+Test-Check 'powercfg lists the host''s display request with its reason' $requests.Display $requests.Text
+Test-Check 'powercfg lists the host''s system request with its reason' $requests.System $requests.Text
+[void] (Move-Pointer $middleX $middleY)
+Test-Check 'leaving the corner ends Keep displays on' (Wait-Until { (Get-HostLog) -match 'Keep displays on ended: "?PointerLeft"?\.' } 5) (Get-PointerText)
+$requests = Get-HostPowerRequests
+Test-Check 'powercfg lists no request of the host once the pointer leaves' (-not $requests.Any) $requests.Text
+
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
 Test-Check 'turning Hot Corners off stops it' ((Get-HostLog) -match 'Hot Corners stopped\.')
