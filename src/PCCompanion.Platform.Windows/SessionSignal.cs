@@ -44,7 +44,10 @@ public sealed class SessionSignal : IDisposable
         return new SessionSignal(signal, received);
     }
 
-    /// <summary>Sends the signal named <paramref name="name"/>. Returns false when nothing listens for it.</summary>
+    /// <summary>
+    /// Sends the signal named <paramref name="name"/>. Returns false when nothing has it open; a
+    /// listener that just stopped may still have it open for a moment, but isn't called.
+    /// </summary>
     public static bool Send(string name)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
@@ -66,9 +69,17 @@ public sealed class SessionSignal : IDisposable
         }
     }
 
+    /// <summary>Stops listening. No call to the listener starts or is still running after this returns.</summary>
     public void Dispose()
     {
-        _wait.Unregister(null);
+        using (var unregistered = new ManualResetEvent(initialState: false))
+        {
+            if (_wait.Unregister(unregistered))
+            {
+                unregistered.WaitOne();
+            }
+        }
+
         _signal.Dispose();
     }
 }
