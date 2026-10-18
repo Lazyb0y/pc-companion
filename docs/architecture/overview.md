@@ -63,6 +63,7 @@
 | `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
 | `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, global keyboard shortcuts, keyboard layouts, the window in front, top-level windows and their app IDs, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks and protected files |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
+| `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md) |
 | `PCCompanion.Host` | The background host |
 | `PCCompanion.Elevated` | The elevated helper: creates and deletes the scheduled tasks of [Always run as administrator](../features/general/run-as-administrator.md), and logs to the user's protected logs folder |
 | `PCCompanion.App` | The settings app |
