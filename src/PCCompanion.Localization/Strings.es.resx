@@ -232,6 +232,14 @@
     <value>Protector de pantalla</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>Mantener las pantallas encendidas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>Esquinas activas: el puntero está en una esquina que mantiene las pantallas encendidas.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>Ejecutar un programa</value>
     <comment>Needs native review.</comment>

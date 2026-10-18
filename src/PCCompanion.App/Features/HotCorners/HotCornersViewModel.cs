@@ -44,6 +44,7 @@ public sealed partial class HotCornersViewModel : ObservableObject
             new(HotCornerAction.Lock, Strings.HotCornersActionLock),
             new(HotCornerAction.TurnOffDisplays, Strings.HotCornersActionTurnOffDisplays),
             new(HotCornerAction.ScreenSaver, Strings.HotCornersActionScreenSaver),
+            new(HotCornerAction.KeepDisplaysOn, Strings.HotCornersActionKeepDisplaysOn),
             new(HotCornerAction.RunProgram, Strings.HotCornersActionRunProgram),
         ];
 

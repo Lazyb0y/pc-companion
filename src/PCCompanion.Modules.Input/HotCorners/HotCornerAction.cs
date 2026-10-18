@@ -15,4 +15,5 @@ public enum HotCornerAction
     TurnOffDisplays,
     ScreenSaver,
     RunProgram,
+    KeepDisplaysOn,
 }

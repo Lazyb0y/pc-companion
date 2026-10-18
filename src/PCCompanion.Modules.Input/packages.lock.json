@@ -20,6 +20,9 @@
       "pccompanion.core": {
         "type": "Project"
       },
+      "pccompanion.localization": {
+        "type": "Project"
+      },
       "pccompanion.platform.windows": {
         "type": "Project"
       }

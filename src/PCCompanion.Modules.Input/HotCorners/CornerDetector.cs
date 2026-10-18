@@ -18,6 +18,12 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
     private bool _finished;
 
     /// <summary>
+    /// The corner the pointer is in, among the corners that have an action, as of the last call to
+    /// <see cref="Configure"/> or <see cref="Update"/>; <see langword="null"/> when it's in none.
+    /// </summary>
+    public ScreenCorner? CurrentCorner => _current?.Position;
+
+    /// <summary>
     /// Sets the settings and the areas of the displays, in physical pixels. A corner the pointer
     /// is in already doesn't trigger until the pointer leaves it and comes back.
     /// </summary>

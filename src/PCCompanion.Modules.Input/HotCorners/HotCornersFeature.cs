@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
@@ -21,6 +23,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
     private RawPointerMonitor? _monitor;
+    private DisplayKeeper? _displays;
     private ITimer? _timer;
     private bool _failed;
 
@@ -86,6 +89,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         _window = window;
         _window.MessageReceived += OnMessageReceived;
         _monitor.InputReceived += OnInputReceived;
+        _displays = new DisplayKeeper(logger, () => KeepDisplaysOn(window));
 
         // Fires on the thread pool; the detector runs on the window's thread.
         _timer = time.CreateTimer(_ => window.BeginInvoke(Update), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
@@ -99,10 +103,11 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
             return;
         }
 
+        _displays?.End(KeepDisplaysOnEnd.HotCornersStopped);
         _timer?.Dispose();
         _monitor?.Dispose();
         _window.Dispose();
-        (_timer, _monitor, _window) = (null, null, null);
+        (_displays, _timer, _monitor, _window) = (null, null, null, null);
         LogStopped(logger);
     }
 
@@ -110,6 +115,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     {
         var displays = Displays.GetAreas();
         _detector.Configure(_settings, displays);
+        _displays?.Check(_detector.CurrentCorner, _settings);
         LogConfigured(logger, displays.Count, _settings.ActivationDelayMilliseconds);
     }
 
@@ -132,6 +138,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         }
 
         var decision = _detector.Update();
+        _displays?.Check(_detector.CurrentCorner, _settings);
         switch (decision.Outcome)
         {
             case CornerOutcome.Waiting:
@@ -162,8 +169,32 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         HotCornerAction.TurnOffDisplays => ShellActions.TurnOffDisplays(window),
         HotCornerAction.ScreenSaver => ShellActions.StartScreenSaver(window),
         HotCornerAction.RunProgram => RunProgram(decision.Corner),
+        HotCornerAction.KeepDisplaysOn => _displays?.Start(decision.Corner) ?? false,
         _ => true,
     };
+
+    // Watches for the session lock first: on the lock screen the displays turn off as usual.
+    private DisplaysKeptOn? KeepDisplaysOn(MessageWindow window)
+    {
+        SessionMonitor sessions;
+        try
+        {
+            sessions = new SessionMonitor(window);
+        }
+        catch (Win32Exception)
+        {
+            return null;
+        }
+
+        if (DisplayRequest.Start(Strings.HotCornersKeepDisplaysOnReason) is not { } request)
+        {
+            sessions.Dispose();
+            return null;
+        }
+
+        sessions.Locked += (_, _) => Guard(() => _displays?.End(KeepDisplaysOnEnd.SessionLocked));
+        return new DisplaysKeptOn(request, sessions);
+    }
 
     // The runner logs its own problems.
     private bool RunProgram(ScreenCorner corner)
@@ -190,6 +221,15 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
             LogFailed(logger, exception);
             _failed = true;
             Stop();
+        }
+    }
+
+    private sealed class DisplaysKeptOn(DisplayRequest request, SessionMonitor sessions) : IDisposable
+    {
+        public void Dispose()
+        {
+            request.Dispose();
+            sessions.Dispose();
         }
     }
 

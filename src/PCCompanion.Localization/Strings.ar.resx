@@ -264,6 +264,14 @@
     <value>شاشة التوقف</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>إبقاء الشاشات قيد التشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>الزوايا النشطة: المؤشر في زاوية تُبقي الشاشات قيد التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>تشغيل برنامج</value>
     <comment>Needs native review.</comment>

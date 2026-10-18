@@ -232,6 +232,14 @@
     <value>Screen saver</value>
     <comment>Hot Corners action: starts the screen saver chosen in Windows settings.</comment>
   </data>
+  <data name="HotCornersActionKeepDisplaysOn" xml:space="preserve">
+    <value>Keep displays on</value>
+    <comment>Hot Corners action: while the pointer stays in the corner, the screen saver doesn't start and the displays don't turn off.</comment>
+  </data>
+  <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
+    <value>Hot Corners: the pointer is in a corner that keeps the displays on.</value>
+    <comment>Reason shown by powercfg /requests while a Hot Corners corner keeps the displays on.</comment>
+  </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>Run a program</value>
     <comment>Hot Corners action: starts the program chosen for the corner.</comment>
