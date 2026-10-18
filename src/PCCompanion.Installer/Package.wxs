@@ -1,6 +1,7 @@
 <Wix
     xmlns="http://wixtoolset.org/schemas/v4/wxs"
-    xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+    xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+    xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
   <Package
       Name="PC Companion"
       Manufacturer="PC Companion"
@@ -69,9 +70,14 @@
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Elevated.exe" />
         </Files>
 
-        <!-- Named, so the last page can open it. -->
+        <!--
+          Named, so the last page can open it. Uninstalling it also removes PC Companion's data; see
+          UserDataFolder below.
+        -->
         <Component Id="SettingsApp">
           <File Id="SettingsApp" Source="!(bindpath.InstallFiles)\PCCompanion.exe" KeyPath="yes" />
+          <util:RemoveFolderEx Property="UserDataFolder" On="uninstall" Condition="UserDataFolder" />
+          <util:RemoveFolderEx Property="MachineDataFolder" On="uninstall" Condition="MachineDataFolder" />
         </Component>
 
         <!-- Named, so uninstalling can run it. -->
@@ -105,6 +111,17 @@
       Uninstalling deletes the scheduled tasks of Always run as administrator, for every user. An
       upgrade keeps them, since the new host is in the same place. It never fails the uninstall.
     -->
+    <!--
+      Uninstalling a per-user install removes the user's %LOCALAPPDATA%\PCCompanion, with the
+      settings and logs; it runs as the user. Uninstalling an all-users install removes
+      %ProgramData%\PCCompanion, with the host's logs while it ran as administrator, which only
+      administrators can change. It runs as administrator, so it leaves every user's own folder: any
+      program running as the user can change it, and a link planted there could make the uninstall
+      remove other files. The folders are named only for a removal that isn't part of an upgrade.
+    -->
+    <SetProperty Id="UserDataFolder" Value="[LocalAppDataFolder]PCCompanion" Before="Wix4RemoveFoldersEx_$(sys.BUILDARCHSHORT)" Sequence="execute" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND NOT (ALLUSERS=1)" />
+    <SetProperty Id="MachineDataFolder" Value="[CommonAppDataFolder]PCCompanion" Before="Wix4RemoveFoldersEx_$(sys.BUILDARCHSHORT)" Sequence="execute" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND ALLUSERS=1" />
+
     <CustomAction Id="DeleteStartupTasks" FileRef="ElevatedHelper" ExeCommand="delete-all-startup-tasks" Execute="deferred" Impersonate="no" Return="ignore" />
     <InstallExecuteSequence>
       <Custom Action="DeleteStartupTasks" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND ALLUSERS=1" />
