@@ -168,6 +168,16 @@ function Get-UninstallEntry {
     return $null
 }
 
+# Settings app and host processes started from $Folder.
+function Get-AppProcesses([string] $Folder) {
+    return @(Get-Process -Name 'PCCompanion', 'PCCompanion.Host' -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "$Folder\*" })
+}
+
+function Test-CheckBoxOn([string] $Name) {
+    $checkBox = Get-Control $Name
+    return $checkBox -and $checkBox.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -eq [System.Windows.Automation.ToggleState]::On
+}
+
 # The dialogs that a verbose install log shows were opened, in order.
 function Get-LogDialogs([string] $Log) {
     return @(Select-String -Path $Log -Pattern 'Action [\d:]+: (\w+)\. Dialog created' -ErrorAction SilentlyContinue | ForEach-Object { $_.Matches[0].Groups[1].Value })
@@ -180,13 +190,13 @@ Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($sc
 
 $scopes = @(
     @{
-        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false
+        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false; OpenApp = $true
         Folder = (Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion')
         RunKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
     },
     @{
-        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true
+        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true; OpenApp = $false
         Folder = (Join-Path $env:ProgramW6432 'PCCompanion')
         RunKey = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
@@ -231,9 +241,24 @@ foreach ($scope in $scopes) {
         Assert-Step "${name}: Install" (Invoke-Click 'Install')
         Assert-Step "${name}: install finishes" (Wait-Page 'Completed the PC Companion Setup Wizard' 300)
         Save-Page "$key-06-finished"
+        Test-Check "${name}: the last page offers to open PC Companion, on by default" (Test-CheckBoxOn 'Open PC Companion')
+        if (-not $scope.OpenApp) {
+            Assert-Step "${name}: clear Open PC Companion" (Invoke-Click 'Open PC Companion')
+            Test-Check "${name}: Open PC Companion is cleared" (-not (Test-CheckBoxOn 'Open PC Companion'))
+        }
         Assert-Step "${name}: Finish" (Invoke-Click 'Finish')
         $code = Get-ExitCode $process
         Test-Check "${name}: setup exits with 0" ($code -eq 0) "exit code $code"
+        if ($scope.OpenApp) {
+            Test-Check "${name}: Finish opens PC Companion" (Wait-Until { @(Get-AppProcesses $scope.Folder | Where-Object { $_.ProcessName -eq 'PCCompanion' }).Count -eq 1 } 30)
+        } else {
+            Start-Sleep -Seconds 10
+            Test-Check "${name}: Finish opens nothing when it's cleared" ((Get-AppProcesses $scope.Folder).Count -eq 0)
+        }
+
+        # Removal needs the files closed.
+        Get-AppProcesses $scope.Folder | Stop-Process -Force -ErrorAction SilentlyContinue
+        [void] (Wait-Until { (Get-AppProcesses $scope.Folder).Count -eq 0 } 15)
 
         Test-Check "${name}: installed in $($scope.Folder)" ((Test-Path (Join-Path $scope.Folder 'PCCompanion.exe')) -and (Test-Path $hostExe))
         $run = (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
@@ -258,6 +283,7 @@ foreach ($scope in $scopes) {
         Assert-Step "${name}: Remove" (Invoke-Click 'Remove')
         Assert-Step "${name}: removal finishes" (Wait-Page 'Completed the PC Companion Setup Wizard' 300)
         Save-Page "$key-10-removed"
+        Test-Check "${name}: the last page after removal doesn't offer to open PC Companion" (-not (Get-Control 'Open PC Companion'))
         Assert-Step "${name}: Finish after removal" (Invoke-Click 'Finish')
         $code = Get-ExitCode $process
         Test-Check "${name}: setup exits with 0 after removal" ($code -eq 0) "exit code $code"
@@ -291,6 +317,8 @@ $runKey = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=""', '/l*v', "`"$results\install-silent.log`"") -Wait -PassThru).ExitCode
 Test-Check 'silent install for all users' ($code -eq 0) "exit code $code"
 Test-Check "silent install in $folder" ((Test-Path (Join-Path $folder 'PCCompanion.exe')) -and (Test-Path $hostExe))
+Start-Sleep -Seconds 5
+Test-Check 'silent install opens nothing' ((Get-AppProcesses $folder).Count -eq 0)
 $run = (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
 Test-Check "silent install startup entry in $runKey" ($run -eq "`"$hostExe`" --startup") "value: $run"
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\remove-silent.log`"") -Wait -PassThru).ExitCode
