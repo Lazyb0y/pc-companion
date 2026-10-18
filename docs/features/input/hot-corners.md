@@ -30,12 +30,25 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 | Lock | Locks the PC | `LockWorkStation` |
 | Turn off displays | Turns the displays off until the pointer moves | `SC_MONITORPOWER` |
 | Screen saver | Starts the screen saver | `SC_SCREENSAVE` |
+| Keep displays on | While the pointer stays in the corner, the screen saver doesn't start and the displays don't turn off | A power request; see [Keep displays on](#keep-displays-on) |
 | Run a program | Starts the program chosen for the corner | Started directly, without a shell; see [Run a program](#run-a-program) |
 
 - Shortcuts are sent as keyboard input only where Windows has no API for the action.
 - A modifier the user is holding, such as the key a corner requires, is released before the shortcut is sent: Ctrl + Windows + D would add a virtual desktop. An unassigned key is pressed first, so releasing the Windows key or Alt doesn't open Start or the menu bar.
 - Screen saver does nothing when no screen saver is chosen in Windows settings.
 - Not included: command lines in cmd or PowerShell syntax, such as pipes, custom shortcuts, per-app settings, and screen edges.
+
+## Keep displays on
+
+- Inspired by Disable Screen Saver in macOS Hot Corners. Unlike the other actions, which run once, it lasts while the pointer stays in the corner.
+- It triggers like the other actions, with the same activation delay, key and exceptions.
+- While it lasts, the screen saver doesn't start, the displays don't turn off and the PC doesn't go to sleep on its own.
+- It ends when the pointer leaves the corner, the corner gets another action, Hot Corners is turned off or stops, or the PC is locked or switched to another user. Locking ends it so the displays turn off on the lock screen as usual; after unlocking, the pointer must leave the corner and come back.
+- Other changes to the settings or the displays don't end it while the pointer is still in a corner with this action.
+- It doesn't stop the user: Sleep in Start, the power button and closing the lid work as usual, and Windows ends the request then.
+- **How:** a power request (`PowerCreateRequest`, then `PowerSetRequest` for the display and the system), released with `PowerClearRequest`. Its reason, "Hot Corners: the pointer is in a corner that keeps the displays on.", is shown by `powercfg /requests` in the user's language. Session locks come from `WTSRegisterSessionNotification`.
+- It changes no screen saver or power setting, and Windows ends the request when the host exits, so nothing is left behind if PC Companion stops unexpectedly.
+- Policies that limit what apps can keep awake, such as `powercfg /requestsoverride` or Group Policy, apply to it as to any app.
 
 ## Run a program
 
@@ -68,7 +81,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
   "hotCorners": {
     "enabled": true,
     "topLeft": { "action": "TaskView", "key": "None" },
-    "topRight": { "action": "None", "key": "None" },
+    "topRight": { "action": "KeepDisplaysOn", "key": "None" },
     "bottomLeft": { "action": "RunProgram", "key": "None", "program": "C:\\Windows\\System32\\notepad.exe", "arguments": "" },
     "bottomRight": { "action": "None", "key": "Control" },
     "activationDelayMilliseconds": 150,
@@ -87,28 +100,33 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 - Windows 10 version 2004 and later, and Windows 11.
 - The Notifications shortcut differs between Windows 10 and 11.
+- Power requests, which Keep displays on uses, are in every supported version.
 
 ## Security and privacy
 
-- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. Nothing is stored or sent, and only which corner ran which action is logged, as a Debug entry. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
+- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. Nothing is stored or sent, and only which corner ran which action, and why Keep displays on ended, is logged, as Debug entries. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
 - **Keyboard:** reads only the state of the chosen key, when a corner is reached; no keyboard hook.
-- **Changes:** sends only the fixed Windows shortcuts in the table, and starts only the program the user chose for a corner; nothing the user types or configures is sent as input.
+- **Changes:** sends only the fixed Windows shortcuts in the table, and starts only the program the user chose for a corner; nothing the user types or configures is sent as input. Keep displays on changes no setting; it holds a power request only while the pointer stays in its corner.
+- **Screen saver and locking:** like a video player, Keep displays on delays the screen saver, and a lock that comes with it, while the pointer rests in the corner. Someone at the PC must put the pointer there, any app running as the user can make the same request, `powercfg /requests` shows it with its reason, and locking the PC ends it.
 - **Programs:** the program and its arguments are stored in `settings.json` and used only to start that program. Any program running as the user can change that file, but it could also start the same program itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so the action doesn't run then. Programs start directly from a full path to an `.exe`, without a shell or a search of folders.
 - **Rights:** runs without admin rights, and never starts a program with them. Turning the feature off stops reading the pointer.
 
 ## Performance
 
 - No timer runs while the pointer is away from the corners; each pointer event costs a few comparisons. A timer runs only while the pointer is in a corner, for the activation delay.
+- Keep displays on adds no timer or polling: the power request is set and cleared on pointer and session events.
 
 ## Accessibility and localization
 
 - Every list, switch and slider has a label for screen readers, and the page works with the keyboard alone.
 - Corner names are physical ("Top left") in every language.
 - The program and arguments boxes and **Browse** carry their corner's name for screen readers, such as "Top left program".
+- The reason of the Keep displays on power request is translated like the page's strings.
 
 ## Testing
 
 - **Unit tests** with fake displays, a fake clock and fake pointer events: the activation delay, leaving and coming back, held buttons, required keys, full-screen apps, and display layouts (side by side, stacked, different sizes and scaling, displays left of or above the main one).
+- **Unit tests for Keep displays on**, with a fake power request: it starts after the delay; it ends when the pointer leaves, the corner's action changes, the feature stops or the PC is locked; it lasts through other settings and display changes while the pointer stays in the corner; and after a lock it starts again only once the pointer leaves and comes back.
 - **Unit tests for Run a program**, with a fake process starter: splitting the arguments, which paths are accepted, the program and arguments in the settings, and that nothing starts while PC Companion runs as administrator.
-- **Sandbox checks** (`scripts/sandbox/runtime-checks.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged.
-- **By hand:** a real mouse on one and several displays, a full-screen game or video, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights.
+- **Sandbox checks** (`scripts/sandbox/runtime-checks.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged. For Keep displays on, `powercfg /requests` lists the host's display and system requests with their reason while the pointer is in the corner, and neither after it leaves.
+- **By hand:** a real mouse on one and several displays, a full-screen game or video, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights. For Keep displays on, on Windows 10 and 11 with the screen saver and display timeout at 1 minute: neither starts while the pointer rests in the corner, both do after it leaves, the displays turn off on the lock screen after locking, and Sleep in Start works.
