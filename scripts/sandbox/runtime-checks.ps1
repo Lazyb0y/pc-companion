@@ -437,6 +437,7 @@ function Write-Settings([string] $Json) {
 }
 
 $msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
+$upgradeMsi = (Get-ChildItem 'C:\Test\upgrade' -Filter '*.msi' | Select-Object -First 1).FullName
 $installFolder = Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion'
 $appExe = Join-Path $installFolder 'PCCompanion.exe'
 $hostExe = Join-Path $installFolder 'PCCompanion.Host.exe'
@@ -828,11 +829,27 @@ Test-Check 'host wrote Debug entries while detailed logging was on' (@($hostLine
 Test-Check 'detailed logging turned itself off in the host' ($turnedOff.Count -ge 1)
 Test-Check 'host wrote no Debug entries after detailed logging turned off' (($turnedOff.Count -ge 1) -and (@($debugLines | Where-Object { $_ -gt $turnedOff[-1] }).Count -eq 0))
 
-# 13. Uninstall.
-$code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall.log`"") -Wait -PassThru).ExitCode
+# 12b. An upgrade to the next version keeps the settings and logs.
+function Get-InstalledVersions {
+    @(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
+        Where-Object { $_.DisplayName -eq 'PC Companion' } | ForEach-Object { $_.DisplayVersion })
+}
+$settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
+$logsBefore = @(Get-ChildItem $logs -File).Count
+$versionBefore = @(Get-InstalledVersions)
+$code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$upgradeMsi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\upgrade.log`"") -Wait -PassThru).ExitCode
+Test-Check 'upgrade to the next version' ($code -eq 0) "exit code $code"
+$versionAfter = @(Get-InstalledVersions)
+Test-Check 'the upgrade replaces the installed version' (($versionAfter.Count -eq 1) -and ($versionAfter[0] -ne $versionBefore[0])) "before: $($versionBefore -join ', '); after: $($versionAfter -join ', ')"
+Test-Check 'the upgrade keeps the settings' ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)
+Test-Check 'the upgrade keeps the logs' (@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count -ge $logsBefore) "before: $logsBefore; after: $(@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count)"
+
+# 13. Uninstall. It removes the data folder.
+$code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$upgradeMsi`"", '/qn', '/l*v', "`"$results\uninstall.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall' ($code -eq 0) "exit code $code"
 Test-Check 'startup entry removed' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))
 Test-Check 'install folder removed' (-not (Test-Path $appExe))
+Test-Check 'uninstalling removes the settings and logs' (-not (Test-Path $dataFolder)) "left: $((Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyContinue) -join ', ')"
 
 # 14. Always run as administrator, in an all-users install. UAC is off in the Sandbox, so every
 #     program already runs as administrator: the hand-off to the task and the protected log
@@ -890,11 +907,27 @@ $allUsersLogs = New-Item -ItemType Directory -Force -Path (Join-Path $results 'l
 Copy-Item -Path (Join-Path $logs '*') -Destination $allUsersLogs -ErrorAction SilentlyContinue
 $logText = (Get-ChildItem $logs -File -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 Test-Check 'Always run as administrator logs no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
+# An uninstall for all users runs as administrator, while any program running as the user can
+# change the user's data folder, so it leaves that folder alone: links planted in it can't make the
+# uninstall remove other files.
+$machineLog = Join-Path $env:ProgramData 'PCCompanion\Logs\host-test.log'
+Set-Content -Path $machineLog -Value 'test'
+Test-Check 'the user''s data folder is there before uninstalling for all users' (Test-Path (Join-Path $dataFolder 'settings.json'))
+$outside = (New-Item -ItemType Directory -Force -Path (Join-Path $env:TEMP 'PCCompanion.Outside')).FullName
+Set-Content -Path (Join-Path $outside 'behind-folder-link.txt') -Value 'keep'
+Set-Content -Path (Join-Path $outside 'behind-file-link.txt') -Value 'keep'
+New-Item -ItemType Junction -Path (Join-Path $dataFolder 'FolderLink') -Target $outside | Out-Null
+New-Item -ItemType SymbolicLink -Path (Join-Path $dataFolder 'FileLink.txt') -Target (Join-Path $outside 'behind-file-link.txt') | Out-Null
+Test-Check 'links to other files are planted in the data folder' ((Test-Path (Join-Path $dataFolder 'FolderLink\behind-folder-link.txt')) -and (Test-Path (Join-Path $dataFolder 'FileLink.txt')))
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall-all-users.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall for all users' ($code -eq 0) "exit code $code"
+$left = @(Get-ChildItem $dataFolder -Force -Name -ErrorAction SilentlyContinue)
+Test-Check 'uninstalling for all users leaves the user''s own settings and logs' (($left -contains 'settings.json') -and ($left -contains 'Logs')) "left: $($left -join ', ')"
+$kept = @(Get-ChildItem $outside -Force -Name -ErrorAction SilentlyContinue)
+Test-Check 'uninstalling doesn''t remove files that links in the data folder lead to' (($kept -contains 'behind-folder-link.txt') -and ($kept -contains 'behind-file-link.txt')) "left outside: $($kept -join ', ')"
 Test-Check 'uninstalling deletes the tasks' ((Get-StartupTasks).Count -eq 0) "tasks: $((Get-StartupTasks) -join ', ')"
 Test-Check 'the all-users folder is removed' (-not (Test-Path (Join-Path $allUsersFolder 'PCCompanion.Host.exe')))
-Test-Check 'the empty protected logs folder is removed' (-not (Test-Path (Join-Path $env:ProgramData 'PCCompanion')))
+Test-Check 'uninstalling for all users removes the protected logs folder, with its logs' (-not (Test-Path (Join-Path $env:ProgramData 'PCCompanion')))
 
 Write-Report "finished $(Get-Date -Format o)"
 Set-Content -Path (Join-Path $results 'done.txt') -Value 'done'
