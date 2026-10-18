@@ -74,6 +74,70 @@ if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction Sile
     throw "No installer in $msiFolder. Run without -NoBuild."
 }
 
+# The runtime checks also upgrade PC Companion, with a copy of the installer that's the next version:
+# its own product and package codes, and the version bounds that find this one as older.
+function Invoke-Com([object] $Target, [string] $Name, [System.Reflection.BindingFlags] $Kind, [object[]] $Arguments) {
+    return $Target.GetType().InvokeMember($Name, $Kind, $null, $Target, $Arguments)
+}
+
+function New-UpgradeInstaller([string] $Source, [string] $Destination) {
+    Copy-Item -Path $Source -Destination $Destination -Force
+    $installer = New-Object -ComObject WindowsInstaller.Installer
+    $database = Invoke-Com $installer 'OpenDatabase' 'InvokeMethod' @($Destination, [int] 1)
+    $view = Invoke-Com $database 'OpenView' 'InvokeMethod' @("SELECT ``Value`` FROM ``Property`` WHERE ``Property``='ProductVersion'")
+    [void] (Invoke-Com $view 'Execute' 'InvokeMethod' $null)
+    $version = Invoke-Com (Invoke-Com $view 'Fetch' 'InvokeMethod' $null) 'StringData' 'GetProperty' @([int] 1)
+    [void] (Invoke-Com $view 'Close' 'InvokeMethod' $null)
+    $parts = $version.Split('.')
+    $parts[-1] = [string] ([int] $parts[-1] + 1)
+    $next = $parts -join '.'
+    $productCode = "{$([guid]::NewGuid().ToString().ToUpperInvariant())}"
+
+    # The Upgrade table's versions are part of its key, so its rows are replaced rather than updated.
+    $columns = 'UpgradeCode', 'VersionMin', 'VersionMax', 'Language', 'Attributes', 'Remove', 'ActionProperty'
+    $columnList = ($columns | ForEach-Object { '`' + $_ + '`' }) -join ', '
+    $view = Invoke-Com $database 'OpenView' 'InvokeMethod' @("SELECT $columnList FROM ``Upgrade``")
+    [void] (Invoke-Com $view 'Execute' 'InvokeMethod' $null)
+    $rows = @()
+    while ($record = Invoke-Com $view 'Fetch' 'InvokeMethod' $null) {
+        $rows += , @(1..$columns.Count | ForEach-Object { Invoke-Com $record 'StringData' 'GetProperty' @([int] $_) })
+    }
+    [void] (Invoke-Com $view 'Close' 'InvokeMethod' $null)
+    $queries = @(
+        "UPDATE ``Property`` SET ``Value``='$next' WHERE ``Property``='ProductVersion'",
+        "UPDATE ``Property`` SET ``Value``='$productCode' WHERE ``Property``='ProductCode'",
+        'DELETE FROM `Upgrade`')
+    foreach ($row in $rows) {
+        $values = for ($i = 0; $i -lt $columns.Count; $i++) {
+            $value = if ($row[$i] -eq $version) { $next } else { $row[$i] }
+            if ($columns[$i] -eq 'Attributes') { [int] $value } else { "'$value'" }
+        }
+        $queries += "INSERT INTO ``Upgrade`` ($columnList) VALUES ($($values -join ', '))"
+    }
+    foreach ($query in $queries) {
+        $view = Invoke-Com $database 'OpenView' 'InvokeMethod' @($query)
+        [void] (Invoke-Com $view 'Execute' 'InvokeMethod' $null)
+        [void] (Invoke-Com $view 'Close' 'InvokeMethod' $null)
+    }
+    $summary = Invoke-Com $database 'SummaryInformation' 'GetProperty' @([int] 1)
+    [void] (Invoke-Com $summary 'Property' 'SetProperty' @([int] 9, "{$([guid]::NewGuid().ToString().ToUpperInvariant())}"))
+    [void] (Invoke-Com $summary 'Persist' 'InvokeMethod' $null)
+    [void] (Invoke-Com $database 'Commit' 'InvokeMethod' $null)
+    foreach ($object in $summary, $view, $database, $installer) { [void] [System.Runtime.InteropServices.Marshal]::ReleaseComObject($object) }
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+    return $next
+}
+
+$upgradeFolder = Join-Path $testResults 'sandbox-upgrade'
+if (Test-Path $upgradeFolder) { Remove-Item -Recurse -Force $upgradeFolder }
+New-Item -ItemType Directory -Force -Path $upgradeFolder | Out-Null
+if (-not $Installer) {
+    $source = (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
+    $upgradeVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-upgrade.msi')
+    Write-Host "Made an upgrade installer, version $upgradeVersion."
+}
+
 if (Test-Path $results) {
     try {
         Remove-Item -Recurse -Force $results
@@ -98,6 +162,11 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
     <MappedFolder>
       <HostFolder>$(ConvertTo-Xml (Join-Path $PSScriptRoot 'sandbox'))</HostFolder>
       <SandboxFolder>C:\Test\scripts</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>$(ConvertTo-Xml $upgradeFolder)</HostFolder>
+      <SandboxFolder>C:\Test\upgrade</SandboxFolder>
       <ReadOnly>true</ReadOnly>
     </MappedFolder>
     <MappedFolder>
