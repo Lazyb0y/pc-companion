@@ -20,10 +20,17 @@ public static class Elevation
     public static bool IsUacElevated => ElevationType == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull;
 
     /// <summary>
+    /// Whether this process runs without admin rights only because of UAC: an administrator's
+    /// program that wasn't elevated. Then a program of the user's that is elevated gets them
+    /// through UAC, unlike when UAC is off.
+    /// </summary>
+    public static bool IsUacLimited => ElevationType == TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited;
+
+    /// <summary>
     /// Whether the user can get admin rights by confirming a UAC prompt: an administrator
     /// account, rather than a standard account that would need another account's password.
     /// </summary>
-    public static bool CanElevate => IsElevated || ElevationType == TOKEN_ELEVATION_TYPE.TokenElevationTypeLimited;
+    public static bool CanElevate => IsElevated || IsUacLimited;
 
     private static unsafe TOKEN_ELEVATION_TYPE? ElevationType
     {
