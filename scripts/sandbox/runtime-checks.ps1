@@ -10,7 +10,14 @@ Outputs: C:\Test\results: report.txt with one PASS or FAIL line per check, scree
 
 The checks look for English, Arabic and Bangla text from src\PCCompanion.Localization; update them
 when those strings change.
+
+.PARAMETER SmartAppControl
+What Smart App Control does in the Sandbox, as smart-app-control.ps1 sets it before the first install.
 #>
+param(
+    [ValidateSet('Off', 'Evaluation', 'On')]
+    [string] $SmartAppControl = 'Off'
+)
 
 $ErrorActionPreference = 'Continue'
 $results = 'C:\Test\results'
@@ -513,6 +520,7 @@ $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
 $menuX = $screen.Width - 300
 $menuY = $screen.Height - 100
 Write-Report "msi: $msi; user: $env:USERNAME; screen: $($screen.Width)x$($screen.Height); Windows $([Environment]::OSVersion.Version)"
+Write-Report (& (Join-Path $PSScriptRoot 'smart-app-control.ps1') $SmartAppControl)
 
 # 1. Install for the current user.
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install.log`"") -Wait -PassThru).ExitCode
