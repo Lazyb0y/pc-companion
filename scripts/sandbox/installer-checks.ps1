@@ -284,11 +284,13 @@ foreach ($scope in $scopes) {
         Assert-Step "${name}: Ready to remove page" (Wait-Page 'Ready to remove PC Companion')
         Save-Page "$key-09-ready-to-remove"
         Assert-Step "${name}: Remove" (Invoke-Click 'Remove')
-        # Windows Installer may first list them as in use; closing them is its default.
+        # Setup closes them before Windows Installer looks for files in use, which would ask first.
         [void] (Wait-Until { (Test-PageHas 'Completed the PC Companion Setup Wizard') -or (Test-PageHas '*currently in use*') } 300)
-        if (Test-PageHas '*currently in use*') {
+        $asked = [bool] (Test-PageHas '*currently in use*')
+        Test-Check "${name}: removal doesn't ask to close PC Companion" (-not $asked) $(if ($asked) { Get-PageSummary } else { '' })
+        if ($asked) {
             Save-Page "$key-09b-files-in-use"
-            Write-Report "[INFO] ${name}: Windows Installer listed files in use - $(Get-PageSummary)"
+            # Closing them is its default.
             Assert-Step "${name}: OK on the files in use page" (Invoke-Click 'OK')
         }
         Assert-Step "${name}: removal finishes" (Wait-Page 'Completed the PC Companion Setup Wizard' 300)

@@ -21,18 +21,32 @@
 
     <!--
       Setup closes the settings app and the host before it removes or replaces their files, so it
-      needs no restart: it sends their windows WM_CLOSE as the user, then, after five seconds, ends
-      whatever still runs, as administrator. That covers older builds and a host running as
-      administrator, which a message from the user may not reach. WiX schedules this before
-      InstallFiles, after RemoveFiles; it runs right after InstallInitialize instead, and
+      needs no restart. First, before InstallValidate, where Windows Installer looks for files in
+      use and would ask to close them, it runs the installed host with its exit argument, as the
+      user: the host closes both, as Exit in its tray menu does, and waits for them to end. The
+      host is found by its component, whose GUID only builds that know the argument have; an older
+      build would ignore it and start, keeping setup waiting.
+    -->
+    <Property Id="INSTALLEDHOST">
+      <ComponentSearch Guid="6580E42F-84A7-4438-B327-1E6D2CB9F919" Type="file">
+        <!-- Without it, the search finds only the folder. -->
+        <FileSearch Name="PCCompanion.Host.exe" />
+      </ComponentSearch>
+    </Property>
+    <CustomAction Id="ExitPCCompanion" Property="INSTALLEDHOST" ExeCommand="--exit" Execute="immediate" Return="ignore" />
+    <!--
+      What still runs, setup closes itself: it sends their windows WM_CLOSE as the user, then, after
+      five seconds, ends whatever still runs, as administrator. That covers older builds and a host
+      running as administrator, which a message from the user may not reach. WiX schedules this
+      before InstallFiles, after RemoveFiles; it runs right after InstallInitialize instead, and
       InstallExecute ends the processes before the installed version is removed: inside the
       transaction, RemoveExistingProducts must follow InstallInitialize or InstallExecute directly
-      (error 2613). Ending a process needs the transaction, so this can't run before InstallValidate,
-      where Windows Installer itself may offer to close them.
+      (error 2613). Ending a process needs the transaction, so this can't run before InstallValidate.
     -->
     <util:CloseApplication Id="CloseSettingsApp" Target="PCCompanion.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
     <util:CloseApplication Id="CloseHost" Target="PCCompanion.Host.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
     <InstallExecuteSequence>
+      <Custom Action="ExitPCCompanion" Before="InstallValidate" Condition="INSTALLEDHOST" />
       <Custom Action="override Wix4CloseApplications_$(sys.BUILDARCHSHORT)" After="InstallInitialize" Condition="VersionNT &gt; 400" />
       <InstallExecute After="Wix4CloseApplications_$(sys.BUILDARCHSHORT)" />
     </InstallExecuteSequence>
@@ -93,6 +107,7 @@
           <Exclude Files="!(bindpath.InstallFiles)\mi-NZ\**" />
           <Exclude Files="!(bindpath.InstallFiles)\ug-CN\**" />
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.exe" />
+          <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Host.exe" />
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Elevated.exe" />
         </Files>
 
@@ -104,6 +119,11 @@
           <File Id="SettingsApp" Source="!(bindpath.InstallFiles)\PCCompanion.exe" KeyPath="yes" />
           <util:RemoveFolderEx Property="UserDataFolder" On="uninstall" Condition="UserDataFolder" />
           <util:RemoveFolderEx Property="MachineDataFolder" On="uninstall" Condition="MachineDataFolder" />
+        </Component>
+
+        <!-- Setup finds it by this GUID to close PC Companion; see ExitPCCompanion above. -->
+        <Component Id="Host" Guid="6580E42F-84A7-4438-B327-1E6D2CB9F919">
+          <File Id="Host" Source="!(bindpath.InstallFiles)\PCCompanion.Host.exe" KeyPath="yes" />
         </Component>
 
         <!-- Named, so uninstalling can run it. -->

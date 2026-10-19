@@ -70,7 +70,7 @@ public partial class App : Application
         };
         window.Activate();
 
-        // Exit in the host's tray menu closes the settings app too.
+        // Exit in the host's tray menu closes the settings app too, as does setup before it removes or replaces its files.
         _exitSignal = SessionSignal.Listen(SettingsAppProcess.ExitSignalName, () => window.DispatcherQueue.TryEnqueue(() =>
         {
             LogExitRequested(_logger);
@@ -158,7 +158,7 @@ public partial class App : Application
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows can't load its text for the language {Language}, so some built-in control text keeps the Windows display language.")]
     private static partial void LogCantSetResourceLanguages(ILogger logger, Win32Exception exception, string language);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Exit was chosen in the tray menu, so the settings app closes.")]
+    [LoggerMessage(Level = LogLevel.Information, Message = "Asked to close, as Exit was chosen in the tray menu or setup is about to remove or replace the app's files.")]
     private static partial void LogExitRequested(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Can't listen for Exit in the tray menu, so choosing it leaves the settings app open.")]

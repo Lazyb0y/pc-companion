@@ -22,6 +22,14 @@ internal static partial class Program
     [STAThread]
     private static void Main(string[] args)
     {
+        // Setup runs the host with --exit before it removes or replaces PC Companion's files. It
+        // writes no log, so an uninstall that removes the data folder leaves nothing behind.
+        if (args.Contains(HostProcess.ExitArgument, StringComparer.OrdinalIgnoreCase))
+        {
+            ExitCommand.Run();
+            return;
+        }
+
         var paths = AppDataPaths.ForCurrentUser();
         var startedAtSignIn = args.Contains(HostProcess.StartupArgument, StringComparer.OrdinalIgnoreCase);
         // At sign-in with Start with Windows off, or with Always run as administrator on and no
