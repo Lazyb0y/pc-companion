@@ -48,6 +48,7 @@ $startStates = [ordered] @{
     HotCorners = 'Installed'
     AppWindows = 'Installed'
     Logging = 'Installed'
+    Updates = 'Installed'
     Setup = 'Installed'
     RunAsAdmin = 'NotInstalled'
     Dialogs = 'NotInstalled'
