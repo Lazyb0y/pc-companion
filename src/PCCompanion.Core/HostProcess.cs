@@ -36,6 +36,18 @@ public static class HostProcess
     public const string ExitArgument = "--exit";
 
     /// <summary>
+    /// The argument setup starts the host with as it uninstalls PC Companion: the host removes the
+    /// user's data folder, as the user who uninstalls it, and exits.
+    /// </summary>
+    public const string RemoveDataArgument = "--remove-data";
+
+    /// <summary>
+    /// With <see cref="RemoveDataArgument"/>, keeps the settings file and removes the rest, as
+    /// Keep my settings in setup does.
+    /// </summary>
+    public const string KeepSettingsArgument = "--keep-settings";
+
+    /// <summary>
     /// What a host does as it starts, before taking the instance lock. With Always run as
     /// administrator on, a host without admin rights leaves the work to the one the scheduled
     /// tasks start: at sign-in, the sign-in task starts it; otherwise the host runs the
