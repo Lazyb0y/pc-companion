@@ -10,7 +10,7 @@ CI builds both installers on every pull request and push to `main`. Download the
 
 - WiX 5 MSI in `src/PCCompanion.Installer`. The WiX SDK version is pinned in `global.json`.
 - The installer publishes the settings app, the host and the elevated helper self-contained, in Release with ReadyToRun, and installs them into one folder. A build step merges the publish folders: the files they share are installed once and must be identical, or the build fails.
-- Settings > Apps shows the app icon.
+- Settings > Apps shows the app icon, and the Start menu shortcut uses the same icon from the package instead of the one in `PCCompanion.exe`, which the taskbar could fail to show on the first start after an install.
 - The settings window sets its icon again once it can be seen, so the taskbar redraws its button.
 - The setup dialogs show PC Companion's images instead of WiX's: `Banner.bmp` (493x58, the top of most pages) and `Dialog.bmp` (493x312; its left 164 pixels show on the welcome, maintenance and finish pages). `scripts\installer-images.ps1` draws both from the app icon; run it when the icon changes and commit the images.
 - Windows Installer dialogs are always light, so the images have a white background. They hold no text, so they need no translation. Above 100% display scale, Windows Installer stretches them to fit, so the icon in them looks softer.

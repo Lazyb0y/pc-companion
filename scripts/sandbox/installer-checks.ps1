@@ -264,6 +264,9 @@ foreach ($scope in $scopes) {
         $run = (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
         Test-Check "${name}: startup entry in $($scope.RunKey)" ($run -eq "`"$hostExe`" --startup") "value: $run"
         Test-Check "${name}: Start menu shortcut" (Test-Path $scope.Shortcut) $scope.Shortcut
+        $iconLocation = if (Test-Path $scope.Shortcut) { (New-Object -ComObject WScript.Shell).CreateShortcut($scope.Shortcut).IconLocation } else { '' }
+        $iconFile = ($iconLocation -split ',')[0]
+        Test-Check "${name}: the Start menu shortcut has the app icon" (($iconFile -like '*.ico') -and (Test-Path $iconFile)) "icon: $iconLocation"
         $entry = Get-UninstallEntry
         Test-Check "${name}: Settings > Apps offers no Modify" ($entry -and $entry.NoModify -eq 1) "entry: $([bool] $entry); NoModify: $($entry.NoModify)"
 
