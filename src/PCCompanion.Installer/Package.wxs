@@ -87,6 +87,34 @@
     <Property Id="ARPNOMODIFY" Value="1" />
 
     <!--
+      Remove goes through a page of our own, with Keep my settings unchecked, which sets
+      KEEPSETTINGS=1: see RemoveUserData below. Its text is English only, like the rest of the
+      installer's own text.
+    -->
+    <UI>
+      <Dialog Id="KeepSettingsDlg" Width="370" Height="270" Title="[ProductName] Setup">
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="WixUI_Bmp_Banner" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Your settings" />
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Choose whether to keep your settings when PC Companion is removed." />
+        <Control Id="Text" Type="Text" X="25" Y="60" Width="320" Height="30" NoPrefix="yes" Text="Removing PC Companion also removes your settings and logs. Keep your settings to use them again if you install PC Companion later." />
+        <Control Id="KeepSettings" Type="CheckBox" X="25" Y="100" Width="320" Height="17" Property="KEEPSETTINGS" CheckBoxValue="1" Text="&amp;Keep my settings" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)">
+          <Publish Event="NewDialog" Value="MaintenanceTypeDlg" />
+        </Control>
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+          <Publish Event="NewDialog" Value="VerifyReadyDlg" />
+        </Control>
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg" />
+        </Control>
+      </Dialog>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="KeepSettingsDlg" Order="10" />
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="KeepSettingsDlg" Order="6" Condition="Installed AND WixUI_InstallMode = &quot;Remove&quot;" />
+    </UI>
+
+    <!--
       The last page offers to open PC Companion, on by default. It shows only after an install or
       an upgrade, not after a repair or a removal; silent installs have no pages and open nothing.
       The pages run with the rights setup was started with, not the admin rights the install gets.
@@ -158,12 +186,13 @@
     -->
     <!--
       Uninstalling removes the user's %LOCALAPPDATA%\PCCompanion, with the settings and logs, or,
-      with KEEPSETTINGS=1, everything in it but settings.json. The host removes it, as the user who
-      uninstalls, for both kinds of install: any program running as the user can change that folder,
-      so with only the user's rights, a link planted there leads only to what the user could remove
-      anyway. Links are removed without what they lead to. Other users' folders stay. It runs before
-      the host's file is removed, so an uninstall that is rolled back doesn't bring the data back. An
-      upgrade keeps everything.
+      with KEEPSETTINGS=1 (Keep my settings on the setup pages), everything in it but settings.json.
+      Uninstalling from Settings > Apps shows no setup pages, so it always removes them. The host
+      removes the folder, as the user who uninstalls, for both kinds of install: any program running
+      as the user can change that folder, so with only the user's rights, a link planted there leads
+      only to what the user could remove anyway. Links are removed without what they lead to. Other
+      users' folders stay. It runs before the host's file is removed, so an uninstall that is rolled
+      back doesn't bring the data back. An upgrade keeps everything.
     -->
     <Property Id="KEEPSETTINGS" Secure="yes" />
     <CustomAction Id="RemoveUserData" FileRef="Host" ExeCommand="--remove-data" Execute="deferred" Impersonate="yes" Return="ignore" />

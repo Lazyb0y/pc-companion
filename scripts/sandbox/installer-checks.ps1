@@ -11,7 +11,8 @@ Outputs: C:\Test\results: report.txt with one PASS or FAIL line per check, a scr
          dialog page, the install logs, and done.txt when finished.
 
 For each scope, the checks install through Advanced, look at what was installed, and remove it
-through the maintenance dialog. A scope stops at its first failed step and removes what it
+through the maintenance dialog, with Keep my settings left unchecked just for you and checked for
+all users. A scope stops at its first failed step and removes what it
 installed. Then they install and remove silently for all users.
 
 The checks look for the English text of the WixUI_Advanced dialogs; update them when the dialogs
@@ -190,13 +191,13 @@ Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($sc
 
 $scopes = @(
     @{
-        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false; OpenApp = $true
+        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false; OpenApp = $true; KeepSettings = $false
         Folder = (Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion')
         RunKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
     },
     @{
-        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true; OpenApp = $false
+        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true; OpenApp = $false; KeepSettings = $true
         Folder = (Join-Path $env:ProgramW6432 'PCCompanion')
         RunKey = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
@@ -259,6 +260,12 @@ foreach ($scope in $scopes) {
         # Removal runs with the settings app and the host open: setup closes them itself.
         if ((Get-AppProcesses $scope.Folder).Count -eq 0) { Start-Process (Join-Path $scope.Folder 'PCCompanion.exe') }
         Test-Check "${name}: the settings app and the host run before removal" (Wait-Until { (Get-AppProcesses $scope.Folder).Count -eq 2 } 30)
+        # Removal removes the user's settings and logs, or with Keep my settings, all but the settings.
+        $dataFolder = Join-Path $env:LOCALAPPDATA 'PCCompanion'
+        New-Item -ItemType Directory -Force -Path $dataFolder | Out-Null
+        Set-Content -Path (Join-Path $dataFolder 'settings.json') -Value '{}' -Encoding utf8
+        $settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
+        Test-Check "${name}: the user's settings and logs are there before removal" (Wait-Until { @(Get-ChildItem (Join-Path $dataFolder 'Logs') -File -ErrorAction SilentlyContinue).Count -gt 0 } 15)
 
         Test-Check "${name}: installed in $($scope.Folder)" ((Test-Path (Join-Path $scope.Folder 'PCCompanion.exe')) -and (Test-Path $hostExe))
         $run = (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
@@ -281,8 +288,21 @@ foreach ($scope in $scopes) {
         Test-Check "${name}: Change is turned off" ($change -and -not $change.Current.IsEnabled) "found: $([bool] $change)"
         Test-Check "${name}: the page says there are no features to change" (Test-PageHas 'PC Companion has no independently selectable features.')
         Assert-Step "${name}: Remove on the change, repair or remove page" (Invoke-Click 'Remove')
+        Assert-Step "${name}: Keep my settings page" (Wait-Page 'Keep my settings')
+        Save-Page "$key-08b-keep-settings"
+        Test-Check "${name}: Keep my settings is unchecked" ((Get-Control 'Keep my settings') -and -not (Test-CheckBoxOn 'Keep my settings'))
+        if ($scope.KeepSettings) {
+            Assert-Step "${name}: check Keep my settings" (Invoke-Click 'Keep my settings')
+            Test-Check "${name}: Keep my settings is checked" (Test-CheckBoxOn 'Keep my settings')
+        }
+        Assert-Step "${name}: Next from the Keep my settings page" (Invoke-Click 'Next')
         Assert-Step "${name}: Ready to remove page" (Wait-Page 'Ready to remove PC Companion')
         Save-Page "$key-09-ready-to-remove"
+        Assert-Step "${name}: Back from the Ready to remove page" (Invoke-Click 'Back')
+        Assert-Step "${name}: Back returns to the Keep my settings page" (Wait-Page 'Keep my settings')
+        Test-Check "${name}: the page keeps the choice" ((Test-CheckBoxOn 'Keep my settings') -eq $scope.KeepSettings)
+        Assert-Step "${name}: Next to the Ready to remove page again" (Invoke-Click 'Next')
+        Assert-Step "${name}: Ready to remove page again" (Wait-Page 'Ready to remove PC Companion')
         Assert-Step "${name}: Remove" (Invoke-Click 'Remove')
         # Setup closes them before Windows Installer looks for files in use, which would ask first.
         [void] (Wait-Until { (Test-PageHas 'Completed the PC Companion Setup Wizard') -or (Test-PageHas '*currently in use*') } 300)
@@ -305,6 +325,13 @@ foreach ($scope in $scopes) {
         Test-Check "${name}: startup entry removed" (-not (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue))
         Test-Check "${name}: Start menu shortcut removed" (-not (Test-Path $scope.Shortcut))
         Test-Check "${name}: Settings > Apps entry removed" (-not (Get-UninstallEntry))
+        $left = @(Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyContinue)
+        if ($scope.KeepSettings) {
+            Test-Check "${name}: Keep my settings keeps the settings and removes the logs" (($left.Count -eq 1) -and ($left[0] -eq 'settings.json') -and ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)) "left: $($left -join ', ')"
+        } else {
+            Test-Check "${name}: removal removes the user's settings and logs" (-not (Test-Path $dataFolder)) "left: $($left -join ', ')"
+        }
+        Remove-Item $dataFolder -Recurse -Force -ErrorAction SilentlyContinue
     } catch {
         # Assert-Step has reported its own failure; anything else is an error in these checks.
         if ("$_" -ne 'step failed') { Test-Check "${name}: checks run without errors" $false "$_" }
