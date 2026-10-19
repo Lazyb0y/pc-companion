@@ -84,7 +84,11 @@ public partial class App : Application
         // Raised on another thread when the settings app is started again.
         AppInstance.GetCurrent().Activated += (_, _) => window.DispatcherQueue.TryEnqueue(window.BringToFront);
 
-        _services.GetRequiredService<HostLauncher>().StartIfNotRunning();
+        // Off the window's thread: on the first start after an install, starting the host can take
+        // seconds while Windows checks its new program file, and the window couldn't answer meanwhile,
+        // so the taskbar showed a generic icon for it.
+        var launcher = _services.GetRequiredService<HostLauncher>();
+        _ = Task.Run(launcher.StartIfNotRunning);
     }
 
     // Without a language setting, .NET and WinUI follow the Windows display language.
