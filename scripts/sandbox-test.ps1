@@ -22,6 +22,12 @@ Uses the installer that is already built.
 .PARAMETER TimeoutMinutes
 How long to wait for the checks to finish.
 
+.PARAMETER SmartAppControl
+What Smart App Control does in the Sandbox. Off, the default, turns it off before anything is
+installed: Windows Sandbox starts it in evaluation mode, where, with networking off, every install
+waits about two minutes for its check. Evaluation leaves it that way. On turns it on, so it blocks
+what it doesn't trust: PC Companion installs, but an unsigned build doesn't start.
+
 .EXAMPLE
 powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
 
@@ -32,7 +38,9 @@ powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Installer
 param(
     [switch] $Installer,
     [switch] $NoBuild,
-    [int] $TimeoutMinutes = 25
+    [int] $TimeoutMinutes = 25,
+    [ValidateSet('Off', 'Evaluation', 'On')]
+    [string] $SmartAppControl = 'Off'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -176,7 +184,7 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
     </MappedFolder>
   </MappedFolders>
   <LogonCommand>
-    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Test\scripts\$checks</Command>
+    <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Test\scripts\$checks -SmartAppControl $SmartAppControl</Command>
   </LogonCommand>
 </Configuration>
 "@

@@ -18,7 +18,14 @@ installed. Then they install and remove silently for all users.
 
 The checks look for the English text of the WixUI_Advanced dialogs; update them when the dialogs
 change.
+
+.PARAMETER SmartAppControl
+What Smart App Control does in the Sandbox, as smart-app-control.ps1 sets it before the first install.
 #>
+param(
+    [ValidateSet('Off', 'Evaluation', 'On')]
+    [string] $SmartAppControl = 'Off'
+)
 
 $ErrorActionPreference = 'Continue'
 $results = 'C:\Test\results'
@@ -189,6 +196,7 @@ $sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'
 $elevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
 Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($screen.Width)x$($screen.Height); Windows $([Environment]::OSVersion.Version)"
+Write-Report (& (Join-Path $PSScriptRoot 'smart-app-control.ps1') $SmartAppControl)
 
 $scopes = @(
     @{
