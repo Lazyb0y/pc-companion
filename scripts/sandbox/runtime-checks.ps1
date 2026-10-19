@@ -85,6 +85,33 @@ public static class Win32 {
         input.ki.dwFlags = up ? 0x0002u : 0u; // KEYEVENTF_KEYUP
         return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
     }
+
+    // Presses or releases the key at a position on the keyboard, whatever the layout makes of it.
+    public static bool ScanKey(ushort scanCode, bool up, bool extended) {
+        var input = new INPUT { type = 1 };
+        input.ki.wScan = scanCode;
+        input.ki.dwFlags = 0x0008u | (up ? 0x0002u : 0u) | (extended ? 0x0001u : 0u); // KEYEVENTF_SCANCODE, KEYUP, EXTENDEDKEY
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
+
+    private delegate bool EnumWindowsProc(IntPtr window, IntPtr parameter);
+    [DllImport("user32.dll")] private static extern bool EnumWindows(EnumWindowsProc callback, IntPtr parameter);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetWindowText(IntPtr window, System.Text.StringBuilder text, int length);
+    [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr window, out RECT rect);
+    [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left, Top, Right, Bottom; }
+
+    public static string WindowTitle(IntPtr window) {
+        var text = new System.Text.StringBuilder(256);
+        GetWindowText(window, text, text.Capacity);
+        return text.ToString();
+    }
+
+    // The visible top-level windows, front to back.
+    public static IntPtr[] TopLevelWindows() {
+        var windows = new System.Collections.Generic.List<IntPtr>();
+        EnumWindows(delegate(IntPtr window, IntPtr parameter) { if (IsWindowVisible(window)) windows.Add(window); return true; }, IntPtr.Zero);
+        return windows.ToArray();
+    }
 }
 '@
 [void] [Win32]::SetProcessDPIAware()
@@ -306,6 +333,43 @@ function Get-SelectedItemName([string] $ListName) {
     return ($selected -join ', ')
 }
 
+# A list of the settings app, such as a ComboBox, rather than a card or text of the same name.
+function Find-AppList([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ComboBox)))
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+
+# The name of the item chosen in the list named $Name.
+function Get-ListSelection([string] $Name) {
+    $list = Find-AppList $Name
+    if (-not $list) { return $null }
+    $expand = $list.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $expand.Expand()
+    Start-Sleep -Milliseconds 500
+    $selected = @($list.GetCurrentPattern([System.Windows.Automation.SelectionPattern]::Pattern).Current.GetSelection() | ForEach-Object { $_.Current.Name })
+    $expand.Collapse()
+    return ($selected -join ', ')
+}
+
+# Chooses the item named $ItemName in the list named $ListName, as a click on it does.
+function Select-ListItem([string] $ListName, [string] $ItemName) {
+    $list = Find-AppList $ListName
+    if (-not $list) { return $false }
+    $expand = $list.GetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern)
+    $expand.Expand()
+    Start-Sleep -Milliseconds 500
+    $condition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $ItemName)
+    $item = $list.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if ($item) { $item.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select() }
+    Start-Sleep -Milliseconds 300
+    if ($expand.Current.ExpandCollapseState -eq [System.Windows.Automation.ExpandCollapseState]::Expanded) { $expand.Collapse() }
+    return [bool] $item
+}
+
 function Find-AppElement([string] $Name) {
     $window = Get-AppWindow
     if (-not $window) { return $null }
@@ -484,8 +548,8 @@ Test-Check 'Always run as administrator is unavailable for a per-user install' (
 Test-Check 'General says why' ($text -contains 'Available when PC Companion is installed for all users.') ($text -join ' | ')
 
 # 4b. Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
-#     Hot Corners and General: a centered column, as Windows Settings lays out its pages.
-$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'General'; Title = 'General' })
+#     Hot Corners, App Windows and General: a centered column, as Windows Settings lays out its pages.
+$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'App Windows'; Title = 'App Windows' }, @{ Name = 'General'; Title = 'General' })
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 600, 1000, 1300, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
@@ -640,7 +704,7 @@ Save-Screenshot '05b-hot-corners-arabic-dark'
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 1000, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
-    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'عام') {
+    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'نوافذ التطبيق', 'عام') {
         [void] (Show-Page $page)
         Start-Sleep -Milliseconds 1500
         Test-PageLayout "$page (right to left)" $page $width
@@ -812,6 +876,101 @@ $running = (Get-Processes 'charmap').Count
 Test-Check 'Run a program logs that it doesn''t run as administrator' (Wait-Until { (Get-HostLog) -match "Run a program doesn't run while PC Companion runs as administrator\." } 5) (Get-PointerText)
 Test-Check 'no program starts while PC Companion runs as administrator' ((Get-Processes 'charmap').Count -eq $running) "charmap processes before: $running, after: $((Get-Processes 'charmap').Count)"
 [void] (Move-Pointer $middleX $middleY)
+
+# 9b. App Windows: the Home switch turns it on and its page saves its settings; the key above Tab
+#     switches between File Explorer windows by its position, also on the German layout after a
+#     switch in the same window, and does nothing once App Windows is off.
+[void] (Close-SettingsApp)
+Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+function Get-AppWindowsSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.appWindows }
+Test-Check 'turn on App Windows on Home' (Set-Toggle 'App Windows' $true)
+Start-Sleep -Seconds 2
+$saved = Get-AppWindowsSettings
+Test-Check 'the Home switch saves App Windows as on' ($saved.enabled -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'select App Windows' (Select-NavigationItem 'App Windows')
+Start-Sleep -Seconds 2
+Save-Screenshot '13b-app-windows-english'
+$text = Get-WindowText
+Test-Check 'App Windows shows its settings' (($text -contains 'Shortcut') -and ($text -contains 'Include minimized windows') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+$selected = Get-ListSelection 'Shortcut'
+Test-Check 'the shortcut is Alt with the key above Tab, shown as it types' ($selected -eq 'Alt + `') "selected: $selected"
+Test-Check 'choose the Windows logo key' (Select-ListItem 'Shortcut' 'Windows logo key + `')
+Start-Sleep -Seconds 1
+$saved = Get-AppWindowsSettings
+Test-Check 'the page saves the shortcut' ($saved.shortcut -eq 'WindowsAboveTab') "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'turn on Include minimized windows' (Set-Toggle 'Include minimized windows' $true)
+Start-Sleep -Seconds 1
+$saved = Get-AppWindowsSettings
+Test-Check 'the page saves Include minimized windows' ($saved.includeMinimized -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
+[void] (Close-SettingsApp)
+
+function Write-AppWindowsSettings([string] $Section) {
+    Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""appWindows"": $Section } }"
+    Start-Sleep -Seconds 3
+}
+function Get-ExplorerWindows { @([Win32]::TopLevelWindows() | Where-Object { [Win32]::WindowTitle($_) -like '* - File Explorer' }) }
+function Get-ExplorerOrder { (Get-ExplorerWindows | ForEach-Object { [Win32]::WindowTitle($_) -replace ' - File Explorer$', '' }) -join ' | ' }
+function Get-FrontTitle { [Win32]::WindowTitle([Win32]::GetForegroundWindow()) -replace ' - File Explorer$', '' }
+$LeftAlt = 0x38; $LeftShift = 0x2A; $KeyAboveTab = 0x29
+function Send-ScanKeys([int[]] $Modifiers, [int] $Key) {
+    foreach ($modifier in $Modifiers) { [void] [Win32]::ScanKey($modifier, $false, $false) }
+    [void] [Win32]::ScanKey($Key, $false, $false)
+    [void] [Win32]::ScanKey($Key, $true, $false)
+    for ($i = $Modifiers.Count - 1; $i -ge 0; $i--) { [void] [Win32]::ScanKey($Modifiers[$i], $true, $false) }
+    Start-Sleep -Milliseconds 700
+}
+
+Write-AppWindowsSettings '{ "enabled": true }'
+foreach ($folder in 'C:\Windows', 'C:\Users', 'C:\Program Files') {
+    Start-Process explorer.exe $folder
+    Start-Sleep -Seconds 3
+}
+$explorers = Get-ExplorerWindows
+Test-Check 'three File Explorer windows open' ($explorers.Count -eq 3) "$($explorers.Count) open"
+$area = New-Object Win32+RECT
+[void] [Win32]::GetWindowRect($explorers[0], [ref] $area)
+[void] (Move-Pointer ([int](($area.Left + $area.Right) / 2)) ([int](($area.Top + $area.Bottom) / 2)))
+[void] [Win32]::LeftButton($true)
+[void] [Win32]::LeftButton($false)
+Start-Sleep -Seconds 1
+$start = Get-ExplorerOrder
+$names = $start -split ' \| '
+$fronts = @()
+for ($i = 0; $i -lt 3; $i++) { Send-ScanKeys @($LeftAlt) $KeyAboveTab; $fronts += Get-FrontTitle }
+Test-Check 'Alt + the key above Tab brings each File Explorer window to the front, the one furthest back first' (($fronts -join ' | ') -eq (@($names[2], $names[1], $names[0]) -join ' | ')) "start: $start; fronts: $($fronts -join ', ')"
+Test-Check 'after a press for each window, they are in their first order' ((Get-ExplorerOrder) -eq $start) (Get-ExplorerOrder)
+Send-ScanKeys @($LeftAlt, $LeftShift) $KeyAboveTab
+Test-Check 'Alt + Shift + the key above Tab brings the second window to the front' ((Get-FrontTitle) -eq $names[1]) "front: $(Get-FrontTitle); order: $(Get-ExplorerOrder)"
+Send-ScanKeys @($LeftAlt) $KeyAboveTab
+Test-Check 'a press forward undoes it' ((Get-ExplorerOrder) -eq $start) (Get-ExplorerOrder)
+Test-Check 'the host logs the switches' (Wait-Until { (Get-HostLog) -match 'App Windows went "?Forward"?; the app has 3 windows' } 5)
+
+# The key above Tab is ^ on the German layout. Windows reports no switch within a window, so the
+# host finds it with its check once a second; a press forward first lets it see the new layout.
+$languages = Get-WinUserLanguageList
+$withGerman = New-WinUserLanguageList en-US
+$withGerman.Add('de-DE')
+Set-WinUserLanguageList $withGerman -Force
+Start-Sleep -Seconds 2
+Send-ScanKeys @($LeftAlt) $KeyAboveTab
+Send-ScanKeys @($LeftAlt) $LeftShift
+Start-Sleep -Milliseconds 1500
+$before = Get-FrontTitle
+Send-ScanKeys @($LeftAlt) $KeyAboveTab
+Test-Check 'after switching to German in the same window, the key above Tab still switches' ((Get-FrontTitle) -ne $before) "front: $before -> $(Get-FrontTitle)"
+Send-ScanKeys @($LeftAlt) $LeftShift
+Set-WinUserLanguageList $languages -Force
+
+Write-AppWindowsSettings '{ "enabled": false }'
+$before = Get-FrontTitle
+Send-ScanKeys @($LeftAlt) $KeyAboveTab
+Test-Check 'turned off, the key above Tab switches no window' ((Get-FrontTitle) -eq $before) "front: $before -> $(Get-FrontTitle)"
+foreach ($window in Get-ExplorerWindows) { [void] [Win32]::PostMessage($window, 0x0010, [UIntPtr]::Zero, [IntPtr]::Zero) } # WM_CLOSE
+Start-Sleep -Seconds 2
 
 # 10. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
 [void] (Close-SettingsApp)
