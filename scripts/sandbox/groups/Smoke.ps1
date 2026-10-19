@@ -9,15 +9,30 @@ Test-Check 'third-party notices installed' (Test-Path (Join-Path $installFolder 
 $run = (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
 Test-Check 'startup entry in HKCU Run' ($run -eq "`"$hostExe`" --startup") "value: $run"
 
+# Starts $Path and checks that Windows started it: Smart App Control, for one, blocks an unsigned
+# build. Returns the process, or $null.
+function Start-Checked([string] $Name, [string] $Path, [string[]] $Arguments) {
+    $parameters = @{ FilePath = $Path; PassThru = $true; ErrorAction = 'Stop' }
+    if ($Arguments) { $parameters.ArgumentList = $Arguments }
+    try {
+        $process = Start-Process @parameters
+        Test-Check "$Name starts" $true
+        return $process
+    } catch {
+        Test-Check "$Name starts" $false $_.Exception.Message
+        return $null
+    }
+}
+
 # Started at sign-in while Start with Windows is off: the host exits and creates nothing.
-$process = Start-Process $hostExe -ArgumentList '--startup' -PassThru
-Test-Check 'host --startup exits when Start with Windows is off' ($process.WaitForExit(10000))
+$process = Start-Checked 'host --startup' $hostExe '--startup'
+Test-Check 'host --startup exits when Start with Windows is off' (($null -ne $process) -and $process.WaitForExit(10000))
 Test-Check 'host --startup creates no data folder' (-not (Test-Path $dataFolder))
 
 # The settings app starts the host and shows Home; both write their logs.
-Start-Process $appExe
-Test-Check 'settings app window opens' (Wait-Until { Get-AppWindow })
-Test-Check 'settings app starts the host' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 15)
+$process = Start-Checked 'the settings app' $appExe
+Test-Check 'settings app window opens' (($null -ne $process) -and (Wait-Until { Get-AppWindow }))
+Test-Check 'settings app starts the host' (($null -ne $process) -and (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 15))
 Start-Sleep -Seconds 3
 Save-Screenshot '01-home-english'
 $text = Get-WindowText

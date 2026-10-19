@@ -74,6 +74,14 @@ function Reset-PCCompanion([string] $State, [string] $Folder) {
 
 # Copies the group's logs to $Folder and checks them. A group that uninstalls PC Companion, which
 # removes the logs, checks what it needs before that.
+# Whether Windows blocked a file of PC Companion from running, as Smart App Control does with an
+# unsigned build: Code Integrity logs event 3077 for each file it blocks.
+function Test-Blocked {
+    $blocked = Get-WinEvent -FilterHashtable @{ LogName = 'Microsoft-Windows-CodeIntegrity/Operational'; Id = 3077 } -ErrorAction SilentlyContinue |
+        Where-Object { $_.Message -like '*\PCCompanion\*' } | Select-Object -First 1
+    return [bool] $blocked
+}
+
 function Test-GroupLogs([string] $Group, [string] $Folder) {
     Stop-All
     $files = @(Get-ChildItem $logs -File -ErrorAction SilentlyContinue)
@@ -113,6 +121,12 @@ foreach ($group in $selected) {
     $checks = @($lines | Where-Object { $_ -match '^\[(PASS|FAIL)\]' }).Count
     $failed = @($lines | Where-Object { $_ -match '^\[FAIL\]' }).Count
     Write-Report ('-- {0}: {1} checks, {2} failed, {3} min {4} s' -f $group, $checks, $failed, [int] [math]::Floor($watch.Elapsed.TotalMinutes), $watch.Elapsed.Seconds)
+
+    # Smoke runs first; the other groups would fail the same way.
+    if ($group -eq 'Smoke' -and $selected.Count -gt 1 -and (Test-Blocked)) {
+        Write-Report "[NOTE] Windows blocked PC Companion from starting (Smart App Control: $SmartAppControl), so these groups didn't run: $(@($selected | Select-Object -Skip 1) -join ', ')."
+        break
+    }
 }
 
 Write-Report "finished $(Get-Date -Format o)"
