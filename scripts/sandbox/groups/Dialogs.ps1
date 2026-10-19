@@ -158,7 +158,7 @@ $scopes = @(
     }
 )
 
-# 1. Install through Advanced and remove through the maintenance dialog, just for you and for all users.
+# Install through Advanced and remove through the maintenance dialog, just for you and for all users.
 foreach ($scope in $scopes) {
     $name = $scope.Name
     $key = $scope.Key
@@ -332,7 +332,7 @@ foreach ($scope in $scopes) {
     }
 }
 
-# 2. Silent install for all users, as docs\development\packaging.md describes it.
+# Silent install for all users, as docs\development\packaging.md describes it.
 $folder = Join-Path $env:ProgramW6432 'PCCompanion'
 $hostExe = Join-Path $folder 'PCCompanion.Host.exe'
 $runKey = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'

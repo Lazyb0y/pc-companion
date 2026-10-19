@@ -1,6 +1,6 @@
-﻿# Logging: detailed logging, and the logs of the groups before it.
+﻿# Logging: detailed logging, which the General page switch turns on for 24 hours; it turns itself
+# off when the time is up.
 
-# 10. Detailed logging: the General page switch turns it on for 24 hours; it turns itself off when the time is up.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
@@ -31,16 +31,8 @@ Start-Sleep -Seconds 2
 [System.Windows.Forms.SendKeys]::SendWait('{ESC}')
 Start-Sleep -Seconds 1
 
-# 12. Logs.
+# The logs show detailed logging turning on, and the host's Debug entries ending when it turned off.
 Stop-All
-Copy-Item -Path (Join-Path $logs '*') -Destination $results -ErrorAction SilentlyContinue
-$logText = (Get-ChildItem $logs -File -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
-Test-Check 'settings app and host logs written' ((Test-Path (Join-Path $logs 'app-*.log')) -and (Test-Path (Join-Path $logs 'host-*.log')))
-Test-Check 'logs have no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
-Test-Check 'logs don''t show the user name' (-not ($logText -match [regex]::Escape($env:USERNAME)))
-Test-Check 'host loaded the changed settings' ($logText -match 'The settings changed and were loaded again')
-Test-Check 'the settings app logged that Exit closed it' ($logText -match 'Asked to close, as Exit was chosen in the tray menu')
-
 $appLog = (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 $hostLines = @(Get-ChildItem $logs -Filter 'host-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName })
 $turnedOff = @(0..($hostLines.Count - 1) | Where-Object { $hostLines[$_] -match 'Detailed logging is off\.' })

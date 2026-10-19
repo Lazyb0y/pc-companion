@@ -1,6 +1,10 @@
 ﻿# App: the settings app's pages, layout and window, one instance, the tray icon and menu, and Start with Windows.
 
-# 4. The General page.
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+
+# The General page.
 Test-Check 'select General' (Select-NavigationItem 'General')
 Start-Sleep -Seconds 2
 Save-Screenshot '02-general-english'
@@ -12,8 +16,8 @@ $adminToggle = Find-Toggle 'Always run as administrator'
 Test-Check 'Always run as administrator is unavailable for a per-user install' (($null -ne $adminToggle) -and -not $adminToggle.Current.IsEnabled)
 Test-Check 'General says why' ($text -contains 'Available when PC Companion is installed for all users.') ($text -join ' | ')
 
-# 4b. Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
-#     Hot Corners, App Windows and General: a centered column, as Windows Settings lays out its pages.
+# Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
+# Hot Corners, App Windows and General: a centered column, as Windows Settings lays out its pages.
 $pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'App Windows'; Title = 'App Windows' }, @{ Name = 'General'; Title = 'General' })
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 600, 1000, 1300, $screen.Width) {
@@ -30,8 +34,8 @@ foreach ($width in 600, 1000, 1300, $screen.Width) {
 Restore-AppWindow $windowBounds
 [void] (Select-NavigationItem 'General')
 
-# 4c. The settings window isn't seen empty: it's out of sight (cloaked) when it first shows, until
-#     its page is there, and it's cloaked before it's taken down when it closes.
+# The settings window isn't seen empty: it's out of sight (cloaked) when it first shows, until
+# its page is there, and it's cloaked before it's taken down when it closes.
 $windowClass = 'WinUIDesktopWin32WindowClass'
 $closing = [Win32]::FindWindow($windowClass, 'PC Companion')
 $process = Get-Processes 'PCCompanion' | Select-Object -First 1
@@ -73,12 +77,12 @@ Test-Check 'the settings window comes into sight with its page' $pageWhenShown
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 2
 
-# 5. One settings app per user session.
+# One settings app per user session.
 Start-Process $appExe
 Start-Sleep -Seconds 5
 Test-Check 'a second launch keeps one settings app' ((Get-Processes 'PCCompanion').Count -eq 1) "processes: $((Get-Processes 'PCCompanion').Count)"
 
-# 6. The tray icon's menu, and selecting the icon.
+# The tray icon's menu, and selecting the icon.
 Test-Check 'tray menu requested' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
 Save-Screenshot '03-tray-menu-english'
@@ -91,10 +95,10 @@ Test-Check 'selecting the tray icon opens the settings app' (Wait-Until { Get-Ap
 Start-Process $hostExe -Wait
 Test-Check 'a second host launch keeps one host' ((Get-Processes 'PCCompanion.Host').Count -eq 1)
 
-# 6b. Selecting the tray icon brings an open settings window to the front, from minimized and from
-#     behind another window. When the user clicks the icon, Explorer lets the host bring a window to
-#     the front; a posted message doesn't, so Select-TrayIcon passes the right on as Explorer does.
-#     Pressing Alt lets this script do that.
+# Selecting the tray icon brings an open settings window to the front, from minimized and from
+# behind another window. When the user clicks the icon, Explorer lets the host bring a window to
+# the front; a posted message doesn't, so Select-TrayIcon passes the right on as Explorer does.
+# Pressing Alt lets this script do that.
 function Select-TrayIcon {
     $hostProcess = Get-Processes 'PCCompanion.Host' | Select-Object -First 1
     if (-not $hostProcess) { return $false }
@@ -125,8 +129,8 @@ Test-Check 'the tray icon brings the settings window in front of the other windo
 Test-Check 'select the tray icon while the settings app is closed and another window is in front' (Select-TrayIcon)
 Test-Check 'the tray icon opens the settings window in front of the other window' (Wait-Until { (Get-AppWindow) -and [Win32]::GetForegroundWindow() -eq [IntPtr] (Get-AppWindow).Current.NativeWindowHandle } 15) "in front: $([Win32]::GetForegroundWindow())"
 
-# 6c. Starting the host again, as a user does from the Run dialog, brings the open settings window
-#     in front of another window: the new launch passes its right to do that on to the running host.
+# Starting the host again, as a user does from the Run dialog, brings the open settings window
+# in front of another window: the new launch passes its right to do that on to the running host.
 [void] [Win32]::Key(0x12, $false)
 [void] [Win32]::SetForegroundWindow($other.MainWindowHandle)
 [void] [Win32]::Key(0x12, $true)
@@ -147,10 +151,12 @@ Test-Check 'tray menu requested for Exit' (Send-TrayEvent $WM_CONTEXTMENU $menuX
 Test-Check 'choose Exit in the tray menu' (Select-TrayMenuItem 'Exit')
 Test-Check 'Exit in the tray menu stops the host' (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 0 } 15)
 Test-Check 'Exit in the tray menu closes the settings app' (Wait-Until { (Get-Processes 'PCCompanion').Count -eq 0 } 15)
+$appLog = (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+Test-Check 'the settings app logged that Exit closed it' ($appLog -match 'Asked to close, as Exit was chosen in the tray menu')
 Start-Process $hostExe
 [void] (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 10)
 
-# 11. Start with Windows on.
+# Start with Windows on.
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "bn", "theme": "Light", "startWithWindows": true } }'
 Start-Sleep -Seconds 2
 [void] (Close-SettingsApp)
