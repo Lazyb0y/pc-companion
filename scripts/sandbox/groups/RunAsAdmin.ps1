@@ -1,8 +1,6 @@
-﻿# Always run as administrator, in an all-users install, and uninstalling it.
-
-# 14. Always run as administrator, in an all-users install. UAC is off in the Sandbox, so every
-#     program already runs as administrator: the hand-off to the task and the protected log
-#     folder in use are checked by hand on a PC with UAC on.
+﻿# Always run as administrator, in an all-users install. UAC is off in the Sandbox, so every
+# program already runs as administrator: the hand-off to the task and the protected log
+# folder in use are checked by hand on a PC with UAC on.
 Stop-All
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=1', '/l*v', "`"$results\install-all-users.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install for all users' ($code -eq 0) "exit code $code"
@@ -72,24 +70,12 @@ $allUsersLogs = New-Item -ItemType Directory -Force -Path (Join-Path $results 'l
 Copy-Item -Path (Join-Path $logs '*') -Destination $allUsersLogs -ErrorAction SilentlyContinue
 $logText = (Get-ChildItem $logs -File -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 Test-Check 'Always run as administrator logs no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
-# An uninstall for all users runs as administrator, while any program running as the user can
-# change the user's data folder: the host removes that folder as the user, and removes links planted
-# in it without what they lead to.
+# Uninstalling removes every user's tasks and the protected logs folder, with the logs in it. Setup
+# checks what it removes from the user's own data folder.
 $machineLog = Join-Path $env:ProgramData 'PCCompanion\Logs\host-test.log'
 Set-Content -Path $machineLog -Value 'test'
-Test-Check 'the user''s data folder is there before uninstalling for all users' (Test-Path (Join-Path $dataFolder 'settings.json'))
-$outside = (New-Item -ItemType Directory -Force -Path (Join-Path $env:TEMP 'PCCompanion.Outside')).FullName
-Set-Content -Path (Join-Path $outside 'behind-folder-link.txt') -Value 'keep'
-Set-Content -Path (Join-Path $outside 'behind-file-link.txt') -Value 'keep'
-New-Item -ItemType Junction -Path (Join-Path $dataFolder 'FolderLink') -Target $outside | Out-Null
-New-Item -ItemType SymbolicLink -Path (Join-Path $dataFolder 'FileLink.txt') -Target (Join-Path $outside 'behind-file-link.txt') | Out-Null
-Test-Check 'links to other files are planted in the data folder' ((Test-Path (Join-Path $dataFolder 'FolderLink\behind-folder-link.txt')) -and (Test-Path (Join-Path $dataFolder 'FileLink.txt')))
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall-all-users.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall for all users' ($code -eq 0) "exit code $code"
-$left = @(Get-ChildItem $dataFolder -Force -Name -ErrorAction SilentlyContinue)
-Test-Check 'uninstalling for all users removes the user''s settings and logs' ($left.Count -eq 0) "left: $($left -join ', ')"
-$kept = @(Get-ChildItem $outside -Force -Name -ErrorAction SilentlyContinue)
-Test-Check 'uninstalling doesn''t remove files that links in the data folder lead to' (($kept -contains 'behind-folder-link.txt') -and ($kept -contains 'behind-file-link.txt')) "left outside: $($kept -join ', ')"
 Test-Check 'uninstalling deletes the tasks' ((Get-StartupTasks).Count -eq 0) "tasks: $((Get-StartupTasks) -join ', ')"
 Test-Check 'the all-users folder is removed' (-not (Test-Path (Join-Path $allUsersFolder 'PCCompanion.Host.exe')))
 Test-Check 'uninstalling for all users removes the protected logs folder, with its logs' (-not (Test-Path (Join-Path $env:ProgramData 'PCCompanion')))

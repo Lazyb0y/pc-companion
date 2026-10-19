@@ -1,8 +1,6 @@
-﻿# App Windows.
-
-# 9b. App Windows: the Home switch turns it on and its page saves its settings; the key above Tab
-#     switches between File Explorer windows by its position, also on the German layout after a
-#     switch in the same window, and does nothing once App Windows is off.
+﻿# App Windows: the Home switch turns it on and its page saves its settings; the key above Tab
+# switches between File Explorer windows by its position, also on the German layout after a
+# switch in the same window, and does nothing once App Windows is off.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
@@ -31,6 +29,8 @@ $saved = Get-AppWindowsSettings
 Test-Check 'the page saves Include minimized windows' ($saved.includeMinimized -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
+# Detailed logging is on for the host's Debug entries.
+$detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 function Write-AppWindowsSettings([string] $Section) {
     Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""appWindows"": $Section } }"
     Start-Sleep -Seconds 3

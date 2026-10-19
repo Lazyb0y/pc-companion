@@ -1,6 +1,8 @@
 ﻿# Languages: Arabic, right to left with the dark theme, and Bangla with the light theme.
 
-# 7. Arabic with the dark theme, as the General page saves them; the host follows the change.
+# Arabic with the dark theme, as the General page saves them; the host follows the change.
+Start-Process $hostExe
+[void] (Wait-Until { (Get-Processes 'PCCompanion.Host').Count -eq 1 } 10)
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "ar", "theme": "Dark", "startWithWindows": false } }'
 Start-Sleep -Seconds 2
@@ -32,7 +34,7 @@ Save-Screenshot '06-tray-menu-arabic'
 [System.Windows.Forms.SendKeys]::SendWait('{ESC}')
 Start-Sleep -Seconds 1
 
-# 8. Bangla with the light theme.
+# Bangla with the light theme.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "bn", "theme": "Light", "startWithWindows": false } }'
 Start-Sleep -Seconds 2
@@ -42,3 +44,4 @@ Start-Sleep -Seconds 3
 Test-Check 'select General in Bangla' (Select-NavigationItem 'সাধারণ')
 Start-Sleep -Seconds 2
 Save-Screenshot '07-general-bangla-light'
+Test-Check 'host loaded the changed settings' ((Get-HostLog) -match 'The settings changed and were loaded again')

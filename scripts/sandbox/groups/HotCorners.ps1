@@ -1,7 +1,5 @@
-﻿# Hot Corners.
-
-# 9. Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
-#    it, not while a mouse button is held, and only with the key it requires.
+﻿# Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
+# it, not while a mouse button is held, and only with the key it requires.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
