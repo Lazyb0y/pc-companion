@@ -84,6 +84,11 @@
 
     <!-- Install dialog with a "Just for me" / "Everyone" choice; per-user is the default. -->
     <ui:WixUI Id="WixUI_Advanced" />
+    <!--
+      The progress page's text for each step and the error messages. Without them, Windows Installer
+      shows its own texts with their placeholders unfilled, such as "File: [1], Directory: [9]".
+    -->
+    <UIRef Id="WixUI_ErrorProgressText" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <!-- Drawn from the app icon by scripts\installer-images.ps1. -->
     <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
