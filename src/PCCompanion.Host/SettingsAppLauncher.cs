@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
@@ -12,7 +13,7 @@ namespace PCCompanion.Host;
 /// </summary>
 internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> logger)
 {
-    private static readonly string SettingsAppPath = Path.Combine(AppContext.BaseDirectory, "PCCompanion.exe");
+    private static readonly string SettingsAppPath = Path.Combine(AppContext.BaseDirectory, SettingsAppProcess.FileName);
 
     public void Open()
     {

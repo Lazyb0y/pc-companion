@@ -29,6 +29,13 @@ public static class HostProcess
     public const string StartupArgument = "--startup";
 
     /// <summary>
+    /// The argument setup starts the host with before it removes or replaces PC Companion's files:
+    /// the host closes the running settings app and host, as Exit in the tray menu does, waits for
+    /// them to end, and exits.
+    /// </summary>
+    public const string ExitArgument = "--exit";
+
+    /// <summary>
     /// What a host does as it starts, before taking the instance lock. With Always run as
     /// administrator on, a host without admin rights leaves the work to the one the scheduled
     /// tasks start: at sign-in, the sign-in task starts it; otherwise the host runs the

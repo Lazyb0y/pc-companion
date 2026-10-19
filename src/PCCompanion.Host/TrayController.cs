@@ -22,7 +22,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     /// <summary>Asks the running host to open the settings, for example from a second host launch.</summary>
     public static uint OpenSettingsMessage { get; } = MessageWindow.RegisterMessage("PCCompanion.Host.OpenSettings");
 
-    /// <summary>Asks the running host to exit, for example from the settings app.</summary>
+    /// <summary>Asks the running host to exit, from the settings app or from setup.</summary>
     public static uint ExitMessage { get; } = MessageWindow.RegisterMessage(HostProcess.ExitMessageName);
 
     /// <param name="window">The host's window, created with <see cref="HostProcess.WindowClassName"/>.</param>
@@ -113,7 +113,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon was selected.")]
     private static partial void LogIconSelected(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "The settings app asked the host to exit.")]
+    [LoggerMessage(Level = LogLevel.Information, Message = "Asked to exit, by the settings app or by setup before it removes or replaces the host's files.")]
     private static partial void LogExitRequested(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Windows asked the host to close, as setup does before it removes or replaces its files.")]
