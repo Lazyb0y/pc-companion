@@ -83,7 +83,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 - Automate testing as much as practical, and run the applicable validation (build, tests) for every task.
 - Tests use isolated data and never touch windows or files they didn't create.
 - Ask before UI tests that move the mouse or take focus, and before disruptive, elevated or system-changing tests (use Windows Sandbox or a VM). Don't install software without approval.
-- `scripts/sandbox-test.ps1` runs the installer, settings app and host checks in Windows Sandbox. Extend the matching group in `scripts/sandbox/groups` when a feature adds runtime behavior worth checking.
+- `scripts/sandbox-test.ps1` runs the installer, settings app and host checks in Windows Sandbox, in groups: `-Checks <Group>` runs only that group after a short smoke check, and no `-Checks` runs every group. [Testing](docs/development/testing.md) lists the groups and which ones a change needs. Extend the feature's group in `scripts/sandbox/groups`, or add one, when a feature adds runtime behavior worth checking.
 - Report what was and wasn't tested. Never claim that a test passed if you didn't run it.
 
 ## Git and GitHub
