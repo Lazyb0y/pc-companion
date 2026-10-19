@@ -16,6 +16,7 @@ using PCCompanion.Core;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Localization;
 using PCCompanion.Logging;
 using PCCompanion.Platform.Windows;
@@ -142,6 +143,7 @@ public partial class App : Application
             .AddSingleton<HostLauncher>()
             .AddSingleton<RunAsAdministrator>()
             .AddSingleton<FeatureSettingsEditor>()
+            .AddSingleton<UpdateCheckStore>()
             .AddTransient<GeneralViewModel>()
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()

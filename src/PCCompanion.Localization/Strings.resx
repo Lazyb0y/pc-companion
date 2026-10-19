@@ -132,6 +132,22 @@
     <value>On until {0}.</value>
     <comment>General page: below GeneralDetailedLoggingHeader while it is on. {0} is the date and time it turns off, in the user's regional format.</comment>
   </data>
+  <data name="GeneralUpdateAvailable" xml:space="preserve">
+    <value>PC Companion {0} is available. You have version {1}.</value>
+    <comment>General page: banner shown when a newer version is available. {0} is the new version and {1} the installed one, for example 1.2.0. "PC Companion" is the product name.</comment>
+  </data>
+  <data name="GeneralUpdateOpenReleasePage" xml:space="preserve">
+    <value>Open release page</value>
+    <comment>General page: button in the update banner that opens the new version's release page on GitHub in the browser.</comment>
+  </data>
+  <data name="GeneralUpdateCheckHeader" xml:space="preserve">
+    <value>Check for updates</value>
+    <comment>General page: setting that turns the daily check for a newer version on or off.</comment>
+  </data>
+  <data name="GeneralUpdateCheckDescription" xml:space="preserve">
+    <value>Once a day, ask GitHub whether a newer version of PC Companion is available.</value>
+    <comment>General page: below GeneralUpdateCheckHeader. "GitHub" and "PC Companion" are names.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>About</value>
     <comment>General page: information about the app.</comment>

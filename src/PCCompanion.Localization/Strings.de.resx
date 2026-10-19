@@ -132,6 +132,22 @@
     <value>Aktiviert bis {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateAvailable" xml:space="preserve">
+    <value>PC Companion {0} ist verfügbar. Sie haben Version {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateOpenReleasePage" xml:space="preserve">
+    <value>Seite der Version öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckHeader" xml:space="preserve">
+    <value>Nach Updates suchen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckDescription" xml:space="preserve">
+    <value>Einmal täglich bei GitHub nachfragen, ob eine neuere Version von PC Companion verfügbar ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>Info</value>
     <comment>Needs native review.</comment>
