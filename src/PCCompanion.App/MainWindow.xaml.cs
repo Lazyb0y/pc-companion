@@ -24,11 +24,13 @@ public sealed partial class MainWindow : Window
     // How long the window may stay out of sight while its content is drawn, in case it never is.
     private static readonly TimeSpan LongestHiddenStart = TimeSpan.FromSeconds(1);
 
+    private static readonly string IconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "PCCompanion.ico");
+
     public MainWindow()
     {
         InitializeComponent();
         Title = Strings.AppDisplayName;
-        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "PCCompanion.ico"));
+        AppWindow.SetIcon(IconPath);
 
         Navigation.FlowDirection = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft
             ? FlowDirection.RightToLeft
@@ -115,6 +117,10 @@ public sealed partial class MainWindow : Window
             CompositionTarget.Rendering -= OnRendering;
             timer.Stop();
             WindowCloak.Set(handle, cloaked: false);
+
+            // Set again once the window can be seen, so the taskbar redraws its button: on its first
+            // start after an install, the taskbar can show a generic icon until the icon changes.
+            AppWindow.SetIcon(IconPath);
         }
 
         // One frame more than the first after the layout pass, so the content is on screen before the window.
