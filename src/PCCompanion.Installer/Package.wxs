@@ -32,6 +32,19 @@
     </UI>
 
     <!--
+      One install per user: Windows Installer can't replace an install in the other scope, so setup
+      stops when PC Companion is installed there. The installed host's component, found in either
+      scope (see INSTALLEDHOST below), shows that it's installed; that no installed version was
+      found in the chosen scope shows that it's in the other one.
+    -->
+    <CustomAction Id="InstalledForAllUsers" Error="PC Companion is already installed for all users. Remove it first, or install it for all users." />
+    <CustomAction Id="InstalledJustForYou" Error="PC Companion is already installed just for you. Remove it first, or install it just for you." />
+    <InstallExecuteSequence>
+      <Custom Action="InstalledForAllUsers" After="AppSearch" Condition="NOT Installed AND INSTALLEDHOST AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED AND NOT (ALLUSERS=1)" />
+      <Custom Action="InstalledJustForYou" After="AppSearch" Condition="NOT Installed AND INSTALLEDHOST AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED AND ALLUSERS=1" />
+    </InstallExecuteSequence>
+
+    <!--
       Setup closes the settings app and the host before it removes or replaces their files, so it
       needs no restart. First, before InstallValidate, where Windows Installer looks for files in
       use and would ask to close them, it runs the installed host with its exit argument, as the

@@ -1157,12 +1157,30 @@ $left = @(Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyC
 Test-Check 'KEEPSETTINGS=1 keeps the settings and removes the logs' (($left.Count -eq 1) -and ($left[0] -eq 'settings.json') -and ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)) "left: $($left -join ', ')"
 Remove-Item $dataFolder -Recurse -Force -ErrorAction SilentlyContinue
 
+# 13c. One install per user: setup stops when PC Companion is installed for the other scope, and
+#      leaves that install alone. Here it's installed just for you; 14 tries the other way round.
+function Test-OtherScopeStops([string] $Name, [string[]] $Scope, [string] $Log, [string] $Message) {
+    $before = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
+    $code = (Start-Process msiexec.exe -ArgumentList (@('/i', "`"$sameVersionMsi`"", '/qn') + $Scope + @('/l*v', "`"$results\$Log`"")) -Wait -PassThru).ExitCode
+    Test-Check "$Name stops" ($code -eq 1603) "exit code $code"
+    Test-Check "$Name says why" ([bool] (Select-String -Path (Join-Path $results $Log) -Pattern $Message -SimpleMatch -Quiet))
+    $after = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
+    Test-Check "$Name leaves the installed one alone" (($after.Count -eq 1) -and ($after[0] -eq $before[0])) "before: $($before -join ', '); after: $($after -join ', ')"
+}
+$code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install-scope-user.log`"") -Wait -PassThru).ExitCode
+Test-Check 'install just for you before trying all users' ($code -eq 0) "exit code $code"
+Test-OtherScopeStops 'installing for all users over a just-for-you install' @('ALLUSERS=1') 'install-other-scope-machine.log' 'already installed just for you'
+$code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall-scope-user.log`"") -Wait -PassThru).ExitCode
+Test-Check 'uninstall the just-for-you install' ($code -eq 0) "exit code $code"
+Remove-Item $dataFolder -Recurse -Force -ErrorAction SilentlyContinue
+
 # 14. Always run as administrator, in an all-users install. UAC is off in the Sandbox, so every
 #     program already runs as administrator: the hand-off to the task and the protected log
 #     folder in use are checked by hand on a PC with UAC on.
 Stop-All
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=1', '/l*v', "`"$results\install-all-users.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install for all users' ($code -eq 0) "exit code $code"
+Test-OtherScopeStops 'installing just for you over an all-users install' @('ALLUSERS=2', 'MSIINSTALLPERUSER=1') 'install-other-scope-user.log' 'already installed for all users'
 $allUsersFolder = Join-Path $env:ProgramW6432 'PCCompanion'
 $protectedLogs = Join-Path $env:ProgramData 'PCCompanion\Logs'
 $acl = Get-Acl $protectedLogs -ErrorAction SilentlyContinue
