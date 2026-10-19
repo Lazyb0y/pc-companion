@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Windows;
+using PCCompanion.Modules.Windows.AppWindows;
 
 namespace PCCompanion.App.Features;
 
@@ -24,6 +27,10 @@ public static class FeatureCatalog
         new(InputModule.Id, "ModuleInputName",
         [
             new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage)),
+        ]),
+        new(WindowsModule.Id, "ModuleWindowsName",
+        [
+            new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
         ]),
     ];
 

@@ -27,6 +27,9 @@ public static class KeyboardLayout
         return layout != 0 ? layout : null;
     }
 
+    /// <summary>The layout of the calling thread, which for a window in front is the layout the user types with.</summary>
+    public static nint OfCurrentThread() => PInvoke.GetKeyboardLayout(0);
+
     /// <summary>The layouts the user has, in the order of the input switcher.</summary>
     public static IReadOnlyList<nint> Installed()
     {
@@ -50,5 +53,22 @@ public static class KeyboardLayout
     {
         var key = PInvoke.MapVirtualKeyEx(scanCode, MAP_VIRTUAL_KEY_TYPE.MAPVK_VSC_TO_VK, (HKL)layout);
         return key != 0 ? key : null;
+    }
+
+    /// <summary>
+    /// The character that the key with <paramref name="scanCode"/> types in <paramref name="layout"/>
+    /// without Shift, such as <c>`</c> for the key above Tab in US English and <c>^</c> in German,
+    /// or <see langword="null"/> when it types none there.
+    /// </summary>
+    public static char? CharacterOf(uint scanCode, nint layout)
+    {
+        if (VirtualKeyOf(scanCode, layout) is not { } key)
+        {
+            return null;
+        }
+
+        // The top bit marks a dead key, such as the German ^.
+        var character = PInvoke.MapVirtualKeyEx(key, MAP_VIRTUAL_KEY_TYPE.MAPVK_VK_TO_CHAR, (HKL)layout) & 0x7FFFFFFF;
+        return character != 0 ? (char)character : null;
     }
 }

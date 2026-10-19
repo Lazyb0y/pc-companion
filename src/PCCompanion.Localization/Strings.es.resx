@@ -148,6 +148,10 @@
     <value>Entrada y desencadenadores</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>Administración de ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>No se pudo guardar el cambio. Inténtalo de nuevo.</value>
     <comment>Needs native review.</comment>
@@ -350,6 +354,58 @@
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>Ventanas de la aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>Cambia entre las ventanas de la aplicación en primer plano con un método abreviado de teclado, por ejemplo entre ventanas del Explorador de archivos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>Método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>Presiónalo de nuevo para pasar a la siguiente ventana de la aplicación. Agrega Mayús para ir en el otro sentido. La tecla es la que está encima de Tab, a la izquierda del 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>la tecla encima de Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>Incluir ventanas minimizadas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>Una ventana minimizada se restaura cuando le llega el turno.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>Las demás aplicaciones no reciben este método abreviado mientras Ventanas de la aplicación está activado. Con el IME de Microsoft para japonés, Alt + la tecla encima de Tab se queda en el IME, así que elige la tecla del logotipo de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>Ventanas de la aplicación no funciona mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que Ventanas de la aplicación también funciona mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>Al presionar el método abreviado, lee qué ventanas están abiertas, su estado y a qué aplicación pertenecen, y mientras Ventanas de la aplicación está activado, la distribución de teclado de la ventana en primer plano. Nunca lee títulos ni contenido de ventanas. Solo cambia qué ventana de la aplicación está en primer plano. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

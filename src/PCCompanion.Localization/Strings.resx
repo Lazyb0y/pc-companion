@@ -148,6 +148,10 @@
     <value>Input &amp; Triggers</value>
     <comment>Navigation pane and Home: the group of features that respond to the mouse and keyboard.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>Window Management</value>
+    <comment>Navigation pane and Home: the group of features that arrange and switch windows.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>Your change couldn't be saved. Try again.</value>
     <comment>Home and feature pages: shown when the settings file can't be written.</comment>
@@ -351,5 +355,57 @@
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
     <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>App Windows</value>
+    <comment>Feature name: switching between the windows of the app in front.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>Switch between the windows of the app in front with a keyboard shortcut, such as between File Explorer windows.</value>
+    <comment>App Windows: the feature description, on its page and its Home card.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>Shortcut</value>
+    <comment>App Windows page: setting name, and the screen reader name of its list.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>Press it again to go on to the next window of the app. Add Shift to go the other way. The key is the one above Tab, left of 1.</value>
+    <comment>App Windows page: below AppWindowsShortcutHeader. The key is found by its position on the keyboard, whatever character it types.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>App Windows page: a shortcut in the list. {0} is the character the key above Tab types in the user's keyboard layout, such as ` or ^, or AppWindowsKeyAboveTab.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>Windows logo key + {0}</value>
+    <comment>App Windows page: a shortcut in the list. {0} is the character the key above Tab types in the user's keyboard layout, such as ` or ^, or AppWindowsKeyAboveTab.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>the key above Tab</value>
+    <comment>App Windows page: used in AppWindowsShortcutAlt and AppWindowsShortcutWindows when the key types no character that can be shown.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>Include minimized windows</value>
+    <comment>App Windows page: setting name. Off by default.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>A minimized window is restored when its turn comes.</value>
+    <comment>App Windows page: below AppWindowsMinimizedHeader.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>Other apps don't get this shortcut while App Windows is on. With the Microsoft Japanese IME, Alt + the key above Tab stays with the IME, so choose the Windows logo key.</value>
+    <comment>App Windows page: shown at all times.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>App Windows doesn't work while an app running as administrator is in front.</value>
+    <comment>App Windows page: a limitation of Windows, shown while Always run as administrator is off.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so App Windows also works while an app running as administrator is in front.</value>
+    <comment>App Windows page: shown instead of AppWindowsAdministratorInfo while Always run as administrator is on.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>When you press the shortcut, reads which windows are open, their state and which app they belong to, and while App Windows is on, the keyboard layout of the window in front. Never reads window titles or contents. Changes only which of the app's windows is in front. Stores and sends nothing.</value>
+    <comment>App Windows page: below FeaturePermissionsHeader.</comment>
   </data>
 </root>

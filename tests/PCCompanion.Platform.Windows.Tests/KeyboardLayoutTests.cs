@@ -23,6 +23,22 @@ public sealed class KeyboardLayoutTests
     [Fact]
     public void AScanCodeOfNoKeyMapsToNone()
     {
-        Assert.All(KeyboardLayout.Installed(), layout => Assert.Null(KeyboardLayout.VirtualKeyOf(0, layout)));
+        Assert.All(KeyboardLayout.Installed(), layout =>
+        {
+            Assert.Null(KeyboardLayout.VirtualKeyOf(0, layout));
+            Assert.Null(KeyboardLayout.CharacterOf(0, layout));
+        });
+    }
+
+    [Fact]
+    public void TheSpaceBarTypesASpaceInEveryLayout()
+    {
+        Assert.All(KeyboardLayout.Installed(), layout => Assert.Equal(' ', KeyboardLayout.CharacterOf(0x39, layout)));
+    }
+
+    [Fact]
+    public void ThisThreadHasOneOfTheUsersLayouts()
+    {
+        Assert.Contains(KeyboardLayout.OfCurrentThread(), KeyboardLayout.Installed());
     }
 }

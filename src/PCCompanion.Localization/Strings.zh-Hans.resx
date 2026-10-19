@@ -140,6 +140,10 @@
     <value>输入和触发器</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>窗口管理</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>无法保存你的更改。请重试。</value>
     <comment>Needs native review.</comment>
@@ -342,6 +346,58 @@
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>应用窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>使用键盘快捷键在前台应用的窗口之间切换，例如在文件资源管理器窗口之间切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>再按一次可转到该应用的下一个窗口。加按 Shift 可反向切换。该键是 Tab 上方、1 左侧的键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>Windows 徽标键 + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>Tab 上方的键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>包括最小化的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>轮到最小化的窗口时，会将其还原。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>应用窗口打开时，其他应用收不到此快捷键。使用 Microsoft 日语输入法时，Alt + Tab 上方的键仍由输入法使用，因此请选择 Windows 徽标键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>以管理员身份运行的应用位于前台时，应用窗口不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，应用窗口也能工作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>按下快捷键时，读取打开了哪些窗口、窗口的状态以及它们所属的应用；应用窗口打开时，还读取前台窗口的键盘布局。从不读取窗口标题或内容。只更改应用的哪个窗口位于前台。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

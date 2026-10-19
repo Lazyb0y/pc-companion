@@ -44,6 +44,7 @@
     <ProjectReference Include="..\PCCompanion.Localization\PCCompanion.Localization.csproj" />
     <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Input\PCCompanion.Modules.Input.csproj" />
+    <ProjectReference Include="..\PCCompanion.Modules.Windows\PCCompanion.Modules.Windows.csproj" />
     <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>
 

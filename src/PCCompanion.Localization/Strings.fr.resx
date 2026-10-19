@@ -148,6 +148,10 @@
     <value>Saisie et déclencheurs</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>Gestion des fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>Impossible d’enregistrer votre modification. Réessayez.</value>
     <comment>Needs native review.</comment>
@@ -350,6 +354,58 @@
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>Fenêtres de l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>Passez d’une fenêtre à l’autre de l’application au premier plan avec un raccourci clavier, par exemple entre des fenêtres de l’Explorateur de fichiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>Raccourci</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>Appuyez de nouveau pour passer à la fenêtre suivante de l’application. Ajoutez Maj pour aller dans l’autre sens. La touche est celle au-dessus de Tab, à gauche de 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>Touche du logo Windows + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>la touche au-dessus de Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>Inclure les fenêtres réduites</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>Une fenêtre réduite est restaurée quand vient son tour.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>Les autres applications ne reçoivent pas ce raccourci tant que Fenêtres de l’application est activé. Avec l’IME Microsoft pour le japonais, Alt + la touche au-dessus de Tab reste à l’IME : choisissez plutôt la touche du logo Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>Fenêtres de l’application ne fonctionne pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion est exécuté en tant qu’administrateur : Fenêtres de l’application fonctionne aussi quand une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>Quand vous appuyez sur le raccourci, lit les fenêtres ouvertes, leur état et l’application à laquelle elles appartiennent, et tant que Fenêtres de l’application est activé, la disposition du clavier de la fenêtre au premier plan. Ne lit jamais les titres ni le contenu des fenêtres. Change uniquement la fenêtre de l’application qui est au premier plan. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

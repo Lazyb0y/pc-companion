@@ -148,6 +148,10 @@
     <value>Eingabe und Auslöser</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>Fensterverwaltung</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>Ihre Änderung konnte nicht gespeichert werden. Versuchen Sie es erneut.</value>
     <comment>Needs native review.</comment>
@@ -350,6 +354,58 @@
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>App-Fenster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>Wechseln Sie per Tastenkombination zwischen den Fenstern der App im Vordergrund, z. B. zwischen Fenstern des Datei-Explorers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>Drücken Sie sie erneut, um zum nächsten Fenster der App zu wechseln. Nehmen Sie die Umschalttaste hinzu, um in die andere Richtung zu wechseln. Gemeint ist die Taste über der Tabulatortaste, links neben der 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>Windows-Logo-Taste + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>Taste über der Tabulatortaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>Minimierte Fenster einbeziehen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>Ein minimiertes Fenster wird wiederhergestellt, wenn es an der Reihe ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>Andere Apps erhalten diese Tastenkombination nicht, solange App-Fenster eingeschaltet ist. Mit dem Microsoft-IME für Japanisch bleibt Alt + die Taste über der Tabulatortaste beim IME. Wählen Sie dann die Windows-Logo-Taste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>App-Fenster funktioniert nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher funktioniert App-Fenster auch, wenn eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>Liest beim Drücken der Tastenkombination, welche Fenster geöffnet sind, ihren Zustand und zu welcher App sie gehören, und solange App-Fenster eingeschaltet ist, das Tastaturlayout des Fensters im Vordergrund. Liest nie Fenstertitel oder -inhalte. Ändert nur, welches Fenster der App im Vordergrund ist. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

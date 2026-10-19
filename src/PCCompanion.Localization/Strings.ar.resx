@@ -180,6 +180,10 @@
     <value>الإدخال والمشغّلات</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleWindowsName" xml:space="preserve">
+    <value>إدارة النوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="FeatureSaveFailed" xml:space="preserve">
     <value>تعذّر حفظ التغيير. حاول مرة أخرى.</value>
     <comment>Needs native review.</comment>
@@ -382,6 +386,58 @@
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. يرسل فقط اختصارات Windows للإجراءات المختارة، ويبدأ فقط البرامج التي تختارها. لا يخزّن أي شيء ولا يرسله.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsName" xml:space="preserve">
+    <value>نوافذ التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsDescription" xml:space="preserve">
+    <value>بدّل بين نوافذ التطبيق الموجود في المقدمة باستخدام اختصار لوحة المفاتيح، مثل التبديل بين نوافذ مستكشف الملفات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutHeader" xml:space="preserve">
+    <value>الاختصار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutDescription" xml:space="preserve">
+    <value>اضغط عليه مرة أخرى للانتقال إلى النافذة التالية للتطبيق. أضف Shift للانتقال في الاتجاه الآخر. المفتاح هو الموجود فوق Tab، على يسار 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAlt" xml:space="preserve">
+    <value>Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindows" xml:space="preserve">
+    <value>مفتاح شعار Windows + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsKeyAboveTab" xml:space="preserve">
+    <value>المفتاح الموجود فوق Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedHeader" xml:space="preserve">
+    <value>تضمين النوافذ المصغّرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsMinimizedDescription" xml:space="preserve">
+    <value>تُستعاد النافذة المصغّرة عندما يحين دورها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutInfo" xml:space="preserve">
+    <value>لا تتلقى التطبيقات الأخرى هذا الاختصار أثناء تشغيل نوافذ التطبيق. مع محرر أسلوب الإدخال الياباني من Microsoft، يبقى Alt + المفتاح الموجود فوق Tab لمحرر أسلوب الإدخال، لذا اختر مفتاح شعار Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfo" xml:space="preserve">
+    <value>لا تعمل نوافذ التطبيق عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا تعمل نوافذ التطبيق أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsPermissions" xml:space="preserve">
+    <value>عند الضغط على الاختصار، يقرأ النوافذ المفتوحة وحالتها والتطبيق الذي تنتمي إليه، وأثناء تشغيل نوافذ التطبيق، يقرأ تخطيط لوحة المفاتيح للنافذة الموجودة في المقدمة. لا يقرأ عناوين النوافذ أو محتواها أبداً. يغيّر فقط نافذة التطبيق الموجودة في المقدمة. لا يخزّن أي شيء ولا يرسله.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
