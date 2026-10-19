@@ -92,6 +92,7 @@ UnhookWinEvent
 UnregisterClass
 UnregisterHotKey
 VIRTUAL_KEY
+WaitForSingleObject
 WINEVENT_OUTOFCONTEXT
 WINEVENT_SKIPOWNPROCESS
 WM_APP

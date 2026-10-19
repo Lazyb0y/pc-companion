@@ -112,12 +112,11 @@
         </Files>
 
         <!--
-          Named, so the last page can open it. Uninstalling it also removes PC Companion's data; see
-          UserDataFolder below.
+          Named, so the last page can open it. Uninstalling it also removes the all-users data
+          folder; see MachineDataFolder below.
         -->
         <Component Id="SettingsApp">
           <File Id="SettingsApp" Source="!(bindpath.InstallFiles)\PCCompanion.exe" KeyPath="yes" />
-          <util:RemoveFolderEx Property="UserDataFolder" On="uninstall" Condition="UserDataFolder" />
           <util:RemoveFolderEx Property="MachineDataFolder" On="uninstall" Condition="MachineDataFolder" />
         </Component>
 
@@ -158,14 +157,26 @@
       upgrade keeps them, since the new host is in the same place. It never fails the uninstall.
     -->
     <!--
-      Uninstalling a per-user install removes the user's %LOCALAPPDATA%\PCCompanion, with the
-      settings and logs; it runs as the user. Uninstalling an all-users install removes
-      %ProgramData%\PCCompanion, with the host's logs while it ran as administrator, which only
-      administrators can change. It runs as administrator, so it leaves every user's own folder: any
-      program running as the user can change it, and a link planted there could make the uninstall
-      remove other files. The folders are named only for a removal that isn't part of an upgrade.
+      Uninstalling removes the user's %LOCALAPPDATA%\PCCompanion, with the settings and logs, or,
+      with KEEPSETTINGS=1, everything in it but settings.json. The host removes it, as the user who
+      uninstalls, for both kinds of install: any program running as the user can change that folder,
+      so with only the user's rights, a link planted there leads only to what the user could remove
+      anyway. Links are removed without what they lead to. Other users' folders stay. It runs before
+      the host's file is removed, so an uninstall that is rolled back doesn't bring the data back. An
+      upgrade keeps everything.
     -->
-    <SetProperty Id="UserDataFolder" Value="[LocalAppDataFolder]PCCompanion" Before="Wix4RemoveFoldersEx_$(sys.BUILDARCHSHORT)" Sequence="execute" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND NOT (ALLUSERS=1)" />
+    <Property Id="KEEPSETTINGS" Secure="yes" />
+    <CustomAction Id="RemoveUserData" FileRef="Host" ExeCommand="--remove-data" Execute="deferred" Impersonate="yes" Return="ignore" />
+    <CustomAction Id="RemoveUserDataKeepSettings" FileRef="Host" ExeCommand="--remove-data --keep-settings" Execute="deferred" Impersonate="yes" Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="RemoveUserData" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND NOT (KEEPSETTINGS=1)" />
+      <Custom Action="RemoveUserDataKeepSettings" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND KEEPSETTINGS=1" />
+    </InstallExecuteSequence>
+
+    <!--
+      Uninstalling an all-users install also removes %ProgramData%\PCCompanion, with the host's logs
+      while it ran as administrator, which only administrators can change. It runs as administrator.
+    -->
     <SetProperty Id="MachineDataFolder" Value="[CommonAppDataFolder]PCCompanion" Before="Wix4RemoveFoldersEx_$(sys.BUILDARCHSHORT)" Sequence="execute" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND ALLUSERS=1" />
 
     <CustomAction Id="DeleteStartupTasks" FileRef="ElevatedHelper" ExeCommand="delete-all-startup-tasks" Execute="deferred" Impersonate="no" Return="ignore" />

@@ -22,11 +22,18 @@ internal static partial class Program
     [STAThread]
     private static void Main(string[] args)
     {
-        // Setup runs the host with --exit before it removes or replaces PC Companion's files. It
-        // writes no log, so an uninstall that removes the data folder leaves nothing behind.
+        // Setup runs the host with --exit before it removes or replaces PC Companion's files, and with
+        // --remove-data as it uninstalls it. They write no log, so an uninstall that removes the
+        // data folder leaves nothing behind.
         if (args.Contains(HostProcess.ExitArgument, StringComparer.OrdinalIgnoreCase))
         {
             ExitCommand.Run();
+            return;
+        }
+
+        if (args.Contains(HostProcess.RemoveDataArgument, StringComparer.OrdinalIgnoreCase))
+        {
+            RemoveDataCommand.Run(args.Contains(HostProcess.KeepSettingsArgument, StringComparer.OrdinalIgnoreCase));
             return;
         }
 

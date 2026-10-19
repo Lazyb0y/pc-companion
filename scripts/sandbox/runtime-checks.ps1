@@ -1125,6 +1125,7 @@ Test-Check 'the upgrade keeps the logs' (@(Get-ChildItem $logs -File -ErrorActio
 #     would ask to close PC Companion if it found it running. It removes the data folder.
 Test-Check 'the settings app and the host run before uninstalling' (Open-PCCompanion)
 $pendingBefore = @(Get-PendingRenames).Count
+$savedSettings = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
 $uninstall = Start-Process msiexec.exe -ArgumentList @('/x', "`"$upgradeMsi`"", '/qb', '/l*v', "`"$results\uninstall.log`"") -PassThru
 [void] $uninstall.Handle
 $finished = $uninstall.WaitForExit(120000)
@@ -1141,6 +1142,20 @@ Test-ClosedBySetup 'uninstalling' $pendingBefore "$results\uninstall.log"
 Test-Check 'startup entry removed' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))
 Test-Check 'install folder removed' (-not (Test-Path $appExe))
 Test-Check 'uninstalling removes the settings and logs' (-not (Test-Path $dataFolder)) "left: $((Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyContinue) -join ', ')"
+
+# 13b. Uninstalling with KEEPSETTINGS=1, as Keep my settings does, keeps settings.json and removes
+#      the rest, the logs included.
+$code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install-again.log`"") -Wait -PassThru).ExitCode
+Test-Check 'install for the current user again' ($code -eq 0) "exit code $code"
+Write-Settings $savedSettings
+Test-Check 'the settings app and the host run before uninstalling with KEEPSETTINGS=1' (Open-PCCompanion)
+Test-Check 'the settings app and the host write their logs' (Wait-Until { @(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count -ge 2 } 15)
+$settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
+$code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', 'KEEPSETTINGS=1', '/l*v', "`"$results\uninstall-keep-settings.log`"") -Wait -PassThru).ExitCode
+Test-Check 'uninstall with KEEPSETTINGS=1' ($code -eq 0) "exit code $code"
+$left = @(Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyContinue)
+Test-Check 'KEEPSETTINGS=1 keeps the settings and removes the logs' (($left.Count -eq 1) -and ($left[0] -eq 'settings.json') -and ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)) "left: $($left -join ', ')"
+Remove-Item $dataFolder -Recurse -Force -ErrorAction SilentlyContinue
 
 # 14. Always run as administrator, in an all-users install. UAC is off in the Sandbox, so every
 #     program already runs as administrator: the hand-off to the task and the protected log
@@ -1214,8 +1229,8 @@ Copy-Item -Path (Join-Path $logs '*') -Destination $allUsersLogs -ErrorAction Si
 $logText = (Get-ChildItem $logs -File -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
 Test-Check 'Always run as administrator logs no errors' (-not ($logText -match '\[(ERR|FTL)\]'))
 # An uninstall for all users runs as administrator, while any program running as the user can
-# change the user's data folder, so it leaves that folder alone: links planted in it can't make the
-# uninstall remove other files.
+# change the user's data folder: the host removes that folder as the user, and removes links planted
+# in it without what they lead to.
 $machineLog = Join-Path $env:ProgramData 'PCCompanion\Logs\host-test.log'
 Set-Content -Path $machineLog -Value 'test'
 Test-Check 'the user''s data folder is there before uninstalling for all users' (Test-Path (Join-Path $dataFolder 'settings.json'))
@@ -1228,7 +1243,7 @@ Test-Check 'links to other files are planted in the data folder' ((Test-Path (Jo
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\uninstall-all-users.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall for all users' ($code -eq 0) "exit code $code"
 $left = @(Get-ChildItem $dataFolder -Force -Name -ErrorAction SilentlyContinue)
-Test-Check 'uninstalling for all users leaves the user''s own settings and logs' (($left -contains 'settings.json') -and ($left -contains 'Logs')) "left: $($left -join ', ')"
+Test-Check 'uninstalling for all users removes the user''s settings and logs' ($left.Count -eq 0) "left: $($left -join ', ')"
 $kept = @(Get-ChildItem $outside -Force -Name -ErrorAction SilentlyContinue)
 Test-Check 'uninstalling doesn''t remove files that links in the data folder lead to' (($kept -contains 'behind-folder-link.txt') -and ($kept -contains 'behind-file-link.txt')) "left outside: $($kept -join ', ')"
 Test-Check 'uninstalling deletes the tasks' ((Get-StartupTasks).Count -eq 0) "tasks: $((Get-StartupTasks) -join ', ')"

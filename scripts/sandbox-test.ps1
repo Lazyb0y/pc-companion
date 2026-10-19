@@ -32,7 +32,7 @@ powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Installer
 param(
     [switch] $Installer,
     [switch] $NoBuild,
-    [int] $TimeoutMinutes = 15
+    [int] $TimeoutMinutes = 25
 )
 
 $ErrorActionPreference = 'Stop'
