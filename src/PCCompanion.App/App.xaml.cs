@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
+using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
@@ -140,6 +141,7 @@ public partial class App : Application
             .AddTransient<GeneralViewModel>()
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()
+            .AddTransient<AppWindowsViewModel>()
             .BuildServiceProvider();
     }
 
