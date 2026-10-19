@@ -5,23 +5,25 @@ at runtime, without changing this PC.
 
 .DESCRIPTION
 Builds the installer for this PC's architecture, starts Windows Sandbox with networking off, and
-runs the groups of checks in scripts\sandbox\groups inside it, with scripts\sandbox\run-checks.ps1.
-The Sandbox window closes when the checks finish. The report, screenshots and logs are written to
-TestResults\sandbox.
+runs the groups of checks in scripts\sandbox\groups inside it, with scripts\sandbox\run-checks.ps1:
+all of them, or Smoke and the ones chosen with -Checks. The Sandbox window closes when the checks
+finish. The report, screenshots and logs are written to TestResults\sandbox.
 
 Needs the Windows Sandbox feature. Only one Sandbox can run at a time. Keep the Sandbox window open
 and the mouse outside it: some checks move the pointer inside the Sandbox, which doesn't work while
 the window is minimized.
 
-.PARAMETER Installer
-Checks the installer's dialogs instead, with scripts\sandbox\groups\Dialogs.ps1, and writes the
-results to TestResults\sandbox-installer.
+.PARAMETER Checks
+The groups to run, such as HotCorners or Setup,Dialogs: the names of the scripts in
+scripts\sandbox\groups. Smoke, a short check that PC Companion installs and starts, always runs
+first, and the groups run in a fixed order whatever the order given. Without it, every group runs.
 
 .PARAMETER NoBuild
 Uses the installer that is already built.
 
 .PARAMETER TimeoutMinutes
-How long to wait for the checks to finish.
+How long to wait for the checks to finish: by default 30 minutes, or 60 when Smart App Control isn't
+off.
 
 .PARAMETER SmartAppControl
 What Smart App Control does in the Sandbox. Off, the default, turns it off before anything is
@@ -33,13 +35,16 @@ what it doesn't trust: PC Companion installs, but an unsigned build doesn't star
 powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
 
 .EXAMPLE
-powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Installer
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Checks HotCorners
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Checks Setup,Dialogs
 #>
 [CmdletBinding()]
 param(
-    [switch] $Installer,
+    [string[]] $Checks,
     [switch] $NoBuild,
-    [int] $TimeoutMinutes = 25,
+    [int] $TimeoutMinutes,
     [ValidateSet('Off', 'Evaluation', 'On')]
     [string] $SmartAppControl = 'Off'
 )
@@ -50,9 +55,23 @@ $platform = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'ARM64' } else { 'x64
 $msiFolder = Join-Path $root "src\PCCompanion.Installer\bin\$platform\Release"
 $sandbox = Join-Path $env:WINDIR 'System32\WindowsSandbox.exe'
 $testResults = Join-Path $root 'TestResults'
-$groups = if ($Installer) { 'Dialogs' } else { 'Smoke,App,Languages,HotCorners,AppWindows,Logging,Setup,RunAsAdmin' }
-$results = Join-Path $testResults $(if ($Installer) { 'sandbox-installer' } else { 'sandbox' })
+$results = Join-Path $testResults 'sandbox'
 $configuration = Join-Path $testResults 'sandbox.wsb'
+if (-not $PSBoundParameters.ContainsKey('TimeoutMinutes')) {
+    $TimeoutMinutes = if ($SmartAppControl -eq 'Off') { 30 } else { 60 }
+}
+
+# The groups are the scripts in scripts\sandbox\groups; run-checks.ps1 runs them in its own order.
+$available = @(Get-ChildItem (Join-Path $PSScriptRoot 'sandbox\groups') -Filter '*.ps1' | ForEach-Object { $_.BaseName })
+$groups = 'All'
+if ($Checks) {
+    $chosen = foreach ($name in @($Checks -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+        $match = $available | Where-Object { $_ -eq $name }
+        if (-not $match) { throw "There's no group of checks named $name. The groups are: $($available -join ', ')." }
+        $match
+    }
+    $groups = $chosen -join ','
+}
 
 if (-not (Test-Path $sandbox)) {
     throw 'Windows Sandbox is not turned on. Turn on the "Windows Sandbox" Windows feature and restart.'
@@ -84,7 +103,7 @@ if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction Sile
 }
 
 # The checks also install, over this one, a copy of the installer that's another build of the
-# same version, and the runtime checks upgrade PC Companion with a copy that's the next version: each with its own
+# same version, and Setup upgrades PC Companion with a copy that's the next version: each with its own
 # product and package codes, and the next version with the version bounds that find this one as older.
 function Invoke-Com([object] $Target, [string] $Name, [System.Reflection.BindingFlags] $Kind, [object[]] $Arguments) {
     return $Target.GetType().InvokeMember($Name, $Kind, $null, $Target, $Arguments)
@@ -203,6 +222,11 @@ while (-not (Test-Path $done) -and (Get-Date) -lt $deadline) {
 $report = Join-Path $results 'report.txt'
 if (Test-Path $report) {
     Get-Content $report -Encoding utf8 | Write-Host
+    $durations = @(Select-String -Path $report -Pattern '^-- (.*)$' -Encoding utf8 | ForEach-Object { $_.Matches[0].Groups[1].Value })
+    if ($durations) {
+        Write-Host "`nGroups:"
+        $durations | ForEach-Object { Write-Host "  $_" }
+    }
 }
 
 if (-not (Test-Path $done)) {
