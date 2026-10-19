@@ -11,7 +11,7 @@ Thanks for your interest in PC Companion. Everyone taking part follows the [code
 ## Making a change
 
 1. Fork the repository and create a branch from `main`, named `<type>/<topic>`, for example `fix/tray-menu`.
-2. Build and test as described in [Build](docs/development/build.md): Windows 10 version 2004 or later, and the .NET SDK version in `global.json`. Before opening a pull request, run `scripts\verify.ps1`, which runs the same checks as CI.
+2. Build as described in [Build](docs/development/build.md): Windows 10 version 2004 or later, and the .NET SDK version in `global.json`. Test as described in [Testing](docs/development/testing.md). Before opening a pull request, run `scripts\verify.ps1`, which runs the same checks as CI.
 3. Keep each commit to one logical change that builds with no warnings. Write commit messages in the [Conventional Commits](https://www.conventionalcommits.org/) style and reference the issue, for example `fix(host): keep the tray icon after Explorer restarts (#42)`.
 4. Add or update tests. Tests use their own temporary data and never touch windows or files they didn't create.
 5. Update the documentation in `docs/` when behavior changes.
