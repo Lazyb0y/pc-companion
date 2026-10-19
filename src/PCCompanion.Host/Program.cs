@@ -10,6 +10,7 @@ using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Features;
 using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Logging;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Windows;
@@ -34,6 +35,19 @@ internal static partial class Program
         if (args.Contains(HostProcess.RemoveDataArgument, StringComparer.OrdinalIgnoreCase))
         {
             RemoveDataCommand.Run(args.Contains(HostProcess.KeepSettingsArgument, StringComparer.OrdinalIgnoreCase));
+            return;
+        }
+
+        // A host running as administrator runs these in a copy of itself without admin rights.
+        if (args.Contains(HostProcess.CheckForUpdatesArgument, StringComparer.OrdinalIgnoreCase))
+        {
+            UpdateCheckCommand.Run();
+            return;
+        }
+
+        if (args.Contains(HostProcess.OpenReleasePageArgument, StringComparer.OrdinalIgnoreCase))
+        {
+            ReleasePageCommand.Run();
             return;
         }
 
@@ -78,6 +92,10 @@ internal static partial class Program
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
             .AddSingleton<FeatureRunner>()
+            .AddSingleton<UpdateCheckStore>()
+            .AddSingleton<GitHubReleaseSource>()
+            .AddSingleton<UpdateChecker>()
+            .AddSingleton<UpdateNotifier>()
             .AddInputModule()
             .AddWindowsModule()
             .BuildServiceProvider();
@@ -93,15 +111,17 @@ internal static partial class Program
         // Features run on this thread, whose message loop they need.
         var store = services.GetRequiredService<SettingsStore>();
         var features = services.GetRequiredService<FeatureRunner>();
-        ApplySettings(store.Load(), detailedLogging, features, logger);
+        var updates = services.GetRequiredService<UpdateNotifier>();
+        ApplySettings(store.Load(), detailedLogging, features, updates, logger);
 
         // Declared after the window, so the tray icon is removed before the window is destroyed.
         using var window = new MessageWindow(HostProcess.WindowClassName);
         using var tray = ActivatorUtilities.CreateInstance<TrayController>(services);
         tray.Show(window);
+        updates.Attach(window, tray);
 
         using var watcher = new SettingsWatcher(paths);
-        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, logger));
+        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, updates, logger));
 
         MessageLoop.Run();
         LogStopped(logger);
@@ -158,18 +178,19 @@ internal static partial class Program
         return ProtectedFiles.CreateUserFolder(folder, sid) ? folder : null;
     }
 
-    private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, FeatureRunner features, ILogger logger)
+    private static void ApplySettings(AppSettings settings, DetailedLogging detailedLogging, FeatureRunner features, UpdateNotifier updates, ILogger logger)
     {
         LanguageSetting.Apply(settings.General.Language, logger);
         detailedLogging.TurnOnUntil(settings.Diagnostics.DetailedLoggingUntil);
         features.Apply(settings);
+        updates.Apply(settings.Updates);
     }
 
-    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, FeatureRunner features, ILogger logger)
+    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, FeatureRunner features, UpdateNotifier updates, ILogger logger)
     {
         try
         {
-            ApplySettings(store.Load(), detailedLogging, features, logger);
+            ApplySettings(store.Load(), detailedLogging, features, updates, logger);
             LogSettingsReloaded(logger);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)

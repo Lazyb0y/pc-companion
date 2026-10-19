@@ -48,6 +48,19 @@ public static class HostProcess
     public const string KeepSettingsArgument = "--keep-settings";
 
     /// <summary>
+    /// The argument a host running as administrator starts a copy of itself with, without admin
+    /// rights, to run the update check: the copy asks GitHub when a check is due and the setting is
+    /// on, saves the result in the user's data folder, and exits.
+    /// </summary>
+    public const string CheckForUpdatesArgument = "--check-for-updates";
+
+    /// <summary>
+    /// The argument a host running as administrator starts a copy of itself with, without admin
+    /// rights, to open the latest release's page in the browser.
+    /// </summary>
+    public const string OpenReleasePageArgument = "--open-release-page";
+
+    /// <summary>
     /// What a host does as it starts, before taking the instance lock. With Always run as
     /// administrator on, a host without admin rights leaves the work to the one the scheduled
     /// tasks start: at sign-in, the sign-in task starts it; otherwise the host runs the

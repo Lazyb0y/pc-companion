@@ -21,10 +21,15 @@ public sealed class TrayIcon : IDisposable
     private const uint IconId = 1;
     private const uint CallbackMessage = PInvoke.WM_APP + 1;
 
+    // The lengths of the notification's title and text, without the terminating null.
+    private const int MaximumTitleLength = 63;
+    private const int MaximumTextLength = 255;
+
     private readonly MessageWindow _window;
     private readonly uint _taskbarCreatedMessage;
     private readonly DestroyIconSafeHandle _icon;
     private readonly string _toolTip;
+    private DestroyIconSafeHandle? _notificationIcon;
     private bool _disposed;
 
     /// <param name="window">Receives the icon's messages; the icon is used on its thread.</param>
@@ -36,7 +41,7 @@ public sealed class TrayIcon : IDisposable
 
         _window = window;
         _toolTip = toolTip;
-        _icon = LoadApplicationIcon();
+        _icon = LoadApplicationIcon(_LI_METRIC.LIM_SMALL);
         _taskbarCreatedMessage = MessageWindow.RegisterMessage("TaskbarCreated");
 
         // The taskbar runs without admin rights; Windows would block its messages to an elevated window.
@@ -56,11 +61,36 @@ public sealed class TrayIcon : IDisposable
     /// <summary>Raised when the user right-clicks the icon or opens its menu with the keyboard.</summary>
     public event EventHandler<TrayMenuEventArgs>? MenuRequested;
 
+    /// <summary>Raised when the user selects the notification <see cref="ShowNotification"/> showed.</summary>
+    public event EventHandler? NotificationSelected;
+
     /// <summary>
     /// False when Windows couldn't add the icon, for example because the taskbar isn't running yet.
     /// The icon is added when the taskbar starts.
     /// </summary>
     public bool IsShown { get; private set; }
+
+    /// <summary>
+    /// Shows a notification from the icon, which Windows shows as a toast and keeps in the
+    /// notification center, unless the user turned off PC Companion's notifications or quiet time
+    /// applies. Text that doesn't fit is cut. Returns false when Windows refused, for example
+    /// because the icon isn't shown.
+    /// </summary>
+    public bool ShowNotification(string title, string text)
+    {
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(text);
+
+        _notificationIcon ??= LoadApplicationIcon(_LI_METRIC.LIM_LARGE);
+
+        var data = CreateData();
+        data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_INFO;
+        data.szInfoTitle = Fit(title, MaximumTitleLength);
+        data.szInfo = Fit(text, MaximumTextLength);
+        data.dwInfoFlags = NOTIFY_ICON_INFOTIP_FLAGS.NIIF_USER | NOTIFY_ICON_INFOTIP_FLAGS.NIIF_LARGE_ICON | NOTIFY_ICON_INFOTIP_FLAGS.NIIF_RESPECT_QUIET_TIME;
+        data.hBalloonIcon = (HICON)_notificationIcon.DangerousGetHandle();
+        return PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_MODIFY, in data);
+    }
 
     public void Dispose()
     {
@@ -74,16 +104,28 @@ public sealed class TrayIcon : IDisposable
         var data = CreateData();
         PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_DELETE, in data);
         _icon.Dispose();
+        _notificationIcon?.Dispose();
     }
 
-    private static unsafe DestroyIconSafeHandle LoadApplicationIcon()
+    // Cuts text that doesn't fit, without splitting a character made of two UTF-16 code units.
+    private static string Fit(string text, int maximumLength)
+    {
+        if (text.Length <= maximumLength)
+        {
+            return text;
+        }
+
+        return text[..(char.IsHighSurrogate(text[maximumLength - 1]) ? maximumLength - 1 : maximumLength)];
+    }
+
+    private static unsafe DestroyIconSafeHandle LoadApplicationIcon(_LI_METRIC size)
     {
         var module = PInvoke.GetModuleHandle((string?)null);
         HICON icon;
         PInvoke.LoadIconMetric(
             (HINSTANCE)module.DangerousGetHandle(),
             (PCWSTR)(char*)ApplicationIconResourceId,
-            _LI_METRIC.LIM_SMALL,
+            size,
             &icon).ThrowOnFailure();
 
         return new DestroyIconSafeHandle(icon, ownsHandle: true);
@@ -136,6 +178,9 @@ public sealed class TrayIcon : IDisposable
                 break;
             case PInvoke.WM_CONTEXTMENU:
                 MenuRequested?.Invoke(this, new TrayMenuEventArgs((short)(e.WParam & 0xFFFF), (short)((e.WParam >> 16) & 0xFFFF)));
+                break;
+            case PInvoke.NIN_BALLOONUSERCLICK:
+                NotificationSelected?.Invoke(this, EventArgs.Empty);
                 break;
         }
 

@@ -44,6 +44,31 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
         return state.LastCheck is not { } last || last > now || now - last >= Interval;
     }
 
+    /// <summary>
+    /// What a check run by a copy of the host without admin rights did, from the result before and
+    /// after it: an answer when the time of the last answer changed, and no answer otherwise. A
+    /// version newly saved as shown is the one to show the notification for. Any program running
+    /// as the user can change the file, so only a version newer than <paramref name="current"/> is shown.
+    /// </summary>
+    public static UpdateCheckOutcome OutcomeOfCopy(UpdateCheckState before, UpdateCheckState after, ReleaseVersion current)
+    {
+        ArgumentNullException.ThrowIfNull(before);
+        ArgumentNullException.ThrowIfNull(after);
+
+        if (after.LastCheck is null || after.LastCheck == before.LastCheck)
+        {
+            return new UpdateCheckOutcome(UpdateCheckResult.NoAnswer);
+        }
+
+        ReleaseVersion? newVersion = null;
+        if (after.NotifiedVersion is { } notified && notified != before.NotifiedVersion && notified > current)
+        {
+            newVersion = notified;
+        }
+
+        return new UpdateCheckOutcome(UpdateCheckResult.Answered, newVersion);
+    }
+
     /// <param name="current">The running version.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public async Task<UpdateCheckOutcome> CheckAsync(ReleaseVersion current, CancellationToken cancellationToken)

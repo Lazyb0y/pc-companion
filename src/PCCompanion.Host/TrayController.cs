@@ -25,6 +25,12 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     /// <summary>Asks the running host to exit, from the settings app or from setup.</summary>
     public static uint ExitMessage { get; } = MessageWindow.RegisterMessage(HostProcess.ExitMessageName);
 
+    /// <summary>Raised when the user selects the notification <see cref="ShowNotification"/> showed.</summary>
+    public event EventHandler? NotificationSelected;
+
+    /// <summary>Shows a notification from the tray icon. Returns false when Windows refused.</summary>
+    public bool ShowNotification(string title, string text) => _icon?.ShowNotification(title, text) ?? false;
+
     /// <param name="window">The host's window, created with <see cref="HostProcess.WindowClassName"/>.</param>
     public void Show(MessageWindow window)
     {
@@ -45,6 +51,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
             settingsApp.Open();
         };
         _icon.MenuRequested += (_, e) => ShowMenu(e.X, e.Y);
+        _icon.NotificationSelected += (_, _) => NotificationSelected?.Invoke(this, EventArgs.Empty);
 
         if (!_icon.IsShown)
         {

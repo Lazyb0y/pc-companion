@@ -32,6 +32,14 @@
     <value>প্রস্থান</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="UpdateNotificationTitle" xml:space="preserve">
+    <value>PC Companion {0} উপলব্ধ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>রিলিজ পৃষ্ঠাটি খুলতে নির্বাচন করুন, যেখান থেকে আপনি এটি ডাউনলোড করতে পারবেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLanguageHeader" xml:space="preserve">
     <value>ভাষা</value>
     <comment>Needs native review.</comment>

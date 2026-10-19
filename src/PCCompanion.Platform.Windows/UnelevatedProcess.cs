@@ -22,11 +22,18 @@ public static class UnelevatedProcess
     /// Starts the program at <paramref name="path"/>, with no arguments, in its own folder.
     /// </summary>
     /// <exception cref="Win32Exception">There's no shell to take the token from, or Windows refused to start the program.</exception>
-    public static void Start(string path)
+    public static void Start(string path) => Start(path, arguments: null);
+
+    /// <summary>
+    /// Starts the program at <paramref name="path"/> in its own folder, without waiting for it.
+    /// The <paramref name="arguments"/> are passed as they are, so they must need no quotes.
+    /// </summary>
+    /// <exception cref="Win32Exception">There's no shell to take the token from, or Windows refused to start the program.</exception>
+    public static void Start(string path, string? arguments)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
 
-        var process = Create(path, arguments: null, sameUser: false);
+        var process = Create(path, arguments, sameUser: false);
         PInvoke.CloseHandle(process.hThread);
         PInvoke.CloseHandle(process.hProcess);
     }

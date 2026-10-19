@@ -195,6 +195,41 @@ public sealed class UpdateCheckerTests : IDisposable
         Assert.True(UpdateChecker.IsDue(new UpdateCheckState { LastCheck = now + TimeSpan.FromSeconds(1) }, now));
     }
 
+    [Fact]
+    public void ACopyThatSavedANewAnswerAnswered()
+    {
+        var before = new UpdateCheckState { LastCheck = _time.Now - TimeSpan.FromDays(2), LatestVersion = new ReleaseVersion(0, 1, 0) };
+        var after = before with { LastCheck = _time.Now };
+
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered), UpdateChecker.OutcomeOfCopy(before, after, Current));
+    }
+
+    [Fact]
+    public void ACopyThatSavedANewVersionAsShownHasTheNotificationShown()
+    {
+        var before = new UpdateCheckState { NotifiedVersion = new ReleaseVersion(0, 2, 0) };
+        var after = new UpdateCheckState { LastCheck = _time.Now, LatestVersion = new ReleaseVersion(0, 3, 0), NotifiedVersion = new ReleaseVersion(0, 3, 0) };
+
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered, new ReleaseVersion(0, 3, 0)), UpdateChecker.OutcomeOfCopy(before, after, Current));
+    }
+
+    [Fact]
+    public void ACopyThatSavedNoNewAnswerGotNoAnswer()
+    {
+        var before = new UpdateCheckState { LastCheck = _time.Now - TimeSpan.FromDays(2) };
+
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.NoAnswer), UpdateChecker.OutcomeOfCopy(before, before, Current));
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.NoAnswer), UpdateChecker.OutcomeOfCopy(new UpdateCheckState(), new UpdateCheckState(), Current));
+    }
+
+    [Fact]
+    public void AChangedFileCantShowAVersionThatIsntNewer()
+    {
+        var after = new UpdateCheckState { LastCheck = _time.Now, NotifiedVersion = new ReleaseVersion(0, 0, 1) };
+
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered), UpdateChecker.OutcomeOfCopy(new UpdateCheckState(), after, Current));
+    }
+
     private Task<UpdateCheckOutcome> CheckAsync() =>
         new UpdateChecker(_store, new GitHubReleaseSource(_gitHub.CreateHandler, _time), _time, _logger)
             .CheckAsync(Current, TestContext.Current.CancellationToken);

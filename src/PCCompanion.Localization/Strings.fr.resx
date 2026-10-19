@@ -32,6 +32,14 @@
     <value>Quitter</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="UpdateNotificationTitle" xml:space="preserve">
+    <value>PC Companion {0} est disponible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>Sélectionnez pour ouvrir sa page de version, où vous pouvez la télécharger.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLanguageHeader" xml:space="preserve">
     <value>Langue</value>
     <comment>Needs native review.</comment>

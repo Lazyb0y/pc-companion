@@ -32,6 +32,14 @@
     <value>خروج</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="UpdateNotificationTitle" xml:space="preserve">
+    <value>يتوفر PC Companion {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>حدد لفتح صفحة الإصدار، حيث يمكنك تنزيله.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLanguageHeader" xml:space="preserve">
     <value>اللغة</value>
     <comment>Needs native review.</comment>
