@@ -74,8 +74,8 @@ if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction Sile
     throw "No installer in $msiFolder. Run without -NoBuild."
 }
 
-# The runtime checks also install, over this one, a copy of the installer that's another build of the
-# same version, and upgrade PC Companion with a copy that's the next version: each with its own
+# The checks also install, over this one, a copy of the installer that's another build of the
+# same version, and the runtime checks upgrade PC Companion with a copy that's the next version: each with its own
 # product and package codes, and the next version with the version bounds that find this one as older.
 function Invoke-Com([object] $Target, [string] $Name, [System.Reflection.BindingFlags] $Kind, [object[]] $Arguments) {
     return $Target.GetType().InvokeMember($Name, $Kind, $null, $Target, $Arguments)
@@ -133,12 +133,10 @@ function New-UpgradeInstaller([string] $Source, [string] $Destination, [switch] 
 $upgradeFolder = Join-Path $testResults 'sandbox-upgrade'
 if (Test-Path $upgradeFolder) { Remove-Item -Recurse -Force $upgradeFolder }
 New-Item -ItemType Directory -Force -Path $upgradeFolder | Out-Null
-if (-not $Installer) {
-    $source = (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
-    $upgradeVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-upgrade.msi')
-    $sameVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-same-version.msi') -SameVersion
-    Write-Host "Made another build of version $sameVersion and an upgrade installer, version $upgradeVersion."
-}
+$source = (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
+$upgradeVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-upgrade.msi')
+$sameVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-same-version.msi') -SameVersion
+Write-Host "Made another build of version $sameVersion and an upgrade installer, version $upgradeVersion."
 
 if (Test-Path $results) {
     try {

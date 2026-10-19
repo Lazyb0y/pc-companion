@@ -12,7 +12,8 @@ Outputs: C:\Test\results: report.txt with one PASS or FAIL line per check, a scr
 
 For each scope, the checks install through Advanced, look at what was installed, and remove it
 through the maintenance dialog, with Keep my settings left unchecked just for you and checked for
-all users. A scope stops at its first failed step and removes what it
+all users. For all users, another build installed through the pages replaces the first before it's
+removed. A scope stops at its first failed step and removes what it
 installed. Then they install and remove silently for all users.
 
 The checks look for the English text of the WixUI_Advanced dialogs; update them when the dialogs
@@ -148,8 +149,8 @@ function Invoke-Click([string] $Name) {
     return $true
 }
 
-function Start-Setup([string] $Log) {
-    $process = Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/l*v', "`"$results\$Log`"") -PassThru
+function Start-Setup([string] $Log, [string] $Package = $msi) {
+    $process = Start-Process msiexec.exe -ArgumentList @('/i', "`"$Package`"", '/l*v', "`"$results\$Log`"") -PassThru
     # Keeps the process handle, so the exit code can be read after setup exits.
     $null = $process.Handle
     return $process
@@ -160,14 +161,13 @@ function Get-ExitCode($Process) {
     return 'still running'
 }
 
-# The Settings > Apps entry.
-function Get-UninstallEntry {
-    foreach ($key in 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*') {
-        $entry = Get-ItemProperty $key -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq 'PC Companion' } | Select-Object -First 1
-        if ($entry) { return $entry }
-    }
-    return $null
+# The Settings > Apps entries; each one's PSChildName is its product code.
+function Get-UninstallEntries {
+    return @(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
+        Where-Object { $_.DisplayName -eq 'PC Companion' })
 }
+
+function Get-UninstallEntry { return Get-UninstallEntries | Select-Object -First 1 }
 
 # Settings app and host processes started from $Folder.
 function Get-AppProcesses([string] $Folder) {
@@ -185,19 +185,20 @@ function Get-LogDialogs([string] $Log) {
 }
 
 $msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
+$sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'
 $elevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
 Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($screen.Width)x$($screen.Height); Windows $([Environment]::OSVersion.Version)"
 
 $scopes = @(
     @{
-        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false; OpenApp = $true; KeepSettings = $false
+        Name = 'just for you'; Key = 'user'; Option = 'Install just for you*'; FolderPage = $false; OpenApp = $true; KeepSettings = $false; AnotherBuild = $false
         Folder = (Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion')
         RunKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
     },
     @{
-        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true; OpenApp = $false; KeepSettings = $true
+        Name = 'all users'; Key = 'machine'; Option = 'Install for all users of this machine'; FolderPage = $true; OpenApp = $false; KeepSettings = $true; AnotherBuild = $true
         Folder = (Join-Path $env:ProgramW6432 'PCCompanion')
         RunKey = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'
         Shortcut = (Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs\PC Companion.lnk')
@@ -210,6 +211,7 @@ foreach ($scope in $scopes) {
     $key = $scope.Key
     $hostExe = Join-Path $scope.Folder 'PCCompanion.Host.exe'
     $previousPage = if ($scope.FolderPage) { 'Destination Folder' } else { 'Installation Scope' }
+    $installedMsi = $msi
 
     try {
         # The first dialog in a new Sandbox can take a few minutes.
@@ -257,6 +259,33 @@ foreach ($scope in $scopes) {
             Test-Check "${name}: Finish opens nothing when it's cleared" ((Get-AppProcesses $scope.Folder).Count -eq 0)
         }
 
+        if ($scope.AnotherBuild) {
+            # Another build of the same version, installed through the pages for the same scope,
+            # replaces this one: setup looks for it once the scope is chosen.
+            $productBefore = (Get-UninstallEntry).PSChildName
+            $process = Start-Setup "another-build-$key.log" $sameVersionMsi
+            Assert-Step "${name}: another build: license page" (Wait-Page 'Please read the PC Companion License Agreement' 300)
+            Assert-Step "${name}: another build: accept the license" (Invoke-Click 'I accept the terms in the License Agreement')
+            Assert-Step "${name}: another build: Advanced" (Invoke-Click 'Advanced')
+            Assert-Step "${name}: another build: scope page" (Wait-Page 'Installation Scope')
+            Assert-Step "${name}: another build: choose the scope" (Invoke-Click $scope.Option)
+            Assert-Step "${name}: another build: Next from the scope page" (Invoke-Click 'Next')
+            if ($scope.FolderPage) {
+                Assert-Step "${name}: another build: folder page" (Wait-Page 'Destination Folder')
+                Assert-Step "${name}: another build: Next from the folder page" (Invoke-Click 'Next')
+            }
+            Assert-Step "${name}: another build: Ready to install page" (Wait-Page 'Ready to install PC Companion')
+            Assert-Step "${name}: another build: Install" (Invoke-Click 'Install')
+            Assert-Step "${name}: another build: install finishes" (Wait-Page 'Completed the PC Companion Setup Wizard' 300)
+            Save-Page "$key-06b-another-build"
+            Assert-Step "${name}: another build: Finish" (Invoke-Click 'Finish')
+            $code = Get-ExitCode $process
+            Test-Check "${name}: another build: setup exits with 0" ($code -eq 0) "exit code $code"
+            $entries = @(Get-UninstallEntries)
+            Test-Check "${name}: another build replaces the installed one, leaving one entry in Settings > Apps" (($entries.Count -eq 1) -and ($entries[0].PSChildName -ne $productBefore)) "before: $productBefore; after: $(($entries | ForEach-Object { $_.PSChildName }) -join ', ')"
+            $installedMsi = $sameVersionMsi
+        }
+
         # Removal runs with the settings app and the host open: setup closes them itself.
         if ((Get-AppProcesses $scope.Folder).Count -eq 0) { Start-Process (Join-Path $scope.Folder 'PCCompanion.exe') }
         Test-Check "${name}: the settings app and the host run before removal" (Wait-Until { (Get-AppProcesses $scope.Folder).Count -eq 2 } 30)
@@ -278,7 +307,7 @@ foreach ($scope in $scopes) {
         Test-Check "${name}: Settings > Apps offers no Modify" ($entry -and $entry.NoModify -eq 1) "entry: $([bool] $entry); NoModify: $($entry.NoModify)"
 
         # Running the MSI again opens the maintenance dialog.
-        $process = Start-Setup "remove-$key.log"
+        $process = Start-Setup "remove-$key.log" $installedMsi
         Assert-Step "${name}: maintenance welcome page" (Wait-Page 'Welcome to the PC Companion Setup Wizard' 120)
         Save-Page "$key-07-maintenance-welcome"
         Assert-Step "${name}: Next from the welcome page" (Invoke-Click 'Next')
@@ -338,11 +367,11 @@ foreach ($scope in $scopes) {
         Save-Page "$key-failed"
         Get-Process msiexec -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
         Start-Sleep -Seconds 5
-        $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*v', "`"$results\cleanup-$key.log`"") -Wait -PassThru).ExitCode
+        $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$installedMsi`"", '/qn', '/l*v', "`"$results\cleanup-$key.log`"") -Wait -PassThru).ExitCode
         Write-Report "${name}: stopped and removed PC Companion (exit code $code)"
     }
 
-    foreach ($log in "install-$key.log", "remove-$key.log") {
+    foreach ($log in "install-$key.log", "another-build-$key.log", "remove-$key.log") {
         $path = Join-Path $results $log
         if (-not (Test-Path $path)) { continue }
         $dialogs = Get-LogDialogs $path

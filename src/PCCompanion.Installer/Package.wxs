@@ -18,6 +18,18 @@
         AllowSameVersionUpgrades="yes"
         Schedule="afterInstallExecute"
         DowngradeErrorMessage="A newer version of PC Companion is already installed." />
+    <!--
+      Windows Installer looks for the installed version only in the scope being installed. With the
+      setup pages, it looks before the scope is chosen, in the just-for-you scope, and the install
+      doesn't look again, so an install for all users would go next to the installed one. The
+      scope page looks again once the scope is chosen, after setting ALLUSERS, and forgets what it
+      found before.
+    -->
+    <UI>
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="WIX_UPGRADE_DETECTED" Value="{}" Order="4" />
+      <Publish Dialog="InstallScopeDlg" Control="Next" Property="WIX_DOWNGRADE_DETECTED" Value="{}" Order="4" />
+      <Publish Dialog="InstallScopeDlg" Control="Next" Event="DoAction" Value="FindRelatedProducts" Order="5" />
+    </UI>
 
     <!--
       Setup closes the settings app and the host before it removes or replaces their files, so it
@@ -25,9 +37,10 @@
       use and would ask to close them, it runs the installed host with its exit argument, as the
       user: the host closes both, as Exit in its tray menu does, and waits for them to end. The
       host is found by its component, whose GUID only builds that know the argument have; an older
-      build would ignore it and start, keeping setup waiting.
+      build would ignore it and start, keeping setup waiting. Secure, so it reaches the install
+      when setup elevates.
     -->
-    <Property Id="INSTALLEDHOST">
+    <Property Id="INSTALLEDHOST" Secure="yes">
       <ComponentSearch Guid="6580E42F-84A7-4438-B327-1E6D2CB9F919" Type="file">
         <!-- Without it, the search finds only the folder. -->
         <FileSearch Name="PCCompanion.Host.exe" />
