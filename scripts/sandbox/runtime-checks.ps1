@@ -501,7 +501,8 @@ function Write-Settings([string] $Json) {
 }
 
 $msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
-$upgradeMsi = (Get-ChildItem 'C:\Test\upgrade' -Filter '*.msi' | Select-Object -First 1).FullName
+$upgradeMsi = 'C:\Test\upgrade\PCCompanion-upgrade.msi'
+$sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'
 $installFolder = Join-Path $env:LOCALAPPDATA 'Programs\PCCompanion'
 $appExe = Join-Path $installFolder 'PCCompanion.exe'
 $hostExe = Join-Path $installFolder 'PCCompanion.Host.exe'
@@ -1036,11 +1037,24 @@ Test-Check 'host wrote Debug entries while detailed logging was on' (@($hostLine
 Test-Check 'detailed logging turned itself off in the host' ($turnedOff.Count -ge 1)
 Test-Check 'host wrote no Debug entries after detailed logging turned off' (($turnedOff.Count -ge 1) -and (@($debugLines | Where-Object { $_ -gt $turnedOff[-1] }).Count -eq 0))
 
-# 12b. An upgrade to the next version keeps the settings and logs.
-function Get-InstalledVersions {
+# 12a. Another build of the same version replaces the installed one, as an upgrade does, and keeps
+#      the settings and logs, rather than installing next to it.
+function Get-InstalledProducts {
     @(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
-        Where-Object { $_.DisplayName -eq 'PC Companion' } | ForEach-Object { $_.DisplayVersion })
+        Where-Object { $_.DisplayName -eq 'PC Companion' })
 }
+function Get-InstalledVersions { @(Get-InstalledProducts | ForEach-Object { $_.DisplayVersion }) }
+$settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
+$logsBefore = @(Get-ChildItem $logs -File).Count
+$productsBefore = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
+$code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$sameVersionMsi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\same-version.log`"") -Wait -PassThru).ExitCode
+Test-Check 'install another build of the same version' ($code -eq 0) "exit code $code"
+$productsAfter = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
+Test-Check 'it replaces the installed build, leaving one entry in Settings > Apps' (($productsAfter.Count -eq 1) -and ($productsAfter[0] -ne $productsBefore[0])) "before: $($productsBefore -join ', '); after: $($productsAfter -join ', ')"
+Test-Check 'it keeps the settings' ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)
+Test-Check 'it keeps the logs' (@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count -ge $logsBefore) "before: $logsBefore; after: $(@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count)"
+
+# 12b. An upgrade to the next version keeps the settings and logs.
 $settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
 $logsBefore = @(Get-ChildItem $logs -File).Count
 $versionBefore = @(Get-InstalledVersions)
