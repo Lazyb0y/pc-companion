@@ -1,8 +1,10 @@
 # Privacy
 
-- PC Companion doesn't collect, send or share any data. It has no telemetry, analytics, ads or accounts, uploads nothing, and makes no network connections.
+- PC Companion doesn't collect, send or share any data about you. It has no telemetry, analytics, ads or accounts, and uploads nothing.
+- **Update check:** once a day, PC Companion asks GitHub for its latest release, at `api.github.com/repos/Lazyb0y/pc-companion/releases/latest`. The request is the same for everyone and contains nothing about you or your PC; as with any website, GitHub sees your IP address, under the [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement). When a newer version exists, PC Companion tells you, and you download and install it yourself. To stop it, turn off **Check for updates** on the **General** page. PC Companion makes no other network connections.
 - It stores these files on your PC, in `%LOCALAPPDATA%\PCCompanion`:
   - `settings.json`: your settings.
+  - `update-check.json`: when PC Companion last checked for updates and the newest version it found.
   - `Logs`: diagnostic logs, kept for 14 days. **Detailed logging**, if you turn it on, adds more detail for 24 hours. Your user profile folder in them is replaced with `%USERPROFILE%`, and they contain no passwords or file contents. They leave your PC only if you share them yourself, for example by attaching them to an issue.
 - The installer adds a startup entry so the app can start when you sign in; it stays in the background only if you turn on **Start with Windows**.
 - Uninstalling removes the app, its startup entry, and your settings and logs in `%LOCALAPPDATA%\PCCompanion`. To keep your settings, run the installer again, choose **Remove** and check **Keep my settings**, or uninstall with `KEEPSETTINGS=1`, for example `msiexec /x PCCompanion-x64.msi KEEPSETTINGS=1`. If others use PC Companion on the same PC, their settings and logs stay until they delete their own `%LOCALAPPDATA%\PCCompanion`.
