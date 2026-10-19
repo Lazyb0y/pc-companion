@@ -9,7 +9,11 @@
       UpgradeCode="52686E02-C65A-47D6-8F24-F7A0CF243D9C"
       Scope="perUserOrMachine">
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of PC Companion is already installed." />
+    <!--
+      Another build of the same version replaces the installed one too, as every build is 0.0.1 for
+      now: each has its own product code, and Windows Installer compares only three parts of a version.
+    -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of PC Companion is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
     <!-- The icon shown in Settings > Apps and on the Start menu shortcut. -->

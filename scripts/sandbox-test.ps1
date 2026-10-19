@@ -74,13 +74,14 @@ if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction Sile
     throw "No installer in $msiFolder. Run without -NoBuild."
 }
 
-# The runtime checks also upgrade PC Companion, with a copy of the installer that's the next version:
-# its own product and package codes, and the version bounds that find this one as older.
+# The runtime checks also install, over this one, a copy of the installer that's another build of the
+# same version, and upgrade PC Companion with a copy that's the next version: each with its own
+# product and package codes, and the next version with the version bounds that find this one as older.
 function Invoke-Com([object] $Target, [string] $Name, [System.Reflection.BindingFlags] $Kind, [object[]] $Arguments) {
     return $Target.GetType().InvokeMember($Name, $Kind, $null, $Target, $Arguments)
 }
 
-function New-UpgradeInstaller([string] $Source, [string] $Destination) {
+function New-UpgradeInstaller([string] $Source, [string] $Destination, [switch] $SameVersion) {
     Copy-Item -Path $Source -Destination $Destination -Force
     $installer = New-Object -ComObject WindowsInstaller.Installer
     $database = Invoke-Com $installer 'OpenDatabase' 'InvokeMethod' @($Destination, [int] 1)
@@ -90,7 +91,7 @@ function New-UpgradeInstaller([string] $Source, [string] $Destination) {
     [void] (Invoke-Com $view 'Close' 'InvokeMethod' $null)
     $parts = $version.Split('.')
     $parts[-1] = [string] ([int] $parts[-1] + 1)
-    $next = $parts -join '.'
+    $next = if ($SameVersion) { $version } else { $parts -join '.' }
     $productCode = "{$([guid]::NewGuid().ToString().ToUpperInvariant())}"
 
     # The Upgrade table's versions are part of its key, so its rows are replaced rather than updated.
@@ -135,7 +136,8 @@ New-Item -ItemType Directory -Force -Path $upgradeFolder | Out-Null
 if (-not $Installer) {
     $source = (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
     $upgradeVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-upgrade.msi')
-    Write-Host "Made an upgrade installer, version $upgradeVersion."
+    $sameVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-same-version.msi') -SameVersion
+    Write-Host "Made another build of version $sameVersion and an upgrade installer, version $upgradeVersion."
 }
 
 if (Test-Path $results) {
