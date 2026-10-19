@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -40,6 +42,30 @@ public static class ShellActions
         SendShortcut(VIRTUAL_KEY.VK_LWIN, OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000) ? VIRTUAL_KEY.VK_N : VIRTUAL_KEY.VK_A);
 
     public static bool Lock() => PInvoke.LockWorkStation();
+
+    /// <summary>
+    /// Opens a web page in the default browser. Only https addresses are opened: the shell starts
+    /// whatever program is registered for other kinds of addresses. A browser started from a
+    /// process running as administrator would run as administrator too.
+    /// </summary>
+    public static bool OpenWebPage(Uri address)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri || address.Scheme != Uri.UriSchemeHttps)
+        {
+            throw new ArgumentException("Only https addresses are opened.", nameof(address));
+        }
+
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(address.AbsoluteUri) { UseShellExecute = true });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     /// Turns the displays off until the pointer moves or a key is pressed.

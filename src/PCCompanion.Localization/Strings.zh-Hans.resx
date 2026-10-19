@@ -32,6 +32,14 @@
     <value>退出</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="UpdateNotificationTitle" xml:space="preserve">
+    <value>PC Companion {0} 现已可用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>选择以打开其发布页面，你可以在该页面下载。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralLanguageHeader" xml:space="preserve">
     <value>语言</value>
     <comment>Needs native review.</comment>

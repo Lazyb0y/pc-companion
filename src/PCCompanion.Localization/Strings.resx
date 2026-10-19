@@ -32,6 +32,14 @@
     <value>Exit</value>
     <comment>Tray icon menu command that stops PC Companion running in the background.</comment>
   </data>
+  <data name="UpdateNotificationTitle" xml:space="preserve">
+    <value>PC Companion {0} is available</value>
+    <comment>Title of the notification shown when a newer version is available. {0} is the version number, for example 1.2.0. "PC Companion" is the product name. At most 63 characters with the version.</comment>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>Select to open its release page, where you can download it.</value>
+    <comment>Text of the notification shown when a newer version is available; selecting it opens the release page on GitHub. At most 255 characters.</comment>
+  </data>
   <data name="GeneralLanguageHeader" xml:space="preserve">
     <value>Language</value>
     <comment>General page: setting for the user interface language.</comment>
