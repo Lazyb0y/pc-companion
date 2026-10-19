@@ -102,6 +102,17 @@ public sealed class MessageWindowTests
         Assert.Null(MessageWindow.FindOwnerProcess(UniqueClassName()));
     }
 
+    [Theory]
+    [InlineData(0x0010u, 0u, true)] // WM_CLOSE
+    [InlineData(0x0016u, 1u, true)] // WM_ENDSESSION, ending
+    [InlineData(0x0016u, 0u, false)] // WM_ENDSESSION, not ending after all
+    [InlineData(0x0011u, 0u, false)] // WM_QUERYENDSESSION only asks
+    [InlineData(0x0002u, 0u, false)] // WM_DESTROY
+    public void IsCloseRequestRecognizesTheMessagesThatCloseAProgram(uint message, uint wParam, bool expected)
+    {
+        Assert.Equal(expected, MessageWindow.IsCloseRequest(message, wParam));
+    }
+
     [Fact]
     public void ADisposedWindowCanBeCreatedAgain()
     {

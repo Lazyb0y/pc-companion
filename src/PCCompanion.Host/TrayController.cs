@@ -75,6 +75,13 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
             MessageLoop.Quit();
             e.Handled = true;
         }
+        else if (MessageWindow.IsCloseRequest(e.Message, e.WParam))
+        {
+            // Setup closes the host before it removes or replaces its files.
+            LogCloseRequested(logger);
+            MessageLoop.Quit();
+            e.Handled = true;
+        }
     }
 
     private void ShowMenu(int x, int y)
@@ -108,6 +115,9 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The settings app asked the host to exit.")]
     private static partial void LogExitRequested(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Windows asked the host to close, as setup does before it removes or replaces its files.")]
+    private static partial void LogCloseRequested(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Another host launch asked to open the settings.")]
     private static partial void LogOpenSettingsRequested(ILogger logger);

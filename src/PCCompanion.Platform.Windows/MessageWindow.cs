@@ -106,6 +106,14 @@ public sealed class MessageWindow : IDisposable
         return !window.IsNull && PInvoke.GetWindowThreadProcessId(window, &processId) != 0 ? processId : null;
     }
 
+    /// <summary>
+    /// Whether a message asks the window's program to close: <c>WM_CLOSE</c>, which setup sends
+    /// before it removes or replaces the program's files, or <c>WM_ENDSESSION</c> when the session
+    /// ends or Restart Manager closes the program.
+    /// </summary>
+    public static bool IsCloseRequest(uint message, nuint wParam) =>
+        message == PInvoke.WM_CLOSE || (message == PInvoke.WM_ENDSESSION && wParam != 0);
+
     /// <summary>Posts a message to this window; it is received by the window's message loop.</summary>
     public void Post(uint message, nuint wParam = 0, nint lParam = 0)
     {
