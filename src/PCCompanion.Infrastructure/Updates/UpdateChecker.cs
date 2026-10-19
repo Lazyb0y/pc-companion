@@ -1,0 +1,140 @@
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
+namespace PCCompanion.Infrastructure.Updates;
+
+public enum UpdateCheckResult
+{
+    /// <summary>GitHub answered less than a day ago, so nothing was asked.</summary>
+    NotDue,
+
+    /// <summary>The request got no answer; it doesn't count as the day's check.</summary>
+    NoAnswer,
+
+    /// <summary>GitHub answered, which counts as the day's check.</summary>
+    Answered,
+}
+
+/// <param name="Result">What happened.</param>
+/// <param name="NewVersion">
+/// A newer version that the notification hasn't shown yet. It's saved as shown, so the caller
+/// shows the notification for it.
+/// </param>
+public sealed record UpdateCheckOutcome(UpdateCheckResult Result, ReleaseVersion? NewVersion = null);
+
+/// <summary>
+/// Runs one update check: asks GitHub when a check is due and saves what it answered.
+/// </summary>
+public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseSource source, TimeProvider time, ILogger<UpdateChecker> logger)
+{
+    /// <summary>How long after GitHub's last answer the next check is due.</summary>
+    public static readonly TimeSpan Interval = TimeSpan.FromHours(24);
+
+    /// <summary>
+    /// Whether a check is due at <paramref name="now"/>: before the first answer, a day after the
+    /// last one, or when the last one seems to be in the future because the clock moved back.
+    /// </summary>
+    public static bool IsDue(UpdateCheckState state, DateTimeOffset now)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+
+        return state.LastCheck is not { } last || last > now || now - last >= Interval;
+    }
+
+    /// <param name="current">The running version.</param>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    public async Task<UpdateCheckOutcome> CheckAsync(ReleaseVersion current, CancellationToken cancellationToken)
+    {
+        var state = store.Load();
+        if (!IsDue(state, time.GetUtcNow()))
+        {
+            return new UpdateCheckOutcome(UpdateCheckResult.NotDue);
+        }
+
+        LogChecking(logger);
+        var answer = await source.GetLatestAsync(cancellationToken).ConfigureAwait(false);
+        var latest = state.LatestVersion;
+        switch (answer.Kind)
+        {
+            case ReleaseAnswerKind.NoAnswer:
+                LogNoAnswer(logger, answer.Exception, answer.Problem);
+                return new UpdateCheckOutcome(UpdateCheckResult.NoAnswer);
+            case ReleaseAnswerKind.Release:
+                latest = answer.Version;
+                break;
+            case ReleaseAnswerKind.NoRelease:
+                LogNoRelease(logger);
+                latest = null;
+                break;
+            case ReleaseAnswerKind.ErrorStatus:
+                LogErrorStatus(logger, answer.StatusCode);
+                break;
+            default:
+                LogUnreadable(logger, answer.Exception, answer.StatusCode, answer.Problem);
+                break;
+        }
+
+        if (answer.Version is { } named)
+        {
+            if (named > current)
+            {
+                LogNewerVersion(logger, named, current);
+            }
+            else
+            {
+                LogUpToDate(logger, current);
+            }
+        }
+
+        ReleaseVersion? newVersion = null;
+        if (latest is { } version && version > current && (state.NotifiedVersion is not { } notified || version > notified))
+        {
+            newVersion = version;
+        }
+
+        // Saved before the notification shows, so it shows once per version. A result that can't
+        // be saved still counts as the day's check while the host runs.
+        var now = time.GetUtcNow();
+        try
+        {
+            store.Save(state with { LastCheck = now, LatestVersion = latest, NotifiedVersion = newVersion ?? state.NotifiedVersion });
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            LogCantSave(logger, exception);
+        }
+
+        LogNextCheck(logger, now + Interval);
+        return new UpdateCheckOutcome(UpdateCheckResult.Answered, newVersion);
+    }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Checking for updates.")]
+    private static partial void LogChecking(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The update check got no answer from GitHub ({Problem}).")]
+    private static partial void LogNoAnswer(ILogger logger, Exception? exception, string? problem);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "GitHub has no release of PC Companion yet.")]
+    private static partial void LogNoRelease(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "GitHub answered the update check with status {StatusCode}.")]
+    private static partial void LogErrorStatus(ILogger logger, int? statusCode);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "GitHub's answer to the update check (status {StatusCode}) can't be used: {Problem}.")]
+    private static partial void LogUnreadable(ILogger logger, Exception? exception, int? statusCode, string? problem);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "PC Companion {Version} is available; this is {Current}.")]
+    private static partial void LogNewerVersion(ILogger logger, ReleaseVersion version, ReleaseVersion current);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "PC Companion {Current} is up to date.")]
+    private static partial void LogUpToDate(ILogger logger, ReleaseVersion current);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't save the update check's result.")]
+    private static partial void LogCantSave(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The next update check is due at {Time:u}.")]
+    private static partial void LogNextCheck(ILogger logger, DateTimeOffset time);
+}

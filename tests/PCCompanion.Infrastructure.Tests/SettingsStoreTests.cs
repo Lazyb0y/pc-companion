@@ -154,6 +154,26 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.Equal(new AppSettings(), _store.Load());
     }
 
+    [Fact]
+    public void TheUpdateCheckIsOnByDefaultAndWhenItsValueIsMissing()
+    {
+        Assert.True(new AppSettings().Updates.CheckAutomatically);
+
+        WriteSettingsFile("""{ "updates": { } }""");
+
+        Assert.True(_store.Load().Updates.CheckAutomatically);
+    }
+
+    [Fact]
+    public void TheUpdateCheckTurnedOffIsSavedAndLoaded()
+    {
+        _store.Save(new AppSettings { Updates = new UpdateSettings { CheckAutomatically = false } });
+
+        Assert.Contains("\"checkAutomatically\": false", File.ReadAllText(_paths.SettingsFile), StringComparison.Ordinal);
+        Assert.False(_store.Load().Updates.CheckAutomatically);
+        Assert.NotEqual(new AppSettings(), _store.Load());
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData("not json")]

@@ -28,6 +28,9 @@ public sealed class AppDataPaths
 
     public string LogsFolder => Path.Combine(Root, "Logs");
 
+    /// <summary>The result of the update checks, which only the host writes.</summary>
+    public string UpdateCheckFile => Path.Combine(Root, "update-check.json");
+
     /// <summary>
     /// The folder of the host's logs while it runs as administrator,
     /// <c>%ProgramData%\PCCompanion\Logs\</c> and the user's security identifier, which only
