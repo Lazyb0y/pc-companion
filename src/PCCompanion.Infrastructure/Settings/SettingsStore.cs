@@ -89,7 +89,7 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
     }
 
     // The move fails while another process is reading the file, which only takes a moment.
-    private static void Replace(string source, string destination)
+    internal static void Replace(string source, string destination)
     {
         for (var attempt = 1; ; attempt++)
         {

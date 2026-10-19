@@ -34,6 +34,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 - The host saves it to `update-check.json` in the data folder, writing `update-check.json.tmp` and then replacing the file, as the settings store does. Only the host writes it; `settings.json` stays the settings app's alone. The settings app reads it for the banner.
 - `lastCheck` is when GitHub last answered, `latestVersion` the newest version it named, and `notifiedVersion` the last version the notification showed. An answer without a usable version keeps `latestVersion`; no release (404) clears it.
 - A file that's missing, over 4 KB or can't be read counts as no check yet, and is replaced at the next save.
+- A result that can't be saved still counts as the day's check until the host stops, so the host doesn't ask every hour.
 - It's a cache: uninstalling removes it, also with **Keep my settings**.
 
 ```json
@@ -83,8 +84,8 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 
 - **Debug:** a check starting, when the next one is due, and that this version is up to date.
 - **Information:** a newer version found, the notification shown and selected, and the first time in a run that GitHub can't be reached. Later ones are Debug, so an offline PC doesn't log every hour.
-- **Warning:** an answer with an error status, such as a rate limit, with its status code, and an answer that can't be read.
-- **Never logged:** the answer's body (the release notes) and headers, cookies, IP addresses and proxy credentials. Versions are logged as the parsed numbers, never as the raw tag.
+- **Warning:** an answer with an error status, such as a rate limit, with its status code; an answer that can't be read; a result that can't be saved; and a check that fails in another way.
+- **Never logged:** the answer's body (the release notes) and headers, cookies, the user's IP address and proxy credentials. Versions are logged as the parsed numbers, never as the raw tag.
 - Nothing is logged as an error: a failed check changes nothing else.
 
 ## Compatibility

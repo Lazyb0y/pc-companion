@@ -36,6 +36,7 @@
 | `general.theme` | `System`, `Light` or `Dark` |
 | `general.startWithWindows` | `true` or `false` (default) |
 | `diagnostics.detailedLoggingUntil` | When detailed logging turns off, as a date and time with an offset, or `null` (default) when it is off |
+| `updates.checkAutomatically` | `true` (default) or `false`; see [Update check](../features/general/update-check.md) |
 
 ## Identifiers
 

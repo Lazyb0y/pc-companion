@@ -22,6 +22,8 @@ public sealed record AppSettings
 
     public DiagnosticsSettings Diagnostics { get; set; } = new();
 
+    public UpdateSettings Updates { get; set; } = new();
+
     /// <summary>
     /// Each feature's section, by feature ID, in the feature's own format. Sections of features
     /// this build doesn't know are kept.
@@ -33,8 +35,9 @@ public sealed record AppSettings
         && SchemaVersion == other.SchemaVersion
         && General == other.General
         && Diagnostics == other.Diagnostics
+        && Updates == other.Updates
         && Features.Count == other.Features.Count
         && Features.All(section => other.Features.TryGetValue(section.Key, out var value) && JsonElement.DeepEquals(section.Value, value));
 
-    public override int GetHashCode() => HashCode.Combine(SchemaVersion, General, Diagnostics, Features.Count);
+    public override int GetHashCode() => HashCode.Combine(SchemaVersion, General, Diagnostics, Updates, Features.Count);
 }
