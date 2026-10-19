@@ -1,15 +1,9 @@
 ﻿<#
 .SYNOPSIS
-Checks PC Companion's installer dialogs inside Windows Sandbox. Started by
-scripts\sandbox-test.ps1 -Installer; don't run it on your own PC: it clicks through the dialogs with
-the mouse, installs and removes PC Companion for the current user and for all users, and shuts
-Windows down at the end.
+The setup pages. Clicks through them with the mouse, installs and removes PC Companion for the current
+user and for all users.
 
 .DESCRIPTION
-Inputs:  C:\Test\msi\PCCompanion-*.msi (read-only).
-Outputs: C:\Test\results: report.txt with one PASS or FAIL line per check, a screenshot of each
-         dialog page, the install logs, and done.txt when finished.
-
 For each scope, the checks install through Advanced, look at what was installed, and remove it
 through the maintenance dialog, with Keep my settings left unchecked just for you and checked for
 all users. For all users, another build installed through the pages replaces the first before it's
@@ -18,28 +12,7 @@ installed. Then they install and remove silently for all users.
 
 The checks look for the English text of the WixUI_Advanced dialogs; update them when the dialogs
 change.
-
-.PARAMETER SmartAppControl
-What Smart App Control does in the Sandbox, as smart-app-control.ps1 sets it before the first install.
 #>
-param(
-    [ValidateSet('Off', 'Evaluation', 'On')]
-    [string] $SmartAppControl = 'Off'
-)
-
-$ErrorActionPreference = 'Continue'
-$results = 'C:\Test\results'
-$report = Join-Path $results 'report.txt'
-New-Item -ItemType Directory -Force -Path $results | Out-Null
-Set-Content -Path $report -Value "PC Companion installer checks - $(Get-Date -Format o)" -Encoding utf8
-
-function Write-Report([string] $Text) { Add-Content -Path $report -Value $Text -Encoding utf8 }
-
-function Test-Check([string] $Name, [bool] $Passed, [string] $Detail = '') {
-    $status = if ($Passed) { 'PASS' } else { 'FAIL' }
-    $suffix = if ($Detail) { " - $Detail" } else { '' }
-    Write-Report "[$status] $Name$suffix"
-}
 
 # A step the rest of the scope needs: a failure stops the scope.
 function Assert-Step([string] $Name, [bool] $Passed) {
@@ -48,29 +21,8 @@ function Assert-Step([string] $Name, [bool] $Passed) {
     throw 'step failed'
 }
 
-Add-Type -AssemblyName System.Windows.Forms, System.Drawing, UIAutomationClient, UIAutomationTypes
-Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-public static class Win32 {
-    [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
-    [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
-    [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
-    [DllImport("user32.dll")] public static extern void mouse_event(uint flags, uint dx, uint dy, uint data, UIntPtr extraInfo);
-}
-'@
-[void] [Win32]::SetProcessDPIAware()
-
 $MOUSEEVENTF_LEFTDOWN = 0x2
 $MOUSEEVENTF_LEFTUP = 0x4
-
-function Wait-Until([scriptblock] $Condition, [int] $Seconds = 30) {
-    for ($i = 0; $i -lt ($Seconds * 4); $i++) {
-        if (& $Condition) { return $true }
-        Start-Sleep -Milliseconds 250
-    }
-    return $false
-}
 
 function Get-SetupWindow {
     $setup = @(Get-Process msiexec -ErrorAction SilentlyContinue | ForEach-Object { $_.Id })
@@ -190,13 +142,6 @@ function Test-CheckBoxOn([string] $Name) {
 function Get-LogDialogs([string] $Log) {
     return @(Select-String -Path $Log -Pattern 'Action [\d:]+: (\w+)\. Dialog created' -ErrorAction SilentlyContinue | ForEach-Object { $_.Matches[0].Groups[1].Value })
 }
-
-$msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
-$sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'
-$elevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-$screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($screen.Width)x$($screen.Height); Windows $([Environment]::OSVersion.Version)"
-Write-Report (& (Join-Path $PSScriptRoot 'smart-app-control.ps1') $SmartAppControl)
 
 $scopes = @(
     @{
@@ -402,7 +347,3 @@ $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$msi`"", '/qn', '/l*
 Test-Check 'silent uninstall' ($code -eq 0) "exit code $code"
 Test-Check 'silent uninstall removes the install folder' (-not (Test-Path (Join-Path $folder 'PCCompanion.exe')))
 Test-Check 'silent uninstall removes the startup entry' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))
-
-Write-Report "finished $(Get-Date -Format o)"
-Set-Content -Path (Join-Path $results 'done.txt') -Value 'done'
-shutdown.exe /s /t 5
