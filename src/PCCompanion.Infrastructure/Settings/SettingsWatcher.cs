@@ -5,7 +5,8 @@ using System.Threading;
 namespace PCCompanion.Infrastructure.Settings;
 
 /// <summary>
-/// Reports changes to <c>settings.json</c>, for processes that read the settings but don't save them.
+/// Reports changes to <c>settings.json</c>, for processes that read the settings but don't save
+/// them, or to another file that another process saves the same way, such as <c>update-check.json</c>.
 /// </summary>
 public sealed class SettingsWatcher : IDisposable
 {
@@ -17,14 +18,25 @@ public sealed class SettingsWatcher : IDisposable
     private readonly Timer _timer;
 
     public SettingsWatcher(AppDataPaths paths)
+        : this((paths ?? throw new ArgumentNullException(nameof(paths))).SettingsFile)
     {
-        ArgumentNullException.ThrowIfNull(paths);
+    }
 
-        _fileName = Path.GetFileName(paths.SettingsFile);
+    /// <param name="file">The full path of the file to watch. Its folder is created if it doesn't exist.</param>
+    public SettingsWatcher(string file)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(file);
+        var folder = Path.GetDirectoryName(file);
+        if (!Path.IsPathFullyQualified(file) || string.IsNullOrEmpty(folder))
+        {
+            throw new ArgumentException("The file must be a full path.", nameof(file));
+        }
+
+        _fileName = Path.GetFileName(file);
         _timer = new Timer(_ => Changed?.Invoke(this, EventArgs.Empty));
 
-        Directory.CreateDirectory(paths.Root);
-        _watcher = new FileSystemWatcher(paths.Root) { NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite };
+        Directory.CreateDirectory(folder);
+        _watcher = new FileSystemWatcher(folder) { NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite };
         _watcher.Created += OnFileEvent;
         _watcher.Changed += OnFileEvent;
         _watcher.Deleted += OnFileEvent;
@@ -36,7 +48,7 @@ public sealed class SettingsWatcher : IDisposable
     }
 
     /// <summary>
-    /// Raised on a thread pool thread after the settings file is saved, replaced or deleted.
+    /// Raised on a thread pool thread after the file is saved, replaced or deleted.
     /// </summary>
     public event EventHandler? Changed;
 
@@ -48,13 +60,13 @@ public sealed class SettingsWatcher : IDisposable
 
     private void OnFileEvent(object sender, FileSystemEventArgs e)
     {
-        if (IsSettingsFile(e.Name) || (e is RenamedEventArgs renamed && IsSettingsFile(renamed.OldName)))
+        if (IsWatchedFile(e.Name) || (e is RenamedEventArgs renamed && IsWatchedFile(renamed.OldName)))
         {
             ReportChange();
         }
     }
 
-    private bool IsSettingsFile(string? name) => string.Equals(name, _fileName, StringComparison.OrdinalIgnoreCase);
+    private bool IsWatchedFile(string? name) => string.Equals(name, _fileName, StringComparison.OrdinalIgnoreCase);
 
     private void ReportChange() => _timer.Change(SettleDelay, Timeout.InfiniteTimeSpan);
 }

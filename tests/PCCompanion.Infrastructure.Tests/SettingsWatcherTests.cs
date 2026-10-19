@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Infrastructure.Updates;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;
@@ -81,5 +82,25 @@ public sealed class SettingsWatcherTests : IDisposable
 
         await Task.Delay(Quiet, TestContext.Current.CancellationToken);
         Assert.Equal(0, Volatile.Read(ref _changes));
+    }
+
+    [Fact]
+    public async Task WatchesTheUpdateCheckResultWhenAskedTo()
+    {
+        var changed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var watcher = new SettingsWatcher(_paths.UpdateCheckFile);
+        watcher.Changed += (_, _) => changed.TrySetResult();
+
+        new UpdateCheckStore(_paths, new RecordingLogger<UpdateCheckStore>()).Save(new UpdateCheckState());
+
+        await changed.Task.WaitAsync(WaitLimit, TestContext.Current.CancellationToken);
+        await Task.Delay(Quiet, TestContext.Current.CancellationToken);
+        Assert.Equal(0, Volatile.Read(ref _changes));
+    }
+
+    [Fact]
+    public void AFileWithoutAFullPathIsRefused()
+    {
+        Assert.Throws<ArgumentException>(() => new SettingsWatcher("update-check.json"));
     }
 }

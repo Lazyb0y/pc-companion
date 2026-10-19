@@ -23,6 +23,16 @@
 
                 <InfoBar
                     IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.UpdateAvailable, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
+                    Severity="Informational">
+                    <InfoBar.ActionButton>
+                        <Button Command="{x:Bind ViewModel.OpenReleasePageCommand}" Content="{app:Localized Key=GeneralUpdateOpenReleasePage}" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
+
+                <InfoBar
+                    IsClosable="False"
                     IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Message="{app:Localized Key=GeneralSaveFailed}"
                     Severity="Error" />
@@ -106,6 +116,13 @@
                         <FontIcon Glyph="&#xEBE8;" />
                     </toolkit:SettingsCard.HeaderIcon>
                     <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralDetailedLoggingHeader}" IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
+                </toolkit:SettingsCard>
+
+                <toolkit:SettingsCard Description="{app:Localized Key=GeneralUpdateCheckDescription}" Header="{app:Localized Key=GeneralUpdateCheckHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE895;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralUpdateCheckHeader}" IsOn="{x:Bind ViewModel.CheckForUpdates, Mode=TwoWay}" />
                 </toolkit:SettingsCard>
 
                 <toolkit:SettingsCard Description="{x:Bind ViewModel.Version}" Header="{app:Localized Key=GeneralAboutHeader}">

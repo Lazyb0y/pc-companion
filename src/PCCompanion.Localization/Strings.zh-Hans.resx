@@ -128,6 +128,22 @@
     <value>已开启，直到 {0}。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateAvailable" xml:space="preserve">
+    <value>PC Companion {0} 现已可用。你的版本为 {1}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateOpenReleasePage" xml:space="preserve">
+    <value>打开发布页面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckHeader" xml:space="preserve">
+    <value>检查更新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckDescription" xml:space="preserve">
+    <value>每天询问一次 GitHub 是否有更新版本的 PC Companion。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>关于</value>
     <comment>Needs native review.</comment>

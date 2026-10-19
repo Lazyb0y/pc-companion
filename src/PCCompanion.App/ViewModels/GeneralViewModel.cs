@@ -13,6 +13,7 @@ using Microsoft.UI.Dispatching;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Settings;
+using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Localization;
 using PCCompanion.Logging;
 using PCCompanion.Platform.Windows;
@@ -32,6 +33,10 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     // The language only changes when the app restarts.
     private static readonly CompositeFormat VersionFormat = CompositeFormat.Parse(Strings.GeneralAboutVersion);
     private static readonly CompositeFormat DetailedLoggingOnUntilFormat = CompositeFormat.Parse(Strings.GeneralDetailedLoggingOnUntil);
+    private static readonly CompositeFormat UpdateAvailableFormat = CompositeFormat.Parse(Strings.GeneralUpdateAvailable);
+
+    private static readonly ReleaseVersion CurrentVersion =
+        ReleaseVersion.FromAssemblyVersion(typeof(App).Assembly.GetName().Version ?? new Version(0, 0, 0));
 
     private readonly AppSettings _settings;
     private readonly SettingsStore _store;
@@ -40,6 +45,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     private readonly TimeProvider _time;
     private readonly ILogger<GeneralViewModel> _logger;
     private readonly RunAsAdministrator _runAsAdministrator;
+    private readonly UpdateCheckStore _updateCheckStore;
+    private readonly SettingsWatcher _updateCheckWatcher;
     private readonly DispatcherQueue? _dispatcher = DispatcherQueue.GetForCurrentThread();
     private LanguageOption _selectedLanguage;
     private ThemeOption _selectedTheme;
@@ -48,6 +55,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     private bool _runAsAdministratorOn;
     private bool _changingRunAsAdministrator;
     private bool _runAsAdministratorFailed;
+    private bool _checkForUpdates;
+    private ReleaseVersion? _newerVersion;
 
     public GeneralViewModel(
         AppSettings settings,
@@ -56,6 +65,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         DetailedLogging detailedLogging,
         TimeProvider time,
         RunAsAdministrator runAsAdministrator,
+        UpdateCheckStore updateCheckStore,
         ILogger<GeneralViewModel> logger)
     {
         _settings = settings;
@@ -66,9 +76,16 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         _logger = logger;
         _runAsAdministrator = runAsAdministrator;
         _runAsAdministratorOn = runAsAdministrator.IsOn;
+        _updateCheckStore = updateCheckStore;
 
         // Detailed logging also turns off by itself, on a timer thread.
         _detailedLogging.Changed += OnDetailedLoggingChanged;
+
+        // The host saves the update check's result, also while the page is open.
+        _checkForUpdates = settings.Updates.CheckAutomatically;
+        _newerVersion = updateCheckStore.Load().NewerThan(CurrentVersion);
+        _updateCheckWatcher = new SettingsWatcher(paths.UpdateCheckFile);
+        _updateCheckWatcher.Changed += OnUpdateCheckChanged;
 
         // Each language is shown in its own language.
         Languages =
@@ -205,6 +222,32 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         ? string.Format(CultureInfo.CurrentCulture, DetailedLoggingOnUntilFormat, until.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
         : PluralStrings.Format("GeneralDetailedLoggingDescription", (int)DetailedLogging.Duration.TotalHours);
 
+    /// <summary>Whether the host asks GitHub once a day whether a newer version is available.</summary>
+    public bool CheckForUpdates
+    {
+        get => _checkForUpdates;
+        set
+        {
+            if (SetProperty(ref _checkForUpdates, value))
+            {
+                _settings.Updates.CheckAutomatically = value;
+                Save();
+                OnPropertyChanged(nameof(UpdateAvailable));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Whether the banner shows: while the check is on and the host found a version newer than
+    /// this one.
+    /// </summary>
+    public bool UpdateAvailable => _checkForUpdates && _newerVersion is not null;
+
+    /// <summary>The banner's text, with the newer version and this one.</summary>
+    public string UpdateMessage => _newerVersion is { } version
+        ? string.Format(CultureInfo.CurrentCulture, UpdateAvailableFormat, version, CurrentVersion)
+        : string.Empty;
+
     /// <summary>True when the last change couldn't be saved.</summary>
     public bool SaveFailed
     {
@@ -234,7 +277,22 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { folder } });
     }
 
-    public void Dispose() => _detailedLogging.Changed -= OnDetailedLoggingChanged;
+    // The settings app never runs as administrator, so neither does the browser it starts.
+    [RelayCommand]
+    private void OpenReleasePage()
+    {
+        if (!ShellActions.OpenWebPage(GitHubReleaseSource.ReleasePageAddress))
+        {
+            LogCantOpenReleasePage(_logger);
+        }
+    }
+
+    public void Dispose()
+    {
+        _detailedLogging.Changed -= OnDetailedLoggingChanged;
+        _updateCheckWatcher.Changed -= OnUpdateCheckChanged;
+        _updateCheckWatcher.Dispose();
+    }
 
     private async Task ChangeRunAsAdministratorAsync(bool on)
     {
@@ -270,6 +328,27 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         }
     }
 
+    // On a thread pool thread, after the host saved a new result.
+    private void OnUpdateCheckChanged(object? sender, EventArgs e)
+    {
+        var newer = _updateCheckStore.Load().NewerThan(CurrentVersion);
+        void Update()
+        {
+            _newerVersion = newer;
+            OnPropertyChanged(nameof(UpdateAvailable));
+            OnPropertyChanged(nameof(UpdateMessage));
+        }
+
+        if (_dispatcher is null)
+        {
+            Update();
+        }
+        else
+        {
+            _dispatcher.TryEnqueue(Update);
+        }
+    }
+
     private void Save()
     {
         try
@@ -286,6 +365,9 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The host hasn't written logs as administrator yet.")]
     private static partial void LogNoHostLogs(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't open the release page.")]
+    private static partial void LogCantOpenReleasePage(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Can't save the settings.")]
     private static partial void LogSaveFailed(ILogger logger, Exception exception);

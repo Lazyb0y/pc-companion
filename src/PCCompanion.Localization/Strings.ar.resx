@@ -148,6 +148,22 @@
     <value>قيد التشغيل حتى {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateAvailable" xml:space="preserve">
+    <value>يتوفر PC Companion {0}. لديك الإصدار {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateOpenReleasePage" xml:space="preserve">
+    <value>فتح صفحة الإصدار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckHeader" xml:space="preserve">
+    <value>التحقق من وجود تحديثات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckDescription" xml:space="preserve">
+    <value>سؤال GitHub مرة يوميًا عما إذا كان يتوفر إصدار أحدث من PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>حول</value>
     <comment>Needs native review.</comment>

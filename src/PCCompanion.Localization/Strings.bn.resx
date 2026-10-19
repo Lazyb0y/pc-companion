@@ -132,6 +132,22 @@
     <value>{0} পর্যন্ত চালু।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateAvailable" xml:space="preserve">
+    <value>PC Companion {0} উপলব্ধ। আপনার কাছে সংস্করণ {1} আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateOpenReleasePage" xml:space="preserve">
+    <value>রিলিজ পৃষ্ঠা খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckHeader" xml:space="preserve">
+    <value>আপডেটের জন্য পরীক্ষা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckDescription" xml:space="preserve">
+    <value>দিনে একবার GitHub-এর কাছে জেনে নিন PC Companion-এর নতুন কোনো সংস্করণ উপলব্ধ কিনা।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>সম্পর্কে</value>
     <comment>Needs native review.</comment>
