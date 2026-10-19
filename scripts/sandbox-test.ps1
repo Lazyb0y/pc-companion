@@ -29,7 +29,8 @@ off.
 What Smart App Control does in the Sandbox. Off, the default, turns it off before anything is
 installed: Windows Sandbox starts it in evaluation mode, where, with networking off, every install
 waits about two minutes for its check. Evaluation leaves it that way. On turns it on, so it blocks
-what it doesn't trust: PC Companion installs, but an unsigned build doesn't start.
+what it doesn't trust: PC Companion installs, but an unsigned build doesn't start. For an unsigned
+installer, this script warns before it starts the Sandbox, and the checks stop after Smoke.
 
 .EXAMPLE
 powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1
@@ -162,6 +163,12 @@ $upgradeFolder = Join-Path $testResults 'sandbox-upgrade'
 if (Test-Path $upgradeFolder) { Remove-Item -Recurse -Force $upgradeFolder }
 New-Item -ItemType Directory -Force -Path $upgradeFolder | Out-Null
 $source = (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
+if ($SmartAppControl -eq 'On') {
+    $signature = (Get-AuthenticodeSignature $source).Status
+    if ($signature -ne 'Valid') {
+        Write-Host "The installer's signature is $signature. With Smart App Control on, PC Companion installs, but Windows blocks it when it starts, so the checks stop after Smoke." -ForegroundColor Yellow
+    }
+}
 $upgradeVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-upgrade.msi')
 $sameVersion = New-UpgradeInstaller $source (Join-Path $upgradeFolder 'PCCompanion-same-version.msi') -SameVersion
 Write-Host "Made another build of version $sameVersion and an upgrade installer, version $upgradeVersion."
