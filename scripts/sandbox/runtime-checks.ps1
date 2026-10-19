@@ -1038,36 +1038,60 @@ Test-Check 'detailed logging turned itself off in the host' ($turnedOff.Count -g
 Test-Check 'host wrote no Debug entries after detailed logging turned off' (($turnedOff.Count -ge 1) -and (@($debugLines | Where-Object { $_ -gt $turnedOff[-1] }).Count -eq 0))
 
 # 12a. Another build of the same version replaces the installed one, as an upgrade does, and keeps
-#      the settings and logs, rather than installing next to it.
+#      the settings and logs, rather than installing next to it. Before this, the upgrade and the
+#      uninstall, the settings app and the host run: setup closes them first, so it needs no restart.
 function Get-InstalledProducts {
     @(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue |
         Where-Object { $_.DisplayName -eq 'PC Companion' })
 }
 function Get-InstalledVersions { @(Get-InstalledProducts | ForEach-Object { $_.DisplayVersion }) }
+function Open-PCCompanion {
+    Start-Process $appExe
+    return (Wait-Until { ((Get-Processes 'PCCompanion').Count -eq 1) -and ((Get-Processes 'PCCompanion.Host').Count -eq 1) } 30)
+}
+# Files setup couldn't remove or replace while they were in use, left for the next restart.
+function Get-PendingRenames {
+    @((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' -Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations | Where-Object { $_ -like '*PCCompanion*' })
+}
+function Test-ClosedBySetup([string] $Name, [int] $PendingBefore) {
+    $running = @(Get-Processes 'PCCompanion') + @(Get-Processes 'PCCompanion.Host')
+    Test-Check "$Name closes the settings app and the host" ($running.Count -eq 0) "running: $(($running | ForEach-Object { $_.ProcessName }) -join ', ')"
+    $pending = @(Get-PendingRenames)
+    Test-Check "$Name leaves no files for a restart" ($pending.Count -le $PendingBefore) "pending: $($pending -join ', ')"
+}
+Test-Check 'the settings app and the host run before installing another build' (Open-PCCompanion)
+$pendingBefore = @(Get-PendingRenames).Count
 $settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
 $logsBefore = @(Get-ChildItem $logs -File).Count
 $productsBefore = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$sameVersionMsi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\same-version.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install another build of the same version' ($code -eq 0) "exit code $code"
+Test-ClosedBySetup 'installing another build' $pendingBefore
 $productsAfter = @(Get-InstalledProducts | ForEach-Object { $_.PSChildName })
 Test-Check 'it replaces the installed build, leaving one entry in Settings > Apps' (($productsAfter.Count -eq 1) -and ($productsAfter[0] -ne $productsBefore[0])) "before: $($productsBefore -join ', '); after: $($productsAfter -join ', ')"
 Test-Check 'it keeps the settings' ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)
 Test-Check 'it keeps the logs' (@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count -ge $logsBefore) "before: $logsBefore; after: $(@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count)"
 
 # 12b. An upgrade to the next version keeps the settings and logs.
+Test-Check 'the settings app and the host run before the upgrade' (Open-PCCompanion)
+$pendingBefore = @(Get-PendingRenames).Count
 $settingsBefore = Get-Content (Join-Path $dataFolder 'settings.json') -Raw
 $logsBefore = @(Get-ChildItem $logs -File).Count
 $versionBefore = @(Get-InstalledVersions)
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$upgradeMsi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\upgrade.log`"") -Wait -PassThru).ExitCode
 Test-Check 'upgrade to the next version' ($code -eq 0) "exit code $code"
+Test-ClosedBySetup 'the upgrade' $pendingBefore
 $versionAfter = @(Get-InstalledVersions)
 Test-Check 'the upgrade replaces the installed version' (($versionAfter.Count -eq 1) -and ($versionAfter[0] -ne $versionBefore[0])) "before: $($versionBefore -join ', '); after: $($versionAfter -join ', ')"
 Test-Check 'the upgrade keeps the settings' ((Get-Content (Join-Path $dataFolder 'settings.json') -Raw -ErrorAction SilentlyContinue) -eq $settingsBefore)
 Test-Check 'the upgrade keeps the logs' (@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count -ge $logsBefore) "before: $logsBefore; after: $(@(Get-ChildItem $logs -File -ErrorAction SilentlyContinue).Count)"
 
 # 13. Uninstall. It removes the data folder.
+Test-Check 'the settings app and the host run before uninstalling' (Open-PCCompanion)
+$pendingBefore = @(Get-PendingRenames).Count
 $code = (Start-Process msiexec.exe -ArgumentList @('/x', "`"$upgradeMsi`"", '/qn', '/l*v', "`"$results\uninstall.log`"") -Wait -PassThru).ExitCode
 Test-Check 'uninstall' ($code -eq 0) "exit code $code"
+Test-ClosedBySetup 'uninstalling' $pendingBefore
 Test-Check 'startup entry removed' (-not (Get-ItemProperty $runKey -Name PCCompanion -ErrorAction SilentlyContinue))
 Test-Check 'install folder removed' (-not (Test-Path $appExe))
 Test-Check 'uninstalling removes the settings and logs' (-not (Test-Path $dataFolder)) "left: $((Get-ChildItem $dataFolder -Force -Recurse -Name -ErrorAction SilentlyContinue) -join ', ')"

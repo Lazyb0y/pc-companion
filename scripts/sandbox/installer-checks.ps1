@@ -256,9 +256,9 @@ foreach ($scope in $scopes) {
             Test-Check "${name}: Finish opens nothing when it's cleared" ((Get-AppProcesses $scope.Folder).Count -eq 0)
         }
 
-        # Removal needs the files closed.
-        Get-AppProcesses $scope.Folder | Stop-Process -Force -ErrorAction SilentlyContinue
-        [void] (Wait-Until { (Get-AppProcesses $scope.Folder).Count -eq 0 } 15)
+        # Removal runs with the settings app and the host open: setup closes them itself.
+        if ((Get-AppProcesses $scope.Folder).Count -eq 0) { Start-Process (Join-Path $scope.Folder 'PCCompanion.exe') }
+        Test-Check "${name}: the settings app and the host run before removal" (Wait-Until { (Get-AppProcesses $scope.Folder).Count -eq 2 } 30)
 
         Test-Check "${name}: installed in $($scope.Folder)" ((Test-Path (Join-Path $scope.Folder 'PCCompanion.exe')) -and (Test-Path $hostExe))
         $run = (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue).PCCompanion
@@ -284,12 +284,20 @@ foreach ($scope in $scopes) {
         Assert-Step "${name}: Ready to remove page" (Wait-Page 'Ready to remove PC Companion')
         Save-Page "$key-09-ready-to-remove"
         Assert-Step "${name}: Remove" (Invoke-Click 'Remove')
+        # Windows Installer may first list them as in use; closing them is its default.
+        [void] (Wait-Until { (Test-PageHas 'Completed the PC Companion Setup Wizard') -or (Test-PageHas '*currently in use*') } 300)
+        if (Test-PageHas '*currently in use*') {
+            Save-Page "$key-09b-files-in-use"
+            Write-Report "[INFO] ${name}: Windows Installer listed files in use - $(Get-PageSummary)"
+            Assert-Step "${name}: OK on the files in use page" (Invoke-Click 'OK')
+        }
         Assert-Step "${name}: removal finishes" (Wait-Page 'Completed the PC Companion Setup Wizard' 300)
         Save-Page "$key-10-removed"
         Test-Check "${name}: the last page after removal doesn't offer to open PC Companion" (-not (Get-Control 'Open PC Companion'))
         Assert-Step "${name}: Finish after removal" (Invoke-Click 'Finish')
         $code = Get-ExitCode $process
         Test-Check "${name}: setup exits with 0 after removal" ($code -eq 0) "exit code $code"
+        Test-Check "${name}: removal closes the settings app and the host" ((Get-AppProcesses $scope.Folder).Count -eq 0) "running: $((Get-AppProcesses $scope.Folder | ForEach-Object { $_.ProcessName }) -join ', ')"
 
         Test-Check "${name}: install folder removed" (-not (Test-Path (Join-Path $scope.Folder 'PCCompanion.exe')))
         Test-Check "${name}: startup entry removed" (-not (Get-ItemProperty $scope.RunKey -Name PCCompanion -ErrorAction SilentlyContinue))

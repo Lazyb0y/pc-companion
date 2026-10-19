@@ -12,8 +12,30 @@
     <!--
       Another build of the same version replaces the installed one too, as every build is 0.0.1 for
       now: each has its own product code, and Windows Installer compares only three parts of a version.
+      The installed one is removed after PC Companion is closed, below.
     -->
-    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of PC Companion is already installed." />
+    <MajorUpgrade
+        AllowSameVersionUpgrades="yes"
+        Schedule="afterInstallExecute"
+        DowngradeErrorMessage="A newer version of PC Companion is already installed." />
+
+    <!--
+      Setup closes the settings app and the host before it removes or replaces their files, so it
+      needs no restart: it sends their windows WM_CLOSE as the user, then, after five seconds, ends
+      whatever still runs, as administrator. That covers older builds and a host running as
+      administrator, which a message from the user may not reach. WiX schedules this before
+      InstallFiles, after RemoveFiles; it runs right after InstallInitialize instead, and
+      InstallExecute ends the processes before the installed version is removed: inside the
+      transaction, RemoveExistingProducts must follow InstallInitialize or InstallExecute directly
+      (error 2613). Ending a process needs the transaction, so this can't run before InstallValidate,
+      where Windows Installer itself may offer to close them.
+    -->
+    <util:CloseApplication Id="CloseSettingsApp" Target="PCCompanion.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
+    <util:CloseApplication Id="CloseHost" Target="PCCompanion.Host.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
+    <InstallExecuteSequence>
+      <Custom Action="override Wix4CloseApplications_$(sys.BUILDARCHSHORT)" After="InstallInitialize" Condition="VersionNT &gt; 400" />
+      <InstallExecute After="Wix4CloseApplications_$(sys.BUILDARCHSHORT)" />
+    </InstallExecuteSequence>
     <MediaTemplate EmbedCab="yes" />
 
     <!-- The icon shown in Settings > Apps and on the Start menu shortcut. -->
