@@ -9,6 +9,7 @@ Documentation for PC Companion. The backlog, roadmap and task status live on Git
 - [Logging](diagnostics/logging.md)
 - [Windows support](compatibility/windows-support.md)
 - [Build](development/build.md)
+- [Testing](development/testing.md)
 - [Packaging](development/packaging.md)
 - [Approval and change-control policy](project/change-control.md)
 

@@ -6,23 +6,7 @@ dotnet build PCCompanion.slnx -c Debug -p:Platform=x64
 
 Platforms: `x64` and `ARM64`.
 
-## Tests
-
-```
-dotnet test --solution PCCompanion.slnx -c Debug -p:Platform=x64
-```
-
-- xUnit v3 on Microsoft.Testing.Platform, which `global.json` selects for `dotnet test`. Test projects go in `tests/` and are included in the solution.
-- `PCCompanion.Architecture.Tests` checks that every project is in the solution, that project references have no cycles, and that they follow the [dependency rules](../architecture/overview.md#dependencies).
-
-## Checks before a pull request
-
-```
-powershell -ExecutionPolicy Bypass -File scripts\verify.ps1
-```
-
-- Builds Debug and Release for x64 and ARM64 and fails on any warning, runs the tests of each build, and checks the lock files with a locked restore, as CI does. It lists lock files the build changed, which belong in the commit.
-- `-Quick` builds only Debug x64; `-Installer` also builds the installers.
+Tests, and the checks to run before a pull request, are in [Testing](testing.md).
 
 ## Configuration
 
