@@ -20,7 +20,8 @@ The checks look for English, Arabic and Bangla text from src\PCCompanion.Localiz
 English text of the WixUI_Advanced dialogs; update them when those strings change.
 
 .PARAMETER Groups
-The groups to run, in order, separated by commas, such as Smoke,HotCorners.
+The groups to run, separated by commas, such as HotCorners,AppWindows, or All. Smoke always runs
+first, and the groups run in the order of $startStates below.
 
 .PARAMETER SmartAppControl
 What Smart App Control does in the Sandbox, as smart-app-control.ps1 sets it before the first install.
@@ -37,8 +38,9 @@ $ErrorActionPreference = 'Continue'
 New-Item -ItemType Directory -Force -Path $results | Out-Null
 Set-Content -Path $report -Value "PC Companion Sandbox checks - $(Get-Date -Format o)" -Encoding utf8
 
-# What each group starts from: installed just for the current user from C:\Test\msi, as Smoke leaves
-# it, or not installed.
+# The groups, in the order they run, and what each starts from: installed just for the current user
+# from C:\Test\msi, as Smoke leaves it, or not installed. The groups that remove PC Companion or
+# install it for all users come last.
 $startStates = [ordered] @{
     Smoke = 'NotInstalled'
     App = 'Installed'
@@ -85,7 +87,10 @@ function Test-GroupLogs([string] $Group, [string] $Folder) {
 $elevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 Write-Report "msi: $msi; user: $env:USERNAME; elevated: $elevated; screen: $($screen.Width)x$($screen.Height); Windows $([Environment]::OSVersion.Version)"
 Write-Report (& (Join-Path $PSScriptRoot 'smart-app-control.ps1') $SmartAppControl)
-$selected = @($Groups -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+$requested = @($Groups -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+$selected = if ($requested -contains 'All') { @($startStates.Keys) } else {
+    @($startStates.Keys | Where-Object { $_ -eq 'Smoke' -or $requested -contains $_ }) + @($requested | Where-Object { -not $startStates.Contains($_) })
+}
 Write-Report "groups: $($selected -join ', ')"
 
 foreach ($group in $selected) {
