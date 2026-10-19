@@ -55,7 +55,7 @@ public interface IFeature : IDisposable
 
 - Strings go in `Strings.resx`, prefixed with the feature name: `HotCornersActionTaskView`.
 - Log with `ILogger<T>` and `[LoggerMessage]`. Use Debug for what happened and why ("top-left corner: Task View"); never log raw input such as every pointer position.
-- Keep a feature's decisions in classes that tests can drive without Windows input: fake displays, a fake clock, fake pointer events. Add runtime checks to `scripts/sandbox/runtime-checks.ps1`.
+- Keep a feature's decisions in classes that tests can drive without Windows input: fake displays, a fake clock, fake pointer events. Add runtime checks to the feature's group in `scripts/sandbox/groups`.
 
 ## Adding a feature
 
