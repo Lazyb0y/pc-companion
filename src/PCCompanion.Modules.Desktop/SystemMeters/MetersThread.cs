@@ -258,7 +258,7 @@ public sealed partial class MetersThread
                 _icons = owner._system.CreateIcons(Window);
                 _icons.Selected += (_, _) => owner.Guard(owner.OpenTaskManager);
                 _icons.MenuRequested += (_, e) => owner.Guard(() => owner.ShowMenu(Window, e.X, e.Y));
-                _controller = new MetersController(owner._system.Readings, owner._system.Appearance, _icons, owner._time, owner._logger);
+                _controller = new MetersController(owner._system.Readings, owner._system.Appearance, _icons, CreateStrip, owner._time, owner._logger);
 
                 _sessions = new SessionMonitor(Window);
                 _sessions.Locked += (_, _) => owner.Guard(() => SetPaused(locked: true, _displaysOff));
@@ -302,6 +302,23 @@ public sealed partial class MetersThread
             _displays?.Dispose();
             _sessions?.Dispose();
             Window.Dispose();
+        }
+
+        // The strip and its watch on the taskbar exist only while the meters show on the taskbar, on a tested build.
+        private MeterStrip? CreateStrip()
+        {
+            if (!MeterStrip.IsSupportedBuild(_owner._system.WindowsBuild))
+            {
+                return null;
+            }
+
+            var host = _owner._system.CreateStripHost(Window);
+            host.Clicked += (_, _) => _owner.Guard(_owner.OpenTaskManager);
+            host.MenuRequested += (_, e) => _owner.Guard(() => _owner.ShowMenu(Window, e.X, e.Y));
+            host.PointerOverChanged += (_, _) => _owner.Guard(() => _controller?.RedrawStrip());
+            host.LayoutMayHaveChanged += (_, _) => _owner.Guard(() => _controller?.LayOutStrip());
+            host.ZOrderMayHaveChanged += (_, _) => _owner.Guard(() => _controller?.KeepStripInSight());
+            return new MeterStrip(host);
         }
 
         private void SetPaused(bool locked, bool displaysOff)

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Desktop.SystemMeters;
@@ -27,8 +29,14 @@ public interface IMetersSystem
 
     IMeterAppearance Appearance { get; }
 
+    /// <summary>The Windows build number, such as 26100, which decides whether the strip can run.</summary>
+    int WindowsBuild { get; }
+
     /// <summary>Creates the meters' icons on the meters thread's window.</summary>
     IMeterIcons CreateIcons(MessageWindow window);
+
+    /// <summary>Creates the strip's window and starts watching the taskbar, on the meters thread's window.</summary>
+    IStripHost CreateStripHost(MessageWindow window);
 
     /// <summary>Returns false when Windows refused.</summary>
     bool OpenTaskManager();
@@ -48,6 +56,8 @@ public interface IMeterAppearance
     /// mode, and the theme's text color in high contrast.
     /// </summary>
     uint Color();
+
+    bool IsHighContrast();
 }
 
 /// <summary>Where the meters show: their notification icons, or fakes in tests. Use it on the meters thread.</summary>
@@ -66,4 +76,56 @@ public interface IMeterIcons : IDisposable
     bool Show(Meter meter, uint[] pixels, int size, string name, string toolTip);
 
     void Remove(Meter meter);
+}
+
+/// <summary>
+/// The taskbar and the strip's window, from Windows, or fakes in tests. Use it on the meters thread.
+/// </summary>
+public interface IStripHost : IDisposable
+{
+    /// <summary>
+    /// Raised when the taskbar's buttons, its settings or the displays may have changed: half a
+    /// second after windows that get taskbar buttons appear or go away, when Windows' settings or
+    /// the displays change, when the taskbar restarts, and every 30 seconds.
+    /// </summary>
+    event EventHandler? LayoutMayHaveChanged;
+
+    /// <summary>
+    /// Raised when the taskbar may have come in front of the strip: when Explorer's windows change
+    /// order or take the mouse, or another window comes to the front.
+    /// </summary>
+    event EventHandler? ZOrderMayHaveChanged;
+
+    /// <summary>Raised when the pointer comes onto the strip or leaves it.</summary>
+    event EventHandler? PointerOverChanged;
+
+    /// <summary>Raised when the user clicks the strip.</summary>
+    event EventHandler? Clicked;
+
+    /// <summary>Raised when the user right-clicks the strip, with the screen point to show a menu at.</summary>
+    event EventHandler<TrayMenuEventArgs>? MenuRequested;
+
+    bool IsShown { get; }
+
+    bool IsPointerOver { get; }
+
+    /// <summary>Reads the taskbar, or returns <see langword="null"/> when it isn't running.</summary>
+    TaskbarState? ReadTaskbar();
+
+    /// <summary>Lists what's on the taskbar, or returns <see langword="null"/> when it didn't answer.</summary>
+    IReadOnlyList<TaskbarElement>? ReadElements(nint taskbar);
+
+    /// <summary>Whether the taskbar is in front, as it is unless a full-screen app is.</summary>
+    bool IsTaskbarTopmost(nint taskbar);
+
+    /// <summary>
+    /// Shows the strip's pixels at its bounds, with a description of every meter's values for its
+    /// tooltip and for screen readers.
+    /// </summary>
+    void Show(uint[] pixels, Rectangle bounds, string description);
+
+    void Hide();
+
+    /// <summary>Brings the strip back in front of the taskbar when the taskbar came in front of it.</summary>
+    bool KeepInFrontOf(nint taskbar);
 }

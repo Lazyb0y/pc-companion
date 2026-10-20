@@ -19,7 +19,11 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
     public IMeterAppearance Appearance { get; } = new WindowsMeterAppearance();
 
+    public int WindowsBuild => Environment.OSVersion.Version.Build;
+
     public IMeterIcons CreateIcons(MessageWindow window) => new NotificationIcons(window);
+
+    public IStripHost CreateStripHost(MessageWindow window) => new WindowsStripHost(window);
 
     public bool OpenTaskManager() => ShellActions.OpenTaskManager();
 
@@ -57,6 +61,8 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
         public uint Color() =>
             WindowsTheme.IsHighContrast() ? WindowsTheme.TextColor() : WindowsTheme.IsDark() ? White : Black;
+
+        public bool IsHighContrast() => WindowsTheme.IsHighContrast();
     }
 
     // An icon per meter, with fixed IDs after the PC Companion icon's, so Windows keeps each in its place.
