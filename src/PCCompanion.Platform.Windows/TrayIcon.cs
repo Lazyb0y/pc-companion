@@ -31,6 +31,7 @@ public sealed class TrayIcon : IDisposable
     private readonly MessageWindow _window;
     private readonly uint _id;
     private readonly uint _taskbarCreatedMessage;
+    private readonly string _name;
     private readonly DestroyIconSafeHandle? _applicationIcon;
     private IconImage? _image;
     private string _toolTip;
@@ -56,7 +57,8 @@ public sealed class TrayIcon : IDisposable
     /// <param name="toolTip">
     /// Shown when the pointer rests on the icon. Windows 11 names the icon for screen readers with
     /// the tooltip it was added with, followed by the current one, so give a name that stays the
-    /// same here, and changing values with <see cref="Update"/>.
+    /// same here, and changing values with <see cref="Update"/>. The icon is added with this name
+    /// again when the taskbar restarts.
     /// </param>
     public TrayIcon(MessageWindow window, uint id, IconImage icon, string toolTip)
         : this(window, id, toolTip, null, icon ?? throw new ArgumentNullException(nameof(icon)))
@@ -72,6 +74,7 @@ public sealed class TrayIcon : IDisposable
         _window = window;
         _id = id;
         _toolTip = toolTip;
+        _name = toolTip;
         _applicationIcon = applicationIcon;
         _image = image;
         _taskbarCreatedMessage = MessageWindow.RegisterMessage("TaskbarCreated");
@@ -117,12 +120,7 @@ public sealed class TrayIcon : IDisposable
 
         var previous = _image;
         (_image, _toolTip) = (icon, toolTip);
-
-        var data = CreateData();
-        data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_ICON | NOTIFY_ICON_DATA_FLAGS.NIF_TIP | NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
-        data.hIcon = CurrentIcon;
-        data.szTip = Fit(_toolTip, MaximumToolTipLength);
-        IsShown = PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_MODIFY, in data) || Add();
+        IsShown = Modify() || Add();
 
         if (!ReferenceEquals(previous, icon))
         {
@@ -201,13 +199,14 @@ public sealed class TrayIcon : IDisposable
         uID = _id,
     };
 
+    // Adds the icon with its name, which screen readers keep, then shows the current tooltip.
     private bool Add()
     {
         var data = CreateData();
         data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_MESSAGE | NOTIFY_ICON_DATA_FLAGS.NIF_ICON | NOTIFY_ICON_DATA_FLAGS.NIF_TIP | NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
         data.uCallbackMessage = CallbackMessage;
         data.hIcon = CurrentIcon;
-        data.szTip = Fit(_toolTip, MaximumToolTipLength);
+        data.szTip = Fit(_name, MaximumToolTipLength);
 
         if (!PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_ADD, in data))
         {
@@ -215,7 +214,16 @@ public sealed class TrayIcon : IDisposable
         }
 
         data.Anonymous.uVersion = PInvoke.NOTIFYICON_VERSION_4;
-        return PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_SETVERSION, in data);
+        return PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_SETVERSION, in data) && (_toolTip == _name || Modify());
+    }
+
+    private bool Modify()
+    {
+        var data = CreateData();
+        data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_ICON | NOTIFY_ICON_DATA_FLAGS.NIF_TIP | NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
+        data.hIcon = CurrentIcon;
+        data.szTip = Fit(_toolTip, MaximumToolTipLength);
+        return PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_MODIFY, in data);
     }
 
     private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
