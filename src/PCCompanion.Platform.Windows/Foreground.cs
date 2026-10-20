@@ -28,6 +28,13 @@ public static class Foreground
     public static bool AllowProcess(uint processId) => PInvoke.AllowSetForegroundWindow(processId);
 
     /// <summary>
+    /// Lets the next process that tries bring its window to the foreground, such as a browser or a
+    /// program this process is about to start through another process. Returns false when this
+    /// process may not pass that on.
+    /// </summary>
+    public static bool AllowAnyProcess() => PInvoke.AllowSetForegroundWindow(PInvoke.ASFW_ANY);
+
+    /// <summary>
     /// Brings <paramref name="window"/>, one of this process's windows, in front of other apps'
     /// windows. Returns false when this process may not, for example while another app is in use
     /// and nothing let this process come to the front.

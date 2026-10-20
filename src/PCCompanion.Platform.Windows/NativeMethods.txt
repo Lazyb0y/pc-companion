@@ -216,3 +216,5 @@ PeekMessage
 IsWindow
 WM_KEYFIRST
 WM_KEYLAST
+EndMenu
+ASFW_ANY

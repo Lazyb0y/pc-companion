@@ -32,6 +32,12 @@ public sealed class PopupMenuTests
     }
 
     [Fact]
+    public void ClosingWithoutAnOpenMenuDoesNothing()
+    {
+        PopupMenu.CloseOpenMenu();
+    }
+
+    [Fact]
     public void DropWaitingKeysDropsOnlyKeyboardMessages()
     {
         using var window = new MessageWindow("PCCompanion.Tests." + Guid.NewGuid().ToString("N"));
