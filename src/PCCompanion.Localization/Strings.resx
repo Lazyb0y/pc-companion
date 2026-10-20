@@ -432,4 +432,72 @@
     <value>When you press the shortcut, reads which windows are open, their state and which app they belong to, and while App Windows is on, the keyboard layout of the window in front. Never reads window titles or contents. Changes only which of the app's windows is in front. Stores and sends nothing.</value>
     <comment>App Windows page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>Desktop</value>
+    <comment>Navigation pane and Home: the group of features for the desktop and the taskbar.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>System Meters</value>
+    <comment>Feature name: CPU, memory and network use shown on the taskbar.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>See how busy your PC is, with live CPU, memory and network use on the taskbar.</value>
+    <comment>System Meters: the feature description, on its page and its Home card.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>CPU</value>
+    <comment>System Meters: the CPU meter's name, on its page, on the taskbar and as its notification icon's first tooltip. Use Task Manager's term.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>Memory</value>
+    <comment>System Meters: the memory meter's name, on its page, on the taskbar and as its notification icon's first tooltip. Use Task Manager's term.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>Network</value>
+    <comment>System Meters: the network meter's name, on its page and as its notification icon's first tooltip.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>CPU: {0}</value>
+    <comment>System Meters tooltip line; {0} is a percentage, such as 42%.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>Memory: {0}</value>
+    <comment>System Meters tooltip line; {0} is a percentage, such as 61%.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>{0} of {1} in use</value>
+    <comment>System Meters tooltip line, below SystemMetersMemoryToolTip; {0} and {1} are sizes from SystemMetersGigabytes, such as 9.7 GB of 15.9 GB.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} GB</value>
+    <comment>System Meters: a size; {0} is a number with one decimal. Use the unit Windows uses in the language.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>Network</value>
+    <comment>System Meters: the network tooltip's first line, above the receive and send rates.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>Receive: {0}</value>
+    <comment>System Meters tooltip line; {0} is a rate, such as 1.2 Mbps. Use Task Manager's term.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>Send: {0}</value>
+    <comment>System Meters tooltip line; {0} is a rate, such as 80 Kbps. Use Task Manager's term.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} Kbps</value>
+    <comment>System Meters: a rate in kilobits per second; {0} is a number. Use the unit Task Manager uses in the language.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} Mbps</value>
+    <comment>System Meters: a rate in megabits per second; {0} is a number.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} Gbps</value>
+    <comment>System Meters: a rate in gigabits per second; {0} is a number.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>Task Manager</value>
+    <comment>System Meters menu command that opens Task Manager. Use Windows' name for Task Manager.</comment>
+  </data>
 </root>

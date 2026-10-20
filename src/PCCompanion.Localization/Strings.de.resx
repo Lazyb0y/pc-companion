@@ -432,4 +432,72 @@
     <value>Liest beim Drücken der Tastenkombination, welche Fenster geöffnet sind, ihren Zustand und zu welcher App sie gehören, und solange App-Fenster eingeschaltet ist, das Tastaturlayout des Fensters im Vordergrund. Liest nie Fenstertitel oder -inhalte. Ändert nur, welches Fenster der App im Vordergrund ist. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>Desktop</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>Systemanzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>Sehen Sie, wie ausgelastet Ihr PC ist, mit live angezeigter CPU-, Arbeitsspeicher- und Netzwerknutzung auf der Taskleiste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>CPU</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>Arbeitsspeicher</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>Netzwerk</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>CPU: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>Arbeitsspeicher: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>{0} von {1} belegt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} GB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>Netzwerk</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>Empfangen: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>Senden: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} KBit/s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} MBit/s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} GBit/s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>Task-Manager</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

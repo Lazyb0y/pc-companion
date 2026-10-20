@@ -424,4 +424,72 @@
     <value>按下快捷键时，读取打开了哪些窗口、窗口的状态以及它们所属的应用；应用窗口打开时，还读取前台窗口的键盘布局。从不读取窗口标题或内容。只更改应用的哪个窗口位于前台。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>系统指示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>在任务栏上实时查看 CPU、内存和网络使用情况，了解电脑的繁忙程度。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>CPU</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>内存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>网络</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>CPU：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>内存：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>已用 {0}，共 {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} GB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>网络</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>接收：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>发送：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} Kbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} Mbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} Gbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>任务管理器</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
