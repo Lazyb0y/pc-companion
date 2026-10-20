@@ -1,15 +1,16 @@
 ﻿<#
 .SYNOPSIS
 Takes the website's screenshots of the settings app in Windows Sandbox, without changing this PC,
-and replaces the ones in website\images.
+and replaces the ones of the pages given in website\images.
 
 .DESCRIPTION
 Builds the installer for this PC's architecture, or takes the one given with -Msi, and starts
 Windows Sandbox with networking off. Inside it, scripts\sandbox\website-screenshots.ps1 installs
 PC Companion, turns its features on, and saves each page of the settings app in the light and dark
 themes, cropped to the window. The Sandbox window closes when it finishes. If every step passed, the
-screenshots replace those in website\images; the report and the screenshots are also in
-TestResults\website-screenshots. See docs\development\website.md.
+screenshots of the pages in -Pages, or of every page without it, replace those in website\images;
+the report and every page's screenshots are also in TestResults\website-screenshots. See
+docs\development\website.md.
 
 Needs the Windows Sandbox feature. Only one Sandbox can run at a time. Keep the Sandbox window open
 and visible until it closes: while it's minimized, it draws nothing, so the screenshots come out
@@ -22,16 +23,23 @@ Uses the installer that is already built.
 Takes the screenshots with this installer instead of building one, such as the one of the release
 the website describes. It must be for this PC's architecture.
 
+.PARAMETER Pages
+The pages whose screenshots replace those in website\images, by their names in the settings app's
+navigation pane, such as "System Meters" or "Hot Corners,General". Commit only new or changed
+screenshots, since every version of an image stays in the repository's history. Without -Pages,
+every page's screenshots are replaced, for a full refresh.
+
 .PARAMETER TimeoutMinutes
 How long to wait for the screenshots: by default 15 minutes.
 
 .EXAMPLE
-powershell -ExecutionPolicy Bypass -File scripts\website-screenshots.ps1 -Msi $HOME\Downloads\PCCompanion-0.1.0-x64.msi
+powershell -ExecutionPolicy Bypass -File scripts\website-screenshots.ps1 -Msi $HOME\Downloads\PCCompanion-0.2.0-x64.msi -Pages "System Meters"
 #>
 [CmdletBinding()]
 param(
     [switch] $NoBuild,
     [string] $Msi,
+    [string[]] $Pages,
     [int] $TimeoutMinutes = 15
 )
 
@@ -151,7 +159,18 @@ if ((Select-String -Path $report -Pattern '^\[FAIL\]' -Quiet) -or -not (Select-S
     exit 1
 }
 
+# A page's screenshots are named after it: System Meters is system-meters-light.png and -dark.png.
 $screenshots = @(Get-ChildItem $results -Filter '*.png')
+if ($Pages) {
+    $names = @($Pages -split ',' | ForEach-Object { $_.Trim().ToLowerInvariant() -replace ' ', '-' } | Where-Object { $_ })
+    $taken = @($screenshots | ForEach-Object { $_.BaseName -replace '-(light|dark)$', '' } | Sort-Object -Unique)
+    $unknown = @($names | Where-Object { $taken -notcontains $_ })
+    if ($unknown) {
+        Write-Host "No screenshots of $($unknown -join ', '), so website\images is unchanged. The pages are: $($taken -join ', ')." -ForegroundColor Red
+        exit 1
+    }
+    $screenshots = @($screenshots | Where-Object { $names -contains ($_.BaseName -replace '-(light|dark)$', '') })
+}
 New-Item -ItemType Directory -Force -Path $images | Out-Null
 Copy-Item -Path $screenshots.FullName -Destination $images -Force
 Write-Host "Saved $($screenshots.Count) screenshots to $images. Look through them before you commit them." -ForegroundColor Green
