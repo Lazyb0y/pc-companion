@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light dark">
+  <title>PC Companion: useful features from macOS and Linux, on Windows</title>
+  <meta name="description" content="PC Companion is a free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows, such as Hot Corners and switching between an app's windows.">
+  <link rel="canonical" href="https://lazyb0y.github.io/pc-companion/">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PC Companion">
+  <meta property="og:description" content="A free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows.">
+  <meta property="og:url" content="https://lazyb0y.github.io/pc-companion/">
+  <meta property="og:image" content="https://lazyb0y.github.io/pc-companion/icon.png">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="./">
+        <img src="icon.png" alt="" width="32" height="32">
+        <span>PC Companion</span>
+      </a>
+      <nav aria-label="Main">
+        <ul class="nav-list">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#privacy">Privacy</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="https://github.com/Lazyb0y/pc-companion">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="eyebrow">Free and open source · Preview</p>
+          <h1 id="hero-title">Useful features from macOS and Linux, on Windows</h1>
+          <p class="lead">PC Companion is a free app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows. It's one app: turn on the features you want and leave the rest off.</p>
+          <div class="actions">
+            <a class="button button-primary" href="https://github.com/Lazyb0y/pc-companion/releases/latest">Download for Windows</a>
+            <a class="button" href="https://github.com/Lazyb0y/pc-companion">See the source code</a>
+          </div>
+          <p class="fine-print">For Windows 11, and Windows 10 version 2004 or later, on x64 and ARM64 PCs.</p>
+        </div>
+        <picture class="shot hero-shot">
+          <source srcset="images/home-dark.png" media="(prefers-color-scheme: dark)">
+          <img src="images/home-light.png" width="1086" height="736" alt="The Home page of PC Companion's settings app, with a card for each feature.">
+        </picture>
+      </div>
+    </section>
+
+    <section id="features" class="section" aria-labelledby="features-title">
+      <div class="wrap">
+        <h2 id="features-title">Features</h2>
+        <p class="section-lead">Each feature is off until you turn it on in the settings app, and its changes apply right away.</p>
+
+        <article class="feature" aria-labelledby="hot-corners-title">
+          <div class="feature-text">
+            <p class="eyebrow">Input &amp; Triggers</p>
+            <h3 id="hot-corners-title">Hot Corners</h3>
+            <p>Move the pointer into a corner of the screen to run an action. Inspired by Hot Corners in macOS, the Activities corner in GNOME and screen edges in KDE Plasma.</p>
+            <ul class="points">
+              <li>Show Task View or the desktop, open Start, Search or Notifications, lock the PC, turn off the displays, start the screen saver, or run a program.</li>
+              <li><strong>Keep displays on</strong> holds off the screen saver and the display timeout while the pointer rests in its corner.</li>
+              <li>A short delay, and optionally a key to hold, so corners don't trigger by accident.</li>
+              <li>Corners stay quiet while you drag a window into them, and while a game, video or presentation is full screen.</li>
+            </ul>
+          </div>
+          <picture class="shot">
+            <source srcset="images/hot-corners-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="images/hot-corners-light.png" width="1086" height="736" loading="lazy" alt="The Hot Corners page, with an action chosen for each corner of the screen and a key to hold for the bottom-right one.">
+          </picture>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="app-windows-title">
+          <div class="feature-text">
+            <p class="eyebrow">Window Management</p>
+            <h3 id="app-windows-title">App Windows</h3>
+            <p>Press <kbd>Alt</kbd> and the key above <kbd>Tab</kbd> to switch between the windows of the app in front, such as your File Explorer windows. Inspired by <kbd>Command</kbd> + <kbd>`</kbd> in macOS and the same shortcut in GNOME and KDE Plasma.</p>
+            <ul class="points">
+              <li>Each press brings the app's next window to the front. Add <kbd>Shift</kbd> to go the other way.</li>
+              <li>It goes by the key's position, so it's the key above Tab on any keyboard: <kbd>`</kbd> on US English, <kbd>^</kbd> on German and <kbd>²</kbd> on French keyboards.</li>
+              <li>Use the Windows key instead of Alt if you prefer, and choose whether minimized windows count.</li>
+              <li>No keyboard hook: Windows tells PC Companion only when you press the shortcut.</li>
+            </ul>
+          </div>
+          <picture class="shot">
+            <source srcset="images/app-windows-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="images/app-windows-light.png" width="1086" height="736" loading="lazy" alt="The App Windows page, with the shortcut and the option to include minimized windows.">
+          </picture>
+        </article>
+
+        <article class="feature" aria-labelledby="general-title">
+          <div class="feature-text">
+            <p class="eyebrow">General</p>
+            <h3 id="general-title">Made to fit Windows</h3>
+            <p>The settings app is laid out like Windows Settings, follows your light or dark mode, and works with the keyboard and screen readers.</p>
+            <ul class="points">
+              <li><strong>Always run as administrator</strong> lets features work in front of apps that run as administrator, when PC Companion is installed for all users.</li>
+              <li><strong>Update check:</strong> once a day, PC Companion tells you when a newer version is out. You can turn it off.</li>
+              <li>Choose the language and theme, start with Windows, and open the logs when you report a problem.</li>
+            </ul>
+          </div>
+          <picture class="shot">
+            <source srcset="images/general-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="images/general-light.png" width="1086" height="736" loading="lazy" alt="The General page, with the language, the app theme, Start with Windows, Always run as administrator, the logs and the update check.">
+          </picture>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="languages-title">
+      <div class="wrap">
+        <h2 id="languages-title">In your language</h2>
+        <p class="section-lead">PC Companion uses your Windows display language, or the one you choose.</p>
+        <ul class="languages">
+          <li><span>English</span></li>
+          <li><span lang="ar" dir="rtl">العربية</span> <small>Arabic</small></li>
+          <li><span lang="bn">বাংলা</span> <small>Bangla</small></li>
+          <li><span lang="zh-Hans">简体中文</span> <small>Chinese (Simplified)</small></li>
+          <li><span lang="fr">Français</span> <small>French</small></li>
+          <li><span lang="de">Deutsch</span> <small>German</small></li>
+          <li><span lang="es">Español</span> <small>Spanish</small></li>
+        </ul>
+        <p>The translations still need review by native speakers. Corrections and new languages are welcome: see <a href="https://github.com/Lazyb0y/pc-companion/blob/main/CONTRIBUTING.md#translations">Translations</a> in the contributing guide.</p>
+      </div>
+    </section>
+
+    <section id="privacy" class="section" aria-labelledby="privacy-title">
+      <div class="wrap">
+        <h2 id="privacy-title">Private by design</h2>
+        <ul class="cards">
+          <li class="card">
+            <h3>No data collected</h3>
+            <p>No telemetry, analytics, ads or accounts. PC Companion uploads nothing.</p>
+          </li>
+          <li class="card">
+            <h3>Stays on your PC</h3>
+            <p>Your settings and logs are kept in <code>%LOCALAPPDATA%\<wbr>PCCompanion</code>. Logs leave your PC only if you share them.</p>
+          </li>
+          <li class="card">
+            <h3>One connection</h3>
+            <p>Once a day, the update check asks GitHub for the latest release. The request is the same for everyone, and you can turn it off.</p>
+          </li>
+          <li class="card">
+            <h3>Open source</h3>
+            <p>All the code is on GitHub under the MIT License. Each installer has a build attestation that shows GitHub built it from this code.</p>
+          </li>
+        </ul>
+        <p><a href="https://github.com/Lazyb0y/pc-companion/blob/main/PRIVACY.md">Read the privacy policy</a></p>
+      </div>
+    </section>
+
+    <section id="download" class="section section-alt" aria-labelledby="download-title">
+      <div class="wrap">
+        <h2 id="download-title">Download and install</h2>
+        <ol class="steps">
+          <li>
+            <h3>Download</h3>
+            <p>Open the <a href="https://github.com/Lazyb0y/pc-companion/releases/latest">latest release</a> and download the x64 installer, <code>PCCompanion-&lt;version&gt;-x64.msi</code>. PCs with an Arm processor, such as a Snapdragon, need the ARM64 one: <strong>Settings &gt; System &gt; About</strong> shows which under <strong>System type</strong>.</p>
+          </li>
+          <li>
+            <h3>Install</h3>
+            <p>Run it and select <strong>Install</strong>. PC Companion installs just for you, without admin rights. <strong>Advanced</strong> installs it for all users, which <strong>Always run as administrator</strong> needs.</p>
+          </li>
+          <li>
+            <h3>If Windows warns you</h3>
+            <p>The installers aren't signed yet, so Windows SmartScreen may say it doesn't recognize the app: select <strong>More info</strong>, then <strong>Run anyway</strong>. The release notes show how to check that your download is the one published.</p>
+          </li>
+          <li>
+            <h3>Turn on features</h3>
+            <p>Open PC Companion from Start and turn on the features you want.</p>
+          </li>
+        </ol>
+        <div class="callout">
+          <p><strong>Smart App Control:</strong> because the installers aren't signed yet, Windows 11 blocks PC Companion from starting while Smart App Control is on.</p>
+        </div>
+        <p>A newer version installs over the old one and keeps your settings. To uninstall, remove PC Companion in <strong>Settings &gt; Apps &gt; Installed apps</strong>.</p>
+        <div class="actions">
+          <a class="button button-primary" href="https://github.com/Lazyb0y/pc-companion/releases/latest">Download the latest release</a>
+          <a class="button" href="https://github.com/Lazyb0y/pc-companion/releases">All releases</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="help-title">
+      <div class="wrap">
+        <h2 id="help-title">Help and contributing</h2>
+        <ul class="cards">
+          <li class="card">
+            <h3><a href="https://github.com/Lazyb0y/pc-companion/discussions">Questions and ideas</a></h3>
+            <p>Ask and discuss in GitHub Discussions.</p>
+          </li>
+          <li class="card">
+            <h3><a href="https://github.com/Lazyb0y/pc-companion/issues/new/choose">Bugs and feature requests</a></h3>
+            <p>Open an issue. <a href="https://github.com/Lazyb0y/pc-companion/blob/main/SUPPORT.md">Support</a> says what to include.</p>
+          </li>
+          <li class="card">
+            <h3><a href="https://github.com/Lazyb0y/pc-companion/blob/main/CONTRIBUTING.md">Contributing</a></h3>
+            <p>Code, translations and documentation are welcome.</p>
+          </li>
+          <li class="card">
+            <h3><a href="https://github.com/Lazyb0y/pc-companion/blob/main/SECURITY.md">Security</a></h3>
+            <p>Report vulnerabilities privately, never in public issues.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p class="brand brand-small">
+        <img src="icon.png" alt="" width="24" height="24">
+        <span>PC Companion</span>
+      </p>
+      <ul class="footer-links">
+        <li><a href="https://github.com/Lazyb0y/pc-companion/blob/main/LICENSE">MIT License</a></li>
+        <li><a href="https://github.com/Lazyb0y/pc-companion/blob/main/PRIVACY.md">Privacy</a></li>
+        <li><a href="https://github.com/Lazyb0y/pc-companion/blob/main/SECURITY.md">Security</a></li>
+        <li><a href="https://github.com/Lazyb0y/pc-companion">Source code</a></li>
+      </ul>
+      <p class="fine-print">PC Companion is an independent project and isn't affiliated with Microsoft. This site has no analytics or cookies and loads nothing from other sites.</p>
+    </div>
+  </footer>
+</body>
+</html>

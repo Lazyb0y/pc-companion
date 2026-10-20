@@ -7,7 +7,7 @@ end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{csproj,props,targets,slnx,appxmanifest,manifest,pubxml,json,yml,yaml}]
+[*.{csproj,props,targets,slnx,appxmanifest,manifest,pubxml,json,yml,yaml,html,css}]
 indent_size = 2
 
 [*.cs]
