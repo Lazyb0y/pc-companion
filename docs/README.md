@@ -4,7 +4,7 @@ Documentation for PC Companion. The backlog, roadmap and task status live on Git
 
 - [Architecture overview](architecture/overview.md)
 - [Features](architecture/features.md): how features plug into the host and the settings app
-- Feature specs: [Hot Corners](features/input/hot-corners.md), [App Windows](features/windows/app-windows.md), [Always run as administrator](features/general/run-as-administrator.md), [Update check](features/general/update-check.md)
+- Feature specs: [Hot Corners](features/input/hot-corners.md), [App Windows](features/windows/app-windows.md), [System Meters](features/desktop/system-meters.md), [Always run as administrator](features/general/run-as-administrator.md), [Update check](features/general/update-check.md)
 - [Localization](localization/overview.md)
 - [Logging](diagnostics/logging.md)
 - [Windows support](compatibility/windows-support.md)
