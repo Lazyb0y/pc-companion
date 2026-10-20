@@ -38,10 +38,19 @@ public interface IFeature : IDisposable
 ```
 
 - Each module registers its features with the host: `services.AddInputModule()`.
-- `Apply` runs on the host's UI thread, which runs the message loop that input monitoring and hidden windows need. Long work goes to the thread pool; nothing blocks the message loop.
 - **Isolation:** the host's `FeatureRunner` calls each feature inside its own error boundary. When `Apply` throws, it logs the error, stops that feature for the rest of the session, and the other features keep running.
 - A feature guards its own handlers of window messages, input and timers the same way: an exception there would end the host.
 - A feature that isn't supported on this PC is never started.
+
+## Threads and processes
+
+- Features run in the host process. A feature gets a process of its own only when it needs one: other rights, as the elevated helper has, a UI framework the host doesn't load, or code that could crash the host in a way an error boundary can't catch. Its spec says why.
+- `Apply` and the features' handlers of window messages, input and timers run on the host's UI thread, which runs the message loop that input monitoring and hidden windows need. They run one at a time, so a slow handler delays every feature.
+- Work on the UI thread takes no more than a few milliseconds. Work that can wait for the disk, the network or another program runs on the thread pool and passes its result back with `MessageWindow.BeginInvoke`: starting processes, file and registry access, listing processes, reading performance counters and network calls.
+- Calls to other programs' windows don't wait for them: `SendMessageTimeout` rather than `SendMessage`, `ShowWindowAsync` rather than `ShowWindow`, and `SetWindowPos` with `SWP_ASYNCWINDOWPOS`. A program that stopped responding would otherwise hold the UI thread.
+- A feature that works all the time, such as one that reads values every second, or that must answer input at once, such as a low-level keyboard or mouse hook, runs on a thread of its own, with its own message window and message loop. Windows waits for a low-level hook at every key press and pointer move, in every program, and removes a slow hook without telling it.
+- An unhandled exception on any thread ends the host, so a feature guards its own threads as it guards its handlers.
+- A feature's spec says which thread each part runs on.
 
 ## In the settings app
 
@@ -59,7 +68,7 @@ public interface IFeature : IDisposable
 
 ## Adding a feature
 
-1. Spec in `docs/features/<module>/<feature>.md`, including a security and privacy review, approved before code.
+1. Spec in `docs/features/<module>/<feature>.md`, including a security and privacy review and the threads its parts run on, approved before code.
 2. Feature class and settings in the module project; register it in the module's `Add<Module>Module`.
 3. Page in `src/PCCompanion.App/Features/<Feature>/` and an entry in `FeatureCatalog.cs`.
 4. Strings with translations marked "Needs native review."
