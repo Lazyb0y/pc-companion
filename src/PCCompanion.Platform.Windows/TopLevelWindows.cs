@@ -11,6 +11,8 @@ namespace PCCompanion.Platform.Windows;
 /// </summary>
 public static class TopLevelWindows
 {
+    private const int MaximumWindowsInFront = 500;
+
     /// <summary>
     /// The visible top-level windows, front to back. Windows on other virtual desktops, and the
     /// frames of suspended Store apps, are visible but cloaked.
@@ -75,12 +77,62 @@ public static class TopLevelWindows
             0,
             SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
 
+    /// <summary>
+    /// Whether a window is always on top. Windows takes that from the taskbar while a full-screen
+    /// app is in front.
+    /// </summary>
+    public static bool IsTopmost(nint window) => (ExtendedStyle(new HWND(window)) & WINDOW_EX_STYLE.WS_EX_TOPMOST) != 0;
+
+    /// <summary>
+    /// Whether <paramref name="other"/> is in front of <paramref name="window"/>. It looks at up to
+    /// 500 windows in front of <paramref name="window"/>, so a desktop with many windows stays cheap.
+    /// </summary>
+    public static bool IsInFrontOf(nint other, nint window)
+    {
+        var current = new HWND(window);
+        for (var step = 0; step < MaximumWindowsInFront; step++)
+        {
+            current = PInvoke.GetWindow(current, GET_WINDOW_CMD.GW_HWNDPREV);
+            if (current.IsNull)
+            {
+                return false;
+            }
+
+            if (current == other)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Whether a window is one that Windows may give a taskbar button: a top-level window that
+    /// isn't a tool window or owned by another window, unless it asks for a button.
+    /// </summary>
+    public static bool MayHaveTaskbarButton(nint window)
+    {
+        var handle = new HWND(window);
+        if (PInvoke.GetAncestor(handle, GET_ANCESTOR_FLAGS.GA_ROOT) != handle)
+        {
+            return false;
+        }
+
+        var style = ExtendedStyle(handle);
+        return (style & WINDOW_EX_STYLE.WS_EX_APPWINDOW) != 0
+            || ((style & WINDOW_EX_STYLE.WS_EX_TOOLWINDOW) == 0 && PInvoke.GetWindow(handle, GET_WINDOW_CMD.GW_OWNER).IsNull);
+    }
+
+    private static WINDOW_EX_STYLE ExtendedStyle(HWND window) =>
+        (WINDOW_EX_STYLE)(uint)PInvoke.GetWindowLongPtr(window, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+
     private static unsafe TopLevelWindow Read(HWND window, HWND desktop)
     {
         // A window that closed meanwhile keeps process ID 0.
         uint processId = 0;
         _ = PInvoke.GetWindowThreadProcessId(window, &processId);
-        var style = (WINDOW_EX_STYLE)(uint)PInvoke.GetWindowLongPtr(window, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        var style = ExtendedStyle(window);
         uint cloaked;
         var isCloaked = PInvoke.DwmGetWindowAttribute(window, DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, &cloaked, sizeof(uint)).Succeeded && cloaked != 0;
 
