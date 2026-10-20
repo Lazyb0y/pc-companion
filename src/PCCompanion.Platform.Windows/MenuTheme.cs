@@ -1,9 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.UI.Accessibility;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace PCCompanion.Platform.Windows;
@@ -50,7 +48,7 @@ public static class MenuTheme
     /// The mode that matches the Windows mode, which the taskbar and Start use. In high contrast,
     /// it's <see cref="MenuMode.Default"/>, which keeps the high contrast colors.
     /// </summary>
-    public static MenuMode ForWindowsMode() => ForWindowsMode(IsHighContrastOn(), IsWindowsModeDark());
+    public static MenuMode ForWindowsMode() => ForWindowsMode(WindowsTheme.IsHighContrast(), WindowsTheme.IsDark());
 
     public static MenuMode ForWindowsMode(bool highContrast, bool windowsModeDark) =>
         highContrast ? MenuMode.Default : windowsModeDark ? MenuMode.Dark : MenuMode.Light;
@@ -98,19 +96,6 @@ public static class MenuTheme
 
         var functions = new Functions(Load(SetPreferredAppModeOrdinal), Load(FlushMenuThemesOrdinal));
         return functions.SetPreferredAppMode == 0 || functions.FlushMenuThemes == 0 ? null : functions;
-    }
-
-    private static bool IsWindowsModeDark()
-    {
-        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-        return key?.GetValue("SystemUsesLightTheme") is 0;
-    }
-
-    private static unsafe bool IsHighContrastOn()
-    {
-        var highContrast = new HIGHCONTRASTW { cbSize = (uint)sizeof(HIGHCONTRASTW) };
-        return PInvoke.SystemParametersInfo(SYSTEM_PARAMETERS_INFO_ACTION.SPI_GETHIGHCONTRAST, highContrast.cbSize, &highContrast, 0)
-            && (highContrast.dwFlags & HIGHCONTRASTW_FLAGS.HCF_HIGHCONTRASTON) != 0;
     }
 
     private sealed record Functions(nint SetPreferredAppMode, nint FlushMenuThemes);

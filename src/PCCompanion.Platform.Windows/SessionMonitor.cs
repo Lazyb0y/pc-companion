@@ -7,7 +7,7 @@ namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// Reports when the user's Windows session is locked or disconnected, as when another user signs
-/// in, until disposed.
+/// in, and when it's unlocked or connected again, until disposed.
 /// </summary>
 public sealed class SessionMonitor : IDisposable
 {
@@ -32,6 +32,9 @@ public sealed class SessionMonitor : IDisposable
     /// <summary>Raised on the window's thread when the session is locked or disconnected.</summary>
     public event EventHandler? Locked;
 
+    /// <summary>Raised on the window's thread when the session is unlocked or connected again.</summary>
+    public event EventHandler? Unlocked;
+
     public void Dispose()
     {
         if (_disposed)
@@ -46,10 +49,18 @@ public sealed class SessionMonitor : IDisposable
 
     private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
     {
-        if (e.Message == PInvoke.WM_WTSSESSION_CHANGE
-            && e.WParam is PInvoke.WTS_SESSION_LOCK or PInvoke.WTS_CONSOLE_DISCONNECT or PInvoke.WTS_REMOTE_DISCONNECT)
+        if (e.Message != PInvoke.WM_WTSSESSION_CHANGE)
+        {
+            return;
+        }
+
+        if (e.WParam is PInvoke.WTS_SESSION_LOCK or PInvoke.WTS_CONSOLE_DISCONNECT or PInvoke.WTS_REMOTE_DISCONNECT)
         {
             Locked?.Invoke(this, EventArgs.Empty);
+        }
+        else if (e.WParam is PInvoke.WTS_SESSION_UNLOCK or PInvoke.WTS_CONSOLE_CONNECT or PInvoke.WTS_REMOTE_CONNECT)
+        {
+            Unlocked?.Invoke(this, EventArgs.Empty);
         }
     }
 }
