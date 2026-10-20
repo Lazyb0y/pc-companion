@@ -25,6 +25,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 ## Repository
 
 - `PCCompanion.slnx` is the solution. Projects go in `src/`, test projects in `tests/`, documentation in `docs/`.
+- `website/` is the project website, published with GitHub Pages at https://lazyb0y.github.io/pc-companion/; follow [Website](docs/development/website.md). It describes the latest release: update it, with screenshots from `scripts/website-screenshots.ps1`, when a release adds or changes features. Plain HTML and CSS, with nothing loaded from other sites and no analytics.
 - The backlog, roadmap, milestones and task status live on GitHub (issues and the "PC Companion" project board), not in the repository.
 - Files start minimal and grow with the repository. Committed files contain no future-planning content.
 - Record significant decisions in the matching topic doc under `docs/` (see [docs/README.md](docs/README.md)).

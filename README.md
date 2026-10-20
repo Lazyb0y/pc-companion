@@ -4,6 +4,8 @@ A free, open-source collection of utilities inspired by macOS and Linux, bringin
 
 This project is in early development; its releases are previews.
 
+Website: [lazyb0y.github.io/pc-companion](https://lazyb0y.github.io/pc-companion/)
+
 ## Features
 
 Each feature is off until you turn it on in the settings app.
