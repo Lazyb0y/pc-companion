@@ -47,6 +47,7 @@ $startStates = [ordered] @{
     Languages = 'Installed'
     HotCorners = 'Installed'
     AppWindows = 'Installed'
+    SystemMeters = 'Installed'
     Logging = 'Installed'
     Updates = 'Installed'
     Setup = 'Installed'
