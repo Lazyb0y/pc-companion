@@ -500,4 +500,104 @@
     <value>Administrador de tareas</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>Medidores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>Elige qué se muestra.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>Lo ocupado que está el procesador, en porcentaje, como en el Administrador de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>Cuánta memoria está en uso, en porcentaje.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>La velocidad a la que el equipo recibe y envía datos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>Mostrar en</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>En la barra de tareas, los medidores comparten un elemento. En el área de notificación, cada uno tiene su propio icono, al que puedes llegar con el teclado: presiona la tecla del logotipo de Windows + B.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>Barra de tareas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>Área de notificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>Diseño</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>Cómo se muestran la CPU y la memoria en la barra de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>Valores y nombres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>Valores grandes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>Compacto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>Iconos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>En color</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>De un color</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>Actualizar cada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>{0} segundo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} segundos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>Al seleccionar los medidores se abre el Administrador de tareas en su página de inicio predeterminada. Para que se abra en Rendimiento, elige Rendimiento en la configuración del Administrador de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows puede poner los iconos nuevos en el menú de iconos ocultos (^) de la barra de tareas. Para tener un medidor siempre a la vista, arrastra su icono a la barra de tareas o actívalo en la configuración de la barra de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>Abrir la configuración de la barra de tareas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>Lee lo ocupado que está el procesador, cuánta memoria está en uso y cuántos datos reciben y envían los adaptadores de red, para todo el equipo; nunca lo que usa cada aplicación. En la barra de tareas, solo lee dónde están sus botones, nunca sus nombres. No establece conexiones de red, y no guarda ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

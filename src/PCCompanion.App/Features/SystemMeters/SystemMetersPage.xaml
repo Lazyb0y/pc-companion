@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PCCompanion.App.Features.SystemMeters.SystemMetersPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:local="using:PCCompanion.App.Features.SystemMeters"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <!-- Laid out like the other feature pages: a column in the middle of the page, at most 1,000 pixels wide. -->
+    <ScrollViewer HorizontalScrollMode="Disabled">
+        <Grid>
+            <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
+                <Grid Margin="0,0,0,20" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon
+                        VerticalAlignment="Top"
+                        AutomationProperties.AccessibilityView="Raw"
+                        FontSize="32"
+                        Glyph="{x:Bind local:SystemMetersViewModel.Glyph}" />
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{app:Localized Key=SystemMetersName}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource BodyTextBlockStyle}"
+                            Text="{app:Localized Key=SystemMetersDescription}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <ToggleSwitch
+                        Grid.Column="2"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="{app:Localized Key=SystemMetersName}"
+                        IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}" />
+                </Grid>
+
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
+                    Message="{app:Localized Key=FeatureSaveFailed}"
+                    Severity="Error" />
+
+                <toolkit:SettingsExpander
+                    Description="{app:Localized Key=SystemMetersMetersDescription}"
+                    Header="{app:Localized Key=SystemMetersMetersHeader}"
+                    IsExpanded="True">
+                    <toolkit:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE9D9;" />
+                    </toolkit:SettingsExpander.HeaderIcon>
+                    <toolkit:SettingsExpander.Items>
+                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersCpuDescription}" Header="{app:Localized Key=SystemMetersCpuHeader}">
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE950;" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersCpuHeader}" IsOn="{x:Bind ViewModel.Cpu, Mode=TwoWay}" />
+                        </toolkit:SettingsCard>
+                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersMemoryDescription}" Header="{app:Localized Key=SystemMetersMemoryHeader}">
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE964;" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersMemoryHeader}" IsOn="{x:Bind ViewModel.Memory, Mode=TwoWay}" />
+                        </toolkit:SettingsCard>
+                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersNetworkDescription}" Header="{app:Localized Key=SystemMetersNetworkHeader}">
+                            <toolkit:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE968;" />
+                            </toolkit:SettingsCard.HeaderIcon>
+                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersNetworkHeader}" IsOn="{x:Bind ViewModel.Network, Mode=TwoWay}" />
+                        </toolkit:SettingsCard>
+                    </toolkit:SettingsExpander.Items>
+                </toolkit:SettingsExpander>
+
+                <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersShowOnDescription}" Header="{app:Localized Key=SystemMetersShowOnHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE7C4;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        MinWidth="200"
+                        AutomationProperties.Name="{app:Localized Key=SystemMetersShowOnHeader}"
+                        ItemsSource="{x:Bind ViewModel.ShowOnOptions}"
+                        SelectedItem="{x:Bind ViewModel.SelectedShowOn, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:ShowOnOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
+
+                <toolkit:SettingsCard
+                    Description="{app:Localized Key=SystemMetersLayoutDescription}"
+                    Header="{app:Localized Key=SystemMetersLayoutHeader}"
+                    IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE80A;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        MinWidth="200"
+                        AutomationProperties.Name="{app:Localized Key=SystemMetersLayoutHeader}"
+                        ItemsSource="{x:Bind ViewModel.LayoutOptions}"
+                        SelectedItem="{x:Bind ViewModel.SelectedLayout, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:LayoutOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
+
+                <toolkit:SettingsCard Header="{app:Localized Key=SystemMetersIconsHeader}" IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE790;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        MinWidth="200"
+                        AutomationProperties.Name="{app:Localized Key=SystemMetersIconsHeader}"
+                        ItemsSource="{x:Bind ViewModel.IconsOptions}"
+                        SelectedItem="{x:Bind ViewModel.SelectedIcons, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:IconsOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
+
+                <toolkit:SettingsCard Header="{app:Localized Key=SystemMetersIntervalHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE916;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <ComboBox
+                        MinWidth="200"
+                        AutomationProperties.Name="{app:Localized Key=SystemMetersIntervalHeader}"
+                        ItemsSource="{x:Bind ViewModel.IntervalOptions}"
+                        SelectedItem="{x:Bind ViewModel.SelectedInterval, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:IntervalOption">
+                                <TextBlock Text="{x:Bind DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </toolkit:SettingsCard>
+
+                <InfoBar
+                    Margin="0,16,0,0"
+                    IsClosable="False"
+                    IsOpen="True"
+                    Message="{app:Localized Key=SystemMetersTaskManagerInfo}"
+                    Severity="Informational" />
+
+                <InfoBar
+                    IsClosable="False"
+                    IsOpen="{x:Bind ViewModel.InNotificationArea, Mode=OneWay}"
+                    Message="{app:Localized Key=SystemMetersHiddenIconsInfo}"
+                    Severity="Informational">
+                    <InfoBar.ActionButton>
+                        <Button Command="{x:Bind ViewModel.OpenTaskbarSettingsCommand}" Content="{app:Localized Key=SystemMetersOpenTaskbarSettings}" />
+                    </InfoBar.ActionButton>
+                </InfoBar>
+
+                <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE72E;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                </toolkit:SettingsCard>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

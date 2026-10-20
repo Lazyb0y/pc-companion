@@ -86,6 +86,20 @@ public static class ShellActions
         }
     }
 
+    /// <summary>Opens the taskbar page of Windows Settings.</summary>
+    public static bool OpenTaskbarSettings()
+    {
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo("ms-settings:taskbar") { UseShellExecute = true });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Turns the displays off until the pointer moves or a key is pressed.
     /// </summary>

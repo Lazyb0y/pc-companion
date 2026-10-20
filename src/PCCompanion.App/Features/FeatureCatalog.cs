@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Desktop;
+using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Modules.Windows;
@@ -31,6 +34,10 @@ public static class FeatureCatalog
         new(WindowsModule.Id, "ModuleWindowsName",
         [
             new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
+        ]),
+        new(DesktopModule.Id, "ModuleDesktopName",
+        [
+            new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage)),
         ]),
     ];
 

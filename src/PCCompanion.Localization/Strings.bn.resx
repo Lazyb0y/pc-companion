@@ -500,4 +500,104 @@
     <value>টাস্ক ম্যানেজার</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>মিটার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>কী দেখানো হবে তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>প্রসেসর কতটা ব্যস্ত, শতাংশে, টাস্ক ম্যানেজারের মতো।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>কতটা মেমরি ব্যবহৃত হচ্ছে, শতাংশে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>পিসি কত দ্রুত ডেটা গ্রহণ ও প্রেরণ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>যেখানে দেখাবে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>টাস্কবারে মিটারগুলো একটি আইটেম ভাগ করে নেয়। বিজ্ঞপ্তি এলাকায় প্রতিটির নিজস্ব আইকন থাকে, যেখানে আপনি কিবোর্ড দিয়ে পৌঁছাতে পারেন: Windows লোগো কী + B চাপুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>টাস্কবার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>বিন্যাস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>টাস্কবারে সিপিইউ ও মেমরি কীভাবে দেখাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>মান ও নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>বড় মান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>সংক্ষিপ্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>আইকন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>রঙিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>এক রঙের</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>হালনাগাদের ব্যবধান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>মিটারগুলো নির্বাচন করলে টাস্ক ম্যানেজার তার ডিফল্ট শুরুর পৃষ্ঠায় খোলে। পারফরম্যান্সে খুলতে, টাস্ক ম্যানেজারের সেটিংসে পারফরম্যান্স বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows নতুন আইকনগুলো টাস্কবারের লুকানো আইকনের মেনুতে (^) রাখতে পারে। কোনো মিটার সবসময় দেখতে, তার আইকন টাস্কবারে টেনে আনুন, অথবা টাস্কবার সেটিংসে এটি চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>টাস্কবার সেটিংস খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>পুরো পিসির জন্য প্রসেসর কতটা ব্যস্ত, কতটা মেমরি ব্যবহৃত হচ্ছে এবং নেটওয়ার্ক অ্যাডাপ্টারগুলো কত ডেটা গ্রহণ ও প্রেরণ করে তা পড়ে; প্রতিটি অ্যাপ কী ব্যবহার করে তা কখনো নয়। টাস্কবারে শুধু এর বোতামগুলো কোথায় আছে তা পড়ে, কখনো সেগুলোর নাম নয়। কোনো নেটওয়ার্ক সংযোগ করে না, এবং কিছুই সংরক্ষণ বা প্রেরণ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

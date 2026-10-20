@@ -500,4 +500,104 @@
     <value>Gestionnaire des tâches</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>Indicateurs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>Choisissez ce qui s’affiche.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>Le taux d’utilisation du processeur, en pourcentage, comme dans le Gestionnaire des tâches.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>La part de la mémoire utilisée, en pourcentage.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>La vitesse à laquelle le PC reçoit et envoie des données.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>Afficher dans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>Dans la barre des tâches, les indicateurs partagent un seul élément. Dans la zone de notification, chacun a sa propre icône, accessible au clavier : appuyez sur la touche du logo Windows + B.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>Barre des tâches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>Zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>Disposition</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>Comment le processeur et la mémoire s’affichent dans la barre des tâches.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>Valeurs et noms</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>Grandes valeurs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>Compacte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>Icônes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>En couleur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>Monochromes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>Aucune</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>Mettre à jour toutes les</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>{0} seconde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} secondes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>La sélection des indicateurs ouvre le Gestionnaire des tâches sur sa page de démarrage par défaut. Pour l’ouvrir sur Performance, choisissez Performance dans les paramètres du Gestionnaire des tâches.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows peut placer les nouvelles icônes dans le menu des icônes masquées (^) de la barre des tâches. Pour garder un indicateur visible, faites glisser son icône dans la barre des tâches ou activez-la dans les paramètres de la barre des tâches.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres de la barre des tâches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>Lit le taux d’utilisation du processeur, la mémoire utilisée et la quantité de données que les cartes réseau reçoivent et envoient, pour tout le PC ; jamais ce qu’utilise chaque application. Dans la barre des tâches, lit seulement l’emplacement de ses boutons, jamais leurs noms. N’établit aucune connexion réseau, et n’enregistre ni n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
