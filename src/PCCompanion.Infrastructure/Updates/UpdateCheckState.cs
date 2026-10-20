@@ -3,7 +3,8 @@ using System;
 namespace PCCompanion.Infrastructure.Updates;
 
 /// <summary>
-/// The result of the update checks, kept in <c>update-check.json</c>. Only the host writes it.
+/// The result of the update checks, kept in <c>update-check.json</c>. The host writes it, and the
+/// settings app after Check now.
 /// </summary>
 public sealed record UpdateCheckState
 {

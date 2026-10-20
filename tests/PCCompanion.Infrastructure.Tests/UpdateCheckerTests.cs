@@ -230,7 +230,98 @@ public sealed class UpdateCheckerTests : IDisposable
         Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered), UpdateChecker.OutcomeOfCopy(new UpdateCheckState(), after, Current));
     }
 
-    private Task<UpdateCheckOutcome> CheckAsync() =>
-        new UpdateChecker(_store, new GitHubReleaseSource(_gitHub.CreateHandler, _time), _time, _logger)
-            .CheckAsync(Current, TestContext.Current.CancellationToken);
+    [Fact]
+    public async Task CheckNowAsksWhenACheckIsntDueAndSavesANewerVersionAsShown()
+    {
+        _store.Save(new UpdateCheckState { LastCheck = _time.Now - TimeSpan.FromMinutes(1) });
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.UpdateAvailable, new ReleaseVersion(0, 2, 0)), outcome);
+        Assert.Single(_gitHub.Requests);
+        Assert.Equal(
+            new UpdateCheckState { LastCheck = _time.Now, LatestVersion = new ReleaseVersion(0, 2, 0), NotifiedVersion = new ReleaseVersion(0, 2, 0) },
+            _store.Load());
+    }
+
+    [Fact]
+    public async Task CheckNowCountsAsTheDaysCheckAndItsVersionGetsNoNotification()
+    {
+        await CheckNowAsync();
+
+        _time.Advance(UpdateChecker.Interval - TimeSpan.FromMinutes(1));
+        Assert.Equal(UpdateCheckResult.NotDue, (await CheckAsync()).Result);
+
+        _time.Advance(TimeSpan.FromMinutes(1));
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered), await CheckAsync());
+        Assert.Equal(2, _gitHub.Requests.Count);
+    }
+
+    [Theory]
+    [InlineData("v0.1.0")]
+    [InlineData("v0.0.9")]
+    public async Task CheckNowFindsTheSameOrAnOlderVersionUpToDate(string tag)
+    {
+        _gitHub.Respond = (_, _) => Task.FromResult(FakeGitHub.Release(tag));
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.UpToDate), outcome);
+        Assert.Null(_store.Load().NotifiedVersion);
+    }
+
+    [Fact]
+    public async Task CheckNowFindsNoReleaseUpToDate()
+    {
+        _store.Save(new UpdateCheckState { LatestVersion = new ReleaseVersion(0, 2, 0) });
+        _gitHub.Respond = (_, _) => Task.FromResult(FakeGitHub.Status(HttpStatusCode.NotFound));
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.UpToDate), outcome);
+        Assert.Null(_store.Load().LatestVersion);
+    }
+
+    [Theory]
+    [InlineData(HttpStatusCode.Forbidden)]
+    [InlineData(HttpStatusCode.TooManyRequests)]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    public async Task CheckNowFailsOnAnErrorAndKeepsTheLatestVersion(HttpStatusCode status)
+    {
+        _store.Save(new UpdateCheckState { LatestVersion = new ReleaseVersion(0, 2, 0), NotifiedVersion = new ReleaseVersion(0, 2, 0) });
+        _gitHub.Respond = (_, _) => Task.FromResult(FakeGitHub.Status(status));
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.Failed), outcome);
+        Assert.Equal(new UpdateCheckState { LastCheck = _time.Now, LatestVersion = new ReleaseVersion(0, 2, 0), NotifiedVersion = new ReleaseVersion(0, 2, 0) }, _store.Load());
+    }
+
+    [Fact]
+    public async Task CheckNowFailsOnAnAnswerThatCantBeUsed()
+    {
+        _gitHub.Respond = (_, _) => Task.FromResult(FakeGitHub.Json("not json"));
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.Failed), outcome);
+        Assert.Equal(new UpdateCheckState { LastCheck = _time.Now }, _store.Load());
+    }
+
+    [Fact]
+    public async Task CheckNowWithNoAnswerChangesNothing()
+    {
+        _gitHub.Respond = (_, _) => Task.FromException<HttpResponseMessage>(new HttpRequestException(HttpRequestError.ConnectionError, "No connection could be made."));
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.NoAnswer), outcome);
+        Assert.False(File.Exists(_paths.UpdateCheckFile));
+    }
+
+    private Task<UpdateCheckOutcome> CheckAsync() => CreateChecker().CheckAsync(Current, TestContext.Current.CancellationToken);
+
+    private Task<CheckNowOutcome> CheckNowAsync() => CreateChecker().CheckNowAsync(Current, TestContext.Current.CancellationToken);
+
+    private UpdateChecker CreateChecker() => new(_store, new GitHubReleaseSource(_gitHub.CreateHandler, _time), _time, _logger);
 }
