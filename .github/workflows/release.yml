@@ -1,0 +1,139 @@
+name: Release
+
+# A push to the release branch builds and tests everything as for main, then creates or replaces
+# the draft release of the version in Directory.Build.props. Publishing the draft by hand creates
+# its tag. See docs/development/releasing.md.
+on:
+  push:
+    branches: [release]
+
+permissions:
+  contents: read
+
+# One draft at a time. The group differs from build.yml's, which the called workflow would wait on.
+concurrency:
+  group: release-draft
+  cancel-in-progress: false
+
+jobs:
+  version:
+    name: Check the version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The update check reads release tags as exactly vMAJOR.MINOR.PATCH, and the installer
+      # upgrades only to a higher version, so every release must be higher than the last.
+      - name: Read and check the version
+        id: version
+        run: |
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          if ! [[ "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::The Version in Directory.Build.props, '$version', must be MAJOR.MINOR.PATCH."
+            exit 1
+          fi
+
+          # Prints what the API returns, or nothing when it's not found; fails on other errors. On an
+          # error, gh prints GitHub's answer instead of the filtered value, so that's dropped.
+          lookup() {
+            local result
+            if result=$(gh api "$1" --jq "$2" 2>error.txt); then
+              echo "$result"
+            elif ! grep -q 'HTTP 404' error.txt; then
+              cat error.txt >&2
+              return 1
+            fi
+          }
+
+          # A published release keeps its tag, and its tag can't be used again.
+          tag=$(lookup "repos/$GITHUB_REPOSITORY/git/ref/tags/v$version" .ref)
+          if [ -n "$tag" ]; then
+            echo "::error::v$version is already published. Raise the Version in Directory.Build.props."
+            exit 1
+          fi
+
+          latest=$(lookup "repos/$GITHUB_REPOSITORY/releases/latest" .tag_name)
+          latest=${latest#v}
+          if [ -n "$latest" ] && { [ "$latest" = "$version" ] || [ "$(printf '%s\n%s\n' "$latest" "$version" | sort -V | tail -n 1)" != "$version" ]; }; then
+            echo "::error::Version $version isn't higher than the latest release, $latest."
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Drafting v$version."
+
+  build:
+    name: Build
+    needs: version
+    uses: ./.github/workflows/build.yml
+    permissions:
+      contents: read
+
+  draft:
+    name: Draft the release
+    needs: [version, build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write # create and replace the draft release
+      id-token: write # sign the attestations
+      attestations: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: PCCompanion-*-msi
+          path: artifacts
+          merge-multiple: true
+
+      - name: Name the installers and list their hashes
+        run: |
+          mkdir release
+          for platform in x64 ARM64; do
+            cp "artifacts/PCCompanion-$platform.msi" "release/PCCompanion-$VERSION-$platform.msi"
+          done
+          cd release
+          sha256sum PCCompanion-*.msi > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            release/PCCompanion-*.msi
+            release/SHA256SUMS.txt
+
+      - name: Write the notes
+        shell: pwsh
+        run: ./scripts/release-notes.ps1 -Version $env:VERSION -Checksums release/SHA256SUMS.txt -Output notes.md
+
+      # A draft has no tag yet, so it's found in the list of releases. GitHub's list of the pull
+      # requests since the last release follows the notes.
+      - name: Create or replace the draft
+        run: |
+          drafts=$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq ".[] | select(.draft and .tag_name == \"v$VERSION\") | .id")
+          for id in $drafts; do
+            echo "Replacing the draft release $id."
+            gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/$id"
+          done
+
+          title="PC Companion $VERSION"
+          if [[ "$VERSION" == 0.* ]]; then
+            title="$title Preview"
+          fi
+
+          gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --draft --target "$GITHUB_SHA" \
+            --title "$title" --notes-file notes.md --generate-notes \
+            release/PCCompanion-*.msi release/SHA256SUMS.txt
