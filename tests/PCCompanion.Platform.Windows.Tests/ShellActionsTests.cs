@@ -19,5 +19,17 @@ public sealed class ShellActionsTests
     public void RelativeAddressesAreRefused()
     {
         Assert.Throws<ArgumentException>(() => ShellActions.OpenWebPage(new Uri("releases/latest", UriKind.Relative)));
+        Assert.Throws<ArgumentException>(() => ShellActions.OpenLink(new Uri("releases/latest", UriKind.Relative)));
+    }
+
+    [Theory]
+    [InlineData("file:///C:/Windows/System32/calc.exe")]
+    [InlineData("ms-settings:privacy")]
+    [InlineData("mailto:someone@example.com")]
+    [InlineData("search-ms:query=calc")]
+    [InlineData("ftp://example.com/file")]
+    public void LinksOpenOnlyForHttpAndHttps(string address)
+    {
+        Assert.Throws<ArgumentException>(() => ShellActions.OpenLink(new Uri(address)));
     }
 }

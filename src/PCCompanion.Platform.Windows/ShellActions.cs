@@ -57,15 +57,24 @@ public static class ShellActions
             throw new ArgumentException("Only https addresses are opened.", nameof(address));
         }
 
-        try
+        return OpenAddress(address);
+    }
+
+    /// <summary>
+    /// Opens a link in the default browser, such as one the user copied. Only http and https
+    /// addresses are opened: the shell starts whatever program is registered for other kinds of
+    /// addresses. A browser started from a process running as administrator would run as
+    /// administrator too.
+    /// </summary>
+    public static bool OpenLink(Uri address)
+    {
+        ArgumentNullException.ThrowIfNull(address);
+        if (!address.IsAbsoluteUri || (address.Scheme != Uri.UriSchemeHttps && address.Scheme != Uri.UriSchemeHttp))
         {
-            using var process = Process.Start(new ProcessStartInfo(address.AbsoluteUri) { UseShellExecute = true });
-            return true;
+            throw new ArgumentException("Only http and https addresses are opened.", nameof(address));
         }
-        catch (Win32Exception)
-        {
-            return false;
-        }
+
+        return OpenAddress(address);
     }
 
     /// <summary>
@@ -117,6 +126,19 @@ public static class ShellActions
         ArgumentNullException.ThrowIfNull(window);
 
         return PInvoke.PostMessage((HWND)window.Handle, PInvoke.WM_SYSCOMMAND, command, parameter);
+    }
+
+    private static bool OpenAddress(Uri address)
+    {
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(address.AbsoluteUri) { UseShellExecute = true });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
     }
 
     // A modifier the user is holding, such as the key a hot corner requires, would change the

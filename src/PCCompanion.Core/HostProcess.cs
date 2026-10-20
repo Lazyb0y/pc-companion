@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using PCCompanion.Core.Settings;
 
 namespace PCCompanion.Core;
@@ -59,6 +61,54 @@ public static class HostProcess
     /// rights, to open the latest release's page in the browser.
     /// </summary>
     public const string OpenReleasePageArgument = "--open-release-page";
+
+    /// <summary>
+    /// The argument, followed by an <c>http</c> or <c>https</c> address, that a host running as
+    /// administrator starts a copy of itself with, without admin rights, to open the address in
+    /// the browser for a feature; see <see cref="WebPageArguments"/>.
+    /// </summary>
+    public const string OpenWebPageArgument = "--open-web-page";
+
+    /// <summary>
+    /// Whether <paramref name="address"/> is an absolute <c>http</c> or <c>https</c> address. The
+    /// Windows shell starts whatever program is registered for other kinds of addresses.
+    /// </summary>
+    public static bool IsWebAddress([NotNullWhen(true)] Uri? address) =>
+        address is { IsAbsoluteUri: true } && (address.Scheme == Uri.UriSchemeHttps || address.Scheme == Uri.UriSchemeHttp);
+
+    /// <summary>
+    /// The arguments that make the host open <paramref name="address"/>: <see cref="OpenWebPageArgument"/>
+    /// and the address, which needs no quotes, since its escaped form has no spaces or quotes.
+    /// </summary>
+    /// <exception cref="ArgumentException">The address isn't an <c>http</c> or <c>https</c> address.</exception>
+    public static string WebPageArguments(Uri address)
+    {
+        if (!IsWebAddress(address) || address.AbsoluteUri.AsSpan().IndexOfAny(" \t\"") >= 0)
+        {
+            throw new ArgumentException("Only http and https addresses are opened.", nameof(address));
+        }
+
+        return OpenWebPageArgument + " " + address.AbsoluteUri;
+    }
+
+    /// <summary>
+    /// The address after <see cref="OpenWebPageArgument"/> in the host's arguments, or
+    /// <see langword="null"/> when there is none or it isn't an <c>http</c> or <c>https</c> address.
+    /// </summary>
+    public static Uri? ReadWebPageAddress(IReadOnlyList<string> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+
+        for (var index = 0; index < arguments.Count - 1; index++)
+        {
+            if (string.Equals(arguments[index], OpenWebPageArgument, StringComparison.OrdinalIgnoreCase))
+            {
+                return Uri.TryCreate(arguments[index + 1], UriKind.Absolute, out var address) && IsWebAddress(address) ? address : null;
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     /// What a host does as it starts, before taking the instance lock. With Always run as
