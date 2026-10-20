@@ -32,7 +32,7 @@ internal sealed class FakeMetersSystem : IMetersSystem
     public IMeterAppearance Appearance { get; }
 
     /// <summary>The Windows build; the strip runs only on tested ones, and by default this isn't one.</summary>
-    public int WindowsBuild { get; set; } = 19045;
+    public int WindowsBuild { get; set; } = 22000;
 
     /// <summary>The strip's host the meters created last.</summary>
     public FakeStripHost? StripHost { get; private set; }

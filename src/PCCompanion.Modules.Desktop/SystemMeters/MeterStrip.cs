@@ -40,10 +40,18 @@ public sealed class MeterStrip : IDisposable
     /// <summary>The newest Windows build the strip was tested on. Raise it after testing a new release.</summary>
     public const int MaxTestedBuild = 26300;
 
-    // Between the strip and the Widgets entry or the notification area, at 100% scale.
+    /// <summary>The Windows 10 builds the strip runs on: version 2004 to 22H2, the last.</summary>
+    public const int Windows10FirstBuild = 19041;
+    public const int Windows10LastBuild = 19045;
+
+    // Between the strip and what's next to it, at 100% scale.
     private const int Gap = 4;
 
+    // Two lines of 12-pixel text need this much of the taskbar's height, at 100% scale.
+    private const int MinimumHeight = 36;
+
     private readonly IStripHost _host;
+    private readonly int _windowsBuild;
     private TaskbarState? _taskbar;
     private IReadOnlyList<TaskbarElement>? _elements;
     private bool _laidOut;
@@ -56,17 +64,23 @@ public sealed class MeterStrip : IDisposable
     private string _description = string.Empty;
     private (uint[] Pixels, Rectangle Bounds, string Description)? _shown;
 
-    public MeterStrip(IStripHost host)
+    /// <param name="windowsBuild">The Windows build, which decides how the strip finds its place and its fonts.</param>
+    public MeterStrip(IStripHost host, int windowsBuild)
     {
         ArgumentNullException.ThrowIfNull(host);
 
         _host = host;
+        _windowsBuild = windowsBuild;
     }
 
     public StripState State { get; private set; } = StripState.NoTaskbar;
 
-    /// <summary>Whether the strip was tested on a Windows build; elsewhere the meters use notification icons.</summary>
-    public static bool IsSupportedBuild(int build) => build is >= MinimumBuild and <= MaxTestedBuild;
+    /// <summary>
+    /// Whether the strip runs on a Windows build: the Windows 11 builds it was tested on, and Windows
+    /// 10 from version 2004. Elsewhere the meters use notification icons.
+    /// </summary>
+    public static bool IsSupportedBuild(int build) =>
+        build is (>= MinimumBuild and <= MaxTestedBuild) or (>= Windows10FirstBuild and <= Windows10LastBuild);
 
     /// <summary>
     /// Reads the taskbar again and finds the strip's place, as when the taskbar may have changed,
@@ -172,10 +186,8 @@ public sealed class MeterStrip : IDisposable
         if (_measuredFor != key)
         {
             var scale = _taskbar.Dpi / 96.0;
-            _metrics = StripPainter.Measure(_style, scale, CultureInfo.CurrentCulture);
-            _bounds = _metrics.Width > 0
-                ? StripPlacement.Find(_taskbar.Bounds, _taskbar.NotificationArea, _elements, _metrics.Width, (int)Math.Round(Gap * scale))
-                : null;
+            _metrics = StripPainter.Measure(_style, scale, CultureInfo.CurrentCulture, StripFonts.For(_windowsBuild));
+            _bounds = _metrics.Width > 0 ? Find(_taskbar, _elements, _metrics.Width, scale) : null;
             _measuredFor = key;
         }
 
@@ -188,6 +200,21 @@ public sealed class MeterStrip : IDisposable
         {
             State = StripState.Shown;
         }
+    }
+
+    // Windows 10's taskbar keeps its task band's position up to date; Windows 11's doesn't.
+    private Rectangle? Find(TaskbarState taskbar, IReadOnlyList<TaskbarElement> elements, int width, double scale)
+    {
+        var gap = (int)Math.Round(Gap * scale);
+        var minimumHeight = (int)Math.Round(MinimumHeight * scale);
+        if (_windowsBuild >= MinimumBuild)
+        {
+            return StripPlacement.Find(taskbar.Bounds, taskbar.NotificationArea, elements, width, gap, minimumHeight);
+        }
+
+        return taskbar.TaskBand is { } band
+            ? StripPlacement.FindInTaskBand(taskbar.Bounds, taskbar.NotificationArea, band, elements, width, gap, minimumHeight)
+            : null;
     }
 
     // Sends the strip to its window only when its pixels, place or description changed.

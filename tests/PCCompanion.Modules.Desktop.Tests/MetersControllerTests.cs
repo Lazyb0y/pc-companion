@@ -24,7 +24,7 @@ public sealed class MetersControllerTests : IDisposable
     public MetersControllerTests()
     {
         _icons = new FakeMetersSystem.FakeMeterIcons(_system);
-        _controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => _strip is { } host ? new MeterStrip(host) : null, _time, _logger);
+        _controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => _strip is { } host ? new MeterStrip(host, 26100) : null, _time, _logger);
     }
 
     public void Dispose() => _controller.Dispose();
@@ -173,7 +173,7 @@ public sealed class MetersControllerTests : IDisposable
     public void WithANotificationAreaChoiceTheStripIsntCreated()
     {
         var created = 0;
-        var controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => { created++; return new MeterStrip(new FakeStripHost()); }, _time, _logger);
+        var controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => { created++; return new MeterStrip(new FakeStripHost(), 26100); }, _time, _logger);
         controller.Apply(AllMeters with { ShowOn = ShowOn.NotificationArea });
 
         _time.Advance(TimeSpan.FromSeconds(1));

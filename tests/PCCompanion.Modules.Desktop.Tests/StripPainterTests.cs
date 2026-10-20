@@ -48,6 +48,15 @@ public sealed class StripPainterTests
     }
 
     [Fact]
+    public void Windows10DrawsInItsOwnFonts()
+    {
+        Assert.Equal(StripFonts.Windows10, StripFonts.For(19045));
+        Assert.Equal(StripFonts.Windows11, StripFonts.For(22000));
+        Assert.Equal(StripFonts.Windows10, StripPainter.Measure(Default, 1, English, StripFonts.Windows10).Fonts);
+        Assert.Equal(StripFonts.Windows11, StripPainter.Measure(Default, 1, English).Fonts);
+    }
+
+    [Fact]
     public void AMeterTurnedOffLeavesOutItsColumn()
     {
         var withoutMemory = StripPainter.Measure(Default with { Memory = false }, 1, English);

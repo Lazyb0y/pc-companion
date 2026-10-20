@@ -318,7 +318,7 @@ public sealed partial class MetersThread
             host.PointerOverChanged += (_, _) => _owner.Guard(() => _controller?.RedrawStrip());
             host.LayoutMayHaveChanged += (_, _) => _owner.Guard(() => _controller?.LayOutStrip());
             host.ZOrderMayHaveChanged += (_, _) => _owner.Guard(() => _controller?.KeepStripInSight());
-            return new MeterStrip(host);
+            return new MeterStrip(host, _owner._system.WindowsBuild);
         }
 
         private void SetPaused(bool locked, bool displaysOff)
