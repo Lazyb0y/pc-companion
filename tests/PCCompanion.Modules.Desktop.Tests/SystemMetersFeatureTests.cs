@@ -82,6 +82,15 @@ public sealed class SystemMetersFeatureTests : IDisposable
     }
 
     [Fact]
+    public void AnUnknownChoiceIsLoggedAndTheFeatureRuns()
+    {
+        _feature.Apply(Section("""{ "enabled": true, "layout": "Spiral" }"""));
+
+        Assert.True(_feature.IsRunning);
+        Assert.Contains((LogLevel.Warning, "The System Meters setting layout has a choice this version doesn't know, so it uses the default."), _logger.Entries);
+    }
+
+    [Fact]
     public void AFailureKeepsTheFeatureOffUntilTheHostRestarts()
     {
         _system.ShowFailure = new InvalidOperationException("The test fails the meters.");

@@ -61,6 +61,11 @@ public sealed partial class SystemMetersFeature(IMetersSystem system, IHostComma
             return;
         }
 
+        foreach (var name in SystemMetersSettings.UnknownChoices(settings))
+        {
+            LogUnknownChoice(logger, name);
+        }
+
         if (!read.Enabled || !read.AnyMeter)
         {
             Stop();
@@ -101,6 +106,9 @@ public sealed partial class SystemMetersFeature(IMetersSystem system, IHostComma
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The System Meters settings can't be read, so System Meters is off.")]
     private static partial void LogUnreadableSettings(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The System Meters setting {Name} has a choice this version doesn't know, so it uses the default.")]
+    private static partial void LogUnknownChoice(ILogger logger, string name);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "System Meters didn't stop within {Seconds} s, so its icons may stay on the taskbar until the pointer passes over them.")]
     private static partial void LogNotStoppedInTime(ILogger logger, double seconds);
