@@ -13,6 +13,7 @@ using PCCompanion.Infrastructure.Features;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Logging;
+using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Windows;
@@ -109,6 +110,7 @@ internal static partial class Program
             .AddInputModule()
             .AddWindowsModule()
             .AddDesktopModule()
+            .AddClipboardModule()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
