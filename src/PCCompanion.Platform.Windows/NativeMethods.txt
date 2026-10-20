@@ -203,3 +203,12 @@ TTS_ALWAYSTIP
 TTS_NOPREFIX
 TOOLTIP_FLAGS
 TRACKMOUSEEVENT_FLAGS
+OpenClipboard
+CloseClipboard
+GetClipboardData
+IsClipboardFormatAvailable
+RegisterClipboardFormat
+GlobalLock
+GlobalUnlock
+GlobalSize
+CLIPBOARD_FORMAT
