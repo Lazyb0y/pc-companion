@@ -10,6 +10,7 @@ using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
 using PCCompanion.App.Features.AppWindows;
+using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.ViewModels;
@@ -152,6 +153,7 @@ public partial class App : Application
             .AddTransient<HotCornersViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<SystemMetersViewModel>()
+            .AddTransient<ClipboardActionsViewModel>()
             .BuildServiceProvider();
     }
 

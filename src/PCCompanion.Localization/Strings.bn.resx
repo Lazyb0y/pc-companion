@@ -668,4 +668,256 @@
     <value>এই মুহূর্তে ক্লিপবোর্ড পড়া যাচ্ছে না</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleClipboardName" xml:space="preserve">
+    <value>ক্লিপবোর্ড ও টেক্সট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsName" xml:space="preserve">
+    <value>ক্লিপবোর্ড অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDescription" xml:space="preserve">
+    <value>কপি করা টেক্সটের জন্য অ্যাকশন দেখতে Windows লোগো কী + Alt + V চাপুন, যেমন কপি করা লিংক খোলা বা পার্সেল নম্বর খোঁজা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutHeader" xml:space="preserve">
+    <value>শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
+    <value>কপি করা টেক্সটের অ্যাকশনগুলো পয়েন্টারের কাছে একটি মেনুতে দেখায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcut" xml:space="preserve">
+    <value>Windows লোগো কী + Alt + V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksHeader" xml:space="preserve">
+    <value>কপি করা লিংক খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksDescription" xml:space="preserve">
+    <value>কপি করা টেক্সট http:// বা https:// দিয়ে শুরু হওয়া একটি ওয়েব লিংক হলে "ব্রাউজারে খুলুন" দেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesHeader" xml:space="preserve">
+    <value>নিয়ম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesDescription" xml:space="preserve">
+    <value>পুরো কপি করা টেক্সট কোনো নিয়মের প্যাটার্নের সাথে মিললে, মেনু সেই নিয়মের নামে তার অ্যাকশন দেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddRule" xml:space="preserve">
+    <value>নিয়ম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoRules" xml:space="preserve">
+    <value>এখনো কোনো নিয়ম নেই। কপি করা পার্সেল, টিকিট বা অর্ডার নম্বর তার ওয়েবসাইটে খুঁজতে, অথবা কপি করা টেক্সট কোনো প্রোগ্রামে খুলতে একটি নিয়ম যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditName" xml:space="preserve">
+    <value>{0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoreName" xml:space="preserve">
+    <value>{0}-এর জন্য আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveUp" xml:space="preserve">
+    <value>উপরে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveDown" xml:space="preserve">
+    <value>নিচে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDelete" xml:space="preserve">
+    <value>মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDeleteTitle" xml:space="preserve">
+    <value>{0} মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddTitle" xml:space="preserve">
+    <value>একটি নিয়ম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditTitle" xml:space="preserve">
+    <value>নিয়ম সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryAddress" xml:space="preserve">
+    <value>{0} খোলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProgram" xml:space="preserve">
+    <value>{0} চালু করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProblem" xml:space="preserve">
+    <value>মেনুতে নেই। {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsUnknownAction" xml:space="preserve">
+    <value>এর অ্যাকশনের জন্য PC Companion-এর নতুন সংস্করণ প্রয়োজন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameHeader" xml:space="preserve">
+    <value>নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNamePlaceholder" xml:space="preserve">
+    <value>পার্সেল ট্র্যাক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameNote" xml:space="preserve">
+    <value>মেনুতে নিয়মটির আইটেম।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameMissing" xml:space="preserve">
+    <value>এর কোনো নাম নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternHeader" xml:space="preserve">
+    <value>প্যাটার্ন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNote" xml:space="preserve">
+    <value>একটি রেগুলার এক্সপ্রেশন, যার সাথে পুরো কপি করা টেক্সট মিলতে হবে। শুরু ও শেষের স্পেস এবং লাইন ব্রেক উপেক্ষা করা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMatchCase" xml:space="preserve">
+    <value>কেস মেলান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternReference" xml:space="preserve">
+    <value>রেগুলার এক্সপ্রেশন রেফারেন্স</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternMissing" xml:space="preserve">
+    <value>এর কোনো প্যাটার্ন নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternInvalid" xml:space="preserve">
+    <value>প্যাটার্নটি একটি বৈধ রেগুলার এক্সপ্রেশন নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
+    <value>প্যাটার্নটি একটি লুকঅ্যারাউন্ড, ব্যাকরেফারেন্স, অ্যাটমিক গ্রুপ বা শর্ত ব্যবহার করে, যা এখানে ব্যবহার করা যায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryHeader" xml:space="preserve">
+    <value>চেষ্টা করে দেখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryPlaceholder" xml:space="preserve">
+    <value>আপনি যে টেক্সট কপি করেন তার একটি নমুনা পেস্ট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryMatches" xml:space="preserve">
+    <value>প্যাটার্নটি এই টেক্সটের সাথে মেলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryNoMatch" xml:space="preserve">
+    <value>প্যাটার্নটি এই টেক্সটের সাথে মেলে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionHeader" xml:space="preserve">
+    <value>অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionOpenAddress" xml:space="preserve">
+    <value>একটি ওয়েব ঠিকানা খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionRunProgram" xml:space="preserve">
+    <value>একটি প্রোগ্রাম চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressHeader" xml:space="preserve">
+    <value>ওয়েব ঠিকানা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressPlaceholder" xml:space="preserve">
+    <value>https://www.example.com/search?q={text}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNote" xml:space="preserve">
+    <value>{text} কপি করা টেক্সট বোঝায়, যা ওয়েব ঠিকানার জন্য এনকোড করা হয়। আপনার ব্রাউজার এটি এই সাইটে পাঠায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressMissing" xml:space="preserve">
+    <value>এর কোনো ওয়েব ঠিকানা নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNotWeb" xml:space="preserve">
+    <value>ঠিকানাটি https:// বা http:// দিয়ে শুরু হতে হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramHeader" xml:space="preserve">
+    <value>প্রোগ্রাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramDialogTitle" xml:space="preserve">
+    <value>একটি প্রোগ্রাম বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramFilter" xml:space="preserve">
+    <value>প্রোগ্রাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsHeader" xml:space="preserve">
+    <value>আর্গুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
+    <value>{text} কপি করা টেক্সট বোঝায়, যা একটি আর্গুমেন্টের মধ্যেই থাকে। কিছু প্রোগ্রাম - বা / দিয়ে শুরু হওয়া আর্গুমেন্টকে অপশন হিসেবে পড়ে। প্রোগ্রাম আপনার অধিকার নিয়ে চালু হয়, এবং PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললে চলে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
+    <value>এর কোনো প্রোগ্রাম নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFullPath" xml:space="preserve">
+    <value>পুরো পাথ লিখুন, যেমন C:\Program Files\App\App.exe।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotExe" xml:space="preserve">
+    <value>একটি প্রোগ্রাম ফাইল (.exe) বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFound" xml:space="preserve">
+    <value>এই প্রোগ্রামটি পাওয়া যায়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramInterpreter" xml:space="preserve">
+    <value>কমান্ড চালায় এমন প্রোগ্রাম, যেমন cmd বা PowerShell, ব্যবহার করা যায় না: কপি করা টেক্সট সেগুলোকে অন্য কমান্ড চালাতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলার সময়, প্রোগ্রাম চালানোর নিয়মগুলো চলে না, এবং লিংক ও ওয়েব ঠিকানা অ্যাডমিন অধিকার ছাড়াই আপনার ব্রাউজারে খোলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPermissions" xml:space="preserve">
+    <value>শুধু আপনি শর্টকাট চাপলে ক্লিপবোর্ডের টেক্সট পড়ে, কখনো ব্যাকগ্রাউন্ডে নয়, এবং কপি করা অ্যাপ যে টেক্সটকে ব্যক্তিগত হিসেবে চিহ্নিত করেছে তা কখনো নয়। টেক্সট সংরক্ষণ, লগ বা প্রেরণ করে না। লিংক ও ওয়েব ঠিকানা আপনার ব্রাউজারে খোলে, যা টেক্সটটি নিয়মে উল্লেখ করা সাইটে পাঠায়, এবং শুধু আপনার নিয়মে উল্লেখ করা প্রোগ্রাম চালু করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

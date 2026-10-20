@@ -668,4 +668,256 @@
     <value>The clipboard can't be read right now</value>
     <comment>Clipboard Actions menu: dimmed note when another app keeps the clipboard open, or the app that copied the text didn't provide it.</comment>
   </data>
+  <data name="ModuleClipboardName" xml:space="preserve">
+    <value>Clipboard &amp; Text</value>
+    <comment>Navigation pane and Home: the group of features that act on copied and typed text.</comment>
+  </data>
+  <data name="ClipboardActionsName" xml:space="preserve">
+    <value>Clipboard Actions</value>
+    <comment>Feature name: actions for the copied text, shown in a menu.</comment>
+  </data>
+  <data name="ClipboardActionsDescription" xml:space="preserve">
+    <value>Press the Windows logo key + Alt + V to see actions for the copied text, such as opening a copied link or looking up a parcel number.</value>
+    <comment>Feature description on its page and on Home.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutHeader" xml:space="preserve">
+    <value>Shortcut</value>
+    <comment>Clipboard Actions page: header of the card that shows the keyboard shortcut.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
+    <value>Shows the actions for the copied text in a menu at the pointer.</value>
+    <comment>Clipboard Actions page: description of the shortcut card.</comment>
+  </data>
+  <data name="ClipboardActionsShortcut" xml:space="preserve">
+    <value>Windows logo key + Alt + V</value>
+    <comment>Clipboard Actions page: the keyboard shortcut. Name the keys as in AppWindowsShortcutWindows; keep V.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksHeader" xml:space="preserve">
+    <value>Open copied links</value>
+    <comment>Clipboard Actions page: switch header.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksDescription" xml:space="preserve">
+    <value>Offers Open in browser when the copied text is a web link that starts with http:// or https://.</value>
+    <comment>Clipboard Actions page: switch description. Open in browser is the menu item ClipboardActionsOpenInBrowser.</comment>
+  </data>
+  <data name="ClipboardActionsRulesHeader" xml:space="preserve">
+    <value>Rules</value>
+    <comment>Clipboard Actions page: header of the section with the user's rules.</comment>
+  </data>
+  <data name="ClipboardActionsRulesDescription" xml:space="preserve">
+    <value>When the whole copied text matches a rule's pattern, the menu offers the rule's action under its name.</value>
+    <comment>Clipboard Actions page: below the Rules header.</comment>
+  </data>
+  <data name="ClipboardActionsAddRule" xml:space="preserve">
+    <value>Add rule</value>
+    <comment>Clipboard Actions page: button that opens the rule editor for a new rule.</comment>
+  </data>
+  <data name="ClipboardActionsNoRules" xml:space="preserve">
+    <value>No rules yet. Add one to look up a copied parcel, ticket or order number on its website, or to open the copied text in a program.</value>
+    <comment>Clipboard Actions page: shown while there are no rules.</comment>
+  </data>
+  <data name="ClipboardActionsEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Clipboard Actions page: button that opens a rule in the rule editor.</comment>
+  </data>
+  <data name="ClipboardActionsEditName" xml:space="preserve">
+    <value>Edit {0}</value>
+    <comment>Clipboard Actions page: name of a rule's Edit button for screen readers. {0} is the rule's name.</comment>
+  </data>
+  <data name="ClipboardActionsMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Clipboard Actions page: name of a rule's More button for screen readers. {0} is the rule's name.</comment>
+  </data>
+  <data name="ClipboardActionsMoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Clipboard Actions page: menu item that moves a rule up the list, and so up the menu.</comment>
+  </data>
+  <data name="ClipboardActionsMoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Clipboard Actions page: menu item that moves a rule down the list, and so down the menu.</comment>
+  </data>
+  <data name="ClipboardActionsDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Clipboard Actions page: menu item and dialog button that delete a rule.</comment>
+  </data>
+  <data name="ClipboardActionsDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>Clipboard Actions page: title of the dialog that asks before a rule is deleted. {0} is the rule's name.</comment>
+  </data>
+  <data name="ClipboardActionsCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Clipboard Actions dialogs: button that closes the dialog without a change.</comment>
+  </data>
+  <data name="ClipboardActionsSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Rule editor: button that saves the rule.</comment>
+  </data>
+  <data name="ClipboardActionsAddTitle" xml:space="preserve">
+    <value>Add a rule</value>
+    <comment>Rule editor: title for a new rule.</comment>
+  </data>
+  <data name="ClipboardActionsEditTitle" xml:space="preserve">
+    <value>Edit the rule</value>
+    <comment>Rule editor: title for an existing rule.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryAddress" xml:space="preserve">
+    <value>Opens {0}</value>
+    <comment>Clipboard Actions page: what a rule does. {0} is the site of its web address, such as tracking.example.com.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProgram" xml:space="preserve">
+    <value>Starts {0}</value>
+    <comment>Clipboard Actions page: what a rule does. {0} is its program's file name, such as player.exe.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProblem" xml:space="preserve">
+    <value>Not in the menu. {0}</value>
+    <comment>Clipboard Actions page: a rule that can't be used. {0} is why, one of the rule editor's problem messages.</comment>
+  </data>
+  <data name="ClipboardActionsUnknownAction" xml:space="preserve">
+    <value>Its action needs a newer version of PC Companion.</value>
+    <comment>Clipboard Actions page: why a rule whose action this version doesn't know can't be used.</comment>
+  </data>
+  <data name="ClipboardActionsNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Rule editor: box header. The rule's name is its item in the menu.</comment>
+  </data>
+  <data name="ClipboardActionsNamePlaceholder" xml:space="preserve">
+    <value>Track the parcel</value>
+    <comment>Rule editor: example name shown in the empty box.</comment>
+  </data>
+  <data name="ClipboardActionsNameNote" xml:space="preserve">
+    <value>The rule's item in the menu.</value>
+    <comment>Rule editor: below the Name box.</comment>
+  </data>
+  <data name="ClipboardActionsNameMissing" xml:space="preserve">
+    <value>It has no name.</value>
+    <comment>Clipboard Actions page: why a rule can't be used.</comment>
+  </data>
+  <data name="ClipboardActionsPatternHeader" xml:space="preserve">
+    <value>Pattern</value>
+    <comment>Rule editor: header of the box for the regular expression.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNote" xml:space="preserve">
+    <value>A regular expression that the whole copied text must match. Spaces and line breaks at its ends are ignored.</value>
+    <comment>Rule editor: below the Pattern box.</comment>
+  </data>
+  <data name="ClipboardActionsMatchCase" xml:space="preserve">
+    <value>Match case</value>
+    <comment>Rule editor: check box. Use Windows' term.</comment>
+  </data>
+  <data name="ClipboardActionsPatternReference" xml:space="preserve">
+    <value>Regular expression reference</value>
+    <comment>Rule editor: link to Microsoft's quick reference for .NET regular expressions.</comment>
+  </data>
+  <data name="ClipboardActionsPatternMissing" xml:space="preserve">
+    <value>It has no pattern.</value>
+    <comment>Clipboard Actions page: why a rule can't be used.</comment>
+  </data>
+  <data name="ClipboardActionsPatternInvalid" xml:space="preserve">
+    <value>The pattern isn't a valid regular expression.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's pattern.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
+    <value>The pattern uses a lookaround, a backreference, an atomic group or a conditional, which can't be used here.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's pattern. Use the usual terms for these parts of regular expressions.</comment>
+  </data>
+  <data name="ClipboardActionsTryHeader" xml:space="preserve">
+    <value>Try it</value>
+    <comment>Rule editor: header of the box for a sample text to try the pattern on.</comment>
+  </data>
+  <data name="ClipboardActionsTryPlaceholder" xml:space="preserve">
+    <value>Paste a sample of the text you copy</value>
+    <comment>Rule editor: shown in the empty Try it box.</comment>
+  </data>
+  <data name="ClipboardActionsTryMatches" xml:space="preserve">
+    <value>The pattern matches this text.</value>
+    <comment>Rule editor: below the Try it box.</comment>
+  </data>
+  <data name="ClipboardActionsTryNoMatch" xml:space="preserve">
+    <value>The pattern doesn't match this text.</value>
+    <comment>Rule editor: below the Try it box.</comment>
+  </data>
+  <data name="ClipboardActionsActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Rule editor: header of the choice of what the rule does.</comment>
+  </data>
+  <data name="ClipboardActionsActionOpenAddress" xml:space="preserve">
+    <value>Open a web address</value>
+    <comment>Rule editor: action choice.</comment>
+  </data>
+  <data name="ClipboardActionsActionRunProgram" xml:space="preserve">
+    <value>Run a program</value>
+    <comment>Rule editor: action choice.</comment>
+  </data>
+  <data name="ClipboardActionsAddressHeader" xml:space="preserve">
+    <value>Web address</value>
+    <comment>Rule editor: box header.</comment>
+  </data>
+  <data name="ClipboardActionsAddressPlaceholder" xml:space="preserve">
+    <value>https://www.example.com/search?q={text}</value>
+    <comment>Rule editor: example shown in the empty Web address box. Keep it as written.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNote" xml:space="preserve">
+    <value>{text} stands for the copied text, encoded for web addresses. Your browser sends it to this site.</value>
+    <comment>Rule editor: below the Web address box. Keep {text} as written.</comment>
+  </data>
+  <data name="ClipboardActionsAddressMissing" xml:space="preserve">
+    <value>It has no web address.</value>
+    <comment>Clipboard Actions page: why a rule can't be used.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNotWeb" xml:space="preserve">
+    <value>The address must start with https:// or http://.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's web address.</comment>
+  </data>
+  <data name="ClipboardActionsProgramHeader" xml:space="preserve">
+    <value>Program</value>
+    <comment>Rule editor: box header.</comment>
+  </data>
+  <data name="ClipboardActionsBrowse" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Rule editor: button that opens the Open dialog to choose a program. Use Windows' term.</comment>
+  </data>
+  <data name="ClipboardActionsProgramDialogTitle" xml:space="preserve">
+    <value>Choose a program</value>
+    <comment>Title of the Open dialog that Browse opens.</comment>
+  </data>
+  <data name="ClipboardActionsProgramFilter" xml:space="preserve">
+    <value>Programs</value>
+    <comment>Open dialog: file type that shows .exe files.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsHeader" xml:space="preserve">
+    <value>Arguments</value>
+    <comment>Rule editor: box header for the program's command-line arguments.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
+    <value>{text} stands for the copied text, which stays in one argument. Some programs read an argument that starts with - or / as an option. Programs start with your rights, and don't run while PC Companion runs as administrator.</value>
+    <comment>Rule editor: below the Arguments box. Keep {text} as written.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
+    <value>It has no program.</value>
+    <comment>Clipboard Actions page: why a rule can't be used.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFullPath" xml:space="preserve">
+    <value>Enter the full path, such as C:\Program Files\App\App.exe.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's program. Keep the path as written.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotExe" xml:space="preserve">
+    <value>Choose a program file (.exe).</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's program.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFound" xml:space="preserve">
+    <value>This program wasn't found.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's program.</comment>
+  </data>
+  <data name="ClipboardActionsProgramInterpreter" xml:space="preserve">
+    <value>Programs that run commands, such as cmd or PowerShell, can't be used: copied text could make them run other commands.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's program.</comment>
+  </data>
+  <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
+    <value>While PC Companion runs as administrator, rules that run a program don't run, and links and web addresses open in your browser without admin rights.</value>
+    <comment>Clipboard Actions page: note.</comment>
+  </data>
+  <data name="ClipboardActionsPermissions" xml:space="preserve">
+    <value>Reads the clipboard's text only when you press the shortcut, never in the background, and never text that the app that copied it marked private. Doesn't store, log or send the text. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
+    <comment>Clipboard Actions page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>
