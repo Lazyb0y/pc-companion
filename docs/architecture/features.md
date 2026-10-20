@@ -38,6 +38,7 @@ public interface IFeature : IDisposable
 ```
 
 - Each module registers its features with the host: `services.AddInputModule()`.
+- A feature that offers the host's Settings or Exit, as in its own menu, takes `IHostCommands` from the host. It may call them from any thread; the host runs them on its UI thread.
 - **Isolation:** the host's `FeatureRunner` calls each feature inside its own error boundary. When `Apply` throws, it logs the error, stops that feature for the rest of the session, and the other features keep running.
 - A feature guards its own handlers of window messages, input and timers the same way: an exception there would end the host.
 - A feature that isn't supported on this PC is never started.
