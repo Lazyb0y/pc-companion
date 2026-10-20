@@ -94,6 +94,26 @@ public static class Win32 {
         return text.ToString();
     }
 
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern int GetClassName(IntPtr window, System.Text.StringBuilder name, int length);
+    [DllImport("user32.dll")] private static extern IntPtr GetWindow(IntPtr window, uint command);
+
+    // The window that owns another, such as a tooltip's.
+    public static IntPtr Owner(IntPtr window) { return GetWindow(window, 4); }
+
+    public static string WindowClass(IntPtr window) {
+        var name = new System.Text.StringBuilder(256);
+        GetClassName(window, name, name.Capacity);
+        return name.ToString();
+    }
+
+    // Whether a window is in front of another (GW_HWNDPREV leads toward the front).
+    public static bool IsInFrontOf(IntPtr window, IntPtr other) {
+        for (var current = GetWindow(other, 3); current != IntPtr.Zero; current = GetWindow(current, 3)) {
+            if (current == window) return true;
+        }
+        return false;
+    }
+
     // The visible top-level windows, front to back.
     public static IntPtr[] TopLevelWindows() {
         var windows = new System.Collections.Generic.List<IntPtr>();
