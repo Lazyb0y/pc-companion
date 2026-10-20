@@ -4,10 +4,17 @@ ChangeWindowMessageFilterEx
 CloseHandle
 COMDLG_FILTERSPEC
 CommandLineToArgv
+CreateBitmap
+CreateCompatibleDC
+CreateDIBSection
+CreateFontIndirect
+CreateIconIndirect
 CreatePopupMenu
 CreateProcessWithTokenW
 CreateWindowEx
 DefWindowProc
+DeleteDC
+DeleteObject
 DestroyIcon
 DestroyMenu
 DestroyWindow
@@ -24,6 +31,7 @@ FILEOPENDIALOGOPTIONS
 FindWindow
 GetAncestor
 FreeMibTable
+GdiFlush
 GetApplicationUserModelId
 GetAsyncKeyState
 GetCurrentProcess
@@ -40,6 +48,7 @@ GetProcAddress
 GetShellWindow
 GetSystemMetrics
 GetSystemTimes
+GetTextExtentPoint32
 GetTokenInformation
 GetWindow
 GetWindowLongPtr
@@ -86,9 +95,12 @@ RegisterRawInputDevices
 RegisterWindowMessage
 SC_MONITORPOWER
 SC_SCREENSAVE
+SelectObject
 SendInput
 SetProcessPreferredUILanguages
+SetBkMode
 SetForegroundWindow
+SetTextColor
 SetWindowPos
 SetWinEventHook
 Shell_NotifyIcon
@@ -99,6 +111,7 @@ SIGDN
 SystemParametersInfo
 TOKEN_ELEVATION
 TOKEN_ELEVATION_TYPE
+TextOut
 TRACK_POPUP_MENU_FLAGS
 TrackPopupMenuEx
 TranslateMessage
