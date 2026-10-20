@@ -48,4 +48,6 @@ if (-not $rows) {
 }
 
 $text = (Get-Content -Path $template -Raw -Encoding utf8).Replace('{{version}}', $Version).Replace('{{installers}}', ($rows -join "`n"))
-[IO.File]::WriteAllText($Output, $text, (New-Object Text.UTF8Encoding $false))
+
+# GitHub adds a blank line before its list of pull requests, so the notes end with no blank lines.
+[IO.File]::WriteAllText($Output, $text.TrimEnd() + "`n", (New-Object Text.UTF8Encoding $false))
