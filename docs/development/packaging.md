@@ -6,7 +6,7 @@ dotnet build src/PCCompanion.Installer/PCCompanion.Installer.wixproj -c Release 
 
 Output: `src/PCCompanion.Installer/bin/x64/Release/PCCompanion-x64.msi`. Platforms: `x64` and `ARM64`.
 
-CI builds both installers on every pull request and push to `main`. Download them from the workflow run's artifacts (`PCCompanion-x64-msi`, `PCCompanion-ARM64-msi`), kept for 14 days.
+CI builds both installers on every pull request and push to `main`. Download them from the workflow run's artifacts (`PCCompanion-x64-msi`, `PCCompanion-ARM64-msi`), kept for 14 days. Releases publish them as `PCCompanion-<version>-<arch>.msi`; see [Releasing](releasing.md).
 
 - WiX 5 MSI in `src/PCCompanion.Installer`. The WiX SDK version is pinned in `global.json`.
 - The installer publishes the settings app, the host and the elevated helper self-contained, in Release with ReadyToRun, and installs them into one folder. A build step merges the publish folders: the files they share are installed once and must be identical, or the build fails.
