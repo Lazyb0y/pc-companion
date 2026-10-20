@@ -20,19 +20,43 @@ public sealed class MeterReadingTests
 
         Assert.False(settings.Enabled);
         Assert.True(settings.Cpu && settings.Memory && settings.Network);
+        Assert.Equal((ShowOn.Taskbar, StripLayout.ValuesAndNames, StripIcons.Color), (settings.ShowOn, settings.Layout, settings.Icons));
         Assert.Equal(TimeSpan.FromSeconds(1), settings.Interval);
+    }
+
+    [Fact]
+    public void UnknownChoicesReadAsTheirDefaultsAndAreNamed()
+    {
+        using var document = JsonDocument.Parse("""{ "showOn": "Desktop", "layout": "Compact", "icons": 2 }""");
+        var section = document.RootElement.Clone();
+
+        var settings = SystemMetersSettings.Read(section);
+
+        Assert.Equal((ShowOn.Taskbar, StripLayout.Compact, StripIcons.Color), (settings.ShowOn, settings.Layout, settings.Icons));
+        Assert.Equal(["showOn", "icons"], SystemMetersSettings.UnknownChoices(section));
+        Assert.Empty(SystemMetersSettings.UnknownChoices(null));
+    }
+
+    [Fact]
+    public void ChoicesAreReadWhateverTheirCase()
+    {
+        using var document = JsonDocument.Parse("""{ "showOn": "notificationArea", "layout": "LARGEVALUES", "icons": "none" }""");
+
+        var settings = SystemMetersSettings.Read(document.RootElement.Clone());
+
+        Assert.Equal((ShowOn.NotificationArea, StripLayout.LargeValues, StripIcons.None), (settings.ShowOn, settings.Layout, settings.Icons));
     }
 
     [Fact]
     public void SettingsRoundTripWithOnlyTheirOwnProperties()
     {
-        var settings = new SystemMetersSettings { Enabled = true, Network = false, UpdateIntervalSeconds = 5 };
+        var settings = new SystemMetersSettings { Enabled = true, Network = false, ShowOn = ShowOn.NotificationArea, Layout = StripLayout.Compact, Icons = StripIcons.OneColor, UpdateIntervalSeconds = 5 };
 
         var section = settings.Write();
 
         Assert.Equal(settings, SystemMetersSettings.Read(section));
         Assert.Equal(
-            """{"enabled":true,"cpu":true,"memory":true,"network":false,"updateIntervalSeconds":5}""",
+            """{"enabled":true,"cpu":true,"memory":true,"network":false,"showOn":"NotificationArea","layout":"Compact","icons":"OneColor","updateIntervalSeconds":5}""",
             section.GetRawText());
     }
 
