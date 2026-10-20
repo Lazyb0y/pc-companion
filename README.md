@@ -31,7 +31,7 @@ To uninstall, remove PC Companion in **Settings > Apps > Installed apps**. This 
 
 ## Updates
 
-Once a day, PC Companion asks GitHub whether a newer version is out. When there is one, a notification and a banner on the **General** page open its release page. Download and install it as above: it installs over the old version and keeps your settings. **General > Check for updates** turns the check off. Each release's notes say what changed.
+Once a day, PC Companion asks GitHub whether a newer version is out. When there is one, a notification and a banner on the **General** page open its release page. Download and install it as above: it installs over the old version and keeps your settings. **General > Check for updates** turns the check off, and **Check now** asks at once. Each release's notes say what changed.
 
 ## Getting help
 
