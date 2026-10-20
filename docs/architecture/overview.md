@@ -64,7 +64,7 @@
 | `PCCompanion.Infrastructure` | Data folder paths, the settings store, the settings watcher, the feature runner and the [update check](../features/general/update-check.md) |
 | `PCCompanion.Logging` | File logging and path redaction; see [Logging](../diagnostics/logging.md) |
 | `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
-| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, global keyboard shortcuts, keyboard layouts, the window in front, top-level windows and their app IDs, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks and protected files |
+| `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, the tray icon, shortcut menus, mouse input, displays, key and pointer state, global keyboard shortcuts, keyboard layouts, the window in front, top-level windows and their app IDs, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks, protected files, and the processor, memory and network adapter readings |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
 | `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md) |
 | `PCCompanion.Host` | The background host |
