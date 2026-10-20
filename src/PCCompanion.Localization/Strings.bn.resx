@@ -644,4 +644,28 @@
     <value>পুরো পিসির জন্য প্রসেসর কতটা ব্যস্ত, কতটা মেমরি ব্যবহৃত হচ্ছে এবং নেটওয়ার্ক অ্যাডাপ্টারগুলো কত ডেটা গ্রহণ ও প্রেরণ করে তা পড়ে; প্রতিটি অ্যাপ কী ব্যবহার করে তা কখনো নয়। টাস্কবারে শুধু এর বোতামগুলো কোথায় আছে তা পড়ে, কখনো সেগুলোর নাম নয়। কোনো নেটওয়ার্ক সংযোগ করে না, এবং কিছুই সংরক্ষণ বা প্রেরণ করে না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>ব্রাউজারে খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>কপি করা টেক্সটের জন্য কোনো অ্যাকশন নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>ক্লিপবোর্ডে কোনো টেক্সট নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>কপি করা টেক্সটটি ব্যক্তিগত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>কপি করা টেক্সটটি খুব দীর্ঘ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>এই মুহূর্তে ক্লিপবোর্ড পড়া যাচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
