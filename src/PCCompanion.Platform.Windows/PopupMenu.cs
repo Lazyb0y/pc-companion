@@ -60,6 +60,11 @@ public static class PopupMenu
     }
 
     /// <summary>
+    /// Closes the menu open on the calling thread, if there is one, as if the user pressed Esc.
+    /// </summary>
+    public static void CloseOpenMenu() => PInvoke.EndMenu();
+
+    /// <summary>
     /// Drops the keyboard messages waiting for the calling thread and returns how many there were.
     /// </summary>
     public static int DropWaitingKeys()
