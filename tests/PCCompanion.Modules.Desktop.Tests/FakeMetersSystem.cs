@@ -31,6 +31,12 @@ internal sealed class FakeMetersSystem : IMetersSystem
 
     public IMeterAppearance Appearance { get; }
 
+    /// <summary>The Windows build; the strip runs only on tested ones, and by default this isn't one.</summary>
+    public int WindowsBuild { get; set; } = 19045;
+
+    /// <summary>The strip's host the meters created last.</summary>
+    public FakeStripHost? StripHost { get; private set; }
+
     /// <summary>The command the next menu returns.</summary>
     public MeterMenuCommand MenuChoice { get; set; }
 
@@ -67,6 +73,16 @@ internal sealed class FakeMetersSystem : IMetersSystem
             Icons = new FakeMeterIcons(this);
             Monitor.PulseAll(_gate);
             return Icons;
+        }
+    }
+
+    public IStripHost CreateStripHost(MessageWindow window)
+    {
+        lock (_gate)
+        {
+            StripHost = new FakeStripHost(Record);
+            Monitor.PulseAll(_gate);
+            return StripHost;
         }
     }
 
@@ -134,6 +150,8 @@ internal sealed class FakeMetersSystem : IMetersSystem
         }
 
         public uint Color() => 0xFFFFFF;
+
+        public bool IsHighContrast() => false;
     }
 
     /// <summary>Records what the meters show; tests raise its events on the meters thread.</summary>
