@@ -40,6 +40,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 ## Architecture
 
 - A small background host (tray icon, hooks, enabled features) plus a WinUI 3 settings app that is launched on demand and exits when closed. The settings app is the only process that writes settings; the host watches the settings files. An elevated helper starts on demand, only when a feature needs admin rights.
+- Features share the host's UI thread, so work there stays within a few milliseconds and never waits for the disk, the network or another program. Follow [Threads and processes](docs/architecture/features.md#threads-and-processes); a feature gets its own process only for the reasons listed there.
 - Identifiers: project and namespace prefix `PCCompanion`; executables `PCCompanion.exe` (settings app) and `PCCompanion.Host.exe` (host); data folder `%LOCALAPPDATA%\PCCompanion`. The user-visible name is "PC Companion".
 - Keep dependencies one-way, with no cycles. Shared projects may be referenced by many projects. Keep OS-specific code isolated.
 - Create projects only when first needed. No empty projects, speculative abstractions or unnecessary boilerplate.
