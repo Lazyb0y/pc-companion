@@ -417,11 +417,12 @@ function Get-WindowText {
 
 # Sends what Explorer sends when the tray icon is used: the host's window gets WM_APP + 1 with the
 # event in the low word of lParam and the icon ID (1) in the high word. The icon itself is usually
-# hidden in the overflow area of a new Windows 11 profile.
-function Send-TrayEvent([int] $TrayEvent, [int] $X = 0, [int] $Y = 0) {
-    $window = [Win32]::FindWindow('PCCompanion.Host', $null)
+# hidden in the overflow area of a new Windows 11 profile. A meter's icon has its own ID and the
+# window of the meters' thread, PCCompanion.SystemMeters.
+function Send-TrayEvent([int] $TrayEvent, [int] $X = 0, [int] $Y = 0, [int] $IconId = 1, [string] $WindowClass = 'PCCompanion.Host') {
+    $window = [Win32]::FindWindow($WindowClass, $null)
     if ($window -eq [IntPtr]::Zero) { return $false }
-    return [Win32]::PostMessage($window, 0x8001, [UIntPtr] [uint32] (($X -band 0xFFFF) -bor ($Y -shl 16)), [IntPtr] ($TrayEvent -bor (1 -shl 16)))
+    return [Win32]::PostMessage($window, 0x8001, [UIntPtr] [uint32] (($X -band 0xFFFF) -bor ($Y -shl 16)), [IntPtr] ($TrayEvent -bor ($IconId -shl 16)))
 }
 
 $WM_CONTEXTMENU = 0x007B
@@ -495,9 +496,9 @@ function Get-TrayMenuBrightness {
 }
 
 # Closes the host's open tray menu and returns whether it closed. Escape would go to the window in
-# front, which needn't be the menu; WM_CANCELMODE makes the host's window end the menu.
-function Close-TrayMenu {
-    $window = [Win32]::FindWindow('PCCompanion.Host', $null)
+# front, which needn't be the menu; WM_CANCELMODE makes the window that owns the menu end it.
+function Close-TrayMenu([string] $WindowClass = 'PCCompanion.Host') {
+    $window = [Win32]::FindWindow($WindowClass, $null)
     if ($window -eq [IntPtr]::Zero) { return $false }
     [void] [Win32]::PostMessage($window, 0x001F, [UIntPtr]::Zero, [IntPtr]::Zero)
     $menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
