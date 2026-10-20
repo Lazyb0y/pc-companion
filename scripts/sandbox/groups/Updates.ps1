@@ -1,12 +1,14 @@
 ﻿# Updates: the update check against a stand-in for GitHub's releases API, with networking still off.
 # The hosts file points api.github.com at an HTTPS server in the Sandbox, whose certificate's root
 # is trusted only here. Turning the check on runs it at once; it finds version 9.9.9, shows the
-# notification and the banner, and selecting the notification opens the release page.
+# notification and the banner, and selecting the notification opens the release page. Then, with
+# the check off, Check now asks each time it's selected.
 
 $serverFolder = Join-Path $results 'fake-github'
 New-Item -ItemType Directory -Force -Path $serverFolder | Out-Null
 $requestLog = Join-Path $serverFolder 'requests.jsonl'
 $answer = Join-Path $serverFolder 'answer.json'
+$status = Join-Path $serverFolder 'status.txt'
 Set-Content -Path $answer -Encoding utf8 -Value '{ "tag_name": "v9.9.9", "name": "PC Companion 9.9.9 Preview", "draft": false, "prerelease": false, "body": "Notes" }'
 $hostsFile = Join-Path $env:SystemRoot 'System32\drivers\etc\hosts'
 $hostsBefore = Get-Content $hostsFile -Raw -ErrorAction SilentlyContinue
@@ -21,13 +23,48 @@ $rootStore.Close()
 Add-Content -Path $hostsFile -Value "`r`n127.0.0.1 api.github.com" -Encoding ascii
 Clear-DnsClientCache -ErrorAction SilentlyContinue
 $server = Start-Process powershell.exe -PassThru -WindowStyle Hidden -ArgumentList @(
-    '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $PSScriptRoot '..\fake-github.ps1'), '-RequestLog', $requestLog, '-Answer', $answer)
+    '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $PSScriptRoot '..\fake-github.ps1'), '-RequestLog', $requestLog, '-Answer', $answer, '-Status', $status)
 $serverUp = Wait-Until { Get-NetTCPConnection -LocalPort 443 -State Listen -ErrorAction SilentlyContinue } 15
 Test-Check 'the stand-in for GitHub listens on port 443' ([bool] $serverUp)
 
 function Get-Requests { @(Get-Content $requestLog -Encoding utf8 -ErrorAction SilentlyContinue | Where-Object { $_ } | ForEach-Object { $_ | ConvertFrom-Json }) }
 # Counted apart: PowerShell returns one request as itself, without a Count.
 function Get-RequestCount { @(Get-Content $requestLog -Encoding utf8 -ErrorAction SilentlyContinue | Where-Object { $_ }).Count }
+
+# Exactly the request the host makes.
+function Test-Request([string] $Name, $Request) {
+    $headerNames = @($Request.Headers.PSObject.Properties.Name | Where-Object { $_ -ne 'Host' } | Sort-Object)
+    Test-Check "$Name asks for the latest release" (($Request.Method -eq 'GET') -and ($Request.Path -eq '/repos/Lazyb0y/pc-companion/releases/latest')) "$($Request.Method) $($Request.Path)"
+    Test-Check "$Name has only the Accept and User-Agent headers" (($headerNames -join ',') -eq 'Accept,User-Agent') ($headerNames -join ', ')
+    Test-Check "$Name's headers say only what they must" (($Request.Headers.Accept -eq 'application/vnd.github+json') -and ($Request.Headers.'User-Agent' -eq 'PCCompanion')) "Accept: $($Request.Headers.Accept); User-Agent: $($Request.Headers.'User-Agent')"
+}
+
+function Get-AppLog {
+    (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
+}
+
+# Focused first, as from the keyboard. The page is scrolled to its end, where the card is, for the
+# screenshots: focus from UI Automation doesn't scroll it.
+function Invoke-CheckNow {
+    $button = Find-AppElement 'Check now'
+    if (-not $button) { return $false }
+    $walker = [System.Windows.Automation.TreeWalker]::RawViewWalker
+    $area = $walker.GetParent($button)
+    while ($area -and -not [bool] $area.GetCurrentPropertyValue([System.Windows.Automation.AutomationElement]::IsScrollPatternAvailableProperty)) {
+        $area = $walker.GetParent($area)
+    }
+    if ($area) {
+        $scroll = $area.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern)
+        if ($scroll.Current.VerticallyScrollable) { $scroll.SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100) }
+    }
+    $button.SetFocus()
+    $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+
+function Set-Answer([string] $Tag) {
+    Set-Content -Path $answer -Encoding utf8 -Value "{ `"tag_name`": `"$Tag`", `"name`": `"PC Companion Preview`", `"draft`": false, `"prerelease`": false, `"body`": `"Notes`" }"
+}
 
 # The check is off, so starting PC Companion asks nothing.
 Write-Settings '{ "schemaVersion": 1, "updates": { "checkAutomatically": false } }'
@@ -47,10 +84,7 @@ Test-Check 'turn on Check for updates' (Set-Toggle 'Check for updates' $true)
 Test-Check 'the host asks GitHub once' (Wait-Until { (Get-RequestCount) -ge 1 } 30) "requests: $(Get-RequestCount)"
 $request = Get-Requests | Select-Object -First 1
 if ($request) {
-    $headerNames = @($request.Headers.PSObject.Properties.Name | Where-Object { $_ -ne 'Host' } | Sort-Object)
-    Test-Check 'the request asks for the latest release' (($request.Method -eq 'GET') -and ($request.Path -eq '/repos/Lazyb0y/pc-companion/releases/latest')) "$($request.Method) $($request.Path)"
-    Test-Check 'the request has only the Accept and User-Agent headers' (($headerNames -join ',') -eq 'Accept,User-Agent') ($headerNames -join ', ')
-    Test-Check 'the headers say only what they must' (($request.Headers.Accept -eq 'application/vnd.github+json') -and ($request.Headers.'User-Agent' -eq 'PCCompanion')) "Accept: $($request.Headers.Accept); User-Agent: $($request.Headers.'User-Agent')"
+    Test-Request 'the request' $request
 }
 
 $resultFile = Join-Path $dataFolder 'update-check.json'
@@ -85,6 +119,52 @@ Test-Check 'General hides the banner' (Wait-Until { @(Get-WindowText | Where-Obj
 $settings = Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json
 Test-Check 'the setting is saved off' ($settings.updates.checkAutomatically -eq $false)
 Test-Check 'GitHub was asked only once' ((Get-RequestCount) -eq 1) "requests: $(Get-RequestCount)"
+
+# Check now, with the check off. The status shows the saved result first.
+$text = Get-WindowText
+Test-Check 'the update status shows the saved newer version' ($text -contains 'PC Companion 9.9.9 is available') ($text -join ' | ')
+Test-Check 'the update status says when the last check was' (@($text | Where-Object { $_ -like 'Last checked: *' }).Count -eq 1) ($text -join ' | ')
+
+# An older version: this one is up to date.
+Set-Answer 'v0.0.1'
+Test-Check 'select Check now' (Invoke-CheckNow)
+Test-Check 'Check now asks GitHub once' (Wait-Until { (Get-RequestCount) -ge 2 } 30) "requests: $(Get-RequestCount)"
+$request = Get-Requests | Select-Object -Last 1
+if ($request) {
+    Test-Request 'Check now''s request' $request
+}
+Test-Check 'General says this version is up to date' (Wait-Until { (Get-WindowText) -contains 'You have the latest version' } 15) ((Get-WindowText) -join ' | ')
+$saved = Get-Content $resultFile -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+Test-Check 'Check now saves the result' (($saved.latestVersion -eq '0.0.1') -and ($saved.notifiedVersion -eq '9.9.9')) "latest: $($saved.latestVersion); notified: $($saved.notifiedVersion)"
+Test-Check 'the app logs Check now' ((Get-AppLog) -match 'Checking for updates, as Check now was selected\.')
+$focused = [System.Windows.Automation.AutomationElement]::FocusedElement
+Test-Check 'the keyboard focus stays on Check now' ($focused -and ($focused.Current.Name -eq 'Check now')) "focused: $(if ($focused) { $focused.Current.Name })"
+
+# A newer version shows the banner, with the check off, and no notification.
+Set-Answer 'v9.9.10'
+Test-Check 'select Check now again' (Invoke-CheckNow)
+Test-Check 'General shows the newer version' (Wait-Until { (Get-WindowText) -contains 'PC Companion 9.9.10 is available' } 30) ((Get-WindowText) -join ' | ')
+$newerBannerPattern = '^PC Companion 9\.9\.10 is available\. You have version \d+\.\d+\.\d+\.$'
+Test-Check 'General shows the banner after Check now, with the check off' (Wait-Until { @(Get-WindowText | Where-Object { $_ -match $newerBannerPattern }).Count -eq 1 } 10) ((Get-WindowText) -join ' | ')
+$saved = Get-Content $resultFile -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+Test-Check 'Check now saves the newer version as shown' (($saved.latestVersion -eq '9.9.10') -and ($saved.notifiedVersion -eq '9.9.10')) "latest: $($saved.latestVersion); notified: $($saved.notifiedVersion)"
+Test-Check 'Check now shows no notification' ((Get-HostLog) -notmatch '9\.9\.10')
+Save-Screenshot '10-update-check-now'
+
+# A rate limit.
+Set-Content -Path $status -Value '429' -Encoding ascii
+Test-Check 'select Check now during a rate limit' (Invoke-CheckNow)
+Test-Check 'General says it can''t check right now' (Wait-Until { ((Get-WindowText) -contains 'Can''t check for updates right now') -and ((Get-WindowText) -contains 'Try again later.') } 30) ((Get-WindowText) -join ' | ')
+Remove-Item -Path $status
+
+# No answer, once the stand-in stops.
+Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+[void] (Wait-Until { -not (Get-NetTCPConnection -LocalPort 443 -State Listen -ErrorAction SilentlyContinue) } 10)
+Test-Check 'select Check now without an answer' (Invoke-CheckNow)
+Test-Check 'General says GitHub can''t be reached' (Wait-Until { ((Get-WindowText) -contains 'Can''t reach GitHub') -and ((Get-WindowText) -contains 'Check your internet connection, then try again.') } 45) ((Get-WindowText) -join ' | ')
+Test-Check 'the app logs that Check now got no answer' ((Get-AppLog) -match 'Check now got no answer from GitHub\.')
+Save-Screenshot '11-update-check-now-no-answer'
+Test-Check 'GitHub was asked once for each Check now that reached it' ((Get-RequestCount) -eq 4) "requests: $(Get-RequestCount)"
 
 # Leaves the Sandbox as it found it for the next groups.
 [void] (Close-SettingsApp)
