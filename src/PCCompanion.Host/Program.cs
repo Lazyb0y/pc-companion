@@ -13,6 +13,7 @@ using PCCompanion.Infrastructure.Features;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Logging;
+using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Platform.Windows;
@@ -101,6 +102,7 @@ internal static partial class Program
             .AddSingleton<UpdateNotifier>()
             .AddInputModule()
             .AddWindowsModule()
+            .AddDesktopModule()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));

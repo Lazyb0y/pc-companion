@@ -5,11 +5,23 @@ using Microsoft.Extensions.Logging;
 namespace PCCompanion.Modules.Desktop.Tests;
 
 /// <summary>
-/// Keeps the level and message of every log entry.
+/// Keeps the level and message of every log entry, from any thread.
 /// </summary>
 internal sealed class RecordingLogger<T> : ILogger<T>
 {
-    public List<(LogLevel Level, string Message)> Entries { get; } = [];
+    private readonly List<(LogLevel Level, string Message)> _entries = [];
+
+    /// <summary>The entries so far.</summary>
+    public IReadOnlyList<(LogLevel Level, string Message)> Entries
+    {
+        get
+        {
+            lock (_entries)
+            {
+                return [.. _entries];
+            }
+        }
+    }
 
     public IDisposable? BeginScope<TState>(TState state)
         where TState : notnull => null;
@@ -19,6 +31,9 @@ internal sealed class RecordingLogger<T> : ILogger<T>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         ArgumentNullException.ThrowIfNull(formatter);
-        Entries.Add((logLevel, formatter(state, exception)));
+        lock (_entries)
+        {
+            _entries.Add((logLevel, formatter(state, exception)));
+        }
     }
 }

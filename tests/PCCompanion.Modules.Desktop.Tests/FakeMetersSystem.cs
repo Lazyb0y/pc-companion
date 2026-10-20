@@ -1,0 +1,199 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using PCCompanion.Core.Features;
+using PCCompanion.Modules.Desktop.SystemMeters;
+using PCCompanion.Platform.Windows;
+using Xunit;
+
+namespace PCCompanion.Modules.Desktop.Tests;
+
+/// <summary>
+/// The meters' Windows parts, recorded instead of shown: no icon reaches the taskbar, no menu
+/// opens and Task Manager doesn't start. It may be used from the meters thread while a test
+/// waits for it with <see cref="WaitUntil"/>.
+/// </summary>
+internal sealed class FakeMetersSystem : IMetersSystem
+{
+    private readonly object _gate = new();
+    private readonly List<string> _events = [];
+    private int _updates;
+    private int _taskManagerOpened;
+
+    public FakeMetersSystem()
+    {
+        Appearance = new FakeAppearance(this);
+    }
+
+    public FakeSystemReadings FakeReadings { get; } = new();
+
+    public ISystemReadings Readings => FakeReadings;
+
+    public IMeterAppearance Appearance { get; }
+
+    /// <summary>The command the next menu returns.</summary>
+    public MeterMenuCommand MenuChoice { get; set; }
+
+    /// <summary>Thrown by each icon shown, to fail the meters.</summary>
+    public Exception? ShowFailure { get; set; }
+
+    /// <summary>The icons the meters created last, and their window.</summary>
+    public FakeMeterIcons? Icons { get; private set; }
+
+    public MessageWindow? Window { get; private set; }
+
+    /// <summary>What the icons did, such as "show Memory" or "remove Network", in order.</summary>
+    public IReadOnlyList<string> Events
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return [.. _events];
+            }
+        }
+    }
+
+    /// <summary>The number of updates, each of which looks at the appearance once.</summary>
+    public int Updates => Volatile.Read(ref _updates);
+
+    public int TaskManagerOpened => Volatile.Read(ref _taskManagerOpened);
+
+    public IMeterIcons CreateIcons(MessageWindow window)
+    {
+        lock (_gate)
+        {
+            Window = window;
+            Icons = new FakeMeterIcons(this);
+            Monitor.PulseAll(_gate);
+            return Icons;
+        }
+    }
+
+    public bool OpenTaskManager()
+    {
+        Interlocked.Increment(ref _taskManagerOpened);
+        Changed();
+        return true;
+    }
+
+    public MeterMenuCommand ShowMenu(MessageWindow window, int x, int y) => MenuChoice;
+
+    /// <summary>Waits until <paramref name="condition"/> holds; returns false after 10 seconds, or <paramref name="timeout"/>.</summary>
+    public bool WaitUntil(Func<FakeMetersSystem, bool> condition, TimeSpan? timeout = null)
+    {
+        var deadline = Environment.TickCount64 + (long)(timeout ?? TimeSpan.FromSeconds(10)).TotalMilliseconds;
+        lock (_gate)
+        {
+            while (!condition(this))
+            {
+                var left = deadline - Environment.TickCount64;
+                if (left <= 0)
+                {
+                    return false;
+                }
+
+                Monitor.Wait(_gate, TimeSpan.FromMilliseconds(Math.Min(left, 100)));
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>Runs <paramref name="action"/> on the meters thread, as Windows' messages would.</summary>
+    public void OnMetersThread(Action<FakeMeterIcons> action)
+    {
+        Assert.True(WaitUntil(system => system.Window is not null));
+        Window!.BeginInvoke(() => action(Icons!));
+    }
+
+    private void Record(string text)
+    {
+        lock (_gate)
+        {
+            _events.Add(text);
+            Monitor.PulseAll(_gate);
+        }
+    }
+
+    private void Changed()
+    {
+        lock (_gate)
+        {
+            Monitor.PulseAll(_gate);
+        }
+    }
+
+    private sealed class FakeAppearance(FakeMetersSystem system) : IMeterAppearance
+    {
+        public int IconSize()
+        {
+            Interlocked.Increment(ref system._updates);
+            system.Changed();
+            return 16;
+        }
+
+        public uint Color() => 0xFFFFFF;
+    }
+
+    /// <summary>Records what the meters show; tests raise its events on the meters thread.</summary>
+    internal sealed class FakeMeterIcons(FakeMetersSystem system) : IMeterIcons
+    {
+        public event EventHandler? Selected;
+
+        public event EventHandler<TrayMenuEventArgs>? MenuRequested;
+
+        /// <summary>The last tooltip shown for each meter.</summary>
+        public Dictionary<Meter, string> ToolTips { get; } = [];
+
+        /// <summary>Whether Windows refuses the icons.</summary>
+        public bool Refuse { get; set; }
+
+        public bool IsDisposed { get; private set; }
+
+        public bool Show(Meter meter, uint[] pixels, int size, string name, string toolTip)
+        {
+            if (system.ShowFailure is { } failure)
+            {
+                throw failure;
+            }
+
+            if (Refuse)
+            {
+                system.Record($"refuse {meter}");
+                return false;
+            }
+
+            ToolTips[meter] = toolTip;
+            system.Record($"show {meter}");
+            return true;
+        }
+
+        public void Remove(Meter meter) => system.Record($"remove {meter}");
+
+        public void Select() => Selected?.Invoke(this, EventArgs.Empty);
+
+        public void OpenMenu() => MenuRequested?.Invoke(this, new TrayMenuEventArgs(10, 20));
+
+        public void Dispose()
+        {
+            IsDisposed = true;
+            system.Record("dispose");
+        }
+    }
+}
+
+/// <summary>Counts the host's commands.</summary>
+internal sealed class FakeHostCommands : IHostCommands
+{
+    private int _settings;
+    private int _exits;
+
+    public int SettingsOpened => Volatile.Read(ref _settings);
+
+    public int Exits => Volatile.Read(ref _exits);
+
+    public void OpenSettings() => Interlocked.Increment(ref _settings);
+
+    public void ExitApp() => Interlocked.Increment(ref _exits);
+}
