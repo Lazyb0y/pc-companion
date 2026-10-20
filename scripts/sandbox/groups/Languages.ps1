@@ -31,8 +31,7 @@ Restore-AppWindow $windowBounds
 Test-Check 'tray menu requested in Arabic' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
 Save-Screenshot '06-tray-menu-arabic'
-[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
-Start-Sleep -Seconds 1
+Test-Check 'the tray menu closes in Arabic' (Close-TrayMenu)
 
 # Bangla with the light theme.
 [void] (Close-SettingsApp)
