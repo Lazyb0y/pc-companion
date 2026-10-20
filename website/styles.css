@@ -1,6 +1,7 @@
 /* PC Companion website. Colors come from the app icon. The page follows the system's light or dark
    mode, or the theme chosen with the switch in the header: each color is light-dark(light, dark),
-   so choosing a theme only sets color-scheme. */
+   so choosing a theme only sets color-scheme. The checked radio button sets it; theme.js also sets
+   data-theme on <html> from the remembered choice before the page is drawn, and keeps it in step. */
 
 :root {
   color-scheme: light dark;
@@ -23,11 +24,13 @@
   --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
 }
 
-:root:has(#theme-light:checked) {
+:root:has(#theme-light:checked),
+:root[data-theme="light"] {
   color-scheme: light;
 }
 
-:root:has(#theme-dark:checked) {
+:root:has(#theme-dark:checked),
+:root[data-theme="dark"] {
   color-scheme: dark;
 }
 
@@ -266,7 +269,8 @@ kbd {
   outline-offset: 2px;
 }
 
-/* Without :has(), the switch couldn't change anything, so it's hidden and the system mode applies. */
+/* Without :has(), the rules above that mention it are dropped, so the switch couldn't change anything;
+   it's hidden and the system mode applies. */
 @supports not selector(:has(*)) {
   .theme-switch {
     display: none;
@@ -379,12 +383,16 @@ kbd {
 }
 
 :root:has(#theme-light:checked) .shot .shot-light,
-:root:has(#theme-dark:checked) .shot .shot-dark {
+:root[data-theme="light"] .shot .shot-light,
+:root:has(#theme-dark:checked) .shot .shot-dark,
+:root[data-theme="dark"] .shot .shot-dark {
   display: block;
 }
 
 :root:has(#theme-light:checked) .shot .shot-dark,
-:root:has(#theme-dark:checked) .shot .shot-light {
+:root[data-theme="light"] .shot .shot-dark,
+:root:has(#theme-dark:checked) .shot .shot-light,
+:root[data-theme="dark"] .shot .shot-light {
   display: none;
 }
 
