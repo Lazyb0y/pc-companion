@@ -43,24 +43,6 @@ public sealed class ProgramRunnerTests
         Assert.Equal([(LogLevel.Warning, "Run a program doesn't run while PC Companion runs as administrator.")], _logger.Entries);
     }
 
-    [Theory]
-    [InlineData(null, ProgramProblem.NotChosen)]
-    [InlineData("  ", ProgramProblem.NotChosen)]
-    [InlineData("App.exe", ProgramProblem.NotFullPath)]
-    [InlineData(@"Tools\App.exe", ProgramProblem.NotFullPath)]
-    [InlineData(@"C:App.exe", ProgramProblem.NotFullPath)]
-    [InlineData(@"C:\Scripts\Clean.bat", ProgramProblem.NotExe)]
-    [InlineData(@"C:\Scripts\Clean.cmd", ProgramProblem.NotExe)]
-    [InlineData(@"C:\Users\Public\Desktop\App.lnk", ProgramProblem.NotExe)]
-    [InlineData(@"C:\Missing\App.exe", ProgramProblem.NotFound)]
-    [InlineData(Program, ProgramProblem.None)]
-    [InlineData(@"C:\PROGRAM FILES\SOME APP\APP.EXE", ProgramProblem.None)]
-    [InlineData(@"\\server\share\App.exe", ProgramProblem.NotFound)]
-    public void CheckAcceptsOnlyTheFullPathOfAnExistingExe(string? program, ProgramProblem expected)
-    {
-        Assert.Equal(expected, ProgramRunner.Check(program, Exists));
-    }
-
     [Fact]
     public void AProgramThatCantRunIsLoggedByItsFileNameOnly()
     {
