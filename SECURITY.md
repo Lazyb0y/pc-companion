@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-PC Companion is in early development and has no releases yet. Security fixes are made on the `main` branch.
+Security fixes go into the latest release only. A vulnerability in it is fixed in a new release, as a hotfix when it can't wait, and older releases aren't updated. To get the fix, install the latest version from [Releases](https://github.com/Lazyb0y/pc-companion/releases); unless you turned off **Check for updates**, PC Companion tells you when one is out.
 
 ## Reporting a vulnerability
 
