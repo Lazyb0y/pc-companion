@@ -327,12 +327,8 @@ kbd {
   padding-block: 32px;
 }
 
-.feature + .feature {
-  border-top: 1px solid var(--border);
-}
-
 .feature h3 {
-  font-size: 1.625rem;
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
 }
 
 .points {
@@ -480,14 +476,24 @@ kbd {
     grid-template-columns: 5fr 7fr;
   }
 
+  /* Two equal columns, so a screenshot is the same size on either side; reverse rows swap them. */
   .feature {
-    grid-template-columns: 5fr 7fr;
-    gap: 56px;
-    padding-block: 48px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "text shot";
+    gap: 80px;
+    padding-block: 56px;
   }
 
-  .feature-reverse .feature-text {
-    order: 2;
+  .feature-reverse {
+    grid-template-areas: "shot text";
+  }
+
+  .feature-text {
+    grid-area: text;
+  }
+
+  .feature .shot {
+    grid-area: shot;
   }
 
   .footer-row {
