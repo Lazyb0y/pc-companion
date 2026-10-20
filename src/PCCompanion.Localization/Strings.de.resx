@@ -668,4 +668,256 @@
     <value>Die Zwischenablage kann gerade nicht gelesen werden</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleClipboardName" xml:space="preserve">
+    <value>Zwischenablage und Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsName" xml:space="preserve">
+    <value>Zwischenablage-Aktionen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDescription" xml:space="preserve">
+    <value>Drücken Sie die Windows-Logo-Taste + Alt + V, um Aktionen für den kopierten Text anzuzeigen, z. B. einen kopierten Link zu öffnen oder eine Sendungsnummer nachzuschlagen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
+    <value>Zeigt die Aktionen für den kopierten Text in einem Menü am Zeiger an.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcut" xml:space="preserve">
+    <value>Windows-Logo-Taste + Alt + V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksHeader" xml:space="preserve">
+    <value>Kopierte Links öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksDescription" xml:space="preserve">
+    <value>Bietet „Im Browser öffnen“ an, wenn der kopierte Text ein Weblink ist, der mit http:// oder https:// beginnt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesHeader" xml:space="preserve">
+    <value>Regeln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesDescription" xml:space="preserve">
+    <value>Wenn der gesamte kopierte Text dem Muster einer Regel entspricht, bietet das Menü die Aktion der Regel unter ihrem Namen an.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddRule" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoRules" xml:space="preserve">
+    <value>Noch keine Regeln. Fügen Sie eine hinzu, um eine kopierte Sendungs-, Ticket- oder Bestellnummer auf der zugehörigen Website nachzuschlagen oder den kopierten Text in einem Programm zu öffnen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEdit" xml:space="preserve">
+    <value>Bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditName" xml:space="preserve">
+    <value>{0} bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoreName" xml:space="preserve">
+    <value>Weitere Optionen für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDelete" xml:space="preserve">
+    <value>Löschen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDeleteTitle" xml:space="preserve">
+    <value>{0} löschen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSave" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddTitle" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditTitle" xml:space="preserve">
+    <value>Regel bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryAddress" xml:space="preserve">
+    <value>Öffnet {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProgram" xml:space="preserve">
+    <value>Startet {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProblem" xml:space="preserve">
+    <value>Nicht im Menü. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsUnknownAction" xml:space="preserve">
+    <value>Ihre Aktion erfordert eine neuere Version von PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNamePlaceholder" xml:space="preserve">
+    <value>Sendung verfolgen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameNote" xml:space="preserve">
+    <value>Der Eintrag der Regel im Menü.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameMissing" xml:space="preserve">
+    <value>Sie hat keinen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternHeader" xml:space="preserve">
+    <value>Muster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNote" xml:space="preserve">
+    <value>Ein regulärer Ausdruck, dem der gesamte kopierte Text entsprechen muss. Leerzeichen und Zeilenumbrüche am Anfang und Ende werden ignoriert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMatchCase" xml:space="preserve">
+    <value>Groß-/Kleinschreibung beachten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternReference" xml:space="preserve">
+    <value>Referenz zu regulären Ausdrücken</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternMissing" xml:space="preserve">
+    <value>Sie hat kein Muster.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternInvalid" xml:space="preserve">
+    <value>Das Muster ist kein gültiger regulärer Ausdruck.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
+    <value>Das Muster verwendet eine Lookaround-Assertion, einen Rückverweis, eine atomare Gruppe oder eine Bedingung, die hier nicht verwendet werden können.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryHeader" xml:space="preserve">
+    <value>Ausprobieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryPlaceholder" xml:space="preserve">
+    <value>Fügen Sie ein Beispiel des Texts ein, den Sie kopieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryMatches" xml:space="preserve">
+    <value>Das Muster entspricht diesem Text.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryNoMatch" xml:space="preserve">
+    <value>Das Muster entspricht diesem Text nicht.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionHeader" xml:space="preserve">
+    <value>Aktion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionOpenAddress" xml:space="preserve">
+    <value>Webadresse öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionRunProgram" xml:space="preserve">
+    <value>Programm ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressHeader" xml:space="preserve">
+    <value>Webadresse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressPlaceholder" xml:space="preserve">
+    <value>https://www.example.com/search?q={text}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNote" xml:space="preserve">
+    <value>{text} steht für den kopierten Text, für Webadressen codiert. Ihr Browser sendet ihn an diese Website.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressMissing" xml:space="preserve">
+    <value>Sie hat keine Webadresse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNotWeb" xml:space="preserve">
+    <value>Die Adresse muss mit https:// oder http:// beginnen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramHeader" xml:space="preserve">
+    <value>Programm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsBrowse" xml:space="preserve">
+    <value>Durchsuchen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramDialogTitle" xml:space="preserve">
+    <value>Programm auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramFilter" xml:space="preserve">
+    <value>Programme</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsHeader" xml:space="preserve">
+    <value>Argumente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
+    <value>{text} steht für den kopierten Text, der in einem Argument bleibt. Manche Programme lesen ein Argument, das mit - oder / beginnt, als Option. Programme werden mit Ihren Rechten gestartet und nicht ausgeführt, solange PC Companion als Administrator ausgeführt wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
+    <value>Sie hat kein Programm.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFullPath" xml:space="preserve">
+    <value>Geben Sie den vollständigen Pfad ein, z. B. C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotExe" xml:space="preserve">
+    <value>Wählen Sie eine Programmdatei (.exe) aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFound" xml:space="preserve">
+    <value>Dieses Programm wurde nicht gefunden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramInterpreter" xml:space="preserve">
+    <value>Programme, die Befehle ausführen, wie cmd oder PowerShell, können nicht verwendet werden: Kopierter Text könnte sie andere Befehle ausführen lassen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
+    <value>Solange PC Companion als Administrator ausgeführt wird, werden Regeln, die ein Programm ausführen, nicht ausgeführt, und Links und Webadressen werden ohne Administratorrechte in Ihrem Browser geöffnet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPermissions" xml:space="preserve">
+    <value>Liest den Text der Zwischenablage nur, wenn Sie die Tastenkombination drücken, nie im Hintergrund, und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -656,4 +656,256 @@
     <value>暂时无法读取剪贴板</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleClipboardName" xml:space="preserve">
+    <value>剪贴板和文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsName" xml:space="preserve">
+    <value>剪贴板操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDescription" xml:space="preserve">
+    <value>按 Windows 徽标键 + Alt + V 查看针对所复制文本的操作，例如打开复制的链接或查询包裹单号。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutHeader" xml:space="preserve">
+    <value>快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
+    <value>在指针处的菜单中显示针对所复制文本的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcut" xml:space="preserve">
+    <value>Windows 徽标键 + Alt + V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksHeader" xml:space="preserve">
+    <value>打开复制的链接</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksDescription" xml:space="preserve">
+    <value>当所复制的文本是以 http:// 或 https:// 开头的网页链接时，提供“在浏览器中打开”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesHeader" xml:space="preserve">
+    <value>规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesDescription" xml:space="preserve">
+    <value>当所复制的整个文本与某条规则的模式匹配时，菜单会以该规则的名称提供它的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddRule" xml:space="preserve">
+    <value>添加规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoRules" xml:space="preserve">
+    <value>还没有规则。添加一条规则，即可在网站上查询复制的包裹单号、工单号或订单号，或在程序中打开复制的文本。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditName" xml:space="preserve">
+    <value>编辑 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveUp" xml:space="preserve">
+    <value>上移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveDown" xml:space="preserve">
+    <value>下移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddTitle" xml:space="preserve">
+    <value>添加规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditTitle" xml:space="preserve">
+    <value>编辑规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryAddress" xml:space="preserve">
+    <value>打开 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProgram" xml:space="preserve">
+    <value>启动 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProblem" xml:space="preserve">
+    <value>不在菜单中。{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsUnknownAction" xml:space="preserve">
+    <value>其操作需要更新版本的 PC Companion。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameHeader" xml:space="preserve">
+    <value>名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNamePlaceholder" xml:space="preserve">
+    <value>跟踪包裹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameNote" xml:space="preserve">
+    <value>此规则在菜单中的项。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameMissing" xml:space="preserve">
+    <value>它没有名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternHeader" xml:space="preserve">
+    <value>模式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNote" xml:space="preserve">
+    <value>所复制的整个文本必须匹配的正则表达式。首尾的空格和换行符会被忽略。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMatchCase" xml:space="preserve">
+    <value>区分大小写</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternReference" xml:space="preserve">
+    <value>正则表达式参考</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternMissing" xml:space="preserve">
+    <value>它没有模式。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternInvalid" xml:space="preserve">
+    <value>该模式不是有效的正则表达式。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
+    <value>该模式使用了环视、反向引用、原子组或条件，这些在此处不可用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryHeader" xml:space="preserve">
+    <value>试一试</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryPlaceholder" xml:space="preserve">
+    <value>粘贴你复制的文本示例</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryMatches" xml:space="preserve">
+    <value>该模式与此文本匹配。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryNoMatch" xml:space="preserve">
+    <value>该模式与此文本不匹配。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionHeader" xml:space="preserve">
+    <value>操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionOpenAddress" xml:space="preserve">
+    <value>打开网址</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionRunProgram" xml:space="preserve">
+    <value>运行程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressHeader" xml:space="preserve">
+    <value>网址</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressPlaceholder" xml:space="preserve">
+    <value>https://www.example.com/search?q={text}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNote" xml:space="preserve">
+    <value>{text} 代表所复制的文本，并按网址进行编码。你的浏览器会将其发送到此网站。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressMissing" xml:space="preserve">
+    <value>它没有网址。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNotWeb" xml:space="preserve">
+    <value>地址必须以 https:// 或 http:// 开头。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramHeader" xml:space="preserve">
+    <value>程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsBrowse" xml:space="preserve">
+    <value>浏览</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramDialogTitle" xml:space="preserve">
+    <value>选择程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramFilter" xml:space="preserve">
+    <value>程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsHeader" xml:space="preserve">
+    <value>参数</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
+    <value>{text} 代表所复制的文本，它会保留在一个参数中。某些程序会将以 - 或 / 开头的参数读取为选项。程序以你的权限启动，PC Companion 以管理员身份运行时不会运行。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
+    <value>它没有程序。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFullPath" xml:space="preserve">
+    <value>输入完整路径，例如 C:\Program Files\App\App.exe。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotExe" xml:space="preserve">
+    <value>选择程序文件(.exe)。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFound" xml:space="preserve">
+    <value>找不到此程序。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramInterpreter" xml:space="preserve">
+    <value>不能使用运行命令的程序，例如 cmd 或 PowerShell：复制的文本可能会让它们运行其他命令。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行时，运行程序的规则不会运行，链接和网址会以非管理员权限在你的浏览器中打开。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPermissions" xml:space="preserve">
+    <value>仅在你按下快捷键时读取剪贴板中的文本，从不在后台读取，也从不读取复制它的应用标记为私密的文本。不会存储、记录或发送该文本。在你的浏览器中打开链接和网址，浏览器会将文本发送到规则指定的网站；只启动你的规则指定的程序。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

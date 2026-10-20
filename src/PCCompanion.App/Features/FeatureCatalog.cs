@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PCCompanion.App.Features.AppWindows;
+using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Clipboard;
+using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Input;
@@ -38,6 +41,10 @@ public static class FeatureCatalog
         new(DesktopModule.Id, "ModuleDesktopName",
         [
             new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage)),
+        ]),
+        new(ClipboardModule.Id, "ModuleClipboardName",
+        [
+            new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage)),
         ]),
     ];
 

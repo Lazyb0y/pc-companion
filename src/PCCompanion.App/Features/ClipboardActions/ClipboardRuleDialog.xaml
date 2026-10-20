@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.ClipboardActions.ClipboardRuleDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    CloseButtonText="{app:Localized Key=ClipboardActionsCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=ClipboardActionsSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <StackPanel MinWidth="420" Spacing="16">
+        <StackPanel Spacing="4">
+            <TextBox
+                x:Name="NameBox"
+                Header="{app:Localized Key=ClipboardActionsNameHeader}"
+                PlaceholderText="{app:Localized Key=ClipboardActionsNamePlaceholder}"
+                Text="{x:Bind Editor.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ClipboardActionsNameNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <!-- Patterns, addresses and arguments read left to right in every language. -->
+            <TextBox
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=ClipboardActionsPatternHeader}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="1Z[0-9A-Z]{16}"
+                Text="{x:Bind Editor.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.PatternProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasPatternProblem, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ClipboardActionsPatternNote}"
+                TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <CheckBox Content="{app:Localized Key=ClipboardActionsMatchCase}" IsChecked="{x:Bind Editor.MatchCase, Mode=TwoWay}" />
+                <HyperlinkButton Content="{app:Localized Key=ClipboardActionsPatternReference}" NavigateUri="https://learn.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBox
+                Header="{app:Localized Key=ClipboardActionsTryHeader}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="{app:Localized Key=ClipboardActionsTryPlaceholder}"
+                Text="{x:Bind Editor.Sample, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.SampleResult, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasSampleResult, Mode=OneWay}" />
+        </StackPanel>
+
+        <RadioButtons Header="{app:Localized Key=ClipboardActionsActionHeader}" SelectedIndex="{x:Bind Editor.ActionIndex, Mode=TwoWay}">
+            <RadioButton Content="{app:Localized Key=ClipboardActionsActionOpenAddress}" />
+            <RadioButton Content="{app:Localized Key=ClipboardActionsActionRunProgram}" />
+        </RadioButtons>
+
+        <StackPanel Spacing="4" Visibility="{x:Bind Editor.IsOpenAddress, Mode=OneWay}">
+            <TextBox
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=ClipboardActionsAddressHeader}"
+                InputScope="Url"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="{app:Localized Key=ClipboardActionsAddressPlaceholder}"
+                Text="{x:Bind Editor.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.AddressProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasAddressProblem, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ClipboardActionsAddressNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Spacing="4" Visibility="{x:Bind Editor.IsRunProgram, Mode=OneWay}">
+            <TextBlock Text="{app:Localized Key=ClipboardActionsProgramHeader}" />
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    AutomationProperties.Name="{app:Localized Key=ClipboardActionsProgramHeader}"
+                    FlowDirection="LeftToRight"
+                    IsSpellCheckEnabled="False"
+                    Text="{x:Bind Editor.Program, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Button
+                    Grid.Column="1"
+                    Click="OnBrowseClick"
+                    Content="{app:Localized Key=ClipboardActionsBrowse}" />
+            </Grid>
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.ProgramProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasProgramProblem, Mode=OneWay}" />
+            <TextBox
+                Margin="0,8,0,0"
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=ClipboardActionsArgumentsHeader}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="{}{text}"
+                Text="{x:Bind Editor.Arguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ClipboardActionsArgumentsNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>

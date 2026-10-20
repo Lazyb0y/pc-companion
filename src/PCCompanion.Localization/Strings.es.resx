@@ -668,4 +668,256 @@
     <value>No se puede leer el Portapapeles en este momento</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleClipboardName" xml:space="preserve">
+    <value>Portapapeles y texto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsName" xml:space="preserve">
+    <value>Acciones del Portapapeles</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDescription" xml:space="preserve">
+    <value>Presiona la tecla del logotipo de Windows + Alt + V para ver acciones para el texto copiado, como abrir un vínculo copiado o buscar un número de paquete.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutHeader" xml:space="preserve">
+    <value>Método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
+    <value>Muestra las acciones para el texto copiado en un menú junto al puntero.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcut" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Alt + V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksHeader" xml:space="preserve">
+    <value>Abrir vínculos copiados</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsOpenLinksDescription" xml:space="preserve">
+    <value>Ofrece Abrir en el explorador cuando el texto copiado es un vínculo web que empieza por http:// o https://.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesHeader" xml:space="preserve">
+    <value>Reglas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsRulesDescription" xml:space="preserve">
+    <value>Cuando todo el texto copiado coincide con el patrón de una regla, el menú ofrece la acción de la regla con su nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddRule" xml:space="preserve">
+    <value>Agregar regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoRules" xml:space="preserve">
+    <value>Aún no hay reglas. Agrega una para buscar en su sitio web un número de paquete, de incidencia o de pedido copiado, o para abrir el texto copiado en un programa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditName" xml:space="preserve">
+    <value>Editar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveUp" xml:space="preserve">
+    <value>Subir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMoveDown" xml:space="preserve">
+    <value>Bajar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDelete" xml:space="preserve">
+    <value>Eliminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsDeleteTitle" xml:space="preserve">
+    <value>¿Eliminar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddTitle" xml:space="preserve">
+    <value>Agregar una regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsEditTitle" xml:space="preserve">
+    <value>Editar la regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryAddress" xml:space="preserve">
+    <value>Abre {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProgram" xml:space="preserve">
+    <value>Inicia {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSummaryProblem" xml:space="preserve">
+    <value>No está en el menú. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsUnknownAction" xml:space="preserve">
+    <value>Su acción requiere una versión más reciente de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameHeader" xml:space="preserve">
+    <value>Nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNamePlaceholder" xml:space="preserve">
+    <value>Seguir el paquete</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameNote" xml:space="preserve">
+    <value>El elemento de la regla en el menú.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNameMissing" xml:space="preserve">
+    <value>No tiene nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternHeader" xml:space="preserve">
+    <value>Patrón</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNote" xml:space="preserve">
+    <value>Una expresión regular con la que debe coincidir todo el texto copiado. Se omiten los espacios y saltos de línea de los extremos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsMatchCase" xml:space="preserve">
+    <value>Coincidir mayúsculas y minúsculas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternReference" xml:space="preserve">
+    <value>Referencia de expresiones regulares</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternMissing" xml:space="preserve">
+    <value>No tiene patrón.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternInvalid" xml:space="preserve">
+    <value>El patrón no es una expresión regular válida.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
+    <value>El patrón usa una búsqueda anticipada o retrospectiva, una referencia inversa, un grupo atómico o una condición, que no se pueden usar aquí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryHeader" xml:space="preserve">
+    <value>Probar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryPlaceholder" xml:space="preserve">
+    <value>Pega un ejemplo del texto que copias</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryMatches" xml:space="preserve">
+    <value>El patrón coincide con este texto.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTryNoMatch" xml:space="preserve">
+    <value>El patrón no coincide con este texto.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionHeader" xml:space="preserve">
+    <value>Acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionOpenAddress" xml:space="preserve">
+    <value>Abrir una dirección web</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionRunProgram" xml:space="preserve">
+    <value>Ejecutar un programa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressHeader" xml:space="preserve">
+    <value>Dirección web</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressPlaceholder" xml:space="preserve">
+    <value>https://www.example.com/search?q={text}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNote" xml:space="preserve">
+    <value>{text} representa el texto copiado, codificado para direcciones web. Tu explorador lo envía a este sitio.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressMissing" xml:space="preserve">
+    <value>No tiene dirección web.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAddressNotWeb" xml:space="preserve">
+    <value>La dirección debe empezar por https:// o http://.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramHeader" xml:space="preserve">
+    <value>Programa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsBrowse" xml:space="preserve">
+    <value>Examinar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramDialogTitle" xml:space="preserve">
+    <value>Elegir un programa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramFilter" xml:space="preserve">
+    <value>Programas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsHeader" xml:space="preserve">
+    <value>Argumentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
+    <value>{text} representa el texto copiado, que se mantiene en un solo argumento. Algunos programas leen un argumento que empieza por - o / como una opción. Los programas se inician con tus permisos y no se ejecutan mientras PC Companion se ejecuta como administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
+    <value>No tiene programa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFullPath" xml:space="preserve">
+    <value>Escribe la ruta completa, como C:\Program Files\App\App.exe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotExe" xml:space="preserve">
+    <value>Elige un archivo de programa (.exe).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramNotFound" xml:space="preserve">
+    <value>No se encontró este programa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsProgramInterpreter" xml:space="preserve">
+    <value>No se pueden usar programas que ejecutan comandos, como cmd o PowerShell: el texto copiado podría hacer que ejecuten otros comandos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
+    <value>Mientras PC Companion se ejecuta como administrador, las reglas que ejecutan un programa no se ejecutan, y los vínculos y las direcciones web se abren en tu explorador sin permisos de administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPermissions" xml:space="preserve">
+    <value>Lee el texto del Portapapeles solo cuando presionas el método abreviado, nunca en segundo plano, y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
