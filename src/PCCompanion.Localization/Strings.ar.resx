@@ -532,4 +532,120 @@
     <value>إدارة المهام</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>المقاييس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>اختر ما يتم عرضه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>مدى انشغال المعالج، بالنسبة المئوية، كما في إدارة المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>مقدار الذاكرة المستخدمة، بالنسبة المئوية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>سرعة استقبال الكمبيوتر للبيانات وإرسالها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>العرض على</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>على شريط المهام، تتشارك المقاييس عنصرًا واحدًا. في منطقة الإعلامات، يكون لكل مقياس أيقونته الخاصة، ويمكنك الوصول إليها بلوحة المفاتيح: اضغط على مفتاح شعار Windows + B.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>شريط المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>منطقة الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>التخطيط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>طريقة عرض وحدة المعالجة المركزية والذاكرة على شريط المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>القيم والأسماء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>قيم كبيرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>مضغوط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>الأيقونات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>ملونة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>بلون واحد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>بلا أيقونات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>التحديث كل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_zero" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>ثانية واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_two" xml:space="preserve">
+    <value>ثانيتين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_few" xml:space="preserve">
+    <value>{0} ثوانٍ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_many" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>يؤدي تحديد المقاييس إلى فتح إدارة المهام على صفحة البدء الافتراضية. لفتحها على الأداء، اختر الأداء في إعدادات إدارة المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>قد يضع Windows الأيقونات الجديدة في قائمة الأيقونات المخفية (^) على شريط المهام. لإبقاء أحد المقاييس ظاهرًا، اسحب أيقونته إلى شريط المهام، أو شغّلها في إعدادات شريط المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>فتح إعدادات شريط المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>يقرأ مدى انشغال المعالج ومقدار الذاكرة المستخدمة ومقدار البيانات التي تستقبلها محولات الشبكة وترسلها، للكمبيوتر كله؛ ولا يقرأ أبدًا ما يستخدمه كل تطبيق. على شريط المهام، يقرأ فقط أماكن أزراره، ولا يقرأ أسماءها أبدًا. لا ينشئ أي اتصالات بالشبكة، ولا يخزن أي شيء ولا يرسله.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

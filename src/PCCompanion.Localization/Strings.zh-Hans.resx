@@ -492,4 +492,100 @@
     <value>任务管理器</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>指标</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>选择要显示的内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>处理器的繁忙程度，以百分比表示，与任务管理器中相同。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>正在使用的内存，以百分比表示。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>电脑接收和发送数据的速度。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>显示位置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>在任务栏上，各项指标共用一个项目。在通知区域中，每项指标都有自己的图标，可以用键盘访问：按 Windows 徽标键 + B。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>任务栏</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>通知区域</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>布局</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>CPU 和内存在任务栏上的显示方式。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>数值和名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>大号数值</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>紧凑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>图标</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>彩色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>单色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>更新间隔</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>选择指标会在任务管理器的默认起始页上打开任务管理器。若要在“性能”页上打开，请在任务管理器的设置中选择“性能”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows 可能会将新图标放在任务栏的隐藏图标菜单 (^) 中。若要让某项指标始终可见，请将其图标拖到任务栏上，或在任务栏设置中将其打开。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>打开任务栏设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>读取整台电脑的处理器繁忙程度、内存使用量以及网络适配器接收和发送的数据量；绝不读取每个应用的使用情况。在任务栏上，只读取其按钮的位置，绝不读取按钮的名称。不建立任何网络连接，不存储也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

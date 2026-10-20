@@ -500,4 +500,104 @@
     <value>Task Manager</value>
     <comment>System Meters menu command that opens Task Manager. Use Windows' name for Task Manager.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>Meters</value>
+    <comment>System Meters page: the name of the group of switches for CPU, memory and network.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>Choose what to show.</value>
+    <comment>System Meters page: below SystemMetersMetersHeader.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>How busy the processor is, in percent, as in Task Manager.</value>
+    <comment>System Meters page: below the CPU switch. Use Windows' name for Task Manager.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>How much of the memory is in use, in percent.</value>
+    <comment>System Meters page: below the Memory switch.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>How fast the PC receives and sends data.</value>
+    <comment>System Meters page: below the Network switch.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>Show on</value>
+    <comment>System Meters page: setting name, and the screen reader name of its list: where the meters show.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>On the taskbar, the meters share one item. In the notification area, each has its own icon, which you can reach with the keyboard: press Windows logo key + B.</value>
+    <comment>System Meters page: below SystemMetersShowOnHeader. Use Windows' names for the taskbar, the notification area and the Windows logo key.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>Taskbar</value>
+    <comment>System Meters page: list item. Use Windows' name for the taskbar.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>Notification area</value>
+    <comment>System Meters page: list item. Use Windows' name for the notification area of the taskbar.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>Layout</value>
+    <comment>System Meters page: setting name, and the screen reader name of its list: how the meters are arranged on the taskbar.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>How CPU and memory show on the taskbar.</value>
+    <comment>System Meters page: below SystemMetersLayoutHeader.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>Values and names</value>
+    <comment>System Meters page: layout list item: each meter shows its value with its name below it.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>Large values</value>
+    <comment>System Meters page: layout list item: each meter shows its value in large text, without its name.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>Compact</value>
+    <comment>System Meters page: layout list item: CPU and memory share one column, one above the other.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>Icons</value>
+    <comment>System Meters page: setting name, and the screen reader name of its list: the style of the meters' icons on the taskbar.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>Color</value>
+    <comment>System Meters page: icon style list item: icons in color.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>One color</value>
+    <comment>System Meters page: icon style list item: outline icons in the color of the taskbar's text.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>None</value>
+    <comment>System Meters page: icon style list item: no icons.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>Update every</value>
+    <comment>System Meters page: setting name, and the screen reader name of its list of seconds, such as "Update every: 2 seconds".</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>System Meters page: list item; {0} is a number of seconds.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>System Meters page: list item; {0} is a number of seconds.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>Selecting the meters opens Task Manager on its default start page. To open it on Performance, choose Performance in Task Manager's settings.</value>
+    <comment>System Meters page: note. Use Windows' names for Task Manager and its Performance page.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows may put new icons in the hidden icons menu (^) of the taskbar. To keep a meter in sight, drag its icon onto the taskbar, or turn it on in the taskbar settings.</value>
+    <comment>System Meters page: note shown with Notification area. Use Windows' names for the hidden icons menu and the taskbar settings.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>Open taskbar settings</value>
+    <comment>System Meters page: button in the note about hidden icons; it opens the taskbar page of Windows Settings.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>Reads how busy the processor is, how much memory is in use and how much data the network adapters receive and send, for the whole PC; never what each app uses. On the taskbar, reads only where its buttons are, never their names. Makes no network connections, and stores and sends nothing.</value>
+    <comment>System Meters page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

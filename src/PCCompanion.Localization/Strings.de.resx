@@ -500,4 +500,104 @@
     <value>Task-Manager</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="SystemMetersMetersHeader" xml:space="preserve">
+    <value>Anzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMetersDescription" xml:space="preserve">
+    <value>Wählen Sie aus, was angezeigt wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuDescription" xml:space="preserve">
+    <value>Wie stark der Prozessor ausgelastet ist, in Prozent, wie im Task-Manager.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryDescription" xml:space="preserve">
+    <value>Wie viel Arbeitsspeicher belegt ist, in Prozent.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkDescription" xml:space="preserve">
+    <value>Wie schnell der PC Daten empfängt und sendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnHeader" xml:space="preserve">
+    <value>Ort der Anzeige</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnDescription" xml:space="preserve">
+    <value>Auf der Taskleiste teilen sich die Anzeigen ein Element. Im Infobereich hat jede ein eigenes Symbol, das Sie mit der Tastatur erreichen: Drücken Sie die Windows-Logo-Taste + B.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnTaskbar" xml:space="preserve">
+    <value>Taskleiste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersShowOnNotificationArea" xml:space="preserve">
+    <value>Infobereich</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutHeader" xml:space="preserve">
+    <value>Layout</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutDescription" xml:space="preserve">
+    <value>Wie CPU und Arbeitsspeicher auf der Taskleiste angezeigt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutValuesAndNames" xml:space="preserve">
+    <value>Werte und Namen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutLargeValues" xml:space="preserve">
+    <value>Große Werte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersLayoutCompact" xml:space="preserve">
+    <value>Kompakt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsHeader" xml:space="preserve">
+    <value>Symbole</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsColor" xml:space="preserve">
+    <value>Farbig</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsOneColor" xml:space="preserve">
+    <value>Einfarbig</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIconsNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalHeader" xml:space="preserve">
+    <value>Aktualisieren alle</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_one" xml:space="preserve">
+    <value>{0} Sekunde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersIntervalSeconds_other" xml:space="preserve">
+    <value>{0} Sekunden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManagerInfo" xml:space="preserve">
+    <value>Beim Auswählen der Anzeigen wird der Task-Manager mit seiner Standardstartseite geöffnet. Damit er mit „Leistung“ geöffnet wird, wählen Sie „Leistung“ in den Einstellungen des Task-Managers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersHiddenIconsInfo" xml:space="preserve">
+    <value>Windows legt neue Symbole möglicherweise im Menü mit ausgeblendeten Symbolen (^) der Taskleiste ab. Damit eine Anzeige sichtbar bleibt, ziehen Sie ihr Symbol auf die Taskleiste oder aktivieren Sie es in den Taskleisteneinstellungen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+    <value>Taskleisteneinstellungen öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersPermissions" xml:space="preserve">
+    <value>Liest, wie stark der Prozessor ausgelastet ist, wie viel Arbeitsspeicher belegt ist und wie viele Daten die Netzwerkadapter empfangen und senden, für den gesamten PC; nie, was einzelne Apps nutzen. Auf der Taskleiste liest es nur, wo ihre Schaltflächen sind, nie deren Namen. Stellt keine Netzwerkverbindungen her und speichert und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

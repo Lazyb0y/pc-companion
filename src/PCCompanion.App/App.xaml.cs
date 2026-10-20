@@ -11,6 +11,7 @@ using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
 using PCCompanion.Core.Settings;
@@ -148,6 +149,7 @@ public partial class App : Application
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()
             .AddTransient<AppWindowsViewModel>()
+            .AddTransient<SystemMetersViewModel>()
             .BuildServiceProvider();
     }
 
