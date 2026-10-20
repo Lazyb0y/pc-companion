@@ -148,6 +148,50 @@
     <value>দিনে একবার GitHub-এর কাছে জেনে নিন PC Companion-এর নতুন কোনো সংস্করণ উপলব্ধ কিনা।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>এখনই পরীক্ষা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>এখনও আপডেটের জন্য পরীক্ষা করা হয়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>আপনার কাছে সর্বশেষ সংস্করণ আছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>PC Companion {0} উপলব্ধ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>আপডেটের জন্য পরীক্ষা করা হচ্ছে…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>GitHub-এ পৌঁছানো যাচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন, তারপর আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>এই মুহূর্তে আপডেটের জন্য পরীক্ষা করা যাচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>পরে আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>সর্বশেষ পরীক্ষা: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>এই উইন্ডো অ্যাডমিনিস্ট্রেটর হিসেবে চলার সময় এখনই পরীক্ষা করুন উপলব্ধ নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>সম্পর্কে</value>
     <comment>Needs native review.</comment>

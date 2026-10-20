@@ -148,6 +148,50 @@
     <value>Once a day, ask GitHub whether a newer version of PC Companion is available.</value>
     <comment>General page: below GeneralUpdateCheckHeader. "GitHub" and "PC Companion" are names.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>Check now</value>
+    <comment>General page: button that asks GitHub for a newer version at once.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>Not checked for updates yet</value>
+    <comment>General page: update status before the first check.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>You have the latest version</value>
+    <comment>General page: update status when the last check found no newer version.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>PC Companion {0} is available</value>
+    <comment>General page: update status when the last check found a newer version. {0} is the new version, for example 1.2.0. "PC Companion" is the product name.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>Checking for updates…</value>
+    <comment>General page: update status while Check now asks GitHub.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>Can't reach GitHub</value>
+    <comment>General page: update status when Check now got no answer, for example without an internet connection. "GitHub" is a name.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>Check your internet connection, then try again.</value>
+    <comment>General page: below GeneralUpdateStatusNoAnswer.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>Can't check for updates right now</value>
+    <comment>General page: update status when GitHub answered Check now with an error, such as too many requests.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>Try again later.</value>
+    <comment>General page: below GeneralUpdateStatusFailed.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>Last checked: {0}</value>
+    <comment>General page: below the update status. {0} is the date and time of the last check, in the user's regional format.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>Check now isn't available while this window runs as administrator.</value>
+    <comment>General page: below the update status when the settings app was started as administrator. "Check now" is GeneralUpdateCheckNow.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>About</value>
     <comment>General page: information about the app.</comment>

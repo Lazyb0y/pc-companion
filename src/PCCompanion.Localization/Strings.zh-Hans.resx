@@ -144,6 +144,50 @@
     <value>每天询问一次 GitHub 是否有更新版本的 PC Companion。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>立即检查</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>尚未检查更新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>你使用的是最新版本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>PC Companion {0} 现已可用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>正在检查更新…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>无法连接到 GitHub</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>请检查你的 Internet 连接，然后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>目前无法检查更新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>请稍后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>上次检查时间：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>此窗口以管理员身份运行时，“立即检查”不可用。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>关于</value>
     <comment>Needs native review.</comment>

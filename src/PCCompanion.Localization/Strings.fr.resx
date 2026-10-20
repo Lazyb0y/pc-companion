@@ -148,6 +148,50 @@
     <value>Demander une fois par jour à GitHub si une version plus récente de PC Companion est disponible.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>Rechercher maintenant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>Aucune recherche de mises à jour pour l’instant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>Vous avez la dernière version</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>PC Companion {0} est disponible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>Recherche de mises à jour…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>Impossible de joindre GitHub</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>Vérifiez votre connexion Internet, puis réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>Impossible de rechercher des mises à jour pour le moment</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>Réessayez plus tard.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>Dernière vérification : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>Rechercher maintenant n’est pas disponible lorsque cette fenêtre s’exécute en tant qu’administrateur.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>À propos</value>
     <comment>Needs native review.</comment>

@@ -148,6 +148,50 @@
     <value>Pregunta una vez al día a GitHub si hay una versión más reciente de PC Companion.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>Buscar ahora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>Aún no se han buscado actualizaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>Tienes la versión más reciente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>PC Companion {0} está disponible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>Buscando actualizaciones…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>No se puede conectar con GitHub</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>Comprueba tu conexión a Internet e inténtalo de nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>No se pueden buscar actualizaciones en este momento</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>Inténtalo de nuevo más tarde.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>Última comprobación: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>Buscar ahora no está disponible mientras esta ventana se ejecuta como administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>Acerca de</value>
     <comment>Needs native review.</comment>
