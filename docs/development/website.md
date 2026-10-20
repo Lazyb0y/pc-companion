@@ -15,10 +15,12 @@ The project website, [lazyb0y.github.io/pc-companion](https://lazyb0y.github.io/
 ## Theme
 
 - The page follows the system's light or dark mode. The switch in the header chooses System, Light or Dark.
-- It works without JavaScript: the switch is three radio buttons, and CSS `:has()` sets `color-scheme` from the one that's checked. Each color is `light-dark(light, dark)` in `styles.css`, so it follows `color-scheme`.
-- The choice lasts while the page is open. Without JavaScript nothing stores it, so a new visit starts with the system's mode.
+- The switch itself works without JavaScript: it's three radio buttons, and CSS `:has()` sets `color-scheme` from the one that's checked. Each color is `light-dark(light, dark)` in `styles.css`, so it follows `color-scheme`.
+- `theme.js` remembers the choice, in the browser's local storage under `pc-companion.theme`: `light` or `dark`, removed for System. It sends nothing anywhere. The site shares `lazyb0y.github.io`, and its storage, with other sites of the account, hence the prefix.
+- It runs from `<head>`, before the page is drawn: it sets `data-theme` on `<html>` from the stored choice, which the CSS treats like the checked button, so a dark page never shows in light first. Once the page is loaded, it checks the matching button, and it keeps `data-theme` and the storage in step with the switch.
+- Without the script, or with storage off, the switch still works, for as long as the page is open.
 - Each screenshot has both images, with `loading="lazy"`. CSS hides the one of the other theme, and a lazy image that's hidden is never downloaded.
-- Browsers without `:has()` hide the switch and follow the system's mode.
+- Browsers without `:has()` drop the rules that mention it, including `data-theme`'s, so they hide the switch and follow the system's mode.
 
 ## Screenshots
 
@@ -34,8 +36,8 @@ powershell -ExecutionPolicy Bypass -File scripts\website-screenshots.ps1 -Msi <f
 
 ## Rules
 
-- Plain HTML and CSS: no site generator, packages or JavaScript.
-- Nothing loaded from other sites: no web fonts, CDNs, analytics or cookies. The page's Content Security Policy allows only its own images and style sheet.
+- Plain HTML and CSS, and one small script of our own, `theme.js`, that remembers the theme: no site generator, packages or other JavaScript. The page works without the script.
+- Nothing loaded from other sites: no web fonts, CDNs, analytics or cookies. The page's Content Security Policy allows only its own images, style sheet and script.
 - Our own icon and screenshots; no Microsoft logos or look-alike branding. The footer says PC Companion isn't affiliated with Microsoft.
 - Light and dark themes, keyboard navigation, screen readers, high contrast, and widths from phones up. Logical CSS properties, such as `margin-inline` and `inset-inline-start`, keep right-to-left layouts working.
 - Links to repository files point to `main` on GitHub.
