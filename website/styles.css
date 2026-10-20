@@ -1,38 +1,34 @@
-/* PC Companion website. Colors come from the app icon; the page follows the system's light or dark mode. */
+/* PC Companion website. Colors come from the app icon. The page follows the system's light or dark
+   mode, or the theme chosen with the switch in the header: each color is light-dark(light, dark),
+   so choosing a theme only sets color-scheme. */
 
 :root {
-  --bg: #f6f8fc;
-  --surface: #ffffff;
-  --surface-alt: #eef2fa;
-  --text: #141821;
-  --text-muted: #4a5366;
-  --border: #dde3ee;
-  --accent: #2155dc;
-  --accent-hover: #1a46ba;
-  --accent-soft: #e3ebfd;
+  color-scheme: light dark;
+  --bg: light-dark(#f6f8fc, #0f131a);
+  --surface: light-dark(#ffffff, #171c25);
+  --surface-alt: light-dark(#eef2fa, #131821);
+  --text: light-dark(#141821, #e9edf4);
+  --text-muted: light-dark(#4a5366, #a8b1c2);
+  --border: light-dark(#dde3ee, #283041);
+  --accent: light-dark(#2155dc, #8ab0ff);
+  --accent-hover: light-dark(#1a46ba, #a9c4ff);
+  --accent-soft: light-dark(#e3ebfd, #1c2741);
   --primary: #2155dc;
   --primary-hover: #1a46ba;
   --highlight: #fbbf24;
-  --shadow: 0 1px 2px rgb(20 24 33 / 0.06), 0 12px 32px rgb(20 24 33 / 0.10);
+  --shadow: 0 1px 2px light-dark(rgb(20 24 33 / 0.06), rgb(0 0 0 / 0.3)), 0 12px 32px light-dark(rgb(20 24 33 / 0.10), rgb(0 0 0 / 0.35));
   --radius: 8px;
   --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Noto Sans", sans-serif;
   --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Noto Sans", sans-serif;
   --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f131a;
-    --surface: #171c25;
-    --surface-alt: #131821;
-    --text: #e9edf4;
-    --text-muted: #a8b1c2;
-    --border: #283041;
-    --accent: #8ab0ff;
-    --accent-hover: #a9c4ff;
-    --accent-soft: #1c2741;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.35);
-  }
+:root:has(#theme-light:checked) {
+  color-scheme: light;
+}
+
+:root:has(#theme-dark:checked) {
+  color-scheme: dark;
 }
 
 *,
@@ -165,10 +161,13 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 8px 24px;
   min-height: 64px;
   padding-block: 8px;
+}
+
+.header-row .brand {
+  margin-inline-end: auto;
 }
 
 .brand {
@@ -211,6 +210,67 @@ kbd {
 
 .nav-list a:hover {
   color: var(--accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Theme switch: System, Light or Dark radio buttons, styled as one control. */
+
+.theme-switch {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-alt);
+}
+
+.theme-switch label {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.theme-switch label:hover {
+  color: var(--text);
+}
+
+.theme-switch svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-switch input:checked + label {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 1px 3px light-dark(rgb(20 24 33 / 0.15), rgb(0 0 0 / 0.5));
+}
+
+.theme-switch input:focus-visible + label {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Without :has(), the switch couldn't change anything, so it's hidden and the system mode applies. */
+@supports not selector(:has(*)) {
+  .theme-switch {
+    display: none;
+  }
 }
 
 /* Hero */
@@ -300,6 +360,32 @@ kbd {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+}
+
+/* Each screenshot has a light and a dark image. The hidden one is lazy and never comes into view, so
+   it's never downloaded. */
+.shot .shot-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .shot .shot-light {
+    display: none;
+  }
+
+  .shot .shot-dark {
+    display: block;
+  }
+}
+
+:root:has(#theme-light:checked) .shot .shot-light,
+:root:has(#theme-dark:checked) .shot .shot-dark {
+  display: block;
+}
+
+:root:has(#theme-light:checked) .shot .shot-dark,
+:root:has(#theme-dark:checked) .shot .shot-light {
+  display: none;
 }
 
 /* Sections */
@@ -515,6 +601,12 @@ kbd {
     padding-inline: 16px;
   }
 
+  /* The theme switch stays beside the name, and the links get a row of their own. */
+  .header-row nav {
+    order: 1;
+    width: 100%;
+  }
+
   .hero {
     padding-block: 40px 24px;
   }
@@ -531,5 +623,9 @@ kbd {
 @media (forced-colors: active) {
   .button-primary {
     border-color: ButtonText;
+  }
+
+  .theme-switch input:checked + label {
+    outline: 2px solid Highlight;
   }
 }
