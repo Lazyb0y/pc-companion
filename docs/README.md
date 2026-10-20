@@ -11,6 +11,7 @@ Documentation for PC Companion. The backlog, roadmap and task status live on Git
 - [Build](development/build.md)
 - [Testing](development/testing.md)
 - [Packaging](development/packaging.md)
+- [Releasing](development/releasing.md)
 - [Approval and change-control policy](project/change-control.md)
 
 Instructions for AI coding agents are in [AGENTS.md](../AGENTS.md).

@@ -17,5 +17,5 @@ Tests, and the checks to run before a pull request, are in [Testing](testing.md)
 - Release builds aren't trimmed. The default Windows SDK projection has trim warnings, and Release-only trimming breaks locked restore.
 - Project references don't receive the `PublishDir` of the project that references them, so the libraries the settings app and the host share build only once when the installer publishes both.
 - `.editorconfig` covers formatting only; code style isn't enforced in the build.
-- CI builds with `ContinuousIntegrationBuild=true`, so builds are deterministic and the source paths in the PDBs don't depend on the runner's folders.
+- CI builds with `ContinuousIntegrationBuild=true`, so builds are deterministic and the source paths in the PDBs don't depend on the runner's folders. The release workflow runs the same builds, tests and installers by calling `build.yml`; see [Releasing](releasing.md).
 - CodeQL scans the C# code and the GitHub Actions workflows with the extended security queries on pushes to `main`, pull requests and once a week. Results appear under Security → Code scanning.
