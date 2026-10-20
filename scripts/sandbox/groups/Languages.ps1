@@ -21,7 +21,7 @@ Save-Screenshot '05b-hot-corners-arabic-dark'
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 1000, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
-    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'نوافذ التطبيق', 'مقاييس النظام', 'عام') {
+    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'نوافذ التطبيق', 'مقاييس النظام', 'إجراءات الحافظة', 'عام') {
         [void] (Show-Page $page)
         Start-Sleep -Milliseconds 1500
         Test-PageLayout "$page (right to left)" $page $width

@@ -275,7 +275,7 @@ public sealed partial class ClipboardActionsThread
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions applied its settings: {Usable} of {Rules} rules can be used; Open copied links {OpenLinks}.")]
     private static partial void LogApplied(ILogger logger, int usable, int rules, bool openLinks);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions' shortcut was pressed: the clipboard has {Status}, with {Offers} actions.")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions' shortcut was pressed; clipboard: {Status}, actions offered: {Offers}.")]
     private static partial void LogPressed(ILogger logger, ClipboardTextStatus status, int offers);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions runs rule {Rule} (0 is Open in browser): {Kind}.")]

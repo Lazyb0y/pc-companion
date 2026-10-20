@@ -1,0 +1,286 @@
+﻿# Clipboard Actions: the Home switch turns it on, and its page adds, edits, moves and deletes rules
+# in the rule editor, which says what's wrong with a pattern, an address or a program. Then, with
+# rules in the settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer for
+# text the checks copy: Open in browser and an address rule open the browser; a rule that runs a
+# program shows dimmed, since everything in the Sandbox runs as administrator; marked-private,
+# missing and too long text show only a note. Esc gives the front back to the window that had it,
+# the shortcut again closes the menu, and turned off the shortcut opens no menu. The host's
+# --open-web-page opens only web addresses. Detailed logging is on for the host's Debug entries.
+[void] (Close-SettingsApp)
+$detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+function Get-ClipboardActionsSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.clipboardActions }
+function Invoke-AppElement([string] $Name) {
+    $element = $null
+    if (-not (Wait-Until { ($script:element = Find-AppElement $Name) -ne $null } 5)) { return $false }
+    $pattern = $null
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern, [ref] $pattern)) { $pattern.Invoke(); return $true }
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern, [ref] $pattern)) { $pattern.Select(); return $true }
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern, [ref] $pattern)) { $pattern.Expand(); return $true }
+    return $false
+}
+# A text box of the settings app by its name; its header has the same name, so the box is found by its type.
+function Find-AppBox([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Edit)))
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+function Set-AppBox([string] $Name, [string] $Value) {
+    $box = Find-AppBox $Name
+    if (-not $box) { return $false }
+    $box.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($Value)
+    Start-Sleep -Milliseconds 300
+    return $true
+}
+function Get-AppBox([string] $Name) {
+    $box = Find-AppBox $Name
+    if (-not $box) { return $null }
+    return $box.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+}
+function Test-AppEnabled([string] $Name) { $element = Find-AppElement $Name; ($null -ne $element) -and $element.Current.IsEnabled }
+
+Test-Check 'turn on Clipboard Actions on Home' (Set-Toggle 'Clipboard Actions' $true)
+Start-Sleep -Seconds 2
+$saved = Get-ClipboardActionsSettings
+Test-Check 'the Home switch saves Clipboard Actions as on' ($saved.enabled -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'select Clipboard Actions' (Select-NavigationItem 'Clipboard Actions')
+Start-Sleep -Seconds 2
+Save-Screenshot '13d-clipboard-actions-english'
+$text = Get-WindowText
+Test-Check 'Clipboard Actions shows its settings' (($text -contains 'Shortcut') -and ($text -contains 'Windows logo key + Alt + V') -and ($text -contains 'Open copied links') -and ($text -contains 'Rules') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'the page says there are no rules yet' (@($text | Where-Object { $_ -like 'No rules yet.*' }).Count -eq 1)
+$openLinks = Find-Toggle 'Open copied links'
+Test-Check 'Open copied links is on' (($null -ne $openLinks) -and $openLinks.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -eq 'On')
+
+# A new rule: Save is off until the rule can be used, Try it says whether the pattern matches.
+Test-Check 'Add rule opens the rule editor' ((Invoke-AppElement 'Add rule') -and (Wait-Until { Find-AppElement 'Add a rule' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'Save is off for an empty rule' (-not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Name' 'Track the parcel')
+[void] (Set-AppBox 'Pattern' '(?=1Z)1Z.+')
+Test-Check 'a pattern with a lookahead is refused' (Wait-Until { Find-AppText 'The pattern uses a lookaround, a backreference, an atomic group or a conditional, which can''t be used here.' } 3)
+[void] (Set-AppBox 'Pattern' '1Z[0-9A-Z]{16}')
+[void] (Set-AppBox 'Try it' '1Z999AA10123456784')
+Test-Check 'Try it says the pattern matches' (Wait-Until { Find-AppText 'The pattern matches this text.' } 3)
+[void] (Set-AppBox 'Web address' 'file:///C:/{text}')
+Test-Check 'an address that isn''t a web address is refused' ((Wait-Until { Find-AppText 'The address must start with https:// or http://.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Web address' 'https://tracking.example.com/?number={text}')
+Test-Check 'Save is on once the rule can be used' (Wait-Until { Test-AppEnabled 'Save' } 3)
+Save-Screenshot '13e-clipboard-actions-rule-editor'
+Test-Check 'Save the rule' (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+$saved = Get-ClipboardActionsSettings
+$rule = @($saved.rules)[0]
+Test-Check 'the page saves the rule' ((@($saved.rules).Count -eq 1) -and ($rule.name -eq 'Track the parcel') -and ($rule.pattern -eq '1Z[0-9A-Z]{16}') -and ($rule.action -eq 'OpenAddress') -and ($rule.address -eq 'https://tracking.example.com/?number={text}')) "saved: $($saved | ConvertTo-Json -Compress -Depth 5)"
+Test-Check 'the rule shows what it does' (Wait-Until { Find-AppText 'Opens tracking.example.com' } 3)
+
+# A rule that runs a program, which refuses command interpreters.
+Test-Check 'Add rule opens the rule editor again' ((Invoke-AppElement 'Add rule') -and (Wait-Until { Find-AppElement 'Add a rule' } 5))
+Start-Sleep -Seconds 1
+[void] (Set-AppBox 'Name' 'Show in Character Map')
+[void] (Set-AppBox 'Pattern' '.+\.txt')
+Test-Check 'choose Run a program' (Invoke-AppElement 'Run a program')
+Start-Sleep -Milliseconds 500
+[void] (Set-AppBox 'Program' 'C:\Windows\System32\cmd.exe')
+Test-Check 'a command interpreter is refused' ((Wait-Until { Find-AppText 'Programs that run commands, such as cmd or PowerShell, can''t be used: copied text could make them run other commands.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Program' 'C:\Windows\System32\charmap.exe')
+[void] (Set-AppBox 'Arguments' '{text}')
+Test-Check 'Save is on for the program rule' (Wait-Until { Test-AppEnabled 'Save' } 3)
+[void] (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+$saved = Get-ClipboardActionsSettings
+Test-Check 'the page saves the program rule after the first' ((@($saved.rules).Count -eq 2) -and (@($saved.rules)[1].action -eq 'RunProgram') -and (@($saved.rules)[1].program -eq 'C:\Windows\System32\charmap.exe')) "saved: $($saved | ConvertTo-Json -Compress -Depth 5)"
+
+# Edit, move and delete.
+Test-Check 'Edit opens the rule' ((Invoke-AppElement 'Edit Track the parcel') -and (Wait-Until { Find-AppElement 'Edit the rule' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'the editor shows the rule' ((Get-AppBox 'Name') -eq 'Track the parcel') "name: $(Get-AppBox 'Name')"
+[void] (Set-AppBox 'Name' 'Track & trace')
+[void] (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+Test-Check 'the page saves the edited name' ((@((Get-ClipboardActionsSettings).rules)[0].name) -eq 'Track & trace')
+Test-Check 'More options opens the rule''s menu' (Invoke-AppElement 'More options for Track & trace')
+Start-Sleep -Seconds 1
+Test-Check 'Move down moves the rule' (Invoke-AppElement 'Move down')
+Start-Sleep -Seconds 2
+Test-Check 'the page saves the new order' ((@((Get-ClipboardActionsSettings).rules)[0].name) -eq 'Show in Character Map')
+[void] (Invoke-AppElement 'More options for Show in Character Map')
+Start-Sleep -Seconds 1
+Test-Check 'Delete asks first' ((Invoke-AppElement 'Delete') -and (Wait-Until { Find-AppElement 'Delete Show in Character Map?' } 5))
+Start-Sleep -Seconds 1
+[void] (Invoke-AppElement 'Delete')
+Start-Sleep -Seconds 2
+$saved = Get-ClipboardActionsSettings
+Test-Check 'the page deletes the rule' ((@($saved.rules).Count -eq 1) -and (@($saved.rules)[0].name -eq 'Track & trace')) "saved: $($saved | ConvertTo-Json -Compress -Depth 5)"
+[void] (Close-SettingsApp)
+
+# The menu, with the rules in the settings file.
+function Write-ClipboardSettings([bool] $Enabled) {
+    $section = @{
+        enabled = $Enabled
+        openLinks = $true
+        rules = @(
+            @{ name = 'Track the parcel'; pattern = '1Z[0-9A-Z]{16}'; action = 'OpenAddress'; address = 'https://tracking.example.com/?number={text}' },
+            @{ name = 'Show in Character Map'; pattern = '.+\.txt'; action = 'RunProgram'; program = 'C:\Windows\System32\charmap.exe'; arguments = '{text}' },
+            @{ name = 'Broken'; pattern = '[0-9'; address = 'https://example.com/{text}' }
+        )
+    }
+    $settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; diagnostics = @{ detailedLoggingUntil = $detailedUntil }; features = @{ clipboardActions = $section } }
+    Write-Settings ($settings | ConvertTo-Json -Depth 6)
+    Start-Sleep -Seconds 3
+}
+function Copy-Text([string] $Text, [string] $Mark) {
+    $data = New-Object System.Windows.Forms.DataObject
+    if ($null -ne $Text) { $data.SetText($Text) }
+    switch ($Mark) {
+        'exclude' { $data.SetData('ExcludeClipboardContentFromMonitorProcessing', $false, (New-Object IO.MemoryStream (, [byte[]] @(0)))) }
+        'history0' { $data.SetData('CanIncludeInClipboardHistory', $false, (New-Object IO.MemoryStream (, [byte[]] @(0, 0, 0, 0)))) }
+        'viewer' { $data.SetData('Clipboard Viewer Ignore', $false, (New-Object IO.MemoryStream (, [byte[]] @(0)))) }
+    }
+    [System.Windows.Forms.Clipboard]::SetDataObject($data, $true)
+    # The Remote Desktop clipboard reads new data at once.
+    Start-Sleep -Milliseconds 700
+}
+function Clear-Clipboard { [System.Windows.Forms.Clipboard]::Clear(); Start-Sleep -Milliseconds 700 }
+function Press-Shortcut {
+    [void] [Win32]::ScanKey(0x5B, $false, $true); [void] [Win32]::ScanKey(0x38, $false, $false); [void] [Win32]::ScanKey(0x2F, $false, $false)
+    Start-Sleep -Milliseconds 60
+    [void] [Win32]::ScanKey(0x2F, $true, $false); [void] [Win32]::ScanKey(0x38, $true, $false); [void] [Win32]::ScanKey(0x5B, $true, $true)
+}
+$menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
+$itemCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::MenuItem)
+function Get-Menu { [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $menuCondition) }
+# The menu's items, as "name" or "name (dimmed)", with the embedding characters around the preview left out.
+function Get-MenuItems {
+    $menu = Get-Menu
+    if (-not $menu) { return 'no menu' }
+    (@($menu.FindAll([System.Windows.Automation.TreeScope]::Descendants, $itemCondition)) | ForEach-Object {
+        $name = $_.Current.Name -replace '[\u202A-\u202C]', ''
+        if ($_.Current.IsEnabled) { $name } else { "$name (dimmed)" }
+    }) -join ' | '
+}
+function Open-Menu {
+    Press-Shortcut
+    $opened = Wait-Until { Get-Menu } 5
+    Start-Sleep -Milliseconds 500
+    return $opened
+}
+function Close-Menu { if (Get-Menu) { Send-Key 0x1B; Start-Sleep -Milliseconds 500 } }
+function Test-CharmapInFront { [Win32]::GetForegroundWindow() -eq $charmap }
+
+Write-ClipboardSettings $true
+if ((Get-Processes 'PCCompanion.Host').Count -eq 0) { Start-Process $hostExe }
+Test-Check 'the host uses the rules it can' (Wait-Until { (Get-HostLog) -match '2 of 3 rules can be used' } 10)
+Test-Check 'the host leaves out the rule it can''t use, by number' ((Get-HostLog) -match 'Clipboard Actions rule 3 can''t be used: "?InvalidPattern"?\.')
+$charmapProcess = Start-Process charmap.exe -PassThru
+Test-Check 'Character Map opens to be the window in front' (Wait-Until { $charmapProcess.Refresh(); $charmapProcess.MainWindowHandle -ne [IntPtr]::Zero } 10)
+$charmap = $charmapProcess.MainWindowHandle
+[void] [Win32]::SetForegroundWindow($charmap)
+[void] (Move-Pointer 700 400)
+
+Copy-Text 'https://example.com/copied/link'
+Test-Check 'the shortcut opens the menu for a copied link' (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'the menu shows the link, Open in browser and Settings' ($items -eq 'https://example.com/copied/link (dimmed) | Open in browser | Settings') $items
+$menuBounds = (Get-Menu).Current.BoundingRectangle
+Test-Check 'the menu opens at the pointer' ((([Math]::Abs($menuBounds.X - 700) -le 10) -or ([Math]::Abs($menuBounds.Right - 700) -le 10)) -and (([Math]::Abs($menuBounds.Y - 400) -le 10) -or ([Math]::Abs($menuBounds.Bottom - 400) -le 10))) "menu at $menuBounds"
+Save-Screenshot '13f-clipboard-actions-menu'
+Send-Key 0x1B
+Start-Sleep -Milliseconds 500
+Test-Check 'Esc closes the menu' (-not (Get-Menu))
+Test-Check 'the window in front gets the front back' (Test-CharmapInFront) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+
+$edgeBefore = (Get-Processes 'msedge').Count
+Test-Check 'the menu opens again' (Open-Menu)
+Test-Check 'Open in browser opens the browser' ((Select-TrayMenuItem 'Open in browser') -and (Wait-Until { (Get-Processes 'msedge').Count -gt $edgeBefore } 20))
+Test-Check 'the host logs the opened link without it' (Wait-Until { (Get-HostLog) -match 'Clipboard Actions opened the address of rule 0' } 5)
+Start-Sleep -Seconds 3
+Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Seconds 2
+[void] [Win32]::SetForegroundWindow($charmap)
+
+Copy-Text "  1Z999AA10123456784`r`n"
+Test-Check 'the shortcut opens the menu for a parcel number' (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'the menu offers the matching rule' ($items -eq '1Z999AA10123456784 (dimmed) | Track the parcel | Settings') $items
+$edgeBefore = (Get-Processes 'msedge').Count
+Test-Check 'the rule opens its address in the browser' ((Select-TrayMenuItem 'Track the parcel') -and (Wait-Until { (Get-Processes 'msedge').Count -gt $edgeBefore } 20))
+Test-Check 'the host logs the rule by number' (Wait-Until { (Get-HostLog) -match 'Clipboard Actions opened the address of rule 1' } 5)
+$edgeCommandLines = (Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe'" | ForEach-Object { $_.CommandLine }) -join ' '
+Test-Check 'the browser got the address with the number' ($edgeCommandLines -match 'tracking\.example\.com/\?number=1Z999AA10123456784') $edgeCommandLines
+Start-Sleep -Seconds 2
+Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Seconds 2
+[void] [Win32]::SetForegroundWindow($charmap)
+
+Copy-Text 'notes.txt'
+[void] (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'a rule that runs a program shows dimmed while running as administrator' ($items -eq 'notes.txt (dimmed) | Show in Character Map (dimmed) | Settings') $items
+Close-Menu
+
+Copy-Text 'PC-12'
+[void] (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'text that matches no rule shows a note' ($items -eq 'PC-12 (dimmed) | No actions for the copied text (dimmed) | Settings') $items
+Close-Menu
+
+foreach ($mark in 'exclude', 'history0', 'viewer') {
+    Copy-Text 'secret-4711' $mark
+    [void] (Open-Menu)
+    $items = Get-MenuItems
+    Test-Check "text marked private ($mark) isn't shown" ($items -eq 'The copied text is private (dimmed) | Settings') $items
+    Close-Menu
+}
+
+Copy-Text ('a' * 5000)
+[void] (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'text longer than 4,096 characters shows a note' ($items -eq 'The copied text is too long (dimmed) | Settings') $items
+Close-Menu
+
+Clear-Clipboard
+[void] (Open-Menu)
+$items = Get-MenuItems
+Test-Check 'an empty clipboard shows a note' ($items -eq 'The clipboard has no text (dimmed) | Settings') $items
+Close-Menu
+
+Copy-Text 'PC-12'
+[void] [Win32]::SetForegroundWindow($charmap)
+[void] (Open-Menu)
+Press-Shortcut
+Test-Check 'the shortcut again closes the menu' (Wait-Until { -not (Get-Menu) } 3)
+Start-Sleep -Milliseconds 500
+Test-Check 'and gives the front back' (Test-CharmapInFront) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+Test-Check 'the log never holds the copied text' (((Get-HostLog) -notmatch 'secret-4711') -and ((Get-HostLog) -notmatch '1Z999AA') -and ((Get-HostLog) -notmatch 'tracking\.example'))
+
+Write-ClipboardSettings $false
+Test-Check 'turning it off ends its thread' (Wait-Until { (Get-HostLog) -match "Clipboard Actions' thread ended\." } 10)
+Write-ClipboardSettings $true
+Test-Check 'turning it on again starts its thread' (Wait-Until { (Get-HostLog) -match 'Clipboard Actions started on its own thread\.' } 10)
+Write-ClipboardSettings $false
+Test-Check 'and turning it off again ends it' (Wait-Until { (Get-MatchCount (Get-HostLog) "Clipboard Actions' thread ended\.") -ge 2 } 10)
+Press-Shortcut
+Start-Sleep -Seconds 2
+Test-Check 'turned off, the shortcut opens no menu' (-not (Get-Menu))
+Close-Menu
+Get-Processes 'charmap' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+
+# The copy a host running as administrator starts to open a web page opens only web addresses.
+$edgeBefore = (Get-Processes 'msedge').Count
+Start-Process $hostExe -ArgumentList @('--open-web-page', 'https://example.com/opened-by-the-copy')
+Test-Check '--open-web-page opens a web address in the browser' (Wait-Until { (Get-Processes 'msedge').Count -gt $edgeBefore } 20)
+Start-Sleep -Seconds 2
+Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Seconds 2
+$calcBefore = (Get-Processes 'CalculatorApp').Count + (Get-Processes 'calc').Count
+Start-Process $hostExe -ArgumentList @('--open-web-page', 'file:///C:/Windows/System32/calc.exe') -Wait
+Start-Sleep -Seconds 3
+Test-Check '--open-web-page opens nothing for another kind of address' ((Get-Processes 'msedge').Count -eq 0 -and ((Get-Processes 'CalculatorApp').Count + (Get-Processes 'calc').Count) -eq $calcBefore)
+Stop-All

@@ -17,9 +17,9 @@ Test-Check 'Always run as administrator is unavailable for a per-user install' (
 Test-Check 'General says why' ($text -contains 'Available when PC Companion is installed for all users.') ($text -join ' | ')
 
 # Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
-# Hot Corners, App Windows, System Meters and General: a centered column, as Windows Settings
+# Hot Corners, App Windows, System Meters, Clipboard Actions and General: a centered column, as Windows Settings
 # lays out its pages.
-$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'App Windows'; Title = 'App Windows' }, @{ Name = 'System Meters'; Title = 'System Meters' }, @{ Name = 'General'; Title = 'General' })
+$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'App Windows'; Title = 'App Windows' }, @{ Name = 'System Meters'; Title = 'System Meters' }, @{ Name = 'Clipboard Actions'; Title = 'Clipboard Actions' }, @{ Name = 'General'; Title = 'General' })
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 600, 1000, 1300, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
