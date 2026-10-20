@@ -4,7 +4,8 @@ Installs PC Companion in Windows Sandbox and checks the installer, the settings 
 at runtime, without changing this PC.
 
 .DESCRIPTION
-Builds the installer for this PC's architecture, starts Windows Sandbox with networking off, and
+Builds the installer for this PC's architecture, or takes the one given with -Msi, starts Windows
+Sandbox with networking off, and
 runs the groups of checks in scripts\sandbox\groups inside it, with scripts\sandbox\run-checks.ps1:
 all of them, or Smoke and the ones chosen with -Checks. The Sandbox window closes when the checks
 finish. The report, screenshots and logs are written to TestResults\sandbox.
@@ -20,6 +21,11 @@ first, and the groups run in a fixed order whatever the order given. Without it,
 
 .PARAMETER NoBuild
 Uses the installer that is already built.
+
+.PARAMETER Msi
+Checks this installer instead of building one, such as an installer downloaded from a draft
+release. It must be for this PC's architecture. The Sandbox gets a copy of it without the mark
+Windows puts on downloaded files, so the checks don't stop at Windows' security warnings.
 
 .PARAMETER TimeoutMinutes
 How long to wait for the checks to finish: by default 30 minutes, or 60 when Smart App Control isn't
@@ -40,11 +46,15 @@ powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Checks HotCor
 
 .EXAMPLE
 powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Checks Setup,Dialogs
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File scripts\sandbox-test.ps1 -Msi $HOME\Downloads\PCCompanion-0.1.0-x64.msi
 #>
 [CmdletBinding()]
 param(
     [string[]] $Checks,
     [switch] $NoBuild,
+    [string] $Msi,
     [int] $TimeoutMinutes,
     [ValidateSet('Off', 'Evaluation', 'On')]
     [string] $SmartAppControl = 'Off'
@@ -91,7 +101,37 @@ if (Test-SandboxRunning) {
     throw 'Windows Sandbox is already running. Close it first; only one Sandbox can run at a time. A Sandbox that was just closed can take a minute to shut down.'
 }
 
-if (-not $NoBuild) {
+# The platform an installer is for, from its summary information's Template, such as x64;1033.
+function Get-InstallerPlatform([string] $Path) {
+    $installer = New-Object -ComObject WindowsInstaller.Installer
+    $summary = $installer.GetType().InvokeMember('SummaryInformation', 'GetProperty', $null, $installer, @($Path, [int] 0))
+    $template = $summary.GetType().InvokeMember('Property', 'GetProperty', $null, $summary, @([int] 7))
+    foreach ($object in $summary, $installer) { [void] [System.Runtime.InteropServices.Marshal]::ReleaseComObject($object) }
+    return ($template -split ';')[0]
+}
+
+if ($Msi) {
+    # A copy in a folder of its own, which the Sandbox maps, without the download mark.
+    if (-not (Test-Path -LiteralPath $Msi -PathType Leaf)) {
+        throw "There's no installer at $Msi."
+    }
+
+    $source = (Resolve-Path -LiteralPath $Msi).ProviderPath
+    $msiPlatform = Get-InstallerPlatform $source
+    if ($msiPlatform -ne $platform) {
+        throw "$source is an installer for $msiPlatform. This PC needs one for $platform."
+    }
+
+    $msiFolder = Join-Path $testResults 'sandbox-msi'
+    if (Test-Path $msiFolder) { Remove-Item -Recurse -Force $msiFolder }
+    New-Item -ItemType Directory -Force -Path $msiFolder | Out-Null
+    $name = Split-Path -Leaf $source
+    if ($name -notlike 'PCCompanion-*.msi') { $name = "PCCompanion-$platform.msi" }
+    $copy = Join-Path $msiFolder $name
+    Copy-Item -LiteralPath $source -Destination $copy
+    Unblock-File -LiteralPath $copy
+    Write-Host "Checking $source."
+} elseif (-not $NoBuild) {
     Write-Host "Building the $platform installer..."
     & dotnet build (Join-Path $root 'src\PCCompanion.Installer\PCCompanion.Installer.wixproj') -c Release "-p:Platform=$platform" | Out-Null
     if ($LASTEXITCODE -ne 0) {
@@ -100,7 +140,7 @@ if (-not $NoBuild) {
 }
 
 if (-not (Get-ChildItem $msiFolder -Filter 'PCCompanion-*.msi' -ErrorAction SilentlyContinue)) {
-    throw "No installer in $msiFolder. Run without -NoBuild."
+    throw "No installer in $msiFolder. Run without -NoBuild, or give one with -Msi."
 }
 
 # The checks also install, over this one, a copy of the installer that's another build of the
