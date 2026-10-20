@@ -8,8 +8,8 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Host;
 
 /// <summary>
-/// The host's tray icon: selecting it opens the settings, and its menu has Settings and Exit.
-/// Use it on the thread that runs the message loop.
+/// The host's tray icon: selecting it opens the settings, and its menu has Settings and Exit. The
+/// menu follows the Windows mode, as the taskbar does. Use it on the thread that runs the message loop.
 /// </summary>
 internal sealed partial class TrayController(SettingsAppLauncher settingsApp, ILogger<TrayController> logger) : IDisposable
 {
@@ -18,6 +18,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
 
     private MessageWindow? _window;
     private TrayIcon? _icon;
+    private MenuMode? _menuMode;
 
     /// <summary>Asks the running host to open the settings, for example from a second host launch.</summary>
     public static uint OpenSettingsMessage { get; } = MessageWindow.RegisterMessage("PCCompanion.Host.OpenSettings");
@@ -56,6 +57,11 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         if (!_icon.IsShown)
         {
             LogIconNotShown(logger);
+        }
+
+        if (!MenuTheme.IsSupported)
+        {
+            LogMenuModeNotSupported(logger, Environment.OSVersion.Version.Build);
         }
     }
 
@@ -96,6 +102,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
         PopupMenuItem[] items = [new(SettingsCommand, Strings.TraySettings), new(ExitCommand, Strings.TrayExit)];
 
+        FollowWindowsMode();
         LogMenuOpened(logger, rightToLeft);
         var command = PopupMenu.Show(_window!, items, x, y, rightToLeft);
         LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", _ => "nothing" });
@@ -115,6 +122,32 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
                 MessageLoop.Quit();
                 break;
         }
+    }
+
+    // Checked each time the menu opens, so a change of the Windows mode needs no notification.
+    private void FollowWindowsMode()
+    {
+        if (!MenuTheme.IsSupported)
+        {
+            return;
+        }
+
+        var mode = MenuTheme.ForWindowsMode();
+        if (mode == _menuMode)
+        {
+            return;
+        }
+
+        if (MenuTheme.Set(mode))
+        {
+            LogMenuModeSet(logger, mode);
+        }
+        else
+        {
+            LogMenuModeNotSet(logger, mode);
+        }
+
+        _menuMode = mode;
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon was selected.")]
@@ -140,4 +173,13 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The tray icon couldn't be added yet; it is added when the taskbar starts.")]
     private static partial void LogIconNotShown(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "The tray menu stays light: the dark menu wasn't tested on Windows build {Build}.")]
+    private static partial void LogMenuModeNotSupported(ILogger logger, int build);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The tray menu follows the Windows mode: {Mode}.")]
+    private static partial void LogMenuModeSet(ILogger logger, MenuMode mode);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Couldn't draw the tray menu in the Windows mode ({Mode}): uxtheme.dll doesn't have the functions.")]
+    private static partial void LogMenuModeNotSet(ILogger logger, MenuMode mode);
 }
