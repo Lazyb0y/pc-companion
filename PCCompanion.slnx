@@ -19,6 +19,7 @@
   <Project Path="src/PCCompanion.Infrastructure/PCCompanion.Infrastructure.csproj" />
   <Project Path="src/PCCompanion.Localization/PCCompanion.Localization.csproj" />
   <Project Path="src/PCCompanion.Logging/PCCompanion.Logging.csproj" />
+  <Project Path="src/PCCompanion.Modules.Desktop/PCCompanion.Modules.Desktop.csproj" />
   <Project Path="src/PCCompanion.Modules.Input/PCCompanion.Modules.Input.csproj" />
   <Project Path="src/PCCompanion.Modules.Windows/PCCompanion.Modules.Windows.csproj" />
   <Project Path="src/PCCompanion.Platform.Windows/PCCompanion.Platform.Windows.csproj" />
@@ -26,6 +27,7 @@
   <Project Path="tests/PCCompanion.Infrastructure.Tests/PCCompanion.Infrastructure.Tests.csproj" />
   <Project Path="tests/PCCompanion.Localization.Tests/PCCompanion.Localization.Tests.csproj" />
   <Project Path="tests/PCCompanion.Logging.Tests/PCCompanion.Logging.Tests.csproj" />
+  <Project Path="tests/PCCompanion.Modules.Desktop.Tests/PCCompanion.Modules.Desktop.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Input.Tests/PCCompanion.Modules.Input.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Windows.Tests/PCCompanion.Modules.Windows.Tests.csproj" />
   <Project Path="tests/PCCompanion.Platform.Windows.Tests/PCCompanion.Platform.Windows.Tests.csproj" />
