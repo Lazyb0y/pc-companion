@@ -432,4 +432,72 @@
     <value>শর্টকাট চাপলে কোন উইন্ডোগুলো খোলা আছে, সেগুলোর অবস্থা এবং সেগুলো কোন অ্যাপের, তা পড়ে, এবং অ্যাপ উইন্ডো চালু থাকার সময় সামনের উইন্ডোর কীবোর্ড লেআউট পড়ে। কখনো উইন্ডোর শিরোনাম বা বিষয়বস্তু পড়ে না। কেবল অ্যাপের কোন উইন্ডো সামনে থাকবে তা বদলায়। কিছুই সংরক্ষণ বা পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>ডেস্কটপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>সিস্টেম মিটার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>টাস্কবারে সিপিইউ, মেমরি ও নেটওয়ার্কের লাইভ ব্যবহার দেখে বুঝুন আপনার পিসি কতটা ব্যস্ত।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>সিপিইউ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>মেমরি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>নেটওয়ার্ক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>সিপিইউ: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>মেমরি: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>{1}-এর মধ্যে {0} ব্যবহৃত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} জিবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>নেটওয়ার্ক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>গ্রহণ: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>প্রেরণ: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} Kbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} Mbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} Gbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>টাস্ক ম্যানেজার</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

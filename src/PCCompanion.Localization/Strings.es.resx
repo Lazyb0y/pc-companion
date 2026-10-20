@@ -432,4 +432,72 @@
     <value>Al presionar el método abreviado, lee qué ventanas están abiertas, su estado y a qué aplicación pertenecen, y mientras Ventanas de la aplicación está activado, la distribución de teclado de la ventana en primer plano. Nunca lee títulos ni contenido de ventanas. Solo cambia qué ventana de la aplicación está en primer plano. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>Escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>Indicadores del sistema</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>Comprueba lo ocupado que está tu PC, con el uso de CPU, memoria y red en tiempo real en la barra de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>CPU</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>Memoria</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>Red</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>CPU: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>Memoria: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>{0} de {1} en uso</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} GB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>Red</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>Recepción: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>Envío: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} Kbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} Mbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} Gbps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>Administrador de tareas</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

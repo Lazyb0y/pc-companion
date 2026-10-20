@@ -464,4 +464,72 @@
     <value>عند الضغط على الاختصار، يقرأ النوافذ المفتوحة وحالتها والتطبيق الذي تنتمي إليه، وأثناء تشغيل نوافذ التطبيق، يقرأ تخطيط لوحة المفاتيح للنافذة الموجودة في المقدمة. لا يقرأ عناوين النوافذ أو محتواها أبداً. يغيّر فقط نافذة التطبيق الموجودة في المقدمة. لا يخزّن أي شيء ولا يرسله.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDesktopName" xml:space="preserve">
+    <value>سطح المكتب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersName" xml:space="preserve">
+    <value>مقاييس النظام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersDescription" xml:space="preserve">
+    <value>اعرف مدى انشغال جهاز الكمبيوتر، مع استخدام وحدة المعالجة المركزية والذاكرة والشبكة مباشرةً على شريط المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuHeader" xml:space="preserve">
+    <value>وحدة المعالجة المركزية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryHeader" xml:space="preserve">
+    <value>الذاكرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkHeader" xml:space="preserve">
+    <value>الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersCpuToolTip" xml:space="preserve">
+    <value>وحدة المعالجة المركزية: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryToolTip" xml:space="preserve">
+    <value>الذاكرة: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMemoryInUse" xml:space="preserve">
+    <value>{0} من {1} قيد الاستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabytes" xml:space="preserve">
+    <value>{0} غيغابايت</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersNetworkToolTip" xml:space="preserve">
+    <value>الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersReceive" xml:space="preserve">
+    <value>الاستلام: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersSend" xml:space="preserve">
+    <value>الإرسال: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersKilobitsPerSecond" xml:space="preserve">
+    <value>{0} كيلوبت/ث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersMegabitsPerSecond" xml:space="preserve">
+    <value>{0} ميغابت/ث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersGigabitsPerSecond" xml:space="preserve">
+    <value>{0} غيغابت/ث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="SystemMetersTaskManager" xml:space="preserve">
+    <value>إدارة المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
