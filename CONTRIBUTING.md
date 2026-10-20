@@ -24,7 +24,7 @@ Thanks for your interest in PC Companion. Everyone taking part follows the [code
 - No user-facing text in code or XAML: add it to `Strings.resx`, as described in [Localization](docs/localization/overview.md).
 - Support keyboard use, screen readers, high DPI, light and dark themes, and right-to-left languages.
 - Support Windows 10 version 2004 and later; see [Windows support](docs/compatibility/windows-support.md).
-- No telemetry and no network connections. Treat external input as untrusted, and start processes with `ProcessStartInfo.ArgumentList`, never through a shell. See [Privacy](PRIVACY.md).
+- No telemetry. The app connects to the network only when a feature or updates need it: discuss a new connection in its issue first, and describe it in [PRIVACY.md](PRIVACY.md). Treat external input as untrusted, and start processes with `ProcessStartInfo.ArgumentList`, never through a shell.
 - Never copy code from GPL-licensed projects, such as KDE, AltSnap, CopyQ or Rainmeter, including close ports or translations. Studying how they behave is fine.
 
 ## Translations

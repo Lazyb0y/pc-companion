@@ -67,7 +67,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 ## Security and privacy
 
 - Least privilege: run without admin rights and request elevation only for operations that need it. Offer an optional "Always run as administrator" mode.
-- No telemetry, analytics, accounts or automatic uploads. The app makes no network connections; any feature that would need one must be disclosed and approved first.
+- No telemetry, analytics, accounts or automatic uploads. The app connects to the network only when a feature or updates need it, and makes no unnecessary connections. Each connection must be approved first and disclosed in `PRIVACY.md`.
 - Treat external input (paths, clipboard content, commands, imported settings) as untrusted. Start processes with `ProcessStartInfo.ArgumentList`, never through a shell. Handle path traversal and symbolic links safely.
 - Never hardcode secrets or store credentials in plain text; use Credential Manager or DPAPI. Never commit signing keys.
 - Prefer user-mode alternatives to drivers.
