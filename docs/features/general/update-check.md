@@ -1,8 +1,8 @@
 # Update check
 
-Once a day, PC Companion asks GitHub whether a newer version is out. When there is one, a notification and a banner on the General page open its release page, where the user downloads and installs it.
+Once a day, PC Companion asks GitHub whether a newer version is out, and **Check now** on the General page asks at once. When there is one, a notification and a banner on the General page open its release page, where the user downloads and installs it.
 
-- Setting on the General page. On by default. Issue: [#83](https://github.com/Lazyb0y/pc-companion/issues/83).
+- Setting on the General page. On by default. Issues: [#83](https://github.com/Lazyb0y/pc-companion/issues/83), and [#113](https://github.com/Lazyb0y/pc-companion/issues/113) for **Check now**.
 - Not included: downloading or installing updates. The user installs the new version by hand, from its release page.
 
 ## When it checks
@@ -31,7 +31,8 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 
 ## The result
 
-- The host saves it to `update-check.json` in the data folder, writing `update-check.json.tmp` and then replacing the file, as the settings store does. Only the host writes it; `settings.json` stays the settings app's alone. The settings app reads it for the banner.
+- The host saves it to `update-check.json` in the data folder, writing `update-check.json.tmp` and then replacing the file, as the settings store does. The settings app saves it too, after **Check now**. `settings.json` stays the settings app's alone. The settings app reads the result for the banner and the update status.
+- If the host and the settings app save at the same moment, one of the two saves fails and is logged; the next check saves again.
 - `lastCheck` is when GitHub last answered, `latestVersion` the newest version it named, and `notifiedVersion` the last version the notification showed. An answer without a usable version keeps `latestVersion`; no release (404) clears it.
 - A file that's missing, over 4 KB or can't be read counts as no check yet, and is replaced at the next save.
 - A result that can't be saved still counts as the day's check until the host stops, so the host doesn't ask every hour.
@@ -55,9 +56,30 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 
 ## Banner
 
-- While the check is on and `latestVersion` is newer than the running version, the General page shows a banner at the top: "PC Companion 0.2.0 is available. You have version 0.1.0.", with **Open release page**, which opens the same page.
+- While the check is on and `latestVersion` is newer than the running version, the General page shows a banner at the top: "PC Companion 0.2.0 is available. You have version 0.1.0.", with **Open release page**, which opens the same page. A newer version that **Check now** found shows it too, also with the check off, until the page closes.
 - It can't be closed. It goes away once the new version is installed, or when the check is turned off.
 - The page reads the result when it opens and watches the file while it's open, so the banner appears as soon as the host saves a newer version.
+
+## Check now
+
+- A card above **Check for updates**, as in Windows Update: its header says what the last check found, its description when that was, and its **Check now** button asks GitHub at once.
+- It works whatever the setting, and whether or not a check is due, so a user who turned the daily check off can still check by hand.
+- The settings app makes the request itself, off the window's thread: the same request as the host's, with the same headers, limits and 30 seconds for the answer. It saves the result as the host does, so it counts as the day's check: the host's next check is due 24 hours later.
+- A newer version it finds is saved as the one the notification showed. The General page already shows it, so the daily check doesn't show the notification for it later.
+- While a check runs, the header says "Checking for updates…" and a progress ring turns next to the button. Selecting the button again does nothing, so repeated clicks make one request; it stays enabled, so the keyboard focus stays on it.
+- Leaving the page cancels a check under way.
+- The settings app runs without admin rights. When it was started as administrator through UAC, for example by setup started as administrator, **Check now** is turned off and says why: the request and saving the result never run with admin rights. With UAC off, every program already has admin rights, so it checks, as the host does.
+
+| Header | Description | When |
+|---|---|---|
+| Not checked for updates yet | | GitHub never answered a check. |
+| You have the latest version | Last checked: 21/10/2026 10:14 | The last answer named no newer version. |
+| PC Companion 0.3.0 is available | Last checked: 21/10/2026 10:14 | The last answer named a newer version. |
+| Checking for updates… | The last check, as above | **Check now** is under way. |
+| Can't reach GitHub | Check your internet connection, then try again. | **Check now** got no answer. |
+| Can't check for updates right now | Try again later. | GitHub answered **Check now** with an error status, such as a rate limit, or with an answer that can't be read, or the check failed in another way. |
+
+- The date and time follow the user's regional settings. The last two stay until the next **Check now**, or until the page opens again.
 
 ## While the host runs as administrator
 
@@ -83,7 +105,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 ## Logging
 
 - **Debug:** a check starting, when the next one is due, and that this version is up to date.
-- **Information:** a newer version found, the notification shown and selected, and the first time in a run that GitHub can't be reached. Later ones are Debug, so an offline PC doesn't log every hour.
+- **Information:** a newer version found, the notification shown and selected, and the first time in a run that GitHub can't be reached. Later ones are Debug, so an offline PC doesn't log every hour. In the settings app's log, **Check now** selected, and getting no answer.
 - **Warning:** an answer with an error status, such as a rate limit, with its status code; an answer that can't be read; a result that can't be saved; and a check that fails in another way.
 - **Never logged:** the answer's body (the release notes) and headers, cookies, the user's IP address and proxy credentials. Versions are logged as the parsed numbers, never as the raw tag.
 - Nothing is logged as an error: a failed check changes nothing else.
@@ -95,23 +117,25 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 
 ## Security and privacy
 
-- **Sends:** one request a day, the same from everyone, with nothing about the user or the PC. As with any website, GitHub sees the IP address and the time. `PRIVACY.md` describes the request and how to turn it off.
+- **Sends:** one request a day, and one each time the user selects **Check now**, the same from everyone, with nothing about the user or the PC. As with any website, GitHub sees the IP address and the time. `PRIVACY.md` describes the request and how to turn it off.
 - **Connection:** a fixed https address. Windows checks GitHub's certificate, and that check is never turned off or replaced; there's no pinning, since GitHub changes its certificates. .NET never follows a redirect from https to http, and whatever the answer, only a version comes from it.
 - **Untrusted answer:** at most 1 MB, read with System.Text.Json source generation; only `tag_name` is used, with the strict pattern above. The version is rebuilt from its numbers before it's shown, saved or logged.
 - **Opens:** only `https://github.com/Lazyb0y/pc-companion/releases/latest`. Nothing from the answer becomes an address, a path or a command line.
-- **Rights:** the request, reading the answer and the browser never run with admin rights; see [While the host runs as administrator](#while-the-host-runs-as-administrator).
+- **Rights:** the request, reading the answer and the browser never run with admin rights; see [While the host runs as administrator](#while-the-host-runs-as-administrator) and [Check now](#check-now).
 - **The result file:** any program running as the user can change `update-check.json`, so it's read as untrusted, and at most 4 KB of it. A changed file can at most show a wrong version; **Open release page** still opens the real page.
 - **Failures:** the check runs on the thread pool and catches its errors, so a failed check never stops the host or its features.
 
 ## Performance
 
 - Between checks, only the hourly timer runs. A check is one small request.
+- **Check now** runs off the settings window's thread, so the window keeps answering while GitHub does.
 
 ## Accessibility and localization
 
 - The strings are in `Strings.resx` and translated like the others. The notification uses the host's language.
 - Versions are shown as written, such as `0.2.0`, in every language.
 - The banner's message and button are read by screen readers, and the switch is named after its header.
+- The update status is a live region: screen readers announce it when it changes, such as when **Check now** finishes.
 
 | Key | English | Where |
 |---|---|---|
@@ -121,6 +145,17 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
 | `GeneralUpdateOpenReleasePage` | Open release page | Banner button |
 | `GeneralUpdateCheckHeader` | Check for updates | Setting |
 | `GeneralUpdateCheckDescription` | Once a day, ask GitHub whether a newer version of PC Companion is available. | Below the setting |
+| `GeneralUpdateCheckNow` | Check now | Button |
+| `GeneralUpdateStatusNotChecked` | Not checked for updates yet | Status |
+| `GeneralUpdateStatusUpToDate` | You have the latest version | Status |
+| `GeneralUpdateStatusAvailable` | PC Companion {0} is available | Status; {0} is the new version. |
+| `GeneralUpdateStatusChecking` | Checking for updates… | Status |
+| `GeneralUpdateStatusNoAnswer` | Can't reach GitHub | Status |
+| `GeneralUpdateStatusNoAnswerHint` | Check your internet connection, then try again. | Below the status |
+| `GeneralUpdateStatusFailed` | Can't check for updates right now | Status |
+| `GeneralUpdateStatusFailedHint` | Try again later. | Below the status |
+| `GeneralUpdateLastCheck` | Last checked: {0} | Below the status; {0} is the date and time. |
+| `GeneralUpdateCheckNowUnavailable` | Check now isn't available while this window runs as administrator. | Below the status |
 
 ## Testing
 
@@ -132,6 +167,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out. When there 
   - the notification once per version, also after a restart;
   - the result file: missing, unreadable and over 4 KB;
   - when the banner shows;
-  - when the host hands the check to a copy without admin rights.
-- **Sandbox checks** (`scripts/sandbox/groups/Updates.ps1`): networking stays off. Through the hosts file, `api.github.com` leads to an HTTPS server in the Sandbox, with a certificate whose root is trusted only there. Starting with the check off, the group turns it on and checks: one request, with exactly the expected headers; the saved result; that Windows took the notification; the banner with both versions; selecting the notification starting a browser with the release page; and turning the check off hiding the banner. Windows didn't show the notification in the Sandbox, likely because of quiet time for the new user it signs in, so whether it appears is checked by hand.
+  - when the host hands the check to a copy without admin rights;
+  - **Check now**: asking when a check isn't due, what it found, saving a newer version as shown, and keeping the latest version after an error status.
+- **Sandbox checks** (`scripts/sandbox/groups/Updates.ps1`): networking stays off. Through the hosts file, `api.github.com` leads to an HTTPS server in the Sandbox, with a certificate whose root is trusted only there. Starting with the check off, the group turns it on and checks: one request, with exactly the expected headers; the saved result; that Windows took the notification; the banner with both versions; selecting the notification starting a browser with the release page; and turning the check off hiding the banner. Then, with the check off, **Check now**: the status from the saved result; the same request, finding this version up to date; a newer version showing the banner without a notification; a rate limit; and no answer. Windows didn't show the notification in the Sandbox, likely because of quiet time for the new user it signs in, so whether it appears is checked by hand.
 - **By hand:** on a real network, behind a proxy, with **Do not disturb** on, and with Always run as administrator on a PC with UAC on, where Task Manager shows the browser running without admin rights. The notification appears under the name PC Companion, stays in the notification center, and selecting it there opens the release page.

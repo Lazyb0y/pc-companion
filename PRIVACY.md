@@ -1,7 +1,7 @@
 # Privacy
 
 - PC Companion doesn't collect, send or share any data about you. It has no telemetry, analytics, ads or accounts, and uploads nothing.
-- **Update check:** once a day, PC Companion asks GitHub for its latest release, at `api.github.com/repos/Lazyb0y/pc-companion/releases/latest`. The request is the same for everyone and contains nothing about you or your PC; as with any website, GitHub sees your IP address, under the [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement). When a newer version exists, PC Companion tells you, and you download and install it yourself. To stop it, turn off **Check for updates** on the **General** page. PC Companion makes no other network connections.
+- **Update check:** once a day, and each time you select **Check now** on the **General** page, PC Companion asks GitHub for its latest release, at `api.github.com/repos/Lazyb0y/pc-companion/releases/latest`. The request is the same for everyone and contains nothing about you or your PC; as with any website, GitHub sees your IP address, under the [GitHub Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement). When a newer version exists, PC Companion tells you, and you download and install it yourself. To stop the daily check, turn off **Check for updates** on the **General** page; **Check now** asks only when you select it. PC Companion makes no other network connections.
 - It stores these files on your PC, in `%LOCALAPPDATA%\PCCompanion`:
   - `settings.json`: your settings.
   - `update-check.json`: when PC Companion last checked for updates and the newest version it found.
