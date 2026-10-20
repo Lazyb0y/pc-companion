@@ -214,4 +214,7 @@ internal sealed class FakeHostCommands : IHostCommands
     public void OpenSettings() => Interlocked.Increment(ref _settings);
 
     public void ExitApp() => Interlocked.Increment(ref _exits);
+
+    // The meters open no web pages.
+    public bool OpenWebPage(Uri address) => throw new NotSupportedException();
 }
