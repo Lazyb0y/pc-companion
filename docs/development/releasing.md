@@ -41,6 +41,7 @@ How a version of PC Companion goes from `main` to a published GitHub release, an
    - known issues;
    - thanks to contributors from outside the project.
 6. Publish the draft, as the latest release. Publishing creates the tag `v<version>` on the draft's commit, and installed copies of PC Companion find the new version at their next daily update check.
+7. If the release adds or changes features, update the [website](website.md) in a pull request to `main`, with [screenshots](website.md#screenshots) taken from the release's installer, and merge it once the release is published, so the site never describes features the download doesn't have.
 
 ## Hotfixes
 

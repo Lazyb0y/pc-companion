@@ -53,7 +53,8 @@
 - `src/<Project>/`: projects.
 - `tests/`: test projects.
 - `docs/`: documentation.
-- `scripts/`: PowerShell scripts for development: checks before a pull request, Windows Sandbox tests and installer inspection. See [Build](../development/build.md), [Testing](../development/testing.md) and [Packaging](../development/packaging.md).
+- `website/`: the project website; see [Website](../development/website.md).
+- `scripts/`: PowerShell scripts for development: checks before a pull request, Windows Sandbox tests, installer inspection and the website's screenshots. See [Build](../development/build.md), [Testing](../development/testing.md), [Packaging](../development/packaging.md) and [Website](../development/website.md#screenshots).
 
 ## Projects
 
