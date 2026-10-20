@@ -270,12 +270,12 @@ public sealed partial class CornerViewModel : ObservableObject
     }
 
     /// <summary>What keeps the program from starting, or an empty string.</summary>
-    public string ProgramProblem => ProgramRunner.Check(_page.GetCorner(_corner).Program, File.Exists) switch
+    public string ProgramProblem => Platform.Windows.ProgramFile.Check(_page.GetCorner(_corner).Program, File.Exists) switch
     {
-        Modules.Input.HotCorners.ProgramProblem.NotChosen => Strings.HotCornersProgramNotChosen,
-        Modules.Input.HotCorners.ProgramProblem.NotFullPath => Strings.HotCornersProgramNotFullPath,
-        Modules.Input.HotCorners.ProgramProblem.NotExe => Strings.HotCornersProgramNotExe,
-        Modules.Input.HotCorners.ProgramProblem.NotFound => Strings.HotCornersProgramNotFound,
+        Platform.Windows.ProgramProblem.NotChosen => Strings.HotCornersProgramNotChosen,
+        Platform.Windows.ProgramProblem.NotFullPath => Strings.HotCornersProgramNotFullPath,
+        Platform.Windows.ProgramProblem.NotExe => Strings.HotCornersProgramNotExe,
+        Platform.Windows.ProgramProblem.NotFound => Strings.HotCornersProgramNotFound,
         _ => string.Empty,
     };
 

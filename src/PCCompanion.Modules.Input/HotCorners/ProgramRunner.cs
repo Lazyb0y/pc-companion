@@ -8,18 +8,6 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// What keeps a corner's program from starting.
-/// </summary>
-public enum ProgramProblem
-{
-    None,
-    NotChosen,
-    NotFullPath,
-    NotExe,
-    NotFound,
-}
-
-/// <summary>
 /// Starts the program of a corner whose action is Run a program. See "Run a program" in
 /// docs/features/input/hot-corners.md.
 /// </summary>
@@ -28,33 +16,6 @@ public enum ProgramProblem
 /// <param name="start">Starts a process.</param>
 public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministrator, Func<string, bool> fileExists, Action<ProcessStartInfo> start)
 {
-    /// <summary>
-    /// Checks a program path: only the full path of an existing <c>.exe</c> file runs. A name
-    /// alone would make Windows search folders for it, and <c>.bat</c> and <c>.cmd</c> files run
-    /// through cmd, which reads arguments differently.
-    /// </summary>
-    public static ProgramProblem Check(string? program, Func<string, bool> fileExists)
-    {
-        ArgumentNullException.ThrowIfNull(fileExists);
-
-        if (string.IsNullOrWhiteSpace(program))
-        {
-            return ProgramProblem.NotChosen;
-        }
-
-        if (!Path.IsPathFullyQualified(program))
-        {
-            return ProgramProblem.NotFullPath;
-        }
-
-        if (!string.Equals(Path.GetExtension(program), ".exe", StringComparison.OrdinalIgnoreCase))
-        {
-            return ProgramProblem.NotExe;
-        }
-
-        return fileExists(program) ? ProgramProblem.None : ProgramProblem.NotFound;
-    }
-
     /// <summary>
     /// Starts the corner's program, in its own folder, with its arguments passed one by one and
     /// no shell. Problems are logged, with the program's file name only: its folder and
@@ -72,7 +33,7 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
 
         var program = corner.Program;
         var fileName = Path.GetFileName(program) ?? string.Empty;
-        var problem = Check(program, fileExists);
+        var problem = ProgramFile.Check(program, fileExists);
         if (problem != ProgramProblem.None)
         {
             LogNotStarted(logger, fileName, problem);
