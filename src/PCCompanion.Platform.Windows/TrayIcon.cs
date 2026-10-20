@@ -8,40 +8,72 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// The app's icon in the notification area of the taskbar. It shows the icon of the executable
-/// and is added again when Explorer restarts.
+/// An icon in the notification area of the taskbar: the app's own, which shows the icon of the
+/// executable, or one the app draws, such as a meter. It's added again when Explorer restarts.
 /// </summary>
 /// <remarks>
 /// The executable's manifest must depend on Common Controls 6, which provides <c>LoadIconMetric</c>.
 /// </remarks>
 public sealed class TrayIcon : IDisposable
 {
+    /// <summary>The ID of the app's own icon. The app's other icons use other IDs.</summary>
+    public const uint ApplicationIconId = 1;
+
     // The .NET SDK embeds <ApplicationIcon> as the icon group with this resource ID.
     private const ushort ApplicationIconResourceId = 32512;
-    private const uint IconId = 1;
     private const uint CallbackMessage = PInvoke.WM_APP + 1;
 
-    // The lengths of the notification's title and text, without the terminating null.
+    // The lengths of the tooltip, the notification's title and its text, without the terminating null.
+    private const int MaximumToolTipLength = 127;
     private const int MaximumTitleLength = 63;
     private const int MaximumTextLength = 255;
 
     private readonly MessageWindow _window;
+    private readonly uint _id;
     private readonly uint _taskbarCreatedMessage;
-    private readonly DestroyIconSafeHandle _icon;
-    private readonly string _toolTip;
+    private readonly DestroyIconSafeHandle? _applicationIcon;
+    private IconImage? _image;
+    private string _toolTip;
     private DestroyIconSafeHandle? _notificationIcon;
     private bool _disposed;
 
+    /// <summary>Adds the app's own icon.</summary>
     /// <param name="window">Receives the icon's messages; the icon is used on its thread.</param>
     /// <param name="toolTip">Shown when the pointer rests on the icon.</param>
     public TrayIcon(MessageWindow window, string toolTip)
+        : this(window, ApplicationIconId, toolTip, LoadApplicationIcon(_LI_METRIC.LIM_SMALL), null)
+    {
+    }
+
+    /// <summary>
+    /// Adds an icon the app draws, such as a meter, and takes over <paramref name="icon"/>.
+    /// </summary>
+    /// <param name="window">Receives the icon's messages; the icon is used on its thread.</param>
+    /// <param name="id">
+    /// The icon's ID, other than <see cref="ApplicationIconId"/>. Windows remembers where the user
+    /// put an icon by the program's path and this ID, so keep it the same from one start to the next.
+    /// </param>
+    /// <param name="toolTip">
+    /// Shown when the pointer rests on the icon. Windows 11 names the icon for screen readers with
+    /// the tooltip it was added with, followed by the current one, so give a name that stays the
+    /// same here, and changing values with <see cref="Update"/>.
+    /// </param>
+    public TrayIcon(MessageWindow window, uint id, IconImage icon, string toolTip)
+        : this(window, id, toolTip, null, icon ?? throw new ArgumentNullException(nameof(icon)))
+    {
+        ArgumentOutOfRangeException.ThrowIfEqual(id, ApplicationIconId);
+    }
+
+    private TrayIcon(MessageWindow window, uint id, string toolTip, DestroyIconSafeHandle? applicationIcon, IconImage? image)
     {
         ArgumentNullException.ThrowIfNull(window);
         ArgumentNullException.ThrowIfNull(toolTip);
 
         _window = window;
+        _id = id;
         _toolTip = toolTip;
-        _icon = LoadApplicationIcon(_LI_METRIC.LIM_SMALL);
+        _applicationIcon = applicationIcon;
+        _image = image;
         _taskbarCreatedMessage = MessageWindow.RegisterMessage("TaskbarCreated");
 
         // The taskbar runs without admin rights; Windows would block its messages to an elevated window.
@@ -69,6 +101,36 @@ public sealed class TrayIcon : IDisposable
     /// The icon is added when the taskbar starts.
     /// </summary>
     public bool IsShown { get; private set; }
+
+    private HICON CurrentIcon => (HICON)(_image?.Handle ?? _applicationIcon!.DangerousGetHandle());
+
+    /// <summary>
+    /// Shows a new picture and tooltip, and takes over <paramref name="icon"/>; the one before is
+    /// destroyed, since the taskbar keeps a copy. When the taskbar lost the icon, it's added
+    /// again. Returns false when Windows refused.
+    /// </summary>
+    public bool Update(IconImage icon, string toolTip)
+    {
+        ArgumentNullException.ThrowIfNull(icon);
+        ArgumentNullException.ThrowIfNull(toolTip);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        var previous = _image;
+        (_image, _toolTip) = (icon, toolTip);
+
+        var data = CreateData();
+        data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_ICON | NOTIFY_ICON_DATA_FLAGS.NIF_TIP | NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
+        data.hIcon = CurrentIcon;
+        data.szTip = Fit(_toolTip, MaximumToolTipLength);
+        IsShown = PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_MODIFY, in data) || Add();
+
+        if (!ReferenceEquals(previous, icon))
+        {
+            previous?.Dispose();
+        }
+
+        return IsShown;
+    }
 
     /// <summary>
     /// Shows a notification from the icon, which Windows shows as a toast and keeps in the
@@ -103,7 +165,8 @@ public sealed class TrayIcon : IDisposable
         _window.MessageReceived -= OnMessageReceived;
         var data = CreateData();
         PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_DELETE, in data);
-        _icon.Dispose();
+        _applicationIcon?.Dispose();
+        _image?.Dispose();
         _notificationIcon?.Dispose();
     }
 
@@ -135,7 +198,7 @@ public sealed class TrayIcon : IDisposable
     {
         cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf<NOTIFYICONDATAW>(),
         hWnd = (HWND)_window.Handle,
-        uID = IconId,
+        uID = _id,
     };
 
     private bool Add()
@@ -143,8 +206,8 @@ public sealed class TrayIcon : IDisposable
         var data = CreateData();
         data.uFlags = NOTIFY_ICON_DATA_FLAGS.NIF_MESSAGE | NOTIFY_ICON_DATA_FLAGS.NIF_ICON | NOTIFY_ICON_DATA_FLAGS.NIF_TIP | NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
         data.uCallbackMessage = CallbackMessage;
-        data.hIcon = (HICON)_icon.DangerousGetHandle();
-        data.szTip = _toolTip;
+        data.hIcon = CurrentIcon;
+        data.szTip = Fit(_toolTip, MaximumToolTipLength);
 
         if (!PInvoke.Shell_NotifyIcon(NOTIFY_ICON_MESSAGE.NIM_ADD, in data))
         {
@@ -163,13 +226,13 @@ public sealed class TrayIcon : IDisposable
             return;
         }
 
-        if (e.Message != CallbackMessage)
+        // With NOTIFYICON_VERSION_4 the low word of lParam is the event, its high word the icon's
+        // ID, and wParam holds the screen point to show a menu at. A window can have several icons.
+        if (e.Message != CallbackMessage || (uint)((e.LParam >> 16) & 0xFFFF) != _id)
         {
             return;
         }
 
-        // With NOTIFYICON_VERSION_4 the low word of lParam is the event, and wParam holds the
-        // screen point to show a menu at.
         switch ((uint)(e.LParam & 0xFFFF))
         {
             case PInvoke.NIN_SELECT:
