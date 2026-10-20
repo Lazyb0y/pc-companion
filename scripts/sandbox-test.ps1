@@ -5,7 +5,7 @@ at runtime, without changing this PC.
 
 .DESCRIPTION
 Builds the installer for this PC's architecture, or takes the one given with -Msi, starts Windows
-Sandbox with networking off, and
+Sandbox, with networking only when a group needs it, and
 runs the groups of checks in scripts\sandbox\groups inside it, with scripts\sandbox\run-checks.ps1:
 all of them, or Smoke and the ones chosen with -Checks. The Sandbox window closes when the checks
 finish. The report, screenshots and logs are written to TestResults\sandbox.
@@ -83,6 +83,13 @@ if ($Checks) {
     }
     $groups = $chosen -join ','
 }
+
+# A group that needs the network says so with a "# Networking: on" line at its top. The Sandbox
+# has networking only when the run includes such a group; run-checks.ps1 turns the network
+# adapters on only during those groups.
+$networkGroups = @(@(if ($groups -eq 'All') { $available } else { $groups -split ',' }) |
+    Where-Object { (Get-Content (Join-Path $PSScriptRoot "sandbox\groups\$_.ps1") -TotalCount 5) -contains '# Networking: on' })
+$networking = if ($networkGroups.Count -gt 0) { 'Default' } else { 'Disable' }
 
 if (-not (Test-Path $sandbox)) {
     throw 'Windows Sandbox is not turned on. Turn on the "Windows Sandbox" Windows feature and restart.'
@@ -227,7 +234,7 @@ function ConvertTo-Xml([string] $Text) { [System.Security.SecurityElement]::Esca
 
 Set-Content -Path $configuration -Encoding utf8 -Value @"
 <Configuration>
-  <Networking>Disable</Networking>
+  <Networking>$networking</Networking>
   <MappedFolders>
     <MappedFolder>
       <HostFolder>$(ConvertTo-Xml $msiFolder)</HostFolder>
@@ -257,6 +264,9 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
 "@
 
 Write-Host 'Starting Windows Sandbox. Its window closes when the checks finish.'
+if ($networkGroups.Count -gt 0) {
+    Write-Host "Networking is on for $($networkGroups -join ', ') only."
+}
 Write-Host "Keep it visible until then: while it's minimized, its screenshots come out blank."
 Start-Process -FilePath $sandbox -ArgumentList "`"$configuration`""
 

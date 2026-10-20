@@ -84,6 +84,25 @@ function Test-Blocked {
     return [bool] $blocked
 }
 
+# A group that needs the network says so with a "# Networking: on" line at its top. The network
+# adapters are on only during such groups. While the Sandbox has networking, api.github.com points
+# at the Sandbox itself, so nothing reaches GitHub, and the groups turn the update check off.
+function Test-NeedsNetwork([string] $Group) {
+    $file = Join-Path $PSScriptRoot "groups\$Group.ps1"
+    return (Test-Path $file) -and ((Get-Content $file -TotalCount 5) -contains '# Networking: on')
+}
+
+function Set-Networking([bool] $On) {
+    $adapters = @(Get-NetAdapter -ErrorAction SilentlyContinue)
+    if ($On) {
+        $adapters | Enable-NetAdapter -Confirm:$false -ErrorAction SilentlyContinue
+        return Wait-Until { $null -ne (Get-NetIPConfiguration -ErrorAction SilentlyContinue | Where-Object { $_.IPv4DefaultGateway }) } 20
+    }
+
+    $adapters | Disable-NetAdapter -Confirm:$false -ErrorAction SilentlyContinue
+    return $true
+}
+
 function Test-GroupLogs([string] $Group, [string] $Folder) {
     Stop-All
     $files = @(Get-ChildItem $logs -File -ErrorAction SilentlyContinue)
@@ -102,6 +121,12 @@ $selected = if ($requested -contains 'All') { @($startStates.Keys) } else {
     @($startStates.Keys | Where-Object { $_ -eq 'Smoke' -or $requested -contains $_ }) + @($requested | Where-Object { -not $startStates.Contains($_) })
 }
 Write-Report "groups: $($selected -join ', ')"
+$networkAdapters = @(Get-NetAdapter -ErrorAction SilentlyContinue)
+if ($networkAdapters.Count -gt 0) {
+    Add-Content -Path (Join-Path $env:SystemRoot 'System32\drivers\etc\hosts') -Value "`r`n127.0.0.1 api.github.com" -Encoding ascii
+    [void] (Set-Networking $false)
+}
+Write-Report "networking: $(if ($networkAdapters.Count -gt 0) { "on for $(@($selected | Where-Object { Test-NeedsNetwork $_ }) -join ', ') only" } else { 'off' })"
 
 foreach ($group in $selected) {
     Write-Report "== $group"
@@ -111,11 +136,18 @@ foreach ($group in $selected) {
     $folder = New-Item -ItemType Directory -Force -Path (Join-Path $results $group)
     if ($startStates.Contains($group) -and (Test-Path $file)) {
         Reset-PCCompanion $startStates[$group] $folder.FullName
+        $needsNetwork = Test-NeedsNetwork $group
+        if ($needsNetwork) {
+            Test-Check "the network is on for $group" ((Set-Networking $true) -and $networkAdapters.Count -gt 0)
+        }
         & {
             $results = $folder.FullName
             . $file
         }
         Test-GroupLogs $group $folder.FullName
+        if ($needsNetwork) {
+            [void] (Set-Networking $false)
+        }
     } else {
         Test-Check "the group $group is in groups\ and in run-checks.ps1" $false
     }

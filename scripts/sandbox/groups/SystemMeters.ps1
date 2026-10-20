@@ -1,4 +1,5 @@
-﻿# System Meters: its page, then the meters on the taskbar strip and as notification icons. The
+﻿# Networking: on
+# System Meters: its page, then the meters on the taskbar strip and as notification icons. The
 # Home switch turns the feature on, and the page shows its settings as they start; with
 # Notification area, Layout and Icons are off and a note's button opens the taskbar settings.
 # The strip shows in the
@@ -11,12 +12,14 @@
 # name, which Windows puts in the hidden icons menu, each with its values in its tooltip.
 # Selecting a meter opens Task Manager, and its menu, dark in the dark Windows mode, has Task
 # Manager, Settings and Exit. The icons come back with their names after Explorer restarts, a
-# meter turned off goes away, and turning System Meters off or Exit removes them all. Detailed
-# logging is on for the host's Debug entries.
+# meter turned off goes away, and turning System Meters off or Exit removes them all. The values
+# follow busy processors, memory in use, and network traffic, for which the group needs networking;
+# the update check stays off, and api.github.com points at the Sandbox. Detailed logging is on for
+# the host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 function Write-MetersSettings([string] $Section) {
-    Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""systemMeters"": $Section } }"
+    Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""updates"": { ""checkAutomatically"": false }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""systemMeters"": $Section } }"
     Start-Sleep -Seconds 3
 }
 $metersWindow = 'PCCompanion.SystemMeters'
@@ -122,6 +125,21 @@ function Get-TaskbarParts {
     } | ForEach-Object { $_.Current.BoundingRectangle } | Where-Object { $_.Width -gt 0 })
 }
 
+# The meters' values, read from the strip's name for screen readers: CPU and memory in percent,
+# and the rates in bits per second.
+function Get-StripValues {
+    $strip = Get-StripWindow
+    $title = if ($strip) { [Win32]::WindowTitle($strip) } else { '' }
+    $values = [ordered] @{ Cpu = -1; Memory = -1; Receive = -1; Send = -1 }
+    if ($title -match 'CPU: (\d+)%') { $values.Cpu = [int] $Matches[1] }
+    if ($title -match 'Memory: (\d+)%') { $values.Memory = [int] $Matches[1] }
+    foreach ($name in 'Receive', 'Send') {
+        if ($title -match "${name}: ([\d.]+) ([KMG])bps") { $values[$name] = [double] $Matches[1] * @{ K = 1e3; M = 1e6; G = 1e9 }[$Matches[2]] }
+    }
+    return [pscustomobject] $values
+}
+function Get-StripValuesText { (Get-StripValues | ConvertTo-Json -Compress) }
+
 # The darkest and brightest pixels of the strip on the screen, from 0 to 1.
 function Get-StripBrightness {
     $bounds = Get-Bounds (Get-StripWindow)
@@ -145,7 +163,7 @@ function Set-WindowsMode([int] $Light) {
 }
 
 # The Home switch and the page.
-Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
+Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" }, "updates": { "checkAutomatically": false } }'
 Start-Sleep -Seconds 2
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
@@ -271,6 +289,28 @@ Test-Check 'the strip is narrower without icons, and as wide with One color icon
 $before = Get-StripWidth
 Start-Sleep -Seconds 3
 Test-Check 'the strip keeps its width as the values change' ((Get-StripWidth) -eq $before) "$before, then $(Get-StripWidth)"
+
+# The values follow real use: busy processes on every processor, 1 GB of memory, pings to the
+# gateway, which this PC's firewall drops but which count as sent, and requests to Windows'
+# connectivity check address, which bring data back.
+$busy = @(1..[Environment]::ProcessorCount | ForEach-Object {
+    Start-Process powershell.exe -ArgumentList '-NoProfile', '-Command', '$end = [DateTime]::Now.AddSeconds(15); while ([DateTime]::Now -lt $end) { }' -WindowStyle Hidden -PassThru
+})
+Test-Check 'busy processors raise CPU above 80%' (Wait-Until { (Get-StripValues).Cpu -gt 80 } 12) (Get-StripValuesText)
+$busy | Stop-Process -Force -ErrorAction SilentlyContinue
+Test-Check 'CPU falls once they stop' (Wait-Until { $cpu = (Get-StripValues).Cpu; ($cpu -ge 0) -and ($cpu -lt 50) } 15) (Get-StripValuesText)
+$before = (Get-StripValues).Memory
+$share = [int] (100 * 1GB / (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory)
+$allocation = Start-Process powershell.exe -ArgumentList '-NoProfile', '-Command', '$memory = New-Object byte[] 1GB; for ($i = 0; $i -lt $memory.Length; $i += 4096) { $memory[$i] = 1 }; Start-Sleep -Seconds 60' -WindowStyle Hidden -PassThru
+Test-Check 'allocating 1 GB raises memory by about its share' (Wait-Until { (Get-StripValues).Memory -ge $before + [int] ($share * 0.6) } 30) "before $before%, its share $share%, now $((Get-StripValues).Memory)%"
+Stop-Process -Id $allocation.Id -Force -ErrorAction SilentlyContinue
+$gateway = (Get-NetIPConfiguration | Where-Object { $_.IPv4DefaultGateway } | Select-Object -First 1).IPv4DefaultGateway.NextHop
+$pings = Start-Process ping.exe -ArgumentList '-n', '20', '-l', '60000', $gateway -WindowStyle Hidden -PassThru
+Test-Check 'pings to the gateway show in Send' (Wait-Until { (Get-StripValues).Send -gt 100000 } 15) "gateway $gateway; $(Get-StripValuesText)"
+Stop-Process -Id $pings.Id -Force -ErrorAction SilentlyContinue
+$requests = Start-Process powershell.exe -ArgumentList '-NoProfile', '-Command', '$end = [DateTime]::Now.AddSeconds(15); while ([DateTime]::Now -lt $end) { try { [void] (Invoke-WebRequest -UseBasicParsing http://www.msftconnecttest.com/connecttest.txt) } catch { } }' -WindowStyle Hidden -PassThru
+Test-Check 'requests to the connectivity check address show in Receive' (Wait-Until { (Get-StripValues).Receive -gt 0 } 15) (Get-StripValuesText)
+Stop-Process -Id $requests.Id -Force -ErrorAction SilentlyContinue
 
 # The text follows the Windows mode: black on a light taskbar, white on a dark one.
 Write-MetersSettings '{ "enabled": true, "icons": "None" }'
