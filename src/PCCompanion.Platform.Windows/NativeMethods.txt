@@ -212,3 +212,7 @@ GlobalLock
 GlobalUnlock
 GlobalSize
 CLIPBOARD_FORMAT
+PeekMessage
+IsWindow
+WM_KEYFIRST
+WM_KEYLAST
