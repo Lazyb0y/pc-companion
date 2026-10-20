@@ -10,8 +10,9 @@
       Scope="perUserOrMachine">
 
     <!--
-      Another build of the same version replaces the installed one too, as every build is 0.0.1 for
-      now: each has its own product code, and Windows Installer compares only three parts of a version.
+      Another build of the same version replaces the installed one too, as builds between releases
+      share a version: each has its own product code, and Windows Installer compares only three parts
+      of a version.
       The installed one is removed after PC Companion is closed, below.
     -->
     <MajorUpgrade
