@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -59,6 +60,24 @@ public static class ShellActions
         try
         {
             using var process = Process.Start(new ProcessStartInfo(address.AbsoluteUri) { UseShellExecute = true });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Opens Task Manager as Windows does from the taskbar: through the shell and without
+    /// arguments, so Windows gives it admin rights for administrators without asking. It opens on
+    /// the page the user chose as its default, and an open Task Manager comes to the front.
+    /// </summary>
+    public static bool OpenTaskManager()
+    {
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(Path.Combine(Environment.SystemDirectory, "Taskmgr.exe")) { UseShellExecute = true });
             return true;
         }
         catch (Win32Exception)

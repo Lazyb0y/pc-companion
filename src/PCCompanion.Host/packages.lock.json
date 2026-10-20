@@ -43,7 +43,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.0.1, )"
+          "PCCompanion.Core": "[0.1.0, )"
         }
       },
       "pccompanion.localization": {
@@ -57,14 +57,24 @@
           "Serilog.Sinks.File": "[7.0.0, )"
         }
       },
+      "pccompanion.modules.desktop": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
+          "PCCompanion.Core": "[0.1.0, )",
+          "PCCompanion.Localization": "[0.1.0, )",
+          "PCCompanion.Platform.Windows": "[0.1.0, )"
+        }
+      },
       "pccompanion.modules.input": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.0.1, )",
-          "PCCompanion.Localization": "[0.0.1, )",
-          "PCCompanion.Platform.Windows": "[0.0.1, )"
+          "PCCompanion.Core": "[0.1.0, )",
+          "PCCompanion.Localization": "[0.1.0, )",
+          "PCCompanion.Platform.Windows": "[0.1.0, )"
         }
       },
       "pccompanion.modules.windows": {
@@ -72,9 +82,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.0.1, )",
-          "PCCompanion.Localization": "[0.0.1, )",
-          "PCCompanion.Platform.Windows": "[0.0.1, )"
+          "PCCompanion.Core": "[0.1.0, )",
+          "PCCompanion.Localization": "[0.1.0, )",
+          "PCCompanion.Platform.Windows": "[0.1.0, )"
         }
       },
       "pccompanion.platform.windows": {
