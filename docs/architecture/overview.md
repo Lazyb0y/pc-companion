@@ -22,6 +22,7 @@
 - Backdrop: Mica on Windows 11, desktop acrylic on Windows 10. Windows turns Mica off while the window isn't in focus.
 - The window is cloaked, kept out of sight, until WinUI has drawn its content, about 160 ms after it's shown on a typical PC, and again as soon as it closes, so it's never seen empty. If its content isn't drawn within a second, it comes into sight anyway.
 - The host's tray icon and menu use the Windows API directly, through CsWin32; the host has no UI framework.
+- The tray menu follows the Windows mode, dark or light, as the taskbar does, on the Windows builds listed in [Windows support](../compatibility/windows-support.md). In high contrast, it keeps the high contrast colors.
 
 ## Settings
 
