@@ -164,6 +164,50 @@
     <value>سؤال GitHub مرة يوميًا عما إذا كان يتوفر إصدار أحدث من PC Companion.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="GeneralUpdateCheckNow" xml:space="preserve">
+    <value>التحقق الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNotChecked" xml:space="preserve">
+    <value>لم يتم التحقق من وجود تحديثات بعد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusUpToDate" xml:space="preserve">
+    <value>لديك أحدث إصدار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusAvailable" xml:space="preserve">
+    <value>يتوفر PC Companion {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusChecking" xml:space="preserve">
+    <value>جارٍ التحقق من وجود تحديثات…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswer" xml:space="preserve">
+    <value>يتعذّر الوصول إلى GitHub</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusNoAnswerHint" xml:space="preserve">
+    <value>تحقق من اتصالك بالإنترنت، ثم حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailed" xml:space="preserve">
+    <value>يتعذّر التحقق من وجود تحديثات الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateStatusFailedHint" xml:space="preserve">
+    <value>حاول مرة أخرى لاحقاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateLastCheck" xml:space="preserve">
+    <value>آخر تحقق: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="GeneralUpdateCheckNowUnavailable" xml:space="preserve">
+    <value>التحقق الآن غير متاح أثناء تشغيل هذه النافذة كمسؤول.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="GeneralAboutHeader" xml:space="preserve">
     <value>حول</value>
     <comment>Needs native review.</comment>

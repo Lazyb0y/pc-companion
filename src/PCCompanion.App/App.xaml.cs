@@ -145,6 +145,8 @@ public partial class App : Application
             .AddSingleton<RunAsAdministrator>()
             .AddSingleton<FeatureSettingsEditor>()
             .AddSingleton<UpdateCheckStore>()
+            .AddSingleton<GitHubReleaseSource>()
+            .AddSingleton<UpdateChecker>()
             .AddTransient<GeneralViewModel>()
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()

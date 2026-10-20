@@ -118,6 +118,28 @@
                     <ToggleSwitch AutomationProperties.Name="{app:Localized Key=GeneralDetailedLoggingHeader}" IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
                 </toolkit:SettingsCard>
 
+                <!--  As in Windows Update: what the last check found, and Check now.  -->
+                <toolkit:SettingsCard Description="{x:Bind ViewModel.UpdateStatusDetail, Mode=OneWay}">
+                    <toolkit:SettingsCard.Header>
+                        <TextBlock
+                            x:Name="UpdateStatusText"
+                            AutomationProperties.LiveSetting="Polite"
+                            Text="{x:Bind ViewModel.UpdateStatus, Mode=OneWay}"
+                            TextWrapping="Wrap" />
+                    </toolkit:SettingsCard.Header>
+                    <toolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE72C;" />
+                    </toolkit:SettingsCard.HeaderIcon>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <ProgressRing
+                            Width="20"
+                            Height="20"
+                            IsActive="{x:Bind ViewModel.CheckingNow, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.CheckingNow, Mode=OneWay}" />
+                        <Button Command="{x:Bind ViewModel.CheckNowCommand}" Content="{app:Localized Key=GeneralUpdateCheckNow}" />
+                    </StackPanel>
+                </toolkit:SettingsCard>
+
                 <toolkit:SettingsCard Description="{app:Localized Key=GeneralUpdateCheckDescription}" Header="{app:Localized Key=GeneralUpdateCheckHeader}">
                     <toolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE895;" />
