@@ -103,7 +103,7 @@ With **Show on** set to **Notification area**, or where the strip can't show, ea
 - Rates are in Kbps, Mbps and Gbps of 1,000, as in Task Manager: with one decimal below 100, such as `0.4 Kbps` or `56.0 Kbps`, and none from 100, such as `120 Kbps`. No traffic shows as `0 Kbps`.
 - A notification icon's tooltip has at most 127 characters, the limit Windows sets; tests check that every language fits.
 - Windows refreshes a tooltip that's open when the values change, and shows tooltips in right-to-left languages right to left, so they need no Unicode control characters.
-- Screen readers read a notification icon's tooltip as its name. Windows 11 names a notification icon with the tooltip it was added with, followed by its current tooltip, as with its own network icon ("Network Network / Internet access"). So each meter's icon is added with just the meter's name, such as "CPU", and gets its values right after: screen readers then read "CPU CPU: 42%", never a value from when the icon was added.
+- Screen readers read a notification icon's tooltip as its name. Windows 11 names a notification icon with the tooltip it was added with, followed by its current tooltip, as with its own network icon ("Network Network / Internet access"). So each meter's icon is added with just the meter's name, such as "CPU", and gets its values right after: screen readers then read "CPU CPU: 42%", never a value from when the icon was added. When the user moves an icon onto the taskbar, Windows names it again with the tooltip it has then, such as "CPU: 5% CPU: 42%", until the taskbar restarts or the meters start again.
 
 ## Selecting the meters
 
