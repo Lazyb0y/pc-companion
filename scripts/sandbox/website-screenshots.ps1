@@ -21,7 +21,7 @@ Set-Content -Path $report -Value "PC Companion website screenshots - $(Get-Date 
 
 # The pages, by their names in the navigation pane, and the features' settings: an action for each
 # corner, and a key for one, so the pages show what the features can do.
-$pages = 'Home', 'Hot Corners', 'App Windows', 'General'
+$pages = 'Home', 'Hot Corners', 'App Windows', 'System Meters', 'General'
 $features = @'
 "hotCorners": {
     "enabled": true,
@@ -32,7 +32,8 @@ $features = @'
     "activationDelayMilliseconds": 150,
     "ignoreFullScreenApps": true
 },
-"appWindows": { "enabled": true, "shortcut": "AltAboveTab", "includeMinimized": false }
+"appWindows": { "enabled": true, "shortcut": "AltAboveTab", "includeMinimized": false },
+"systemMeters": { "enabled": true }
 '@
 
 # The size of the window without its invisible resize borders, as on the website.

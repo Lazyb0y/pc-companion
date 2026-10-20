@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'">
   <meta name="color-scheme" content="light dark">
   <title>PC Companion: useful features from macOS and Linux, on Windows</title>
-  <meta name="description" content="PC Companion is a free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows, such as Hot Corners and switching between an app's windows.">
+  <meta name="description" content="PC Companion is a free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows, such as Hot Corners, switching between an app's windows, and system meters on the taskbar.">
   <link rel="canonical" href="https://lazyb0y.github.io/pc-companion/">
   <link rel="icon" href="icon.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
@@ -97,7 +97,25 @@
           </picture>
         </article>
 
-        <article class="feature" aria-labelledby="general-title">
+        <article class="feature" aria-labelledby="system-meters-title">
+          <div class="feature-text">
+            <p class="eyebrow">Desktop</p>
+            <h3 id="system-meters-title">System Meters</h3>
+            <p>See how busy your PC is, with live CPU, memory and network use on the taskbar. Inspired by iStat Menus in macOS and the system monitor widgets of KDE Plasma.</p>
+            <ul class="points">
+              <li>The meters share one item in the taskbar's free space, next to the Widgets entry or the notification area, in three layouts, with color icons, one-color icons or none.</li>
+              <li>Or each meter gets its own icon in the notification area, which you can reach with the keyboard.</li>
+              <li>The values Task Manager shows: how busy the processor is, how much memory is in use, and how fast the PC receives and sends data. Select the meters to open Task Manager.</li>
+              <li>Reads only figures for the whole PC, never what each app uses or the names on the taskbar, and pauses while the PC is locked or the displays are off.</li>
+            </ul>
+          </div>
+          <picture class="shot">
+            <source srcset="images/system-meters-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="images/system-meters-light.png" width="1086" height="736" loading="lazy" alt="The System Meters page, with a switch for each meter, where they show, the layout, the icons and how often they update.">
+          </picture>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="general-title">
           <div class="feature-text">
             <p class="eyebrow">General</p>
             <h3 id="general-title">Made to fit Windows</h3>
