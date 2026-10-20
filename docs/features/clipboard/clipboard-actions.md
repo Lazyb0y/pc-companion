@@ -21,8 +21,10 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - another app keeps the clipboard open, even after a few tries.
 - Spaces and line breaks at the ends of the text are removed before matching, such as the line break a terminal adds when copying a line. The actions get the same trimmed text.
 - Nothing happens when text is copied: PC Companion reads the clipboard only when the shortcut is pressed.
-- Pressing the shortcut while the menu is open does nothing.
-- The browser or program that an action opens comes to the front.
+- The menu opens as the shortcut is pressed. Releasing Alt and the Windows key keeps it open and opens neither Start nor a menu bar.
+- Pressing the shortcut again closes the menu.
+- A letter chooses the item that starts with it, when only one does, as in other Windows menus.
+- The browser or program that an action opens comes to the front. When the menu closes without an action, as with Esc, the window that was in front gets the front back, so typing goes on there; see [Showing the menu](#showing-the-menu).
 
 ## Web links
 
@@ -35,7 +37,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - **Open a web address:** opens the rule's address in the default browser, with `{text}` replaced by the copied text, such as `https://tracking.example.com/?number={text}`. The text is encoded for addresses (`Uri.EscapeDataString`), so it can't change the other parts of the address. The address must start with `https://` or `http://`, also after the replacement.
   - **Run a program:** starts the rule's program, with `{text}` in its arguments replaced by the copied text; see [Run a program](#run-a-program).
 - Patterns are .NET regular expressions. A pattern must match the whole text, as if it started with `^` and ended with `$`, so a pattern for a number doesn't match a paragraph that contains one. **Match case** is off by default.
-- Patterns run with `RegexOptions.NonBacktracking`, whose time grows only with the length of the text, so no copied text can keep a pattern busy; each match also stops after 100 ms. Backreferences, lookarounds and atomic groups aren't available with it, and the rule editor says so when a pattern uses them.
+- Patterns run with `RegexOptions.NonBacktracking`, whose time grows only with the length of the text, so no copied text can keep a pattern busy; each match also stops after 100 ms. Backreferences, lookarounds, atomic groups and conditionals aren't available with it. The rule editor says so in the user's language; .NET's own message for them is in English only.
 - Patterns match with the invariant culture, so Match case off works the same in every language, as with the Turkish dotted and dotless i.
 - Every rule needs a name; the menu shows up to 60 characters of it.
 - Several rules can match the same text. Two rules with the same pattern give two actions for the same text.
@@ -65,19 +67,44 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 ## Reading the clipboard
 
 - Only plain text (`CF_UNICODETEXT`) is read; Windows converts other text formats to it.
-- PC Companion opens the clipboard, copies at most the first 4,097 characters, and closes it right away, so other apps can use it. When another app has it open, PC Companion tries again up to five times, 20 ms apart.
-- An app can provide its data only when someone asks for it (delayed rendering), and reading then waits for that app. That happens on the feature's own thread; see [Threads](#threads).
+- PC Companion opens the clipboard, copies at most the first 4,097 characters, and closes it right away, so other apps can use it. When another app has it open, PC Companion tries again, five times in all, 20 ms apart, which takes about 150 ms with Windows' timer.
+- An app can provide its data only when someone asks for it (delayed rendering), and reading then waits for that app, up to 30 seconds, when Windows gives up. That happens on the feature's own thread; see [Threads](#threads). Until then the menu doesn't show, and another press waits its turn.
+- Clipboard tools and the Remote Desktop clipboard often read new data first and keep the clipboard open while such an app provides it. The menu then says another app has the clipboard open, rather than waiting.
 - The text stays in memory only until the menu closes and the chosen action has started.
+
+## Showing the menu
+
+- The feature's hidden window comes to the front (`SetForegroundWindow`) before the menu opens, as Windows requires for a menu to close when the user clicks elsewhere. Windows allows it right after the user pressed the shortcut.
+- Key messages already waiting for the feature's thread are dropped before the menu opens. While its window is in front, such as after an earlier menu, the shortcut's own Alt key waits there and would close the new menu at once.
+- When the menu closes without an action and the feature's window is still in front, the window that was in front before the shortcut gets it back (`SetForegroundWindow`); otherwise typing would go to the hidden window. After a click in another window, that window keeps the front.
+- Before an action or Settings starts a program, the feature's thread lets it come to the front (`AllowSetForegroundWindow`), while PC Companion is still in front.
 
 ## Threads
 
 - Clipboard Actions runs on a thread of its own, as [Threads and processes](../../architecture/features.md#threads-and-processes) requires: an STA thread with its own hidden window and message loop. Reading the clipboard can wait for the app that copied the text, and the menu runs its own message loop while it's open. On their own thread, neither delays the other features.
 - **The host's UI thread** runs only `Apply`: it reads the section, then starts the feature's thread, passes it the new settings with `MessageWindow.BeginInvoke` on its window, or asks it to stop. It never waits for the feature's thread.
 - **The feature's thread** registers the shortcut, compiles the patterns when the settings change, and at each press reads the clipboard, matches the rules and shows the menu. It gets its own copy of the settings, so the two threads share no state.
-- **The chosen action** starts on the thread pool: Windows can take a while to start a program or the browser, for example while antivirus software checks it. First, while PC Companion is still in front after the choice, the feature's thread lets the program it starts come to the front (`AllowSetForegroundWindow`).
+- **The chosen action** starts on the thread pool: Windows can take a while to start a program or the browser, for example while antivirus software checks it.
 - **Settings** in the menu runs on the host's UI thread, through `IHostCommands`.
 - **Stopping:** the feature's thread closes an open menu, removes the shortcut and its window, and ends. When the feature is turned on again before the old thread has ended, the new thread waits for it before registering the shortcut, which Windows would otherwise refuse. It's a background thread, so one that doesn't end doesn't keep the host running.
 - **Failures:** an unhandled exception on the feature's thread would end the host, so everything there runs inside the feature's error boundary. A failure is logged, ends the thread and keeps the feature off until the host restarts, like a failing `Apply`.
+
+## Spike results
+
+A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by a helper, confirmed:
+
+- Windows + Alt + V registers. Windows' own shortcuts, such as Windows + V, Windows + Shift + V, Windows + Ctrl + V, and Windows + Alt + K, D and B, are refused as already registered (error 1409), so a Windows version that took Windows + Alt + V would show up as a refused shortcut.
+- The menu opens at the pointer as the shortcut is pressed and stays open when Alt and the Windows key are released, in either order, with no Start and no menu bar. Esc, a click on the desktop and the shortcut again close it. A unique first letter chooses its item at once.
+- While the feature's window was in front from an earlier menu, the new menu closed within 5 ms: the shortcut's Alt key-down (`WM_SYSKEYDOWN`) was waiting in the thread's queue. Dropping waiting key messages before the menu fixed it every time.
+- Without giving the front back, Esc left the hidden window in front and typed text went nowhere. Giving it back to the window that was in front put the text there, after Esc, Settings and a second press alike, with no Alt left held.
+- After `AllowSetForegroundWindow`, the browser opened the link and came to the front, and a program came to the front. Windows Sandbox doesn't apply the foreground lock, so this is also tested by hand.
+- The program got the copied text as exactly one argument, with its spaces, quotes, `&`, `%PATH%` and `$env:TEMP` as they were.
+- `ExcludeClipboardContentFromMonitorProcessing`, `CanIncludeInClipboardHistory` with 0 and `Clipboard Viewer Ignore` each kept the text from being read; `CanUploadToCloudClipboard` with 0 and `CanIncludeInClipboardHistory` with 1 didn't.
+- 4,096 characters were read; 4,097 and 1,000,000 were too long. Reading took under 0.3 ms, and 2 ms for 1,000,000 characters.
+- With the clipboard held open for 1 second, the five tries gave up after about 150 ms; held for 50 ms, the third try read it.
+- An app that provided its text after 1.5 seconds made reading wait 1.5 seconds. For an app that never answered, Windows gave up after 30 seconds (`ERROR_TIMEOUT`). With the Remote Desktop clipboard running, as Windows Sandbox has, it asked first and kept the clipboard open, so the tries gave up instead.
+- Windows menus draw the isolate characters (U+2068, U+2069) as boxes. The embedding characters show nothing and give Arabic text its own direction in a left-to-right menu.
+- 50 non-backtracking patterns compiled in 96 to 130 ms. Matching all 50 against 4,096 characters took up to 17 ms the first time, while each pattern builds its matcher, and under 1 ms after that. The same harmful patterns with backtracking stopped at the 100 ms limit. With the invariant culture, Match case off doesn't match `i` with the Turkish `İ`.
 
 ## Settings
 
@@ -135,7 +162,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - Windows 10 version 2004 and later, and Windows 11.
 - Every API is documented and in every supported version: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, and `TrackPopupMenuEx`. `RegexOptions.NonBacktracking` is part of .NET.
-- Windows doesn't use Windows + Alt + V, according to Microsoft's list of keyboard shortcuts. When another program already has it, Windows refuses it: the shortcut then does nothing, and a warning is logged.
+- Windows doesn't use Windows + Alt + V, according to Microsoft's list of keyboard shortcuts, and registering it succeeded where Windows' own shortcuts were refused. When another program already has it, Windows refuses it: the shortcut then does nothing, and a warning is logged.
 
 ## Security and privacy
 
@@ -151,12 +178,12 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 ## Performance
 
 - Between presses nothing runs: no clipboard listener, no timer and no hook. The feature's thread waits in its message loop.
-- Patterns compile only when the settings change, on the feature's thread. A press reads at most 4,097 characters and matches up to 50 patterns, each in time that grows only with the length of the text.
+- Patterns compile only when the settings change, on the feature's thread: about 0.1 seconds for 50 rules. A press reads at most 4,097 characters, in well under a millisecond unless the copying app provides its data on request, and matches up to 50 patterns, each in time that grows only with the length of the text: under 20 ms for 50 patterns and 4,096 characters, and under 1 ms once each pattern has matched once.
 
 ## Accessibility and localization
 
 - The menu is a Windows menu: it works with the keyboard (arrow keys, Enter, Esc and first letters), with screen readers and in high contrast, follows dark mode as the PC Companion icon's menu does, and is laid out right to left in right-to-left languages.
-- The preview of the copied text is isolated (Unicode first strong isolate), so text in the other direction doesn't mix with the menu's.
+- The preview of the copied text is wrapped in a left-to-right or right-to-left embedding (U+202A or U+202B, ended by U+202C), by its first letter's direction, so text in the other direction keeps its own order. Windows menus draw the newer isolate characters as boxes.
 - A `&` in a rule's name shows as written, not as an access key.
 - The page and the rule editor work with the keyboard alone. Their boxes, lists and buttons have labels for screen readers, the rule buttons carry the rule's name, such as "Edit Track the parcel", and problems below a box are announced.
 - `{text}` is the same in every language; the page explains it in the user's language.
@@ -170,9 +197,10 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - web addresses: encoding of spaces, `&`, `#`, `/` and non-Latin text, and addresses that stop being `http` or `https` after the replacement;
   - programs: `{text}` stays one argument with spaces, quotes and `&`; command interpreters are refused; nothing starts while PC Companion runs as administrator;
   - private text: each mark keeps the text from being read;
-  - the menu: its order, each reason for no actions, the preview's length, ellipsis and isolation, `&` in names, and dimmed programs while running as administrator;
+  - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, `&` in names, and dimmed programs while running as administrator;
+  - the front: given back after the menu closes without an action, kept after a click in another window;
   - settings: unknown actions, missing fields and unusable rules are left out with a warning.
-- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation. Open in browser starts the default browser with the link; a rule with Notepad opens a file the checks created; text marked private shows the private item and nothing else. Turned off, the shortcut opens no menu.
+- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation. Open in browser starts the default browser with the link; a rule's program, a small one of the checks' own (Windows Sandbox has no Notepad), gets the text as one argument; text marked private shows the private item and nothing else. Esc gives the front back to the window the checks typed in, and typing goes on there; the menu opens again at each later press. Turned off, the shortcut opens no menu.
 - **By hand:**
   - that the menu and the browser come to the front on a PC, where Windows' foreground lock applies;
   - an app running as administrator in front, with and without Always run as administrator;
