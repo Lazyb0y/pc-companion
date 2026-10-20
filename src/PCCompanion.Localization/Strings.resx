@@ -644,4 +644,28 @@
     <value>Reads how busy the processor is, how much memory is in use and how much data the network adapters receive and send, for the whole PC; never what each app uses. On the taskbar, reads only where its buttons are, never their names. Makes no network connections, and stores and sends nothing.</value>
     <comment>System Meters page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>Open in browser</value>
+    <comment>Clipboard Actions menu: item that opens the copied web link in the default browser.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>No actions for the copied text</value>
+    <comment>Clipboard Actions menu: dimmed note when no rule matches the copied text.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>The clipboard has no text</value>
+    <comment>Clipboard Actions menu: dimmed note when the clipboard holds no text, such as a picture or copied files. Use Windows' name for the clipboard.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>The copied text is private</value>
+    <comment>Clipboard Actions menu: dimmed note when the app that copied the text, such as a password manager, marked it private, so PC Companion didn't read it.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>The copied text is too long</value>
+    <comment>Clipboard Actions menu: dimmed note when the copied text is longer than 4,096 characters.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>The clipboard can't be read right now</value>
+    <comment>Clipboard Actions menu: dimmed note when another app keeps the clipboard open, or the app that copied the text didn't provide it.</comment>
+  </data>
 </root>

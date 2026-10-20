@@ -632,4 +632,28 @@
     <value>读取整台电脑的处理器繁忙程度、内存使用量以及网络适配器接收和发送的数据量；绝不读取每个应用的使用情况。在任务栏上，只读取其按钮的位置，绝不读取按钮的名称。不建立任何网络连接，不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>在浏览器中打开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>没有适用于所复制文本的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>剪贴板中没有文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>所复制的文本为私密内容</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>所复制的文本太长</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>暂时无法读取剪贴板</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

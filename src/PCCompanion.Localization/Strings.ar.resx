@@ -692,4 +692,28 @@
     <value>يقرأ مدى انشغال المعالج ومقدار الذاكرة المستخدمة ومقدار البيانات التي تستقبلها محولات الشبكة وترسلها، للكمبيوتر كله؛ ولا يقرأ أبدًا ما يستخدمه كل تطبيق. على شريط المهام، يقرأ فقط أماكن أزراره، ولا يقرأ أسماءها أبدًا. لا ينشئ أي اتصالات بالشبكة، ولا يخزن أي شيء ولا يرسله.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>فتح في المستعرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>لا توجد إجراءات للنص المنسوخ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>لا تحتوي الحافظة على نص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>النص المنسوخ خاص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>النص المنسوخ طويل جدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>يتعذر قراءة الحافظة الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

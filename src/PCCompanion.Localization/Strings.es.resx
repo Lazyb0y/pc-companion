@@ -644,4 +644,28 @@
     <value>Lee lo ocupado que está el procesador, cuánta memoria está en uso y cuántos datos reciben y envían los adaptadores de red, para todo el equipo; nunca lo que usa cada aplicación. En la barra de tareas, solo lee dónde están sus botones, nunca sus nombres. No establece conexiones de red, y no guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>Abrir en el explorador</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>No hay acciones para el texto copiado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>El Portapapeles no contiene texto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>El texto copiado es privado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>El texto copiado es demasiado largo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>No se puede leer el Portapapeles en este momento</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

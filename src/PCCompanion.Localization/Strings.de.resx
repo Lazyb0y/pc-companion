@@ -644,4 +644,28 @@
     <value>Liest, wie stark der Prozessor ausgelastet ist, wie viel Arbeitsspeicher belegt ist und wie viele Daten die Netzwerkadapter empfangen und senden, für den gesamten PC; nie, was einzelne Apps nutzen. Auf der Taskleiste liest es nur, wo ihre Schaltflächen sind, nie deren Namen. Stellt keine Netzwerkverbindungen her und speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>Im Browser öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>Keine Aktionen für den kopierten Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>Die Zwischenablage enthält keinen Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>Der kopierte Text ist privat</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>Der kopierte Text ist zu lang</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>Die Zwischenablage kann gerade nicht gelesen werden</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

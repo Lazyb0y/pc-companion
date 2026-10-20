@@ -644,4 +644,28 @@
     <value>Lit le taux d’utilisation du processeur, la mémoire utilisée et la quantité de données que les cartes réseau reçoivent et envoient, pour tout le PC ; jamais ce qu’utilise chaque application. Dans la barre des tâches, lit seulement l’emplacement de ses boutons, jamais leurs noms. N’établit aucune connexion réseau, et n’enregistre ni n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsOpenInBrowser" xml:space="preserve">
+    <value>Ouvrir dans le navigateur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoActions" xml:space="preserve">
+    <value>Aucune action pour le texte copié</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoText" xml:space="preserve">
+    <value>Le Presse-papiers ne contient pas de texte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsPrivate" xml:space="preserve">
+    <value>Le texte copié est privé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsTooLong" xml:space="preserve">
+    <value>Le texte copié est trop long</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCantRead" xml:space="preserve">
+    <value>Impossible de lire le Presse-papiers pour le moment</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
