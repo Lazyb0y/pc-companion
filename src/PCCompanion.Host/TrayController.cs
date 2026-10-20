@@ -49,7 +49,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         _icon.Selected += (_, _) =>
         {
             LogIconSelected(logger);
-            settingsApp.Open();
+            OpenSettings();
         };
         _icon.MenuRequested += (_, e) => ShowMenu(e.X, e.Y);
         _icon.NotificationSelected += (_, _) => NotificationSelected?.Invoke(this, EventArgs.Empty);
@@ -63,6 +63,21 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         {
             LogMenuModeNotSupported(logger, Environment.OSVersion.Version.Build);
         }
+    }
+
+    /// <summary>Opens the settings app, or brings it to the front. Call it on the UI thread.</summary>
+    public void OpenSettings() => settingsApp.Open();
+
+    /// <summary>Stops the host and closes the settings app, as Exit in the menu does. Call it on the UI thread.</summary>
+    public void Exit()
+    {
+        // Exit closes the whole app, the settings app included.
+        if (SessionSignal.Send(SettingsAppProcess.ExitSignalName))
+        {
+            LogClosingSettingsApp(logger);
+        }
+
+        MessageLoop.Quit();
     }
 
     public void Dispose()
@@ -79,7 +94,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         if (e.Message == OpenSettingsMessage)
         {
             LogOpenSettingsRequested(logger);
-            settingsApp.Open();
+            OpenSettings();
             e.Handled = true;
         }
         else if (e.Message == ExitMessage)
@@ -110,16 +125,10 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
         switch (command)
         {
             case SettingsCommand:
-                settingsApp.Open();
+                OpenSettings();
                 break;
             case ExitCommand:
-                // Exit closes the whole app, the settings app included.
-                if (SessionSignal.Send(SettingsAppProcess.ExitSignalName))
-                {
-                    LogClosingSettingsApp(logger);
-                }
-
-                MessageLoop.Quit();
+                Exit();
                 break;
         }
     }

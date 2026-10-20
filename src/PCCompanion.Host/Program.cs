@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using PCCompanion.Core;
+using PCCompanion.Core.Features;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Infrastructure.Features;
@@ -92,6 +93,8 @@ internal static partial class Program
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
             .AddSingleton<FeatureRunner>()
+            .AddSingleton<HostCommands>()
+            .AddSingleton<IHostCommands>(provider => provider.GetRequiredService<HostCommands>())
             .AddSingleton<UpdateCheckStore>()
             .AddSingleton<GitHubReleaseSource>()
             .AddSingleton<UpdateChecker>()
@@ -119,6 +122,9 @@ internal static partial class Program
         using var tray = ActivatorUtilities.CreateInstance<TrayController>(services);
         tray.Show(window);
         updates.Attach(window, tray);
+
+        // Features started before the window existed; their Settings and Exit work from now on.
+        services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit);
 
         using var watcher = new SettingsWatcher(paths);
         watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, updates, logger));

@@ -61,7 +61,7 @@
 | Project | Contents |
 |---|---|
 | `PCCompanion.Core` | The settings model and the feature contract; see [Features](features.md) |
-| `PCCompanion.Infrastructure` | Data folder paths, the settings store, the settings watcher, the feature runner and the [update check](../features/general/update-check.md) |
+| `PCCompanion.Infrastructure` | Data folder paths, the settings store, the settings watcher, the feature runner, the host's commands for features and the [update check](../features/general/update-check.md) |
 | `PCCompanion.Logging` | File logging and path redaction; see [Logging](../diagnostics/logging.md) |
 | `PCCompanion.Localization` | Strings, languages and plural rules; see [Localization](../localization/overview.md) |
 | `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, a coalescable timer, tray icons, shortcut menus, the Windows mode and high contrast, the session and display state, mouse input, displays, key and pointer state, global keyboard shortcuts, keyboard layouts, the window in front, top-level windows and their app IDs, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks, protected files, text and icons drawn from pixels, and the processor, memory and network adapter readings |
