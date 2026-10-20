@@ -36,6 +36,7 @@ GetApplicationUserModelId
 GetAsyncKeyState
 GetCurrentProcess
 GetCursorPos
+GetDpiForMonitor
 GetForegroundWindow
 GetGUIThreadInfo
 GetIfTable2
@@ -49,7 +50,10 @@ GetShellWindow
 GetSystemMetrics
 GetSystemTimes
 GetTextExtentPoint32
+GetSysColor
+GetSystemMetricsForDpi
 GetTokenInformation
+GUID_CONSOLE_DISPLAY_STATE
 GetWindow
 GetWindowLongPtr
 GetWindowThreadProcessId
@@ -64,9 +68,11 @@ IShellItem
 IsIconic
 IsWindowVisible
 LoadIconMetric
+KillTimer
 LocalFree
 LockWorkStation
 MapVirtualKeyEx
+MonitorFromPoint
 MUI_LANGUAGE_NAME
 NINF_KEY
 NIN_BALLOONUSERCLICK
@@ -83,6 +89,8 @@ PdhOpenQuery
 PKEY_AppUserModel_ID
 PostMessage
 PostQuitMessage
+PBT_POWERSETTINGCHANGE
+POWERBROADCAST_SETTING
 POWER_REQUEST_CONTEXT_VERSION
 PowerClearRequest
 PowerCreateRequest
@@ -91,6 +99,7 @@ PropVariantClear
 QueryFullProcessImageName
 RegisterClassEx
 RegisterHotKey
+RegisterPowerSettingNotification
 RegisterRawInputDevices
 RegisterWindowMessage
 SC_MONITORPOWER
@@ -99,6 +108,7 @@ SelectObject
 SendInput
 SetProcessPreferredUILanguages
 SetBkMode
+SetCoalescableTimer
 SetForegroundWindow
 SetTextColor
 SetWindowPos
@@ -116,6 +126,7 @@ TRACK_POPUP_MENU_FLAGS
 TrackPopupMenuEx
 TranslateMessage
 UnhookWinEvent
+UnregisterPowerSettingNotification
 UnregisterClass
 UnregisterHotKey
 VIRTUAL_KEY
@@ -131,9 +142,14 @@ WM_HOTKEY
 WM_INPUT
 WM_NULL
 WM_SYSCOMMAND
+WM_POWERBROADCAST
+WM_TIMER
 WM_WTSSESSION_CHANGE
+WTS_CONSOLE_CONNECT
 WTS_CONSOLE_DISCONNECT
+WTS_REMOTE_CONNECT
 WTS_REMOTE_DISCONNECT
 WTS_SESSION_LOCK
+WTS_SESSION_UNLOCK
 WTSRegisterSessionNotification
 WTSUnRegisterSessionNotification

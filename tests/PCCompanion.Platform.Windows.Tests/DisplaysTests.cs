@@ -19,4 +19,20 @@ public sealed class DisplaysTests
 
         Assert.DoesNotContain(areas, area => areas.Any(other => other != area && other.IntersectsWith(area)));
     }
+
+    [Fact]
+    public void TheMainDisplayHasADpi()
+    {
+        Assert.InRange(Displays.MainDisplayDpi(), 96u, 960u);
+    }
+
+    [Theory]
+    [InlineData(96u, 16)]
+    [InlineData(120u, 20)]
+    [InlineData(144u, 24)]
+    [InlineData(192u, 32)]
+    public void SmallIconsGrowWithTheDpi(uint dpi, int size)
+    {
+        Assert.Equal(size, Displays.SmallIconSize(dpi));
+    }
 }
