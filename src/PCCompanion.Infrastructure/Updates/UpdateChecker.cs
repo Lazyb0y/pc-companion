@@ -25,8 +25,28 @@ public enum UpdateCheckResult
 /// </param>
 public sealed record UpdateCheckOutcome(UpdateCheckResult Result, ReleaseVersion? NewVersion = null);
 
+public enum CheckNowResult
+{
+    /// <summary>GitHub named no version newer than the running one.</summary>
+    UpToDate,
+
+    /// <summary>GitHub named a newer version.</summary>
+    UpdateAvailable,
+
+    /// <summary>The request got no answer.</summary>
+    NoAnswer,
+
+    /// <summary>GitHub answered with an error status, such as a rate limit, or with an answer that can't be used.</summary>
+    Failed,
+}
+
+/// <param name="Result">What the check found.</param>
+/// <param name="NewerVersion">The newer version, for <see cref="CheckNowResult.UpdateAvailable"/>.</param>
+public sealed record CheckNowOutcome(CheckNowResult Result, ReleaseVersion? NewerVersion = null);
+
 /// <summary>
-/// Runs one update check: asks GitHub when a check is due and saves what it answered.
+/// Runs one update check: asks GitHub when a check is due, or when the user selects Check now,
+/// and saves what it answered.
 /// </summary>
 public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseSource source, TimeProvider time, ILogger<UpdateChecker> logger)
 {
@@ -79,6 +99,33 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
             return new UpdateCheckOutcome(UpdateCheckResult.NotDue);
         }
 
+        return (await AskAsync(state, current, cancellationToken).ConfigureAwait(false)).Outcome;
+    }
+
+    /// <summary>
+    /// Runs the check the user asked for with Check now on the General page: asks GitHub whether
+    /// or not a check is due, and saves the answer as the day's check. A newer version is saved as
+    /// shown, since the General page shows it, so the notification doesn't show it later.
+    /// </summary>
+    /// <param name="current">The running version.</param>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    public async Task<CheckNowOutcome> CheckNowAsync(ReleaseVersion current, CancellationToken cancellationToken)
+    {
+        var (_, answer, latest) = await AskAsync(store.Load(), current, cancellationToken).ConfigureAwait(false);
+        return answer switch
+        {
+            ReleaseAnswerKind.NoAnswer => new CheckNowOutcome(CheckNowResult.NoAnswer),
+            ReleaseAnswerKind.ErrorStatus or ReleaseAnswerKind.Unreadable => new CheckNowOutcome(CheckNowResult.Failed),
+            _ when latest is { } version && version > current => new CheckNowOutcome(CheckNowResult.UpdateAvailable, version),
+            _ => new CheckNowOutcome(CheckNowResult.UpToDate),
+        };
+    }
+
+    // Asks GitHub and saves what it answered. Also returns what GitHub answered and the newest
+    // version known after it.
+    private async Task<(UpdateCheckOutcome Outcome, ReleaseAnswerKind Answer, ReleaseVersion? Latest)> AskAsync(
+        UpdateCheckState state, ReleaseVersion current, CancellationToken cancellationToken)
+    {
         LogChecking(logger);
         var answer = await source.GetLatestAsync(cancellationToken).ConfigureAwait(false);
         var latest = state.LatestVersion;
@@ -86,7 +133,7 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
         {
             case ReleaseAnswerKind.NoAnswer:
                 LogNoAnswer(logger, answer.Exception, answer.Problem);
-                return new UpdateCheckOutcome(UpdateCheckResult.NoAnswer);
+                return (new UpdateCheckOutcome(UpdateCheckResult.NoAnswer), answer.Kind, latest);
             case ReleaseAnswerKind.Release:
                 latest = answer.Version;
                 break;
@@ -133,7 +180,7 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
         }
 
         LogNextCheck(logger, now + Interval);
-        return new UpdateCheckOutcome(UpdateCheckResult.Answered, newVersion);
+        return (new UpdateCheckOutcome(UpdateCheckResult.Answered, newVersion), answer.Kind, latest);
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Checking for updates.")]
