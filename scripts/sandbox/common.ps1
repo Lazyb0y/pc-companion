@@ -463,6 +463,47 @@ function Select-TrayMenuItem([string] $Name) {
     return $true
 }
 
+# The average brightness of the open tray menu, from 0 (black) to 255 (white), or -1 when no menu
+# opened within 10 seconds.
+function Get-TrayMenuBrightness {
+    $menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
+    $script:menu = $null
+    $found = Wait-Until {
+        $script:menu = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $menuCondition)
+        $null -ne $script:menu
+    } 10
+    if (-not $found) { return -1 }
+    # Menus fade in.
+    Start-Sleep -Milliseconds 500
+    $rectangle = $script:menu.Current.BoundingRectangle
+    if ($rectangle.Width -lt 1 -or $rectangle.Height -lt 1) { return -1 }
+
+    $bitmap = New-Object System.Drawing.Bitmap ([int] $rectangle.Width), ([int] $rectangle.Height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen([int] $rectangle.X, [int] $rectangle.Y, 0, 0, $bitmap.Size)
+    $total = 0.0
+    $count = 0
+    for ($x = 0; $x -lt $bitmap.Width; $x += 2) {
+        for ($y = 0; $y -lt $bitmap.Height; $y += 2) {
+            $total += $bitmap.GetPixel($x, $y).GetBrightness()
+            $count++
+        }
+    }
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    return [int] (255 * $total / $count)
+}
+
+# Closes the host's open tray menu and returns whether it closed. Escape would go to the window in
+# front, which needn't be the menu; WM_CANCELMODE makes the host's window end the menu.
+function Close-TrayMenu {
+    $window = [Win32]::FindWindow('PCCompanion.Host', $null)
+    if ($window -eq [IntPtr]::Zero) { return $false }
+    [void] [Win32]::PostMessage($window, 0x001F, [UIntPtr]::Zero, [IntPtr]::Zero)
+    $menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
+    return Wait-Until { $null -eq [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $menuCondition) } 5
+}
+
 # Moves the pointer into the top-left corner and pushes it against the edges, as a mouse does.
 # Windows reports no mouse input for an absolute move to exactly (0, 0), so the push makes the
 # host see the pointer arrive.

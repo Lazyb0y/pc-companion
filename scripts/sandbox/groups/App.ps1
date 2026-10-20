@@ -86,8 +86,28 @@ Test-Check 'a second launch keeps one settings app' ((Get-Processes 'PCCompanion
 Test-Check 'tray menu requested' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
 Save-Screenshot '03-tray-menu-english'
-[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
-Start-Sleep -Seconds 1
+Test-Check 'the tray menu closes' (Close-TrayMenu)
+
+# The tray menu follows the Windows mode, which the host reads each time the menu opens.
+$personalize = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+$windowsMode = (Get-ItemProperty $personalize -ErrorAction SilentlyContinue).SystemUsesLightTheme
+if (-not (Test-Path $personalize)) { [void] (New-Item $personalize -Force) }
+foreach ($mode in @{ Name = 'dark'; Light = 0 }, @{ Name = 'light'; Light = 1 }) {
+    [void] (New-ItemProperty $personalize -Name SystemUsesLightTheme -Value $mode.Light -PropertyType DWord -Force)
+    [void] (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+    $brightness = Get-TrayMenuBrightness
+    $passed = if ($mode.Light -eq 0) { ($brightness -ge 0) -and ($brightness -lt 100) } else { $brightness -gt 160 }
+    Test-Check "the tray menu is $($mode.Name) in the $($mode.Name) Windows mode" $passed "brightness $brightness"
+    Save-Screenshot "03-tray-menu-$($mode.Name)"
+    Test-Check "the tray menu closes in the $($mode.Name) Windows mode" (Close-TrayMenu)
+}
+if ($null -eq $windowsMode) {
+    Remove-ItemProperty $personalize -Name SystemUsesLightTheme -ErrorAction SilentlyContinue
+}
+else {
+    [void] (New-ItemProperty $personalize -Name SystemUsesLightTheme -Value $windowsMode -PropertyType DWord -Force)
+}
+
 Test-Check 'settings app closes' (Close-SettingsApp)
 Test-Check 'host keeps running after the settings app closes' ((Get-Processes 'PCCompanion.Host').Count -eq 1)
 Test-Check 'tray icon selected' (Send-TrayEvent $NIN_SELECT)

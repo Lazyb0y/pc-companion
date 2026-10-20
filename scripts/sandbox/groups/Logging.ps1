@@ -19,8 +19,7 @@ Test-Check 'General shows when detailed logging turns off' (@($text | Where-Obje
 Save-Screenshot '08-general-detailed-logging'
 Test-Check 'tray menu requested with detailed logging on' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
-[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
-Start-Sleep -Seconds 1
+Test-Check 'the tray menu closes with detailed logging on' (Close-TrayMenu)
 [void] (Close-SettingsApp)
 # As if the 24 hours were nearly over.
 $soon = [DateTimeOffset]::Now.AddSeconds(20).ToString('o')
@@ -28,8 +27,7 @@ Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, "
 Start-Sleep -Seconds 25
 Test-Check 'tray menu requested after detailed logging ended' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
 Start-Sleep -Seconds 2
-[System.Windows.Forms.SendKeys]::SendWait('{ESC}')
-Start-Sleep -Seconds 1
+Test-Check 'the tray menu closes after detailed logging ended' (Close-TrayMenu)
 
 # The logs show detailed logging turning on, and the host's Debug entries ending when it turned off.
 Stop-All
