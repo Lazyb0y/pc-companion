@@ -28,7 +28,7 @@ internal sealed class FakeStripHost(Action<string>? record = null) : IStripHost
 
     public event EventHandler<TrayMenuEventArgs>? MenuRequested;
 
-    public TaskbarState? Taskbar { get; set; } = new(1, 100, TaskbarBounds, NotificationArea, 96, IsTopmost: true, IsAutoHide: false);
+    public TaskbarState? Taskbar { get; set; } = new(1, 100, TaskbarBounds, NotificationArea, TaskBand: null, 96, IsTopmost: true, IsAutoHide: false);
 
     public List<TaskbarElement>? Elements { get; set; } = DefaultElements();
 

@@ -86,6 +86,42 @@ public sealed class StripPlacementTests
     }
 
     [Fact]
+    public void ATaskbarLowerThanTheMinimumHasNoRoom()
+    {
+        Assert.Null(StripPlacement.Find(Taskbar, Tray, FakeStripHost.DefaultElements(), Width, Gap, minimumHeight: 49));
+        Assert.NotNull(StripPlacement.Find(Taskbar, Tray, FakeStripHost.DefaultElements(), Width, Gap, minimumHeight: 48));
+    }
+
+    [Fact]
+    public void OnWindows10TheStripEndsTheTaskBandAfterItsLastButton()
+    {
+        var taskbar = new Rectangle(0, 1040, 1920, 40);
+        var band = new Rectangle(200, 1040, 1300, 40);
+        List<TaskbarElement> elements =
+        [
+            new(band, string.Empty, StripPlacement.TaskBandClass),
+            new(new Rectangle(200, 1040, 1300, 40), string.Empty, StripPlacement.TaskListClass),
+            new(new Rectangle(200, 1040, 60, 40), "Window", string.Empty),
+            new(new Rectangle(1600, 1040, 40, 40), "Tray", string.Empty),
+        ];
+
+        Assert.Equal(new Rectangle(band.Right - Gap - Width, 1040, Width, 40), StripPlacement.FindInTaskBand(taskbar, new Rectangle(1700, 1040, 220, 40), band, elements, Width, Gap));
+
+        elements.Add(new(new Rectangle(260, 1040, 1037, 40), "Window", string.Empty));
+        Assert.Null(StripPlacement.FindInTaskBand(taskbar, new Rectangle(1700, 1040, 220, 40), band, elements, Width, Gap));
+    }
+
+    [Fact]
+    public void OnAMirroredWindows10TaskbarTheStripStartsTheTaskBand()
+    {
+        var taskbar = new Rectangle(0, 1040, 1920, 40);
+        var band = new Rectangle(420, 1040, 1300, 40);
+        List<TaskbarElement> elements = [new(new Rectangle(1600, 1040, 120, 40), "Window", string.Empty)];
+
+        Assert.Equal(band.Left + Gap, StripPlacement.FindInTaskBand(taskbar, new Rectangle(0, 1040, 220, 40), band, elements, Width, Gap)?.X);
+    }
+
+    [Fact]
     public void AVerticalTaskbarHasNoRoom()
     {
         Assert.Null(StripPlacement.Find(new Rectangle(0, 0, 62, 1080), null, [], Width, Gap));

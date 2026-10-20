@@ -59,10 +59,11 @@ The meters share one item on the taskbar, the strip, in the free space next to t
 ### When the strip can't show
 
 - The automation IDs, class names and child windows above aren't a documented API, so, as with the tray menu's dark mode, the strip runs only on the Windows builds it was tested on: Windows 11 from build 22621 (version 22H2) to `MeterStrip.MaxTestedBuild`, now 26300. Raise it after testing a new release.
+- On Windows 10, from version 2004 to 22H2 (builds 19041 to 19045), the strip goes at the end of the task band, the taskbar's band of app buttons (`MSTaskSwWClass`), after its last button. Windows 10 keeps the task band's position up to date, and other toolbars and the news entry are outside it. The strip draws in Segoe UI and Segoe MDL2 Assets there, since Windows 10 has neither Segoe UI Variable nor Segoe Fluent Icons. It isn't tested on Windows 10 yet.
 - The meters show as notification icons instead:
-  - on Windows 10 and other builds;
+  - on other builds;
   - while the taskbar hides itself (`ABM_GETSTATE` reports `ABS_AUTOHIDE`);
-  - while the taskbar has no room for the strip, as with many app buttons;
+  - while the taskbar has no room for the strip, as with many app buttons, or is too low for two lines of text, as with small taskbar buttons;
   - while the taskbar isn't running.
 - They move back to the strip as soon as it can show, and a Debug entry in the log says why they moved.
 
@@ -190,7 +191,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11, on x64 and ARM64.
-- The strip runs on Windows 11 builds 22621 to the newest tested one; elsewhere the meters show as notification icons. See [When the strip can't show](#when-the-strip-cant-show).
+- The strip runs on Windows 11 builds 22621 to the newest tested one, and on Windows 10 versions 2004 to 22H2, where it isn't tested yet; elsewhere the meters show as notification icons. See [When the strip can't show](#when-the-strip-cant-show).
 - Every API is documented and in every supported version: processor utility since Windows 8, `SetCoalescableTimer` since Windows 8, `GetSystemMetricsForDpi` since Windows 10 version 1607, and the others earlier. What the strip relies on about the taskbar's layout isn't documented, so [Windows support](../../compatibility/windows-support.md) lists it with the tested builds.
 
 ## Security and privacy

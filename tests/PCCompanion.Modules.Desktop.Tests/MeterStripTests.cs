@@ -18,12 +18,17 @@ public sealed class MeterStripTests : IDisposable
 
     public MeterStripTests()
     {
-        _strip = new MeterStrip(_host);
+        _strip = new MeterStrip(_host, 26100);
     }
 
     public void Dispose() => _strip.Dispose();
 
     [Theory]
+    [InlineData(19040, false)]
+    [InlineData(19041, true)]
+    [InlineData(19045, true)]
+    [InlineData(19046, false)]
+    [InlineData(22000, false)]
     [InlineData(22620, false)]
     [InlineData(22621, true)]
     [InlineData(26300, true)]
@@ -115,7 +120,7 @@ public sealed class MeterStripTests : IDisposable
         Assert.Equal(StripState.NoTaskbar, _strip.State);
         Assert.False(_host.IsShown);
 
-        _host.Taskbar = new(2, 200, FakeStripHost.TaskbarBounds, FakeStripHost.NotificationArea, 96, true, false);
+        _host.Taskbar = new(2, 200, FakeStripHost.TaskbarBounds, FakeStripHost.NotificationArea, null, 96, true, false);
         _host.Elements = [];
         _strip.LayOut();
 
@@ -173,12 +178,42 @@ public sealed class MeterStripTests : IDisposable
         _strip.Show(Style, Values, White, string.Empty);
         var width = _host.Last!.Value.Bounds.Width;
 
-        // Without the Widgets entry and the apps, there's room for the wider strip.
-        _host.Taskbar = _host.Taskbar! with { Dpi = 144 };
+        // A taskbar as high as at 150%, without the Widgets entry and the apps, has room for the wider strip.
+        _host.Taskbar = _host.Taskbar! with { Dpi = 144, Bounds = FakeStripHost.TaskbarBounds with { Y = 1008, Height = 72 } };
         _host.Elements = [];
         _strip.LayOut();
 
         Assert.InRange(_host.Last!.Value.Bounds.Width, width * 1.4, width * 1.6);
+    }
+
+    [Fact]
+    public void ATaskbarWithSmallButtonsHasNoRoomForTwoLines()
+    {
+        _host.Taskbar = _host.Taskbar! with { Bounds = FakeStripHost.TaskbarBounds with { Y = 1050, Height = 30 } };
+        _host.Elements = [];
+
+        Assert.Equal(StripState.NoRoom, _strip.Show(Style, Values, White, string.Empty));
+    }
+
+    [Fact]
+    public void OnWindows10TheStripGoesAtTheEndOfTheTaskBandInWindows10sFonts()
+    {
+        using var strip = new MeterStrip(_host, 19045);
+        var band = new Rectangle(200, 1040, 1300, 40);
+        _host.Taskbar = new(1, 100, new Rectangle(0, 1040, 1920, 40), new Rectangle(1700, 1040, 220, 40), band, 96, true, false);
+        _host.Elements = [new(new Rectangle(200, 1040, 600, 40), string.Empty, StripPlacement.TaskListClass), new(new Rectangle(200, 1040, 300, 40), "Window", string.Empty)];
+
+        Assert.Equal(StripState.Shown, strip.Show(Style, Values, White, string.Empty));
+        Assert.Equal(band.Right - 4, _host.Last!.Value.Bounds.Right);
+        Assert.Equal(StripPainter.Measure(Style, 1, CultureInfo.CurrentCulture, StripFonts.Windows10).Width, _host.Last.Value.Bounds.Width);
+    }
+
+    [Fact]
+    public void OnWindows10WithoutATaskBandTheStripHasNoRoom()
+    {
+        using var strip = new MeterStrip(_host, 19045);
+
+        Assert.Equal(StripState.NoRoom, strip.Show(Style, Values, White, string.Empty));
     }
 
     [Fact]

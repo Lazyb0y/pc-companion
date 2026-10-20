@@ -28,6 +28,23 @@ public sealed record StripTexts(string? Cpu, string? Memory, string? Receive, st
 /// <param name="HighContrast">High contrast is on, so the icons use the text color too.</param>
 public readonly record struct StripColors(uint Text, bool HighContrast);
 
+/// <summary>The fonts the strip draws with, which differ between Windows 11 and Windows 10.</summary>
+/// <param name="Value">Values, in semibold.</param>
+/// <param name="Text">Names and rates.</param>
+/// <param name="Large">Large values, in semibold.</param>
+/// <param name="Icons">The outline icons and the arrows.</param>
+public sealed record StripFonts(string Value, string Text, string Large, string Icons)
+{
+    // GDI knows Segoe UI Variable Display Semibold by its cut name: it cuts face names to 31 characters.
+    public static StripFonts Windows11 { get; } = new("Segoe UI Variable Text Semibold", "Segoe UI Variable Text", "Segoe UI Variable Display Semib", "Segoe Fluent Icons");
+
+    // Windows 10 has neither Segoe UI Variable nor Segoe Fluent Icons.
+    public static StripFonts Windows10 { get; } = new("Segoe UI Semibold", "Segoe UI", "Segoe UI Semibold", "Segoe MDL2 Assets");
+
+    /// <summary>The fonts of a Windows build: Windows 11's from build 22000.</summary>
+    public static StripFonts For(int windowsBuild) => windowsBuild >= 22000 ? Windows11 : Windows10;
+}
+
 /// <summary>A column of the strip.</summary>
 public enum StripColumnKind
 {
@@ -43,7 +60,7 @@ public enum StripColumnKind
 public readonly record struct StripColumn(StripColumnKind Kind, int X, int Width);
 
 /// <summary>The strip's size and its columns' places, at a scale, which <see cref="StripPainter.Measure"/> works out.</summary>
-public sealed record StripMetrics(StripStyle Style, double Scale, int Width, IReadOnlyList<StripColumn> Columns);
+public sealed record StripMetrics(StripStyle Style, double Scale, StripFonts Fonts, int Width, IReadOnlyList<StripColumn> Columns);
 
 /// <summary>
 /// Lays out and draws the strip: the columns of CPU, memory and network, each with its icon. Each
@@ -52,12 +69,6 @@ public sealed record StripMetrics(StripStyle Style, double Scale, int Width, IRe
 /// </summary>
 public static class StripPainter
 {
-    public const string ValueFont = "Segoe UI Variable Text Semibold";
-    public const string TextFont = "Segoe UI Variable Text";
-    // GDI knows Segoe UI Variable Display Semibold by this name: it cuts face names to 31 characters.
-    public const string LargeFont = "Segoe UI Variable Display Semib";
-    public const string IconFont = "Segoe Fluent Icons";
-
     private const int Regular = 400;
     private const int Semibold = 600;
     private const string NoValue = "--";
@@ -83,14 +94,16 @@ public static class StripPainter
 
     /// <summary>
     /// Works out the strip's width and its columns' places for a style at a scale (1 at 100%), with
-    /// the widest values in <paramref name="culture"/> and the names in the current UI language.
+    /// the widest values in <paramref name="culture"/> and the names in the current UI language, in
+    /// Windows 11's fonts unless others are given.
     /// </summary>
-    public static StripMetrics Measure(StripStyle style, double scale, CultureInfo culture)
+    public static StripMetrics Measure(StripStyle style, double scale, CultureInfo culture, StripFonts? fonts = null)
     {
         ArgumentNullException.ThrowIfNull(style);
         ArgumentNullException.ThrowIfNull(culture);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(scale);
 
+        fonts ??= StripFonts.Windows11;
         var sizes = new Sizes(scale);
         var widestPercent = MeterText.Percent(100, culture);
         var kinds = new List<StripColumnKind>();
@@ -121,10 +134,10 @@ public static class StripPainter
 
         var widths = kinds.Select(kind => kind switch
         {
-            StripColumnKind.Cpu => MeterWidth(style, sizes, widestPercent, Strings.SystemMetersCpuHeader),
-            StripColumnKind.Memory => MeterWidth(style, sizes, widestPercent, Strings.SystemMetersMemoryHeader),
-            StripColumnKind.CpuAndMemory => (style.Icons == StripIcons.None ? 0 : sizes.SmallIcon + sizes.SmallIconGap) + Text(widestPercent, ValueFont, Semibold, sizes.Line).Width,
-            _ => Arrow(style, sizes, receive: true).Width + sizes.ArrowGap + WidestRate(culture, sizes),
+            StripColumnKind.Cpu => MeterWidth(style, fonts, sizes, widestPercent, Strings.SystemMetersCpuHeader),
+            StripColumnKind.Memory => MeterWidth(style, fonts, sizes, widestPercent, Strings.SystemMetersMemoryHeader),
+            StripColumnKind.CpuAndMemory => (style.Icons == StripIcons.None ? 0 : sizes.SmallIcon + sizes.SmallIconGap) + Text(widestPercent, fonts.Value, Semibold, sizes.Line).Width,
+            _ => Arrow(style, fonts, sizes, receive: true).Width + sizes.ArrowGap + WidestRate(culture, fonts, sizes),
         }).ToList();
 
         var columns = new List<StripColumn>();
@@ -137,7 +150,7 @@ public static class StripPainter
         }
 
         var width = kinds.Count == 0 ? 0 : x - sizes.Between + sizes.Padding;
-        return new StripMetrics(style, scale, width, columns);
+        return new StripMetrics(style, scale, fonts, width, columns);
     }
 
     /// <summary>
@@ -159,22 +172,22 @@ public static class StripPainter
             canvas.Fill(sizes.HighlightInset, sizes.HighlightInset, canvas.Width - (2 * sizes.HighlightInset), height - (2 * sizes.HighlightInset), sizes.HighlightRadius, colors.Text, HighlightOpacity);
         }
 
-        var style = metrics.Style;
+        var (style, fonts) = (metrics.Style, metrics.Fonts);
         foreach (var column in metrics.Columns)
         {
             switch (column.Kind)
             {
                 case StripColumnKind.Cpu:
-                    PaintMeter(canvas, style, sizes, colors, column.X, texts.Cpu, Strings.SystemMetersCpuHeader, memory: false);
+                    PaintMeter(canvas, style, fonts, sizes, colors, column.X, texts.Cpu, Strings.SystemMetersCpuHeader, memory: false);
                     break;
                 case StripColumnKind.Memory:
-                    PaintMeter(canvas, style, sizes, colors, column.X, texts.Memory, Strings.SystemMetersMemoryHeader, memory: true);
+                    PaintMeter(canvas, style, fonts, sizes, colors, column.X, texts.Memory, Strings.SystemMetersMemoryHeader, memory: true);
                     break;
                 case StripColumnKind.CpuAndMemory:
-                    PaintCompact(canvas, style, sizes, colors, column.X, texts);
+                    PaintCompact(canvas, style, fonts, sizes, colors, column.X, texts);
                     break;
                 case StripColumnKind.Network:
-                    PaintNetwork(canvas, style, sizes, colors, column.X, texts);
+                    PaintNetwork(canvas, style, fonts, sizes, colors, column.X, texts);
                     break;
             }
         }
@@ -183,44 +196,44 @@ public static class StripPainter
     }
 
     // The width of a CPU or memory column: its icon, then its value, above its name or large.
-    private static int MeterWidth(StripStyle style, Sizes sizes, string widestPercent, string name)
+    private static int MeterWidth(StripStyle style, StripFonts fonts, Sizes sizes, string widestPercent, string name)
     {
         var icon = style.Icons == StripIcons.None ? 0 : sizes.Icon + sizes.IconGap;
         var text = style.Layout == StripLayout.LargeValues
-            ? Text(widestPercent, LargeFont, Semibold, sizes.Large).Width
-            : Math.Max(Text(widestPercent, ValueFont, Semibold, sizes.Line).Width, Text(name, TextFont, Regular, sizes.Line).Width);
+            ? Text(widestPercent, fonts.Large, Semibold, sizes.Large).Width
+            : Math.Max(Text(widestPercent, fonts.Value, Semibold, sizes.Line).Width, Text(name, fonts.Text, Regular, sizes.Line).Width);
         return icon + text;
     }
 
     // So a rate keeps its place as it changes.
-    private static int WidestRate(CultureInfo culture, Sizes sizes) =>
-        WidestRates.Max(rate => Text(MeterText.Rate(rate, culture), TextFont, Regular, sizes.Line).Width);
+    private static int WidestRate(CultureInfo culture, StripFonts fonts, Sizes sizes) =>
+        WidestRates.Max(rate => Text(MeterText.Rate(rate, culture), fonts.Text, Regular, sizes.Line).Width);
 
-    private static void PaintMeter(StripCanvas canvas, StripStyle style, Sizes sizes, StripColors colors, int x, string? value, string name, bool memory)
+    private static void PaintMeter(StripCanvas canvas, StripStyle style, StripFonts fonts, Sizes sizes, StripColors colors, int x, string? value, string name, bool memory)
     {
         var middle = canvas.Height / 2.0;
         if (style.Icons != StripIcons.None)
         {
-            PaintIcon(canvas, style, colors, memory, sizes.Icon, x, middle);
+            PaintIcon(canvas, style, fonts, colors, memory, sizes.Icon, x, middle);
             x += sizes.Icon + sizes.IconGap;
         }
 
         if (style.Layout == StripLayout.LargeValues)
         {
-            var large = Text(value ?? NoValue, LargeFont, Semibold, sizes.Large);
+            var large = Text(value ?? NoValue, fonts.Large, Semibold, sizes.Large);
             canvas.Draw(large, x, TopFor(large, middle), colors.Text);
             return;
         }
 
-        var valueMask = Text(value ?? NoValue, ValueFont, Semibold, sizes.Line);
-        var nameMask = Text(name, TextFont, Regular, sizes.Line);
+        var valueMask = Text(value ?? NoValue, fonts.Value, Semibold, sizes.Line);
+        var nameMask = Text(name, fonts.Text, Regular, sizes.Line);
         var top = (canvas.Height - (valueMask.Height + nameMask.Height)) / 2;
         canvas.Draw(valueMask, x, top, colors.Text);
         canvas.Draw(nameMask, x, top + valueMask.Height, colors.Text, NameOpacity);
     }
 
     // CPU above memory, each with a small icon centered on its value.
-    private static void PaintCompact(StripCanvas canvas, StripStyle style, Sizes sizes, StripColors colors, int x, StripTexts texts)
+    private static void PaintCompact(StripCanvas canvas, StripStyle style, StripFonts fonts, Sizes sizes, StripColors colors, int x, StripTexts texts)
     {
         var rows = new List<(string? Value, bool Memory)>();
         if (style.Cpu)
@@ -235,12 +248,12 @@ public static class StripPainter
 
         for (var row = 0; row < rows.Count; row++)
         {
-            var value = Text(rows[row].Value ?? NoValue, ValueFont, Semibold, sizes.Line);
+            var value = Text(rows[row].Value ?? NoValue, fonts.Value, Semibold, sizes.Line);
             var top = ((canvas.Height - (rows.Count * value.Height)) / 2) + (row * value.Height);
             var textX = x;
             if (style.Icons != StripIcons.None)
             {
-                PaintIcon(canvas, style, colors, rows[row].Memory, sizes.SmallIcon, x, top + InkMiddle(value));
+                PaintIcon(canvas, style, fonts, colors, rows[row].Memory, sizes.SmallIcon, x, top + InkMiddle(value));
                 textX += sizes.SmallIcon + sizes.SmallIconGap;
             }
 
@@ -249,15 +262,15 @@ public static class StripPainter
     }
 
     // Receive above send, each after its arrow, centered on the rate.
-    private static void PaintNetwork(StripCanvas canvas, StripStyle style, Sizes sizes, StripColors colors, int x, StripTexts texts)
+    private static void PaintNetwork(StripCanvas canvas, StripStyle style, StripFonts fonts, Sizes sizes, StripColors colors, int x, StripTexts texts)
     {
         var colored = style.Icons == StripIcons.Color && !colors.HighContrast;
-        var lineHeight = Text(texts.Receive ?? NoValue, TextFont, Regular, sizes.Line).Height;
+        var lineHeight = Text(texts.Receive ?? NoValue, fonts.Text, Regular, sizes.Line).Height;
         var firstTop = (canvas.Height - (2 * lineHeight)) / 2;
         foreach (var receive in new[] { true, false })
         {
-            var rate = Text((receive ? texts.Receive : texts.Send) ?? NoValue, TextFont, Regular, sizes.Line);
-            var arrow = Arrow(style, sizes, receive);
+            var rate = Text((receive ? texts.Receive : texts.Send) ?? NoValue, fonts.Text, Regular, sizes.Line);
+            var arrow = Arrow(style, fonts, sizes, receive);
             var top = firstTop + (receive ? 0 : lineHeight);
             var arrowColor = colored ? (receive ? StripArt.Download : StripArt.Upload) : colors.Text;
             canvas.Draw(arrow, x, TopFor(arrow, top + InkMiddle(rate)), arrowColor);
@@ -266,7 +279,7 @@ public static class StripPainter
     }
 
     // Color icons are drawn; One color icons, and every icon in high contrast, are outline glyphs in the text color.
-    private static void PaintIcon(StripCanvas canvas, StripStyle style, StripColors colors, bool memory, int size, int x, double middle)
+    private static void PaintIcon(StripCanvas canvas, StripStyle style, StripFonts fonts, StripColors colors, bool memory, int size, int x, double middle)
     {
         if (style.Icons == StripIcons.Color && !colors.HighContrast)
         {
@@ -274,15 +287,15 @@ public static class StripPainter
             return;
         }
 
-        var glyph = Text(memory ? MemoryGlyph : ProcessorGlyph, IconFont, Regular, size);
+        var glyph = Text(memory ? MemoryGlyph : ProcessorGlyph, fonts.Icons, Regular, size);
         canvas.Draw(glyph, x, TopFor(glyph, middle), colors.Text);
     }
 
     // Without icons, the arrows are plain characters in the text color.
-    private static TextMask Arrow(StripStyle style, Sizes sizes, bool receive) =>
+    private static TextMask Arrow(StripStyle style, StripFonts fonts, Sizes sizes, bool receive) =>
         style.Icons == StripIcons.None
-            ? Text(receive ? DownArrow : UpArrow, TextFont, Regular, sizes.Line)
-            : Text(receive ? DownloadGlyph : UploadGlyph, IconFont, Semibold, sizes.Line + 1);
+            ? Text(receive ? DownArrow : UpArrow, fonts.Text, Regular, sizes.Line)
+            : Text(receive ? DownloadGlyph : UploadGlyph, fonts.Icons, Semibold, sizes.Line + 1);
 
     // Cached, so an update draws only text it hasn't drawn before.
     private static TextMask Text(string text, string font, int weight, int height)
