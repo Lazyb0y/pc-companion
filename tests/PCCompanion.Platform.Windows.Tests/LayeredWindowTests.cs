@@ -155,6 +155,16 @@ public sealed class LayeredWindowTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new WinEventHook(WinEventHook.ObjectHideEvent, WinEventHook.ObjectShowEvent));
     }
 
+    [Fact]
+    public void AWinEventHookCanBeDisposedTwiceAndCreatedAgain()
+    {
+        var hook = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, skipOwnProcess: true);
+        hook.Dispose();
+        hook.Dispose();
+
+        using var again = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, skipOwnProcess: true);
+    }
+
     [DllImport("user32.dll", EntryPoint = "PostMessageW")]
     private static extern bool PostMessage(nint window, uint message, nuint wParam, nint lParam);
 
