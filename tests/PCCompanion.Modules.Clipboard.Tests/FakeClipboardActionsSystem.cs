@@ -120,10 +120,11 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
     }
 
     // Runs at once, on the feature's thread, so a test sees the action's result as soon as the menu closes.
+    // Recorded after the action, since a test that waits for "background" then checks its result.
     public void RunInBackground(Action action)
     {
-        Record("background");
         action();
+        Record("background");
     }
 
     /// <summary>Waits until <paramref name="condition"/> holds, up to <paramref name="timeout"/> or 10 seconds.</summary>
