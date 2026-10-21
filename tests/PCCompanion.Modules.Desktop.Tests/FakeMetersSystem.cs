@@ -85,6 +85,19 @@ internal sealed class FakeMetersSystem : IMetersSystem
         }
     }
 
+    /// <summary>What pauses the meters, which tests change; neither the session's lock nor the PC's displays.</summary>
+    public FakeMeterPauses? Pauses { get; private set; }
+
+    public IMeterPauses WatchPauses(MessageWindow window)
+    {
+        lock (_gate)
+        {
+            Pauses = new FakeMeterPauses(window);
+            Monitor.PulseAll(_gate);
+            return Pauses;
+        }
+    }
+
     public bool OpenTaskManager()
     {
         Interlocked.Increment(ref _taskManagerOpened);
@@ -154,6 +167,33 @@ internal sealed class FakeMetersSystem : IMetersSystem
     }
 
     /// <summary>Records what the meters show; tests raise its events on the meters thread.</summary>
+    /// <summary>
+    /// The session's lock and the displays' state, as a test sets them: unlocked and on until it
+    /// changes them, whatever the PC running the tests does. Each change arrives on the meters thread.
+    /// </summary>
+    internal sealed class FakeMeterPauses(MessageWindow window) : IMeterPauses
+    {
+        public event EventHandler? Locked;
+
+        public event EventHandler? Unlocked;
+
+        public event EventHandler? DisplaysOff;
+
+        public event EventHandler? DisplaysOn;
+
+        public void Lock() => window.BeginInvoke(() => Locked?.Invoke(this, EventArgs.Empty));
+
+        public void Unlock() => window.BeginInvoke(() => Unlocked?.Invoke(this, EventArgs.Empty));
+
+        public void TurnDisplaysOff() => window.BeginInvoke(() => DisplaysOff?.Invoke(this, EventArgs.Empty));
+
+        public void TurnDisplaysOn() => window.BeginInvoke(() => DisplaysOn?.Invoke(this, EventArgs.Empty));
+
+        public void Dispose()
+        {
+        }
+    }
+
     internal sealed class FakeMeterIcons(FakeMetersSystem system) : IMeterIcons
     {
         public event EventHandler? Selected;
