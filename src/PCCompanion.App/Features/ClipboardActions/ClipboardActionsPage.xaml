@@ -19,12 +19,11 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=ClipboardActionsName}" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=ClipboardActionsShortcutDescription}" Header="{app:Localized Key=ClipboardActionsShortcutHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE765;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <TextBlock Text="{app:Localized Key=ClipboardActionsShortcut}" />
-                </toolkit:SettingsCard>
+                <controls:TextCard
+                    Description="{app:Localized Key=ClipboardActionsShortcutDescription}"
+                    Glyph="&#xE765;"
+                    Header="{app:Localized Key=ClipboardActionsShortcutHeader}"
+                    Text="{app:Localized Key=ClipboardActionsShortcut}" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=ClipboardActionsOpenLinksDescription}"
