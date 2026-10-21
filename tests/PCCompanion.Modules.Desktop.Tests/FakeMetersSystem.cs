@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Platform.Windows;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Desktop.Tests;
@@ -10,12 +11,11 @@ namespace PCCompanion.Modules.Desktop.Tests;
 /// <summary>
 /// The meters' Windows parts, recorded instead of shown: no icon reaches the taskbar, no menu
 /// opens and Task Manager doesn't start. It may be used from the meters thread while a test
-/// waits for it with <see cref="WaitUntil"/>.
+/// waits for it. Its events are what the icons and the strip did, such as "show Memory" or
+/// "remove Network".
 /// </summary>
-internal sealed class FakeMetersSystem : IMetersSystem
+internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMetersSystem
 {
-    private readonly object _gate = new();
-    private readonly List<string> _events = [];
     private int _updates;
     private int _taskManagerOpened;
 
@@ -47,18 +47,6 @@ internal sealed class FakeMetersSystem : IMetersSystem
 
     public MessageWindow? Window { get; private set; }
 
-    /// <summary>What the icons did, such as "show Memory" or "remove Network", in order.</summary>
-    public IReadOnlyList<string> Events
-    {
-        get
-        {
-            lock (_gate)
-            {
-                return [.. _events];
-            }
-        }
-    }
-
     /// <summary>The number of updates, each of which looks at the appearance once.</summary>
     public int Updates => Volatile.Read(ref _updates);
 
@@ -66,21 +54,21 @@ internal sealed class FakeMetersSystem : IMetersSystem
 
     public IMeterIcons CreateIcons(MessageWindow window)
     {
-        lock (_gate)
+        lock (Gate)
         {
             Window = window;
             Icons = new FakeMeterIcons(this);
-            Monitor.PulseAll(_gate);
+            Changed();
             return Icons;
         }
     }
 
     public IStripHost CreateStripHost(MessageWindow window)
     {
-        lock (_gate)
+        lock (Gate)
         {
             StripHost = new FakeStripHost(Record);
-            Monitor.PulseAll(_gate);
+            Changed();
             return StripHost;
         }
     }
@@ -90,10 +78,10 @@ internal sealed class FakeMetersSystem : IMetersSystem
 
     public IMeterPauses WatchPauses(MessageWindow window)
     {
-        lock (_gate)
+        lock (Gate)
         {
             Pauses = new FakeMeterPauses(window);
-            Monitor.PulseAll(_gate);
+            Changed();
             return Pauses;
         }
     }
@@ -107,49 +95,11 @@ internal sealed class FakeMetersSystem : IMetersSystem
 
     public MeterMenuCommand ShowMenu(MessageWindow window, int x, int y) => MenuChoice;
 
-    /// <summary>Waits until <paramref name="condition"/> holds; returns false after 10 seconds, or <paramref name="timeout"/>.</summary>
-    public bool WaitUntil(Func<FakeMetersSystem, bool> condition, TimeSpan? timeout = null)
-    {
-        var deadline = Environment.TickCount64 + (long)(timeout ?? TimeSpan.FromSeconds(10)).TotalMilliseconds;
-        lock (_gate)
-        {
-            while (!condition(this))
-            {
-                var left = deadline - Environment.TickCount64;
-                if (left <= 0)
-                {
-                    return false;
-                }
-
-                Monitor.Wait(_gate, TimeSpan.FromMilliseconds(Math.Min(left, 100)));
-            }
-
-            return true;
-        }
-    }
-
     /// <summary>Runs <paramref name="action"/> on the meters thread, as Windows' messages would.</summary>
     public void OnMetersThread(Action<FakeMeterIcons> action)
     {
         Assert.True(WaitUntil(system => system.Window is not null));
         Window!.BeginInvoke(() => action(Icons!));
-    }
-
-    private void Record(string text)
-    {
-        lock (_gate)
-        {
-            _events.Add(text);
-            Monitor.PulseAll(_gate);
-        }
-    }
-
-    private void Changed()
-    {
-        lock (_gate)
-        {
-            Monitor.PulseAll(_gate);
-        }
     }
 
     private sealed class FakeAppearance(FakeMetersSystem system) : IMeterAppearance
@@ -166,7 +116,6 @@ internal sealed class FakeMetersSystem : IMetersSystem
         public bool IsHighContrast() => false;
     }
 
-    /// <summary>Records what the meters show; tests raise its events on the meters thread.</summary>
     /// <summary>
     /// The session's lock and the displays' state, as a test sets them: unlocked and on until it
     /// changes them, whatever the PC running the tests does. Each change arrives on the meters thread.
@@ -194,6 +143,7 @@ internal sealed class FakeMetersSystem : IMetersSystem
         }
     }
 
+    /// <summary>Records what the meters show; tests raise its events on the meters thread.</summary>
     internal sealed class FakeMeterIcons(FakeMetersSystem system) : IMeterIcons
     {
         public event EventHandler? Selected;
