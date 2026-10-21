@@ -501,11 +501,31 @@ function Send-Key([uint16] $Key) {
     [void] [Win32]::Key($Key, $true)
 }
 
+# The names of the settings window's elements. While a page changes, UI Automation can miss the
+# window, find no element or fail to read one, so a failed or empty read is tried again, up to three
+# times; the window always has some text, such as its navigation pane. The report notes each failed
+# read.
 function Get-WindowText {
-    $window = Get-AppWindow
-    if (-not $window) { return @() }
-    $all = $window.FindAll([System.Windows.Automation.TreeScope]::Descendants, [System.Windows.Automation.Condition]::TrueCondition)
-    return @($all | ForEach-Object { $_.Current.Name } | Where-Object { $_ })
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        if ($attempt -gt 1) { Start-Sleep -Milliseconds 500 }
+        try {
+            $window = Get-AppWindow
+            if ($window) {
+                $all = $window.FindAll([System.Windows.Automation.TreeScope]::Descendants, [System.Windows.Automation.Condition]::TrueCondition)
+                $text = @($all | ForEach-Object { $_.Current.Name } | Where-Object { $_ })
+                if ($text.Count -gt 0) { return $text }
+                $problem = 'the window had no text'
+            }
+            else {
+                $problem = 'no settings window was found'
+            }
+        }
+        catch {
+            $problem = "$($_.Exception.GetType().Name): $($_.Exception.Message)"
+        }
+        Write-Report "[NOTE] Reading the settings window's text failed, attempt $attempt of 3: $problem"
+    }
+    return @()
 }
 
 # Sends what Explorer sends when the tray icon is used: the host's window gets WM_APP + 1 with the
