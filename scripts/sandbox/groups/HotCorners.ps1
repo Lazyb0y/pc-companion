@@ -17,6 +17,18 @@ $text = Get-WindowText
 Test-Check 'Hot Corners shows its settings' (($text -contains 'Top left') -and ($text -contains 'Activation delay') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 $selected = Get-SelectedItemName 'Top left action'
 Test-Check 'the top-left corner shows Task View when first turned on' ($selected -eq 'Task View') "selected: $selected"
+
+# The activation delay's slider, named after its header, shows the delay and saves a new one.
+$sliderCondition = New-Object System.Windows.Automation.AndCondition(
+    (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'Activation delay')),
+    (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::IsRangeValuePatternAvailableProperty, $true)))
+$slider = (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $sliderCondition)
+$range = if ($slider) { $slider.GetCurrentPattern([System.Windows.Automation.RangeValuePattern]::Pattern) } else { $null }
+Test-Check 'the activation delay starts at 150 ms' (($null -ne $range) -and ($range.Current.Value -eq 150) -and ((Get-WindowText) -contains '150 ms')) "slider: $(if ($range) { $range.Current.Value } else { 'not found' })"
+if ($range) { $range.SetValue(300) }
+Start-Sleep -Seconds 1
+$saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners
+Test-Check 'the activation delay slider saves 300 ms and shows it' (($saved.activationDelayMilliseconds -eq 300) -and ((Get-WindowText) -contains '300 ms')) "saved: $($saved.activationDelayMilliseconds)"
 [void] (Close-SettingsApp)
 
 # The top-left corner shows the desktop; detailed logging is on for the host's Debug entries.
