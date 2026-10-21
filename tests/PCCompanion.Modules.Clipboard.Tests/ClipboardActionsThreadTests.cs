@@ -38,6 +38,9 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         {
             StopAndJoin(thread);
         }
+
+        // Clipboard Actions never exits PC Companion.
+        Assert.Equal(0, _commands.Exits);
     }
 
     [Fact]

@@ -86,7 +86,7 @@ Enforced by `PCCompanion.Architecture.Tests`.
 | `PCCompanion.Elevated` | Core, Infrastructure, Logging, Platform.Windows |
 | `PCCompanion.Host`, `PCCompanion.App` | The projects above; never each other |
 | `*.Tests` | Any project except App and Host |
-| `PCCompanion.Testing` | No other project |
+| `PCCompanion.Testing` | Core |
 
 - Nothing references `PCCompanion.App`, `PCCompanion.Host` or a test project, and only test projects reference `PCCompanion.Testing`.
 - Project references never form a cycle, and every project is in the solution.

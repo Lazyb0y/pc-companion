@@ -35,7 +35,7 @@ internal static class DependencyRules
 
     private static readonly string[] ModuleReferences = [Core, PlatformWindows, Localization];
 
-    private static readonly string[] TestingReferences = [];
+    private static readonly string[] TestingReferences = [Core];
 
     public static bool IsKnown(string project) =>
         SharedProjects.ContainsKey(project) || IsModule(project) || IsEntryPoint(project) || IsTest(project) || IsTesting(project);

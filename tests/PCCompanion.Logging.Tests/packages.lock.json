@@ -143,6 +143,9 @@
           "xunit.v3.runner.common": "[4.0.2]"
         }
       },
+      "pccompanion.core": {
+        "type": "Project"
+      },
       "pccompanion.logging": {
         "type": "Project",
         "dependencies": {
@@ -154,7 +157,8 @@
       "pccompanion.testing": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
+          "PCCompanion.Core": "[0.2.0, )"
         }
       },
       "Microsoft.Extensions.DependencyInjection": {

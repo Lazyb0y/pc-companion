@@ -34,6 +34,9 @@ public sealed class MetersThreadTests : IDisposable
         {
             StopAndJoin(thread);
         }
+
+        // The meters open no web pages.
+        Assert.Empty(_commands.WebPages);
     }
 
     [Fact]
