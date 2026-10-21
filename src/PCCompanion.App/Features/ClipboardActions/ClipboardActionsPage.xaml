@@ -11,28 +11,46 @@
     <ScrollViewer HorizontalScrollMode="Disabled">
         <Grid>
             <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
-                <Grid Margin="0,0,0,20" ColumnSpacing="16">
+                <!--
+                    The icon, the title and the switch share one middle line. The title's box is
+                    trimmed to its capital letters, so the icon is centered on what's drawn at any
+                    text size; the padding, the same above and below, keeps room for p, g and y.
+                -->
+                <Grid
+                    Margin="0,0,0,20"
+                    ColumnSpacing="16"
+                    RowSpacing="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <FontIcon
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         AutomationProperties.AccessibilityView="Raw"
                         FontSize="32"
                         Glyph="{x:Bind local:ClipboardActionsViewModel.Glyph}" />
-                    <StackPanel Grid.Column="1" Spacing="4">
-                        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="{app:Localized Key=ClipboardActionsName}" />
-                        <TextBlock
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Style="{StaticResource BodyTextBlockStyle}"
-                            Text="{app:Localized Key=ClipboardActionsDescription}"
-                            TextWrapping="Wrap" />
-                    </StackPanel>
+                    <TextBlock
+                        Grid.Column="1"
+                        Padding="0,8"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource TitleTextBlockStyle}"
+                        Text="{app:Localized Key=ClipboardActionsName}"
+                        TextLineBounds="Tight" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{app:Localized Key=ClipboardActionsDescription}"
+                        TextWrapping="Wrap" />
                     <ToggleSwitch
                         Grid.Column="2"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         AutomationProperties.Name="{app:Localized Key=ClipboardActionsName}"
                         IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}" />
                 </Grid>
