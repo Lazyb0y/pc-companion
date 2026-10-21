@@ -71,18 +71,15 @@
                     IsOn="{x:Bind ViewModel.RunAsAdministratorOn, Mode=TwoWay}"
                     IsSwitchEnabled="{x:Bind ViewModel.RunAsAdministratorAvailable, Mode=OneWay}" />
 
-                <toolkit:SettingsCard Description="{x:Bind ViewModel.LogsRetention}" Header="{app:Localized Key=GeneralLogsHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE9F9;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button
-                            Command="{x:Bind ViewModel.OpenHostLogsFolderCommand}"
-                            Content="{app:Localized Key=GeneralLogsOpenHost}"
-                            Visibility="{x:Bind ViewModel.HostLogsShown, Mode=OneWay}" />
-                        <Button Command="{x:Bind ViewModel.OpenLogsFolderCommand}" Content="{app:Localized Key=GeneralLogsOpen}" />
-                    </StackPanel>
-                </toolkit:SettingsCard>
+                <controls:ButtonCard
+                    ButtonCommand="{x:Bind ViewModel.OpenLogsFolderCommand}"
+                    ButtonContent="{app:Localized Key=GeneralLogsOpen}"
+                    Description="{x:Bind ViewModel.LogsRetention}"
+                    Glyph="&#xE9F9;"
+                    Header="{app:Localized Key=GeneralLogsHeader}"
+                    IsSecondButtonShown="{x:Bind ViewModel.HostLogsShown, Mode=OneWay}"
+                    SecondButtonCommand="{x:Bind ViewModel.OpenHostLogsFolderCommand}"
+                    SecondButtonContent="{app:Localized Key=GeneralLogsOpenHost}" />
 
                 <controls:SwitchCard
                     Description="{x:Bind ViewModel.DetailedLoggingDescription, Mode=OneWay}"
@@ -91,26 +88,20 @@
                     IsOn="{x:Bind ViewModel.DetailedLoggingOn, Mode=TwoWay}" />
 
                 <!--  As in Windows Update: what the last check found, and Check now.  -->
-                <toolkit:SettingsCard Description="{x:Bind ViewModel.UpdateStatusDetail, Mode=OneWay}">
-                    <toolkit:SettingsCard.Header>
+                <controls:ButtonCard
+                    ButtonCommand="{x:Bind ViewModel.CheckNowCommand}"
+                    ButtonContent="{app:Localized Key=GeneralUpdateCheckNow}"
+                    Description="{x:Bind ViewModel.UpdateStatusDetail, Mode=OneWay}"
+                    Glyph="&#xE72C;"
+                    IsWorking="{x:Bind ViewModel.CheckingNow, Mode=OneWay}">
+                    <controls:ButtonCard.Header>
                         <TextBlock
                             x:Name="UpdateStatusText"
                             AutomationProperties.LiveSetting="Polite"
                             Text="{x:Bind ViewModel.UpdateStatus, Mode=OneWay}"
                             TextWrapping="Wrap" />
-                    </toolkit:SettingsCard.Header>
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE72C;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <ProgressRing
-                            Width="20"
-                            Height="20"
-                            IsActive="{x:Bind ViewModel.CheckingNow, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.CheckingNow, Mode=OneWay}" />
-                        <Button Command="{x:Bind ViewModel.CheckNowCommand}" Content="{app:Localized Key=GeneralUpdateCheckNow}" />
-                    </StackPanel>
-                </toolkit:SettingsCard>
+                    </controls:ButtonCard.Header>
+                </controls:ButtonCard>
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=GeneralUpdateCheckDescription}"
