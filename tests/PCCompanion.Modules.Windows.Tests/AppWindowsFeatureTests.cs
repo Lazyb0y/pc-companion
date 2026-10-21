@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Testing;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Windows.Tests;
 
@@ -67,11 +67,5 @@ public sealed class AppWindowsFeatureTests : IDisposable
         Assert.True(_feature.IsRunning);
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("unknown", StringComparison.Ordinal));
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("registered", StringComparison.Ordinal));
-    }
-
-    private static JsonElement Section(string json)
-    {
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
     }
 }

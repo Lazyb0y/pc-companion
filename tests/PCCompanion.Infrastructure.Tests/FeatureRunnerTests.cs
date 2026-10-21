@@ -8,6 +8,7 @@ using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Features;
 using PCCompanion.Testing;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Infrastructure.Tests;
 
@@ -79,8 +80,6 @@ public sealed class FeatureRunnerTests
         Assert.Contains((LogLevel.Error, "The throwsOnStop feature failed to stop."), _logger.Entries);
         Assert.Throws<ObjectDisposedException>(() => runner.Apply(new AppSettings()));
     }
-
-    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
 
     private sealed class FakeFeature(string id) : IFeature
     {

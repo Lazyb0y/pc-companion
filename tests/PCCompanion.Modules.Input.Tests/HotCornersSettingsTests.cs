@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text.Json;
 using PCCompanion.Modules.Input.HotCorners;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Input.Tests;
 
@@ -127,6 +128,4 @@ public sealed class HotCornersSettingsTests
             [HotCornerAction.TaskView, HotCornerAction.Start, HotCornerAction.Search, HotCornerAction.Notifications],
             [.. new[] { ScreenCorner.TopLeft, ScreenCorner.TopRight, ScreenCorner.BottomLeft, ScreenCorner.BottomRight }.Select(corner => settings.For(corner).Action)]);
     }
-
-    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
 }
