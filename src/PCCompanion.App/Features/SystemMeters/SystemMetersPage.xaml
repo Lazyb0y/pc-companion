@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
     xmlns:controls="using:PCCompanion.App.Controls"
-    xmlns:local="using:PCCompanion.App.Features.SystemMeters"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
     <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
@@ -45,76 +44,33 @@
                     </toolkit:SettingsExpander.Items>
                 </toolkit:SettingsExpander>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersShowOnDescription}" Header="{app:Localized Key=SystemMetersShowOnHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE7C4;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        MinWidth="200"
-                        AutomationProperties.Name="{app:Localized Key=SystemMetersShowOnHeader}"
-                        ItemsSource="{x:Bind ViewModel.ShowOnOptions}"
-                        SelectedItem="{x:Bind ViewModel.SelectedShowOn, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:ShowOnOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=SystemMetersShowOnDescription}"
+                    Glyph="&#xE7C4;"
+                    Header="{app:Localized Key=SystemMetersShowOnHeader}"
+                    ItemsSource="{x:Bind ViewModel.ShowOnOptions}"
+                    SelectedItem="{x:Bind ViewModel.SelectedShowOn, Mode=TwoWay}" />
 
-                <toolkit:SettingsCard
+                <controls:ChoiceCard
                     Description="{app:Localized Key=SystemMetersLayoutDescription}"
+                    Glyph="&#xE80A;"
                     Header="{app:Localized Key=SystemMetersLayoutHeader}"
-                    IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE80A;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        MinWidth="200"
-                        AutomationProperties.Name="{app:Localized Key=SystemMetersLayoutHeader}"
-                        ItemsSource="{x:Bind ViewModel.LayoutOptions}"
-                        SelectedItem="{x:Bind ViewModel.SelectedLayout, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:LayoutOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                    IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.LayoutOptions}"
+                    SelectedItem="{x:Bind ViewModel.SelectedLayout, Mode=TwoWay}" />
 
-                <toolkit:SettingsCard Header="{app:Localized Key=SystemMetersIconsHeader}" IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE790;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        MinWidth="200"
-                        AutomationProperties.Name="{app:Localized Key=SystemMetersIconsHeader}"
-                        ItemsSource="{x:Bind ViewModel.IconsOptions}"
-                        SelectedItem="{x:Bind ViewModel.SelectedIcons, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:IconsOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Glyph="&#xE790;"
+                    Header="{app:Localized Key=SystemMetersIconsHeader}"
+                    IsEnabled="{x:Bind ViewModel.OnTaskbar, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.IconsOptions}"
+                    SelectedItem="{x:Bind ViewModel.SelectedIcons, Mode=TwoWay}" />
 
-                <toolkit:SettingsCard Header="{app:Localized Key=SystemMetersIntervalHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE916;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        MinWidth="200"
-                        AutomationProperties.Name="{app:Localized Key=SystemMetersIntervalHeader}"
-                        ItemsSource="{x:Bind ViewModel.IntervalOptions}"
-                        SelectedItem="{x:Bind ViewModel.SelectedInterval, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:IntervalOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Glyph="&#xE916;"
+                    Header="{app:Localized Key=SystemMetersIntervalHeader}"
+                    ItemsSource="{x:Bind ViewModel.IntervalOptions}"
+                    SelectedItem="{x:Bind ViewModel.SelectedInterval, Mode=TwoWay}" />
 
                 <InfoBar
                     Margin="0,16,0,0"

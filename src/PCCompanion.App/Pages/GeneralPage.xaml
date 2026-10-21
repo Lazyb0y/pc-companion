@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
     xmlns:controls="using:PCCompanion.App.Controls"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
-    xmlns:viewModels="using:PCCompanion.App.ViewModels">
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
     <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
     <ScrollViewer HorizontalScrollMode="Disabled">
@@ -33,37 +32,19 @@
                     Message="{app:Localized Key=GeneralSaveFailed}"
                     Severity="Error" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=GeneralLanguageDescription}" Header="{app:Localized Key=GeneralLanguageHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF2B7;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        AutomationProperties.Name="{app:Localized Key=GeneralLanguageHeader}"
-                        ItemsSource="{x:Bind ViewModel.Languages}"
-                        SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:LanguageOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=GeneralLanguageDescription}"
+                    Glyph="&#xF2B7;"
+                    Header="{app:Localized Key=GeneralLanguageHeader}"
+                    ItemsSource="{x:Bind ViewModel.Languages}"
+                    SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=GeneralThemeDescription}" Header="{app:Localized Key=GeneralThemeHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE790;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        AutomationProperties.Name="{app:Localized Key=GeneralThemeHeader}"
-                        ItemsSource="{x:Bind ViewModel.Themes}"
-                        SelectedItem="{x:Bind ViewModel.SelectedTheme, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:ThemeOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=GeneralThemeDescription}"
+                    Glyph="&#xE790;"
+                    Header="{app:Localized Key=GeneralThemeHeader}"
+                    ItemsSource="{x:Bind ViewModel.Themes}"
+                    SelectedItem="{x:Bind ViewModel.SelectedTheme, Mode=TwoWay}" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=GeneralStartupDescription}"

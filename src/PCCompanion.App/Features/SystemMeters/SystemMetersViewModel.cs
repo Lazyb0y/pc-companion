@@ -2,19 +2,20 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using PCCompanion.App.ViewModels;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.SystemMeters;
 
-public sealed record ShowOnOption(ShowOn ShowOn, string DisplayName);
+public sealed record ShowOnOption(ShowOn ShowOn, string DisplayName) : Choice(DisplayName);
 
-public sealed record LayoutOption(StripLayout Layout, string DisplayName);
+public sealed record LayoutOption(StripLayout Layout, string DisplayName) : Choice(DisplayName);
 
-public sealed record IconsOption(StripIcons Icons, string DisplayName);
+public sealed record IconsOption(StripIcons Icons, string DisplayName) : Choice(DisplayName);
 
-public sealed record IntervalOption(int Seconds, string DisplayName);
+public sealed record IntervalOption(int Seconds, string DisplayName) : Choice(DisplayName);
 
 /// <summary>
 /// The System Meters page. Every change is saved right away.

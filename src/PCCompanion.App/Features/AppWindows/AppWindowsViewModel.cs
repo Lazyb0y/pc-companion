@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.AppWindows;
@@ -9,7 +10,7 @@ using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.AppWindows;
 
-public sealed record ShortcutOption(AppWindowsShortcut Shortcut, string DisplayName);
+public sealed record ShortcutOption(AppWindowsShortcut Shortcut, string DisplayName) : Choice(DisplayName);
 
 /// <summary>
 /// The App Windows page. Every change is saved right away.
