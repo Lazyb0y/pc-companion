@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Logging;
@@ -40,26 +39,13 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
             return;
         }
 
-        var startInfo = new ProcessStartInfo(program!)
+        if (ProgramFile.TryStart(program!, CommandLine.SplitArguments(corner.Arguments), start, out var errorCode))
         {
-            UseShellExecute = false,
-            WorkingDirectory = Path.GetDirectoryName(program),
-        };
-
-        foreach (var argument in CommandLine.SplitArguments(corner.Arguments))
-        {
-            startInfo.ArgumentList.Add(argument);
-        }
-
-        try
-        {
-            start(startInfo);
             LogStarted(logger, fileName);
         }
-        catch (Win32Exception exception)
+        else
         {
-            // Not logged with the exception, whose message includes the program's folder.
-            LogCantStart(logger, fileName, exception.NativeErrorCode);
+            LogCantStart(logger, fileName, errorCode);
         }
     }
 

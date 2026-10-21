@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 
 namespace PCCompanion.Platform.Windows;
@@ -45,5 +48,41 @@ public static class ProgramFile
         }
 
         return fileExists(program) ? ProgramProblem.None : ProgramProblem.NotFound;
+    }
+
+    /// <summary>
+    /// Starts <paramref name="program"/>, a checked full path, in its own folder, with
+    /// <paramref name="arguments"/> passed one by one and no shell. Returns false, with Windows'
+    /// error code, when Windows couldn't start it; the error's message isn't given, since it
+    /// includes the program's folder.
+    /// </summary>
+    /// <param name="start">Starts a process.</param>
+    public static bool TryStart(string program, IEnumerable<string> arguments, Action<ProcessStartInfo> start, out int errorCode)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+        ArgumentNullException.ThrowIfNull(start);
+
+        var startInfo = new ProcessStartInfo(program)
+        {
+            UseShellExecute = false,
+            WorkingDirectory = Path.GetDirectoryName(program),
+        };
+
+        foreach (var argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+
+        try
+        {
+            start(startInfo);
+            errorCode = 0;
+            return true;
+        }
+        catch (Win32Exception exception)
+        {
+            errorCode = exception.NativeErrorCode;
+            return false;
+        }
     }
 }
