@@ -11,5 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PCCompanion.Modules.Desktop\PCCompanion.Modules.Desktop.csproj" />
+    <ProjectReference Include="..\PCCompanion.Testing\PCCompanion.Testing.csproj" />
   </ItemGroup>
 </Project>

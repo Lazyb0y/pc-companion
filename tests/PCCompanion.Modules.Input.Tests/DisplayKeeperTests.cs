@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;

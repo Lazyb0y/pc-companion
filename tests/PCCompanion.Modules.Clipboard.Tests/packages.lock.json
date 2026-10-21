@@ -148,6 +148,12 @@
       "pccompanion.platform.windows": {
         "type": "Project"
       },
+      "pccompanion.testing": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",
         "requested": "[10.0.13, )",

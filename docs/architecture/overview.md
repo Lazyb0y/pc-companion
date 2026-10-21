@@ -51,7 +51,7 @@
 
 - `PCCompanion.slnx`: the solution, at the repository root.
 - `src/<Project>/`: projects.
-- `tests/`: test projects.
+- `tests/`: test projects, and `PCCompanion.Testing` with the test doubles and helpers they share.
 - `docs/`: documentation.
 - `website/`: the project website; see [Website](../development/website.md).
 - `scripts/`: PowerShell scripts for development: checks before a pull request, Windows Sandbox tests, installer inspection and the website's screenshots. See [Build](../development/build.md), [Testing](../development/testing.md), [Packaging](../development/packaging.md) and [Website](../development/website.md#screenshots).
@@ -86,7 +86,8 @@ Enforced by `PCCompanion.Architecture.Tests`.
 | `PCCompanion.Elevated` | Core, Infrastructure, Logging, Platform.Windows |
 | `PCCompanion.Host`, `PCCompanion.App` | The projects above; never each other |
 | `*.Tests` | Any project except App and Host |
+| `PCCompanion.Testing` | No other project |
 
-- Nothing references `PCCompanion.App`, `PCCompanion.Host` or a test project.
+- Nothing references `PCCompanion.App`, `PCCompanion.Host` or a test project, and only test projects reference `PCCompanion.Testing`.
 - Project references never form a cycle, and every project is in the solution.
 - A new project needs a rule here and in the tests.

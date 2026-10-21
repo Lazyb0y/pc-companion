@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;

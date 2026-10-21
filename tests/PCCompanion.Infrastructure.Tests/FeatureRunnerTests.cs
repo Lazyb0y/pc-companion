@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Features;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;

@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace PCCompanion.Modules.Desktop.Tests;
+namespace PCCompanion.Testing;
 
 /// <summary>
 /// Keeps the level and message of every log entry, from any thread.
 /// </summary>
-internal sealed class RecordingLogger<T> : ILogger<T>
+public sealed class RecordingLogger<T> : ILogger<T>
 {
     private readonly List<(LogLevel Level, string Message)> _entries = [];
 

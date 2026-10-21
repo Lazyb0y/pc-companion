@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Platform.Windows;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Clipboard.Tests;

@@ -20,6 +20,9 @@ internal static class DependencyRules
     private const string ModulePrefix = "PCCompanion.Modules.";
     private const string TestSuffix = ".Tests";
 
+    // The test doubles and helpers that test projects share; nothing else may reference them.
+    private const string Testing = "PCCompanion.Testing";
+
     private static readonly Dictionary<string, string[]> SharedProjects = new(StringComparer.OrdinalIgnoreCase)
     {
         [Core] = [],
@@ -32,8 +35,10 @@ internal static class DependencyRules
 
     private static readonly string[] ModuleReferences = [Core, PlatformWindows, Localization];
 
+    private static readonly string[] TestingReferences = [];
+
     public static bool IsKnown(string project) =>
-        SharedProjects.ContainsKey(project) || IsModule(project) || IsEntryPoint(project) || IsTest(project);
+        SharedProjects.ContainsKey(project) || IsModule(project) || IsEntryPoint(project) || IsTest(project) || IsTesting(project);
 
     public static bool IsAllowed(string project, string reference)
     {
@@ -45,6 +50,16 @@ internal static class DependencyRules
         if (IsTest(project))
         {
             return true;
+        }
+
+        if (IsTesting(reference))
+        {
+            return false;
+        }
+
+        if (IsTesting(project))
+        {
+            return TestingReferences.Contains(reference, StringComparer.OrdinalIgnoreCase);
         }
 
         if (IsEntryPoint(project))
@@ -63,4 +78,6 @@ internal static class DependencyRules
     private static bool IsModule(string project) => project.StartsWith(ModulePrefix, StringComparison.OrdinalIgnoreCase);
 
     private static bool IsTest(string project) => project.EndsWith(TestSuffix, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsTesting(string project) => string.Equals(project, Testing, StringComparison.OrdinalIgnoreCase);
 }

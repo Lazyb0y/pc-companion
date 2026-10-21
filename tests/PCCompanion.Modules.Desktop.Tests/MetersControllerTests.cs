@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Platform.Windows;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Desktop.Tests;

@@ -11,5 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PCCompanion.Modules.Clipboard\PCCompanion.Modules.Clipboard.csproj" />
+    <ProjectReference Include="..\PCCompanion.Testing\PCCompanion.Testing.csproj" />
   </ItemGroup>
 </Project>
