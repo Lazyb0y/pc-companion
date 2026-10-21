@@ -16,7 +16,7 @@ public sealed class DisplayKeeperTests
     private static readonly Point BottomRight = new(1919, 1079);
 
     private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
-    private readonly ManualClock _clock = new();
+    private readonly ManualTimeProvider _clock = new();
     private readonly RecordingLogger<DisplayKeeper> _logger = new();
     private readonly CornerDetector _detector;
     private readonly DisplayKeeper _keeper;

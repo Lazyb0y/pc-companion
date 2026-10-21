@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;
@@ -14,7 +15,7 @@ public sealed class CornerDetectorTests
     private static readonly Point TopLeft = new(0, 0);
 
     private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
-    private readonly ManualClock _clock = new();
+    private readonly ManualTimeProvider _clock = new();
     private readonly CornerDetector _detector;
 
     public CornerDetectorTests()

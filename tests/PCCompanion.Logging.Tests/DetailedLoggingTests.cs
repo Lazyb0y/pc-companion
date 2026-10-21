@@ -1,4 +1,5 @@
 using System;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Logging.Tests;
