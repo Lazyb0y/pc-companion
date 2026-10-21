@@ -1,6 +1,6 @@
 # Update check
 
-Once a day, PC Companion asks GitHub whether a newer version is out, and **Check now** on the General page asks at once. When there is one, a notification and a banner on the General page open its release page, where the user downloads and installs it.
+Once a day, PC Companion asks GitHub whether a newer version is out, and **Check now** on the General page asks at once. When there is one, a notification and a banner on the General page open its release page, where the user downloads and installs it. Until the user opens the General page, a badge on its item in the navigation pane points there.
 
 - Setting on the General page. On by default. Issues: [#83](https://github.com/Lazyb0y/pc-companion/issues/83), and [#113](https://github.com/Lazyb0y/pc-companion/issues/113) for **Check now**.
 - Not included: downloading or installing updates. The user installs the new version by hand, from its release page.
@@ -31,9 +31,10 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 
 ## The result
 
-- The host saves it to `update-check.json` in the data folder, writing `update-check.json.tmp` and then replacing the file, as the settings store does. The settings app saves it too, after **Check now**. `settings.json` stays the settings app's alone. The settings app reads the result for the banner and the update status.
+- The host saves it to `update-check.json` in the data folder, writing `update-check.json.tmp` and then replacing the file, as the settings store does. The settings app saves it too, after **Check now** and when the General page shows a new version. `settings.json` stays the settings app's alone. The settings app reads the result for the banner, the badge and the update status.
 - If the host and the settings app save at the same moment, one of the two saves fails and is logged; the next check saves again.
-- `lastCheck` is when GitHub last answered, `latestVersion` the newest version it named, and `notifiedVersion` the last version the notification showed. An answer without a usable version keeps `latestVersion`; no release (404) clears it.
+- Each save changes only its own values and reads the file again just before writing, so a check that waits for GitHub's answer doesn't undo a `seenVersion` saved in the meantime.
+- `lastCheck` is when GitHub last answered, `latestVersion` the newest version it named, `notifiedVersion` the last version the notification showed, and `seenVersion` the last version the General page showed. An answer without a usable version keeps `latestVersion`; no release (404) clears it.
 - A file that's missing, over 4 KB or can't be read counts as no check yet, and is replaced at the next save.
 - A result that can't be saved still counts as the day's check until the host stops, so the host doesn't ask every hour.
 - It's a cache: uninstalling removes it, also with **Keep my settings**.
@@ -42,7 +43,8 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 {
   "lastCheck": "2026-10-20T09:14:00+00:00",
   "latestVersion": "0.2.0",
-  "notifiedVersion": "0.2.0"
+  "notifiedVersion": "0.2.0",
+  "seenVersion": "0.2.0"
 }
 ```
 
@@ -59,6 +61,16 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 - While the check is on and `latestVersion` is newer than the running version, the General page shows a banner at the top: "PC Companion 0.2.0 is available. You have version 0.1.0.", with **Open release page**, which opens the same page. A newer version that **Check now** found shows it too, also with the check off, until the page closes.
 - It can't be closed. It goes away once the new version is installed, or when the check is turned off.
 - The page reads the result when it opens and watches the file while it's open, so the banner appears as soon as the host saves a newer version.
+
+## Badge
+
+- The banner is on a page the user seldom opens, so a badge on the General item in the navigation pane points to it: WinUI's dot `InfoBadge` in the accent color (`AttentionDotInfoBadgeStyle`), which Microsoft recommends for showing that updates are available.
+- It shows while the check is on and `latestVersion` is newer than the running version and than `seenVersion`: a version the General page hasn't shown yet. With the check off it doesn't show, as the banner doesn't; a version that **Check now** finds is already on the open page.
+- When the General page shows a version in its banner, as the page opens or as a newer version arrives while it's open, the settings app saves that version as `seenVersion` and the badge goes away. It comes back for the next version. The banner stays until the version is installed, or until the check is turned off.
+- The window reads the result when it opens and watches the file while it's open, as the General page does, so the badge appears as soon as the host saves a newer version, and goes away when the check is turned off.
+- When `seenVersion` can't be saved, or the settings app runs as administrator through UAC, where it never saves the result, the badge stays away until the window closes and shows again the next time it opens.
+- While the window is narrower than 1,008 pixels, the pane folds away behind its button, so the badge is seen once the pane opens. WinUI has no badge for that button.
+- macOS System Settings also puts a badge on General, but keeps it until the update is installed, which users complain about and hide with Terminal commands. As Microsoft's guidance for badges asks, this one goes away once seen, and the banner is what stays.
 
 ## Check now
 
@@ -122,19 +134,21 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 - **Untrusted answer:** at most 1 MB, read with System.Text.Json source generation; only `tag_name` is used, with the strict pattern above. The version is rebuilt from its numbers before it's shown, saved or logged.
 - **Opens:** only `https://github.com/Lazyb0y/pc-companion/releases/latest`. Nothing from the answer becomes an address, a path or a command line.
 - **Rights:** the request, reading the answer and the browser never run with admin rights; see [While the host runs as administrator](#while-the-host-runs-as-administrator) and [Check now](#check-now).
-- **The result file:** any program running as the user can change `update-check.json`, so it's read as untrusted, and at most 4 KB of it. A changed file can at most show a wrong version; **Open release page** still opens the real page.
+- **The result file:** any program running as the user can change `update-check.json`, so it's read as untrusted, and at most 4 KB of it. A changed file can at most show a wrong version, or show or hide the badge; **Open release page** still opens the real page.
 - **Failures:** the check runs on the thread pool and catches its errors, so a failed check never stops the host or its features.
 
 ## Performance
 
 - Between checks, only the hourly timer runs. A check is one small request.
 - **Check now** runs off the settings window's thread, so the window keeps answering while GitHub does.
+- The badge adds no timer: the window reads the result, at most 4 KB, when it opens and when the file changes.
 
 ## Accessibility and localization
 
 - The strings are in `Strings.resx` and translated like the others. The notification uses the host's language.
 - Versions are shown as written, such as `0.2.0`, in every language.
 - The banner's message and button are read by screen readers, and the switch is named after its header.
+- The badge itself isn't read, so while it shows, the General item's status (`AutomationProperties.ItemStatus`) is "PC Companion 0.3.0 is available", which screen readers read with the item's name.
 - The update status is a live region: screen readers announce it when it changes, such as when **Check now** finishes.
 
 | Key | English | Where |
@@ -148,7 +162,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 | `GeneralUpdateCheckNow` | Check now | Button |
 | `GeneralUpdateStatusNotChecked` | Not checked for updates yet | Status |
 | `GeneralUpdateStatusUpToDate` | You have the latest version | Status |
-| `GeneralUpdateStatusAvailable` | PC Companion {0} is available | Status; {0} is the new version. |
+| `GeneralUpdateStatusAvailable` | PC Companion {0} is available | Status, and the General item's status while the badge shows; {0} is the new version. |
 | `GeneralUpdateStatusChecking` | Checking for updates… | Status |
 | `GeneralUpdateStatusNoAnswer` | Can't reach GitHub | Status |
 | `GeneralUpdateStatusNoAnswerHint` | Check your internet connection, then try again. | Below the status |
@@ -166,8 +180,9 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
   - the schedule: 2 minutes after start, 24 hours after an answer, a last check in the future, and turning the setting on and off;
   - the notification once per version, also after a restart;
   - the result file: missing, unreadable and over 4 KB;
-  - when the banner shows;
+  - when the banner and the badge show, and saving the version the banner shows as `seenVersion`;
+  - a save keeping the values it doesn't change, such as a check that ends after `seenVersion` was saved;
   - when the host hands the check to a copy without admin rights;
   - **Check now**: asking when a check isn't due, what it found, saving a newer version as shown, and keeping the latest version after an error status.
-- **Sandbox checks** (`scripts/sandbox/groups/Updates.ps1`): networking stays off. Through the hosts file, `api.github.com` leads to an HTTPS server in the Sandbox, with a certificate whose root is trusted only there. Starting with the check off, the group turns it on and checks: one request, with exactly the expected headers; the saved result; that Windows took the notification; the banner with both versions; selecting the notification starting a browser with the release page; and turning the check off hiding the banner. Then, with the check off, **Check now**: the status from the saved result; the same request, finding this version up to date; a newer version showing the banner without a notification; a rate limit; and no answer. Windows didn't show the notification in the Sandbox, likely because of quiet time for the new user it signs in, so whether it appears is checked by hand.
-- **By hand:** on a real network, behind a proxy, with **Do not disturb** on, and with Always run as administrator on a PC with UAC on, where Task Manager shows the browser running without admin rights. The notification appears under the name PC Companion, stays in the notification center, and selecting it there opens the release page.
+- **Sandbox checks** (`scripts/sandbox/groups/Updates.ps1`): networking stays off. Through the hosts file, `api.github.com` leads to an HTTPS server in the Sandbox, with a certificate whose root is trusted only there. Starting with the check off, the group turns it on and checks: one request, with exactly the expected headers; the saved result; that Windows took the notification; the banner with both versions; selecting the notification starting a browser with the release page; and turning the check off hiding the banner. Then, with the check off, **Check now**: the status from the saved result; the same request, finding this version up to date; a newer version showing the banner without a notification; a rate limit; and no answer. Windows didn't show the notification in the Sandbox, likely because of quiet time for the new user it signs in, so whether it appears is checked by hand. The badge: the General item's status with a newer version saved, its going away once General opens and the version saved as seen, and its staying away after the settings app starts again.
+- **By hand:** on a real network, behind a proxy, with **Do not disturb** on, and with Always run as administrator on a PC with UAC on, where Task Manager shows the browser running without admin rights. The notification appears under the name PC Companion, stays in the notification center, and selecting it there opens the release page. The badge in light, dark and high contrast themes, and Narrator reading the General item's status.
