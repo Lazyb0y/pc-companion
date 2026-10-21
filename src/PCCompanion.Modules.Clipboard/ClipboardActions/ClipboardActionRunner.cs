@@ -1,9 +1,9 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
@@ -53,26 +53,13 @@ public sealed partial class ClipboardActionRunner(IHostCommands commands, Func<b
             return;
         }
 
-        var startInfo = new ProcessStartInfo(offer.Program)
+        if (ProgramFile.TryStart(offer.Program, offer.Arguments ?? [], start, out var errorCode))
         {
-            UseShellExecute = false,
-            WorkingDirectory = Path.GetDirectoryName(offer.Program),
-        };
-
-        foreach (var argument in offer.Arguments ?? [])
-        {
-            startInfo.ArgumentList.Add(argument);
-        }
-
-        try
-        {
-            start(startInfo);
             LogStarted(logger, offer.Rule, fileName);
         }
-        catch (Win32Exception exception)
+        else
         {
-            // Not logged with the exception, whose message includes the program's folder.
-            LogCantStart(logger, fileName, exception.NativeErrorCode);
+            LogCantStart(logger, fileName, errorCode);
         }
     }
 
