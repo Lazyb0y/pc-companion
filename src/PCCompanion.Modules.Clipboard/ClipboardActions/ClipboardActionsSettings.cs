@@ -59,7 +59,7 @@ public sealed record ClipboardRule
 /// <summary>
 /// Clipboard Actions settings, stored in <c>features.clipboardActions</c>. See docs/features/clipboard/clipboard-actions.md.
 /// </summary>
-public sealed record ClipboardActionsSettings
+public sealed record ClipboardActionsSettings : IFeatureSettings<ClipboardActionsSettings>
 {
     /// <summary>The most rules the menu uses; later ones are left out.</summary>
     public const int MaximumRules = 50;
@@ -79,6 +79,8 @@ public sealed record ClipboardActionsSettings
         FeatureSettings.Read(section, ClipboardActionsJsonContext.Default.ClipboardActionsSettings, () => new ClipboardActionsSettings());
 
     public JsonElement Write() => FeatureSettings.Write(this, ClipboardActionsJsonContext.Default.ClipboardActionsSettings);
+
+    public ClipboardActionsSettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 
     // Compares the rules one by one, not the lists, so the same settings read twice are equal.
     public bool Equals(ClipboardActionsSettings? other) =>

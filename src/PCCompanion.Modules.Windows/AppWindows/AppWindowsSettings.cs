@@ -6,7 +6,7 @@ namespace PCCompanion.Modules.Windows.AppWindows;
 /// <summary>
 /// App Windows settings, stored in <c>features.appWindows</c>. See docs/features/windows/app-windows.md.
 /// </summary>
-public sealed record AppWindowsSettings
+public sealed record AppWindowsSettings : IFeatureSettings<AppWindowsSettings>
 {
     public bool Enabled { get; set; }
 
@@ -26,4 +26,6 @@ public sealed record AppWindowsSettings
         FeatureSettings.Read(section, AppWindowsJsonContext.Default.AppWindowsSettings, () => new AppWindowsSettings());
 
     public JsonElement Write() => FeatureSettings.Write(this, AppWindowsJsonContext.Default.AppWindowsSettings);
+
+    public AppWindowsSettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 }
