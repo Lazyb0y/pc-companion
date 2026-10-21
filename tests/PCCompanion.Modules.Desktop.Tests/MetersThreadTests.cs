@@ -13,14 +13,11 @@ namespace PCCompanion.Modules.Desktop.Tests;
 public sealed class MetersThreads;
 
 // Each test runs the meters thread with its own hidden window and a real timer, and fake icons,
-// so nothing shows on the taskbar, no menu opens and Task Manager doesn't start.
+// so nothing shows on the taskbar, no menu opens and Task Manager doesn't start. The session's lock
+// and the displays' state are fakes too, so the meters run whether or not the PC's screen is on.
 [Collection(nameof(MetersThreads))]
 public sealed class MetersThreadTests : IDisposable
 {
-    private const uint SessionChangeMessage = 0x02B1; // WM_WTSSESSION_CHANGE
-    private const nuint SessionLock = 0x7;
-    private const nuint SessionUnlock = 0x8;
-
     private static readonly SystemMetersSettings AllMeters = new() { Enabled = true };
 
     private readonly FakeMetersSystem _system = new();
@@ -120,12 +117,27 @@ public sealed class MetersThreadTests : IDisposable
         Start(AllMeters);
         Assert.True(_system.WaitUntil(system => system.Updates >= 1));
 
-        _system.Window!.Post(SessionChangeMessage, SessionLock);
+        _system.Pauses!.Lock();
         Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("System Meters paused: True", StringComparison.Ordinal))));
         var updates = _system.Updates;
         Assert.False(_system.WaitUntil(system => system.Updates > updates, TimeSpan.FromSeconds(1.5)));
 
-        _system.Window.Post(SessionChangeMessage, SessionUnlock);
+        _system.Pauses.Unlock();
+        Assert.True(_system.WaitUntil(system => system.Updates > updates));
+    }
+
+    [Fact]
+    public void UpdatesPauseWhileTheDisplaysAreOff()
+    {
+        Start(AllMeters);
+        Assert.True(_system.WaitUntil(system => system.Updates >= 1));
+
+        _system.Pauses!.TurnDisplaysOff();
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("System Meters paused: True", StringComparison.Ordinal))));
+        var updates = _system.Updates;
+        Assert.False(_system.WaitUntil(system => system.Updates > updates, TimeSpan.FromSeconds(1.5)));
+
+        _system.Pauses.TurnDisplaysOn();
         Assert.True(_system.WaitUntil(system => system.Updates > updates));
     }
 

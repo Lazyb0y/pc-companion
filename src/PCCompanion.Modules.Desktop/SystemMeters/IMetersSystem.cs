@@ -38,11 +38,29 @@ public interface IMetersSystem
     /// <summary>Creates the strip's window and starts watching the taskbar, on the meters thread's window.</summary>
     IStripHost CreateStripHost(MessageWindow window);
 
+    /// <summary>Starts watching what pauses the meters, on the meters thread's window.</summary>
+    IMeterPauses WatchPauses(MessageWindow window);
+
     /// <summary>Returns false when Windows refused.</summary>
     bool OpenTaskManager();
 
     /// <summary>Shows the meters' menu at a screen point and returns the command chosen.</summary>
     MeterMenuCommand ShowMenu(MessageWindow window, int x, int y);
+}
+
+/// <summary>
+/// What pauses the meters: the session locked or the displays off, from Windows or fakes in tests.
+/// Raised on the meters thread; the displays' state is reported once right after watching starts.
+/// </summary>
+public interface IMeterPauses : IDisposable
+{
+    event EventHandler? Locked;
+
+    event EventHandler? Unlocked;
+
+    event EventHandler? DisplaysOff;
+
+    event EventHandler? DisplaysOn;
 }
 
 /// <summary>How the meters look now, which follows Windows' settings.</summary>

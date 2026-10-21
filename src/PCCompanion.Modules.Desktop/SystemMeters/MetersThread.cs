@@ -241,8 +241,7 @@ public sealed partial class MetersThread
         private readonly MetersThread _owner;
         private readonly IMeterIcons? _icons;
         private readonly MetersController? _controller;
-        private readonly SessionMonitor? _sessions;
-        private readonly DisplayStateMonitor? _displays;
+        private readonly IMeterPauses? _pauses;
         private CoalescableTimer? _timer;
         private TimeSpan _timerInterval;
         private SystemMetersSettings? _settings;
@@ -260,14 +259,12 @@ public sealed partial class MetersThread
                 _icons.MenuRequested += (_, e) => owner.Guard(() => owner.ShowMenu(Window, e.X, e.Y));
                 _controller = new MetersController(owner._system.Readings, owner._system.Appearance, _icons, CreateStrip, owner._time, owner._logger);
 
-                _sessions = new SessionMonitor(Window);
-                _sessions.Locked += (_, _) => owner.Guard(() => SetPaused(locked: true, _displaysOff));
-                _sessions.Unlocked += (_, _) => owner.Guard(() => SetPaused(locked: false, _displaysOff));
-
                 // It reports the displays' state at once.
-                _displays = new DisplayStateMonitor(Window);
-                _displays.TurnedOff += (_, _) => owner.Guard(() => SetPaused(_locked, displaysOff: true));
-                _displays.TurnedOn += (_, _) => owner.Guard(() => SetPaused(_locked, displaysOff: false));
+                _pauses = owner._system.WatchPauses(Window);
+                _pauses.Locked += (_, _) => owner.Guard(() => SetPaused(locked: true, _displaysOff));
+                _pauses.Unlocked += (_, _) => owner.Guard(() => SetPaused(locked: false, _displaysOff));
+                _pauses.DisplaysOff += (_, _) => owner.Guard(() => SetPaused(_locked, displaysOff: true));
+                _pauses.DisplaysOn += (_, _) => owner.Guard(() => SetPaused(_locked, displaysOff: false));
             }
             catch
             {
@@ -299,8 +296,7 @@ public sealed partial class MetersThread
             _timer?.Dispose();
             _controller?.Dispose();
             _icons?.Dispose();
-            _displays?.Dispose();
-            _sessions?.Dispose();
+            _pauses?.Dispose();
             Window.Dispose();
         }
 

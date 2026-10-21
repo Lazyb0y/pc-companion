@@ -25,6 +25,8 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
     public IStripHost CreateStripHost(MessageWindow window) => new WindowsStripHost(window);
 
+    public IMeterPauses WatchPauses(MessageWindow window) => new WindowsMeterPauses(window);
+
     public bool OpenTaskManager() => ShellActions.OpenTaskManager();
 
     // The menu follows the Windows mode and the language, as the PC Companion icon's menu does.
@@ -63,6 +65,46 @@ internal sealed class WindowsMetersSystem : IMetersSystem
             WindowsTheme.IsHighContrast() ? WindowsTheme.TextColor() : WindowsTheme.IsDark() ? White : Black;
 
         public bool IsHighContrast() => WindowsTheme.IsHighContrast();
+    }
+
+    // The session's lock and the displays' state, from Windows' notifications to the meters' window.
+    private sealed class WindowsMeterPauses : IMeterPauses
+    {
+        private readonly SessionMonitor _sessions;
+        private readonly DisplayStateMonitor _displays;
+
+        public WindowsMeterPauses(MessageWindow window)
+        {
+            _sessions = new SessionMonitor(window);
+            try
+            {
+                _displays = new DisplayStateMonitor(window);
+            }
+            catch
+            {
+                _sessions.Dispose();
+                throw;
+            }
+
+            _sessions.Locked += (_, e) => Locked?.Invoke(this, e);
+            _sessions.Unlocked += (_, e) => Unlocked?.Invoke(this, e);
+            _displays.TurnedOff += (_, e) => DisplaysOff?.Invoke(this, e);
+            _displays.TurnedOn += (_, e) => DisplaysOn?.Invoke(this, e);
+        }
+
+        public event EventHandler? Locked;
+
+        public event EventHandler? Unlocked;
+
+        public event EventHandler? DisplaysOff;
+
+        public event EventHandler? DisplaysOn;
+
+        public void Dispose()
+        {
+            _displays.Dispose();
+            _sessions.Dispose();
+        }
     }
 
     // An icon per meter, with fixed IDs after the PC Companion icon's, so Windows keeps each in its place.
