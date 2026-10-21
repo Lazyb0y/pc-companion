@@ -36,12 +36,11 @@
                     </ComboBox>
                 </toolkit:SettingsCard>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=AppWindowsMinimizedDescription}" Header="{app:Localized Key=AppWindowsMinimizedHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE921;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=AppWindowsMinimizedHeader}" IsOn="{x:Bind ViewModel.IncludeMinimized, Mode=TwoWay}" />
-                </toolkit:SettingsCard>
+                <controls:SwitchCard
+                    Description="{app:Localized Key=AppWindowsMinimizedDescription}"
+                    Glyph="&#xE921;"
+                    Header="{app:Localized Key=AppWindowsMinimizedHeader}"
+                    IsOn="{x:Bind ViewModel.IncludeMinimized, Mode=TwoWay}" />
 
                 <InfoBar
                     Margin="0,16,0,0"

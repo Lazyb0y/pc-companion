@@ -26,12 +26,11 @@
                     <TextBlock Text="{app:Localized Key=ClipboardActionsShortcut}" />
                 </toolkit:SettingsCard>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=ClipboardActionsOpenLinksDescription}" Header="{app:Localized Key=ClipboardActionsOpenLinksHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE71B;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=ClipboardActionsOpenLinksHeader}" IsOn="{x:Bind ViewModel.OpenLinks, Mode=TwoWay}" />
-                </toolkit:SettingsCard>
+                <controls:SwitchCard
+                    Description="{app:Localized Key=ClipboardActionsOpenLinksDescription}"
+                    Glyph="&#xE71B;"
+                    Header="{app:Localized Key=ClipboardActionsOpenLinksHeader}"
+                    IsOn="{x:Bind ViewModel.OpenLinks, Mode=TwoWay}" />
 
                 <Grid Margin="0,24,0,4" ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
