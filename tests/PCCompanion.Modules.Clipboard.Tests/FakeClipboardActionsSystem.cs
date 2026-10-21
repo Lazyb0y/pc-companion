@@ -2,21 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Threading;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Platform.Windows;
+using PCCompanion.Testing;
 
 namespace PCCompanion.Modules.Clipboard.Tests;
 
 /// <summary>
 /// Clipboard Actions' Windows parts, recorded instead of used: no shortcut is registered, the
 /// clipboard isn't read, no menu opens and no program starts. It may be used from the feature's
-/// thread while a test waits for it with <see cref="WaitUntil"/>.
+/// thread while a test waits for it. Its events are what happened, such as "register", "read",
+/// "menu", "allow front" or "dispose shortcut".
 /// </summary>
-internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
+internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardActionsSystem>, IClipboardActionsSystem
 {
-    private readonly object _gate = new();
-    private readonly List<string> _events = [];
     private readonly List<IReadOnlyList<PopupMenuItem>> _menus = [];
 
     public bool IsAdministrator { get; set; }
@@ -36,24 +35,12 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
     /// <summary>The shortcut registered last.</summary>
     public FakeShortcut? Shortcut { get; private set; }
 
-    /// <summary>What happened, such as "register", "read", "menu", "allow front" or "dispose shortcut", in order.</summary>
-    public IReadOnlyList<string> Events
-    {
-        get
-        {
-            lock (_gate)
-            {
-                return [.. _events];
-            }
-        }
-    }
-
     /// <summary>The items of each menu shown.</summary>
     public IReadOnlyList<IReadOnlyList<PopupMenuItem>> Menus
     {
         get
         {
-            lock (_gate)
+            lock (Gate)
             {
                 return [.. _menus];
             }
@@ -70,10 +57,10 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
             return null;
         }
 
-        lock (_gate)
+        lock (Gate)
         {
             Shortcut = new FakeShortcut(this, window);
-            Monitor.PulseAll(_gate);
+            Changed();
             return Shortcut;
         }
     }
@@ -88,7 +75,7 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
 
     public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position)
     {
-        lock (_gate)
+        lock (Gate)
         {
             _menus.Add(items);
         }
@@ -111,7 +98,7 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
 
     public void StartProcess(ProcessStartInfo startInfo)
     {
-        lock (_gate)
+        lock (Gate)
         {
             Started.Add(startInfo);
         }
@@ -125,36 +112,6 @@ internal sealed class FakeClipboardActionsSystem : IClipboardActionsSystem
     {
         action();
         Record("background");
-    }
-
-    /// <summary>Waits until <paramref name="condition"/> holds, up to <paramref name="timeout"/> or 10 seconds.</summary>
-    public bool WaitUntil(Func<FakeClipboardActionsSystem, bool> condition, TimeSpan? timeout = null)
-    {
-        var deadline = Environment.TickCount64 + (long)(timeout ?? TimeSpan.FromSeconds(10)).TotalMilliseconds;
-        lock (_gate)
-        {
-            while (!condition(this))
-            {
-                var left = deadline - Environment.TickCount64;
-                if (left <= 0)
-                {
-                    return false;
-                }
-
-                Monitor.Wait(_gate, TimeSpan.FromMilliseconds(Math.Min(left, 100)));
-            }
-
-            return true;
-        }
-    }
-
-    public void Record(string happened)
-    {
-        lock (_gate)
-        {
-            _events.Add(happened);
-            Monitor.PulseAll(_gate);
-        }
     }
 
     /// <summary>The shortcut, pressed by the test on the feature's thread, as Windows would report it.</summary>
