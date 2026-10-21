@@ -17,6 +17,7 @@
 - Every section has `enabled`, `false` by default. A missing section means the feature is off with its defaults.
 - Only the settings app saves. The host loads the sections at startup and after every save.
 - `FeatureSettings` in Core reads and writes a section with the feature's JSON context. Home changes only `enabled`, with `FeatureSettings.SetEnabled`, so it needs no feature's format.
+- The settings record implements `IFeatureSettings<TSelf>` from Core: `Enabled`, `Read`, `Write` and `WithEnabled`, so code shared by every feature can read, turn on or off and save it.
 
 ## Running in the host
 
@@ -58,6 +59,7 @@ public interface IFeature : IDisposable
 - The navigation pane has a section per module with an item per feature, above **General**.
 - **Home** shows a card per feature: icon, name, description, on/off switch, and **Not available on this PC** when it isn't supported.
 - A feature page has a header (icon, name, description, on/off switch), then its settings in cards, then a **Permissions & data** card that says what the feature reads and changes. Every feature page uses the same header control, `Controls/FeatureHeader`, which also shows when a change on the page couldn't be saved. The icon and the switch are centered on the name's capital letters as they're drawn, at any text size: the name's box is trimmed to them (`TextLineBounds="Tight"`), with the same padding above and below.
+- A feature page's view model derives from `FeatureViewModel<TSettings>`, which reads the settings, saves each change right away and gives the header its icon, `IsOn` and `SaveFailed`. A setting's property changes it with `Change`, or calls `Save` itself.
 - The settings app maps each `FeatureInfo` to its page in one place, `Features/FeatureCatalog.cs`, which the navigation pane and Home are built from.
 - A feature class has a static `Definition` (its `FeatureInfo`) and `CurrentSupport`, so the settings app doesn't create the feature.
 
@@ -70,7 +72,7 @@ public interface IFeature : IDisposable
 ## Adding a feature
 
 1. Spec in `docs/features/<module>/<feature>.md`, including a security and privacy review and the threads its parts run on, approved before code.
-2. Feature class and settings in the module project; register it in the module's `Add<Module>Module`.
-3. Page in `src/PCCompanion.App/Features/<Feature>/` and an entry in `FeatureCatalog.cs`.
+2. Feature class and settings, an `IFeatureSettings<TSelf>` record, in the module project; register it in the module's `Add<Module>Module`.
+3. Page, with `FeatureHeader`, and its view model, a `FeatureViewModel<TSettings>`, in `src/PCCompanion.App/Features/<Feature>/`, and an entry in `FeatureCatalog.cs`.
 4. Strings with translations marked "Needs native review."
 5. Tests, Sandbox checks, docs, and `NOTICE.md` and `ThirdPartyNotices.txt` if a new package ships.

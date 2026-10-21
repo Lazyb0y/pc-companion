@@ -14,7 +14,7 @@
             <StackPanel Style="{StaticResource PageColumnStyle}">
                 <controls:FeatureHeader
                     Description="{app:Localized Key=AppWindowsDescription}"
-                    Glyph="{x:Bind local:AppWindowsViewModel.Glyph}"
+                    Glyph="{x:Bind ViewModel.Glyph}"
                     IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}"
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=AppWindowsName}" />

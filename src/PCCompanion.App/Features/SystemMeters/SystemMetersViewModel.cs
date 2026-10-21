@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
@@ -20,25 +19,21 @@ public sealed record IntervalOption(int Seconds, string DisplayName);
 /// <summary>
 /// The System Meters page. Every change is saved right away.
 /// </summary>
-public sealed partial class SystemMetersViewModel : ObservableObject
+public sealed partial class SystemMetersViewModel : FeatureViewModel<SystemMetersSettings>
 {
     // The choices for Update every, in seconds.
     private static readonly int[] Intervals = [1, 2, 5];
 
-    private readonly FeatureSettingsEditor _editor;
     private readonly ILogger<SystemMetersViewModel> _logger;
-    private SystemMetersSettings _settings;
     private ShowOnOption? _selectedShowOn;
     private LayoutOption? _selectedLayout;
     private IconsOption? _selectedIcons;
     private IntervalOption? _selectedInterval;
-    private bool _saveFailed;
 
     public SystemMetersViewModel(FeatureSettingsEditor editor, ILogger<SystemMetersViewModel> logger)
+        : base(editor, SystemMetersFeature.Definition)
     {
-        _editor = editor;
         _logger = logger;
-        _settings = editor.Read(SystemMetersFeature.Definition.Id, SystemMetersSettings.Read);
 
         ShowOnOptions =
         [
@@ -59,15 +54,13 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         ];
         IntervalOptions = [.. Intervals.Select(seconds => new IntervalOption(seconds, PluralStrings.Format("SystemMetersIntervalSeconds", seconds)))];
 
-        _selectedShowOn = ShowOnOptions.First(option => option.ShowOn == _settings.ShowOn);
-        _selectedLayout = LayoutOptions.First(option => option.Layout == _settings.Layout);
-        _selectedIcons = IconsOptions.First(option => option.Icons == _settings.Icons);
+        _selectedShowOn = ShowOnOptions.First(option => option.ShowOn == Settings.ShowOn);
+        _selectedLayout = LayoutOptions.First(option => option.Layout == Settings.Layout);
+        _selectedIcons = IconsOptions.First(option => option.Icons == Settings.Icons);
 
         // An interval the list doesn't offer, such as 3 written by hand, works and shows none chosen.
-        _selectedInterval = IntervalOptions.FirstOrDefault(option => option.Seconds == _settings.UpdateIntervalSeconds);
+        _selectedInterval = IntervalOptions.FirstOrDefault(option => option.Seconds == Settings.UpdateIntervalSeconds);
     }
-
-    public static string Glyph => SystemMetersFeature.Definition.Glyph;
 
     public IReadOnlyList<ShowOnOption> ShowOnOptions { get; }
 
@@ -77,56 +70,22 @@ public sealed partial class SystemMetersViewModel : ObservableObject
 
     public IReadOnlyList<IntervalOption> IntervalOptions { get; }
 
-    public bool IsOn
-    {
-        get => _settings.Enabled;
-        set
-        {
-            if (value != _settings.Enabled)
-            {
-                Save(_settings with { Enabled = value });
-                OnPropertyChanged();
-            }
-        }
-    }
-
     public bool Cpu
     {
-        get => _settings.Cpu;
-        set
-        {
-            if (value != _settings.Cpu)
-            {
-                Save(_settings with { Cpu = value });
-                OnPropertyChanged();
-            }
-        }
+        get => Settings.Cpu;
+        set => Change(Settings.Cpu, value, () => Settings with { Cpu = value });
     }
 
     public bool Memory
     {
-        get => _settings.Memory;
-        set
-        {
-            if (value != _settings.Memory)
-            {
-                Save(_settings with { Memory = value });
-                OnPropertyChanged();
-            }
-        }
+        get => Settings.Memory;
+        set => Change(Settings.Memory, value, () => Settings with { Memory = value });
     }
 
     public bool Network
     {
-        get => _settings.Network;
-        set
-        {
-            if (value != _settings.Network)
-            {
-                Save(_settings with { Network = value });
-                OnPropertyChanged();
-            }
-        }
+        get => Settings.Network;
+        set => Change(Settings.Network, value, () => Settings with { Network = value });
     }
 
     public ShowOnOption? SelectedShowOn
@@ -136,7 +95,7 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         {
             if (value is not null && SetProperty(ref _selectedShowOn, value))
             {
-                Save(_settings with { ShowOn = value.ShowOn });
+                Save(Settings with { ShowOn = value.ShowOn });
                 OnPropertyChanged(nameof(OnTaskbar));
                 OnPropertyChanged(nameof(InNotificationArea));
             }
@@ -150,7 +109,7 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         {
             if (value is not null && SetProperty(ref _selectedLayout, value))
             {
-                Save(_settings with { Layout = value.Layout });
+                Save(Settings with { Layout = value.Layout });
             }
         }
     }
@@ -162,7 +121,7 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         {
             if (value is not null && SetProperty(ref _selectedIcons, value))
             {
-                Save(_settings with { Icons = value.Icons });
+                Save(Settings with { Icons = value.Icons });
             }
         }
     }
@@ -174,23 +133,16 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         {
             if (value is not null && SetProperty(ref _selectedInterval, value))
             {
-                Save(_settings with { UpdateIntervalSeconds = value.Seconds });
+                Save(Settings with { UpdateIntervalSeconds = value.Seconds });
             }
         }
     }
 
     /// <summary>Whether the meters show on the taskbar, where Layout and Icons apply.</summary>
-    public bool OnTaskbar => _settings.ShowOn == ShowOn.Taskbar;
+    public bool OnTaskbar => Settings.ShowOn == ShowOn.Taskbar;
 
     /// <summary>Whether each meter has its own notification icon, which Windows may hide.</summary>
-    public bool InNotificationArea => _settings.ShowOn == ShowOn.NotificationArea;
-
-    /// <summary>True when the last change couldn't be saved.</summary>
-    public bool SaveFailed
-    {
-        get => _saveFailed;
-        private set => SetProperty(ref _saveFailed, value);
-    }
+    public bool InNotificationArea => Settings.ShowOn == ShowOn.NotificationArea;
 
     [RelayCommand]
     private void OpenTaskbarSettings()
@@ -199,12 +151,6 @@ public sealed partial class SystemMetersViewModel : ObservableObject
         {
             LogCantOpenTaskbarSettings(_logger);
         }
-    }
-
-    private void Save(SystemMetersSettings settings)
-    {
-        _settings = settings;
-        SaveFailed = !_editor.Save(SystemMetersFeature.Definition.Id, settings.Write());
     }
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't open the taskbar settings.")]

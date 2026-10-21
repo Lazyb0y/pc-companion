@@ -18,20 +18,16 @@ public sealed record KeyOption(HotCornerKey Key, string DisplayName);
 /// <summary>
 /// The Hot Corners page. Every change is saved right away.
 /// </summary>
-public sealed partial class HotCornersViewModel : ObservableObject
+public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSettings>
 {
     private static readonly CompositeFormat DelayFormat = CompositeFormat.Parse(Strings.HotCornersDelayValue);
 
-    private readonly FeatureSettingsEditor _editor;
     private readonly AppSettings _appSettings;
-    private HotCornersSettings _settings;
-    private bool _saveFailed;
 
     public HotCornersViewModel(FeatureSettingsEditor editor, AppSettings appSettings)
+        : base(editor, HotCornersFeature.Definition)
     {
-        _editor = editor;
         _appSettings = appSettings;
-        _settings = editor.Read(HotCornersFeature.Definition.Id, HotCornersSettings.Read);
 
         Actions =
         [
@@ -63,8 +59,6 @@ public sealed partial class HotCornersViewModel : ObservableObject
         BottomRight = new CornerViewModel(this, ScreenCorner.BottomRight, Strings.HotCornersBottomRight);
     }
 
-    public static string Glyph => HotCornersFeature.Definition.Glyph;
-
     /// <summary>What happens while an app running as administrator is in front.</summary>
     public string AdministratorInfo => _appSettings.General.AlwaysRunAsAdministrator
         ? Strings.HotCornersAdministratorInfoOn
@@ -82,73 +76,38 @@ public sealed partial class HotCornersViewModel : ObservableObject
 
     public CornerViewModel BottomRight { get; }
 
-    public bool IsOn
-    {
-        get => _settings.Enabled;
-        set
-        {
-            if (value != _settings.Enabled)
-            {
-                Save(_settings with { Enabled = value });
-                OnPropertyChanged();
-            }
-        }
-    }
-
     public double ActivationDelay
     {
-        get => _settings.ActivationDelayMilliseconds;
+        get => Settings.ActivationDelayMilliseconds;
         set
         {
             var milliseconds = (int)Math.Round(value);
-            if (milliseconds != _settings.ActivationDelayMilliseconds)
+            if (Change(Settings.ActivationDelayMilliseconds, milliseconds, () => Settings with { ActivationDelayMilliseconds = milliseconds }))
             {
-                Save(_settings with { ActivationDelayMilliseconds = milliseconds });
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(ActivationDelayText));
             }
         }
     }
 
-    public string ActivationDelayText => string.Format(CultureInfo.CurrentCulture, DelayFormat, _settings.ActivationDelayMilliseconds);
+    public string ActivationDelayText => string.Format(CultureInfo.CurrentCulture, DelayFormat, Settings.ActivationDelayMilliseconds);
 
     public static double MaximumActivationDelay => HotCornersSettings.MaximumActivationDelayMilliseconds;
 
     public bool IgnoreFullScreenApps
     {
-        get => _settings.IgnoreFullScreenApps;
-        set
-        {
-            if (value != _settings.IgnoreFullScreenApps)
-            {
-                Save(_settings with { IgnoreFullScreenApps = value });
-                OnPropertyChanged();
-            }
-        }
+        get => Settings.IgnoreFullScreenApps;
+        set => Change(Settings.IgnoreFullScreenApps, value, () => Settings with { IgnoreFullScreenApps = value });
     }
 
-    /// <summary>True when the last change couldn't be saved.</summary>
-    public bool SaveFailed
-    {
-        get => _saveFailed;
-        private set => SetProperty(ref _saveFailed, value);
-    }
-
-    internal CornerSettings GetCorner(ScreenCorner corner) => _settings.For(corner);
+    internal CornerSettings GetCorner(ScreenCorner corner) => Settings.For(corner);
 
     internal void SetCorner(ScreenCorner corner, CornerSettings value) => Save(corner switch
     {
-        ScreenCorner.TopLeft => _settings with { TopLeft = value },
-        ScreenCorner.TopRight => _settings with { TopRight = value },
-        ScreenCorner.BottomLeft => _settings with { BottomLeft = value },
-        _ => _settings with { BottomRight = value },
+        ScreenCorner.TopLeft => Settings with { TopLeft = value },
+        ScreenCorner.TopRight => Settings with { TopRight = value },
+        ScreenCorner.BottomLeft => Settings with { BottomLeft = value },
+        _ => Settings with { BottomRight = value },
     });
-
-    private void Save(HotCornersSettings settings)
-    {
-        _settings = settings;
-        SaveFailed = !_editor.Save(HotCornersFeature.Definition.Id, settings.Write());
-    }
 }
 
 /// <summary>

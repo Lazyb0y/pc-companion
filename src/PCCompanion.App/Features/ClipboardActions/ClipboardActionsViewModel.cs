@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 
@@ -19,7 +18,7 @@ public sealed record ClipboardRuleItem(int Index, ClipboardRule Rule, string Nam
 /// The Clipboard Actions page. Every change is saved right away; a rule is saved when the rule
 /// editor's Save is chosen.
 /// </summary>
-public sealed partial class ClipboardActionsViewModel : ObservableObject
+public sealed partial class ClipboardActionsViewModel : FeatureViewModel<ClipboardActionsSettings>
 {
     private static readonly CompositeFormat EditFormat = CompositeFormat.Parse(Strings.ClipboardActionsEditName);
     private static readonly CompositeFormat MoreFormat = CompositeFormat.Parse(Strings.ClipboardActionsMoreName);
@@ -27,55 +26,21 @@ public sealed partial class ClipboardActionsViewModel : ObservableObject
     private static readonly CompositeFormat ProgramFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryProgram);
     private static readonly CompositeFormat ProblemFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryProblem);
 
-    private readonly FeatureSettingsEditor _editor;
-    private ClipboardActionsSettings _settings;
-    private bool _saveFailed;
-
     public ClipboardActionsViewModel(FeatureSettingsEditor editor)
+        : base(editor, ClipboardActionsFeature.Definition)
     {
-        _editor = editor;
-        _settings = editor.Read(ClipboardActionsFeature.Definition.Id, ClipboardActionsSettings.Read);
         RefreshRules();
-    }
-
-    public static string Glyph => ClipboardActionsFeature.Definition.Glyph;
-
-    public bool IsOn
-    {
-        get => _settings.Enabled;
-        set
-        {
-            if (value != _settings.Enabled)
-            {
-                Save(_settings with { Enabled = value });
-                OnPropertyChanged();
-            }
-        }
     }
 
     public bool OpenLinks
     {
-        get => _settings.OpenLinks;
-        set
-        {
-            if (value != _settings.OpenLinks)
-            {
-                Save(_settings with { OpenLinks = value });
-                OnPropertyChanged();
-            }
-        }
+        get => Settings.OpenLinks;
+        set => Change(Settings.OpenLinks, value, () => Settings with { OpenLinks = value });
     }
 
     public ObservableCollection<ClipboardRuleItem> Rules { get; } = [];
 
     public bool HasNoRules => Rules.Count == 0;
-
-    /// <summary>True when the last change couldn't be saved.</summary>
-    public bool SaveFailed
-    {
-        get => _saveFailed;
-        private set => SetProperty(ref _saveFailed, value);
-    }
 
     /// <summary>What keeps a rule out of the menu, or an empty string.</summary>
     public static string ProblemOf(ClipboardRule rule)
@@ -105,22 +70,22 @@ public sealed partial class ClipboardActionsViewModel : ObservableObject
         return problem;
     }
 
-    public void Add(ClipboardRule rule) => SaveRules([.. _settings.Rules, rule]);
+    public void Add(ClipboardRule rule) => SaveRules([.. Settings.Rules, rule]);
 
     public void Replace(int index, ClipboardRule rule) =>
-        SaveRules([.. _settings.Rules.Select((existing, at) => at == index ? rule : existing)]);
+        SaveRules([.. Settings.Rules.Select((existing, at) => at == index ? rule : existing)]);
 
-    public void Delete(int index) => SaveRules([.. _settings.Rules.Where((_, at) => at != index)]);
+    public void Delete(int index) => SaveRules([.. Settings.Rules.Where((_, at) => at != index)]);
 
     public void Move(int index, int offset)
     {
         var target = index + offset;
-        if (index < 0 || target < 0 || index >= _settings.Rules.Count || target >= _settings.Rules.Count)
+        if (index < 0 || target < 0 || index >= Settings.Rules.Count || target >= Settings.Rules.Count)
         {
             return;
         }
 
-        var rules = _settings.Rules.ToList();
+        var rules = Settings.Rules.ToList();
         (rules[index], rules[target]) = (rules[target], rules[index]);
         SaveRules(rules);
     }
@@ -139,14 +104,14 @@ public sealed partial class ClipboardActionsViewModel : ObservableObject
 
     private void SaveRules(IReadOnlyList<ClipboardRule> rules)
     {
-        Save(_settings with { Rules = rules });
+        Save(Settings with { Rules = rules });
         RefreshRules();
     }
 
     private void RefreshRules()
     {
         Rules.Clear();
-        var rules = _settings.Rules;
+        var rules = Settings.Rules;
         for (var index = 0; index < rules.Count; index++)
         {
             var rule = rules[index];
@@ -165,11 +130,5 @@ public sealed partial class ClipboardActionsViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(HasNoRules));
-    }
-
-    private void Save(ClipboardActionsSettings settings)
-    {
-        _settings = settings;
-        SaveFailed = !_editor.Save(ClipboardActionsFeature.Definition.Id, settings.Write());
     }
 }
