@@ -108,6 +108,22 @@ function Invoke-Click([string] $Name) {
     return $true
 }
 
+function Test-OptionSelected([string] $Name) {
+    $option = Get-Control $Name
+    $pattern = $null
+    return $option -and $option.TryGetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern, [ref] $pattern) -and $pattern.Current.IsSelected
+}
+
+# Clicks a radio button until it's chosen. A click can be lost while the page settles, which
+# would leave the other option chosen and lead setup to another page.
+function Select-Option([string] $Name) {
+    for ($attempt = 0; $attempt -lt 3; $attempt++) {
+        if (-not (Invoke-Click $Name)) { return $false }
+        if (Wait-Until { Test-OptionSelected $Name } 3) { return $true }
+    }
+    return $false
+}
+
 function Start-Setup([string] $Log, [string] $Package = $msi) {
     $process = Start-Process msiexec.exe -ArgumentList @('/i', "`"$Package`"", '/l*v', "`"$results\$Log`"") -PassThru
     # Keeps the process handle, so the exit code can be read after setup exits.
@@ -174,7 +190,7 @@ foreach ($scope in $scopes) {
         Save-Page "$key-01-license"
         Assert-Step "${name}: Advanced" (Invoke-Click 'Advanced')
         Assert-Step "${name}: scope page" (Wait-Page 'Installation Scope')
-        Assert-Step "${name}: choose the scope" (Invoke-Click $scope.Option)
+        Assert-Step "${name}: choose the scope" (Select-Option $scope.Option)
         Save-Page "$key-02-scope"
         Assert-Step "${name}: Next from the scope page" (Invoke-Click 'Next')
 
@@ -221,7 +237,7 @@ foreach ($scope in $scopes) {
             Assert-Step "${name}: another build: accept the license" (Invoke-Click 'I accept the terms in the License Agreement')
             Assert-Step "${name}: another build: Advanced" (Invoke-Click 'Advanced')
             Assert-Step "${name}: another build: scope page" (Wait-Page 'Installation Scope')
-            Assert-Step "${name}: another build: choose the scope" (Invoke-Click $scope.Option)
+            Assert-Step "${name}: another build: choose the scope" (Select-Option $scope.Option)
             Assert-Step "${name}: another build: Next from the scope page" (Invoke-Click 'Next')
             if ($scope.FolderPage) {
                 Assert-Step "${name}: another build: folder page" (Wait-Page 'Destination Folder')
