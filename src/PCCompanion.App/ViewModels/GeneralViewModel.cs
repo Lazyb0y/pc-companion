@@ -38,9 +38,6 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     private static readonly CompositeFormat UpdateStatusAvailableFormat = CompositeFormat.Parse(Strings.GeneralUpdateStatusAvailable);
     private static readonly CompositeFormat LastCheckFormat = CompositeFormat.Parse(Strings.GeneralUpdateLastCheck);
 
-    private static readonly ReleaseVersion CurrentVersion =
-        ReleaseVersion.FromAssemblyVersion(typeof(App).Assembly.GetName().Version ?? new Version(0, 0, 0));
-
     private readonly AppSettings _settings;
     private readonly SettingsStore _store;
     private readonly AppDataPaths _paths;
@@ -95,7 +92,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         // The host saves the update check's result, also while the page is open.
         _checkForUpdates = settings.Updates.CheckAutomatically;
         var state = updateCheck.State;
-        _newerVersion = state.NewerThan(CurrentVersion);
+        _newerVersion = state.NewerThan(App.CurrentVersion);
         _lastCheck = state.LastCheck;
         updateCheck.Changed += OnUpdateCheckChanged;
 
@@ -120,6 +117,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
         LogsRetention = PluralStrings.Format("GeneralLogsRetention", FileLoggingExtensions.RetentionDays);
         Version = string.Format(CultureInfo.CurrentCulture, VersionFormat, App.InformationalVersion.Split('+')[0]);
+        MarkUpdateSeen();
     }
 
     public IReadOnlyList<LanguageOption> Languages { get; }
@@ -245,6 +243,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
                 _settings.Updates.CheckAutomatically = value;
                 Save();
                 OnPropertyChanged(nameof(UpdateAvailable));
+                MarkUpdateSeen();
             }
         }
     }
@@ -257,7 +256,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
     /// <summary>The banner's text, with the newer version and this one.</summary>
     public string UpdateMessage => _newerVersion is { } version
-        ? string.Format(CultureInfo.CurrentCulture, UpdateAvailableFormat, version, CurrentVersion)
+        ? string.Format(CultureInfo.CurrentCulture, UpdateAvailableFormat, version, App.CurrentVersion)
         : string.Empty;
 
     /// <summary>
@@ -345,7 +344,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         try
         {
             // Off the window's thread: reading and saving the result, and the request.
-            var outcome = await Task.Run(() => _updateChecker.CheckNowAsync(CurrentVersion, leavingPage), leavingPage).ConfigureAwait(true);
+            var outcome = await Task.Run(() => _updateChecker.CheckNowAsync(App.CurrentVersion, leavingPage), leavingPage).ConfigureAwait(true);
             if (outcome.Result is CheckNowResult.UpToDate or CheckNowResult.UpdateAvailable)
             {
                 _newerVersion = outcome.NewerVersion;
@@ -433,7 +432,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         var updateCheck = _updateCheck.State;
         void Update()
         {
-            _newerVersion = updateCheck.NewerThan(CurrentVersion);
+            _newerVersion = updateCheck.NewerThan(App.CurrentVersion);
             _lastCheck = updateCheck.LastCheck;
             OnUpdateStatusChanged();
         }
@@ -454,6 +453,19 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(UpdateMessage));
         OnPropertyChanged(nameof(UpdateStatus));
         OnPropertyChanged(nameof(UpdateStatusDetail));
+        MarkUpdateSeen();
+    }
+
+    // The banner shows the version, so the badge on the General item goes away. Off the window's
+    // thread: saving it. A process elevated through UAC never saves the result, so then the badge
+    // stays away only until the window closes.
+    private void MarkUpdateSeen()
+    {
+        if (!_disposed && UpdateAvailable && _newerVersion is { } version && !_updateCheck.IsSeen(version))
+        {
+            var save = !Elevation.IsUacElevated;
+            _ = Task.Run(() => _updateCheck.MarkSeen(version, save));
+        }
     }
 
     private void Save()

@@ -29,6 +29,10 @@
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE713;" />
                 </NavigationViewItem.Icon>
+                <!-- Shown in code while a newer version is available that the General page hasn't shown. -->
+                <NavigationViewItem.InfoBadge>
+                    <InfoBadge x:Name="UpdateBadge" Style="{ThemeResource AttentionDotInfoBadgeStyle}" Visibility="Collapsed" />
+                </NavigationViewItem.InfoBadge>
             </NavigationViewItem>
         </NavigationView.FooterMenuItems>
 

@@ -54,6 +54,10 @@ public partial class App : Application
     public static string InformationalVersion { get; } =
         typeof(App).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? string.Empty;
 
+    /// <summary>The running version, as the update check compares it.</summary>
+    public static ReleaseVersion CurrentVersion { get; } =
+        ReleaseVersion.FromAssemblyVersion(typeof(App).Assembly.GetName().Version ?? new Version(0, 0, 0));
+
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         var settings = _services.GetRequiredService<AppSettings>();
@@ -61,7 +65,7 @@ public partial class App : Application
         LogStarted(_logger, InformationalVersion, Environment.OSVersion.Version);
         ApplyLanguage(settings.General.Language);
 
-        var window = new MainWindow();
+        var window = new MainWindow(settings, _services.GetRequiredService<UpdateCheckWatcher>());
         _window = window;
         window.ApplyTheme(settings.General.Theme);
 
