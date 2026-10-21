@@ -183,6 +183,7 @@ Start-Sleep -Seconds 2
 Save-Screenshot '15-system-meters-page'
 $text = Get-WindowText
 Test-Check 'System Meters shows its settings' (($text -contains 'Meters') -and ($text -contains 'Show on') -and ($text -contains 'Layout') -and ($text -contains 'Update every') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'the page''s switch shows System Meters on' (Test-ToggleOn 'System Meters')
 Test-Check 'every meter starts on' ((Test-ToggleOn 'CPU') -and (Test-ToggleOn 'Memory') -and (Test-ToggleOn 'Network'))
 function Get-Choice([string] $Name) {
     $script:choice = ''
@@ -206,6 +207,8 @@ Test-Check 'Open taskbar settings opens Settings' (Wait-Until { (Get-Processes '
 Get-Processes 'SystemSettings' | Stop-Process -Force -ErrorAction SilentlyContinue
 Test-Check 'turn System Meters off on its page' (Set-Toggle 'System Meters' $false)
 Start-Sleep -Seconds 2
+$saved = Get-MetersSection
+Test-Check 'the page''s switch saves System Meters as off' ($saved.enabled -eq $false) "saved: $($saved | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 [void] (Start-Process $hostExe -ArgumentList '--exit' -Wait -PassThru)
 
