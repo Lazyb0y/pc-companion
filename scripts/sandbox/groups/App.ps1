@@ -16,6 +16,18 @@ $adminToggle = Find-Toggle 'Always run as administrator'
 Test-Check 'Always run as administrator is unavailable for a per-user install' (($null -ne $adminToggle) -and -not $adminToggle.Current.IsEnabled)
 Test-Check 'General says why' ($text -contains 'Available when PC Companion is installed for all users.') ($text -join ' | ')
 
+# App theme, chosen in its list on the General page, applies at once and is saved. The Sandbox's
+# Windows mode is light, so Use system setting is light too.
+foreach ($theme in @{ Name = 'Dark'; Saved = 'Dark' }, @{ Name = 'Light'; Saved = 'Light' }, @{ Name = 'Use system setting'; Saved = 'System' }) {
+    Test-Check "choose the app theme $($theme.Name)" (Select-ListItem 'App theme' $theme.Name)
+    Start-Sleep -Seconds 1
+    $brightness = Get-AppWindowBrightness
+    $saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).general.theme
+    $looks = if ($theme.Saved -eq 'Dark') { ($brightness -ge 0) -and ($brightness -lt 100) } else { $brightness -gt 160 }
+    Test-Check "the app theme $($theme.Name) applies at once and is saved" ($looks -and ($saved -eq $theme.Saved)) "brightness $brightness, saved: $saved"
+    Save-Screenshot "02a-general-theme-$($theme.Saved.ToLowerInvariant())"
+}
+
 # Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
 # Hot Corners, App Windows, System Meters, Clipboard Actions and General: a centered column, as Windows Settings
 # lays out its pages. At the full screen's width, the feature pages' headers too.
