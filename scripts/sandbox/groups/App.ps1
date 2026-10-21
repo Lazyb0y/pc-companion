@@ -18,20 +18,53 @@ Test-Check 'General says why' ($text -contains 'Available when PC Companion is i
 
 # Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
 # Hot Corners, App Windows, System Meters, Clipboard Actions and General: a centered column, as Windows Settings
-# lays out its pages.
-$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners' }, @{ Name = 'App Windows'; Title = 'App Windows' }, @{ Name = 'System Meters'; Title = 'System Meters' }, @{ Name = 'Clipboard Actions'; Title = 'Clipboard Actions' }, @{ Name = 'General'; Title = 'General' })
+# lays out its pages. At the full screen's width, the feature pages' headers too.
+$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners'; Header = $true }, @{ Name = 'App Windows'; Title = 'App Windows'; Header = $true }, @{ Name = 'System Meters'; Title = 'System Meters'; Header = $true }, @{ Name = 'Clipboard Actions'; Title = 'Clipboard Actions'; Header = $true }, @{ Name = 'General'; Title = 'General' })
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
+$letterHeights = @{}
 foreach ($width in 600, 1000, 1300, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
     foreach ($page in $pages) {
         [void] (Show-Page $page.Name)
         Start-Sleep -Milliseconds 1500
         Test-PageLayout $page.Name $page.Title $width
+        if ($width -eq $screen.Width -and $page.Header) {
+            $letterHeights[$page.Name] = Test-HeaderAlignment $page.Name $page.Title
+        }
         if ($width -eq $screen.Width -or $width -eq 600) {
             Save-Screenshot "02b-layout-$($page.Name.ToLowerInvariant() -replace ' ', '-')-$width"
         }
     }
 }
+
+# The headers at the largest Windows text size, which the settings app reads when it starts.
+$accessibility = 'HKCU:\Software\Microsoft\Accessibility'
+$textScale = (Get-ItemProperty $accessibility -ErrorAction SilentlyContinue).TextScaleFactor
+if (-not (Test-Path $accessibility)) { [void] (New-Item $accessibility -Force) }
+[void] (New-ItemProperty $accessibility -Name TextScaleFactor -Value 225 -PropertyType DWord -Force)
+[void] (Close-SettingsApp)
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+[void] (Set-AppWindowWidth $screen.Width)
+foreach ($page in @($pages | Where-Object { $_.Header })) {
+    [void] (Show-Page $page.Name)
+    Start-Sleep -Milliseconds 1500
+    $height = Test-HeaderAlignment $page.Name $page.Title ' at 225% text size'
+    # Windows enlarges big text less than small text: the title's letters by about a third.
+    Test-Check "$($page.Name)'s title is larger at 225% text size" ($height -ge 1.2 * $letterHeights[$page.Name]) "first letter $height pixels high, $($letterHeights[$page.Name]) at 100%"
+    Save-Screenshot "02c-header-$($page.Name.ToLowerInvariant() -replace ' ', '-')-text-225"
+}
+if ($null -eq $textScale) {
+    Remove-ItemProperty $accessibility -Name TextScaleFactor -ErrorAction SilentlyContinue
+}
+else {
+    [void] (New-ItemProperty $accessibility -Name TextScaleFactor -Value $textScale -PropertyType DWord -Force)
+}
+[void] (Close-SettingsApp)
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
 Restore-AppWindow $windowBounds
 [void] (Select-NavigationItem 'General')
 
