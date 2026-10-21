@@ -156,23 +156,15 @@
                     </StackPanel>
                 </Border>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=HotCornersDelayDescription}" Header="{app:Localized Key=HotCornersDelayHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE916;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock VerticalAlignment="Center" Text="{x:Bind ViewModel.ActivationDelayText, Mode=OneWay}" />
-                        <Slider
-                            Width="200"
-                            AutomationProperties.Name="{app:Localized Key=HotCornersDelayHeader}"
-                            IsThumbToolTipEnabled="False"
-                            Maximum="{x:Bind local:HotCornersViewModel.MaximumActivationDelay}"
-                            Minimum="0"
-                            SnapsTo="StepValues"
-                            StepFrequency="50"
-                            Value="{x:Bind ViewModel.ActivationDelay, Mode=TwoWay}" />
-                    </StackPanel>
-                </toolkit:SettingsCard>
+                <controls:SliderCard
+                    Description="{app:Localized Key=HotCornersDelayDescription}"
+                    Glyph="&#xE916;"
+                    Header="{app:Localized Key=HotCornersDelayHeader}"
+                    Maximum="{x:Bind local:HotCornersViewModel.MaximumActivationDelay}"
+                    Minimum="0"
+                    StepFrequency="50"
+                    Value="{x:Bind ViewModel.ActivationDelay, Mode=TwoWay}"
+                    ValueText="{x:Bind ViewModel.ActivationDelayText, Mode=OneWay}" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=HotCornersFullScreenDescription}"
