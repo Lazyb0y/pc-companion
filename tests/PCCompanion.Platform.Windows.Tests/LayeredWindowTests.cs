@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
@@ -153,20 +153,6 @@ public sealed class LayeredWindowTests
     public void AWinEventHookNeedsEventsInOrder()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new WinEventHook(WinEventHook.ObjectHideEvent, WinEventHook.ObjectShowEvent));
-    }
-
-    private static string UniqueClassName() => $"PCCompanion.Tests.{Guid.NewGuid():N}";
-
-    private static void RunPostedMessages()
-    {
-        MessageLoop.Quit();
-        MessageLoop.Run();
-    }
-
-    private static void RunFor(MessageWindow window, TimeSpan time)
-    {
-        using var end = new Timer(_ => window.BeginInvoke(MessageLoop.Quit), null, time, Timeout.InfiniteTimeSpan);
-        MessageLoop.Run();
     }
 
     [DllImport("user32.dll", EntryPoint = "PostMessageW")]

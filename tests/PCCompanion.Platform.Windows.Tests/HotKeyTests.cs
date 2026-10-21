@@ -1,5 +1,5 @@
-using System;
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
@@ -56,14 +56,5 @@ public sealed class HotKeyTests
         Assert.Equal(0, count);
         Assert.NotNull(again);
         Assert.NotEqual(hotKey.Id, again.Id);
-    }
-
-    private static string UniqueClassName() => "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
-
-    // Messages posted before Quit are delivered before the loop ends.
-    private static void RunPostedMessages()
-    {
-        MessageLoop.Quit();
-        MessageLoop.Run();
     }
 }

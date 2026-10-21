@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
@@ -122,14 +123,5 @@ public sealed class MessageWindowTests
         using var window = new MessageWindow(className);
 
         Assert.NotEqual(0, window.Handle);
-    }
-
-    private static string UniqueClassName() => "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
-
-    // Messages posted before Quit are delivered before the loop ends.
-    private static void RunPostedMessages()
-    {
-        MessageLoop.Quit();
-        MessageLoop.Run();
     }
 }

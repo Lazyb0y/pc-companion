@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
@@ -72,8 +73,6 @@ public sealed class TopLevelWindowsTests
 
         Assert.Equal(window.Handle, TopLevelWindows.RootOwner(window.Handle));
     }
-
-    private static string UniqueClassName() => "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
 
     // Cloaked first, so it never appears.
     private static void Show(nint window)
