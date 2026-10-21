@@ -1,15 +1,18 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 using PCCompanion.App.Features;
 using PCCompanion.App.Pages;
 using PCCompanion.Core.Settings;
+using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
@@ -26,8 +29,16 @@ public sealed partial class MainWindow : Window
 
     private static readonly string IconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "PCCompanion.ico");
 
-    public MainWindow()
+    private readonly AppSettings _settings;
+    private readonly UpdateCheckWatcher _updateCheck;
+
+    public MainWindow(AppSettings settings, UpdateCheckWatcher updateCheck)
     {
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(updateCheck);
+
+        _settings = settings;
+        _updateCheck = updateCheck;
         InitializeComponent();
         Title = Strings.AppDisplayName;
         AppWindow.SetIcon(IconPath);
@@ -42,6 +53,15 @@ public sealed partial class MainWindow : Window
         Navigation.DisplayModeChanged += (_, e) => PlacePageBelowPaneButton(e.DisplayMode);
         SetBackdrop();
         HideWhileNotDrawn();
+
+        ShowUpdateBadge();
+        updateCheck.Changed += OnUpdateCheckChanged;
+        updateCheck.Seen += OnUpdateCheckChanged;
+        Closed += (_, _) =>
+        {
+            updateCheck.Changed -= OnUpdateCheckChanged;
+            updateCheck.Seen -= OnUpdateCheckChanged;
+        };
     }
 
     /// <summary>
@@ -136,6 +156,21 @@ public sealed partial class MainWindow : Window
         timer.Tick += (_, _) => Show();
         timer.Start();
         Closed += (_, _) => WindowCloak.Set(handle, cloaked: true);
+    }
+
+    // Raised on other threads.
+    private void OnUpdateCheckChanged(object? sender, EventArgs e) => DispatcherQueue.TryEnqueue(ShowUpdateBadge);
+
+    // While the check is on, the badge on the General item shows a newer version the General page
+    // hasn't shown yet. Screen readers don't read the badge, so the item's status says it. The
+    // setting changes only on the General page, whose banner has cleared the badge by then.
+    private void ShowUpdateBadge()
+    {
+        var version = _settings.Updates.CheckAutomatically ? _updateCheck.UnseenVersion(App.CurrentVersion) : null;
+        UpdateBadge.Visibility = version is null ? Visibility.Collapsed : Visibility.Visible;
+        AutomationProperties.SetItemStatus(
+            GeneralItem,
+            version is { } newer ? string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.GeneralUpdateStatusAvailable), newer) : string.Empty);
     }
 
     // While the pane is folded away, its button sits over the top-left of the page, so the page
