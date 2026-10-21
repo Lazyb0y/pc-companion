@@ -10,7 +10,20 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
+
+            <!--
+                A page's content, as in Windows Settings: a column in the middle of the page, at
+                most 1,000 pixels wide (1,072 with the padding). Pages put it in a Grid in a
+                ScrollViewer that scrolls only up and down. The Grid takes the page's visible width
+                and centers the column in it; directly in the ScrollViewer, the column would be
+                centered in the width of its unwrapped text, off to the right and past the window's
+                edge.
+            -->
+            <Style x:Key="PageColumnStyle" TargetType="StackPanel">
+                <Setter Property="MaxWidth" Value="1072" />
+                <Setter Property="Padding" Value="36,24" />
+                <Setter Property="Spacing" Value="4" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

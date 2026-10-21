@@ -8,10 +8,10 @@
     xmlns:local="using:PCCompanion.App.Features.ClipboardActions"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
-    <!-- Laid out like the other feature pages: a column in the middle of the page, at most 1,000 pixels wide. -->
+    <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
     <ScrollViewer HorizontalScrollMode="Disabled">
         <Grid>
-            <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
+            <StackPanel Style="{StaticResource PageColumnStyle}">
                 <controls:FeatureHeader
                     Description="{app:Localized Key=ClipboardActionsDescription}"
                     Glyph="{x:Bind local:ClipboardActionsViewModel.Glyph}"
