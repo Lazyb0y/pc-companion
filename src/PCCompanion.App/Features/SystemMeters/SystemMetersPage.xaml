@@ -4,8 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
-    xmlns:controls="using:PCCompanion.App.Controls"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+    xmlns:controls="using:PCCompanion.App.Controls">
 
     <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
     <ScrollViewer HorizontalScrollMode="Disabled">
@@ -18,14 +17,12 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=SystemMetersName}" />
 
-                <toolkit:SettingsExpander
+                <controls:IconExpander
                     Description="{app:Localized Key=SystemMetersMetersDescription}"
+                    Glyph="&#xE9D9;"
                     Header="{app:Localized Key=SystemMetersMetersHeader}"
                     IsExpanded="True">
-                    <toolkit:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xE9D9;" />
-                    </toolkit:SettingsExpander.HeaderIcon>
-                    <toolkit:SettingsExpander.Items>
+                    <controls:IconExpander.Items>
                         <controls:SwitchCard
                             Description="{app:Localized Key=SystemMetersCpuDescription}"
                             Glyph="&#xE950;"
@@ -41,8 +38,8 @@
                             Glyph="&#xE968;"
                             Header="{app:Localized Key=SystemMetersNetworkHeader}"
                             IsOn="{x:Bind ViewModel.Network, Mode=TwoWay}" />
-                    </toolkit:SettingsExpander.Items>
-                </toolkit:SettingsExpander>
+                    </controls:IconExpander.Items>
+                </controls:IconExpander>
 
                 <controls:ChoiceCard
                     Description="{app:Localized Key=SystemMetersShowOnDescription}"
