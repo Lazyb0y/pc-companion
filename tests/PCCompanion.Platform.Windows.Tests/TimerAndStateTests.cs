@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
@@ -108,28 +109,13 @@ public sealed class TimerAndStateTests
         }
     }
 
-    private static string UniqueClassName() => "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
-
     [DllImport("user32.dll")]
     private static extern nint SendMessage(nint window, uint message, nuint wParam, nint lParam);
-
-    // Messages posted before Quit are delivered before the loop ends.
-    private static void RunPostedMessages()
-    {
-        MessageLoop.Quit();
-        MessageLoop.Run();
-    }
 
     // Runs the loop until something on this thread quits it, or for 5 seconds at most.
     private static void RunUntilQuitOrTimeout(MessageWindow window)
     {
         using var timeout = new Timer(_ => window.BeginInvoke(MessageLoop.Quit), null, TimeSpan.FromSeconds(5), Timeout.InfiniteTimeSpan);
-        MessageLoop.Run();
-    }
-
-    private static void RunFor(MessageWindow window, TimeSpan time)
-    {
-        using var end = new Timer(_ => window.BeginInvoke(MessageLoop.Quit), null, time, Timeout.InfiniteTimeSpan);
         MessageLoop.Run();
     }
 }
