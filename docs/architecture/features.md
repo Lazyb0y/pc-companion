@@ -57,7 +57,7 @@ public interface IFeature : IDisposable
 
 - The navigation pane has a section per module with an item per feature, above **General**.
 - **Home** shows a card per feature: icon, name, description, on/off switch, and **Not available on this PC** when it isn't supported.
-- A feature page has a header (icon, name, description, on/off switch), then its settings in cards, then a **Permissions & data** card that says what the feature reads and changes. The icon and the switch are centered on the name's capital letters as they're drawn, at any text size: the name's box is trimmed to them (`TextLineBounds="Tight"`), with the same padding above and below.
+- A feature page has a header (icon, name, description, on/off switch), then its settings in cards, then a **Permissions & data** card that says what the feature reads and changes. Every feature page uses the same header control, `Controls/FeatureHeader`, which also shows when a change on the page couldn't be saved. The icon and the switch are centered on the name's capital letters as they're drawn, at any text size: the name's box is trimmed to them (`TextLineBounds="Tight"`), with the same padding above and below.
 - The settings app maps each `FeatureInfo` to its page in one place, `Features/FeatureCatalog.cs`, which the navigation pane and Home are built from.
 - A feature class has a static `Definition` (its `FeatureInfo`) and `CurrentSupport`, so the settings app doesn't create the feature.
 

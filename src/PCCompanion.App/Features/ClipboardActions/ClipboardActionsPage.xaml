@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
     xmlns:local="using:PCCompanion.App.Features.ClipboardActions"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
@@ -11,55 +12,12 @@
     <ScrollViewer HorizontalScrollMode="Disabled">
         <Grid>
             <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
-                <!--
-                    The icon, the title and the switch share one middle line. The title's box is
-                    trimmed to its capital letters, so the icon is centered on what's drawn at any
-                    text size; the padding, the same above and below, keeps room for p, g and y.
-                -->
-                <Grid
-                    Margin="0,0,0,20"
-                    ColumnSpacing="16"
-                    RowSpacing="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <FontIcon
-                        VerticalAlignment="Center"
-                        AutomationProperties.AccessibilityView="Raw"
-                        FontSize="32"
-                        Glyph="{x:Bind local:ClipboardActionsViewModel.Glyph}" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Padding="0,8"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource TitleTextBlockStyle}"
-                        Text="{app:Localized Key=ClipboardActionsName}"
-                        TextLineBounds="Tight" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{app:Localized Key=ClipboardActionsDescription}"
-                        TextWrapping="Wrap" />
-                    <ToggleSwitch
-                        Grid.Column="2"
-                        VerticalAlignment="Center"
-                        AutomationProperties.Name="{app:Localized Key=ClipboardActionsName}"
-                        IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}" />
-                </Grid>
-
-                <InfoBar
-                    IsClosable="False"
-                    IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
-                    Message="{app:Localized Key=FeatureSaveFailed}"
-                    Severity="Error" />
+                <controls:FeatureHeader
+                    Description="{app:Localized Key=ClipboardActionsDescription}"
+                    Glyph="{x:Bind local:ClipboardActionsViewModel.Glyph}"
+                    IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}"
+                    SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
+                    Title="{app:Localized Key=ClipboardActionsName}" />
 
                 <toolkit:SettingsCard Description="{app:Localized Key=ClipboardActionsShortcutDescription}" Header="{app:Localized Key=ClipboardActionsShortcutHeader}">
                     <toolkit:SettingsCard.HeaderIcon>
