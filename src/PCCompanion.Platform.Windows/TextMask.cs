@@ -57,23 +57,7 @@ public sealed record TextMask(int Width, int Height, byte[] Coverage)
 
             // A pixel more on each side for smoothing that reaches past the advance width.
             int width = Math.Max(1, size.cx + 2), height = Math.Max(1, size.cy);
-            var info = new BITMAPINFO
-            {
-                bmiHeader = new BITMAPINFOHEADER
-                {
-                    biSize = (uint)sizeof(BITMAPINFOHEADER),
-                    biWidth = width,
-                    biHeight = -height, // top-down
-                    biPlanes = 1,
-                    biBitCount = 32,
-                },
-            };
-
-            using var bitmap = PInvoke.CreateDIBSection(dc, &info, DIB_USAGE.DIB_RGB_COLORS, out var bits, null, 0);
-            if (bitmap.IsInvalid)
-            {
-                throw new Win32Exception();
-            }
+            using var bitmap = TopDownBitmap.Create(dc, width, height, out var bits);
 
             var oldBitmap = PInvoke.SelectObject(dc, (HGDIOBJ)bitmap.DangerousGetHandle());
             PInvoke.SetTextColor(dc, new COLORREF(0x00FFFFFF));
