@@ -7,15 +7,10 @@
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:viewModels="using:PCCompanion.App.ViewModels">
 
-    <!--
-        As in Windows Settings: the content is a column in the middle of the page, at most 1,000
-        pixels wide (1,072 with the padding). The Grid takes the page's visible width and centers
-        the column in it; directly in the ScrollViewer, the column would be centered in the width
-        of its unwrapped text, off to the right and past the window's edge.
-    -->
+    <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
     <ScrollViewer HorizontalScrollMode="Disabled">
         <Grid>
-            <StackPanel MaxWidth="1072" Padding="36,24" Spacing="4">
+            <StackPanel Style="{StaticResource PageColumnStyle}">
                 <TextBlock
                     Margin="0,0,0,20"
                     Style="{StaticResource TitleTextBlockStyle}"
