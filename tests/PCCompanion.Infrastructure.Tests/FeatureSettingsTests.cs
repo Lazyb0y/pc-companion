@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using PCCompanion.Core.Features;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Infrastructure.Tests;
 
@@ -55,8 +56,6 @@ public sealed partial class FeatureSettingsTests
     {
         Assert.Equal("""{"enabled":true}""", FeatureSettings.SetEnabled(null, enabled: true).GetRawText());
     }
-
-    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
 
     internal sealed record SampleSettings(bool Enabled, int Delay);
 

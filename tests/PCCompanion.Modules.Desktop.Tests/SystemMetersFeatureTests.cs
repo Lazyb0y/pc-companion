@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Testing;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Desktop.Tests;
 
@@ -114,6 +114,4 @@ public sealed class SystemMetersFeatureTests : IDisposable
 
         Assert.Equal("dispose", _system.Events[^1]);
     }
-
-    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
 }

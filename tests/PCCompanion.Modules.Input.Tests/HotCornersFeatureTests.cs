@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Testing;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Input.Tests;
 
@@ -88,6 +88,4 @@ public sealed class HotCornersFeatureTests : IDisposable
 
         Assert.True(_feature.IsRunning);
     }
-
-    private static JsonElement Section(string json) => JsonDocument.Parse(json).RootElement.Clone();
 }

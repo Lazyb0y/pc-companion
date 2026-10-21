@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Testing;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Clipboard.Tests;
 
@@ -75,11 +75,5 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
     {
         Assert.Equal("clipboardActions", ClipboardActionsFeature.Definition.Id);
         Assert.Equal(ClipboardModule.Id, ClipboardActionsFeature.Definition.ModuleId);
-    }
-
-    private static JsonElement Section(string json)
-    {
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
     }
 }

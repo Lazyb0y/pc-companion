@@ -1,6 +1,7 @@
 using System.Text.Json;
 using PCCompanion.Modules.Windows.AppWindows;
 using Xunit;
+using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Windows.Tests;
 
@@ -53,11 +54,5 @@ public sealed class AppWindowsSettingsTests
     public void AShortcutNumberReadsAsAnyValue()
     {
         Assert.Equal((AppWindowsShortcut)7, AppWindowsSettings.Read(Section("""{ "shortcut": 7 }""")).Shortcut);
-    }
-
-    private static JsonElement Section(string json)
-    {
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
     }
 }
