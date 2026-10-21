@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Platform.Windows;
@@ -7,32 +6,22 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
 /// <summary>
-/// Runs Clipboard Actions on a thread of its own, with its own hidden window and message loop, as
-/// "Threads" in docs/features/clipboard/clipboard-actions.md says: it registers the shortcut,
-/// compiles the rules, and at each press reads the clipboard, matches the rules and shows the
-/// menu. The host's UI thread starts it, passes it new settings and stops it, and never waits for
-/// it, except for <see cref="Join"/> when the host exits.
+/// Runs Clipboard Actions on a <see cref="MessageLoopThread{TSettings}"/> of its own, as "Threads"
+/// in docs/features/clipboard/clipboard-actions.md says: it registers the shortcut, compiles the
+/// rules, and at each press reads the clipboard, matches the rules and shows the menu. The host's
+/// UI thread starts it, passes it new settings and stops it, and never waits for it, except for
+/// <see cref="Join"/> when the host exits.
 /// </summary>
-public sealed partial class ClipboardActionsThread
+public sealed partial class ClipboardActionsThread : MessageLoopThread<ClipboardActionsSettings>
 {
     private const string WindowClassName = "PCCompanion.ClipboardActions";
 
     private readonly IClipboardActionsSystem _system;
     private readonly IHostCommands _commands;
     private readonly ILogger _logger;
-    private readonly ClipboardActionsThread? _previous;
     private readonly ClipboardActionRunner _runner;
-    private readonly Thread _thread;
-
-    // Shared with the host's UI thread.
-    private readonly Lock _gate = new();
-    private ClipboardActionsSettings _latest;
-    private MessageWindow? _window;
-    private bool _stopping;
-    private volatile bool _failed;
 
     // The thread's own, while its message loop runs.
-    private ClipboardActionsSettings? _applied;
     private ClipboardRules? _rules;
     private bool _menuOpen;
 
@@ -42,149 +31,53 @@ public sealed partial class ClipboardActionsThread
     /// which Windows would refuse while the old thread has it.
     /// </param>
     public ClipboardActionsThread(ClipboardActionsSettings settings, IClipboardActionsSystem system, IHostCommands commands, ILogger logger, ClipboardActionsThread? previous = null)
+        : base("Clipboard Actions", WindowClassName, settings, previous)
     {
-        ArgumentNullException.ThrowIfNull(settings);
         ArgumentNullException.ThrowIfNull(system);
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(logger);
 
-        _latest = settings;
         _system = system;
         _commands = commands;
         _logger = logger;
-        _previous = previous;
         _runner = new ClipboardActionRunner(commands, () => system.IsAdministrator, system.FileExists, system.StartProcess, logger);
-
-        // A background thread, so one that doesn't end doesn't keep the host running.
-        _thread = new Thread(Run) { IsBackground = true, Name = "Clipboard Actions" };
-        _thread.SetApartmentState(ApartmentState.STA);
-        _thread.Start();
+        Start();
     }
 
-    /// <summary>Whether the thread stopped because of a failure, which it logged.</summary>
-    public bool HasFailed => _failed;
-
-    private ClipboardActionsSettings Latest
+    protected override IDisposable? Open(MessageWindow window)
     {
-        get
+        var shortcut = _system.RegisterShortcut(window);
+        if (shortcut is null)
         {
-            lock (_gate)
-            {
-                return _latest;
-            }
+            LogShortcutRefused(_logger);
         }
+        else
+        {
+            shortcut.Pressed += (_, _) => Guard(() => Pressed(window));
+        }
+
+        return shortcut;
     }
 
-    /// <summary>Passes new settings to the thread, without waiting for it. Call it from one thread.</summary>
-    public void Update(ClipboardActionsSettings settings)
+    protected override void Apply(ClipboardActionsSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(settings);
-
-        MessageWindow? window;
-        lock (_gate)
-        {
-            _latest = settings;
-            window = _window;
-        }
-
-        // Without a window yet, the thread takes the latest settings when it creates one.
-        window?.BeginInvoke(() => Guard(() => Apply(Latest)));
-    }
-
-    /// <summary>Asks the thread to close its menu, remove the shortcut and end, without waiting for it.</summary>
-    public void Stop()
-    {
-        MessageWindow? window;
-        lock (_gate)
-        {
-            _stopping = true;
-            window = _window;
-        }
-
-        window?.BeginInvoke(() =>
-        {
-            if (_menuOpen)
-            {
-                PopupMenu.CloseOpenMenu();
-            }
-
-            MessageLoop.Quit();
-        });
-    }
-
-    /// <summary>Waits for the thread to end. Returns false when it didn't in time.</summary>
-    public bool Join(TimeSpan timeout) => _thread.Join(timeout);
-
-    private void Run()
-    {
-        try
-        {
-            _previous?.Join(Timeout.InfiniteTimeSpan);
-
-            using var window = new MessageWindow(WindowClassName);
-            try
-            {
-                if (!Attach(window))
-                {
-                    return;
-                }
-
-                using var shortcut = _system.RegisterShortcut(window);
-                if (shortcut is null)
-                {
-                    LogShortcutRefused(_logger);
-                }
-                else
-                {
-                    shortcut.Pressed += (_, _) => Guard(() => Pressed(window));
-                }
-
-                Apply(Latest);
-                LogStarted(_logger);
-                MessageLoop.Run();
-            }
-            finally
-            {
-                Detach();
-            }
-        }
-        catch (Exception exception)
-        {
-            Fail(exception);
-        }
-
-        LogStopped(_logger);
-    }
-
-    // Returns false when the thread was asked to stop before it had a window.
-    private bool Attach(MessageWindow window)
-    {
-        lock (_gate)
-        {
-            _window = window;
-            return !_stopping;
-        }
-    }
-
-    private void Detach()
-    {
-        lock (_gate)
-        {
-            _window = null;
-        }
-    }
-
-    private void Apply(ClipboardActionsSettings settings)
-    {
-        if (settings == _applied)
-        {
-            return;
-        }
-
-        _applied = settings;
         _rules = ClipboardRules.Compile(settings, _logger);
         LogApplied(_logger, _rules.Count, settings.Rules.Count, settings.OpenLinks);
     }
+
+    protected override void OnStopping()
+    {
+        if (_menuOpen)
+        {
+            PopupMenu.CloseOpenMenu();
+        }
+    }
+
+    protected override void OnStarted() => LogStarted(_logger);
+
+    protected override void OnStopped() => LogStopped(_logger);
+
+    protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
 
     private void Pressed(MessageWindow window)
     {
@@ -235,32 +128,6 @@ public sealed partial class ClipboardActionsThread
         {
             LogActionFailed(_logger, exception, offer.Rule);
         }
-    }
-
-    // Runs on the thread, where an exception would end the host. A failure ends the thread,
-    // which removes the shortcut.
-    private void Guard(Action action)
-    {
-        if (_failed)
-        {
-            return;
-        }
-
-        try
-        {
-            action();
-        }
-        catch (Exception exception)
-        {
-            Fail(exception);
-            MessageLoop.Quit();
-        }
-    }
-
-    private void Fail(Exception exception)
-    {
-        _failed = true;
-        LogFailed(_logger, exception);
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions started on its own thread.")]
