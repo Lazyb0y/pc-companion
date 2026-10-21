@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PCCompanion.Infrastructure.Tests;
+namespace PCCompanion.Testing;
 
 /// <summary>
-/// A clock that moves only when a test calls <see cref="Advance"/>, which fires the timers that
-/// are due on the test's thread, periodic ones once per period.
+/// A clock that moves only when a test calls <see cref="Advance"/>, for wall-clock time, for the
+/// timestamps that measure elapsed time and for timers. Advancing fires the timers that are due
+/// on the test's thread, periodic ones once per period.
 /// </summary>
-internal sealed class ManualTimeProvider : TimeProvider
+public sealed class ManualTimeProvider : TimeProvider
 {
     private readonly List<ManualTimer> _timers = [];
 
     public DateTimeOffset Now { get; set; } = new(2026, 10, 20, 9, 0, 0, TimeSpan.Zero);
 
     public override DateTimeOffset GetUtcNow() => Now;
+
+    public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+
+    public override long GetTimestamp() => Now.UtcTicks;
 
     public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
     {

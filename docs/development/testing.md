@@ -7,7 +7,7 @@ dotnet test --solution PCCompanion.slnx -c Debug -p:Platform=x64
 ```
 
 - xUnit v3 on Microsoft.Testing.Platform, which `global.json` selects for `dotnet test`. Test projects go in `tests/` and are included in the solution.
-- Test doubles and helpers that more than one test project needs go in `tests/PCCompanion.Testing`, not into each project, such as `RecordingLogger<T>`, which keeps every log entry.
+- Test doubles and helpers that more than one test project needs go in `tests/PCCompanion.Testing`, not into each project, such as `RecordingLogger<T>`, which keeps every log entry, and `ManualTimeProvider`, a clock and timers that move only when a test advances them.
 - `PCCompanion.Architecture.Tests` checks that every project is in the solution, that project references have no cycles, and that they follow the [dependency rules](../architecture/overview.md#dependencies).
 
 ## Checks before a pull request
