@@ -588,6 +588,32 @@ function Get-TrayMenuBrightness {
     return [int] (255 * $total / $count)
 }
 
+# The average brightness of the settings window below its title bar, from 0 (black) to 255
+# (white), or -1 when it isn't open.
+function Get-AppWindowBrightness {
+    $window = Get-AppWindow
+    if (-not $window) { return -1 }
+    $bounds = $window.Current.BoundingRectangle
+    $width = [int] $bounds.Width - 16
+    $height = [int] $bounds.Height - 56
+    if ($width -lt 1 -or $height -lt 1) { return -1 }
+
+    $bitmap = New-Object System.Drawing.Bitmap $width, $height
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen([int] $bounds.Left + 8, [int] $bounds.Top + 48, 0, 0, $bitmap.Size)
+    $total = 0.0
+    $count = 0
+    for ($x = 0; $x -lt $width; $x += 4) {
+        for ($y = 0; $y -lt $height; $y += 4) {
+            $total += $bitmap.GetPixel($x, $y).GetBrightness()
+            $count++
+        }
+    }
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    return [int] (255 * $total / $count)
+}
+
 # Closes the host's open tray menu and returns whether it closed. Escape would go to the window in
 # front, which needn't be the menu; WM_CANCELMODE makes the window that owns the menu end it.
 function Close-TrayMenu([string] $WindowClass = 'PCCompanion.Host') {
