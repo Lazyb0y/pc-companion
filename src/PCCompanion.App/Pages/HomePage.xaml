@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls="using:PCCompanion.App.Controls"
     xmlns:viewModels="using:PCCompanion.App.ViewModels">
 
     <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
@@ -33,20 +33,15 @@
                                 <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Features}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="viewModels:FeatureCardViewModel">
-                                            <toolkit:SettingsCard
+                                            <controls:SwitchCard
                                                 Margin="0,0,0,4"
                                                 Click="OnFeatureCardClick"
                                                 Description="{x:Bind Description}"
+                                                Glyph="{x:Bind Glyph}"
                                                 Header="{x:Bind Name}"
-                                                IsClickEnabled="True">
-                                                <toolkit:SettingsCard.HeaderIcon>
-                                                    <FontIcon Glyph="{x:Bind Glyph}" />
-                                                </toolkit:SettingsCard.HeaderIcon>
-                                                <ToggleSwitch
-                                                    AutomationProperties.Name="{x:Bind Name}"
-                                                    IsEnabled="{x:Bind IsSupported}"
-                                                    IsOn="{x:Bind IsOn, Mode=TwoWay}" />
-                                            </toolkit:SettingsCard>
+                                                IsClickEnabled="True"
+                                                IsOn="{x:Bind IsOn, Mode=TwoWay}"
+                                                IsSwitchEnabled="{x:Bind IsSupported}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

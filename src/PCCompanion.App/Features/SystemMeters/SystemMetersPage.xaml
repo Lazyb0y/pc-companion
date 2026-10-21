@@ -27,24 +27,21 @@
                         <FontIcon Glyph="&#xE9D9;" />
                     </toolkit:SettingsExpander.HeaderIcon>
                     <toolkit:SettingsExpander.Items>
-                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersCpuDescription}" Header="{app:Localized Key=SystemMetersCpuHeader}">
-                            <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE950;" />
-                            </toolkit:SettingsCard.HeaderIcon>
-                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersCpuHeader}" IsOn="{x:Bind ViewModel.Cpu, Mode=TwoWay}" />
-                        </toolkit:SettingsCard>
-                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersMemoryDescription}" Header="{app:Localized Key=SystemMetersMemoryHeader}">
-                            <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE964;" />
-                            </toolkit:SettingsCard.HeaderIcon>
-                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersMemoryHeader}" IsOn="{x:Bind ViewModel.Memory, Mode=TwoWay}" />
-                        </toolkit:SettingsCard>
-                        <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersNetworkDescription}" Header="{app:Localized Key=SystemMetersNetworkHeader}">
-                            <toolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE968;" />
-                            </toolkit:SettingsCard.HeaderIcon>
-                            <ToggleSwitch AutomationProperties.Name="{app:Localized Key=SystemMetersNetworkHeader}" IsOn="{x:Bind ViewModel.Network, Mode=TwoWay}" />
-                        </toolkit:SettingsCard>
+                        <controls:SwitchCard
+                            Description="{app:Localized Key=SystemMetersCpuDescription}"
+                            Glyph="&#xE950;"
+                            Header="{app:Localized Key=SystemMetersCpuHeader}"
+                            IsOn="{x:Bind ViewModel.Cpu, Mode=TwoWay}" />
+                        <controls:SwitchCard
+                            Description="{app:Localized Key=SystemMetersMemoryDescription}"
+                            Glyph="&#xE964;"
+                            Header="{app:Localized Key=SystemMetersMemoryHeader}"
+                            IsOn="{x:Bind ViewModel.Memory, Mode=TwoWay}" />
+                        <controls:SwitchCard
+                            Description="{app:Localized Key=SystemMetersNetworkDescription}"
+                            Glyph="&#xE968;"
+                            Header="{app:Localized Key=SystemMetersNetworkHeader}"
+                            IsOn="{x:Bind ViewModel.Network, Mode=TwoWay}" />
                     </toolkit:SettingsExpander.Items>
                 </toolkit:SettingsExpander>
 

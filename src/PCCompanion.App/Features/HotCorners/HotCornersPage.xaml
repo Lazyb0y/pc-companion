@@ -174,12 +174,11 @@
                     </StackPanel>
                 </toolkit:SettingsCard>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=HotCornersFullScreenDescription}" Header="{app:Localized Key=HotCornersFullScreenHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE740;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch AutomationProperties.Name="{app:Localized Key=HotCornersFullScreenHeader}" IsOn="{x:Bind ViewModel.IgnoreFullScreenApps, Mode=TwoWay}" />
-                </toolkit:SettingsCard>
+                <controls:SwitchCard
+                    Description="{app:Localized Key=HotCornersFullScreenDescription}"
+                    Glyph="&#xE740;"
+                    Header="{app:Localized Key=HotCornersFullScreenHeader}"
+                    IsOn="{x:Bind ViewModel.IgnoreFullScreenApps, Mode=TwoWay}" />
 
                 <InfoBar
                     Margin="0,16,0,0"
