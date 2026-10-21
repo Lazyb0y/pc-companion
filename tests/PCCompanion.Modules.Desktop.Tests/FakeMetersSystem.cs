@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using PCCompanion.Core.Features;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Platform.Windows;
 using Xunit;
@@ -199,22 +198,4 @@ internal sealed class FakeMetersSystem : IMetersSystem
             system.Record("dispose");
         }
     }
-}
-
-/// <summary>Counts the host's commands.</summary>
-internal sealed class FakeHostCommands : IHostCommands
-{
-    private int _settings;
-    private int _exits;
-
-    public int SettingsOpened => Volatile.Read(ref _settings);
-
-    public int Exits => Volatile.Read(ref _exits);
-
-    public void OpenSettings() => Interlocked.Increment(ref _settings);
-
-    public void ExitApp() => Interlocked.Increment(ref _exits);
-
-    // The meters open no web pages.
-    public bool OpenWebPage(Uri address) => throw new NotSupportedException();
 }
