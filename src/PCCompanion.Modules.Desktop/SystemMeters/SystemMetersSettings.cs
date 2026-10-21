@@ -45,7 +45,7 @@ public enum StripIcons
 /// <summary>
 /// System Meters settings, stored in <c>features.systemMeters</c>. See docs/features/desktop/system-meters.md.
 /// </summary>
-public sealed record SystemMetersSettings
+public sealed record SystemMetersSettings : IFeatureSettings<SystemMetersSettings>
 {
     public const int MinimumIntervalSeconds = 1;
     public const int MaximumIntervalSeconds = 10;
@@ -114,6 +114,8 @@ public sealed record SystemMetersSettings
     }
 
     public JsonElement Write() => FeatureSettings.Write(this, SystemMetersJsonContext.Default.SystemMetersSettings);
+
+    public SystemMetersSettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 }
 
 /// <summary>

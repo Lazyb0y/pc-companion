@@ -7,7 +7,7 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// <summary>
 /// Hot Corners settings, stored in <c>features.hotCorners</c>. See docs/features/input/hot-corners.md.
 /// </summary>
-public sealed record HotCornersSettings
+public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
 {
     public const int DefaultActivationDelayMilliseconds = 150;
 
@@ -55,6 +55,8 @@ public sealed record HotCornersSettings
     }
 
     public JsonElement Write() => FeatureSettings.Write(this, HotCornersJsonContext.Default.HotCornersSettings);
+
+    public HotCornersSettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 
     public CornerSettings For(ScreenCorner corner) => corner switch
     {
