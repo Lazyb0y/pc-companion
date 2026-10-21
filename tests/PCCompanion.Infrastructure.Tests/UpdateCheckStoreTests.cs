@@ -38,6 +38,7 @@ public sealed class UpdateCheckStoreTests : IDisposable
             LastCheck = new DateTimeOffset(2026, 10, 20, 9, 14, 0, TimeSpan.Zero),
             LatestVersion = new ReleaseVersion(0, 2, 0),
             NotifiedVersion = new ReleaseVersion(0, 1, 5),
+            SeenVersion = new ReleaseVersion(0, 1, 4),
         };
 
         _store.Save(state);
@@ -58,6 +59,7 @@ public sealed class UpdateCheckStoreTests : IDisposable
         Assert.Contains("\"lastCheck\": \"2026-10-20T09:14:00+00:00\"", json, StringComparison.Ordinal);
         Assert.Contains("\"latestVersion\": \"0.2.0\"", json, StringComparison.Ordinal);
         Assert.Contains("\"notifiedVersion\": null", json, StringComparison.Ordinal);
+        Assert.Contains("\"seenVersion\": null", json, StringComparison.Ordinal);
     }
 
     [Fact]

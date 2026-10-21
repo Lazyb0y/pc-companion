@@ -93,13 +93,12 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public async Task<UpdateCheckOutcome> CheckAsync(ReleaseVersion current, CancellationToken cancellationToken)
     {
-        var state = store.Load();
-        if (!IsDue(state, time.GetUtcNow()))
+        if (!IsDue(store.Load(), time.GetUtcNow()))
         {
             return new UpdateCheckOutcome(UpdateCheckResult.NotDue);
         }
 
-        return (await AskAsync(state, current, cancellationToken).ConfigureAwait(false)).Outcome;
+        return (await AskAsync(current, cancellationToken).ConfigureAwait(false)).Outcome;
     }
 
     /// <summary>
@@ -111,7 +110,7 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public async Task<CheckNowOutcome> CheckNowAsync(ReleaseVersion current, CancellationToken cancellationToken)
     {
-        var (_, answer, latest) = await AskAsync(store.Load(), current, cancellationToken).ConfigureAwait(false);
+        var (_, answer, latest) = await AskAsync(current, cancellationToken).ConfigureAwait(false);
         return answer switch
         {
             ReleaseAnswerKind.NoAnswer => new CheckNowOutcome(CheckNowResult.NoAnswer),
@@ -124,10 +123,14 @@ public sealed partial class UpdateChecker(UpdateCheckStore store, GitHubReleaseS
     // Asks GitHub and saves what it answered. Also returns what GitHub answered and the newest
     // version known after it.
     private async Task<(UpdateCheckOutcome Outcome, ReleaseAnswerKind Answer, ReleaseVersion? Latest)> AskAsync(
-        UpdateCheckState state, ReleaseVersion current, CancellationToken cancellationToken)
+        ReleaseVersion current, CancellationToken cancellationToken)
     {
         LogChecking(logger);
         var answer = await source.GetLatestAsync(cancellationToken).ConfigureAwait(false);
+
+        // Read once GitHub answered, which can take 30 seconds, so what another save changed in
+        // the meantime is kept, such as the version the General page showed.
+        var state = store.Load();
         var latest = state.LatestVersion;
         switch (answer.Kind)
         {
