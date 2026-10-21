@@ -2,7 +2,6 @@ using System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
-using Microsoft.UI.Xaml.Controls;
 
 namespace PCCompanion.App.Controls;
 
@@ -13,7 +12,7 @@ namespace PCCompanion.App.Controls;
 public partial class IconCard : SettingsCard
 {
     public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register(
-        nameof(Glyph), typeof(string), typeof(IconCard), new PropertyMetadata(string.Empty, (sender, e) => ((IconCard)sender).OnGlyphChanged((string)e.NewValue)));
+        nameof(Glyph), typeof(string), typeof(IconCard), new PropertyMetadata(string.Empty, (sender, e) => GlyphIcon.Set(sender, HeaderIconProperty, (string)e.NewValue)));
 
     /// <summary>The card's icon, a glyph of the icon font.</summary>
     public string Glyph
@@ -27,17 +26,5 @@ public partial class IconCard : SettingsCard
     {
         ArgumentNullException.ThrowIfNull(control);
         RegisterPropertyChangedCallback(HeaderProperty, (_, _) => AutomationProperties.SetName(control, Header as string ?? string.Empty));
-    }
-
-    private void OnGlyphChanged(string glyph)
-    {
-        if (string.IsNullOrEmpty(glyph))
-        {
-            ClearValue(HeaderIconProperty);
-        }
-        else
-        {
-            HeaderIcon = new FontIcon { Glyph = glyph };
-        }
     }
 }
