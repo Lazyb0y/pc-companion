@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 
-namespace PCCompanion.Logging.Tests;
+namespace PCCompanion.Testing;
 
 /// <summary>
 /// A new, empty folder under the temp folder that is deleted when disposed.
 /// </summary>
-internal sealed class TemporaryFolder : IDisposable
+public sealed class TemporaryFolder : IDisposable
 {
     public TemporaryFolder()
     {
