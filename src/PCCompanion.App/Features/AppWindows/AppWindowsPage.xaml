@@ -30,18 +30,9 @@
                     Header="{app:Localized Key=AppWindowsMinimizedHeader}"
                     IsOn="{x:Bind ViewModel.IncludeMinimized, Mode=TwoWay}" />
 
-                <InfoBar
-                    Margin="0,16,0,0"
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="{app:Localized Key=AppWindowsShortcutInfo}"
-                    Severity="Informational" />
+                <controls:Note Margin="0,16,0,0" Message="{app:Localized Key=AppWindowsShortcutInfo}" />
 
-                <InfoBar
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="{x:Bind ViewModel.AdministratorInfo}"
-                    Severity="Informational" />
+                <controls:Note Message="{x:Bind ViewModel.AdministratorInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=AppWindowsPermissions}" />
             </StackPanel>

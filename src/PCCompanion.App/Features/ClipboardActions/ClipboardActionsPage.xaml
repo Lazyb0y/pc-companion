@@ -122,12 +122,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <InfoBar
-                    Margin="0,16,0,0"
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="{app:Localized Key=ClipboardActionsAdministratorInfo}"
-                    Severity="Informational" />
+                <controls:Note Margin="0,16,0,0" Message="{app:Localized Key=ClipboardActionsAdministratorInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=ClipboardActionsPermissions}" />
             </StackPanel>

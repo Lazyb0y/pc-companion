@@ -3,7 +3,8 @@
     x:Class="PCCompanion.App.Controls.FeatureHeader"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:app="using:PCCompanion.App">
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls">
 
     <StackPanel Spacing="4">
         <!--
@@ -50,8 +51,7 @@
                 IsOn="{x:Bind IsOn, Mode=TwoWay}" />
         </Grid>
 
-        <InfoBar
-            IsClosable="False"
+        <controls:Note
             IsOpen="{x:Bind SaveFailed, Mode=OneWay}"
             Message="{app:Localized Key=FeatureSaveFailed}"
             Severity="Error" />

@@ -69,22 +69,13 @@
                     ItemsSource="{x:Bind ViewModel.IntervalOptions}"
                     SelectedItem="{x:Bind ViewModel.SelectedInterval, Mode=TwoWay}" />
 
-                <InfoBar
-                    Margin="0,16,0,0"
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="{app:Localized Key=SystemMetersTaskManagerInfo}"
-                    Severity="Informational" />
+                <controls:Note Margin="0,16,0,0" Message="{app:Localized Key=SystemMetersTaskManagerInfo}" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
+                    ButtonCommand="{x:Bind ViewModel.OpenTaskbarSettingsCommand}"
+                    ButtonContent="{app:Localized Key=SystemMetersOpenTaskbarSettings}"
                     IsOpen="{x:Bind ViewModel.InNotificationArea, Mode=OneWay}"
-                    Message="{app:Localized Key=SystemMetersHiddenIconsInfo}"
-                    Severity="Informational">
-                    <InfoBar.ActionButton>
-                        <Button Command="{x:Bind ViewModel.OpenTaskbarSettingsCommand}" Content="{app:Localized Key=SystemMetersOpenTaskbarSettings}" />
-                    </InfoBar.ActionButton>
-                </InfoBar>
+                    Message="{app:Localized Key=SystemMetersHiddenIconsInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=SystemMetersPermissions}" />
             </StackPanel>
