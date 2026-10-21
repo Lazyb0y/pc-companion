@@ -39,7 +39,7 @@ public sealed class WebPageArgumentsTests
     [InlineData("--open-web-page", "ms-settings:privacy")]
     [InlineData("--open-web-page", "example.com")]
     [InlineData("--open-web-page")]
-    [InlineData("--open-release-page", "https://example.com")]
+    [InlineData("--check-for-updates", "https://example.com")]
     public void TheCopyOpensNothingButAWebAddress(params string[] arguments)
     {
         Assert.Null(HostProcess.ReadWebPageAddress(arguments));

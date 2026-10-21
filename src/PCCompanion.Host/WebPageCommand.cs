@@ -7,14 +7,13 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Host;
 
 /// <summary>
-/// Opens web pages for features, such as a link Clipboard Actions offers, never with admin rights.
-/// A browser started by a host running as administrator would run as administrator too, so such a
-/// host starts a copy of itself with <see cref="HostProcess.OpenWebPageArgument"/> without admin
-/// rights, as it does for the release page, and the copy opens the page.
+/// Opens web pages, such as a link Clipboard Actions offers or the release page the update
+/// notification opens, never with admin rights. A browser started by a host running as
+/// administrator would run as administrator too, so such a host starts a copy of itself with
+/// <see cref="HostProcess.OpenWebPageArgument"/> without admin rights, and the copy opens the page.
 /// </summary>
 internal static class WebPageCommand
 {
-
     /// <summary>
     /// Opens <paramref name="address"/>, an <c>http</c> or <c>https</c> address, from the running
     /// host. Returns false when it isn't one or Windows refused.

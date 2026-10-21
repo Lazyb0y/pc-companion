@@ -48,12 +48,6 @@ internal static partial class Program
             return;
         }
 
-        if (args.Contains(HostProcess.OpenReleasePageArgument, StringComparer.OrdinalIgnoreCase))
-        {
-            ReleasePageCommand.Run();
-            return;
-        }
-
         if (args.Contains(HostProcess.OpenWebPageArgument, StringComparer.OrdinalIgnoreCase))
         {
             WebPageCommand.Run(args);
