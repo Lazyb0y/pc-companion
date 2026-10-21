@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using PCCompanion.Core;
 using PCCompanion.Infrastructure;
 using PCCompanion.Platform.Windows;
@@ -14,7 +13,6 @@ namespace PCCompanion.Host;
 /// </summary>
 internal static class RemoveDataCommand
 {
-    private static readonly string HostPath = Path.Combine(AppContext.BaseDirectory, HostProcess.FileName);
     private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(1);
 
     public static void Run(bool keepSettings)
@@ -29,7 +27,7 @@ internal static class RemoveDataCommand
                 : HostProcess.RemoveDataArgument;
             try
             {
-                UnelevatedProcess.Run(HostPath, arguments, Timeout);
+                UnelevatedProcess.Run(HostProcess.ExecutablePath, arguments, Timeout);
             }
             catch (Win32Exception)
             {

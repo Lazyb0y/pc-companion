@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using PCCompanion.Core.Settings;
 
 namespace PCCompanion.Core;
@@ -12,6 +13,12 @@ public static class HostProcess
 {
     /// <summary>The host's executable, installed next to the settings app.</summary>
     public const string FileName = "PCCompanion.Host.exe";
+
+    /// <summary>
+    /// The full path of the host's executable, next to the program that asks: the settings app or
+    /// the host itself.
+    /// </summary>
+    public static string ExecutablePath { get; } = Path.Combine(AppContext.BaseDirectory, FileName);
 
     /// <summary>
     /// The class name of the host's hidden window, which other processes post messages to.
