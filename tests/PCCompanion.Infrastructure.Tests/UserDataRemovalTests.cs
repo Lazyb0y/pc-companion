@@ -1,4 +1,5 @@
 using System.IO;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;
