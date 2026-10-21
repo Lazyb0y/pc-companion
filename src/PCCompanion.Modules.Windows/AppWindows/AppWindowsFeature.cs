@@ -16,7 +16,7 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     private readonly WindowSwitcher _switcher = new(new WindowsAppWindowsEnvironment());
     private AppWindowsSettings _settings = new();
     private MessageWindow? _window;
-    private ForegroundMonitor? _monitor;
+    private WinEventHook? _foreground;
     private ShortcutKeeper? _shortcut;
     private bool _failed;
 
@@ -69,10 +69,11 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     private void Start()
     {
         var window = new MessageWindow(WindowClassName);
-        ForegroundMonitor monitor;
+        WinEventHook foreground;
         try
         {
-            monitor = new ForegroundMonitor();
+            // Another program's window coming to the front.
+            foreground = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, skipOwnProcess: true);
         }
         catch
         {
@@ -81,12 +82,12 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         }
 
         _window = window;
-        _monitor = monitor;
+        _foreground = foreground;
 
         // The timer fires on the thread pool; the keeper runs on the window's thread.
         _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)), logger);
         _shortcut.Pressed += (_, direction) => Guard(() => Switch(direction));
-        _monitor.Changed += (_, _) => Guard(() => _shortcut?.Check());
+        _foreground.Raised += (_, _) => Guard(() => _shortcut?.Check());
         LogStarted(logger);
     }
 
@@ -98,9 +99,9 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         }
 
         _shortcut?.Dispose();
-        _monitor?.Dispose();
+        _foreground?.Dispose();
         _window.Dispose();
-        (_shortcut, _monitor, _window) = (null, null, null);
+        (_shortcut, _foreground, _window) = (null, null, null);
         LogStopped(logger);
     }
 
