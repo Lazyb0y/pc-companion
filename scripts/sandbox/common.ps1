@@ -280,6 +280,79 @@ function Test-PageLayout([string] $Name, [string] $Title, [int] $Width) {
     Test-Check $check $passed $detail
 }
 
+# Checks a feature page's header as it's drawn: the icon, the title's capital letters and the
+# switch share one middle line. UI Automation doesn't see the icon and gives the title's box rather
+# than its letters, so the icon's middle and that of the title's first letter, a capital, come from
+# the screen's pixels; the switch's middle is that of its track. For a title on one line, in a page
+# laid out left to right. $When says what's different, such as the text size. Returns the first
+# letter's height in pixels, or 0 when it isn't found.
+function Test-HeaderAlignment([string] $Name, [string] $Title, [string] $When = '') {
+    $check = "${Name}${When}: the header's icon and switch are centered on the title"
+    $layout = Get-PageLayout $Title
+    $toggle = Find-Toggle $Title
+    if (-not $layout -or -not $toggle) {
+        Test-Check $check $false 'the page''s title or switch isn''t shown'
+        return 0
+    }
+
+    # The icon is in the 16 pixels left of the title and at most 80 wide; the header's rows reach
+    # past the title's box when the icon or the switch is taller.
+    $box = $layout.Title
+    $switch = $toggle.Current.BoundingRectangle
+    $left = [int] $box.Left - 100
+    $top = [int] [math]::Min($box.Top, $switch.Top) - 24
+    $bitmap = New-Object System.Drawing.Bitmap 160, ([int] [math]::Max($box.Bottom, $switch.Bottom) + 24 - $top)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen($left, $top, 0, 0, $bitmap.Size)
+    # Ink is what differs clearly from the background, taken from the gap between the icon and the title.
+    $background = $bitmap.GetPixel(92, [int] ($box.Top + $box.Height / 2) - $top).GetBrightness()
+    $isInk = { param($x, $y) [math]::Abs($bitmap.GetPixel($x, $y).GetBrightness() - $background) -gt 0.3 }
+    $rowsWithInk = {
+        param($fromX, $toX, $fromY, $toY)
+        @(for ($y = $fromY; $y -le $toY; $y++) {
+            for ($x = $fromX; $x -le $toX; $x++) { if (& $isInk $x $y) { $y; break } }
+        })
+    }
+    $iconRows = & $rowsWithInk 0 90 0 ($bitmap.Height - 1)
+    # The title's first letter: the ink joined to the leftmost ink in the title's box, which keeps
+    # out the description below it. Joined pixels rather than columns, since the next letter can
+    # reach under a capital, as y does under S.
+    $titleLeft = [int] $box.Left - $left - 2
+    $titleTop = [int] $box.Top - $top
+    $titleBottom = [int] $box.Bottom - $top - 1
+    $start = $null
+    for ($x = $titleLeft; $x -lt $bitmap.Width -and -not $start; $x++) {
+        for ($y = $titleTop; $y -le $titleBottom; $y++) { if (& $isInk $x $y) { $start = @($x, $y); break } }
+    }
+    $letterRows = @()
+    if ($start) {
+        $joined = @{}
+        $pending = New-Object System.Collections.Stack
+        $pending.Push($start)
+        while ($pending.Count -gt 0) {
+            $x, $y = $pending.Pop()
+            if ($joined.ContainsKey("$x,$y") -or $x -lt $titleLeft -or $x -ge $bitmap.Width -or $y -lt $titleTop -or $y -gt $titleBottom -or -not (& $isInk $x $y)) { continue }
+            $joined["$x,$y"] = $y
+            foreach ($dx in -1, 0, 1) { foreach ($dy in -1, 0, 1) { $pending.Push(@(($x + $dx), ($y + $dy))) } }
+        }
+        $letterRows = @($joined.Values | Sort-Object)
+    }
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    if ($iconRows.Count -eq 0 -or $letterRows.Count -eq 0) {
+        Test-Check $check $false "icon rows: $($iconRows.Count), first letter rows: $($letterRows.Count)"
+        return 0
+    }
+
+    $iconMiddle = $top + ($iconRows[0] + $iconRows[-1] + 1) / 2
+    $letterMiddle = $top + ($letterRows[0] + $letterRows[-1] + 1) / 2
+    $letterHeight = $letterRows[-1] - $letterRows[0] + 1
+    $switchMiddle = $switch.Top + $switch.Height / 2
+    $passed = ([math]::Abs($iconMiddle - $letterMiddle) -le 1.5) -and ([math]::Abs($switchMiddle - $letterMiddle) -le 1.5)
+    Test-Check $check $passed "middles: icon $iconMiddle, title's first letter $letterMiddle, switch $switchMiddle; first letter $letterHeight pixels high"
+    return $letterHeight
+}
+
 # Shows the page of navigation item $Name. In a narrow window the pane folds away, so if the item
 # can't be selected, this opens the pane with its button first.
 function Show-Page([string] $Name) {
