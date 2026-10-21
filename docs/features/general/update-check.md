@@ -86,7 +86,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 - The request, reading the answer and the browser never run with admin rights, and the host never writes to the user's folder as administrator: a link planted there could redirect the write, which is why its logs go to a protected folder; see [Always run as administrator](run-as-administrator.md).
 - So a host elevated through UAC runs a copy of itself without admin rights, with the token of the Windows shell, as for `--remove-data`:
   - `--check-for-updates` makes the request and saves the result, with the version the notification shows. It checks the setting and whether a check is due, so starting it by hand adds no request.
-  - `--open-release-page` opens the release page, and nothing else.
+  - `--open-web-page` with the release page's address opens it, as it opens a feature's web page; it opens only `http` and `https` addresses.
 - The elevated host then reads the result, as untrusted, and shows the notification itself.
 - With UAC off, every program already has admin rights, so the host checks itself, as it writes its logs to the user's folder then.
 

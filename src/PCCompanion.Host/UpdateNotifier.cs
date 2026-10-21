@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using System.Threading;
@@ -97,25 +96,13 @@ internal sealed partial class UpdateNotifier : IDisposable
         }
     }
 
-    // A browser started by a host running as administrator would run as administrator too, so
-    // such a host has a copy without admin rights open the page.
+    // Like a feature's web page, never with admin rights: see WebPageCommand.
     private void OpenReleasePage()
     {
         LogSelected(_logger);
-        try
+        if (!WebPageCommand.Open(GitHubReleaseSource.ReleasePageAddress))
         {
-            if (Elevation.IsUacElevated)
-            {
-                UnelevatedProcess.Start(HostProcess.ExecutablePath, HostProcess.OpenReleasePageArgument);
-            }
-            else if (!ShellActions.OpenWebPage(GitHubReleaseSource.ReleasePageAddress))
-            {
-                LogCantOpen(_logger, null);
-            }
-        }
-        catch (Win32Exception exception)
-        {
-            LogCantOpen(_logger, exception);
+            LogCantOpen(_logger);
         }
     }
 
@@ -132,5 +119,5 @@ internal sealed partial class UpdateNotifier : IDisposable
     private static partial void LogSelected(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Can't open the release page.")]
-    private static partial void LogCantOpen(ILogger logger, Exception? exception);
+    private static partial void LogCantOpen(ILogger logger);
 }

@@ -64,15 +64,9 @@ public static class HostProcess
     public const string CheckForUpdatesArgument = "--check-for-updates";
 
     /// <summary>
-    /// The argument a host running as administrator starts a copy of itself with, without admin
-    /// rights, to open the latest release's page in the browser.
-    /// </summary>
-    public const string OpenReleasePageArgument = "--open-release-page";
-
-    /// <summary>
     /// The argument, followed by an <c>http</c> or <c>https</c> address, that a host running as
     /// administrator starts a copy of itself with, without admin rights, to open the address in
-    /// the browser for a feature; see <see cref="WebPageArguments"/>.
+    /// the browser, for a feature or the release page; see <see cref="WebPageArguments"/>.
     /// </summary>
     public const string OpenWebPageArgument = "--open-web-page";
 
