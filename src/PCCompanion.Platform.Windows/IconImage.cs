@@ -33,23 +33,7 @@ public sealed class IconImage : IDisposable
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
         ArgumentOutOfRangeException.ThrowIfNotEqual(pixels.Length, size * size, nameof(pixels));
 
-        var info = new BITMAPINFO
-        {
-            bmiHeader = new BITMAPINFOHEADER
-            {
-                biSize = (uint)sizeof(BITMAPINFOHEADER),
-                biWidth = size,
-                biHeight = -size, // top-down
-                biPlanes = 1,
-                biBitCount = 32,
-            },
-        };
-
-        using var color = PInvoke.CreateDIBSection(HDC.Null, &info, DIB_USAGE.DIB_RGB_COLORS, out var bits, null, 0);
-        if (color.IsInvalid)
-        {
-            throw new Win32Exception();
-        }
+        using var color = TopDownBitmap.Create(HDC.Null, size, size, out var bits);
 
         pixels.CopyTo(new Span<uint>(bits, pixels.Length));
 

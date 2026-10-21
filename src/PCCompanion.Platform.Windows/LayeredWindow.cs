@@ -110,27 +110,11 @@ public sealed class LayeredWindow : IDisposable
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(bounds.Height, nameof(bounds));
         ArgumentOutOfRangeException.ThrowIfNotEqual(pixels.Length, bounds.Width * bounds.Height, nameof(pixels));
 
-        var info = new BITMAPINFO
-        {
-            bmiHeader = new BITMAPINFOHEADER
-            {
-                biSize = (uint)sizeof(BITMAPINFOHEADER),
-                biWidth = bounds.Width,
-                biHeight = -bounds.Height, // top-down
-                biPlanes = 1,
-                biBitCount = 32,
-            },
-        };
-
         var screen = PInvoke.GetDC(HWND.Null);
         var memory = PInvoke.CreateCompatibleDC(screen);
         try
         {
-            using var bitmap = PInvoke.CreateDIBSection(memory, &info, DIB_USAGE.DIB_RGB_COLORS, out var bits, null, 0);
-            if (bitmap.IsInvalid)
-            {
-                throw new Win32Exception();
-            }
+            using var bitmap = TopDownBitmap.Create(memory, bounds.Width, bounds.Height, out var bits);
 
             pixels.CopyTo(new Span<uint>(bits, pixels.Length));
             var previous = PInvoke.SelectObject(memory, (HGDIOBJ)bitmap.DangerousGetHandle());
