@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
     xmlns:controls="using:PCCompanion.App.Controls"
-    xmlns:local="using:PCCompanion.App.Features.AppWindows"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
 
     <!-- The page's content is a column in the middle of the page: see PageColumnStyle in App.xaml. -->
@@ -19,22 +18,12 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=AppWindowsName}" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=AppWindowsShortcutDescription}" Header="{app:Localized Key=AppWindowsShortcutHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE765;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                    <ComboBox
-                        MinWidth="200"
-                        AutomationProperties.Name="{app:Localized Key=AppWindowsShortcutHeader}"
-                        ItemsSource="{x:Bind ViewModel.Shortcuts}"
-                        SelectedItem="{x:Bind ViewModel.SelectedShortcut, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:ShortcutOption">
-                                <TextBlock Text="{x:Bind DisplayName}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </toolkit:SettingsCard>
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=AppWindowsShortcutDescription}"
+                    Glyph="&#xE765;"
+                    Header="{app:Localized Key=AppWindowsShortcutHeader}"
+                    ItemsSource="{x:Bind ViewModel.Shortcuts}"
+                    SelectedItem="{x:Bind ViewModel.SelectedShortcut, Mode=TwoWay}" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=AppWindowsMinimizedDescription}"

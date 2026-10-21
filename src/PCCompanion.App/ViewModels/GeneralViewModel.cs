@@ -22,9 +22,9 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.App.ViewModels;
 
 /// <param name="Tag">The BCP-47 tag, or <see langword="null"/> for the Windows display language.</param>
-public sealed record LanguageOption(string? Tag, string DisplayName);
+public sealed record LanguageOption(string? Tag, string DisplayName) : Choice(DisplayName);
 
-public sealed record ThemeOption(AppTheme Theme, string DisplayName);
+public sealed record ThemeOption(AppTheme Theme, string DisplayName) : Choice(DisplayName);
 
 /// <summary>
 /// The General page. Every change is saved right away.
