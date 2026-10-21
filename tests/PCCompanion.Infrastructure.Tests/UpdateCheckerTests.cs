@@ -60,6 +60,30 @@ public sealed class UpdateCheckerTests : IDisposable
         Assert.Equal(new ReleaseVersion(0, 3, 0), _store.Load().NotifiedVersion);
     }
 
+    [Fact]
+    public async Task ACheckKeepsWhatAnotherSaveChangedWhileGitHubAnswered()
+    {
+        // Meanwhile, Check now found the same version and the General page showed it.
+        var saved = new UpdateCheckState
+        {
+            LastCheck = _time.Now,
+            LatestVersion = new ReleaseVersion(0, 2, 0),
+            NotifiedVersion = new ReleaseVersion(0, 2, 0),
+            SeenVersion = new ReleaseVersion(0, 2, 0),
+        };
+        _gitHub.Respond = (_, _) =>
+        {
+            _store.Save(saved);
+            _time.Advance(TimeSpan.FromSeconds(5));
+            return Task.FromResult(FakeGitHub.Release("v0.2.0"));
+        };
+
+        var outcome = await CheckAsync();
+
+        Assert.Equal(new UpdateCheckOutcome(UpdateCheckResult.Answered), outcome);
+        Assert.Equal(saved with { LastCheck = _time.Now }, _store.Load());
+    }
+
     [Theory]
     [InlineData("v0.1.0")]
     [InlineData("v0.0.9")]
@@ -296,6 +320,30 @@ public sealed class UpdateCheckerTests : IDisposable
 
         Assert.Equal(new CheckNowOutcome(CheckNowResult.Failed), outcome);
         Assert.Equal(new UpdateCheckState { LastCheck = _time.Now, LatestVersion = new ReleaseVersion(0, 2, 0), NotifiedVersion = new ReleaseVersion(0, 2, 0) }, _store.Load());
+    }
+
+    [Fact]
+    public async Task CheckNowKeepsWhatAnotherSaveChangedWhileGitHubAnswered()
+    {
+        // Meanwhile, the host's check found a newer version and the General page showed it.
+        var saved = new UpdateCheckState
+        {
+            LastCheck = _time.Now,
+            LatestVersion = new ReleaseVersion(0, 2, 0),
+            NotifiedVersion = new ReleaseVersion(0, 2, 0),
+            SeenVersion = new ReleaseVersion(0, 2, 0),
+        };
+        _gitHub.Respond = (_, _) =>
+        {
+            _store.Save(saved);
+            _time.Advance(TimeSpan.FromSeconds(5));
+            return Task.FromResult(FakeGitHub.Status(HttpStatusCode.TooManyRequests));
+        };
+
+        var outcome = await CheckNowAsync();
+
+        Assert.Equal(new CheckNowOutcome(CheckNowResult.Failed), outcome);
+        Assert.Equal(saved with { LastCheck = _time.Now }, _store.Load());
     }
 
     [Fact]
