@@ -171,12 +171,7 @@
                     Header="{app:Localized Key=HotCornersFullScreenHeader}"
                     IsOn="{x:Bind ViewModel.IgnoreFullScreenApps, Mode=TwoWay}" />
 
-                <InfoBar
-                    Margin="0,16,0,0"
-                    IsClosable="False"
-                    IsOpen="True"
-                    Message="{x:Bind ViewModel.AdministratorInfo}"
-                    Severity="Informational" />
+                <controls:Note Margin="0,16,0,0" Message="{x:Bind ViewModel.AdministratorInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=HotCornersPermissions}" />
             </StackPanel>

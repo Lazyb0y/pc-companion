@@ -15,18 +15,13 @@
                     Style="{StaticResource TitleTextBlockStyle}"
                     Text="{app:Localized Key=NavigationGeneral}" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
+                    ButtonCommand="{x:Bind ViewModel.OpenReleasePageCommand}"
+                    ButtonContent="{app:Localized Key=GeneralUpdateOpenReleasePage}"
                     IsOpen="{x:Bind ViewModel.UpdateAvailable, Mode=OneWay}"
-                    Message="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}"
-                    Severity="Informational">
-                    <InfoBar.ActionButton>
-                        <Button Command="{x:Bind ViewModel.OpenReleasePageCommand}" Content="{app:Localized Key=GeneralUpdateOpenReleasePage}" />
-                    </InfoBar.ActionButton>
-                </InfoBar>
+                    Message="{x:Bind ViewModel.UpdateMessage, Mode=OneWay}" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
                     IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Message="{app:Localized Key=GeneralSaveFailed}"
                     Severity="Error" />
@@ -51,14 +46,12 @@
                     Header="{app:Localized Key=GeneralStartupHeader}"
                     IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
                     IsOpen="{x:Bind ViewModel.RunAsAdministratorFailed, Mode=OneWay}"
                     Message="{app:Localized Key=GeneralRunAsAdministratorFailed}"
                     Severity="Error" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
                     IsOpen="{x:Bind ViewModel.HostWithoutAdminRights, Mode=OneWay}"
                     Message="{app:Localized Key=GeneralRunAsAdministratorHostWithoutAdminRights}"
                     Severity="Warning" />

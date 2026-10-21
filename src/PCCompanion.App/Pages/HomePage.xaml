@@ -16,8 +16,7 @@
                     Style="{StaticResource TitleTextBlockStyle}"
                     Text="{app:Localized Key=NavigationHome}" />
 
-                <InfoBar
-                    IsClosable="False"
+                <controls:Note
                     IsOpen="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Message="{app:Localized Key=FeatureSaveFailed}"
                     Severity="Error" />
