@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
     xmlns:controls="using:PCCompanion.App.Controls"
-    xmlns:local="using:PCCompanion.App.Features.HotCorners"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+    xmlns:local="using:PCCompanion.App.Features.HotCorners">
 
     <Page.Resources>
         <DataTemplate x:Key="CornerTemplate" x:DataType="local:CornerViewModel">
@@ -179,11 +178,7 @@
                     Message="{x:Bind ViewModel.AdministratorInfo}"
                     Severity="Informational" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=HotCornersPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE72E;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                </toolkit:SettingsCard>
+                <controls:PermissionsCard Description="{app:Localized Key=HotCornersPermissions}" />
             </StackPanel>
         </Grid>
     </ScrollViewer>

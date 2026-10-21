@@ -129,11 +129,7 @@
                     Message="{app:Localized Key=ClipboardActionsAdministratorInfo}"
                     Severity="Informational" />
 
-                <toolkit:SettingsCard Description="{app:Localized Key=ClipboardActionsPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE72E;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                </toolkit:SettingsCard>
+                <controls:PermissionsCard Description="{app:Localized Key=ClipboardActionsPermissions}" />
             </StackPanel>
         </Grid>
     </ScrollViewer>

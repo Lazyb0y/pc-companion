@@ -89,11 +89,7 @@
                     </InfoBar.ActionButton>
                 </InfoBar>
 
-                <toolkit:SettingsCard Description="{app:Localized Key=SystemMetersPermissions}" Header="{app:Localized Key=FeaturePermissionsHeader}">
-                    <toolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE72E;" />
-                    </toolkit:SettingsCard.HeaderIcon>
-                </toolkit:SettingsCard>
+                <controls:PermissionsCard Description="{app:Localized Key=SystemMetersPermissions}" />
             </StackPanel>
         </Grid>
     </ScrollViewer>
