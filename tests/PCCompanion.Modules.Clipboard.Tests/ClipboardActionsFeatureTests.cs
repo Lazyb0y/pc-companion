@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Clipboard.Tests;

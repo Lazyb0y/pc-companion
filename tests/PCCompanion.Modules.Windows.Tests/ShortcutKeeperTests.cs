@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Platform.Windows;
+using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Modules.Windows.Tests.FakeShortcutEnvironment;
 

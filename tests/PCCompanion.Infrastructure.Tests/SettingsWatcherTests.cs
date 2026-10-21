@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Infrastructure.Updates;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;

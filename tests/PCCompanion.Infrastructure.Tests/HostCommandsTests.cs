@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Infrastructure.Features;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;
@@ -42,7 +44,7 @@ public sealed class HostCommandsTests
         Assert.False(commands.OpenWebPage(Address));
 
         Assert.Empty(_uiThread);
-        Assert.Equal(3, _logger.Entries.FindAll(entry => entry.Level == LogLevel.Warning).Count);
+        Assert.Equal(3, _logger.Entries.Count(entry => entry.Level == LogLevel.Warning));
     }
 
     [Fact]

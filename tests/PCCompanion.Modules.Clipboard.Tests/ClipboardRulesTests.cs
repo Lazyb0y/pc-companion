@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Clipboard.Tests;

@@ -33,4 +33,5 @@
   <Project Path="tests/PCCompanion.Modules.Input.Tests/PCCompanion.Modules.Input.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Windows.Tests/PCCompanion.Modules.Windows.Tests.csproj" />
   <Project Path="tests/PCCompanion.Platform.Windows.Tests/PCCompanion.Platform.Windows.Tests.csproj" />
+  <Project Path="tests/PCCompanion.Testing/PCCompanion.Testing.csproj" />
 </Solution>

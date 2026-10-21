@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Infrastructure.Updates;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;
