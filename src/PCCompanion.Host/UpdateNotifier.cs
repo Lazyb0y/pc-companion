@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +20,6 @@ namespace PCCompanion.Host;
 /// </summary>
 internal sealed partial class UpdateNotifier : IDisposable
 {
-    private static readonly string HostPath = Path.Combine(AppContext.BaseDirectory, HostProcess.FileName);
 
     // The copy's check has 30 seconds for GitHub's answer, after the copy starts.
     private static readonly TimeSpan CopyTimeout = TimeSpan.FromMinutes(1);
@@ -81,7 +79,7 @@ internal sealed partial class UpdateNotifier : IDisposable
     {
         var before = _store.Load();
         LogCheckingInCopy(_logger);
-        await Task.Run(() => UnelevatedProcess.Run(HostPath, HostProcess.CheckForUpdatesArgument, CopyTimeout), cancellationToken).ConfigureAwait(false);
+        await Task.Run(() => UnelevatedProcess.Run(HostProcess.ExecutablePath, HostProcess.CheckForUpdatesArgument, CopyTimeout), cancellationToken).ConfigureAwait(false);
         return UpdateChecker.OutcomeOfCopy(before, _store.Load(), CurrentVersion);
     }
 
@@ -108,7 +106,7 @@ internal sealed partial class UpdateNotifier : IDisposable
         {
             if (Elevation.IsUacElevated)
             {
-                UnelevatedProcess.Start(HostPath, HostProcess.OpenReleasePageArgument);
+                UnelevatedProcess.Start(HostProcess.ExecutablePath, HostProcess.OpenReleasePageArgument);
             }
             else if (!ShellActions.OpenWebPage(GitHubReleaseSource.ReleasePageAddress))
             {

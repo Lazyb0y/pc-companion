@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
 
@@ -15,7 +14,6 @@ namespace PCCompanion.Host;
 /// </summary>
 internal static class WebPageCommand
 {
-    private static readonly string HostPath = Path.Combine(AppContext.BaseDirectory, HostProcess.FileName);
 
     /// <summary>
     /// Opens <paramref name="address"/>, an <c>http</c> or <c>https</c> address, from the running
@@ -32,7 +30,7 @@ internal static class WebPageCommand
         {
             if (Elevation.IsUacElevated)
             {
-                UnelevatedProcess.Start(HostPath, HostProcess.WebPageArguments(address));
+                UnelevatedProcess.Start(HostProcess.ExecutablePath, HostProcess.WebPageArguments(address));
                 return true;
             }
 

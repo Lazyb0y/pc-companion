@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
@@ -15,7 +14,6 @@ namespace PCCompanion.App;
 /// </summary>
 public sealed partial class HostLauncher(ILogger<HostLauncher> logger)
 {
-    private static readonly string HostPath = Path.Combine(AppContext.BaseDirectory, HostProcess.FileName);
     private static readonly TimeSpan ExitTimeout = TimeSpan.FromSeconds(10);
 
     public void StartIfNotRunning()
@@ -28,12 +26,12 @@ public sealed partial class HostLauncher(ILogger<HostLauncher> logger)
 
         try
         {
-            using var process = Process.Start(new ProcessStartInfo(HostPath) { UseShellExecute = false });
+            using var process = Process.Start(new ProcessStartInfo(HostProcess.ExecutablePath) { UseShellExecute = false });
             LogStarted(logger);
         }
         catch (Win32Exception exception)
         {
-            LogCantStart(logger, exception, HostPath);
+            LogCantStart(logger, exception, HostProcess.ExecutablePath);
         }
     }
 
