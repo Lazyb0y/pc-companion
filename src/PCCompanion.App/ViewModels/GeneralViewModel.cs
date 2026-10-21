@@ -48,9 +48,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     private readonly TimeProvider _time;
     private readonly ILogger<GeneralViewModel> _logger;
     private readonly RunAsAdministrator _runAsAdministrator;
-    private readonly UpdateCheckStore _updateCheckStore;
+    private readonly UpdateCheckWatcher _updateCheck;
     private readonly UpdateChecker _updateChecker;
-    private readonly SettingsWatcher _updateCheckWatcher;
     private readonly CancellationTokenSource _leavingPage = new();
     private readonly DispatcherQueue? _dispatcher = DispatcherQueue.GetForCurrentThread();
     private LanguageOption _selectedLanguage;
@@ -75,7 +74,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         DetailedLogging detailedLogging,
         TimeProvider time,
         RunAsAdministrator runAsAdministrator,
-        UpdateCheckStore updateCheckStore,
+        UpdateCheckWatcher updateCheck,
         UpdateChecker updateChecker,
         ILogger<GeneralViewModel> logger)
     {
@@ -87,7 +86,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
         _logger = logger;
         _runAsAdministrator = runAsAdministrator;
         _runAsAdministratorOn = runAsAdministrator.IsOn;
-        _updateCheckStore = updateCheckStore;
+        _updateCheck = updateCheck;
         _updateChecker = updateChecker;
 
         // Detailed logging also turns off by itself, on a timer thread.
@@ -95,11 +94,10 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
         // The host saves the update check's result, also while the page is open.
         _checkForUpdates = settings.Updates.CheckAutomatically;
-        var updateCheck = updateCheckStore.Load();
-        _newerVersion = updateCheck.NewerThan(CurrentVersion);
-        _lastCheck = updateCheck.LastCheck;
-        _updateCheckWatcher = new SettingsWatcher(paths.UpdateCheckFile);
-        _updateCheckWatcher.Changed += OnUpdateCheckChanged;
+        var state = updateCheck.State;
+        _newerVersion = state.NewerThan(CurrentVersion);
+        _lastCheck = state.LastCheck;
+        updateCheck.Changed += OnUpdateCheckChanged;
 
         // Each language is shown in its own language.
         Languages =
@@ -390,8 +388,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
         _disposed = true;
         _detailedLogging.Changed -= OnDetailedLoggingChanged;
-        _updateCheckWatcher.Changed -= OnUpdateCheckChanged;
-        _updateCheckWatcher.Dispose();
+        _updateCheck.Changed -= OnUpdateCheckChanged;
         _leavingPage.Cancel();
         _leavingPage.Dispose();
     }
@@ -433,7 +430,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     // On a thread pool thread, after the host or Check now saved a new result.
     private void OnUpdateCheckChanged(object? sender, EventArgs e)
     {
-        var updateCheck = _updateCheckStore.Load();
+        var updateCheck = _updateCheck.State;
         void Update()
         {
             _newerVersion = updateCheck.NewerThan(CurrentVersion);
