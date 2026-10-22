@@ -22,6 +22,7 @@
   <Project Path="src/PCCompanion.Modules.Clipboard/PCCompanion.Modules.Clipboard.csproj" />
   <Project Path="src/PCCompanion.Modules.Desktop/PCCompanion.Modules.Desktop.csproj" />
   <Project Path="src/PCCompanion.Modules.Input/PCCompanion.Modules.Input.csproj" />
+  <Project Path="src/PCCompanion.Modules.Network/PCCompanion.Modules.Network.csproj" />
   <Project Path="src/PCCompanion.Modules.Windows/PCCompanion.Modules.Windows.csproj" />
   <Project Path="src/PCCompanion.Platform.Windows/PCCompanion.Platform.Windows.csproj" />
   <Project Path="tests/PCCompanion.Architecture.Tests/PCCompanion.Architecture.Tests.csproj" />
@@ -31,6 +32,7 @@
   <Project Path="tests/PCCompanion.Modules.Clipboard.Tests/PCCompanion.Modules.Clipboard.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Desktop.Tests/PCCompanion.Modules.Desktop.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Input.Tests/PCCompanion.Modules.Input.Tests.csproj" />
+  <Project Path="tests/PCCompanion.Modules.Network.Tests/PCCompanion.Modules.Network.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Windows.Tests/PCCompanion.Modules.Windows.Tests.csproj" />
   <Project Path="tests/PCCompanion.Platform.Windows.Tests/PCCompanion.Platform.Windows.Tests.csproj" />
   <Project Path="tests/PCCompanion.Testing/PCCompanion.Testing.csproj" />
