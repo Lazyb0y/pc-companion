@@ -20,6 +20,7 @@ public sealed class WindowsNetworkProfilesSystem : INetworkProfilesSystem
 
     public ProxyRestrictions ReadRestrictions() => ProxyPolicies.Read();
 
+    // The settings, and the policies, so a policy set or removed shows without waiting for the settings to change.
     public IDisposable Watch(Action changed)
     {
         var watches = new Watches();
@@ -28,6 +29,8 @@ public sealed class WindowsNetworkProfilesSystem : INetworkProfilesSystem
             watches.Add(new RegistryWatch(Registry.CurrentUser, InternetSettingsPath, changed));
             watches.Add(new RegistryWatch(Registry.LocalMachine, InternetSettingsPath, changed));
             watches.Add(new RegistryWatch(Registry.LocalMachine, ProxyPolicies.PerMachinePath, changed));
+            watches.Add(new RegistryWatch(Registry.CurrentUser, ProxyPolicies.ControlPanelPath, changed));
+            watches.Add(new RegistryWatch(Registry.LocalMachine, ProxyPolicies.ControlPanelPath, changed));
             return watches;
         }
         catch

@@ -546,8 +546,9 @@ Save-Screenshot '14e-network-profiles-edge'
 Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 $jobs | Stop-Job -PassThru | Remove-Job -Force
 
-# Group Policy: each setting dims the profiles and leaves the settings as they are. The policies that
-# lock the settings aren't watched, so another program's change makes the host read them.
+# Group Policy: each setting dims the profiles as soon as it's set and leaves the settings as they
+# are, and the profiles can be chosen again as soon as it's removed. The host watches each policy's
+# key, so nothing else changes meanwhile.
 $before = Get-Proxy
 $policies = @(
     @{ Name = 'Prevent changing proxy settings for the user'; Key = $userPolicy; Value = 'Proxy'; Set = 1; Restriction = 'PreventChanges' },
@@ -559,7 +560,6 @@ function Get-RestrictionsCount([string] $Restrictions) { Get-MatchCount (Get-Hos
 foreach ($policy in $policies) {
     $restrictionsBefore = Get-RestrictionsCount $policy.Restriction
     Set-Policy $policy.Key $policy.Value $policy.Set
-    if ($policy.Restriction -ne 'PerMachine') { [NetworkProfilesCheck]::Write(3, '127.0.0.1:18082', '-', '-') }
     Test-Check "$($policy.Name): the host finds the policy" (Wait-Until { (Get-RestrictionsCount $policy.Restriction) -gt $restrictionsBefore } 10)
     [void] (Open-ProfileMenu)
     $items = Get-MenuText 'Network Profiles settings'
@@ -577,8 +577,11 @@ foreach ($policy in $policies) {
     }
     $noneBefore = Get-RestrictionsCount 'None'
     Clear-Policies
-    [NetworkProfilesCheck]::Write(3, '127.0.0.1:18082', '-', '-')
     Test-Check "$($policy.Name): removed, the host finds none" (Wait-Until { (Get-RestrictionsCount 'None') -gt $noneBefore } 10)
+    [void] (Open-ProfileMenu)
+    $items = Get-MenuText 'Network Profiles settings'
+    Test-Check "$($policy.Name): removed, the profiles can be chosen again" (($items -like 'Proxy A*') -and ($items -notmatch 'dimmed')) $items
+    [void] (Close-TrayMenu)
 }
 Test-Check 'the policies left Windows'' settings as they were' ((Get-Proxy) -eq $before) "before: $before, after: $(Get-Proxy)"
 
