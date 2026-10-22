@@ -1073,11 +1073,11 @@
     <comment>Network Profiles page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="NetworkProfilesAddTitle" xml:space="preserve">
-    <value>Add profile</value>
+    <value>Add a profile</value>
     <comment>Profile editor: dialog title for a new profile.</comment>
   </data>
   <data name="NetworkProfilesEditTitle" xml:space="preserve">
-    <value>Edit profile</value>
+    <value>Edit the profile</value>
     <comment>Profile editor: dialog title for a profile that exists.</comment>
   </data>
   <data name="NetworkProfilesNameHeader" xml:space="preserve">
