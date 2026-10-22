@@ -74,6 +74,55 @@ public sealed class RegistryWatchTests
     }
 
     [Fact]
+    public void AKeyCreatedLaterIsWatchedItself()
+    {
+        using var test = new TestRegistryKey();
+        using var changed = new SemaphoreSlim(0);
+        using var watch = new RegistryWatch(Registry.CurrentUser, test.Path + @"\Policies\Proxy", () => changed.Release());
+
+        using (test.Key.CreateSubKey("Policies"))
+        {
+        }
+
+        Assert.True(changed.Wait(Timeout, TestContext.Current.CancellationToken));
+        Drain(changed);
+
+        using (test.Key.CreateSubKey(@"Policies\Proxy"))
+        {
+        }
+
+        Assert.True(changed.Wait(Timeout, TestContext.Current.CancellationToken));
+        Drain(changed);
+
+        using (var proxy = test.Key.OpenSubKey(@"Policies\Proxy", writable: true)!)
+        {
+            proxy.SetValue("Value", 1);
+        }
+
+        Assert.True(changed.Wait(Timeout, TestContext.Current.CancellationToken));
+    }
+
+    // Above a key that doesn't exist yet, only subkeys created or deleted can bring it.
+    [Fact]
+    public void AChangeElsewhereBelowTheKeyAboveDoesNotCallBack()
+    {
+        using var test = new TestRegistryKey();
+        using (test.Key.CreateSubKey("Other"))
+        {
+        }
+
+        using var changed = new SemaphoreSlim(0);
+        using var watch = new RegistryWatch(Registry.CurrentUser, test.Path + @"\Policies", () => changed.Release());
+
+        using (var other = test.Key.OpenSubKey("Other", writable: true)!)
+        {
+            other.SetValue("Value", 1);
+        }
+
+        Assert.False(changed.Wait(Quiet, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     public void ADeletedKeyIsWatchedFromTheNearestKeyAbove()
     {
         using var test = new TestRegistryKey();
@@ -90,6 +139,14 @@ public sealed class RegistryWatchTests
 
         using (test.Key.CreateSubKey("Policies"))
         {
+        }
+
+        Assert.True(changed.Wait(Timeout, TestContext.Current.CancellationToken));
+        Drain(changed);
+
+        using (var policies = test.Key.OpenSubKey("Policies", writable: true)!)
+        {
+            policies.SetValue("Value", 1);
         }
 
         Assert.True(changed.Wait(Timeout, TestContext.Current.CancellationToken));

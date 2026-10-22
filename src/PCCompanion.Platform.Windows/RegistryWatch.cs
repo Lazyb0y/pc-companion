@@ -12,9 +12,11 @@ namespace PCCompanion.Platform.Windows;
 /// <summary>
 /// Calls back on the thread pool when a registry key, or a value or subkey in it, changes, until
 /// disposed. No thread waits in between: Windows signals an event, and a thread pool wait serves
-/// it. A key that doesn't exist yet is watched through the nearest key above it that does, which
-/// also reports when the key is created; a watched key that's deleted is replaced the same way.
-/// Windows can signal one change more than once, such as twice for a change of the proxy settings.
+/// it. A key that doesn't exist yet is watched through the nearest key above it that does, for its
+/// subkeys created or deleted only, so it reports when the key is created without reporting every
+/// change below it; from then on the key itself is watched. A watched key that's deleted is
+/// replaced the same way. Windows can signal one change more than once, such as twice for a change
+/// of the proxy settings.
 /// </summary>
 public sealed class RegistryWatch : IDisposable
 {
@@ -23,21 +25,30 @@ public sealed class RegistryWatch : IDisposable
         // outlast that thread.
         | REG_NOTIFY_FILTER.REG_NOTIFY_THREAD_AGNOSTIC;
 
+    // For a key above the one asked for: its subkeys created or deleted, which is how the key asked
+    // for, or one on the way to it, appears.
+    private const REG_NOTIFY_FILTER Subkeys = REG_NOTIFY_FILTER.REG_NOTIFY_CHANGE_NAME | REG_NOTIFY_FILTER.REG_NOTIFY_THREAD_AGNOSTIC;
+
+    // Keys created and deleted all the time mustn't keep a thread pool thread looking.
+    private const int MostTries = 10;
+
     private readonly RegistryKey _root;
     private readonly string _path;
     private readonly Action _changed;
     private readonly AutoResetEvent _signal = new(false);
     private readonly RegisteredWaitHandle _wait;
     private readonly Lock _gate = new();
-    private RegistryKey _key;
+    private RegistryKey? _key;
+    private string _keyPath = string.Empty;
     private bool _watching;
     private bool _disposed;
 
     /// <param name="root">The key the path starts from, such as <see cref="Registry.CurrentUser"/>.</param>
     /// <param name="path">The key to watch, below <paramref name="root"/>.</param>
     /// <param name="changed">
-    /// Called on a thread pool thread after a change, never on two threads at once. It must not
-    /// throw, and must not dispose the watch.
+    /// Called on a thread pool thread after a change, never on two threads at once, and also when
+    /// another subkey of the key above is created or deleted. It must not throw, and must not
+    /// dispose the watch.
     /// </param>
     /// <exception cref="Win32Exception">Windows refused the watch.</exception>
     public RegistryWatch(RegistryKey root, string path, Action changed)
@@ -49,11 +60,10 @@ public sealed class RegistryWatch : IDisposable
         _root = root;
         _path = path;
         _changed = changed;
-        _key = OpenNearest();
-        var result = Watch();
+        var result = WatchNearest();
         if (result != WIN32_ERROR.NO_ERROR)
         {
-            _key.Dispose();
+            _key?.Dispose();
             _signal.Dispose();
             throw new Win32Exception((int)result);
         }
@@ -86,7 +96,7 @@ public sealed class RegistryWatch : IDisposable
             }
         }
 
-        _key.Dispose();
+        _key?.Dispose();
         _signal.Dispose();
     }
 
@@ -100,13 +110,12 @@ public sealed class RegistryWatch : IDisposable
             }
 
             // Set the watch again before the callback, so a change while it runs is signaled too.
-            if (Watch() != WIN32_ERROR.NO_ERROR)
+            // Above the key asked for, a key on the way to it may have been created, and a watched
+            // key may have been deleted: then watch the nearest key that exists now. The root
+            // itself can always be watched.
+            if (_keyPath != _path || Watch() != WIN32_ERROR.NO_ERROR)
             {
-                // The key was deleted: watch the nearest key above it, which also reports when
-                // it's created again. The root itself can always be watched.
-                _key.Dispose();
-                _key = OpenNearest();
-                _watching = Watch() == WIN32_ERROR.NO_ERROR;
+                _watching = WatchNearest() == WIN32_ERROR.NO_ERROR;
             }
 
             // Inside the lock: a signal during the callback queues another on a second thread,
@@ -115,17 +124,45 @@ public sealed class RegistryWatch : IDisposable
         }
     }
 
-    private WIN32_ERROR Watch() => PInvoke.RegNotifyChangeKeyValue(_key.Handle, true, Changes, _signal.SafeWaitHandle, true);
+    // Watches the key asked for, or the nearest key above it that exists. Looks again once the
+    // watch is set, so a key created or deleted meanwhile isn't missed.
+    private WIN32_ERROR WatchNearest()
+    {
+        var result = WIN32_ERROR.NO_ERROR;
+        for (var tries = 0; tries < MostTries; tries++)
+        {
+            _key?.Dispose();
+            (_key, _keyPath) = OpenNearest();
+            result = Watch();
+            if (result != WIN32_ERROR.ERROR_KEY_DELETED && (result != WIN32_ERROR.NO_ERROR || _keyPath == _path || NearestPath() == _keyPath))
+            {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private WIN32_ERROR Watch() => _keyPath == _path
+        ? PInvoke.RegNotifyChangeKeyValue(_key!.Handle, true, Changes, _signal.SafeWaitHandle, true)
+        : PInvoke.RegNotifyChangeKeyValue(_key!.Handle, false, Subkeys, _signal.SafeWaitHandle, true);
+
+    private string NearestPath()
+    {
+        var (key, path) = OpenNearest();
+        key.Dispose();
+        return path;
+    }
 
     // The key at the path, or the nearest key above it that exists, down to the root itself.
-    private RegistryKey OpenNearest()
+    private (RegistryKey Key, string Path) OpenNearest()
     {
         var path = _path;
         while (true)
         {
             if (_root.OpenSubKey(path, RegistryRights.Notify) is { } key)
             {
-                return key;
+                return (key, path);
             }
 
             if (path.Length == 0)
