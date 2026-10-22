@@ -1101,7 +1101,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>تغيّر ملفات التعريف إعدادات الوكيل لـ Ethernet وWi-Fi؛ ولاتصالات VPN إعداداتها الخاصة في إعدادات Windows. تستخدم المستعرضات ومعظم التطبيقات الإعدادات الجديدة على الفور، وبعض التطبيقات فقط بعد إعادة تشغيلها، وتستخدم أدوات سطر الأوامر إعداداتها الخاصة.</value>
+    <value>تغيّر ملفات التعريف إعدادات الوكيل لـ Ethernet وWi-Fi؛ ولاتصالات VPN إعداداتها الخاصة في إعدادات Windows. تستخدم المستعرضات ومعظم التطبيقات الإعدادات الجديدة على الفور، وبعض التطبيقات فقط بعد إعادة تشغيلها، وتستخدم أدوات سطر الأوامر وخدمات Windows، مثل Windows Update، إعداداتها الخاصة.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">

@@ -1053,7 +1053,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>প্রোফাইলগুলি Ethernet ও Wi-Fi-এর প্রক্সি সেটিংস পরিবর্তন করে; VPN সংযোগের নিজস্ব সেটিংস Windows সেটিংসে থাকে। ব্রাউজার ও বেশিরভাগ অ্যাপ সঙ্গে সঙ্গে নতুন সেটিংস ব্যবহার করে, কিছু অ্যাপ শুধু পুনরায় চালু হওয়ার পরে, আর কমান্ড-লাইন টুলগুলি নিজস্ব সেটিংস ব্যবহার করে।</value>
+    <value>প্রোফাইলগুলি Ethernet ও Wi-Fi-এর প্রক্সি সেটিংস পরিবর্তন করে; VPN সংযোগের নিজস্ব সেটিংস Windows সেটিংসে থাকে। ব্রাউজার ও বেশিরভাগ অ্যাপ সঙ্গে সঙ্গে নতুন সেটিংস ব্যবহার করে, কিছু অ্যাপ শুধু পুনরায় চালু হওয়ার পরে, আর কমান্ড-লাইন টুল ও Windows Update-এর মতো Windows পরিষেবাগুলি নিজস্ব সেটিংস ব্যবহার করে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">

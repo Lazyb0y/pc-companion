@@ -1053,7 +1053,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>Les profils modifient les paramètres de proxy pour Ethernet et le Wi-Fi ; les connexions VPN ont les leurs, dans les Paramètres Windows. Les navigateurs et la plupart des applications utilisent les nouveaux paramètres immédiatement, certaines applications seulement après leur redémarrage, et les outils en ligne de commande utilisent leurs propres paramètres.</value>
+    <value>Les profils modifient les paramètres de proxy pour Ethernet et le Wi-Fi ; les connexions VPN ont les leurs, dans les Paramètres Windows. Les navigateurs et la plupart des applications utilisent les nouveaux paramètres immédiatement, certaines applications seulement après leur redémarrage, et les outils en ligne de commande et les services Windows, comme Windows Update, utilisent leurs propres paramètres.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
