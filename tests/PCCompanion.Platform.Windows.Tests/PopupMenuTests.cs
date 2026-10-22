@@ -29,6 +29,22 @@ public sealed class PopupMenuTests
         Assert.Empty(PopupMenuItem.Separator.Text);
         Assert.False(new PopupMenuItem(1, "Settings").IsSeparator);
         Assert.True(new PopupMenuItem(1, "Settings").IsEnabled);
+        Assert.False(new PopupMenuItem(1, "Settings").IsChecked);
+        Assert.Null(new PopupMenuItem(1, "Settings").Items);
+    }
+
+    [Fact]
+    public void ASubmenuHoldsItsItemsAndHasNoId()
+    {
+        PopupMenuItem[] profiles = [new(10, "Office") { IsChecked = true }, new(11, "Home")];
+
+        var submenu = PopupMenuItem.Submenu("Network profile", profiles);
+
+        Assert.Equal(0u, submenu.Id);
+        Assert.Equal("Network profile", submenu.Text);
+        Assert.Same(profiles, submenu.Items);
+        Assert.False(submenu.IsSeparator);
+        Assert.True(submenu.Items![0].IsChecked);
     }
 
     [Fact]

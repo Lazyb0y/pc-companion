@@ -7,7 +7,10 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace PCCompanion.Platform.Windows;
 
-/// <param name="Id">Returned by <see cref="PopupMenu.Show"/> when the item is chosen; must not be 0, except for <see cref="Separator"/>.</param>
+/// <param name="Id">
+/// Returned by <see cref="PopupMenu.Show"/> when the item is chosen; must not be 0, except for
+/// <see cref="Separator"/> and a <see cref="Submenu"/>. Items in submenus need IDs of their own too.
+/// </param>
 public sealed record PopupMenuItem(uint Id, string Text)
 {
     /// <summary>A line between groups of items.</summary>
@@ -16,7 +19,21 @@ public sealed record PopupMenuItem(uint Id, string Text)
     /// <summary>Whether the item can be chosen. A disabled item shows dimmed, as a heading or a note.</summary>
     public bool IsEnabled { get; init; } = true;
 
+    /// <summary>Shows a radio mark (a dot) before the item, as for the chosen one of a group.</summary>
+    public bool IsChecked { get; init; }
+
     public bool IsSeparator { get; private init; }
+
+    /// <summary>The items of a <see cref="Submenu"/>; null for other items.</summary>
+    public IReadOnlyList<PopupMenuItem>? Items { get; private init; }
+
+    /// <summary>An item that opens a submenu of <paramref name="items"/>, instead of being chosen.</summary>
+    public static PopupMenuItem Submenu(string text, IReadOnlyList<PopupMenuItem> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return new PopupMenuItem(0, text) { Items = items };
+    }
 }
 
 /// <summary>
@@ -94,17 +111,7 @@ public static class PopupMenu
         ArgumentNullException.ThrowIfNull(owner);
         ArgumentNullException.ThrowIfNull(items);
 
-        using var menu = PInvoke.CreatePopupMenu_SafeHandle();
-        foreach (var item in items)
-        {
-            var itemFlags = item.IsSeparator ? MENU_ITEM_FLAGS.MF_SEPARATOR
-                : item.IsEnabled ? MENU_ITEM_FLAGS.MF_STRING
-                : MENU_ITEM_FLAGS.MF_STRING | MENU_ITEM_FLAGS.MF_GRAYED;
-            if (!PInvoke.AppendMenu(menu, itemFlags, item.Id, item.IsSeparator ? null : item.Text))
-            {
-                throw new Win32Exception();
-            }
-        }
+        using var menu = Create(items);
 
         var flags = TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD | TRACK_POPUP_MENU_FLAGS.TPM_NONOTIFY | TRACK_POPUP_MENU_FLAGS.TPM_RIGHTBUTTON;
         flags |= PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_MENUDROPALIGNMENT) != 0
@@ -128,5 +135,67 @@ public static class PopupMenu
         PInvoke.PostMessage(window, PInvoke.WM_NULL, 0, 0);
 
         return (uint)chosen.Value;
+    }
+
+    // A menu with the items, and their submenus, which Windows destroys with it.
+    private static DestroyMenuSafeHandle Create(IReadOnlyList<PopupMenuItem> items)
+    {
+        var menu = PInvoke.CreatePopupMenu_SafeHandle();
+        try
+        {
+            foreach (var item in items)
+            {
+                Append(menu, item);
+            }
+
+            return menu;
+        }
+        catch
+        {
+            menu.Dispose();
+            throw;
+        }
+    }
+
+    private static unsafe void Append(DestroyMenuSafeHandle menu, PopupMenuItem item)
+    {
+        var flags = item.IsSeparator ? MENU_ITEM_FLAGS.MF_SEPARATOR : MENU_ITEM_FLAGS.MF_STRING;
+        if (!item.IsEnabled)
+        {
+            flags |= MENU_ITEM_FLAGS.MF_GRAYED;
+        }
+
+        if (item.IsChecked)
+        {
+            flags |= MENU_ITEM_FLAGS.MF_CHECKED;
+        }
+
+        if (item.Items is { } submenuItems)
+        {
+            using var submenu = Create(submenuItems);
+            if (!PInvoke.AppendMenu(menu, flags | MENU_ITEM_FLAGS.MF_POPUP, (nuint)submenu.DangerousGetHandle(), item.Text))
+            {
+                throw new Win32Exception();
+            }
+
+            // The menu owns the submenu now, and destroys it with itself.
+            submenu.SetHandleAsInvalid();
+            return;
+        }
+
+        if (!PInvoke.AppendMenu(menu, flags, item.Id, item.IsSeparator ? null : item.Text))
+        {
+            throw new Win32Exception();
+        }
+
+        if (item.IsChecked)
+        {
+            // A dot instead of a check mark.
+            var info = new MENUITEMINFOW { cbSize = (uint)sizeof(MENUITEMINFOW), fMask = MENU_ITEM_MASK.MIIM_FTYPE, fType = MENU_ITEM_TYPE.MFT_RADIOCHECK };
+            if (!PInvoke.SetMenuItemInfo(menu, (uint)(PInvoke.GetMenuItemCount(menu) - 1), true, info))
+            {
+                throw new Win32Exception();
+            }
+        }
     }
 }
