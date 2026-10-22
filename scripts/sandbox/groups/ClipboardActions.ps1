@@ -32,8 +32,12 @@ Test-Check 'Add rule opens the rule editor' ((Invoke-AppElement 'Add rule') -and
 Start-Sleep -Seconds 1
 Test-Check 'Save is off for an empty rule' (-not (Test-AppEnabled 'Save'))
 [void] (Set-AppBox 'Name' 'Track the parcel')
+$patternProblem = 'The pattern uses a lookaround, a backreference, an atomic group or a conditional, which can''t be used here.'
+Start-Announcements
 [void] (Set-AppBox 'Pattern' '(?=1Z)1Z.+')
-Test-Check 'a pattern with a lookahead is refused' (Wait-Until { Find-AppText 'The pattern uses a lookaround, a backreference, an atomic group or a conditional, which can''t be used here.' } 3)
+Test-Check 'a pattern with a lookahead is refused' (Wait-Until { Find-AppText $patternProblem } 3)
+Test-Check 'screen readers announce the problem once, and the box reads it' (Test-Announced 'Pattern' $patternProblem) ((Get-Announcements) -join ' | ')
+Stop-Announcements
 [void] (Set-AppBox 'Pattern' '1Z[0-9A-Z]{16}')
 [void] (Set-AppBox 'Try it' '1Z999AA10123456784')
 Test-Check 'Try it says the pattern matches' (Wait-Until { Find-AppText 'The pattern matches this text.' } 3)
