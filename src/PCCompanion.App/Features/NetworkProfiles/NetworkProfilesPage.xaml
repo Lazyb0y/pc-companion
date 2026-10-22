@@ -53,6 +53,7 @@
                             Content="{app:Localized Key=NetworkProfilesAddCurrent}"
                             IsEnabled="{x:Bind ViewModel.CanAdd, Mode=OneWay}" />
                         <Button
+                            x:Name="AddProfileButton"
                             AutomationProperties.Name="{app:Localized Key=NetworkProfilesAddProfile}"
                             Click="OnAddClick"
                             IsEnabled="{x:Bind ViewModel.CanAdd, Mode=OneWay}"
@@ -72,7 +73,10 @@
                     TextWrapping="Wrap"
                     Visibility="{x:Bind ViewModel.HasNoProfiles, Mode=OneWay}" />
 
-                <ItemsControl IsTabStop="False" ItemsSource="{x:Bind ViewModel.Profiles}">
+                <ItemsControl
+                    x:Name="ProfileList"
+                    IsTabStop="False"
+                    ItemsSource="{x:Bind ViewModel.Profiles}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Spacing="4" />
@@ -91,6 +95,7 @@
                                         Text="{app:Localized Key=NetworkProfilesInUse}"
                                         Visibility="{x:Bind IsInUse}" />
                                     <Button
+                                        AutomationProperties.AutomationId="Use"
                                         AutomationProperties.Name="{x:Bind UseName}"
                                         Click="OnUseClick"
                                         Content="{app:Localized Key=NetworkProfilesUse}"
@@ -98,11 +103,16 @@
                                         Tag="{x:Bind Index}"
                                         Visibility="{x:Bind IsNotInUse}" />
                                     <Button
+                                        AutomationProperties.AutomationId="Edit"
                                         AutomationProperties.Name="{x:Bind EditName}"
                                         Click="OnEditClick"
                                         Content="{app:Localized Key=NetworkProfilesEdit}"
                                         Tag="{x:Bind Index}" />
-                                    <Button AutomationProperties.Name="{x:Bind MoreName}" ToolTipService.ToolTip="{x:Bind MoreName}">
+                                    <Button
+                                        AutomationProperties.AutomationId="More"
+                                        AutomationProperties.Name="{x:Bind MoreName}"
+                                        Tag="{x:Bind Index}"
+                                        ToolTipService.ToolTip="{x:Bind MoreName}">
                                         <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
                                         <Button.Flyout>
                                             <MenuFlyout>

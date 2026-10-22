@@ -165,7 +165,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 
 - The submenu is a Windows menu: it works with the keyboard, with screen readers, which read the radio mark as checked, and in high contrast, follows dark mode as the rest of the PC Companion icon's menu does, and is laid out right to left in right-to-left languages.
 - A `&` in a profile's name shows as written, not as an access key.
-- The page and the profile editor work with the keyboard alone. Their boxes, lists and buttons have labels for screen readers, the profile buttons carry the profile's name, such as "Use Office", **In use** is announced, and problems below a box are announced.
+- The page and the profile editor work with the keyboard alone, and keyboard focus stays on a profile when the list changes: on its Edit after **Use**, on the profile moved, and on the next profile after **Delete**. Their boxes, lists and buttons have labels for screen readers, the profile buttons carry the profile's name, such as "Use Office", **In use** is announced, and problems below a box are announced.
 - Proxy servers, exceptions and addresses are shown left to right in every language.
 - Original settings gets its name in the user's language when the feature is first turned on; after that it's a name like any other.
 - The strings are translated like the other pages', marked "Needs native review."
