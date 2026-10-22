@@ -8,7 +8,9 @@ namespace PCCompanion.Platform.Windows.Tests;
 // Each test watches and changes only a key of its own.
 public sealed class RegistryWatchTests
 {
-    private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(5);
+    // The watch calls back on the thread pool, which can take seconds to get to it while other
+    // tests hold its threads, as on a busy build machine. Each wait ends at the callback.
+    private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan Quiet = TimeSpan.FromMilliseconds(300);
 
     [Fact]
