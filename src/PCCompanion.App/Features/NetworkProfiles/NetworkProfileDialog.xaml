@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.NetworkProfiles.NetworkProfileDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    CloseButtonText="{app:Localized Key=NetworkProfilesCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=NetworkProfilesSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <!-- Laid out like Windows' Proxy page. Servers and addresses read left to right in every language. -->
+    <StackPanel MinWidth="420" Spacing="16">
+        <StackPanel Spacing="4">
+            <TextBox
+                x:Name="NameBox"
+                Header="{app:Localized Key=NetworkProfilesNameHeader}"
+                PlaceholderText="{app:Localized Key=NetworkProfilesNamePlaceholder}"
+                Text="{x:Bind Editor.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.NameProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasNameProblem, Mode=OneWay}" />
+        </StackPanel>
+
+        <ToggleSwitch Header="{app:Localized Key=NetworkProfilesAutoDetect}" IsOn="{x:Bind Editor.AutoDetect, Mode=TwoWay}" />
+
+        <StackPanel Spacing="4">
+            <ToggleSwitch Header="{app:Localized Key=NetworkProfilesUseScript}" IsOn="{x:Bind Editor.UseScript, Mode=TwoWay}" />
+            <TextBox
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=NetworkProfilesScriptHeader}"
+                InputScope="Url"
+                IsEnabled="{x:Bind Editor.UseScript, Mode=OneWay}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="https://pac.example.com/proxy.pac"
+                Text="{x:Bind Editor.ScriptAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.ScriptProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasScriptProblem, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <ToggleSwitch Header="{app:Localized Key=NetworkProfilesUseServer}" IsOn="{x:Bind Editor.UseServer, Mode=TwoWay}" />
+            <TextBox
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=NetworkProfilesServerHeader}"
+                IsEnabled="{x:Bind Editor.UseServer, Mode=OneWay}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="proxy.example.com:8080"
+                Text="{x:Bind Editor.Server, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.ServerProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasServerProblem, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=NetworkProfilesServerNote}"
+                TextWrapping="Wrap" />
+            <TextBox
+                Margin="0,8,0,0"
+                FlowDirection="LeftToRight"
+                Header="{app:Localized Key=NetworkProfilesExceptionsHeader}"
+                IsEnabled="{x:Bind Editor.UseServer, Mode=OneWay}"
+                IsSpellCheckEnabled="False"
+                PlaceholderText="*.example.com;10.*"
+                Text="{x:Bind Editor.Exceptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.ExceptionsProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasExceptionsProblem, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=NetworkProfilesExceptionsNote}"
+                TextWrapping="Wrap" />
+            <CheckBox
+                Content="{app:Localized Key=NetworkProfilesBypassLocal}"
+                IsChecked="{x:Bind Editor.BypassLocal, Mode=TwoWay}"
+                IsEnabled="{x:Bind Editor.UseServer, Mode=OneWay}" />
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>

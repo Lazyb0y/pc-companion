@@ -13,7 +13,7 @@ Save proxy settings as named profiles, such as Office and Home, and switch betwe
 - The profile whose settings Windows uses now has a check mark (a radio mark). When Windows' settings match none of the profiles, for example after a change in Windows Settings, no profile has it, and the submenu starts with a dimmed **Other proxy settings in use**.
 - The submenu ends with **Network Profiles settings**, which opens the feature's page.
 - The submenu shows only while the feature is on and has at least one profile.
-- The page shows the same: **In use** on the matching profile, and a **Use** button on the others.
+- The page shows the same: **In use** on the matching profile, and a **Use** button on the others, available while the feature is on.
 - Switching changes only Windows' proxy settings. PC Companion stores nothing about which profile is in use; it compares Windows' settings with the profiles each time they change.
 - PC Companion never changes the proxy settings on its own: not when it starts, not when the feature is turned on or off, and not when another program changes them. Turning the feature off or uninstalling PC Companion leaves the settings as they are.
 
@@ -40,7 +40,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - A profile with everything off is "no proxy".
 - Applying a profile writes the parts that are on. A part that's off is only turned off: Windows keeps its last proxy server and script address, as it does when the user turns them off in Windows Settings.
 - A profile matches Windows' settings when the same parts are on and their values are the same, ignoring case, spaces at the ends, an `http://` before a server and the order of the exceptions. The values of parts that are off don't count. Windows Settings adds `http://` when it saves a server, so `proxy.example.com:8080` still matches after the user saves the same server there.
-- When the feature is first turned on, the list starts with one profile, **Original settings**, made from Windows' current settings, so the user always has a way back. **Add from current settings** makes more profiles the same way.
+- When the feature is first turned on, the list starts with one profile, **Original settings**, made from Windows' current settings, so the user always has a way back. **Add from current settings** opens the profile editor with Windows' current settings, for a name.
 - Up to 20 profiles. Names are up to 60 characters, and no two profiles have the same name, ignoring case. The proxy server, the exceptions and the script address are up to 2,048 characters each.
 - A profile that can't be used, such as one with a proxy server that isn't in the formats above or a script address that isn't `http` or `https`, is left out of the menu, with a warning in the log that gives its number. The page shows the problem on the profile.
 

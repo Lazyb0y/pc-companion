@@ -189,6 +189,16 @@
           "PCCompanion.Platform.Windows": "[0.2.0, )"
         }
       },
+      "pccompanion.modules.network": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
+          "PCCompanion.Core": "[0.2.0, )",
+          "PCCompanion.Localization": "[0.2.0, )",
+          "PCCompanion.Platform.Windows": "[0.2.0, )"
+        }
+      },
       "pccompanion.modules.windows": {
         "type": "Project",
         "dependencies": {

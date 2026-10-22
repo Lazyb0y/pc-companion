@@ -996,4 +996,216 @@
     <value>إعدادات ملفات تعريف الشبكة</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="NetworkProfilesOriginalSettings" xml:space="preserve">
+    <value>الإعدادات الأصلية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesManagedInfo" xml:space="preserve">
+    <value>تدير مؤسستك إعدادات الوكيل، لذا لا يمكن استخدام ملفات التعريف. لا يزال بإمكانك تحريرها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseFailed" xml:space="preserve">
+    <value>لم يقم Windows بالتبديل إلى {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesHeader" xml:space="preserve">
+    <value>ملفات التعريف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesDescription" xml:space="preserve">
+    <value>اختر ملف تعريف في قائمة أيقونة PC Companion، أو حدد استخدام، لتبديل إعدادات الوكيل في Windows إليه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddProfile" xml:space="preserve">
+    <value>إضافة ملف تعريف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddCurrent" xml:space="preserve">
+    <value>إضافة من الإعدادات الحالية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNoProfiles" xml:space="preserve">
+    <value>لا توجد ملفات تعريف بعد. أضف ملفاً، أو أضف إعدادات Windows الحالية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInUse" xml:space="preserve">
+    <value>قيد الاستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUse" xml:space="preserve">
+    <value>استخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseName" xml:space="preserve">
+    <value>استخدام {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEdit" xml:space="preserve">
+    <value>تحرير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditName" xml:space="preserve">
+    <value>تحرير {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoreName" xml:space="preserve">
+    <value>مزيد من الخيارات لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveUp" xml:space="preserve">
+    <value>نقل لأعلى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveDown" xml:space="preserve">
+    <value>نقل لأسفل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDelete" xml:space="preserve">
+    <value>حذف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDeleteTitle" xml:space="preserve">
+    <value>هل تريد حذف {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesCancel" xml:space="preserve">
+    <value>إلغاء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSave" xml:space="preserve">
+    <value>حفظ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryServer" xml:space="preserve">
+    <value>الخادم الوكيل {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryScript" xml:space="preserve">
+    <value>برنامج الإعداد النصي على {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryDetect" xml:space="preserve">
+    <value>يكشف عن الإعدادات تلقائياً</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryNoProxy" xml:space="preserve">
+    <value>بلا وكيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryProblem" xml:space="preserve">
+    <value>ليس في القائمة: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooMany" xml:space="preserve">
+    <value>ليس في القائمة: تُستخدم أول 20 ملف تعريف فقط.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInfo" xml:space="preserve">
+    <value>تغيّر ملفات التعريف إعدادات الوكيل لـ Ethernet وWi-Fi؛ ولاتصالات VPN إعداداتها الخاصة في إعدادات Windows. تستخدم المستعرضات ومعظم التطبيقات الإعدادات الجديدة على الفور، وبعض التطبيقات فقط بعد إعادة تشغيلها، وتستخدم أدوات سطر الأوامر إعداداتها الخاصة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>إعدادات الوكيل في Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>اطّلع على الإعدادات التي يستخدمها Windows الآن، وقم بإعداد وكيل اتصال VPN.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>فتح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesPermissions" xml:space="preserve">
+    <value>يغيّر إعدادات الوكيل لـ Ethernet وWi-Fi فقط عندما تختار ملف تعريف، ويقرأها ويقرأ إعدادات نهج المجموعة التي تديرها. لا يُجري أي اتصالات بالشبكة بنفسه: مع الكشف التلقائي أو برنامج الإعداد النصي، يبحث Windows وتطبيقاتك عن الوكيل. لا يسجل أسماء ملفات التعريف أو الخوادم الوكيلة أو العناوين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddTitle" xml:space="preserve">
+    <value>إضافة ملف تعريف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditTitle" xml:space="preserve">
+    <value>تحرير ملف التعريف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameHeader" xml:space="preserve">
+    <value>الاسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNamePlaceholder" xml:space="preserve">
+    <value>المكتب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAutoDetect" xml:space="preserve">
+    <value>الكشف عن الإعدادات تلقائياً</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseScript" xml:space="preserve">
+    <value>استخدام البرنامج النصي للإعداد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptHeader" xml:space="preserve">
+    <value>عنوان البرنامج النصي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseServer" xml:space="preserve">
+    <value>استخدام خادم وكيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerHeader" xml:space="preserve">
+    <value>الخادم الوكيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerNote" xml:space="preserve">
+    <value>العنوان والمنفذ، مثل proxy.example.com:8080، أو خادم لكل بروتوكول، مثل http=proxy.example.com:8080;https=proxy.example.com:8443.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsHeader" xml:space="preserve">
+    <value>الاستثناءات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsNote" xml:space="preserve">
+    <value>العناوين التي لا تستخدم الخادم الوكيل، مفصولة بفواصل منقوطة، مع * كحرف بدل، مثل *.example.com;10.*.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesBypassLocal" xml:space="preserve">
+    <value>عدم استخدام الخادم الوكيل للعناوين المحلية (الإنترانت)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameMissing" xml:space="preserve">
+    <value>أدخل اسماً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInvalid" xml:space="preserve">
+    <value>استخدم اسماً في سطر واحد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInUse" xml:space="preserve">
+    <value>يحمل ملف تعريف آخر هذا الاسم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerMissing" xml:space="preserve">
+    <value>أدخل الخادم الوكيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerInvalid" xml:space="preserve">
+    <value>أدخل عنواناً ومنفذاً، مثل proxy.example.com:8080، أو خادماً لكل بروتوكول.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptMissing" xml:space="preserve">
+    <value>أدخل عنوان البرنامج النصي للإعداد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptNotWeb" xml:space="preserve">
+    <value>أدخل عنوان ويب يبدأ بـ http:// أو https://.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionInvalid" xml:space="preserve">
+    <value>افصل العناوين بفواصل منقوطة، بدون مسافات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooLong" xml:space="preserve">
+    <value>استخدم {0} حرفاً أو أقل.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

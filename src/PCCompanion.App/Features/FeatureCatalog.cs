@@ -5,6 +5,7 @@ using System.Text.Json;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
@@ -13,6 +14,8 @@ using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Network;
+using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
 
@@ -50,6 +53,10 @@ public static class FeatureCatalog
         new(ClipboardModule.Id, "ModuleClipboardName",
         [
             new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage)),
+        ]),
+        new(NetworkModule.Id, "ModuleNetworkName",
+        [
+            new(NetworkProfilesFeature.Definition, NetworkProfilesFeature.CurrentSupport, typeof(NetworkProfilesPage), NetworkProfilesFirstSettings.Create),
         ]),
     ];
 

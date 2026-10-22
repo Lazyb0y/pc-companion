@@ -107,7 +107,7 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
         if (id == NetworkProfilesMenu.SettingsItem)
         {
-            commands.OpenSettings();
+            commands.OpenFeatureSettings(Definition.Id);
             return;
         }
 
@@ -253,8 +253,8 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
         }
     }
 
-    // On the thread pool. Group Policy can manage the settings since the menu opened, and Windows
-    // can report a change it didn't make, so the policies are read first and the settings after.
+    // On the thread pool. Group Policy can manage the settings since the menu opened, so the switch
+    // reads the policies again first.
     private void Switch(UsableProfile chosen, Session session)
     {
         // Turned off since the choice: change nothing.
@@ -265,25 +265,8 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
         try
         {
-            var restrictions = system.ReadRestrictions();
-            if (restrictions != ProxyRestrictions.None)
-            {
-                session.Invoker.Post(() => Guard(session, () =>
-                {
-                    _restrictions = restrictions;
-                    LogManaged(logger, chosen.Number);
-                }));
-                return;
-            }
-
-            system.WriteProxy(ProxyMatching.ToWindows(chosen.Profile.Proxy));
-            var after = system.ReadProxy();
-            var applied = ProxyMatching.Matches(chosen.Profile.Proxy, after);
-            session.Invoker.Post(() => Guard(session, () => Switched(chosen.Number, after, applied)));
-        }
-        catch (Win32Exception exception)
-        {
-            session.Invoker.Post(() => Guard(session, () => LogRefused(logger, chosen.Number, exception.NativeErrorCode)));
+            var outcome = ProxySwitch.Apply(system, chosen.Profile.Proxy);
+            session.Invoker.Post(() => Guard(session, () => Switched(chosen.Number, outcome)));
         }
         catch (Exception exception)
         {
@@ -309,18 +292,26 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
         UpdateInUse();
     }
 
-    private void Switched(int number, ProxySettings after, bool applied)
+    private void Switched(int number, SwitchOutcome outcome)
     {
-        if (applied)
+        switch (outcome.Result)
         {
-            LogSwitched(logger, number);
-        }
-        else
-        {
-            LogNotApplied(logger, number);
+            case SwitchResult.Managed:
+                _restrictions = outcome.Restrictions;
+                LogManaged(logger, number);
+                return;
+            case SwitchResult.Refused:
+                LogRefused(logger, number, outcome.Error);
+                return;
+            case SwitchResult.Switched:
+                LogSwitched(logger, number);
+                break;
+            default:
+                LogNotApplied(logger, number);
+                break;
         }
 
-        _windows = after;
+        _windows = outcome.After;
         UpdateInUse();
     }
 

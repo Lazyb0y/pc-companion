@@ -948,4 +948,216 @@
     <value>নেটওয়ার্ক প্রোফাইল সেটিংস</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="NetworkProfilesOriginalSettings" xml:space="preserve">
+    <value>মূল সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesManagedInfo" xml:space="preserve">
+    <value>আপনার প্রতিষ্ঠান প্রক্সি সেটিংস পরিচালনা করে, তাই প্রোফাইলগুলি ব্যবহার করা যাবে না। আপনি এখনও সেগুলি সম্পাদনা করতে পারবেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseFailed" xml:space="preserve">
+    <value>Windows {0}-এ পরিবর্তন করেনি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesHeader" xml:space="preserve">
+    <value>প্রোফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesDescription" xml:space="preserve">
+    <value>Windows-এর প্রক্সি সেটিংস কোনো প্রোফাইলে পরিবর্তন করতে PC Companion আইকনের মেনুতে সেটি বেছে নিন, অথবা ব্যবহার করুন নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddProfile" xml:space="preserve">
+    <value>প্রোফাইল যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddCurrent" xml:space="preserve">
+    <value>বর্তমান সেটিংস থেকে যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNoProfiles" xml:space="preserve">
+    <value>এখনও কোনো প্রোফাইল নেই। একটি যোগ করুন, অথবা Windows-এর বর্তমান সেটিংস যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInUse" xml:space="preserve">
+    <value>ব্যবহৃত হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUse" xml:space="preserve">
+    <value>ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseName" xml:space="preserve">
+    <value>{0} ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditName" xml:space="preserve">
+    <value>{0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoreName" xml:space="preserve">
+    <value>{0}-এর জন্য আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveUp" xml:space="preserve">
+    <value>উপরে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveDown" xml:space="preserve">
+    <value>নিচে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDelete" xml:space="preserve">
+    <value>মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDeleteTitle" xml:space="preserve">
+    <value>{0} মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryServer" xml:space="preserve">
+    <value>প্রক্সি সার্ভার {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryScript" xml:space="preserve">
+    <value>{0}-এ সেটআপ স্ক্রিপ্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryDetect" xml:space="preserve">
+    <value>স্বয়ংক্রিয়ভাবে সেটিংস শনাক্ত করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryNoProxy" xml:space="preserve">
+    <value>কোনো প্রক্সি নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryProblem" xml:space="preserve">
+    <value>মেনুতে নেই: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooMany" xml:space="preserve">
+    <value>মেনুতে নেই: শুধুমাত্র প্রথম ২০টি প্রোফাইল ব্যবহৃত হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInfo" xml:space="preserve">
+    <value>প্রোফাইলগুলি Ethernet ও Wi-Fi-এর প্রক্সি সেটিংস পরিবর্তন করে; VPN সংযোগের নিজস্ব সেটিংস Windows সেটিংসে থাকে। ব্রাউজার ও বেশিরভাগ অ্যাপ সঙ্গে সঙ্গে নতুন সেটিংস ব্যবহার করে, কিছু অ্যাপ শুধু পুনরায় চালু হওয়ার পরে, আর কমান্ড-লাইন টুলগুলি নিজস্ব সেটিংস ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Windows প্রক্সি সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>Windows এখন যে সেটিংস ব্যবহার করছে তা দেখুন, এবং একটি VPN সংযোগের প্রক্সি সেট আপ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesPermissions" xml:space="preserve">
+    <value>শুধুমাত্র আপনি একটি প্রোফাইল বেছে নিলে Ethernet ও Wi-Fi-এর প্রক্সি সেটিংস পরিবর্তন করে, এবং সেগুলি ও সেগুলি পরিচালনাকারী গ্রুপ পলিসি সেটিংস পড়ে। নিজে কোনো নেটওয়ার্ক সংযোগ করে না: স্বয়ংক্রিয় শনাক্তকরণ বা সেটআপ স্ক্রিপ্টের ক্ষেত্রে Windows ও আপনার অ্যাপগুলি প্রক্সি খোঁজে। প্রোফাইলের নাম, প্রক্সি সার্ভার বা ঠিকানা লগ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddTitle" xml:space="preserve">
+    <value>প্রোফাইল যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditTitle" xml:space="preserve">
+    <value>প্রোফাইল সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameHeader" xml:space="preserve">
+    <value>নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNamePlaceholder" xml:space="preserve">
+    <value>অফিস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAutoDetect" xml:space="preserve">
+    <value>স্বয়ংক্রিয়ভাবে সেটিংস শনাক্ত করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseScript" xml:space="preserve">
+    <value>সেটআপ স্ক্রিপ্ট ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptHeader" xml:space="preserve">
+    <value>স্ক্রিপ্টের ঠিকানা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseServer" xml:space="preserve">
+    <value>একটি প্রক্সি সার্ভার ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerHeader" xml:space="preserve">
+    <value>প্রক্সি সার্ভার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerNote" xml:space="preserve">
+    <value>ঠিকানা ও পোর্ট, যেমন proxy.example.com:8080, অথবা প্রতিটি প্রোটোকলের জন্য একটি সার্ভার, যেমন http=proxy.example.com:8080;https=proxy.example.com:8443।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsHeader" xml:space="preserve">
+    <value>ব্যতিক্রম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsNote" xml:space="preserve">
+    <value>যেসব ঠিকানা প্রক্সি সার্ভার ব্যবহার করে না, সেমিকোলন দিয়ে আলাদা করা, * ওয়াইল্ডকার্ড হিসেবে, যেমন *.example.com;10.*।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesBypassLocal" xml:space="preserve">
+    <value>স্থানীয় (ইন্ট্রানেট) ঠিকানার জন্য প্রক্সি সার্ভার ব্যবহার করবেন না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameMissing" xml:space="preserve">
+    <value>একটি নাম লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInvalid" xml:space="preserve">
+    <value>এক লাইনে একটি নাম ব্যবহার করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInUse" xml:space="preserve">
+    <value>অন্য একটি প্রোফাইলের এই নাম আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerMissing" xml:space="preserve">
+    <value>প্রক্সি সার্ভার লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerInvalid" xml:space="preserve">
+    <value>একটি ঠিকানা ও পোর্ট লিখুন, যেমন proxy.example.com:8080, অথবা প্রতিটি প্রোটোকলের জন্য একটি সার্ভার।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptMissing" xml:space="preserve">
+    <value>সেটআপ স্ক্রিপ্টের ঠিকানা লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptNotWeb" xml:space="preserve">
+    <value>http:// বা https:// দিয়ে শুরু হওয়া একটি ওয়েব ঠিকানা লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionInvalid" xml:space="preserve">
+    <value>ঠিকানাগুলি স্পেস ছাড়া সেমিকোলন দিয়ে আলাদা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooLong" xml:space="preserve">
+    <value>{0}টি বা তার কম অক্ষর ব্যবহার করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

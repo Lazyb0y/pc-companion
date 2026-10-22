@@ -948,4 +948,216 @@
     <value>Configuración de Perfiles de red</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="NetworkProfilesOriginalSettings" xml:space="preserve">
+    <value>Configuración original</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesManagedInfo" xml:space="preserve">
+    <value>Su organización administra la configuración de proxy, por lo que no se pueden usar los perfiles. Puede seguir editándolos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseFailed" xml:space="preserve">
+    <value>Windows no cambió a {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesHeader" xml:space="preserve">
+    <value>Perfiles</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesDescription" xml:space="preserve">
+    <value>Elija un perfil en el menú del icono de PC Companion o seleccione Usar para cambiar la configuración de proxy de Windows a ese perfil.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddProfile" xml:space="preserve">
+    <value>Agregar perfil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddCurrent" xml:space="preserve">
+    <value>Agregar desde la configuración actual</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNoProfiles" xml:space="preserve">
+    <value>Todavía no hay perfiles. Agregue uno o agregue la configuración actual de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInUse" xml:space="preserve">
+    <value>En uso</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUse" xml:space="preserve">
+    <value>Usar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseName" xml:space="preserve">
+    <value>Usar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditName" xml:space="preserve">
+    <value>Editar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveUp" xml:space="preserve">
+    <value>Subir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveDown" xml:space="preserve">
+    <value>Bajar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDelete" xml:space="preserve">
+    <value>Eliminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDeleteTitle" xml:space="preserve">
+    <value>¿Eliminar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryServer" xml:space="preserve">
+    <value>Servidor proxy {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryScript" xml:space="preserve">
+    <value>Script de instalación en {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryDetect" xml:space="preserve">
+    <value>Detecta la configuración automáticamente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryNoProxy" xml:space="preserve">
+    <value>Sin proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryProblem" xml:space="preserve">
+    <value>No está en el menú: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooMany" xml:space="preserve">
+    <value>No está en el menú: solo se usan los primeros 20 perfiles.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInfo" xml:space="preserve">
+    <value>Los perfiles cambian la configuración de proxy de Ethernet y Wi-Fi; las conexiones VPN tienen la suya, en Configuración de Windows. Los exploradores y la mayoría de las aplicaciones usan la nueva configuración de inmediato, algunas aplicaciones solo después de reiniciarse, y las herramientas de línea de comandos usan su propia configuración.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Configuración de proxy de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>Vea la configuración que Windows usa ahora y configure el proxy de una conexión VPN.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>Abrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesPermissions" xml:space="preserve">
+    <value>Cambia la configuración de proxy de Ethernet y Wi-Fi solo cuando elige un perfil, y la lee junto con la configuración de directiva de grupo que la administra. No realiza conexiones de red por sí mismo: con la detección automática o un script de instalación, Windows y sus aplicaciones buscan el proxy. No registra nombres de perfiles, servidores proxy ni direcciones.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddTitle" xml:space="preserve">
+    <value>Agregar perfil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditTitle" xml:space="preserve">
+    <value>Editar perfil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameHeader" xml:space="preserve">
+    <value>Nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNamePlaceholder" xml:space="preserve">
+    <value>Oficina</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAutoDetect" xml:space="preserve">
+    <value>Detectar la configuración automáticamente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseScript" xml:space="preserve">
+    <value>Usar script de instalación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptHeader" xml:space="preserve">
+    <value>Dirección del script</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseServer" xml:space="preserve">
+    <value>Usar un servidor proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerHeader" xml:space="preserve">
+    <value>Servidor proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerNote" xml:space="preserve">
+    <value>La dirección y el puerto, como proxy.example.com:8080, o un servidor para cada protocolo, como http=proxy.example.com:8080;https=proxy.example.com:8443.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsHeader" xml:space="preserve">
+    <value>Excepciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsNote" xml:space="preserve">
+    <value>Direcciones que no usan el servidor proxy, separadas por punto y coma, con * como comodín, como *.example.com;10.*.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesBypassLocal" xml:space="preserve">
+    <value>No usar el servidor proxy para direcciones locales (intranet)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameMissing" xml:space="preserve">
+    <value>Escriba un nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInvalid" xml:space="preserve">
+    <value>Use un nombre en una sola línea.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInUse" xml:space="preserve">
+    <value>Otro perfil tiene este nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerMissing" xml:space="preserve">
+    <value>Escriba el servidor proxy.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerInvalid" xml:space="preserve">
+    <value>Escriba una dirección y un puerto, como proxy.example.com:8080, o un servidor para cada protocolo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptMissing" xml:space="preserve">
+    <value>Escriba la dirección del script de instalación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptNotWeb" xml:space="preserve">
+    <value>Escriba una dirección web que empiece por http:// o https://.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionInvalid" xml:space="preserve">
+    <value>Separe las direcciones con punto y coma, sin espacios.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooLong" xml:space="preserve">
+    <value>Use {0} caracteres como máximo.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

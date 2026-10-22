@@ -96,18 +96,10 @@ public static class ShellActions
     }
 
     /// <summary>Opens the taskbar page of Windows Settings.</summary>
-    public static bool OpenTaskbarSettings()
-    {
-        try
-        {
-            using var process = Process.Start(new ProcessStartInfo("ms-settings:taskbar") { UseShellExecute = true });
-            return true;
-        }
-        catch (Win32Exception)
-        {
-            return false;
-        }
-    }
+    public static bool OpenTaskbarSettings() => OpenSettingsPage("ms-settings:taskbar");
+
+    /// <summary>Opens the Proxy page of Windows Settings.</summary>
+    public static bool OpenProxySettings() => OpenSettingsPage("ms-settings:network-proxy");
 
     /// <summary>
     /// Turns the displays off until the pointer moves or a key is pressed.
@@ -189,5 +181,18 @@ public static class ShellActions
             type = INPUT_TYPE.INPUT_KEYBOARD,
             Anonymous = new INPUT._Anonymous_e__Union { ki = new KEYBDINPUT { wVk = key, dwFlags = flags } },
         };
+    }
+
+    private static bool OpenSettingsPage(string address)
+    {
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(address) { UseShellExecute = true });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
     }
 }
