@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
 
@@ -78,6 +79,9 @@ public static class ClipboardRuleCheck
         "wsl.exe", "bash.exe", "wt.exe", "explorer.exe", "rundll32.exe",
     };
 
+    // Set once PrepareMatching has run.
+    private static int s_matchingPrepared;
+
     /// <summary>
     /// Compiles a pattern that the whole text must match, as if it started with <c>^</c> and ended
     /// with <c>$</c>, without backtracking, with the invariant culture, and with
@@ -97,6 +101,7 @@ public static class ClipboardRuleCheck
             // Checked on its own first: unbalanced, the pattern could close the group that anchors it.
             _ = new Regex(pattern, options, MatchTimeout);
             var whole = new Regex($@"\A(?:{pattern})\z", options, MatchTimeout);
+            PrepareMatching();
             problem = PatternProblem.None;
             return whole;
         }
@@ -127,6 +132,18 @@ public static class ClipboardRuleCheck
         catch (RegexMatchTimeoutException)
         {
             return false;
+        }
+    }
+
+    // .NET prepares its non-backtracking matching code at the first match in a process. That takes
+    // about 10 ms, counted toward MatchTimeout, and much longer on a busy PC: the first rule to
+    // match could run out of time and be left out of the menu. A match of our own, without a time
+    // limit, prepares it before any rule's match is timed.
+    private static void PrepareMatching()
+    {
+        if (Interlocked.Exchange(ref s_matchingPrepared, 1) == 0)
+        {
+            _ = new Regex(@"\A(?:x)\z", RegexOptions.NonBacktracking | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).IsMatch("x");
         }
     }
 

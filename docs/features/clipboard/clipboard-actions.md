@@ -37,7 +37,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - **Open a web address:** opens the rule's address in the default browser, with `{text}` replaced by the copied text, such as `https://tracking.example.com/?number={text}`. The text is encoded for addresses (`Uri.EscapeDataString`), so it can't change the other parts of the address. The address must start with `https://` or `http://`, also after the replacement.
   - **Run a program:** starts the rule's program, with `{text}` in its arguments replaced by the copied text; see [Run a program](#run-a-program).
 - Patterns are .NET regular expressions. A pattern must match the whole text, as if it started with `^` and ended with `$`, so a pattern for a number doesn't match a paragraph that contains one. **Match case** is off by default.
-- Patterns run with `RegexOptions.NonBacktracking`, whose time grows only with the length of the text, so no copied text can keep a pattern busy; each match also stops after 100 ms. Backreferences, lookarounds, atomic groups and conditionals aren't available with it. The rule editor says so in the user's language; .NET's own message for them is in English only.
+- Patterns run with `RegexOptions.NonBacktracking`, whose time grows only with the length of the text, so no copied text can keep a pattern busy; each match also stops after 100 ms. The first match in a process takes about 10 ms longer while .NET prepares its matching code, so a match of a pattern of our own, without a time limit, comes first: otherwise the first rule to match could run out of time on a busy PC and be left out of the menu. Backreferences, lookarounds, atomic groups and conditionals aren't available with it. The rule editor says so in the user's language; .NET's own message for them is in English only.
 - Patterns match with the invariant culture, so Match case off works the same in every language, as with the Turkish dotted and dotless i.
 - Every rule needs a name; the menu shows up to 60 characters of it.
 - Several rules can match the same text. Two rules with the same pattern give two actions for the same text.
@@ -105,6 +105,7 @@ A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by
 - An app that provided its text after 1.5 seconds made reading wait 1.5 seconds. For an app that never answered, Windows gave up after 30 seconds (`ERROR_TIMEOUT`). With the Remote Desktop clipboard running, as Windows Sandbox has, it asked first and kept the clipboard open, so the tries gave up instead.
 - Windows menus draw the isolate characters (U+2068, U+2069) as boxes. The embedding characters show nothing and give Arabic text its own direction in a left-to-right menu.
 - 50 non-backtracking patterns compiled in 96 to 130 ms. Matching all 50 against 4,096 characters took up to 17 ms the first time, while each pattern builds its matcher, and under 1 ms after that. The same harmful patterns with backtracking stopped at the 100 ms limit. With the invariant culture, Match case off doesn't match `i` with the Turkish `İ`.
+- A rule's first match took about 11 ms, and with 32 busy threads on 8 processors 108 to 123 ms, so 3 of 4 ran out of time. After a match of our own, the first match took about 1 ms, also with 32 busy threads, and with Match case on or off.
 
 ## Settings
 
