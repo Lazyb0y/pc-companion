@@ -61,7 +61,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 
 ## Managed settings
 
-- An organization can manage the proxy settings with Group Policy. PC Companion watches the policies and reads them each time it reads the settings, so a policy shows as soon as it's set or removed, and when either is set, switching isn't available: the profiles in the menu are dimmed, the submenu starts with a dimmed **Your organization manages the proxy settings**, and the page shows the same note and no **Use** buttons. The policies:
+- An organization can manage the proxy settings with Group Policy. PC Companion watches the policies and reads them each time it reads the settings, so a policy shows as soon as it's set or removed, and when either is set, switching isn't available: the profiles in the menu are dimmed, the submenu starts with a dimmed **Your organization manages the proxy settings**, and the page shows the same note, with its **Use** buttons off. The policies:
   - **Prevent changing proxy settings**: the value `Proxy` (or `Autoconfig`) set to 1 in `Software\Policies\Microsoft\Internet Explorer\Control Panel`, for the user or the computer. Only Windows Settings honors it: `InternetSetOption` changes the settings anyway, so PC Companion checks for it itself;
   - **Make proxy settings per-machine (rather than per-user)**: `ProxySettingsPerUser` set to 0 in `HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings`. WinINet then keeps the settings for the computer, in HKLM. A program running as administrator changes them for every user of the PC; one without admin rights is told the change succeeded, and nothing changes. PC Companion makes no changes then, even while it runs as administrator.
 
