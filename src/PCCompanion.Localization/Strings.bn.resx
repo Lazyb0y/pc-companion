@@ -920,4 +920,32 @@
     <value>শুধু আপনি শর্টকাট চাপলে ক্লিপবোর্ডের টেক্সট পড়ে, কখনো ব্যাকগ্রাউন্ডে নয়, এবং কপি করা অ্যাপ যে টেক্সটকে ব্যক্তিগত হিসেবে চিহ্নিত করেছে তা কখনো নয়। টেক্সট সংরক্ষণ, লগ বা প্রেরণ করে না। লিংক ও ওয়েব ঠিকানা আপনার ব্রাউজারে খোলে, যা টেক্সটটি নিয়মে উল্লেখ করা সাইটে পাঠায়, এবং শুধু আপনার নিয়মে উল্লেখ করা প্রোগ্রাম চালু করে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>নেটওয়ার্ক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>নেটওয়ার্ক প্রোফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>PC Companion আইকনের মেনু থেকে সংরক্ষিত প্রক্সি সেটিংসের মধ্যে পরিবর্তন করুন, যেমন অফিস ও বাড়ির জন্য।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>নেটওয়ার্ক প্রোফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>অন্য প্রক্সি সেটিংস ব্যবহৃত হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>আপনার প্রতিষ্ঠান প্রক্সি সেটিংস পরিচালনা করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>নেটওয়ার্ক প্রোফাইল সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

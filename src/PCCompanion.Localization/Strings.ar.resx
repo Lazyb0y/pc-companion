@@ -968,4 +968,32 @@
     <value>يقرأ نص الحافظة فقط عند الضغط على الاختصار، ولا يقرأه أبدًا في الخلفية، ولا يقرأ أبدًا النص الذي وضع عليه التطبيق الذي نسخه علامة خاص. لا يخزن النص أو يسجله أو يرسله. يفتح الارتباطات وعناوين الويب في المستعرض، الذي يرسل النص إلى الموقع الذي تحدده القاعدة، ولا يبدأ إلا البرامج التي تحددها قواعدك.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>ملفات تعريف الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>بدّل بين إعدادات الوكيل المحفوظة، مثل إعدادات المكتب والمنزل، من قائمة أيقونة PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>ملف تعريف الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>إعدادات وكيل أخرى قيد الاستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>تدير مؤسستك إعدادات الوكيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>إعدادات ملفات تعريف الشبكة</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -920,4 +920,32 @@
     <value>Liest den Text der Zwischenablage nur, wenn Sie die Tastenkombination drücken, nie im Hintergrund, und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>Netzwerk</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>Netzwerkprofile</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>Wechseln Sie über das Menü des PC Companion-Symbols zwischen gespeicherten Proxyeinstellungen, etwa für Büro und Zuhause.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>Netzwerkprofil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>Andere Proxyeinstellungen aktiv</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>Ihre Organisation verwaltet die Proxyeinstellungen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>Einstellungen für Netzwerkprofile</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

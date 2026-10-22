@@ -920,4 +920,32 @@
     <value>Lee el texto del Portapapeles solo cuando presionas el método abreviado, nunca en segundo plano, y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>Red</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>Perfiles de red</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>Cambie entre configuraciones de proxy guardadas, como las de la oficina y de casa, desde el menú del icono de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>Perfil de red</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>Se usa otra configuración de proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>Su organización administra la configuración de proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>Configuración de Perfiles de red</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
