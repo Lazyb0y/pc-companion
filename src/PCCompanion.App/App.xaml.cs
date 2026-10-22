@@ -13,6 +13,7 @@ using PCCompanion.App.Features;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
@@ -170,6 +171,7 @@ public partial class App : Application
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
+            .AddTransient<NetworkProfilesViewModel>()
             .BuildServiceProvider();
     }
 

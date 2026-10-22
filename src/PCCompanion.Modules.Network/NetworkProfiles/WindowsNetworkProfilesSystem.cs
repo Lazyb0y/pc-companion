@@ -6,8 +6,8 @@ using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Network.NetworkProfiles;
 
-/// <summary>Network Profiles' access to Windows.</summary>
-internal sealed class WindowsNetworkProfilesSystem : INetworkProfilesSystem
+/// <summary>Network Profiles' access to Windows, for the feature and its page in the settings app.</summary>
+public sealed class WindowsNetworkProfilesSystem : INetworkProfilesSystem
 {
     private const string WindowClassName = "PCCompanion.NetworkProfiles";
 

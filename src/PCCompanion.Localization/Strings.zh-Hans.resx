@@ -936,4 +936,216 @@
     <value>网络配置文件设置</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="NetworkProfilesOriginalSettings" xml:space="preserve">
+    <value>原始设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesManagedInfo" xml:space="preserve">
+    <value>你的组织管理代理设置，因此无法使用配置文件。你仍然可以编辑它们。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseFailed" xml:space="preserve">
+    <value>Windows 未切换到 {0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesHeader" xml:space="preserve">
+    <value>配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesDescription" xml:space="preserve">
+    <value>在 PC Companion 图标的菜单中选择配置文件，或选择“使用”，将 Windows 的代理设置切换到该配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddProfile" xml:space="preserve">
+    <value>添加配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddCurrent" xml:space="preserve">
+    <value>从当前设置添加</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNoProfiles" xml:space="preserve">
+    <value>还没有配置文件。添加一个，或添加 Windows 的当前设置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInUse" xml:space="preserve">
+    <value>正在使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUse" xml:space="preserve">
+    <value>使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseName" xml:space="preserve">
+    <value>使用 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditName" xml:space="preserve">
+    <value>编辑 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveUp" xml:space="preserve">
+    <value>上移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMoveDown" xml:space="preserve">
+    <value>下移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryServer" xml:space="preserve">
+    <value>代理服务器 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryScript" xml:space="preserve">
+    <value>{0} 上的设置脚本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryDetect" xml:space="preserve">
+    <value>自动检测设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryNoProxy" xml:space="preserve">
+    <value>无代理</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryProblem" xml:space="preserve">
+    <value>不在菜单中: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooMany" xml:space="preserve">
+    <value>不在菜单中: 仅使用前 20 个配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesInfo" xml:space="preserve">
+    <value>配置文件会更改以太网和 Wi-Fi 的代理设置；VPN 连接在 Windows 设置中有自己的设置。浏览器和大多数应用会立即使用新设置，某些应用仅在重新启动后使用，命令行工具使用自己的设置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Windows 代理设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>查看 Windows 当前使用的设置，并设置 VPN 连接的代理。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>打开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesPermissions" xml:space="preserve">
+    <value>仅在你选择配置文件时更改以太网和 Wi-Fi 的代理设置，并读取这些设置以及管理它们的组策略设置。它本身不建立任何网络连接：使用自动检测或设置脚本时，由 Windows 和你的应用查找代理。不记录配置文件名称、代理服务器或地址。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAddTitle" xml:space="preserve">
+    <value>添加配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesEditTitle" xml:space="preserve">
+    <value>编辑配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameHeader" xml:space="preserve">
+    <value>名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNamePlaceholder" xml:space="preserve">
+    <value>办公室</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesAutoDetect" xml:space="preserve">
+    <value>自动检测设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseScript" xml:space="preserve">
+    <value>使用设置脚本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptHeader" xml:space="preserve">
+    <value>脚本地址</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesUseServer" xml:space="preserve">
+    <value>使用代理服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerHeader" xml:space="preserve">
+    <value>代理服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerNote" xml:space="preserve">
+    <value>地址和端口，例如 proxy.example.com:8080，或每个协议对应一个服务器，例如 http=proxy.example.com:8080;https=proxy.example.com:8443。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsHeader" xml:space="preserve">
+    <value>例外</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsNote" xml:space="preserve">
+    <value>不使用代理服务器的地址，用分号分隔，以 * 作为通配符，例如 *.example.com;10.*。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesBypassLocal" xml:space="preserve">
+    <value>请勿将代理服务器用于本地(Intranet)地址</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameMissing" xml:space="preserve">
+    <value>输入名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInvalid" xml:space="preserve">
+    <value>名称只能有一行。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesNameInUse" xml:space="preserve">
+    <value>另一个配置文件已使用此名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerMissing" xml:space="preserve">
+    <value>输入代理服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesServerInvalid" xml:space="preserve">
+    <value>输入地址和端口，例如 proxy.example.com:8080，或每个协议对应一个服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptMissing" xml:space="preserve">
+    <value>输入设置脚本的地址。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesScriptNotWeb" xml:space="preserve">
+    <value>输入以 http:// 或 https:// 开头的网址。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionInvalid" xml:space="preserve">
+    <value>用分号分隔地址，不要使用空格。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesTooLong" xml:space="preserve">
+    <value>最多使用 {0} 个字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

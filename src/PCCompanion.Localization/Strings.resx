@@ -948,4 +948,216 @@
     <value>Network Profiles settings</value>
     <comment>Network profile submenu: opens the feature's settings. Network Profiles is NetworkProfilesName.</comment>
   </data>
+  <data name="NetworkProfilesOriginalSettings" xml:space="preserve">
+    <value>Original settings</value>
+    <comment>Name of the profile made from Windows' proxy settings when Network Profiles is first turned on.</comment>
+  </data>
+  <data name="NetworkProfilesManagedInfo" xml:space="preserve">
+    <value>Your organization manages the proxy settings, so profiles can't be used. You can still edit them.</value>
+    <comment>Network Profiles page: warning when Group Policy manages the proxy settings.</comment>
+  </data>
+  <data name="NetworkProfilesUseFailed" xml:space="preserve">
+    <value>Windows didn't switch to {0}.</value>
+    <comment>Network Profiles page: error after Use. {0} is the profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesHeader" xml:space="preserve">
+    <value>Profiles</value>
+    <comment>Network Profiles page: header of the profile list.</comment>
+  </data>
+  <data name="NetworkProfilesProfilesDescription" xml:space="preserve">
+    <value>Choose a profile in the PC Companion icon's menu, or select Use, to switch Windows' proxy settings to it.</value>
+    <comment>Network Profiles page: below NetworkProfilesProfilesHeader. Use is NetworkProfilesUse.</comment>
+  </data>
+  <data name="NetworkProfilesAddProfile" xml:space="preserve">
+    <value>Add profile</value>
+    <comment>Network Profiles page: button.</comment>
+  </data>
+  <data name="NetworkProfilesAddCurrent" xml:space="preserve">
+    <value>Add from current settings</value>
+    <comment>Network Profiles page: button that adds a profile with Windows' current proxy settings.</comment>
+  </data>
+  <data name="NetworkProfilesNoProfiles" xml:space="preserve">
+    <value>No profiles yet. Add one, or add Windows' current settings.</value>
+    <comment>Network Profiles page: shown when the list is empty.</comment>
+  </data>
+  <data name="NetworkProfilesInUse" xml:space="preserve">
+    <value>In use</value>
+    <comment>Network Profiles page: shown on the profile whose settings Windows uses now.</comment>
+  </data>
+  <data name="NetworkProfilesUse" xml:space="preserve">
+    <value>Use</value>
+    <comment>Network Profiles page: button that switches Windows' proxy settings to the profile.</comment>
+  </data>
+  <data name="NetworkProfilesUseName" xml:space="preserve">
+    <value>Use {0}</value>
+    <comment>Network Profiles page: name of the Use button for screen readers. {0} is the profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Network Profiles page: button.</comment>
+  </data>
+  <data name="NetworkProfilesEditName" xml:space="preserve">
+    <value>Edit {0}</value>
+    <comment>Network Profiles page: name of the Edit button for screen readers. {0} is the profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Network Profiles page: name of the More button for screen readers. {0} is the profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesMoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Network Profiles page: menu item.</comment>
+  </data>
+  <data name="NetworkProfilesMoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Network Profiles page: menu item.</comment>
+  </data>
+  <data name="NetworkProfilesDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Network Profiles page: menu item and dialog button.</comment>
+  </data>
+  <data name="NetworkProfilesDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>Network Profiles page: title of the dialog that asks before deleting. {0} is the profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Network Profiles page and profile editor: dialog button.</comment>
+  </data>
+  <data name="NetworkProfilesSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Profile editor: button.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryServer" xml:space="preserve">
+    <value>Proxy server {0}</value>
+    <comment>Network Profiles page: part of a profile's summary. {0} is the proxy server, such as proxy.example.com:8080.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryScript" xml:space="preserve">
+    <value>Setup script on {0}</value>
+    <comment>Network Profiles page: part of a profile's summary. {0} is the script's host, such as pac.example.com.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryDetect" xml:space="preserve">
+    <value>Detects settings automatically</value>
+    <comment>Network Profiles page: part of a profile's summary.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryNoProxy" xml:space="preserve">
+    <value>No proxy</value>
+    <comment>Network Profiles page: summary of a profile with everything off.</comment>
+  </data>
+  <data name="NetworkProfilesSummaryProblem" xml:space="preserve">
+    <value>Not in the menu: {0}</value>
+    <comment>Network Profiles page: summary of a profile that can't be used. {0} says what to change.</comment>
+  </data>
+  <data name="NetworkProfilesTooMany" xml:space="preserve">
+    <value>Not in the menu: only the first 20 profiles are used.</value>
+    <comment>Network Profiles page: summary of profiles after the 20th.</comment>
+  </data>
+  <data name="NetworkProfilesInfo" xml:space="preserve">
+    <value>Profiles change the proxy settings for Ethernet and Wi-Fi; VPN connections have their own, in Windows Settings. Browsers and most apps use new settings right away, some apps only after they restart, and command-line tools use their own settings.</value>
+    <comment>Network Profiles page: note.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Windows proxy settings</value>
+    <comment>Network Profiles page: card header.</comment>
+  </data>
+  <data name="NetworkProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>See the settings Windows uses now, and set up the proxy of a VPN connection.</value>
+    <comment>Network Profiles page: below NetworkProfilesWindowsSettingsHeader.</comment>
+  </data>
+  <data name="NetworkProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>Open</value>
+    <comment>Network Profiles page: button that opens the Proxy page of Windows Settings.</comment>
+  </data>
+  <data name="NetworkProfilesPermissions" xml:space="preserve">
+    <value>Changes your proxy settings for Ethernet and Wi-Fi only when you choose a profile, and reads them and the Group Policy settings that manage them. Makes no network connections itself: with automatic detection or a setup script, Windows and your apps look for the proxy. Doesn't log profile names, proxy servers or addresses.</value>
+    <comment>Network Profiles page: below FeaturePermissionsHeader.</comment>
+  </data>
+  <data name="NetworkProfilesAddTitle" xml:space="preserve">
+    <value>Add profile</value>
+    <comment>Profile editor: dialog title for a new profile.</comment>
+  </data>
+  <data name="NetworkProfilesEditTitle" xml:space="preserve">
+    <value>Edit profile</value>
+    <comment>Profile editor: dialog title for a profile that exists.</comment>
+  </data>
+  <data name="NetworkProfilesNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Profile editor: box header.</comment>
+  </data>
+  <data name="NetworkProfilesNamePlaceholder" xml:space="preserve">
+    <value>Office</value>
+    <comment>Profile editor: example in the empty Name box.</comment>
+  </data>
+  <data name="NetworkProfilesAutoDetect" xml:space="preserve">
+    <value>Automatically detect settings</value>
+    <comment>Profile editor: switch, as on Windows' Proxy page.</comment>
+  </data>
+  <data name="NetworkProfilesUseScript" xml:space="preserve">
+    <value>Use setup script</value>
+    <comment>Profile editor: switch, as on Windows' Proxy page.</comment>
+  </data>
+  <data name="NetworkProfilesScriptHeader" xml:space="preserve">
+    <value>Script address</value>
+    <comment>Profile editor: box header, as on Windows' Proxy page.</comment>
+  </data>
+  <data name="NetworkProfilesUseServer" xml:space="preserve">
+    <value>Use a proxy server</value>
+    <comment>Profile editor: switch, as on Windows' Proxy page.</comment>
+  </data>
+  <data name="NetworkProfilesServerHeader" xml:space="preserve">
+    <value>Proxy server</value>
+    <comment>Profile editor: box header.</comment>
+  </data>
+  <data name="NetworkProfilesServerNote" xml:space="preserve">
+    <value>The address and port, such as proxy.example.com:8080, or a server for each protocol, such as http=proxy.example.com:8080;https=proxy.example.com:8443.</value>
+    <comment>Profile editor: below the Proxy server box. Keep the examples as they are.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsHeader" xml:space="preserve">
+    <value>Exceptions</value>
+    <comment>Profile editor: box header for the addresses that don't use the proxy server.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionsNote" xml:space="preserve">
+    <value>Addresses that don't use the proxy server, separated by semicolons, with * as a wildcard, such as *.example.com;10.*.</value>
+    <comment>Profile editor: below the Exceptions box. Keep the example as it is.</comment>
+  </data>
+  <data name="NetworkProfilesBypassLocal" xml:space="preserve">
+    <value>Don't use the proxy server for local (intranet) addresses</value>
+    <comment>Profile editor: check box, as on Windows' Proxy page.</comment>
+  </data>
+  <data name="NetworkProfilesNameMissing" xml:space="preserve">
+    <value>Enter a name.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesNameInvalid" xml:space="preserve">
+    <value>Use a name on one line.</value>
+    <comment>Profile editor and Network Profiles page: problem with a name that has a line break or another control character.</comment>
+  </data>
+  <data name="NetworkProfilesNameInUse" xml:space="preserve">
+    <value>Another profile has this name.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's name.</comment>
+  </data>
+  <data name="NetworkProfilesServerMissing" xml:space="preserve">
+    <value>Enter the proxy server.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's proxy server.</comment>
+  </data>
+  <data name="NetworkProfilesServerInvalid" xml:space="preserve">
+    <value>Enter an address and port, such as proxy.example.com:8080, or a server for each protocol.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's proxy server. Keep the example as it is.</comment>
+  </data>
+  <data name="NetworkProfilesScriptMissing" xml:space="preserve">
+    <value>Enter the setup script's address.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's script address.</comment>
+  </data>
+  <data name="NetworkProfilesScriptNotWeb" xml:space="preserve">
+    <value>Enter a web address that starts with http:// or https://.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's script address.</comment>
+  </data>
+  <data name="NetworkProfilesExceptionInvalid" xml:space="preserve">
+    <value>Separate the addresses with semicolons, without spaces.</value>
+    <comment>Profile editor and Network Profiles page: problem with a profile's exceptions.</comment>
+  </data>
+  <data name="NetworkProfilesTooLong" xml:space="preserve">
+    <value>Use {0} characters or fewer.</value>
+    <comment>Profile editor and Network Profiles page: problem with a text that's too long. {0} is a number.</comment>
+  </data>
 </root>

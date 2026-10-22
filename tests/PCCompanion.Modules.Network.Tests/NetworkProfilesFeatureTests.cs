@@ -189,13 +189,13 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     }
 
     [Fact]
-    public void NetworkProfilesSettingsOpensTheSettings()
+    public void NetworkProfilesSettingsOpensTheFeaturesPage()
     {
         _feature.Apply(On(Office));
 
         _feature.ChooseMenuItem(NetworkProfilesMenu.SettingsItem);
 
-        Assert.Equal(1, _commands.SettingsOpened);
+        Assert.Equal(["networkProfiles"], _commands.FeaturePagesOpened);
     }
 
     [Fact]
