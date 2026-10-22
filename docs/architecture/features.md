@@ -76,8 +76,9 @@ public interface IFeature : IDisposable
 
 ## Adding a feature
 
-1. Spec in `docs/features/<module>/<feature>.md`, including a security and privacy review and the threads its parts run on, approved before code.
-2. Feature class and settings, an `IFeatureSettings<TSelf>` record, in the module project; register it in the module's `Add<Module>Module`.
-3. Page, with `FeatureHeader`, and its view model, a `FeatureViewModel<TSettings>`, in `src/PCCompanion.App/Features/<Feature>/`, and an entry in `FeatureCatalog.cs`.
-4. Strings with translations marked "Needs native review."
-5. Tests, Sandbox checks, docs, and `NOTICE.md` and `ThirdPartyNotices.txt` if a new package ships.
+1. Research how macOS, Linux desktops such as KDE Plasma and GNOME, Windows itself and popular tools do it, and what their users complain about, so the feature can do better than all of them. Study GPL projects' behavior only.
+2. Spec in `docs/features/<module>/<feature>.md`, including where it does better than the others, a security and privacy review and the threads its parts run on, approved before code.
+3. Feature class and settings, an `IFeatureSettings<TSelf>` record, in the module project; register it in the module's `Add<Module>Module`.
+4. Page, with `FeatureHeader`, and its view model, a `FeatureViewModel<TSettings>`, in `src/PCCompanion.App/Features/<Feature>/`, and an entry in `FeatureCatalog.cs`.
+5. Strings with translations marked "Needs native review."
+6. Tests, Sandbox checks, docs, and `NOTICE.md` and `ThirdPartyNotices.txt` if a new package ships.
