@@ -1,20 +1,27 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
+using PCCompanion.Core.Features;
+using PCCompanion.Infrastructure.Features;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
 
 /// <summary>
-/// The host's tray icon: selecting it opens the settings, and its menu has Settings and Exit. The
-/// menu follows the Windows mode, as the taskbar does. Use it on the thread that runs the message loop.
+/// The host's tray icon: selecting it opens the settings, and its menu has the running features'
+/// items, then Settings and Exit. The menu follows the Windows mode, as the taskbar does. Use it on
+/// the thread that runs the message loop.
 /// </summary>
-internal sealed partial class TrayController(SettingsAppLauncher settingsApp, ILogger<TrayController> logger) : IDisposable
+internal sealed partial class TrayController(SettingsAppLauncher settingsApp, FeatureRunner features, ILogger<TrayController> logger) : IDisposable
 {
     private const uint SettingsCommand = 1;
     private const uint ExitCommand = 2;
+
+    // The features' items get menu IDs from here on.
+    private const int FirstFeatureCommand = 100;
 
     private MessageWindow? _window;
     private TrayIcon? _icon;
@@ -115,23 +122,43 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, IL
     private void ShowMenu(int x, int y)
     {
         var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
-        PopupMenuItem[] items = [new(SettingsCommand, Strings.TraySettings), new(ExitCommand, Strings.TrayExit)];
+        var items = features.GetMenuItems(FirstFeatureCommand).Select(ToPopupMenuItem).ToList();
+        if (items.Count > 0)
+        {
+            items.Add(PopupMenuItem.Separator);
+        }
+
+        items.Add(new PopupMenuItem(SettingsCommand, Strings.TraySettings));
+        items.Add(new PopupMenuItem(ExitCommand, Strings.TrayExit));
 
         FollowWindowsMode();
         LogMenuOpened(logger, rightToLeft);
         var command = PopupMenu.Show(_window!, items, x, y, rightToLeft);
-        LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", _ => "nothing" });
+        LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", 0 => "nothing", _ => "a feature's item" });
 
         switch (command)
         {
+            case 0:
+                break;
             case SettingsCommand:
                 OpenSettings();
                 break;
             case ExitCommand:
                 Exit();
                 break;
+            default:
+                features.ChooseMenuItem((int)command);
+                break;
         }
     }
+
+    // A feature's text shows as written, without access keys.
+    private static PopupMenuItem ToPopupMenuItem(HostMenuItem item) => item switch
+    {
+        { IsSeparator: true } => PopupMenuItem.Separator,
+        { Items: { } submenuItems } => PopupMenuItem.Submenu(PopupMenu.Escape(item.Text), [.. submenuItems.Select(ToPopupMenuItem)]) with { IsEnabled = item.IsEnabled },
+        _ => new PopupMenuItem((uint)item.Id, PopupMenu.Escape(item.Text)) { IsEnabled = item.IsEnabled, IsChecked = item.IsChecked },
+    };
 
     // Checked each time the menu opens, so a change of the Windows mode needs no notification.
     private void FollowWindowsMode()
