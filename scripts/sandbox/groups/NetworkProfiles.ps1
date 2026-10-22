@@ -459,7 +459,20 @@ Test-Check 'In use follows a change another program makes' (Wait-Until { (-not (
 Start-Sleep -Seconds 1
 Test-Check 'and focus stays where it was' ((Get-FocusedName) -eq 'Edit Office & lab') (Get-FocusedName)
 Test-Check 'Open opens Windows'' Proxy page' ((Invoke-AppElement 'Open') -and (Wait-Until { (Get-Processes 'SystemSettings').Count -gt 0 } 15))
-Start-Sleep -Seconds 2
+
+# A change saved in Windows Settings' Proxy page moves In use, as one another program makes does:
+# its Automatically detect settings switch saves as soon as it's toggled.
+$detectSwitch = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'SystemSettings_Proxy_AutomaticDetection_ToggleSwitch')
+$script:detect = $null
+Test-Check 'Windows Settings shows Automatically detect settings' (Wait-Until { ($script:detect = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $detectSwitch)) -ne $null } 20)
+if ($script:detect) {
+    $script:detect.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
+    Test-Check 'turning it off in Windows Settings changes Windows'' settings' (Wait-Until { (Get-Proxy) -like '1|*' } 5) (Get-Proxy)
+    Test-Check 'and In use follows the change' (Wait-Until { Find-AppElement 'Use Home' } 5)
+    Save-Screenshot '14c-network-profiles-windows-settings'
+    $script:detect.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Toggle()
+    Test-Check 'turned on again there, Home is in use again' (Wait-Until { ((Get-Proxy) -like '9|*') -and -not (Find-AppElement 'Use Home') } 5) (Get-Proxy)
+}
 Get-Processes 'SystemSettings' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 [void] (Close-SettingsApp)
 
