@@ -908,4 +908,32 @@
     <value>仅在你按下快捷键时读取剪贴板中的文本，从不在后台读取，也从不读取复制它的应用标记为私密的文本。不会存储、记录或发送该文本。在你的浏览器中打开链接和网址，浏览器会将文本发送到规则指定的网站；只启动你的规则指定的程序。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>网络</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>网络配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>从 PC Companion 图标的菜单中，在已保存的代理设置（例如办公室和家里的设置）之间切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>网络配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>正在使用其他代理设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>你的组织管理代理设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>网络配置文件设置</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

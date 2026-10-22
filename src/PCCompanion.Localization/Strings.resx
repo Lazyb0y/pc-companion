@@ -920,4 +920,32 @@
     <value>Reads the clipboard's text only when you press the shortcut, never in the background, and never text that the app that copied it marked private. Doesn't store, log or send the text. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
     <comment>Clipboard Actions page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>Network</value>
+    <comment>Navigation pane and Home: the group of features that change network settings.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>Network Profiles</value>
+    <comment>Feature name: named sets of proxy settings to switch between.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>Switch between saved proxy settings, such as for the office and home, from the PC Companion icon's menu.</value>
+    <comment>Feature description, on Home and the feature's page.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>Network profile</value>
+    <comment>PC Companion icon's menu: the submenu that lists the network profiles.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>Other proxy settings in use</value>
+    <comment>Network profile submenu: dimmed note when Windows' proxy settings match none of the profiles.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>Your organization manages the proxy settings</value>
+    <comment>Network profile submenu: dimmed note when Group Policy manages the proxy settings, so profiles can't be chosen.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>Network Profiles settings</value>
+    <comment>Network profile submenu: opens the feature's settings. Network Profiles is NetworkProfilesName.</comment>
+  </data>
 </root>

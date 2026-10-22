@@ -920,4 +920,32 @@
     <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur le raccourci, jamais en arrière-plan, et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleNetworkName" xml:space="preserve">
+    <value>Réseau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesName" xml:space="preserve">
+    <value>Profils réseau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesDescription" xml:space="preserve">
+    <value>Basculez entre des paramètres de proxy enregistrés, par exemple pour le bureau et la maison, depuis le menu de l'icône PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenu" xml:space="preserve">
+    <value>Profil réseau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuOther" xml:space="preserve">
+    <value>Autres paramètres de proxy utilisés</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuManaged" xml:space="preserve">
+    <value>Votre organisation gère les paramètres de proxy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesMenuSettings" xml:space="preserve">
+    <value>Paramètres des profils réseau</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
