@@ -9,7 +9,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 ## Behavior
 
 - Each of the four corners can run one action, or nothing.
-- A corner triggers when the pointer reaches it and stays for the **activation delay**: 150 ms by default, as in KDE Plasma, adjustable from 0 to 1,000 ms.
+- A corner triggers when the pointer reaches it and stays for the **activation delay**: 150 ms by default, adjustable from 0 to 1,000 ms.
 - After it triggers, a corner doesn't trigger again until the pointer has left it.
 - A corner can require a key: hold Ctrl, Alt, Shift or the Windows key while the pointer reaches it. This avoids accidental triggers, as in macOS.
 - A corner doesn't trigger:
