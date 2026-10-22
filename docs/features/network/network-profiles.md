@@ -78,7 +78,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 
 ## The PC Companion icon's menu
 
-- The host's menu has only Settings and Exit today. Core gets a small interface through which a running feature adds a submenu: the host asks each feature for its items each time the menu opens, on the UI thread, and a feature answers from the state it already has, so the menu never waits. The chosen item goes back to its feature.
+- A running feature adds a submenu through `IHostMenuItems` in Core: the host asks each feature for its items each time the menu opens, on the UI thread, and a feature answers from the state it already has, so the menu never waits. The chosen item goes back to its feature. See [Running in the host](../../architecture/features.md#running-in-the-host).
 - `PopupMenu` gets submenus and radio check marks.
 
 ## Settings
