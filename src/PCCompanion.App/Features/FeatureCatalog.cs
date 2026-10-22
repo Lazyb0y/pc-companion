@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.HotCorners;
@@ -21,7 +22,11 @@ namespace PCCompanion.App.Features;
 public sealed record CatalogModule(string Id, string NameKey, IReadOnlyList<CatalogFeature> Features);
 
 /// <param name="PageType">The feature's page in the settings app.</param>
-public sealed record CatalogFeature(FeatureInfo Info, FeatureSupport Support, Type PageType);
+/// <param name="FirstSettings">
+/// Makes the section a feature starts with when it's turned on and has none yet, such as settings
+/// read from Windows; null for its defaults.
+/// </param>
+public sealed record CatalogFeature(FeatureInfo Info, FeatureSupport Support, Type PageType, Func<JsonElement>? FirstSettings = null);
 
 /// <summary>
 /// Every module and feature, in the order the navigation pane and Home show them.
@@ -49,4 +54,7 @@ public static class FeatureCatalog
     ];
 
     public static IEnumerable<CatalogFeature> Features => Modules.SelectMany(module => module.Features);
+
+    /// <summary>The feature with the ID <paramref name="featureId"/>, or null.</summary>
+    public static CatalogFeature? Find(string featureId) => Features.FirstOrDefault(feature => feature.Info.Id == featureId);
 }

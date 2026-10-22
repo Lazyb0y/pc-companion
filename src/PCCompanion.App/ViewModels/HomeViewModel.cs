@@ -42,6 +42,7 @@ public sealed partial class HomeViewModel : ObservableObject
 public sealed partial class FeatureCardViewModel : ObservableObject
 {
     private readonly FeatureSettingsEditor _editor;
+    private readonly CatalogFeature _feature;
     private readonly Action<bool> _saved;
     private bool _isOn;
 
@@ -52,6 +53,7 @@ public sealed partial class FeatureCardViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(editor);
 
         _editor = editor;
+        _feature = feature;
         _saved = saved;
         Id = feature.Info.Id;
         Name = Localized.GetString(feature.Info.NameKey);
@@ -78,7 +80,7 @@ public sealed partial class FeatureCardViewModel : ObservableObject
         {
             if (SetProperty(ref _isOn, value))
             {
-                _saved(_editor.SetEnabled(Id, value));
+                _saved(_editor.SetEnabled(Id, value, _feature.FirstSettings));
             }
         }
     }

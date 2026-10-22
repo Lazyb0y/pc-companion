@@ -34,11 +34,18 @@ public sealed partial class FeatureSettingsEditor(AppSettings settings, Settings
 
     public bool IsEnabled(string featureId) => FeatureSettings.IsEnabled(Section(featureId));
 
+    /// <summary>Whether the feature has a section, as it has once it's been turned on or changed.</summary>
+    public bool HasSection(string featureId) => Section(featureId) is not null;
+
     /// <summary>
-    /// Turns a feature on or off. Returns false when the change couldn't be saved.
+    /// Turns a feature on or off. A feature turned on without a section yet starts with the one
+    /// <paramref name="firstSettings"/> makes, if any. Returns false when the change couldn't be saved.
     /// </summary>
-    public bool SetEnabled(string featureId, bool enabled) =>
-        Save(featureId, FeatureSettings.SetEnabled(Section(featureId), enabled));
+    public bool SetEnabled(string featureId, bool enabled, Func<JsonElement>? firstSettings = null)
+    {
+        var section = Section(featureId) ?? (enabled ? firstSettings?.Invoke() : null);
+        return Save(featureId, FeatureSettings.SetEnabled(section, enabled));
+    }
 
     /// <summary>
     /// Replaces a feature's section. Returns false when the change couldn't be saved.
