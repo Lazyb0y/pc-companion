@@ -33,7 +33,7 @@ public abstract class FeatureViewModel<TSettings> : ObservableObject
     public bool IsOn
     {
         get => Settings.Enabled;
-        set => Change(Settings.Enabled, value, () => Settings.WithEnabled(value));
+        set => Change(Settings.Enabled, value, () => (value ? FirstSettings() : Settings).WithEnabled(value));
     }
 
     /// <summary>True when the last change couldn't be saved.</summary>
@@ -64,6 +64,10 @@ public abstract class FeatureViewModel<TSettings> : ObservableObject
         OnPropertyChanged(propertyName);
         return true;
     }
+
+    // The settings a feature starts with when it's turned on and has no section yet, as Home's switch does.
+    private TSettings FirstSettings() =>
+        !_editor.HasSection(_feature.Id) && FeatureCatalog.Find(_feature.Id)?.FirstSettings is { } first ? TSettings.Read(first()) : Settings;
 
     /// <summary>Saves the settings right away; <see cref="SaveFailed"/> says whether that worked.</summary>
     protected void Save(TSettings settings)
