@@ -1053,7 +1053,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>Profile ändern die Proxyeinstellungen für Ethernet und WLAN; VPN-Verbindungen haben eigene, in den Windows-Einstellungen. Browser und die meisten Apps verwenden neue Einstellungen sofort, manche Apps erst nach einem Neustart, und Befehlszeilentools verwenden eigene Einstellungen.</value>
+    <value>Profile ändern die Proxyeinstellungen für Ethernet und WLAN; VPN-Verbindungen haben eigene, in den Windows-Einstellungen. Browser und die meisten Apps verwenden neue Einstellungen sofort, manche Apps erst nach einem Neustart, und Befehlszeilentools und Windows-Dienste wie Windows Update verwenden eigene Einstellungen.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">

@@ -1053,7 +1053,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>Los perfiles cambian la configuración de proxy de Ethernet y Wi-Fi; las conexiones VPN tienen la suya, en Configuración de Windows. Los exploradores y la mayoría de las aplicaciones usan la nueva configuración de inmediato, algunas aplicaciones solo después de reiniciarse, y las herramientas de línea de comandos usan su propia configuración.</value>
+    <value>Los perfiles cambian la configuración de proxy de Ethernet y Wi-Fi; las conexiones VPN tienen la suya, en Configuración de Windows. Los exploradores y la mayoría de las aplicaciones usan la nueva configuración de inmediato, algunas aplicaciones solo después de reiniciarse, y las herramientas de línea de comandos y los servicios de Windows, como Windows Update, usan su propia configuración.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">

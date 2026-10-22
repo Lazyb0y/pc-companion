@@ -1053,7 +1053,7 @@
     <comment>Network Profiles page: summary of profiles after the 20th.</comment>
   </data>
   <data name="NetworkProfilesInfo" xml:space="preserve">
-    <value>Profiles change the proxy settings for Ethernet and Wi-Fi; VPN connections have their own, in Windows Settings. Browsers and most apps use new settings right away, some apps only after they restart, and command-line tools use their own settings.</value>
+    <value>Profiles change the proxy settings for Ethernet and Wi-Fi; VPN connections have their own, in Windows Settings. Browsers and most apps use new settings right away, some apps only after they restart, and command-line tools and Windows services, such as Windows Update, use their own settings.</value>
     <comment>Network Profiles page: note.</comment>
   </data>
   <data name="NetworkProfilesWindowsSettingsHeader" xml:space="preserve">
