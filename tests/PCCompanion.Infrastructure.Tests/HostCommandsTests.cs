@@ -24,7 +24,7 @@ public sealed class HostCommandsTests
     {
         var commands = new HostCommands(_logger);
         int settings = 0, exits = 0;
-        commands.Attach(_uiThread.Enqueue, () => settings++, () => exits++, _ => true);
+        commands.Attach(_uiThread.Enqueue, _ => settings++, () => exits++, _ => true);
 
         await Task.Run(commands.OpenSettings, TestContext.Current.CancellationToken);
         await Task.Run(commands.ExitApp, TestContext.Current.CancellationToken);
@@ -32,6 +32,20 @@ public sealed class HostCommandsTests
         Assert.Equal((0, 0), (settings, exits));
         RunUiThread();
         Assert.Equal((1, 1), (settings, exits));
+    }
+
+    [Fact]
+    public void AFeaturesSettingsOpenOnItsPage()
+    {
+        var commands = new HostCommands(_logger);
+        var pages = new List<string?>();
+        commands.Attach(_uiThread.Enqueue, pages.Add, () => { }, _ => true);
+
+        commands.OpenSettings();
+        commands.OpenFeatureSettings("networkProfiles");
+        RunUiThread();
+
+        Assert.Equal([null, "networkProfiles"], pages);
     }
 
     [Fact]
@@ -51,7 +65,7 @@ public sealed class HostCommandsTests
     public void AFailingCommandIsLoggedAndDoesNotReachTheUiThreadsLoop()
     {
         var commands = new HostCommands(_logger);
-        commands.Attach(_uiThread.Enqueue, () => throw new InvalidOperationException("Can't open."), () => { }, _ => true);
+        commands.Attach(_uiThread.Enqueue, _ => throw new InvalidOperationException("Can't open."), () => { }, _ => true);
 
         commands.OpenSettings();
         RunUiThread();
@@ -66,7 +80,7 @@ public sealed class HostCommandsTests
     {
         var commands = new HostCommands(_logger);
         var asked = new List<Uri>();
-        commands.Attach(_uiThread.Enqueue, () => { }, () => { }, address =>
+        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, address =>
         {
             asked.Add(address);
             return opened;
@@ -82,7 +96,7 @@ public sealed class HostCommandsTests
     public void AWebPageIsLoggedWithoutItsAddress()
     {
         var commands = new HostCommands(_logger);
-        commands.Attach(_uiThread.Enqueue, () => { }, () => { }, _ => true);
+        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true);
 
         commands.OpenWebPage(Address);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -68,6 +69,7 @@ public partial class App : Application
         var window = new MainWindow(settings, _services.GetRequiredService<UpdateCheckWatcher>());
         _window = window;
         window.ApplyTheme(settings.General.Theme);
+        ShowRequestedFeature(window, Environment.GetCommandLineArgs());
 
         // The app exits when its window closes; disposing the services flushes the log.
         window.Closed += (_, _) =>
@@ -88,8 +90,17 @@ public partial class App : Application
             LogCantListenForExit(_logger);
         }
 
-        // Raised on another thread when the settings app is started again.
-        AppInstance.GetCurrent().Activated += (_, _) => window.DispatcherQueue.TryEnqueue(window.BringToFront);
+        // Raised on another thread when the settings app is started again, such as by the host
+        // for a feature's page.
+        AppInstance.GetCurrent().Activated += (_, e) =>
+        {
+            var arguments = LaunchArguments(e);
+            window.DispatcherQueue.TryEnqueue(() =>
+            {
+                ShowRequestedFeature(window, arguments);
+                window.BringToFront();
+            });
+        };
 
         // Off the window's thread: on the first start after an install, starting the host can take
         // seconds while Windows checks its new program file, and the window couldn't answer meanwhile,
@@ -162,6 +173,21 @@ public partial class App : Application
             .BuildServiceProvider();
     }
 
+    // The arguments of a launch that handed over to this app.
+    private static IReadOnlyList<string> LaunchArguments(AppActivationArguments activation) =>
+        activation is { Kind: ExtendedActivationKind.Launch, Data: Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs launch }
+            ? CommandLine.SplitArguments(launch.Arguments)
+            : [];
+
+    private void ShowRequestedFeature(MainWindow window, IReadOnlyList<string> arguments)
+    {
+        if (SettingsAppProcess.FeatureFromArguments(arguments) is { } featureId)
+        {
+            LogShowingFeature(_logger, featureId);
+            window.ShowFeature(featureId);
+        }
+    }
+
     [LoggerMessage(Level = LogLevel.Information, Message = "Started version {Version} on Windows {WindowsVersion}.")]
     private static partial void LogStarted(ILogger logger, string version, Version windowsVersion);
 
@@ -176,6 +202,9 @@ public partial class App : Application
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Can't listen for Exit in the tray menu, so choosing it leaves the settings app open.")]
     private static partial void LogCantListenForExit(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Asked to show the {FeatureId} page.")]
+    private static partial void LogShowingFeature(ILogger logger, string featureId);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The app stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);

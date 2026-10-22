@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -15,20 +16,31 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
 {
     private static readonly string SettingsAppPath = Path.Combine(AppContext.BaseDirectory, SettingsAppProcess.FileName);
 
-    public void Open()
+    /// <summary>
+    /// Starts the settings app, which hands over to the one that's open, if any.
+    /// </summary>
+    /// <param name="featureId">The feature whose page to show, or null for the page the settings app shows first.</param>
+    public void Open(string? featureId = null)
     {
         LetOpenSettingsAppComeToFront();
+        IReadOnlyList<string> arguments = featureId is null ? [] : SettingsAppProcess.FeatureArguments(featureId);
         try
         {
-            // The settings app never runs as administrator.
+            // The settings app never runs as administrator. A feature's ID needs no quotes.
             if (Elevation.IsElevated)
             {
-                UnelevatedProcess.Start(SettingsAppPath);
+                UnelevatedProcess.Start(SettingsAppPath, arguments.Count == 0 ? null : string.Join(' ', arguments));
                 LogStartedWithoutAdminRights(logger);
                 return;
             }
 
-            using var process = Process.Start(new ProcessStartInfo(SettingsAppPath) { UseShellExecute = false });
+            var startInfo = new ProcessStartInfo(SettingsAppPath) { UseShellExecute = false };
+            foreach (var argument in arguments)
+            {
+                startInfo.ArgumentList.Add(argument);
+            }
+
+            using var process = Process.Start(startInfo);
             LogStarted(logger, process?.Id);
         }
         catch (Win32Exception exception)
