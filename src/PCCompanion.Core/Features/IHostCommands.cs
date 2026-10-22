@@ -15,6 +15,12 @@ public interface IHostCommands
     void OpenSettings();
 
     /// <summary>
+    /// Opens the settings app on the page of the feature with the ID <paramref name="featureId"/>,
+    /// or shows that page in the settings app that's open.
+    /// </summary>
+    void OpenFeatureSettings(string featureId);
+
+    /// <summary>
     /// Stops PC Companion, the settings app included, as Exit in the PC Companion icon's menu does.
     /// </summary>
     void ExitApp();

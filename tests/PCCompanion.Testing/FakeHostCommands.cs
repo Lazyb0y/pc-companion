@@ -11,6 +11,7 @@ namespace PCCompanion.Testing;
 public sealed class FakeHostCommands : IHostCommands
 {
     private readonly List<Uri> _webPages = [];
+    private readonly List<string> _pages = [];
     private int _settings;
     private int _exits;
 
@@ -33,7 +34,27 @@ public sealed class FakeHostCommands : IHostCommands
         }
     }
 
+    /// <summary>The features whose settings pages were asked for so far.</summary>
+    public IReadOnlyList<string> FeaturePagesOpened
+    {
+        get
+        {
+            lock (_pages)
+            {
+                return [.. _pages];
+            }
+        }
+    }
+
     public void OpenSettings() => Interlocked.Increment(ref _settings);
+
+    public void OpenFeatureSettings(string featureId)
+    {
+        lock (_pages)
+        {
+            _pages.Add(featureId);
+        }
+    }
 
     public void ExitApp() => Interlocked.Increment(ref _exits);
 

@@ -16,12 +16,15 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
     private volatile Connection? _connection;
 
     /// <param name="runOnUiThread">Queues an action on the host's UI thread, from any thread.</param>
-    /// <param name="openSettings">The host's Settings, which runs on its UI thread.</param>
+    /// <param name="openSettings">
+    /// The host's Settings, which runs on its UI thread, with the ID of the feature whose page to
+    /// show, or null for the page the settings app shows first.
+    /// </param>
     /// <param name="exit">The host's Exit, which runs on its UI thread.</param>
     /// <param name="openWebPage">
     /// Opens a web page without admin rights, on the calling thread, and returns false when it can't.
     /// </param>
-    public void Attach(Action<Action> runOnUiThread, Action openSettings, Action exit, Func<Uri, bool> openWebPage)
+    public void Attach(Action<Action> runOnUiThread, Action<string?> openSettings, Action exit, Func<Uri, bool> openWebPage)
     {
         ArgumentNullException.ThrowIfNull(runOnUiThread);
         ArgumentNullException.ThrowIfNull(openSettings);
@@ -31,9 +34,16 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
         _connection = new Connection(runOnUiThread, openSettings, exit, openWebPage);
     }
 
-    public void OpenSettings() => Run("Settings", _connection?.OpenSettings);
+    public void OpenSettings() => Run("Settings", connection => connection.OpenSettings(null));
 
-    public void ExitApp() => Run("Exit", _connection?.Exit);
+    public void OpenFeatureSettings(string featureId)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(featureId);
+
+        Run("a feature's settings", connection => connection.OpenSettings(featureId));
+    }
+
+    public void ExitApp() => Run("Exit", connection => connection.Exit());
 
     // Not logged with the address, which can hold what a feature's user copied or typed.
     public bool OpenWebPage(Uri address)
@@ -50,9 +60,9 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
         return connection.OpenWebPage(address);
     }
 
-    private void Run(string command, Action? action)
+    private void Run(string command, Action<Connection> action)
     {
-        if (_connection is not { } connection || action is null)
+        if (_connection is not { } connection)
         {
             LogNotAttached(logger, command);
             return;
@@ -64,7 +74,7 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
             try
             {
                 LogRunning(logger, command);
-                action();
+                action(connection);
             }
             catch (Exception exception)
             {
@@ -73,7 +83,7 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
         });
     }
 
-    private sealed record Connection(Action<Action> RunOnUiThread, Action OpenSettings, Action Exit, Func<Uri, bool> OpenWebPage);
+    private sealed record Connection(Action<Action> RunOnUiThread, Action<string?> OpenSettings, Action Exit, Func<Uri, bool> OpenWebPage);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "A feature asked for {Command}.")]
     private static partial void LogRunning(ILogger logger, string command);

@@ -64,6 +64,7 @@ public interface IFeature : IDisposable
 - A note on a page, such as what a feature can't do or why a change failed, is a `Controls/Note`: an `InfoBar` the user can't close, shown and informational unless the page binds `IsOpen` or sets `Severity`, with an optional button (`ButtonContent`, `ButtonCommand`).
 - A feature page's view model derives from `FeatureViewModel<TSettings>`, which reads the settings, saves each change right away and gives the header its icon, `IsOn` and `SaveFailed`. A setting's property changes it with `Change`, or calls `Save` itself.
 - The settings app maps each `FeatureInfo` to its page in one place, `Features/FeatureCatalog.cs`, which the navigation pane and Home are built from.
+- `PCCompanion.exe --feature <id>` opens the settings app on that feature's page, or shows it in the settings app that's open. A feature asks the host for it with `IHostCommands.OpenFeatureSettings`, as from a menu item.
 - A feature class has a static `Definition` (its `FeatureInfo`) and `CurrentSupport`, so the settings app doesn't create the feature.
 
 ## Strings, logging and tests

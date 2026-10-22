@@ -72,8 +72,11 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
         }
     }
 
-    /// <summary>Opens the settings app, or brings it to the front. Call it on the UI thread.</summary>
-    public void OpenSettings() => settingsApp.Open();
+    /// <summary>
+    /// Opens the settings app, or brings it to the front, on the page of the feature with
+    /// <paramref name="featureId"/>, or on the page it shows first. Call it on the UI thread.
+    /// </summary>
+    public void OpenSettings(string? featureId = null) => settingsApp.Open(featureId);
 
     /// <summary>Stops the host and closes the settings app, as Exit in the menu does. Call it on the UI thread.</summary>
     public void Exit()
