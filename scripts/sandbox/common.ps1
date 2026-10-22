@@ -479,6 +479,39 @@ function Find-AppDialog([string] $Name) {
 }
 
 # A tooltip or text of the settings app whose name is exactly $Name.
+# Invokes, selects or expands an element of the settings app by its name, within 5 seconds.
+function Invoke-AppElement([string] $Name) {
+    $element = $null
+    if (-not (Wait-Until { ($script:element = Find-AppElement $Name) -ne $null } 5)) { return $false }
+    $pattern = $null
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern, [ref] $pattern)) { $pattern.Invoke(); return $true }
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern, [ref] $pattern)) { $pattern.Select(); return $true }
+    if ($script:element.TryGetCurrentPattern([System.Windows.Automation.ExpandCollapsePattern]::Pattern, [ref] $pattern)) { $pattern.Expand(); return $true }
+    return $false
+}
+# A text box of the settings app by its name; its header has the same name, so the box is found by its type.
+function Find-AppBox([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Edit)))
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+function Set-AppBox([string] $Name, [string] $Value) {
+    $box = Find-AppBox $Name
+    if (-not $box) { return $false }
+    $box.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($Value)
+    Start-Sleep -Milliseconds 300
+    return $true
+}
+function Get-AppBox([string] $Name) {
+    $box = Find-AppBox $Name
+    if (-not $box) { return $null }
+    return $box.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+}
+function Test-AppEnabled([string] $Name) { $element = Find-AppElement $Name; ($null -ne $element) -and $element.Current.IsEnabled }
+
 function Find-AppText([string] $Name) {
     $window = Get-AppWindow
     if (-not $window) { return $null }
