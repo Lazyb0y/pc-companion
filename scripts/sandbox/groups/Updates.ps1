@@ -2,7 +2,8 @@
 # The hosts file points api.github.com at an HTTPS server in the Sandbox, whose certificate's root
 # is trusted only here. Turning the check on runs it at once; it finds version 9.9.9, shows the
 # notification and the banner, and selecting the notification opens the release page. Then, with
-# the check off, Check now asks each time it's selected.
+# the check off, Check now asks each time it's selected. Last, the badge on the General item points
+# to a newer version until General shows it.
 
 $serverFolder = Join-Path $results 'fake-github'
 New-Item -ItemType Directory -Force -Path $serverFolder | Out-Null
@@ -60,6 +61,27 @@ function Invoke-CheckNow {
     $button.SetFocus()
     $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
     return $true
+}
+
+# The General item's status, which names the newer version while the badge shows, and is empty
+# otherwise. Screen readers read it; the badge itself has no UI Automation element.
+function Get-GeneralItemStatus {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'General')),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
+    $item = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if (-not $item) { return $null }
+    return $item.Current.ItemStatus
+}
+
+# Saves a newer version, as the host does after a check.
+function Save-NewerVersion([string] $Version) {
+    $result = Get-Content $resultFile -Raw | ConvertFrom-Json
+    $result.latestVersion = $Version
+    $result.notifiedVersion = $Version
+    [System.IO.File]::WriteAllText($resultFile, ($result | ConvertTo-Json))
 }
 
 function Set-Answer([string] $Tag) {
@@ -165,6 +187,43 @@ Test-Check 'General says GitHub can''t be reached' (Wait-Until { ((Get-WindowTex
 Test-Check 'the app logs that Check now got no answer' ((Get-AppLog) -match 'Check now got no answer from GitHub\.')
 Save-Screenshot '11-update-check-now-no-answer'
 Test-Check 'GitHub was asked once for each Check now that reached it' ((Get-RequestCount) -eq 4) "requests: $(Get-RequestCount)"
+
+# The badge on the General item. The banner showed 9.9.10 after Check now, so it's saved as seen,
+# and the later Check now kept it. Turned on again, the check asks nothing: GitHub answered today.
+$saved = Get-Content $resultFile -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+Test-Check 'the version the banner showed is saved as seen' ($saved.seenVersion -eq '9.9.10') "seen: $($saved.seenVersion)"
+Test-Check 'turn on Check for updates again' (Set-Toggle 'Check for updates' $true)
+Test-Check 'show Home' (Select-NavigationItem 'Home')
+Start-Sleep -Seconds 1
+Test-Check 'the General item has no badge for a version General showed' ((Get-GeneralItemStatus) -eq '') "status: $(Get-GeneralItemStatus)"
+
+# A newer version shows the badge on the open window, and the item's status names it.
+Save-NewerVersion '9.9.11'
+Test-Check 'the General item shows the badge for a newer version' (Wait-Until { (Get-GeneralItemStatus) -eq 'PC Companion 9.9.11 is available' } 10) "status: $(Get-GeneralItemStatus)"
+Save-Screenshot '12-update-badge'
+
+# General shows the version in its banner, which clears the badge and saves the version as seen.
+Test-Check 'show General' (Select-NavigationItem 'General')
+$badgeBannerPattern = '^PC Companion 9\.9\.11 is available\. You have version \d+\.\d+\.\d+\.$'
+Test-Check 'General shows the banner for the newer version' (Wait-Until { @(Get-WindowText | Where-Object { $_ -match $badgeBannerPattern }).Count -eq 1 } 10) ((Get-WindowText) -join ' | ')
+Test-Check 'the badge goes away once General shows the version' (Wait-Until { (Get-GeneralItemStatus) -eq '' } 10) "status: $(Get-GeneralItemStatus)"
+Test-Check 'the version is saved as seen' (Wait-Until { (Get-Content $resultFile -Raw | ConvertFrom-Json).seenVersion -eq '9.9.11' } 10) (Get-Content $resultFile -Raw)
+
+# It stays away after the settings app starts again.
+Test-Check 'close the settings app' (Close-SettingsApp)
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'the badge stays away after the settings app starts again' ((Get-GeneralItemStatus) -eq '') "status: $(Get-GeneralItemStatus)"
+
+# With the check off, a newer version shows no badge.
+[void] (Select-NavigationItem 'General')
+Start-Sleep -Seconds 2
+Test-Check 'turn off Check for updates for the badge' (Set-Toggle 'Check for updates' $false)
+Test-Check 'show Home again' (Select-NavigationItem 'Home')
+Save-NewerVersion '9.9.12'
+Start-Sleep -Seconds 2
+Test-Check 'the General item has no badge with the check off' ((Get-GeneralItemStatus) -eq '') "status: $(Get-GeneralItemStatus)"
 
 # Leaves the Sandbox as it found it for the next groups.
 [void] (Close-SettingsApp)
