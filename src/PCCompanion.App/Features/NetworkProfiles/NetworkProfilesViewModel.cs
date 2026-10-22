@@ -77,6 +77,12 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
         RefreshProfiles();
     }
 
+    /// <summary>Raised before <see cref="Profiles"/> is rebuilt, which replaces every item.</summary>
+    public event EventHandler? ProfilesRebuilding;
+
+    /// <summary>Raised once <see cref="Profiles"/> is rebuilt.</summary>
+    public event EventHandler? ProfilesRebuilt;
+
     public ObservableCollection<NetworkProfileItem> Profiles { get; } = [];
 
     public bool HasNoProfiles => Profiles.Count == 0;
@@ -278,6 +284,7 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
     // first profile that matches Windows' settings is the one in use.
     private void RefreshProfiles()
     {
+        ProfilesRebuilding?.Invoke(this, EventArgs.Empty);
         Profiles.Clear();
         var profiles = Settings.Profiles;
         var usableNames = new List<string>();
@@ -315,6 +322,7 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
 
         OnPropertyChanged(nameof(HasNoProfiles));
         OnPropertyChanged(nameof(CanAdd));
+        ProfilesRebuilt?.Invoke(this, EventArgs.Empty);
     }
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Can't watch the proxy settings, so In use shows the settings as they were when the page opened.")]
