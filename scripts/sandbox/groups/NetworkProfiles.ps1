@@ -371,8 +371,12 @@ Start-Sleep -Seconds 1
 Test-Check 'Save is off for an empty profile' (-not (Test-AppEnabled 'Save'))
 [void] (Set-AppBox 'Name' 'Office')
 Test-Check 'turn on Use a proxy server' (Set-Toggle 'Use a proxy server' $true)
+$serverProblem = 'Enter an address and port, such as proxy.example.com:8080, or a server for each protocol.'
+Start-Announcements
 [void] (Set-AppBox 'Proxy server' 'not a server')
-Test-Check 'a proxy server that isn''t address:port is refused' ((Wait-Until { Find-AppText 'Enter an address and port, such as proxy.example.com:8080, or a server for each protocol.' } 3) -and -not (Test-AppEnabled 'Save'))
+Test-Check 'a proxy server that isn''t address:port is refused' ((Wait-Until { Find-AppText $serverProblem } 3) -and -not (Test-AppEnabled 'Save'))
+Test-Check 'screen readers announce the problem once, and the box reads it' (Test-Announced 'Proxy server' $serverProblem) ((Get-Announcements) -join ' | ')
+Stop-Announcements
 [void] (Set-AppBox 'Proxy server' 'proxy.office.test:8080')
 [void] (Set-AppBox 'Exceptions' '*.office.test;10.*')
 Test-Check 'check Don''t use the proxy server for local addresses' (Set-Toggle 'Don''t use the proxy server for local (intranet) addresses' $true)

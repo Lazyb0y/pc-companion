@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
     CloseButtonText="{app:Localized Key=ClipboardActionsCancel}"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
@@ -28,12 +29,14 @@
         <StackPanel Spacing="4">
             <!-- Patterns, addresses and arguments read left to right in every language. -->
             <TextBox
+                AutomationProperties.HelpText="{x:Bind Editor.PatternProblem, Mode=OneWay}"
                 FlowDirection="LeftToRight"
                 Header="{app:Localized Key=ClipboardActionsPatternHeader}"
                 IsSpellCheckEnabled="False"
                 PlaceholderText="1Z[0-9A-Z]{16}"
                 Text="{x:Bind Editor.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
+                controls:Announcement.IsLive="True"
                 Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                 Style="{StaticResource CaptionTextBlockStyle}"
                 Text="{x:Bind Editor.PatternProblem, Mode=OneWay}"
@@ -71,6 +74,7 @@
 
         <StackPanel Spacing="4" Visibility="{x:Bind Editor.IsOpenAddress, Mode=OneWay}">
             <TextBox
+                AutomationProperties.HelpText="{x:Bind Editor.AddressProblem, Mode=OneWay}"
                 FlowDirection="LeftToRight"
                 Header="{app:Localized Key=ClipboardActionsAddressHeader}"
                 InputScope="Url"
@@ -78,6 +82,7 @@
                 PlaceholderText="{app:Localized Key=ClipboardActionsAddressPlaceholder}"
                 Text="{x:Bind Editor.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
+                controls:Announcement.IsLive="True"
                 Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                 Style="{StaticResource CaptionTextBlockStyle}"
                 Text="{x:Bind Editor.AddressProblem, Mode=OneWay}"
@@ -98,6 +103,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBox
+                    AutomationProperties.HelpText="{x:Bind Editor.ProgramProblem, Mode=OneWay}"
                     AutomationProperties.Name="{app:Localized Key=ClipboardActionsProgramHeader}"
                     FlowDirection="LeftToRight"
                     IsSpellCheckEnabled="False"
@@ -108,6 +114,7 @@
                     Content="{app:Localized Key=ClipboardActionsBrowse}" />
             </Grid>
             <TextBlock
+                controls:Announcement.IsLive="True"
                 Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                 Style="{StaticResource CaptionTextBlockStyle}"
                 Text="{x:Bind Editor.ProgramProblem, Mode=OneWay}"

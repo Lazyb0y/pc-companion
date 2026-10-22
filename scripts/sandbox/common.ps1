@@ -525,6 +525,44 @@ function Find-AppText([string] $Name) {
     return [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
 }
 
+# What screen readers announce from live regions, such as a problem below a box: Start-Announcements
+# before the change, then Get-Announcements for the texts announced. UI Automation calls back on
+# threads of its own, where PowerShell can't run, so C# collects them.
+Add-Type -AssemblyName WindowsBase
+Add-Type -ReferencedAssemblies ([System.Windows.Automation.AutomationElement].Assembly.Location), ([System.Windows.Automation.AutomationElementIdentifiers].Assembly.Location), ([System.Windows.Rect].Assembly.Location) -TypeDefinition @'
+using System.Collections.Concurrent;
+using System.Windows.Automation;
+public static class Announcements {
+    private static readonly ConcurrentQueue<string> Texts = new ConcurrentQueue<string>();
+    private static AutomationEventHandler handler;
+    public static void Start() {
+        Stop();
+        string ignored;
+        while (Texts.TryDequeue(out ignored)) { }
+        handler = delegate(object sender, AutomationEventArgs e) {
+            try { Texts.Enqueue(((AutomationElement)sender).Current.Name); } catch (ElementNotAvailableException) { }
+        };
+        Automation.AddAutomationEventHandler(AutomationElementIdentifiers.LiveRegionChangedEvent, AutomationElement.RootElement, TreeScope.Subtree, handler);
+    }
+    public static string[] Heard() { return Texts.ToArray(); }
+    public static void Stop() {
+        if (handler == null) { return; }
+        Automation.RemoveAutomationEventHandler(AutomationElementIdentifiers.LiveRegionChangedEvent, AutomationElement.RootElement, handler);
+        handler = null;
+    }
+}
+'@
+function Start-Announcements { [Announcements]::Start() }
+function Get-Announcements { [Announcements]::Heard() }
+function Stop-Announcements { [Announcements]::Stop() }
+
+# Whether screen readers announce the text once, and the box reads it as its help text when it gets focus.
+function Test-Announced([string] $Box, [string] $Text) {
+    if (-not (Wait-Until { @(Get-Announcements | Where-Object { $_ -eq $Text }).Count -gt 0 } 5)) { return $false }
+    Start-Sleep -Milliseconds 500
+    return (@(Get-Announcements | Where-Object { $_ -eq $Text }).Count -eq 1) -and ((Find-AppBox $Box).Current.HelpText -eq $Text)
+}
+
 function Get-PointerText { "pointer at $([System.Windows.Forms.Cursor]::Position)" }
 
 # Presses and releases a key as a keyboard does. Unlike UI Automation's Invoke, it doesn't wait
