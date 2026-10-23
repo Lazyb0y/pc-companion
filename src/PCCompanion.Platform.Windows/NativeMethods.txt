@@ -260,3 +260,5 @@ FOLDERID_AppsFolder
 GetDIBits
 GetObject
 BITMAP
+CreateNamedPipe
+PIPE_UNLIMITED_INSTANCES
