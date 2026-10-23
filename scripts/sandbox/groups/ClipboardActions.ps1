@@ -2,9 +2,9 @@
 # in the rule editor, which says what's wrong with a pattern, an address or a program. Then, with
 # rules in the settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer, below
 # the text cursor of Character Map's box or of a text area in Edge, and above it at the bottom of
-# the screen. For text the checks copy, Open in browser and an address rule open the browser; a rule
-# that runs a program shows dimmed, since everything in the Sandbox runs as administrator;
-# marked-private, missing and too long text show only a note. Esc gives the front back to the window that had it,
+# the screen. For text the checks copy, Open in browser and an address rule open the browser, and a
+# rule that runs a program starts Character Map; marked-private, missing and too long text show
+# only a note. Esc gives the front back to the window that had it,
 # the shortcut again closes the menu, and turned off the shortcut opens no menu. The host's
 # --open-web-page opens only web addresses. Detailed logging is on for the host's Debug entries.
 [void] (Close-SettingsApp)
@@ -305,10 +305,15 @@ Start-Sleep -Seconds 2
 [void] [Win32]::SetForegroundWindow($charmap)
 
 Copy-Text 'notes.txt'
-[void] (Open-Menu)
+Test-Check 'the shortcut opens the menu for a file name' (Open-Menu)
 $items = Get-MenuItems
-Test-Check 'a rule that runs a program shows dimmed while running as administrator' ($items -eq 'notes.txt (dimmed) | Show in Character Map (dimmed) | Settings') $items
-Close-Menu
+Test-Check 'the menu offers the rule that runs a program' ($items -eq 'notes.txt (dimmed) | Show in Character Map | Settings') $items
+$charmapBefore = @(Get-Processes 'charmap' | ForEach-Object { $_.Id })
+Test-Check 'the rule starts its program' ((Select-TrayMenuItem 'Show in Character Map') -and (Wait-Until { @(Get-Processes 'charmap').Count -gt $charmapBefore.Count } 10)) "charmap processes before: $($charmapBefore.Count), after: $(@(Get-Processes 'charmap').Count)"
+Test-Check 'the host logs the program by its file name' (Wait-Until { (Get-HostLog) -match 'Clipboard Actions rule 2 started charmap\.exe\.' } 5)
+Get-Processes 'charmap' | Where-Object { $charmapBefore -notcontains $_.Id } | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Seconds 2
+[void] [Win32]::SetForegroundWindow($charmap)
 
 Copy-Text 'PC-12'
 [void] (Open-Menu)

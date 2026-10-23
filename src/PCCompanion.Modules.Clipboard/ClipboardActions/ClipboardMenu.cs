@@ -34,10 +34,9 @@ public static class ClipboardMenu
     /// <summary>
     /// The menu for what was read from the clipboard and the actions offered for its text: the
     /// start of the text, dimmed, the actions or a note that there are none, then Settings. Without
-    /// text, a note says why. While PC Companion runs as administrator, rules that run a program
-    /// show dimmed, because they don't run then.
+    /// text, a note says why.
     /// </summary>
-    public static ClipboardMenuPlan Build(ClipboardTextResult read, IReadOnlyList<ClipboardOffer> offers, bool isAdministrator)
+    public static ClipboardMenuPlan Build(ClipboardTextResult read, IReadOnlyList<ClipboardOffer> offers)
     {
         ArgumentNullException.ThrowIfNull(read);
         ArgumentNullException.ThrowIfNull(offers);
@@ -69,7 +68,7 @@ public static class ClipboardMenu
                 var offer = offers[index];
                 var id = FirstOffer + (uint)index;
                 actions[id] = offer;
-                items.Add(new PopupMenuItem(id, Label(offer)) { IsEnabled = !(isAdministrator && offer.Kind == OfferKind.RunProgram) });
+                items.Add(new PopupMenuItem(id, Label(offer)));
             }
         }
 

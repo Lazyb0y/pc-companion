@@ -20,7 +20,7 @@ public sealed class ClipboardMenuTests
     [Fact]
     public void TheMenuShowsTheTextTheActionsAndSettings()
     {
-        var plan = ClipboardMenu.Build(Text("https://example.com/clip.mp4\r\n"), [Link, Play], isAdministrator: false);
+        var plan = ClipboardMenu.Build(Text("https://example.com/clip.mp4\r\n"), [Link, Play]);
 
         Assert.Equal(
             [
@@ -41,7 +41,7 @@ public sealed class ClipboardMenuTests
     [Fact]
     public void WithoutActionsANoteSaysSo()
     {
-        var plan = ClipboardMenu.Build(Text("PC-12"), [], isAdministrator: false);
+        var plan = ClipboardMenu.Build(Text("PC-12"), []);
 
         Assert.Equal([(Lre + "PC-12" + Pdf, false), ("-", false), (Strings.ClipboardActionsNoActions, false), ("-", false), (Strings.TraySettings, true)], plan.Items.Select(Describe));
         Assert.Empty(plan.Offers);
@@ -63,7 +63,7 @@ public sealed class ClipboardMenuTests
             _ => Strings.ClipboardActionsCantRead,
         };
 
-        var plan = ClipboardMenu.Build(new ClipboardTextResult(status), [], isAdministrator: false);
+        var plan = ClipboardMenu.Build(new ClipboardTextResult(status), []);
 
         Assert.Equal([(expected, false), ("-", false), (Strings.TraySettings, true)], plan.Items.Select(Describe));
     }
@@ -71,17 +71,9 @@ public sealed class ClipboardMenuTests
     [Fact]
     public void OnlySpacesCountAsNoText()
     {
-        var plan = ClipboardMenu.Build(Text(" \r\n\t"), [], isAdministrator: false);
+        var plan = ClipboardMenu.Build(Text(" \r\n\t"), []);
 
         Assert.Equal(Strings.ClipboardActionsNoText, plan.Items[0].Text);
-    }
-
-    [Fact]
-    public void WhileRunningAsAdministratorProgramsShowDimmed()
-    {
-        var plan = ClipboardMenu.Build(Text("https://example.com/clip.mp4"), [Link, Play, Track], isAdministrator: true);
-
-        Assert.Equal([true, false, true], plan.Items.Skip(2).Take(3).Select(item => item.IsEnabled));
     }
 
     [Fact]

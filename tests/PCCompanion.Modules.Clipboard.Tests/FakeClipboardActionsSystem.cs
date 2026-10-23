@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -11,15 +10,13 @@ namespace PCCompanion.Modules.Clipboard.Tests;
 
 /// <summary>
 /// Clipboard Actions' Windows parts, recorded instead of used: no shortcut is registered, the
-/// clipboard isn't read, no menu opens and no program starts. It may be used from the feature's
+/// clipboard isn't read and no menu opens. It may be used from the feature's
 /// thread while a test waits for it. Its events are what happened, such as "register", "read",
 /// "ask" for the app's text cursor, "menu", "allow front" or "dispose shortcut".
 /// </summary>
 internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardActionsSystem>, IClipboardActionsSystem
 {
     private readonly List<IReadOnlyList<PopupMenuItem>> _menus = [];
-
-    public bool IsAdministrator { get; set; }
 
     /// <summary>Whether Windows refuses the shortcut.</summary>
     public bool RefusesShortcut { get; set; }
@@ -47,8 +44,6 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
             }
         }
     }
-
-    public List<ProcessStartInfo> Started { get; } = [];
 
     public IShortcut? RegisterShortcut(MessageWindow window)
     {
@@ -118,15 +113,6 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
     public void AllowFront() => Record("allow front");
 
     public bool FileExists(string path) => true;
-
-    public void StartProcess(ProcessStartInfo startInfo)
-    {
-        lock (Gate)
-        {
-            Started.Add(startInfo);
-            Record("start");
-        }
-    }
 
     // Runs at once, on the feature's thread, so a test sees the action's result as soon as the menu closes.
     // Recorded after the action, since a test that waits for "background" then checks its result.

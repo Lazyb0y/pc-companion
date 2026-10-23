@@ -1097,7 +1097,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
-    <value>يمثل {text} النص المنسوخ، الذي يبقى في وسيطة واحدة. تقرأ بعض البرامج الوسيطة التي تبدأ بـ - أو / كخيار. تبدأ البرامج بأذوناتك، ولا تعمل أثناء تشغيل PC Companion كمسؤول.</value>
+    <value>يمثل {text} النص المنسوخ، الذي يبقى في وسيطة واحدة. تقرأ بعض البرامج الوسيطة التي تبدأ بـ - أو / كخيار. تبدأ البرامج بأذوناتك، حتى أثناء تشغيل PC Companion كمسؤول.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
@@ -1121,7 +1121,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
-    <value>أثناء تشغيل PC Companion كمسؤول، لا تعمل القواعد التي تشغّل برنامجًا، وتُفتح الارتباطات وعناوين الويب في المستعرض بدون أذونات المسؤول.</value>
+    <value>أثناء تشغيل PC Companion كمسؤول، تبدأ البرامج بأذوناتك، وتُفتح الارتباطات وعناوين الويب في المستعرض بدون أذونات المسؤول.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">

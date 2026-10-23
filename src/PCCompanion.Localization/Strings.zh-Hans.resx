@@ -1017,7 +1017,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
-    <value>{text} 代表所复制的文本，它会保留在一个参数中。某些程序会将以 - 或 / 开头的参数读取为选项。程序以你的权限启动，PC Companion 以管理员身份运行时不会运行。</value>
+    <value>{text} 代表所复制的文本，它会保留在一个参数中。某些程序会将以 - 或 / 开头的参数读取为选项。程序以你的权限启动，PC Companion 以管理员身份运行时也是如此。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
@@ -1041,7 +1041,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
-    <value>PC Companion 以管理员身份运行时，运行程序的规则不会运行，链接和网址会以非管理员权限在你的浏览器中打开。</value>
+    <value>PC Companion 以管理员身份运行时，程序仍以你的权限启动，链接和网址会以非管理员权限在你的浏览器中打开。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">

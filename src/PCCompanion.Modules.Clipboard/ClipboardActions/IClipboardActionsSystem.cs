@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using PCCompanion.Platform.Windows;
@@ -10,9 +9,6 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 /// <summary>What Clipboard Actions' thread uses from Windows; tests use fakes.</summary>
 public interface IClipboardActionsSystem
 {
-    /// <summary>Whether PC Companion runs as administrator, when rules don't run programs.</summary>
-    bool IsAdministrator { get; }
-
     /// <summary>
     /// Registers Windows + Alt + V on the thread's window, or returns <see langword="null"/> when
     /// Windows refused, for example because another program has it.
@@ -47,8 +43,6 @@ public interface IClipboardActionsSystem
     void AllowFront();
 
     bool FileExists(string path);
-
-    void StartProcess(ProcessStartInfo startInfo);
 
     /// <summary>Runs an action off the thread, on the thread pool.</summary>
     void RunInBackground(Action action);

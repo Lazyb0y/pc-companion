@@ -63,11 +63,11 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - **Arguments** are in one box. They're split by the Windows command-line rules first, and then `{text}` is replaced in each argument, so the copied text stays inside one argument, whatever spaces or quotes it holds.
 - Programs that read their arguments as commands don't run from a rule: `cmd.exe`, `powershell.exe`, `pwsh.exe`, `wscript.exe`, `cscript.exe`, `mshta.exe`, `wsl.exe`, `bash.exe`, `wt.exe`, `explorer.exe` and `rundll32.exe`. Copied text can come from any web page, and with such a program, text like `x & del …` would run commands of its own. The rule editor says why.
 - Some programs read an argument that starts with `-` or `/` as an option. The rule editor notes this; a pattern that starts with a letter or a digit avoids it.
-- **While PC Companion runs as administrator, Run a program does nothing**, as in Hot Corners: the menu shows those rules dimmed, and a warning is logged. Any program running as the user can change the settings file, so that file must never make PC Companion run code as administrator.
+- **The program never gets admin rights, also while PC Companion runs as administrator**, as in Hot Corners. Any program running as the user can change the settings file, so that file must never make PC Companion run code as administrator. The host starts the program through `IHostCommands.StartProgram`: elevated through UAC, it has a copy of itself without admin rights start it; see [Always run as administrator](../general/run-as-administrator.md#between-the-host-and-other-programs).
 
 ## Running as administrator
 
-- A browser started by a program running as administrator runs as administrator too. So while PC Companion runs as administrator, a copy of the host without admin rights opens links and web addresses, as the update check opens the release page.
+- A browser started by a program running as administrator runs as administrator too. So while PC Companion runs as administrator, a copy of the host without admin rights opens links and web addresses, as the update check opens the release page, and another starts the programs of rules.
 - While an app running as administrator is in front, Windows may not pass the shortcut to PC Companion; this is tested by hand.
 
 ## Private text
@@ -200,7 +200,7 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 - **Untrusted text:** the copied text can come from any app or web page, so it's treated as untrusted. Patterns run in time that grows only with the text's length, with a time limit. Addresses get the text encoded and open only as `http` or `https`. Programs get it inside one argument, without a shell, and command interpreters don't run from a rule.
 - **Network:** PC Companion makes no connections. Choosing an action that opens a link or web address has the browser open it, and a rule's address sends the copied text to the site the user named. `PRIVACY.md` gets a line on Clipboard Actions.
 - **Logs:** Debug entries when the shortcut is pressed, how many rules matched, whether the menu opened at Windows' text cursor, the app's accessibility text cursor or the pointer, without where, and whether the app didn't answer in time, which rule's action ran, by number, and why the menu had no actions, such as private text. Warnings when Windows refuses the shortcut, a rule can't be used, a program doesn't start (with its file name only, as in Hot Corners) or the browser doesn't open. Never the copied text, addresses, patterns or rule names, which can hold personal data.
-- **Settings:** the rules are in `settings.json`. Any program running as the user can change that file, but it could also open the same addresses and start the same programs itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so programs don't run then, and links open without admin rights.
+- **Settings:** the rules are in `settings.json`. Any program running as the user can change that file, but it could also open the same addresses and start the same programs itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so programs and links still start without admin rights then.
 - **Rights:** runs without admin rights, and never starts a program or the browser with them. Turning the feature off removes the shortcut.
 - **Failures:** everything on the feature's thread runs inside the feature's error boundary, and the other features keep running.
 
@@ -220,21 +220,21 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 
 ## Testing
 
-- **Unit tests** with fake clipboards and a fake process starter:
+- **Unit tests** with fake clipboards and fake host commands:
   - matching: the whole text, trimming, Match case, the Turkish i, patterns that don't compile or need backtracking, the 4,096-character limit and the 50-rule limit;
   - web links: `http` and `https` open; `file:`, `javascript:`, `ms-settings:`, other apps' addresses and text with spaces don't;
   - web addresses: encoding of spaces, `&`, `#`, `/` and non-Latin text, and addresses that stop being `http` or `https` after the replacement;
-  - programs: `{text}` stays one argument with spaces, quotes and `&`; command interpreters are refused; nothing starts while PC Companion runs as administrator;
+  - programs: `{text}` stays one argument with spaces, quotes and `&`; command interpreters are refused; the host starts the program;
   - private text: each mark keeps the text from being read;
-  - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, `&` in names, and dimmed programs while running as administrator;
+  - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, and `&` in names;
   - where the menu opens: at Windows' text cursor with its line kept clear, at the app's accessibility text cursor when Windows has none, and at the pointer when there's neither, when the app doesn't answer within 100 ms, while an earlier request still waits, and for an app with another integrity level, which isn't asked; a text cursor marked hidden, with no height or outside its window isn't used;
   - the front: given back after the menu closes without an action, kept after a click in another window;
   - settings: unknown actions, missing fields and unusable rules are left out with a warning.
-- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them, and the rule editor refuses a pattern with a lookahead, an address that isn't a web address, a command interpreter and a program that doesn't exist, and takes one that exists right after it; a rule whose program exists says what it starts, and one whose program doesn't exist shows why in the list. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation: at the pointer while Character Map's character grid has the focus, below the text cursor of its Characters to copy box, and above it with the window at the bottom of the screen; in Edge, below the text cursor of a local page's text area, and at the pointer with the page's plain text clicked. Open in browser and an address rule start the default browser with the address; a rule that runs a program shows dimmed, since everything in Windows Sandbox runs as administrator; text marked private, text that's too long and an empty clipboard show only their note. Esc and the shortcut again give the front back to the window that had it. Turned off, the shortcut opens no menu. The host's `--open-web-page` opens only web addresses.
+- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them, and the rule editor refuses a pattern with a lookahead, an address that isn't a web address, a command interpreter and a program that doesn't exist, and takes one that exists right after it; a rule whose program exists says what it starts, and one whose program doesn't exist shows why in the list. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation: at the pointer while Character Map's character grid has the focus, below the text cursor of its Characters to copy box, and above it with the window at the bottom of the screen; in Edge, below the text cursor of a local page's text area, and at the pointer with the page's plain text clicked. Open in browser and an address rule start the default browser with the address; a rule that runs a program starts Character Map, and the host logs it by its file name; text marked private, text that's too long and an empty clipboard show only their note. Esc and the shortcut again give the front back to the window that had it. Turned off, the shortcut opens no menu. The host's `--open-web-page` opens only web addresses.
 - **By hand:**
   - that the menu and the browser come to the front on a PC, where Windows' foreground lock applies;
   - a rule that runs a program, without admin rights, getting the text as one argument;
-  - Always run as administrator with UAC on: links open in a browser without admin rights, and rules that run a program show dimmed;
+  - Always run as administrator with UAC on: links open in a browser, and rules' programs start, without admin rights;
   - an app running as administrator in front, with and without Always run as administrator;
   - text copied from a browser, Office and a terminal, and from a password manager that marks it private;
   - a screen reader reading the menu, and a right-to-left language;

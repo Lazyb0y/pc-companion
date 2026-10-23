@@ -42,7 +42,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         _system = system;
         _commands = commands;
         _logger = logger;
-        _runner = new ClipboardActionRunner(commands, () => system.IsAdministrator, system.FileExists, system.StartProcess, logger);
+        _runner = new ClipboardActionRunner(commands, system.FileExists, logger);
         _placer = new MenuPlacer(system);
         Start();
     }
@@ -110,7 +110,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         var offers = string.IsNullOrEmpty(text) ? [] : rules.Match(text);
         LogPressed(_logger, read.Status, offers.Count, position.Place);
 
-        var plan = ClipboardMenu.Build(read, offers, _system.IsAdministrator);
+        var plan = ClipboardMenu.Build(read, offers);
         uint chosen;
         _menuOpen = true;
         try
