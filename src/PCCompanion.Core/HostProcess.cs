@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 using PCCompanion.Core.Settings;
 
 namespace PCCompanion.Core;
@@ -65,11 +66,19 @@ public static class HostProcess
     public const string CheckForUpdatesArgument = "--check-for-updates";
 
     /// <summary>
-    /// The argument, followed by an <c>http</c> or <c>https</c> address, that a host running as
-    /// administrator starts a copy of itself with, without admin rights, to open the address in
-    /// the browser, for a feature or the release page; see <see cref="WebPageArguments"/>.
+    /// The argument, followed by the name of a pipe, that a host running as administrator starts a
+    /// copy of itself with, without admin rights, to open a web page in the browser, for a feature
+    /// or the release page: the copy reads the address from the pipe, as
+    /// <see cref="WebAddressHandOff"/> writes it, opens it only if it's an <c>http</c> or
+    /// <c>https</c> address, and exits with 0 when it did. See <see cref="WebPageArguments"/>.
     /// </summary>
     public const string OpenWebPageArgument = "--open-web-page";
+
+    /// <summary>
+    /// The most bytes a web page's address handed to the copy may have: Windows starts the browser
+    /// with a command line of 32,767 characters at most, so a longer address can't open.
+    /// </summary>
+    public const int MaximumWebAddressLength = 32 * 1024;
 
     /// <summary>
     /// Whether <paramref name="address"/> is an absolute <c>http</c> or <c>https</c> address. The
@@ -79,38 +88,43 @@ public static class HostProcess
         address is { IsAbsoluteUri: true } && (address.Scheme == Uri.UriSchemeHttps || address.Scheme == Uri.UriSchemeHttp);
 
     /// <summary>
-    /// The arguments that make the host open <paramref name="address"/>: <see cref="OpenWebPageArgument"/>
-    /// and the address, which needs no quotes, since its escaped form has no spaces or quotes.
+    /// The arguments that make the host open the address it reads from the pipe named
+    /// <paramref name="pipeName"/>: <see cref="OpenWebPageArgument"/> and the name.
     /// </summary>
-    /// <exception cref="ArgumentException">The address isn't an <c>http</c> or <c>https</c> address.</exception>
-    public static string WebPageArguments(Uri address)
+    /// <exception cref="ArgumentException">The name has other characters than letters, digits and dots.</exception>
+    public static string WebPageArguments(string pipeName) => PipeArguments(OpenWebPageArgument, pipeName);
+
+    /// <summary>
+    /// The pipe name after <see cref="OpenWebPageArgument"/> in the host's arguments, or
+    /// <see langword="null"/> when there is none or it isn't one.
+    /// </summary>
+    public static string? ReadWebPagePipe(IReadOnlyList<string> arguments) => ReadPipe(arguments, OpenWebPageArgument);
+
+    /// <summary>
+    /// <paramref name="address"/> as the host hands it to the copy: its escaped form, in UTF-8.
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// The address isn't an <c>http</c> or <c>https</c> address, or it's longer than <see cref="MaximumWebAddressLength"/>.
+    /// </exception>
+    public static byte[] WebAddressHandOff(Uri address)
     {
-        if (!IsWebAddress(address) || address.AbsoluteUri.AsSpan().IndexOfAny(" \t\"") >= 0)
+        if (!IsWebAddress(address))
         {
             throw new ArgumentException("Only http and https addresses are opened.", nameof(address));
         }
 
-        return OpenWebPageArgument + " " + address.AbsoluteUri;
+        var handOff = Encoding.UTF8.GetBytes(address.AbsoluteUri);
+        return handOff.Length <= MaximumWebAddressLength
+            ? handOff
+            : throw new ArgumentException("The address is too long to open.", nameof(address));
     }
 
     /// <summary>
-    /// The address after <see cref="OpenWebPageArgument"/> in the host's arguments, or
-    /// <see langword="null"/> when there is none or it isn't an <c>http</c> or <c>https</c> address.
+    /// The address the copy read from the pipe, or <see langword="null"/> when it isn't an
+    /// <c>http</c> or <c>https</c> address.
     /// </summary>
-    public static Uri? ReadWebPageAddress(IReadOnlyList<string> arguments)
-    {
-        ArgumentNullException.ThrowIfNull(arguments);
-
-        for (var index = 0; index < arguments.Count - 1; index++)
-        {
-            if (string.Equals(arguments[index], OpenWebPageArgument, StringComparison.OrdinalIgnoreCase))
-            {
-                return Uri.TryCreate(arguments[index + 1], UriKind.Absolute, out var address) && IsWebAddress(address) ? address : null;
-            }
-        }
-
-        return null;
-    }
+    public static Uri? ReadWebAddress(ReadOnlySpan<byte> handOff) =>
+        Uri.TryCreate(Encoding.UTF8.GetString(handOff), UriKind.Absolute, out var address) && IsWebAddress(address) ? address : null;
 
     /// <summary>
     /// The argument, followed by the name of a pipe, that a host running as administrator starts a
@@ -125,22 +139,26 @@ public static class HostProcess
     /// <paramref name="pipeName"/>: <see cref="RunProgramArgument"/> and the name.
     /// </summary>
     /// <exception cref="ArgumentException">The name has other characters than letters, digits and dots.</exception>
-    public static string RunProgramArguments(string pipeName) =>
-        IsPipeName(pipeName)
-            ? RunProgramArgument + " " + pipeName
-            : throw new ArgumentException("A pipe name has only letters, digits and dots.", nameof(pipeName));
+    public static string RunProgramArguments(string pipeName) => PipeArguments(RunProgramArgument, pipeName);
 
     /// <summary>
     /// The pipe name after <see cref="RunProgramArgument"/> in the host's arguments, or
     /// <see langword="null"/> when there is none or it isn't one.
     /// </summary>
-    public static string? ReadRunProgramPipe(IReadOnlyList<string> arguments)
+    public static string? ReadRunProgramPipe(IReadOnlyList<string> arguments) => ReadPipe(arguments, RunProgramArgument);
+
+    private static string PipeArguments(string argument, string pipeName) =>
+        IsPipeName(pipeName)
+            ? argument + " " + pipeName
+            : throw new ArgumentException("A pipe name has only letters, digits and dots.", nameof(pipeName));
+
+    private static string? ReadPipe(IReadOnlyList<string> arguments, string argument)
     {
         ArgumentNullException.ThrowIfNull(arguments);
 
         for (var index = 0; index < arguments.Count - 1; index++)
         {
-            if (string.Equals(arguments[index], RunProgramArgument, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(arguments[index], argument, StringComparison.OrdinalIgnoreCase))
             {
                 return IsPipeName(arguments[index + 1]) ? arguments[index + 1] : null;
             }

@@ -28,8 +28,8 @@ public interface IHostCommands
 
     /// <summary>
     /// Opens an <c>http</c> or <c>https</c> address in the default browser, never with admin
-    /// rights: a host running as administrator has a copy of itself without them open it. It may
-    /// wait for Windows to start the browser, so don't call it on the host's UI thread. Returns
+    /// rights: a host running as administrator has a copy of itself without them open it. It waits
+    /// for Windows to open it, up to 30 seconds, so don't call it on the host's UI thread. Returns
     /// false when the address isn't a web address or Windows refused.
     /// </summary>
     bool OpenWebPage(Uri address);
