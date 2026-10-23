@@ -8,6 +8,7 @@
 - **Exit** asks the settings app to close through a named event in the user session, `Local\PCCompanion.App.Exit`. Nothing else sends it, so the settings app stays open when the host stops any other way.
 - Windows starts the host at every sign-in. It keeps running only for users who turned on **Start with Windows**.
 - Only the settings app saves settings. The host watches the settings file and loads it again after each save.
+- The host gives the settings app what only it knows, such as Hot Corners' recent results, through named pipes for the user's own account that the host only writes to, never through files: a host running as administrator mustn't write where programs without admin rights can redirect it. See [Hot Corners](../features/input/hot-corners.md#recent-results).
 - Both are self-contained and install into one folder; see [Packaging](../development/packaging.md).
 
 ## UI
