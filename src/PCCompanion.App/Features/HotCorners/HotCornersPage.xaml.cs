@@ -30,7 +30,12 @@ public sealed partial class HotCornersPage : Page
             {
                 corner.FlowDirection = FlowDirection;
             }
+
+            ViewModel.StartResults();
         };
+
+        // The recent results are read only while the page is shown.
+        Unloaded += (_, _) => ViewModel.StopResults();
     }
 
     public HotCornersViewModel ViewModel { get; }

@@ -240,6 +240,39 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
+                <StackPanel Margin="0,24,0,4" Spacing="2">
+                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=HotCornersResultsHeader}" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{app:Localized Key=HotCornersResultsDescription}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+                <TextBlock
+                    Margin="0,8"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind ViewModel.ResultsMessage, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind ViewModel.HasResultsMessage, Mode=OneWay}" />
+
+                <ItemsControl IsTabStop="False" ItemsSource="{x:Bind ViewModel.Results}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="local:CornerResultItem">
+                            <toolkit:SettingsCard Description="{x:Bind When}" Header="{x:Bind Text}">
+                                <toolkit:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="{x:Bind Glyph}" />
+                                </toolkit:SettingsCard.HeaderIcon>
+                            </toolkit:SettingsCard>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
                 <controls:Note Margin="0,16,0,0" Message="{x:Bind ViewModel.AdministratorInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=HotCornersPermissions}" />
