@@ -136,6 +136,30 @@ public sealed class CornerResultsTests
     }
 
     [Fact]
+    public void EveryActionHasItsOwnText()
+    {
+        using var language = new Language("en-US");
+
+        var texts = Enum.GetValues<HotCornerAction>()
+            .Select(action => CornerResultText.Describe(new CornerResult(_clock.GetUtcNow(), ScreenCorner.TopLeft, action, CornerResultKind.Ran, 1)))
+            .ToList();
+
+        Assert.Equal(texts.Count, texts.Distinct().Count());
+    }
+
+    [Fact]
+    public void EveryCornerHasItsOwnText()
+    {
+        using var language = new Language("en-US");
+
+        var texts = Enum.GetValues<ScreenCorner>()
+            .Select(corner => CornerResultText.Describe(new CornerResult(_clock.GetUtcNow(), corner, HotCornerAction.TaskView, CornerResultKind.Ran, 1)))
+            .ToList();
+
+        Assert.Equal(texts.Count, texts.Distinct().Count());
+    }
+
+    [Fact]
     public void AResultsTimeIsInTheUsersFormatWithHowManyTimes()
     {
         using var language = new Language("en-US");
