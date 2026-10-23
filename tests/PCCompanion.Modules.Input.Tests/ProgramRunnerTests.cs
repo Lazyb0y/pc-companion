@@ -10,15 +10,26 @@ using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;
 
-// A fake starter records what would start; no program runs.
+// A fake starter records what would start; no program runs. The work meant for the thread pool
+// waits in a list until the test runs it.
 public sealed class ProgramRunnerTests
 {
     private const string Program = @"C:\Program Files\Some App\App.exe";
+    private const string OtherProgram = @"C:\Windows\System32\charmap.exe";
 
     private readonly RecordingLogger<HotCornersFeature> _logger = new();
     private readonly List<ProcessStartInfo> _started = [];
+    private readonly List<string> _checked = [];
+    private readonly List<Action> _background = [];
+    private readonly ProgramRunner _runner;
     private bool _isAdministrator;
     private int _startError;
+    private Exception? _startFailure;
+
+    public ProgramRunnerTests()
+    {
+        _runner = new ProgramRunner(_logger, () => _isAdministrator, Exists, Start, _background.Add);
+    }
 
     [Fact]
     public void TheProgramStartsInItsFolderWithItsArgumentsAndNoShell()
@@ -31,6 +42,36 @@ public sealed class ProgramRunnerTests
         Assert.Equal(@"C:\Program Files\Some App", startInfo.WorkingDirectory);
         Assert.False(startInfo.UseShellExecute);
         Assert.Equal([(LogLevel.Debug, "Started App.exe.")], _logger.Entries);
+    }
+
+    [Fact]
+    public void RunReturnsBeforeTheProgramIsCheckedOrStarted()
+    {
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program });
+
+        Assert.Single(_background);
+        Assert.Empty(_checked);
+        Assert.Empty(_started);
+        Assert.Empty(_logger.Entries);
+
+        RunBackground();
+
+        Assert.Equal([Program], _checked);
+        Assert.Equal(Program, Assert.Single(_started).FileName);
+    }
+
+    [Fact]
+    public void TwoCornersRightAfterEachOtherStartTheirOwnPrograms()
+    {
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program, Arguments = "--first" });
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = OtherProgram, Arguments = "--second" });
+
+        // The thread pool can run them in either order.
+        Assert.Equal(2, _background.Count);
+        _background[1]();
+        _background[0]();
+
+        Assert.Equal([(OtherProgram, "--second"), (Program, "--first")], _started.Select(startInfo => (startInfo.FileName, string.Join(' ', startInfo.ArgumentList))));
     }
 
     [Fact]
@@ -65,22 +106,53 @@ public sealed class ProgramRunnerTests
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("Program Files", StringComparison.Ordinal) || entry.Message.Contains("secret", StringComparison.Ordinal));
     }
 
-    private static bool Exists(string path) =>
-        new[] { Program, @"C:\Scripts\Clean.bat", @"C:\Scripts\Clean.cmd", @"C:\Users\Public\Desktop\App.lnk" }
-            .Contains(path, StringComparer.OrdinalIgnoreCase);
+    [Fact]
+    public void AnUnexpectedFailureIsLoggedAndGoesNoFurther()
+    {
+        _startFailure = new InvalidOperationException("Something went wrong.");
 
+        Run(new CornerSettings { Program = Program, Arguments = "--secret 123" });
+
+        Assert.Empty(_started);
+        Assert.Equal([(LogLevel.Error, "Run a program failed to start App.exe.")], _logger.Entries);
+    }
+
+    private bool Exists(string path)
+    {
+        _checked.Add(path);
+        return new[] { Program, OtherProgram, @"C:\Scripts\Clean.bat", @"C:\Scripts\Clean.cmd", @"C:\Users\Public\Desktop\App.lnk" }
+            .Contains(path, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private void Start(ProcessStartInfo startInfo)
+    {
+        if (_startError != 0)
+        {
+            throw new Win32Exception(_startError, $"An error occurred trying to start process '{startInfo.FileName}'.");
+        }
+
+        if (_startFailure is { } failure)
+        {
+            throw failure;
+        }
+
+        _started.Add(startInfo);
+    }
+
+    // Runs the corner's program, and then the work it left for the thread pool.
     private void Run(CornerSettings corner)
     {
-        var runner = new ProgramRunner(_logger, () => _isAdministrator, Exists, startInfo =>
+        _runner.Run(corner with { Action = HotCornerAction.RunProgram });
+        RunBackground();
+    }
+
+    private void RunBackground()
+    {
+        foreach (var action in _background)
         {
-            if (_startError != 0)
-            {
-                throw new Win32Exception(_startError, $"An error occurred trying to start process '{startInfo.FileName}'.");
-            }
+            action();
+        }
 
-            _started.Add(startInfo);
-        });
-
-        runner.Run(corner with { Action = HotCornerAction.RunProgram });
+        _background.Clear();
     }
 }

@@ -13,17 +13,40 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// <param name="isAdministrator">Whether PC Companion runs as administrator; programs don't start then.</param>
 /// <param name="fileExists">Whether a file exists.</param>
 /// <param name="start">Starts a process.</param>
-public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministrator, Func<string, bool> fileExists, Action<ProcessStartInfo> start)
+/// <param name="runInBackground">Runs an action on the thread pool.</param>
+public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministrator, Func<string, bool> fileExists, Action<ProcessStartInfo> start, Action<Action> runInBackground)
 {
     /// <summary>
     /// Starts the corner's program, in its own folder, with its arguments passed one by one and
-    /// no shell. Problems are logged, with the program's file name only: its folder and
-    /// arguments can hold personal paths or secrets.
+    /// no shell. The program is checked and started on the thread pool, and this returns at once:
+    /// a program on a network share that's offline can take many seconds. Problems are logged,
+    /// with the program's file name only: its folder and arguments can hold personal paths or
+    /// secrets.
     /// </summary>
     public void Run(CornerSettings corner)
     {
         ArgumentNullException.ThrowIfNull(corner);
 
+        runInBackground(() => RunGuarded(corner));
+    }
+
+    // On the thread pool, where an exception wouldn't reach the feature's error boundary and
+    // would end the host.
+    private void RunGuarded(CornerSettings corner)
+    {
+        var fileName = Path.GetFileName(corner.Program) ?? string.Empty;
+        try
+        {
+            Start(corner, fileName);
+        }
+        catch (Exception exception)
+        {
+            LogFailed(logger, exception, fileName);
+        }
+    }
+
+    private void Start(CornerSettings corner, string fileName)
+    {
         if (isAdministrator())
         {
             LogAdministrator(logger);
@@ -31,7 +54,6 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
         }
 
         var program = corner.Program;
-        var fileName = Path.GetFileName(program) ?? string.Empty;
         var problem = ProgramFile.Check(program, fileExists);
         if (problem != ProgramProblem.None)
         {
@@ -60,4 +82,7 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows couldn't start {FileName} (error {ErrorCode}).")]
     private static partial void LogCantStart(ILogger logger, string fileName, int errorCode);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Run a program failed to start {FileName}.")]
+    private static partial void LogFailed(ILogger logger, Exception exception, string fileName);
 }
