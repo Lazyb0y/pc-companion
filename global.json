@@ -8,6 +8,6 @@
     "runner": "Microsoft.Testing.Platform"
   },
   "msbuild-sdks": {
-    "WixToolset.Sdk": "5.0.2"
+    "WixToolset.Sdk": "7.0.0"
   }
 }
