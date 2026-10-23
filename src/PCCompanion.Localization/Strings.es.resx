@@ -421,7 +421,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
+    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Cuando el puntero llega a una esquina, también lee si una aplicación limitó u ocultó el puntero, y dónde están las ventanas en esa pantalla, pero no sus títulos ni su contenido. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

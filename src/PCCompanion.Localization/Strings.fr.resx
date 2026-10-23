@@ -421,7 +421,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
+    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Quand le pointeur atteint un coin, vérifie aussi si une application a limité ou masqué le pointeur, et lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

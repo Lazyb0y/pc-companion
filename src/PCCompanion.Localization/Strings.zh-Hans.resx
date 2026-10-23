@@ -413,7 +413,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
+    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。指针到达某个角时，还会读取是否有应用限制或隐藏了指针，以及该显示器上窗口的位置，但不读取窗口标题或内容。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">
