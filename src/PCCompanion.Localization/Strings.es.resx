@@ -412,6 +412,62 @@
     <value>Por ejemplo, un juego, un vídeo o una presentación.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>No activar mientras estas aplicaciones están en primer plano</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>Por ejemplo, Escritorio remoto, una máquina virtual o una aplicación de dibujo. Mientras una de ellas está en primer plano, ninguna esquina se activa en ninguna pantalla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>Agregar una aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>Aplicación en ejecución…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>Archivo de programa…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>No hay aplicaciones en la lista.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>Quitar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>Quitar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>Elegir una aplicación en ejecución</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>Aplicaciones en ejecución</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>Buscando las aplicaciones en ejecución</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>Ninguna otra aplicación tiene una ventana abierta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>Agregar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Las esquinas no funcionan mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
     <comment>Needs native review.</comment>
@@ -421,7 +477,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Cuando el puntero llega a una esquina, también lee si una aplicación limitó u ocultó el puntero, y dónde están las ventanas en esa pantalla, pero no sus títulos ni su contenido. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
+    <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Cuando el puntero llega a una esquina, también lee si una aplicación limitó u ocultó el puntero, y dónde están las ventanas en esa pantalla, pero no sus títulos ni su contenido, y mientras haya aplicaciones en la lista, qué aplicación está en primer plano. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

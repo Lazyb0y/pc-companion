@@ -412,6 +412,62 @@
     <value>Par exemple, un jeu, une vidéo ou une présentation.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>Ne pas déclencher quand ces applications sont au premier plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>Par exemple, Bureau à distance, une machine virtuelle ou une application de dessin. Quand l’une d’elles est au premier plan, aucun coin ne se déclenche, sur aucun écran.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>Ajouter une application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>Application en cours d’exécution…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>Fichier de programme…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>Aucune application n’est dans la liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>Supprimer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>Supprimer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>Choisir une application en cours d’exécution</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>Applications en cours d’exécution</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>Recherche des applications en cours d’exécution</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>Aucune autre application n’a de fenêtre ouverte.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>Ajouter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Les coins ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
     <comment>Needs native review.</comment>
@@ -421,7 +477,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Quand le pointeur atteint un coin, vérifie aussi si une application a limité ou masqué le pointeur, et lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
+    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Quand le pointeur atteint un coin, vérifie aussi si une application a limité ou masqué le pointeur, et lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu, et, quand des applications sont dans la liste, quelle application est au premier plan. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

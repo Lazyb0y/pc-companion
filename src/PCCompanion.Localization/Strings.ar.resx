@@ -444,6 +444,62 @@
     <value>على سبيل المثال، لعبة أو فيديو أو عرض تقديمي.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>عدم التشغيل عندما تكون هذه التطبيقات في المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>على سبيل المثال، سطح المكتب البعيد أو جهاز ظاهري أو تطبيق رسم. عندما يكون أحدها في المقدمة، لا تعمل أي زاوية على أي شاشة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>إضافة تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>تطبيق قيد التشغيل…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>ملف برنامج…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>لا توجد تطبيقات في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>إزالة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>إزالة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>اختيار تطبيق قيد التشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>التطبيقات قيد التشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>جارٍ البحث عن التطبيقات قيد التشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>لا يوجد تطبيق آخر له نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>إضافة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>إلغاء</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>لا تعمل الزوايا عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
     <comment>Needs native review.</comment>
@@ -453,7 +509,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. وعندما يصل المؤشر إلى زاوية، يقرأ أيضاً ما إذا كان أحد التطبيقات قد قيّد المؤشر أو أخفاه، ومواضع النوافذ على تلك الشاشة، دون عناوينها أو محتواها. يرسل فقط اختصارات Windows للإجراءات المختارة، ويبدأ فقط البرامج التي تختارها. لا يخزّن أي شيء ولا يرسله.</value>
+    <value>يقرأ موضع المؤشر، وما إذا كان زر الماوس أو المفتاح المختار مضغوطاً، فقط أثناء تشغيل الزوايا النشطة. وعندما يصل المؤشر إلى زاوية، يقرأ أيضاً ما إذا كان أحد التطبيقات قد قيّد المؤشر أو أخفاه، ومواضع النوافذ على تلك الشاشة، دون عناوينها أو محتواها، وعندما توجد تطبيقات في القائمة، التطبيق الموجود في المقدمة. يرسل فقط اختصارات Windows للإجراءات المختارة، ويبدأ فقط البرامج التي تختارها. لا يخزّن أي شيء ولا يرسله.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.HotCorners;
@@ -57,6 +60,7 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         TopRight = new CornerViewModel(this, ScreenCorner.TopRight, Strings.HotCornersTopRight);
         BottomLeft = new CornerViewModel(this, ScreenCorner.BottomLeft, Strings.HotCornersBottomLeft);
         BottomRight = new CornerViewModel(this, ScreenCorner.BottomRight, Strings.HotCornersBottomRight);
+        RefreshExcludedApps();
     }
 
     /// <summary>What happens while an app running as administrator is in front.</summary>
@@ -97,6 +101,47 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
     {
         get => Settings.IgnoreFullScreenApps;
         set => Change(Settings.IgnoreFullScreenApps, value, () => Settings with { IgnoreFullScreenApps = value });
+    }
+
+    /// <summary>The apps in front of which corners don't trigger.</summary>
+    public ObservableCollection<ExcludedAppItem> ExcludedApps { get; } = [];
+
+    public bool HasNoExcludedApps => ExcludedApps.Count == 0;
+
+    /// <summary>Whether the list has <paramref name="app"/> already.</summary>
+    public bool Lists(ExcludedApp app) => Settings.Lists(app);
+
+    /// <summary>Adds <paramref name="app"/> to the list, unless it's there already.</summary>
+    public void AddExcludedApp(ExcludedApp app) => SaveExcludedApps(Settings.WithExcludedApp(app));
+
+    public void RemoveExcludedApp(int index)
+    {
+        if (index >= 0 && index < Settings.ExcludedApps.Count)
+        {
+            SaveExcludedApps(Settings.WithoutExcludedApp(index));
+        }
+    }
+
+    private void SaveExcludedApps(HotCornersSettings settings)
+    {
+        if (settings != Settings)
+        {
+            Save(settings);
+            RefreshExcludedApps();
+        }
+    }
+
+    private void RefreshExcludedApps()
+    {
+        ExcludedApps.Clear();
+        for (var index = 0; index < Settings.ExcludedApps.Count; index++)
+        {
+            var item = new ExcludedAppItem(index, Settings.ExcludedApps[index]);
+            ExcludedApps.Add(item);
+            _ = item.LoadIconAsync();
+        }
+
+        OnPropertyChanged(nameof(HasNoExcludedApps));
     }
 
     internal CornerSettings GetCorner(ScreenCorner corner) => Settings.For(corner);
@@ -239,4 +284,54 @@ public sealed partial class CornerViewModel : ObservableObject
     };
 
     public bool HasProgramProblem => ProgramProblem.Length > 0;
+}
+
+/// <summary>
+/// A listed app on the Hot Corners page. Its icon shows once it's read.
+/// </summary>
+public sealed partial class ExcludedAppItem : ObservableObject
+{
+    private static readonly CompositeFormat RemoveNameFormat = CompositeFormat.Parse(Strings.HotCornersRemoveAppName);
+
+    private IconElement _icon = AppLooks.ToIconElement(null);
+
+    public ExcludedAppItem(int index, ExcludedApp app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+
+        Index = index;
+        App = app;
+        Name = app.Name.Trim() is { Length: > 0 } name ? name : Path.GetFileNameWithoutExtension(app.Program) ?? app.AppId ?? string.Empty;
+        RemoveName = string.Format(CultureInfo.CurrentCulture, RemoveNameFormat, Name);
+    }
+
+    /// <summary>The app's place in the list, from 0.</summary>
+    public int Index { get; }
+
+    public ExcludedApp App { get; }
+
+    public string Name { get; }
+
+    /// <summary>The program's path, shown in the tooltip, or <see langword="null"/> for an app ID.</summary>
+    public string? Program => App.Program;
+
+    /// <summary>The screen reader name of the Remove button.</summary>
+    public string RemoveName { get; }
+
+    /// <summary>The card's icon: the plain app icon until the app's own is read.</summary>
+    public IconElement Icon
+    {
+        get => _icon;
+        private set => SetProperty(ref _icon, value);
+    }
+
+    /// <summary>Reads the app's icon off the UI thread, and shows it.</summary>
+    public async Task LoadIconAsync()
+    {
+        var icon = await Task.Run(() => AppLooks.ReadIcon(App, null)).ConfigureAwait(true);
+        if (await AppLooks.ToImageAsync(icon).ConfigureAwait(true) is { } image)
+        {
+            Icon = AppLooks.ToIconElement(image);
+        }
+    }
 }

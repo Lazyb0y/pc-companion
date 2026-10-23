@@ -1,7 +1,11 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
 
@@ -64,6 +68,43 @@ public sealed partial class HotCornersPage : Page
     {
         Grid.SetRow(corner, row);
         Grid.SetColumn(corner, column);
+    }
+
+    private async void OnAddRunningAppClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new RunningAppDialog(ViewModel)
+        {
+            XamlRoot = XamlRoot,
+            FlowDirection = FlowDirection,
+            RequestedTheme = ActualTheme,
+        };
+
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Chosen is { } app)
+        {
+            ViewModel.AddExcludedApp(app);
+        }
+    }
+
+    // Only the full path of an .exe file can be the app in front.
+    private async void OnAddProgramFileClick(object sender, RoutedEventArgs e)
+    {
+        if (App.Current.MainWindow is not { } window
+            || OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.HotCornersProgramDialogTitle, Strings.HotCornersProgramFilter, "*.exe") is not { } program
+            || ProgramFile.Check(program, File.Exists) != ProgramProblem.None)
+        {
+            return;
+        }
+
+        var name = await Task.Run(() => AppDisplay.NameOfProgram(program)).ConfigureAwait(true);
+        ViewModel.AddExcludedApp(new ExcludedApp { Name = name, Program = program });
+    }
+
+    private void OnRemoveAppClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: int index })
+        {
+            ViewModel.RemoveExcludedApp(index);
+        }
     }
 
     private void OnBrowseClick(object sender, RoutedEventArgs e)
