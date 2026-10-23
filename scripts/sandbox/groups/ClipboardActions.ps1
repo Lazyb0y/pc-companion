@@ -63,6 +63,9 @@ Test-Check 'choose Run a program' (Invoke-AppElement 'Run a program')
 Start-Sleep -Milliseconds 500
 [void] (Set-AppBox 'Program' 'C:\Windows\System32\cmd.exe')
 Test-Check 'a command interpreter is refused' ((Wait-Until { Find-AppText 'Programs that run commands, such as cmd or PowerShell, can''t be used: copied text could make them run other commands.' } 3) -and -not (Test-AppEnabled 'Save'))
+# Whether the program exists is read off the page's thread, so the problem shows a moment later.
+[void] (Set-AppBox 'Program' 'C:\Windows\System32\PCCompanionMissing.exe')
+Test-Check 'a program that doesn''t exist is refused' ((Wait-Until { Find-AppText "This program wasn't found." } 5) -and -not (Test-AppEnabled 'Save'))
 [void] (Set-AppBox 'Program' 'C:\Windows\System32\charmap.exe')
 [void] (Set-AppBox 'Arguments' '{text}')
 Test-Check 'Save is on for the program rule' (Wait-Until { Test-AppEnabled 'Save' } 3)
@@ -92,6 +95,20 @@ Start-Sleep -Seconds 1
 Start-Sleep -Seconds 2
 $saved = Get-ClipboardActionsSettings
 Test-Check 'the page deletes the rule' ((@($saved.rules).Count -eq 1) -and (@($saved.rules)[0].name -eq 'Track & trace')) "saved: $($saved | ConvertTo-Json -Compress -Depth 5)"
+[void] (Close-SettingsApp)
+
+# A rule whose program doesn't exist, as after the program was removed, shows why in the list once
+# the page has looked for the program off its thread.
+$missingRule = @{ name = 'Missing program'; pattern = '.+'; action = 'RunProgram'; program = 'C:\Windows\System32\PCCompanionMissing.exe'; arguments = '{text}' }
+$settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; features = @{ clipboardActions = @{ enabled = $true; openLinks = $true; rules = @($missingRule) } } }
+Write-Settings ($settings | ConvertTo-Json -Depth 6)
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Clipboard Actions with a rule whose program doesn''t exist' (Select-NavigationItem 'Clipboard Actions')
+Test-Check 'a rule whose program doesn''t exist shows why in the list' (Wait-Until { Find-AppText "Not in the menu. This program wasn't found." } 5)
+Save-Screenshot '13e-clipboard-actions-missing-program'
 [void] (Close-SettingsApp)
 
 # The menu, with the rules in the settings file.
