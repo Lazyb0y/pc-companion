@@ -92,7 +92,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         var window = new MessageWindow(WindowClassName);
         try
         {
-            _monitor = new RawPointerMonitor(window);
+            _monitor = new RawPointerMonitor();
         }
         catch
         {
