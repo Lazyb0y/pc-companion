@@ -67,12 +67,17 @@ Test-Check 'a command interpreter is refused' ((Wait-Until { Find-AppText 'Progr
 [void] (Set-AppBox 'Program' 'C:\Windows\System32\PCCompanionMissing.exe')
 Test-Check 'a program that doesn''t exist is refused' ((Wait-Until { Find-AppText "This program wasn't found." } 5) -and -not (Test-AppEnabled 'Save'))
 [void] (Set-AppBox 'Program' 'C:\Windows\System32\charmap.exe')
+Test-Check 'a program that exists clears the problem' (Wait-Until { -not (Find-AppText "This program wasn't found.") } 5)
 [void] (Set-AppBox 'Arguments' '{text}')
 Test-Check 'Save is on for the program rule' (Wait-Until { Test-AppEnabled 'Save' } 3)
+Start-Sleep -Seconds 2
+Test-Check 'the problem stays away and Save stays on' ((-not (Find-AppText "This program wasn't found.")) -and (Test-AppEnabled 'Save'))
 [void] (Invoke-AppElement 'Save')
 Start-Sleep -Seconds 2
 $saved = Get-ClipboardActionsSettings
 Test-Check 'the page saves the program rule after the first' ((@($saved.rules).Count -eq 2) -and (@($saved.rules)[1].action -eq 'RunProgram') -and (@($saved.rules)[1].program -eq 'C:\Windows\System32\charmap.exe')) "saved: $($saved | ConvertTo-Json -Compress -Depth 5)"
+# The list looks for the program off its thread; one that exists keeps the rule's summary.
+Test-Check 'a rule whose program exists says what it starts' ((Find-AppText 'Starts charmap.exe') -and -not (Find-AppText "Not in the menu. This program wasn't found."))
 
 # Edit, move and delete.
 Test-Check 'Edit opens the rule' ((Invoke-AppElement 'Edit Track the parcel') -and (Wait-Until { Find-AppElement 'Edit the rule' } 5))

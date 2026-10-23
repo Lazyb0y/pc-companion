@@ -335,6 +335,10 @@ $selected = Get-SelectedItemName 'Top left action'
 Test-Check 'the top-left corner shows Run a program' ($selected -eq 'Run a program') "selected: $selected"
 $shown = Get-BoxText 'Top left program'
 Test-Check 'the program box shows the program' ($shown -eq $program) "shown: $shown"
+# Whether the program exists is read off the page's thread, so a problem would show a moment later.
+$programProblems = @('Choose a program to run.', 'Enter the full path, such as C:\Program Files\App\App.exe.', 'Choose a program file (.exe).', "This program wasn't found.")
+function Find-ProgramProblem { @($programProblems | Where-Object { Find-AppText $_ }) }
+Test-Check 'a program that exists shows no problem below the box' (-not (Wait-Until { @(Find-ProgramProblem).Count -gt 0 } 3)) "shown: $(@(Find-ProgramProblem) -join ' | ')"
 Test-Check 'the arguments box shows the arguments' ((Get-BoxText 'Top left arguments') -eq '/A')
 Save-Screenshot '12-hot-corners-run-program'
 # A path that doesn't fit shows its end after an ellipsis; the tooltip and the box while editing show all of it.
@@ -374,6 +378,14 @@ if ($argumentsBox) { $argumentsBox.SetFocus() }
 $savedProgram = { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners.topLeft.program }
 Test-Check 'a program that doesn''t exist shows its problem below the box' (Wait-Until { (& $savedProgram) -eq $missing -and (Find-AppText "This program wasn't found.") } 10) "saved: $(& $savedProgram)"
 Save-Screenshot '12d-hot-corners-program-missing'
+# The program that exists again clears the problem: a late answer about the missing one is dropped.
+if ($programBox) { $programBox.SetFocus() }
+[void] (Set-AppBox 'Top left program' $program)
+if ($argumentsBox) { $argumentsBox.SetFocus() }
+Test-Check 'a program that exists again clears the problem below the box' (Wait-Until { (& $savedProgram) -eq $program -and @(Find-ProgramProblem).Count -eq 0 } 10) "saved: $(& $savedProgram); shown: $(@(Find-ProgramProblem) -join ' | ')"
+Start-Sleep -Seconds 2
+Test-Check 'the problem stays away' (@(Find-ProgramProblem).Count -eq 0) "shown: $(@(Find-ProgramProblem) -join ' | ')"
+Save-Screenshot '12d2-hot-corners-program-found-again'
 
 # With Hot Corners on and the page open, a host that no longer answers makes the page say, after a
 # few reads, that recent results aren't available. It's the last check, since it ends the host.
