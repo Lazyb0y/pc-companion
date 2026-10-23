@@ -18,7 +18,7 @@ public static class CornerResultText
     {
         ArgumentNullException.ThrowIfNull(result);
 
-        return string.Format(CultureInfo.CurrentCulture, ResultFormat, CornerName(result.Corner), ActionName(result.Action), Outcome(result.Kind));
+        return string.Format(CultureInfo.CurrentCulture, ResultFormat, CornerName(result.Corner), HotCornerActionNames.NameOf(result.Action), Outcome(result.Kind));
     }
 
     /// <summary>When it happened, such as "12:41:05", and how many times in a row, if more than once.</summary>
@@ -38,21 +38,6 @@ public static class CornerResultText
         ScreenCorner.TopRight => Strings.HotCornersTopRight,
         ScreenCorner.BottomLeft => Strings.HotCornersBottomLeft,
         _ => Strings.HotCornersBottomRight,
-    };
-
-    private static string ActionName(HotCornerAction action) => action switch
-    {
-        HotCornerAction.TaskView => Strings.HotCornersActionTaskView,
-        HotCornerAction.ShowDesktop => Strings.HotCornersActionShowDesktop,
-        HotCornerAction.Start => Strings.HotCornersActionStart,
-        HotCornerAction.Search => Strings.HotCornersActionSearch,
-        HotCornerAction.Notifications => Strings.HotCornersActionNotifications,
-        HotCornerAction.Lock => Strings.HotCornersActionLock,
-        HotCornerAction.TurnOffDisplays => Strings.HotCornersActionTurnOffDisplays,
-        HotCornerAction.ScreenSaver => Strings.HotCornersActionScreenSaver,
-        HotCornerAction.KeepDisplaysOn => Strings.HotCornersActionKeepDisplaysOn,
-        HotCornerAction.RunProgram => Strings.HotCornersActionRunProgram,
-        _ => Strings.HotCornersActionNone,
     };
 
     private static string Outcome(CornerResultKind kind) => kind switch
