@@ -389,7 +389,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>Démarre avec vos droits. Ne s’exécute pas tant que PC Companion est exécuté en tant qu’administrateur.</value>
+    <value>Démarre avec vos droits, même quand PC Companion est exécuté en tant qu’administrateur.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -540,10 +540,6 @@
     <value>Windows ne l’a pas exécutée</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>programme non démarré, car PC Companion s’exécute en tant qu’administrateur</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>aucun programme démarré, car aucun n’est choisi</value>
     <comment>Needs native review.</comment>
@@ -565,7 +561,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion est exécuté en tant qu’administrateur : les coins fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan. Exécuter un programme ne s’exécute pas.</value>
+    <value>PC Companion est exécuté en tant qu’administrateur : les coins fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

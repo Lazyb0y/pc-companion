@@ -51,7 +51,6 @@ public static class CornerResultText
         CornerResultKind.FullScreenApp => Strings.HotCornersResultFullScreenApp,
         CornerResultKind.AppExcluded => Strings.HotCornersResultAppExcluded,
         CornerResultKind.Refused => Strings.HotCornersResultRefused,
-        CornerResultKind.ProgramAsAdministrator => Strings.HotCornersResultProgramAsAdministrator,
         CornerResultKind.ProgramNotChosen => Strings.HotCornersResultProgramNotChosen,
         CornerResultKind.ProgramNotFound => Strings.HotCornersResultProgramNotFound,
         CornerResultKind.ProgramNotExe => Strings.HotCornersResultProgramNotExe,

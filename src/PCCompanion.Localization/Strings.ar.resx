@@ -421,7 +421,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>يبدأ بأذوناتك. لا يعمل أثناء تشغيل PC Companion كمسؤول.</value>
+    <value>يبدأ بأذوناتك، حتى أثناء تشغيل PC Companion كمسؤول.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -588,10 +588,6 @@
     <value>لم يشغّله Windows</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>لم يبدأ البرنامج لأن PC Companion يعمل كمسؤول</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>لم يبدأ أي برنامج لأنه لم يتم اختيار برنامج</value>
     <comment>Needs native review.</comment>
@@ -613,7 +609,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>يعمل PC Companion كمسؤول، لذا تعمل الزوايا أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة. لا يعمل تشغيل برنامج.</value>
+    <value>يعمل PC Companion كمسؤول، لذا تعمل الزوايا أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

@@ -389,7 +389,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>আপনার অধিকার নিয়ে চালু হয়। PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললে এটি চলে না।</value>
+    <value>আপনার অধিকার নিয়ে চালু হয়, PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললেও।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -540,10 +540,6 @@
     <value>Windows এটি চালায়নি</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>প্রোগ্রাম চালু হয়নি, কারণ PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>কোনো প্রোগ্রাম চালু হয়নি, কারণ কোনোটি বেছে নেওয়া হয়নি</value>
     <comment>Needs native review.</comment>
@@ -565,7 +561,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও কোণগুলো কাজ করে। একটি প্রোগ্রাম চালান কাজ করে না।</value>
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও কোণগুলো কাজ করে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

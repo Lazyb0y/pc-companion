@@ -389,7 +389,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>Se inicia con tus permisos. No se ejecuta mientras PC Companion se ejecuta como administrador.</value>
+    <value>Se inicia con tus permisos, también mientras PC Companion se ejecuta como administrador.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -540,10 +540,6 @@
     <value>Windows no la ejecutó</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>no se inició el programa porque PC Companion se ejecuta como administrador</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>no se inició ningún programa porque no hay ninguno elegido</value>
     <comment>Needs native review.</comment>
@@ -565,7 +561,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion se ejecuta como administrador, así que las esquinas también funcionan mientras una aplicación que se ejecuta como administrador está en primer plano. Ejecutar un programa no se ejecuta.</value>
+    <value>PC Companion se ejecuta como administrador, así que las esquinas también funcionan mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

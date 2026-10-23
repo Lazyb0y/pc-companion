@@ -25,9 +25,6 @@ public enum CornerResultKind
     /// <summary>Windows didn't run the action.</summary>
     Refused,
 
-    /// <summary>Run a program doesn't run while PC Companion runs as administrator.</summary>
-    ProgramAsAdministrator,
-
     ProgramNotChosen,
 
     ProgramNotFound,

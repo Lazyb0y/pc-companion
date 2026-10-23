@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -15,12 +14,12 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// <summary>
 /// Runs an action when the pointer reaches a corner of a display. See docs/features/input/hot-corners.md.
 /// </summary>
-public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger, TimeProvider time) : IFeature
+public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger, TimeProvider time, IHostCommands commands) : IFeature
 {
     private const string WindowClassName = "PCCompanion.HotCorners";
 
     private readonly CornerDetector _detector = new(new WindowsHotCornerEnvironment(), time);
-    private readonly ProgramRunner _programs = new(logger, () => Environment.IsPrivilegedProcess, File.Exists, StartProcess, action => Task.Run(action));
+    private readonly ProgramRunner _programs = new(logger, File.Exists, commands, action => Task.Run(action));
     private readonly CornerResults _results = new(time);
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
@@ -262,11 +261,6 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     {
         _programs.Run(_settings.For(corner), kind => _results.Add(corner, HotCornerAction.RunProgram, kind));
         return true;
-    }
-
-    private static void StartProcess(ProcessStartInfo startInfo)
-    {
-        using var process = Process.Start(startInfo);
     }
 
     // Runs on the window's thread, where an exception would end the host. Like a failing Apply,

@@ -389,7 +389,7 @@
     <comment>Hot Corners page: shown when the program's file doesn't exist.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>Starts with your rights. Doesn't run while PC Companion runs as administrator.</value>
+    <value>Starts with your rights, also while PC Companion runs as administrator.</value>
     <comment>Hot Corners page: below a corner's program and arguments.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -540,10 +540,6 @@
     <value>Windows didn't run it</value>
     <comment>Recent result ({2} of HotCornersResult).</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>didn't start the program, because PC Companion runs as administrator</value>
-    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>didn't start a program, because none is chosen</value>
     <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
@@ -565,8 +561,8 @@
     <comment>Hot Corners page: a limitation of Windows, shown while PC Companion runs without admin rights.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion runs as administrator, so corners also work while an app running as administrator is in front. Run a program doesn't run.</value>
-    <comment>Hot Corners page: replaces HotCornersAdministratorInfo while PC Companion runs as administrator. "Run a program" is HotCornersActionRunProgram.</comment>
+    <value>PC Companion runs as administrator, so corners also work while an app running as administrator is in front.</value>
+    <comment>Hot Corners page: replaces HotCornersAdministratorInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents, and while apps are listed, which app is in front. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
