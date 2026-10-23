@@ -248,3 +248,7 @@ CHILDID_SELF
 TOKEN_MANDATORY_LABEL
 GetSidSubAuthority
 GetSidSubAuthorityCount
+GetClipCursor
+GetCursorInfo
+MonitorFromWindow
+GetMonitorInfo

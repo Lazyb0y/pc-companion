@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Xunit;
@@ -11,6 +12,7 @@ namespace PCCompanion.Platform.Windows.Tests;
 public sealed class TopLevelWindowsTests
 {
     private const int ShowWithoutActivating = 4; // SW_SHOWNOACTIVATE
+    private const uint MoveWithoutActivating = 0x0014; // SWP_NOZORDER | SWP_NOACTIVATE
 
     [Fact]
     public void ListsAVisibleWindowWithWhatItIsLike()
@@ -33,6 +35,87 @@ public sealed class TopLevelWindowsTests
                 HasOwner: false,
                 IsDesktop: false),
             listed);
+    }
+
+    [Fact]
+    public void FindsAWindowWithItsPlaceAndStyles()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+        Assert.True(SetWindowPos(window.Handle, 0, 10, 20, 400, 300, MoveWithoutActivating));
+
+        WindowPlace? found = null;
+        var decision = TopLevelWindows.FindFrontToBack(place =>
+        {
+            if (place.Handle != window.Handle)
+            {
+                return null;
+            }
+
+            found = place;
+            return true;
+        });
+
+        Assert.True(decision);
+
+        // Windows gives every overlapped window a title bar.
+        Assert.Equal(
+            new WindowPlace(
+                window.Handle,
+                new Rectangle(10, 20, 400, 300),
+                IsCloaked: true,
+                IsMinimized: false,
+                IsClickThrough: false,
+                IsNoActivate: false,
+                IsToolWindow: false,
+                IsTopmost: false,
+                HasFrame: true,
+                IsShell: false),
+            found);
+    }
+
+    [Fact]
+    public void FindingStopsAtTheFirstWindowThatDecides()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+        var visited = 0;
+
+        Assert.False(TopLevelWindows.FindFrontToBack(_ =>
+        {
+            visited++;
+            return false;
+        }));
+        Assert.Equal(1, visited);
+    }
+
+    [Fact]
+    public void FindingWithoutADecisionReturnsNull()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+
+        Assert.Null(TopLevelWindows.FindFrontToBack(_ => null));
+    }
+
+    [Fact]
+    public void TheDesktopBelongsToTheShell()
+    {
+        WindowPlace? desktop = null;
+        var desktopHandle = TopLevelWindows.List().FirstOrDefault(listed => listed.IsDesktop)?.Handle;
+        _ = TopLevelWindows.FindFrontToBack(place =>
+        {
+            if (place.Handle != desktopHandle)
+            {
+                return null;
+            }
+
+            desktop = place;
+            return true;
+        });
+
+        // Without a shell, as on some build servers, there's no desktop window.
+        Assert.True(desktopHandle is null || desktop is { IsShell: true });
     }
 
     [Fact]
@@ -83,4 +166,7 @@ public sealed class TopLevelWindowsTests
 
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(nint window, int command);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetWindowPos(nint window, nint insertAfter, int x, int y, int width, int height, uint flags);
 }

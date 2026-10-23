@@ -13,6 +13,19 @@ public static class Foreground
     public static nint Window => PInvoke.GetForegroundWindow();
 
     /// <summary>
+    /// What Windows reports about full-screen apps. Its busy state isn't used: it doesn't say which
+    /// display the full-screen app is on.
+    /// </summary>
+    public static FullScreenMode FullScreenMode =>
+        !PInvoke.SHQueryUserNotificationState(out var state).Succeeded ? FullScreenMode.None
+        : state switch
+        {
+            QUERY_USER_NOTIFICATION_STATE.QUNS_RUNNING_D3D_FULL_SCREEN => FullScreenMode.Exclusive,
+            QUERY_USER_NOTIFICATION_STATE.QUNS_PRESENTATION_MODE => FullScreenMode.Presentation,
+            _ => FullScreenMode.None,
+        };
+
+    /// <summary>
     /// Whether the app in front is full screen, such as a game, a video or a presentation.
     /// </summary>
     public static bool IsFullScreen() =>
@@ -40,4 +53,22 @@ public static class Foreground
     /// and nothing let this process come to the front.
     /// </summary>
     public static bool Bring(nint window) => PInvoke.SetForegroundWindow(new HWND(window));
+}
+
+/// <summary>
+/// What Windows reports about full-screen apps.
+/// </summary>
+public enum FullScreenMode
+{
+    None,
+
+    /// <summary>
+    /// An app, usually a game, has its display to itself (exclusive full screen). It's the app in front.
+    /// </summary>
+    Exclusive,
+
+    /// <summary>
+    /// Presentation mode is on, as set in Windows Mobility Center.
+    /// </summary>
+    Presentation,
 }

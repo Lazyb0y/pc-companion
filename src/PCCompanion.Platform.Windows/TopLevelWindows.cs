@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Dwm;
@@ -33,6 +35,33 @@ public static class TopLevelWindows
         }, 0);
 
         return windows;
+    }
+
+    /// <summary>
+    /// Reads the visible top-level windows front to back, with their place and the styles that tell
+    /// an app's window from overlays, until <paramref name="decide"/> returns a value, and returns
+    /// that value; <see langword="null"/> when no window decided. It reads no titles or class names
+    /// and sends the windows no messages, so a window that stopped responding can't hold it.
+    /// </summary>
+    public static bool? FindFrontToBack(Func<WindowPlace, bool?> decide)
+    {
+        ArgumentNullException.ThrowIfNull(decide);
+
+        var shell = PInvoke.GetShellWindow();
+        var shellProcessId = shell.IsNull ? 0 : ProcessIdOf(shell);
+        bool? decision = null;
+
+        PInvoke.EnumWindows((window, _) =>
+        {
+            if (PInvoke.IsWindowVisible(window))
+            {
+                decision = decide(ReadPlace(window, shellProcessId));
+            }
+
+            return decision is null;
+        }, 0);
+
+        return decision;
     }
 
     /// <summary>
@@ -127,26 +156,54 @@ public static class TopLevelWindows
     private static WINDOW_EX_STYLE ExtendedStyle(HWND window) =>
         (WINDOW_EX_STYLE)(uint)PInvoke.GetWindowLongPtr(window, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
 
-    private static unsafe TopLevelWindow Read(HWND window, HWND desktop)
+    private static TopLevelWindow Read(HWND window, HWND desktop)
     {
-        // A window that closed meanwhile keeps process ID 0.
-        uint processId = 0;
-        _ = PInvoke.GetWindowThreadProcessId(window, &processId);
         var style = ExtendedStyle(window);
-        uint cloaked;
-        var isCloaked = PInvoke.DwmGetWindowAttribute(window, DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, &cloaked, sizeof(uint)).Succeeded && cloaked != 0;
 
         return new TopLevelWindow(
             window,
-            processId,
+            ProcessIdOf(window),
             IsMinimized: PInvoke.IsIconic(window),
-            IsCloaked: isCloaked,
+            IsCloaked: IsCloaked(window),
             IsToolWindow: (style & WINDOW_EX_STYLE.WS_EX_TOOLWINDOW) != 0,
             IsAppWindow: (style & WINDOW_EX_STYLE.WS_EX_APPWINDOW) != 0,
             IsNoActivate: (style & WINDOW_EX_STYLE.WS_EX_NOACTIVATE) != 0,
             IsTopmost: (style & WINDOW_EX_STYLE.WS_EX_TOPMOST) != 0,
             HasOwner: !PInvoke.GetWindow(window, GET_WINDOW_CMD.GW_OWNER).IsNull,
             IsDesktop: window == desktop);
+    }
+
+    private static WindowPlace ReadPlace(HWND window, uint shellProcessId)
+    {
+        var style = (WINDOW_STYLE)(uint)PInvoke.GetWindowLongPtr(window, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
+        var extendedStyle = ExtendedStyle(window);
+        var bounds = PInvoke.GetWindowRect(window, out var area) ? Rectangle.FromLTRB(area.left, area.top, area.right, area.bottom) : Rectangle.Empty;
+
+        return new WindowPlace(
+            window,
+            bounds,
+            IsCloaked: IsCloaked(window),
+            IsMinimized: PInvoke.IsIconic(window),
+            IsClickThrough: (extendedStyle & WINDOW_EX_STYLE.WS_EX_TRANSPARENT) != 0,
+            IsNoActivate: (extendedStyle & WINDOW_EX_STYLE.WS_EX_NOACTIVATE) != 0,
+            IsToolWindow: (extendedStyle & WINDOW_EX_STYLE.WS_EX_TOOLWINDOW) != 0,
+            IsTopmost: (extendedStyle & WINDOW_EX_STYLE.WS_EX_TOPMOST) != 0,
+            HasFrame: (style & WINDOW_STYLE.WS_CAPTION) == WINDOW_STYLE.WS_CAPTION || (style & WINDOW_STYLE.WS_THICKFRAME) != 0,
+            IsShell: shellProcessId != 0 && ProcessIdOf(window) == shellProcessId);
+    }
+
+    // A window that closed meanwhile keeps process ID 0.
+    private static unsafe uint ProcessIdOf(HWND window)
+    {
+        uint processId = 0;
+        _ = PInvoke.GetWindowThreadProcessId(window, &processId);
+        return processId;
+    }
+
+    private static unsafe bool IsCloaked(HWND window)
+    {
+        uint cloaked;
+        return PInvoke.DwmGetWindowAttribute(window, DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, &cloaked, sizeof(uint)).Succeeded && cloaked != 0;
     }
 }
 
@@ -167,3 +224,26 @@ public sealed record TopLevelWindow(
     bool IsTopmost,
     bool HasOwner,
     bool IsDesktop);
+
+/// <summary>
+/// A visible top-level window's place and the styles that tell an app's window from overlays, as
+/// <see cref="TopLevelWindows.FindFrontToBack"/> read it.
+/// </summary>
+/// <param name="Bounds">The window's rectangle, in physical pixels when the process is per-monitor DPI aware.</param>
+/// <param name="IsCloaked">Kept out of sight by Windows, as on another virtual desktop.</param>
+/// <param name="IsClickThrough">Lets clicks through to the windows behind it (<c>WS_EX_TRANSPARENT</c>).</param>
+/// <param name="IsNoActivate">Not activated when clicked, like an on-screen keyboard.</param>
+/// <param name="IsTopmost">Always on top.</param>
+/// <param name="HasFrame">Has a title bar or a frame for resizing (<c>WS_CAPTION</c>, <c>WS_THICKFRAME</c>).</param>
+/// <param name="IsShell">Belongs to the Windows shell's process, which shows the desktop, the taskbar and Task View.</param>
+public sealed record WindowPlace(
+    nint Handle,
+    Rectangle Bounds,
+    bool IsCloaked,
+    bool IsMinimized,
+    bool IsClickThrough,
+    bool IsNoActivate,
+    bool IsToolWindow,
+    bool IsTopmost,
+    bool HasFrame,
+    bool IsShell);
