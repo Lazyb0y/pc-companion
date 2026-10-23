@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.HotCorners;
 
@@ -24,8 +26,13 @@ public sealed record KeyOption(HotCornerKey Key, string DisplayName);
 public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSettings>
 {
     private static readonly CompositeFormat DelayFormat = CompositeFormat.Parse(Strings.HotCornersDelayValue);
+    private static readonly TimeSpan ResultsTimeout = TimeSpan.FromMilliseconds(500);
 
     private readonly AppSettings _appSettings;
+    private DispatcherQueueTimer? _resultsTimer;
+    private bool _readingResults;
+    private IReadOnlyList<CornerResult> _shownResults = [];
+    private string _resultsMessage = string.Empty;
 
     public HotCornersViewModel(FeatureSettingsEditor editor, AppSettings appSettings)
         : base(editor, HotCornersFeature.Definition)
@@ -128,6 +135,90 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         {
             Save(settings);
             RefreshExcludedApps();
+        }
+    }
+
+    /// <summary>The recent results, newest first.</summary>
+    public ObservableCollection<CornerResultItem> Results { get; } = [];
+
+    /// <summary>Why there are no results to show, or an empty string.</summary>
+    public string ResultsMessage
+    {
+        get => _resultsMessage;
+        private set
+        {
+            if (SetProperty(ref _resultsMessage, value))
+            {
+                OnPropertyChanged(nameof(HasResultsMessage));
+            }
+        }
+    }
+
+    public bool HasResultsMessage => ResultsMessage.Length > 0;
+
+    /// <summary>
+    /// Shows the recent results as they come, asking the host about once a second, until
+    /// <see cref="StopResults"/>. Call it on the page's thread.
+    /// </summary>
+    public void StartResults()
+    {
+        if (_resultsTimer is not null)
+        {
+            return;
+        }
+
+        _resultsTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+        _resultsTimer.Interval = TimeSpan.FromSeconds(1);
+        _resultsTimer.Tick += (_, _) => _ = RefreshResultsAsync();
+        _resultsTimer.Start();
+        _ = RefreshResultsAsync();
+    }
+
+    public void StopResults()
+    {
+        _resultsTimer?.Stop();
+        _resultsTimer = null;
+    }
+
+    // The pipe is read off the UI thread; a read still going when the next tick comes is let finish.
+    private async Task RefreshResultsAsync()
+    {
+        if (_readingResults)
+        {
+            return;
+        }
+
+        _readingResults = true;
+        try
+        {
+            var snapshot = IsOn
+                ? await Task.Run(() => SnapshotPipe.ReadAsync(CornerResults.PipeName, ResultsTimeout, CornerResults.MaximumSnapshotLength)).ConfigureAwait(true)
+                : null;
+            ShowResults(snapshot is null ? null : CornerResults.FromJson(snapshot));
+        }
+        finally
+        {
+            _readingResults = false;
+        }
+    }
+
+    private void ShowResults(IReadOnlyList<CornerResult>? results)
+    {
+        ResultsMessage = results is null ? Strings.HotCornersResultsUnavailable
+            : results.Count == 0 ? Strings.HotCornersResultsNone
+            : string.Empty;
+
+        results ??= [];
+        if (results.SequenceEqual(_shownResults))
+        {
+            return;
+        }
+
+        _shownResults = results;
+        Results.Clear();
+        foreach (var result in results)
+        {
+            Results.Add(new CornerResultItem(result));
         }
     }
 
@@ -284,6 +375,20 @@ public sealed partial class CornerViewModel : ObservableObject
     };
 
     public bool HasProgramProblem => ProgramProblem.Length > 0;
+}
+
+/// <summary>
+/// A recent result on the Hot Corners page.
+/// </summary>
+public sealed class CornerResultItem(CornerResult result)
+{
+    public string Text { get; } = CornerResultText.Describe(result);
+
+    /// <summary>When it happened, and how many times in a row.</summary>
+    public string When { get; } = CornerResultText.When(result);
+
+    /// <summary>A check mark for an action that ran, otherwise an information icon.</summary>
+    public string Glyph { get; } = result.Kind == CornerResultKind.Ran ? "" : "";
 }
 
 /// <summary>
