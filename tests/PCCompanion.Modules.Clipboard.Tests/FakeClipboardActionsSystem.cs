@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -12,7 +13,7 @@ namespace PCCompanion.Modules.Clipboard.Tests;
 /// Clipboard Actions' Windows parts, recorded instead of used: no shortcut is registered, the
 /// clipboard isn't read, no menu opens and no program starts. It may be used from the feature's
 /// thread while a test waits for it. Its events are what happened, such as "register", "read",
-/// "menu", "allow front" or "dispose shortcut".
+/// "ask" for the app's text cursor, "menu", "allow front" or "dispose shortcut".
 /// </summary>
 internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardActionsSystem>, IClipboardActionsSystem
 {
@@ -73,14 +74,35 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
 
     public Point PointerPosition() => new(10, 20);
 
-    public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position)
+    /// <summary>The app in front and Windows' text cursor of it; by default, no window.</summary>
+    public ForegroundTextCursor Front { get; set; }
+
+    /// <summary>Whether the app in front runs at PC Companion's integrity level.</summary>
+    public bool SameIntegrityLevel { get; set; } = true;
+
+    /// <summary>The app's answer when it's asked for its text cursor; it never comes while unset.</summary>
+    public Task<Rectangle?> AppAnswer { get; set; } = new TaskCompletionSource<Rectangle?>().Task;
+
+    public ForegroundTextCursor ReadTextCursor() => Front;
+
+    public bool CanAskTextCursor(nint window) => SameIntegrityLevel;
+
+    public Task<Rectangle?> AskTextCursor(nint window)
+    {
+        Record($"ask {window}");
+        return AppAnswer;
+    }
+
+    public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position, Rectangle? keepClear)
     {
         lock (Gate)
         {
             _menus.Add(items);
         }
 
-        Record($"menu at {position.X},{position.Y}");
+        Record(keepClear is { } line
+            ? $"menu at {position.X},{position.Y} below {line.Left},{line.Top},{line.Right},{line.Bottom}"
+            : $"menu at {position.X},{position.Y}");
         foreach (var item in items)
         {
             if (item.Text == Choice && item.IsEnabled)

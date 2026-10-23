@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -24,10 +25,23 @@ public interface IClipboardActionsSystem
     /// <summary>Where the pointer is, in screen pixels, for the menu.</summary>
     Point PointerPosition();
 
+    /// <summary>The app in front and Windows' text cursor of it; doesn't wait for the app.</summary>
+    ForegroundTextCursor ReadTextCursor();
+
+    /// <summary>Whether the app of <paramref name="window"/> runs at PC Companion's integrity level, so it may be asked.</summary>
+    bool CanAskTextCursor(nint window);
+
+    /// <summary>
+    /// Asks the app of <paramref name="window"/> for its accessibility text cursor, off the thread;
+    /// the task ends with <see langword="null"/> when the app gives none the user can see.
+    /// </summary>
+    Task<Rectangle?> AskTextCursor(nint window);
+
     /// <summary>
     /// Shows the menu at a screen point, as for a shortcut, and returns the chosen item's ID, or 0.
     /// </summary>
-    uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position);
+    /// <param name="keepClear">The text cursor's line, which the menu doesn't cover, or <see langword="null"/>.</param>
+    uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position, Rectangle? keepClear);
 
     /// <summary>Lets the program an action starts come to the front.</summary>
     void AllowFront();

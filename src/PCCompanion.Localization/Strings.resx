@@ -685,8 +685,8 @@
     <comment>Clipboard Actions page: header of the card that shows the keyboard shortcut.</comment>
   </data>
   <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
-    <value>Shows the actions for the copied text in a menu at the pointer.</value>
-    <comment>Clipboard Actions page: description of the shortcut card.</comment>
+    <value>Shows the actions for the copied text in a menu where you're typing, or at the pointer.</value>
+    <comment>Clipboard Actions page: description of the shortcut card. The menu opens at the text cursor of the app in front, or at the mouse pointer when the app has none.</comment>
   </data>
   <data name="ClipboardActionsShortcut" xml:space="preserve">
     <value>Windows logo key + Alt + V</value>

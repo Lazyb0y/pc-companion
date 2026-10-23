@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
@@ -57,6 +58,20 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         Assert.Equal(["‪" + Parcel + "‬", string.Empty, "Track the parcel", string.Empty, Strings.TraySettings], menu.Select(item => item.Text));
         Assert.Equal(["register", "read", "menu at 10,20", "allow front", "background"], _system.Events);
         Assert.Equal([new Uri("https://tracking.example.com/?number=" + Parcel)], _commands.WebPages);
+    }
+
+    [Fact]
+    public void APressOpensTheMenuBelowTheTextCursorAndLogsWhere()
+    {
+        _system.Front = new ForegroundTextCursor(42, new Rectangle(300, 200, 1, 18));
+        Start(TrackParcels);
+
+        Press();
+
+        Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
+        Assert.Equal(["register", "read", "menu at 300,200 below 300,200,301,218"], _system.Events);
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.EndsWith("menu: AtTextCursor.", StringComparison.Ordinal))));
+        Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("300", StringComparison.Ordinal));
     }
 
     [Fact]
