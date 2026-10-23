@@ -9,6 +9,7 @@ Output: `src/PCCompanion.Installer/bin/x64/Release/PCCompanion-x64.msi`. Platfor
 CI builds both installers on every pull request and push to `main`. Download them from the workflow run's artifacts (`PCCompanion-x64-msi`, `PCCompanion-ARM64-msi`), kept for 14 days. Releases publish them as `PCCompanion-<version>-<arch>.msi`; see [Releasing](releasing.md).
 
 - WiX 5 MSI in `src/PCCompanion.Installer`. The WiX SDK version is pinned in `global.json`.
+- The installer stays on WiX 5, because later versions are no longer free to use. Dependabot offers WiX 5 updates only, not new major versions.
 - The installer publishes the settings app, the host and the elevated helper self-contained, in Release with ReadyToRun, and installs them into one folder. A build step merges the publish folders: the files they share are installed once and must be identical, or the build fails.
 - Settings > Apps shows the app icon, and the Start menu shortcut uses the same icon from the package instead of the one in `PCCompanion.exe`, which the taskbar could fail to show on the first start after an install.
 - The settings window sets its icon again once it can be seen, so the taskbar redraws its button.
