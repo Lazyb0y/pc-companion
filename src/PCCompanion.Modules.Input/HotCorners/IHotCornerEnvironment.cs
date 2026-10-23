@@ -33,6 +33,11 @@ public interface IHotCornerEnvironment
     /// </summary>
     Rectangle? FrontWindowDisplay { get; }
 
+    /// <summary>
+    /// The app of the window in front, or <see langword="null"/> when no window is in front.
+    /// </summary>
+    AppInFront? AppInFront { get; }
+
     bool IsKeyHeld(HotCornerKey key);
 
     /// <summary>

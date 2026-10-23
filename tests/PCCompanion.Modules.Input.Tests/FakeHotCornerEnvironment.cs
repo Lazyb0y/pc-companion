@@ -7,7 +7,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Input.Tests;
 
 /// <summary>
-/// The pointer, buttons, keys, full-screen state and windows, as a test sets them.
+/// The pointer, buttons, keys, full-screen state, windows and the app in front, as a test sets them.
 /// </summary>
 internal sealed class FakeHotCornerEnvironment : IHotCornerEnvironment
 {
@@ -22,6 +22,21 @@ internal sealed class FakeHotCornerEnvironment : IHotCornerEnvironment
     public FullScreenMode FullScreenMode { get; set; }
 
     public Rectangle? FrontWindowDisplay { get; set; }
+
+    public AppInFront? AppInFront
+    {
+        get
+        {
+            AppReads++;
+            return FrontApp;
+        }
+    }
+
+    /// <summary>The app <see cref="AppInFront"/> returns.</summary>
+    public AppInFront? FrontApp { get; set; }
+
+    /// <summary>How many times the app in front was read.</summary>
+    public int AppReads { get; private set; }
 
     public HotCornerKey HeldKey { get; set; }
 

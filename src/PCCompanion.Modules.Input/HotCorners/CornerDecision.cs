@@ -46,4 +46,9 @@ public enum CornerOutcome
     /// An app is full screen on the corner's display.
     /// </summary>
     FullScreenApp,
+
+    /// <summary>
+    /// An app the user listed is in front.
+    /// </summary>
+    AppExcluded,
 }

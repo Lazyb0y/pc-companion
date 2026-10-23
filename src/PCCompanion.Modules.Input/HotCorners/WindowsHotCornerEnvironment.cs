@@ -5,7 +5,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// Reads the pointer, buttons, keys, full-screen state and windows from Windows.
+/// Reads the pointer, buttons, keys, full-screen state, windows and the app in front from Windows.
 /// </summary>
 internal sealed class WindowsHotCornerEnvironment : IHotCornerEnvironment
 {
@@ -20,6 +20,16 @@ internal sealed class WindowsHotCornerEnvironment : IHotCornerEnvironment
     public FullScreenMode FullScreenMode => Foreground.FullScreenMode;
 
     public Rectangle? FrontWindowDisplay => Displays.AreaOf(Foreground.Window);
+
+    public AppInFront? AppInFront
+    {
+        get
+        {
+            var window = Foreground.Window;
+            var processId = window == 0 ? 0 : TopLevelWindows.ProcessIdOf(window);
+            return processId == 0 ? null : new AppInFront(AppIdentity.OfWindow(window), AppIdentity.OfPackagedProcess(processId), AppIdentity.ProgramPath(processId));
+        }
+    }
 
     public bool IsKeyHeld(HotCornerKey key) => InputState.IsModifierHeld(key switch
     {

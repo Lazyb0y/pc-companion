@@ -8,6 +8,9 @@ namespace PCCompanion.Modules.Input.Tests;
 
 public sealed class HotCornersSettingsTests
 {
+    private static readonly ExcludedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
+    private static readonly ExcludedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
+
     [Fact]
     public void WithoutASectionTheFeatureIsOffAndTheTopLeftCornerShowsTaskView()
     {
@@ -111,6 +114,64 @@ public sealed class HotCornersSettingsTests
     public void ReadRejectsASectionThatDoesNotMatch(string json)
     {
         Assert.ThrowsAny<JsonException>(() => HotCornersSettings.Read(Section(json)));
+    }
+
+    [Fact]
+    public void TheListedAppsAreKeptWithTheirNames()
+    {
+        var settings = new HotCornersSettings { ExcludedApps = [RemoteDesktop, Photos] };
+
+        var section = settings.Write();
+
+        Assert.Equal(settings, HotCornersSettings.Read(section));
+        Assert.Equal([RemoteDesktop, Photos], HotCornersSettings.Read(section).ExcludedApps);
+    }
+
+    [Fact]
+    public void ReadLeavesOutAListedAppWithNeitherOrBothOfAnAppIdAndAProgram()
+    {
+        var settings = HotCornersSettings.Read(Section("""
+            {
+              "excludedApps": [
+                { "name": "Nothing" },
+                { "name": "Both", "appId": "App.Id", "program": "C:\\Apps\\App.exe" },
+                { "name": "Blank", "program": " " },
+                { "name": "Remote Desktop Connection", "program": "C:\\Windows\\System32\\mstsc.exe" }
+              ]
+            }
+            """));
+
+        Assert.Equal([RemoteDesktop], settings.ExcludedApps);
+    }
+
+    [Fact]
+    public void AnAppIsListedOnce()
+    {
+        var settings = new HotCornersSettings()
+            .WithExcludedApp(RemoteDesktop)
+            .WithExcludedApp(RemoteDesktop with { Name = "Again", Program = @"c:\windows\system32\MSTSC.exe" })
+            .WithExcludedApp(Photos)
+            .WithExcludedApp(Photos with { AppId = Photos.AppId!.ToUpperInvariant() })
+            .WithExcludedApp(new ExcludedApp { Name = "Nothing" });
+
+        Assert.Equal([RemoteDesktop, Photos], settings.ExcludedApps);
+        Assert.True(settings.Lists(new ExcludedApp { Program = @"C:\Windows\System32\MSTSC.EXE" }));
+    }
+
+    [Fact]
+    public void RemovingAnAppKeepsTheOthersInOrder()
+    {
+        var notepad = new ExcludedApp { Name = "Notepad", Program = @"C:\Windows\System32\notepad.exe" };
+        var settings = new HotCornersSettings { ExcludedApps = [RemoteDesktop, Photos, notepad] };
+
+        Assert.Equal([RemoteDesktop, notepad], settings.WithoutExcludedApp(1).ExcludedApps);
+    }
+
+    [Fact]
+    public void SettingsWithTheSameListedAppsAreEqual()
+    {
+        Assert.Equal(new HotCornersSettings { ExcludedApps = [RemoteDesktop] }, new HotCornersSettings { ExcludedApps = [RemoteDesktop with { }] });
+        Assert.NotEqual(new HotCornersSettings { ExcludedApps = [RemoteDesktop] }, new HotCornersSettings { ExcludedApps = [Photos] });
     }
 
     [Fact]
