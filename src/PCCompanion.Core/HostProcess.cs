@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using PCCompanion.Core.Settings;
 
 namespace PCCompanion.Core;
@@ -110,6 +111,47 @@ public static class HostProcess
 
         return null;
     }
+
+    /// <summary>
+    /// The argument, followed by the name of a pipe, that a host running as administrator starts a
+    /// copy of itself with, without admin rights, to start a program for a feature: the copy reads
+    /// the program and its arguments from the pipe, as a <see cref="ProgramToStart"/>, starts the
+    /// program, and exits with 0 or Windows' error code. See <see cref="RunProgramArguments"/>.
+    /// </summary>
+    public const string RunProgramArgument = "--run-program";
+
+    /// <summary>
+    /// The arguments that make the host start the program it reads from the pipe named
+    /// <paramref name="pipeName"/>: <see cref="RunProgramArgument"/> and the name.
+    /// </summary>
+    /// <exception cref="ArgumentException">The name has other characters than letters, digits and dots.</exception>
+    public static string RunProgramArguments(string pipeName) =>
+        IsPipeName(pipeName)
+            ? RunProgramArgument + " " + pipeName
+            : throw new ArgumentException("A pipe name has only letters, digits and dots.", nameof(pipeName));
+
+    /// <summary>
+    /// The pipe name after <see cref="RunProgramArgument"/> in the host's arguments, or
+    /// <see langword="null"/> when there is none or it isn't one.
+    /// </summary>
+    public static string? ReadRunProgramPipe(IReadOnlyList<string> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+
+        for (var index = 0; index < arguments.Count - 1; index++)
+        {
+            if (string.Equals(arguments[index], RunProgramArgument, StringComparison.OrdinalIgnoreCase))
+            {
+                return IsPipeName(arguments[index + 1]) ? arguments[index + 1] : null;
+            }
+        }
+
+        return null;
+    }
+
+    // A name that needs no quotes on a command line and names nothing but a pipe.
+    private static bool IsPipeName(string? name) =>
+        !string.IsNullOrEmpty(name) && name.Length <= 200 && name.All(character => char.IsAsciiLetterOrDigit(character) || character == '.');
 
     /// <summary>
     /// What a host does as it starts, before taking the instance lock. With Always run as

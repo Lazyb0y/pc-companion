@@ -262,3 +262,4 @@ GetObject
 BITMAP
 CreateNamedPipe
 PIPE_UNLIMITED_INSTANCES
+GetExitCodeProcess

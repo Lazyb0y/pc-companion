@@ -55,6 +55,12 @@ internal static partial class Program
             return;
         }
 
+        if (args.Contains(HostProcess.RunProgramArgument, StringComparer.OrdinalIgnoreCase))
+        {
+            Environment.ExitCode = ProgramCommand.Run(args);
+            return;
+        }
+
         var paths = AppDataPaths.ForCurrentUser();
         var startedAtSignIn = args.Contains(HostProcess.StartupArgument, StringComparer.OrdinalIgnoreCase);
         // At sign-in with Start with Windows off, or with Always run as administrator on and no
@@ -130,7 +136,7 @@ internal static partial class Program
         updates.Attach(window, tray);
 
         // Features started before the window existed; their Settings and Exit work from now on.
-        services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open);
+        services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open, ProgramCommand.Start);
 
         using var watcher = new SettingsWatcher(paths);
         watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, updates, logger));

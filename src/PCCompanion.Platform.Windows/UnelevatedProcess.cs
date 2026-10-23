@@ -26,7 +26,9 @@ public static class UnelevatedProcess
 
     /// <summary>
     /// Starts the program at <paramref name="path"/> in its own folder, without waiting for it.
-    /// The <paramref name="arguments"/> are passed as they are, so they must need no quotes.
+    /// The <paramref name="arguments"/> are passed as they are, so they must need no quotes. With
+    /// the path, they must fit in 1,024 characters, which is all Windows takes from a process with
+    /// another's token.
     /// </summary>
     /// <exception cref="Win32Exception">There's no shell to take the token from, or Windows refused to start the program.</exception>
     public static void Start(string path, string? arguments)
@@ -41,21 +43,33 @@ public static class UnelevatedProcess
     /// <summary>
     /// Runs the program at <paramref name="path"/> in its own folder, as the same user as this
     /// process, and waits up to <paramref name="timeout"/> for it to exit. The
-    /// <paramref name="arguments"/> are passed as they are, so they must need no quotes.
+    /// <paramref name="arguments"/> are passed as they are, so they must need no quotes, and with
+    /// the path they must fit in 1,024 characters. Returns the program's exit code, or
+    /// <see langword="null"/> when it was still running.
     /// </summary>
     /// <exception cref="Win32Exception">
     /// There's no shell of this user without admin rights to take the token from, or Windows
     /// refused to start the program.
     /// </exception>
-    public static void Run(string path, string arguments, TimeSpan timeout)
+    public static unsafe uint? Run(string path, string arguments, TimeSpan timeout)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
         ArgumentException.ThrowIfNullOrEmpty(arguments);
 
         var process = Create(path, arguments, sameUser: true);
         PInvoke.CloseHandle(process.hThread);
-        _ = PInvoke.WaitForSingleObject(process.hProcess, (uint)timeout.TotalMilliseconds);
-        PInvoke.CloseHandle(process.hProcess);
+        try
+        {
+            uint exitCode;
+            return PInvoke.WaitForSingleObject(process.hProcess, (uint)timeout.TotalMilliseconds) == WAIT_EVENT.WAIT_OBJECT_0
+                && PInvoke.GetExitCodeProcess(process.hProcess, &exitCode)
+                ? exitCode
+                : null;
+        }
+        finally
+        {
+            PInvoke.CloseHandle(process.hProcess);
+        }
     }
 
     private static unsafe PROCESS_INFORMATION Create(string path, string? arguments, bool sameUser)
