@@ -51,14 +51,24 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
             return;
         }
 
+        HotCornersSettings read;
         try
         {
-            _settings = HotCornersSettings.Read(settings);
+            read = HotCornersSettings.Read(settings);
         }
         catch (JsonException exception)
         {
             LogUnreadableSettings(logger, exception);
-            _settings = new HotCornersSettings();
+            read = new HotCornersSettings();
+        }
+
+        // Saving other settings, such as another feature's, leaves a running Hot Corners as it is,
+        // so a corner the pointer is in isn't reset.
+        var unchanged = _window is not null && read == _settings;
+        _settings = read;
+        if (unchanged)
+        {
+            return;
         }
 
         if (!_settings.Enabled)

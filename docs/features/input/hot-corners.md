@@ -19,7 +19,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
   - while an app the user listed is in front, on any display;
   - on the lock screen or a UAC prompt, which Windows shows on a separate desktop.
 - See [Full screen and a captured pointer](#full-screen-and-a-captured-pointer) and [Apps that turn corners off](#apps-that-turn-corners-off) for how these are checked.
-- A corner the pointer is already in when Hot Corners starts, or when its settings or the displays change, triggers only after the pointer leaves it and comes back.
+- A corner the pointer is already in when Hot Corners starts, or when its settings or the displays change, triggers only after the pointer leaves it and comes back; saving other settings, such as another feature's, doesn't.
 - The feature page shows the last few results, such as which corner ran which action, or why a corner didn't trigger; see [Recent results](#recent-results).
 
 ## Actions
