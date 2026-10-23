@@ -1,6 +1,6 @@
 ﻿# Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
-# it, not while a mouse button is held, an app is full screen or has captured the pointer, and
-# only with the key it requires.
+# it, not while a mouse button is held, an app is full screen or has captured the pointer, or a
+# listed app is in front, and only with the key it requires.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
@@ -186,6 +186,92 @@ $window = Start-TestWindow 'HidesPointer'
 Test-Check 'a window in the corner that hides the pointer skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'PointerHidden') } 5) (Get-PointerText)
 Stop-Process -Id $window.Id -Force -ErrorAction SilentlyContinue
 Remove-Item $testWindowScript -ErrorAction SilentlyContinue
+
+# Apps that turn corners off: with Character Map listed and in front, the corner is skipped and the
+# host logs why. The page shows the listed app; Remove removes it, Running app lists Character Map
+# and adds it again, and Program file adds a program through the Open dialog, each saved.
+$charmap = Join-Path $env:WINDIR 'System32\charmap.exe'
+$commandPrompt = Join-Path $env:WINDIR 'System32\cmd.exe'
+function Get-ExcludedApps {
+    $apps = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners.excludedApps
+    if ($null -eq $apps) { return @() }
+    return @($apps)
+}
+function Find-AppListItem([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+function Find-InElement($Element, [string] $AutomationId, $ControlType) {
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $AutomationId)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, $ControlType)))
+    return $Element.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": true, ""topLeft"": { ""action"": ""ShowDesktop"", ""key"": ""None"" }, ""excludedApps"": [ { ""name"": ""Character Map"", ""program"": ""$($charmap.Replace('\', '\\'))"" } ] } } }"
+Start-Sleep -Seconds 3
+$characterMap = Start-Process $charmap -PassThru
+[void] (Wait-Until { $characterMap.Refresh(); $characterMap.MainWindowHandle -ne [IntPtr]::Zero } 15)
+[void] [Win32]::SetForegroundWindow($characterMap.MainWindowHandle)
+Start-Sleep -Seconds 1
+Test-Check 'Character Map is in front' ([Win32]::GetForegroundWindow() -eq $characterMap.MainWindowHandle)
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'a listed app in front skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'AppExcluded') } 5) (Get-PointerText)
+[void] (Move-Pointer $middleX $middleY)
+
+[void] (Close-SettingsApp)
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Hot Corners for its apps' (Select-NavigationItem 'Hot Corners')
+Start-Sleep -Seconds 2
+Test-Check 'the page lists Character Map' ($null -ne (Find-AppElement 'Remove Character Map'))
+Save-Screenshot '10b-hot-corners-apps'
+Test-Check 'Remove removes Character Map' ((Invoke-AppElement 'Remove Character Map') -and (Wait-Until { @(Get-ExcludedApps).Count -eq 0 } 5)) "saved: $(Get-ExcludedApps | ConvertTo-Json -Compress)"
+Test-Check 'Add an app offers Running app' ((Invoke-AppElement 'Add an app') -and (Wait-Until { Find-AppElement 'Running app…' } 5))
+[void] (Invoke-AppElement 'Running app…')
+$appItem = $null
+Test-Check 'Running app lists Character Map' (Wait-Until { ($script:appItem = Find-AppListItem 'Character Map') -ne $null } 15)
+Save-Screenshot '10c-hot-corners-running-app'
+if ($appItem) { $appItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
+[void] (Invoke-AppElement 'Add')
+Test-Check 'Running app adds Character Map with its name' (Wait-Until { $apps = @(Get-ExcludedApps); ($apps.Count -eq 1) -and ($apps[0].program -eq $charmap) -and ($apps[0].name -eq 'Character Map') } 5) "saved: $(Get-ExcludedApps | ConvertTo-Json -Compress)"
+Test-Check 'Add an app offers Program file' ((Invoke-AppElement 'Add an app') -and (Wait-Until { Find-AppElement 'Program file…' } 5))
+# Invoked through UI Automation, the item would wait for the Open dialog to close, so it's chosen
+# with the keyboard, as Browse is.
+$programFileItem = Find-AppElement 'Program file…'
+if ($programFileItem) { $programFileItem.SetFocus(); Start-Sleep -Milliseconds 300; Send-Key 0x20 }
+$openDialog = $null
+Test-Check 'Program file opens the Open dialog' (Wait-Until { ($script:openDialog = Find-AppDialog 'Choose a program') -ne $null } 10)
+# The file name box has the keyboard focus when the dialog opens; its window shows before the box
+# does. Its type differs between Windows versions, so it's found by its ID alone, and typed into
+# when it can't be set. Enter chooses Open.
+$fileNameBox = $null
+$idCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, '1148')
+[void] (Wait-Until { ($script:fileNameBox = $openDialog.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $idCondition)) -ne $null } 10)
+Start-Sleep -Seconds 1
+$valuePattern = $null
+if ($fileNameBox -and $fileNameBox.TryGetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern, [ref] $valuePattern)) {
+    $fileNameBox.SetFocus()
+    $valuePattern.SetValue($commandPrompt)
+} else {
+    [System.Windows.Forms.SendKeys]::SendWait($commandPrompt)
+}
+Start-Sleep -Milliseconds 500
+Send-Key 0x0D
+Test-Check 'Program file adds the program with its description as its name' (Wait-Until { $apps = @(Get-ExcludedApps); ($apps.Count -eq 2) -and ($apps[1].program -eq $commandPrompt) -and $apps[1].name -and ($apps[1].name -ne 'cmd') } 10) "saved: $(Get-ExcludedApps | ConvertTo-Json -Compress)"
+# An Open dialog left open would hold the later checks.
+if (Find-AppDialog 'Choose a program') { Send-Key 0x1B; [void] (Wait-Until { -not (Find-AppDialog 'Choose a program') } 5) }
+$removeButton = Find-AppElement 'Remove Character Map'
+$scrollItem = $null
+if ($removeButton -and $removeButton.TryGetCurrentPattern([System.Windows.Automation.ScrollItemPattern]::Pattern, [ref] $scrollItem)) { $scrollItem.ScrollIntoView(); Start-Sleep -Seconds 1 }
+Save-Screenshot '10d-hot-corners-apps-added'
+[void] (Close-SettingsApp)
+Stop-Process -Id $characterMap.Id -Force -ErrorAction SilentlyContinue
 
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
