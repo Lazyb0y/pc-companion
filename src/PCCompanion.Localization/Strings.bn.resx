@@ -468,6 +468,94 @@
     <value>বাতিল করুন</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsHeader" xml:space="preserve">
+    <value>সাম্প্রতিক ফলাফল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsDescription" xml:space="preserve">
+    <value>পয়েন্টার সর্বশেষ যে কোণগুলোতে পৌঁছেছে, সেগুলোর প্রতিটি কেন তার অ্যাকশন চালিয়েছে বা চালায়নি, নতুনগুলো আগে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsNone" xml:space="preserve">
+    <value>এখনও কোনো কোণে পৌঁছানো হয়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsUnavailable" xml:space="preserve">
+    <value>হট কর্নার চালু থাকলে ফলাফল দেখানো হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResult" xml:space="preserve">
+    <value>{0}, {1}: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_one" xml:space="preserve">
+    <value>{0} বার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_other" xml:space="preserve">
+    <value>{0} বার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRan" xml:space="preserve">
+    <value>চালানো হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultLeftEarly" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ বিলম্ব শেষ হওয়ার আগেই পয়েন্টার সরে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ একটি মাউস বোতাম চেপে ধরা ছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultKeyNotHeld" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ বেছে নেওয়া কী চেপে ধরা ছিল না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerConfined" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ একটি অ্যাপ পয়েন্টার আটকে রেখেছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerHidden" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ একটি অ্যাপ পয়েন্টার লুকিয়ে রেখেছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultFullScreenApp" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ একটি অ্যাপ পূর্ণ স্ক্রিনে ছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultAppExcluded" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ তালিকার একটি অ্যাপ সামনে ছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRefused" xml:space="preserve">
+    <value>Windows এটি চালায়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
+    <value>প্রোগ্রাম চালু হয়নি, কারণ PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
+    <value>কোনো প্রোগ্রাম চালু হয়নি, কারণ কোনোটি বেছে নেওয়া হয়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotFound" xml:space="preserve">
+    <value>প্রোগ্রাম চালু হয়নি, কারণ এটি পাওয়া যাচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotExe" xml:space="preserve">
+    <value>প্রোগ্রাম চালু হয়নি, কারণ এটি কোনো .exe ফাইলের সম্পূর্ণ পাথ নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramCantStart" xml:space="preserve">
+    <value>Windows প্রোগ্রামটি চালু করতে পারেনি</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে কোণগুলো কাজ করে না।</value>
     <comment>Needs native review.</comment>

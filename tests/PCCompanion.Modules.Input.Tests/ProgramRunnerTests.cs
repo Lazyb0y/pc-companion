@@ -21,6 +21,7 @@ public sealed class ProgramRunnerTests
     private readonly List<ProcessStartInfo> _started = [];
     private readonly List<string> _checked = [];
     private readonly List<Action> _background = [];
+    private readonly List<CornerResultKind> _done = [];
     private readonly ProgramRunner _runner;
     private bool _isAdministrator;
     private int _startError;
@@ -42,12 +43,25 @@ public sealed class ProgramRunnerTests
         Assert.Equal(@"C:\Program Files\Some App", startInfo.WorkingDirectory);
         Assert.False(startInfo.UseShellExecute);
         Assert.Equal([(LogLevel.Debug, "Started App.exe.")], _logger.Entries);
+        Assert.Equal([CornerResultKind.Ran], _done);
+    }
+
+    [Theory]
+    [InlineData(null, CornerResultKind.ProgramNotChosen)]
+    [InlineData(@"C:\Missing\App.exe", CornerResultKind.ProgramNotFound)]
+    [InlineData(@"C:\Scripts\Clean.cmd", CornerResultKind.ProgramNotExe)]
+    [InlineData("App.exe", CornerResultKind.ProgramNotExe)]
+    public void AProgramThatCantRunGivesWhy(string? program, CornerResultKind result)
+    {
+        Run(new CornerSettings { Program = program });
+
+        Assert.Equal([result], _done);
     }
 
     [Fact]
     public void RunReturnsBeforeTheProgramIsCheckedOrStarted()
     {
-        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program });
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program }, _done.Add);
 
         Assert.Single(_background);
         Assert.Empty(_checked);
@@ -63,8 +77,8 @@ public sealed class ProgramRunnerTests
     [Fact]
     public void TwoCornersRightAfterEachOtherStartTheirOwnPrograms()
     {
-        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program, Arguments = "--first" });
-        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = OtherProgram, Arguments = "--second" });
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = Program, Arguments = "--first" }, _done.Add);
+        _runner.Run(new CornerSettings { Action = HotCornerAction.RunProgram, Program = OtherProgram, Arguments = "--second" }, _done.Add);
 
         // The thread pool can run them in either order.
         Assert.Equal(2, _background.Count);
@@ -83,6 +97,7 @@ public sealed class ProgramRunnerTests
 
         Assert.Empty(_started);
         Assert.Equal([(LogLevel.Warning, "Run a program doesn't run while PC Companion runs as administrator.")], _logger.Entries);
+        Assert.Equal([CornerResultKind.ProgramAsAdministrator], _done);
     }
 
     [Fact]
@@ -103,6 +118,7 @@ public sealed class ProgramRunnerTests
         Run(new CornerSettings { Program = Program, Arguments = "--secret 123" });
 
         Assert.Equal([(LogLevel.Warning, "Windows couldn't start App.exe (error 740).")], _logger.Entries);
+        Assert.Equal([CornerResultKind.ProgramCantStart], _done);
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("Program Files", StringComparison.Ordinal) || entry.Message.Contains("secret", StringComparison.Ordinal));
     }
 
@@ -115,6 +131,7 @@ public sealed class ProgramRunnerTests
 
         Assert.Empty(_started);
         Assert.Equal([(LogLevel.Error, "Run a program failed to start App.exe.")], _logger.Entries);
+        Assert.Equal([CornerResultKind.ProgramCantStart], _done);
     }
 
     private bool Exists(string path)
@@ -142,7 +159,7 @@ public sealed class ProgramRunnerTests
     // Runs the corner's program, and then the work it left for the thread pool.
     private void Run(CornerSettings corner)
     {
-        _runner.Run(corner with { Action = HotCornerAction.RunProgram });
+        _runner.Run(corner with { Action = HotCornerAction.RunProgram }, _done.Add);
         RunBackground();
     }
 

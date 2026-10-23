@@ -45,12 +45,22 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
 
     public CornerDecision Update()
     {
-        var corner = Find(environment.PointerPosition);
+        var position = environment.PointerPosition;
+        var corner = Find(position);
         if (corner != _current)
         {
+            // A corner the pointer was seen leaving while waiting for the delay. One it passes
+            // straight into, as between displays, waits for its own delay instead, and a pointer
+            // that can't be read, as on the lock screen, didn't leave early.
+            var leftEarly = !_finished && _current is { } left && corner is null && position is not null ? left : (Corner?)null;
             _current = corner;
             _enteredAt = time.GetTimestamp();
             _finished = false;
+
+            if (leftEarly is { } early)
+            {
+                return new CornerDecision(CornerOutcome.LeftEarly, early.Position, _settings.For(early.Position).Action, TimeSpan.Zero);
+            }
 
             // Dragging a window into a corner snaps it there; releasing the button before the
             // delay ends must not trigger the corner.

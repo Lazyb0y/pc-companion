@@ -21,36 +21,38 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
     /// no shell. The program is checked and started on the thread pool, and this returns at once:
     /// a program on a network share that's offline can take many seconds. Problems are logged,
     /// with the program's file name only: its folder and arguments can hold personal paths or
-    /// secrets.
+    /// secrets. <paramref name="done"/> gets the result on the thread pool.
     /// </summary>
-    public void Run(CornerSettings corner)
+    public void Run(CornerSettings corner, Action<CornerResultKind> done)
     {
         ArgumentNullException.ThrowIfNull(corner);
+        ArgumentNullException.ThrowIfNull(done);
 
-        runInBackground(() => RunGuarded(corner));
+        runInBackground(() => done(RunGuarded(corner)));
     }
 
     // On the thread pool, where an exception wouldn't reach the feature's error boundary and
     // would end the host.
-    private void RunGuarded(CornerSettings corner)
+    private CornerResultKind RunGuarded(CornerSettings corner)
     {
         var fileName = Path.GetFileName(corner.Program) ?? string.Empty;
         try
         {
-            Start(corner, fileName);
+            return Start(corner, fileName);
         }
         catch (Exception exception)
         {
             LogFailed(logger, exception, fileName);
+            return CornerResultKind.ProgramCantStart;
         }
     }
 
-    private void Start(CornerSettings corner, string fileName)
+    private CornerResultKind Start(CornerSettings corner, string fileName)
     {
         if (isAdministrator())
         {
             LogAdministrator(logger);
-            return;
+            return CornerResultKind.ProgramAsAdministrator;
         }
 
         var program = corner.Program;
@@ -58,17 +60,22 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
         if (problem != ProgramProblem.None)
         {
             LogNotStarted(logger, fileName, problem);
-            return;
+            return problem switch
+            {
+                ProgramProblem.NotChosen => CornerResultKind.ProgramNotChosen,
+                ProgramProblem.NotFound => CornerResultKind.ProgramNotFound,
+                _ => CornerResultKind.ProgramNotExe,
+            };
         }
 
         if (ProgramFile.TryStart(program!, CommandLine.SplitArguments(corner.Arguments), start, out var errorCode))
         {
             LogStarted(logger, fileName);
+            return CornerResultKind.Ran;
         }
-        else
-        {
-            LogCantStart(logger, fileName, errorCode);
-        }
+
+        LogCantStart(logger, fileName, errorCode);
+        return CornerResultKind.ProgramCantStart;
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Started {FileName}.")]

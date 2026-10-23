@@ -21,9 +21,11 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
     private readonly CornerDetector _detector = new(new WindowsHotCornerEnvironment(), time);
     private readonly ProgramRunner _programs = new(logger, () => Environment.IsPrivilegedProcess, File.Exists, StartProcess, action => Task.Run(action));
+    private readonly CornerResults _results = new(time);
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
     private RawPointerMonitor? _monitor;
+    private SnapshotPipe? _resultsPipe;
     private DisplayKeeper? _displays;
     private ITimer? _timer;
     private bool _failed;
@@ -94,7 +96,22 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
         // Fires on the thread pool; the detector runs on the window's thread.
         _timer = time.CreateTimer(_ => window.BeginInvoke(Update), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _resultsPipe = ServeResults();
         LogStarted(logger);
+    }
+
+    // The settings app shows the results while Hot Corners runs; without the pipe, corners still work.
+    private SnapshotPipe? ServeResults()
+    {
+        try
+        {
+            return SnapshotPipe.Serve(CornerResults.PipeName, _results.ToJson, exception => LogResultsFailed(logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogResultsFailed(logger, exception);
+            return null;
+        }
     }
 
     private void Stop()
@@ -107,8 +124,10 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         _displays?.End(KeepDisplaysOnEnd.HotCornersStopped);
         _timer?.Dispose();
         _monitor?.Dispose();
+        _resultsPipe?.Dispose();
         _window.Dispose();
-        (_displays, _timer, _monitor, _window) = (null, null, null, null);
+        (_displays, _timer, _monitor, _resultsPipe, _window) = (null, null, null, null, null);
+        _results.Clear();
         LogStopped(logger);
     }
 
@@ -147,14 +166,22 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 break;
             case CornerOutcome.Triggered:
                 LogTriggered(logger, decision.Corner, decision.Action);
-                if (!Run(decision, window))
+                var ran = Run(decision, window);
+                if (!ran)
                 {
                     LogActionRefused(logger, decision.Action);
                 }
 
+                // Run a program adds its own result once the program has started or not.
+                if (decision.Action != HotCornerAction.RunProgram)
+                {
+                    _results.Add(decision.Corner, decision.Action, ran ? CornerResultKind.Ran : CornerResultKind.Refused);
+                }
+
                 break;
-            case CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.PointerConfined or CornerOutcome.PointerHidden or CornerOutcome.FullScreenApp or CornerOutcome.AppExcluded:
+            case CornerOutcome.LeftEarly or CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.PointerConfined or CornerOutcome.PointerHidden or CornerOutcome.FullScreenApp or CornerOutcome.AppExcluded:
                 LogSkipped(logger, decision.Corner, decision.Action, decision.Outcome);
+                _results.Add(decision.Corner, decision.Action, CornerResults.KindOf(decision.Outcome));
                 break;
         }
     });
@@ -197,10 +224,10 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         return new DisplaysKeptOn(request, sessions);
     }
 
-    // The runner starts the program on the thread pool and logs its own problems.
+    // The runner starts the program on the thread pool, logs its own problems and adds the result.
     private bool RunProgram(ScreenCorner corner)
     {
-        _programs.Run(_settings.For(corner));
+        _programs.Run(_settings.For(corner), kind => _results.Add(corner, HotCornerAction.RunProgram, kind));
         return true;
     }
 
@@ -251,6 +278,9 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't run {Action}.")]
     private static partial void LogActionRefused(ILogger logger, HotCornerAction action);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Hot Corners can't give the settings app its recent results.")]
+    private static partial void LogResultsFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The Hot Corners settings can't be read, so Hot Corners is off.")]
     private static partial void LogUnreadableSettings(ILogger logger, Exception exception);
