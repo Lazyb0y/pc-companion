@@ -412,6 +412,62 @@
     <value>Zum Beispiel ein Spiel, ein Video oder eine Präsentation.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>Nicht auslösen, solange diese Apps im Vordergrund sind</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>Zum Beispiel Remotedesktop, ein virtueller Computer oder eine Zeichen-App. Solange eine davon im Vordergrund ist, löst keine Ecke auf einem Bildschirm aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>App hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>Ausgeführte App…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>Programmdatei…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>Es sind keine Apps aufgeführt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>Entfernen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>{0} entfernen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>Ausgeführte App auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>Ausgeführte Apps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>Ausgeführte Apps werden gesucht</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>Keine andere App hat ein Fenster geöffnet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>Hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Die Ecken funktionieren nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
     <comment>Needs native review.</comment>
@@ -421,7 +477,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Erreicht der Zeiger eine Ecke, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
+    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Erreicht der Zeiger eine Ecke, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte, und solange Apps aufgeführt sind, welche App im Vordergrund ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

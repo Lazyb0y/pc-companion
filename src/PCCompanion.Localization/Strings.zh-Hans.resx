@@ -404,6 +404,62 @@
     <value>例如游戏、视频或演示文稿。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>这些应用位于前台时不触发</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>例如远程桌面、虚拟机或绘图应用。其中任何一个位于前台时，所有显示器上的触发角都不会触发。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>添加应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>正在运行的应用…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>程序文件…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>未列出任何应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>删除 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>选择正在运行的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>正在运行的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>正在查找正在运行的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>没有其他应用打开了窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>添加</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>以管理员身份运行的应用位于前台时，触发角不起作用。</value>
     <comment>Needs native review.</comment>
@@ -413,7 +469,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。指针到达某个角时，还会读取是否有应用限制或隐藏了指针，以及该显示器上窗口的位置，但不读取窗口标题或内容。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
+    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。指针到达某个角时，还会读取是否有应用限制或隐藏了指针，以及该显示器上窗口的位置，但不读取窗口标题或内容；列出了应用时，还会读取位于前台的应用。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">

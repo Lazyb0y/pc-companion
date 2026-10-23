@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.HotCorners.RunningAppDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:local="using:PCCompanion.App.Features.HotCorners"
+    CloseButtonText="{app:Localized Key=HotCornersRunningAppCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="False"
+    PrimaryButtonText="{app:Localized Key=HotCornersRunningAppAdd}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{app:Localized Key=HotCornersRunningAppTitle}">
+
+    <Grid MinWidth="360" MinHeight="120">
+        <ProgressRing
+            x:Name="LoadingRing"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            AutomationProperties.Name="{app:Localized Key=HotCornersRunningAppLoading}"
+            IsActive="True" />
+        <TextBlock
+            x:Name="NoApps"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            Text="{app:Localized Key=HotCornersRunningAppNone}"
+            TextWrapping="Wrap"
+            Visibility="Collapsed" />
+        <ListView
+            x:Name="Apps"
+            MaxHeight="360"
+            AutomationProperties.Name="{app:Localized Key=HotCornersRunningAppList}"
+            ItemsSource="{x:Bind Items}"
+            SelectionChanged="OnSelectionChanged"
+            SelectionMode="Single"
+            Visibility="Collapsed">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:RunningAppItem">
+                    <StackPanel Padding="0,8" Orientation="Horizontal" Spacing="12">
+                        <Grid Width="24" Height="24" AutomationProperties.AccessibilityView="Raw">
+                            <Image Source="{x:Bind Image}" />
+                            <FontIcon FontSize="20" Glyph="&#xECAA;" Visibility="{x:Bind PlainIconVisibility}" />
+                        </Grid>
+                        <TextBlock VerticalAlignment="Center" Text="{x:Bind Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentDialog>

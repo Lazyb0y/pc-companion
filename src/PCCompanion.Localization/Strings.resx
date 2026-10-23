@@ -412,6 +412,62 @@
     <value>For example, a game, a video or a presentation.</value>
     <comment>Hot Corners page: below HotCornersFullScreenHeader.</comment>
   </data>
+  <data name="HotCornersExcludedAppsHeader" xml:space="preserve">
+    <value>Don't trigger while these apps are in front</value>
+    <comment>Hot Corners page: header of the list of apps that turn corners off.</comment>
+  </data>
+  <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
+    <value>For example, remote desktop, a virtual machine or a drawing app. While one of them is in front, no corner triggers on any display.</value>
+    <comment>Hot Corners page: below HotCornersExcludedAppsHeader.</comment>
+  </data>
+  <data name="HotCornersAddApp" xml:space="preserve">
+    <value>Add an app</value>
+    <comment>Hot Corners page: button that opens a menu of ways to add an app to the list.</comment>
+  </data>
+  <data name="HotCornersAddRunningApp" xml:space="preserve">
+    <value>Running app…</value>
+    <comment>Hot Corners page: item of the HotCornersAddApp menu that opens a dialog of the apps with a window open.</comment>
+  </data>
+  <data name="HotCornersAddProgramFile" xml:space="preserve">
+    <value>Program file…</value>
+    <comment>Hot Corners page: item of the HotCornersAddApp menu that opens the Open dialog for a program.</comment>
+  </data>
+  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+    <value>No apps are listed.</value>
+    <comment>Hot Corners page: shown instead of the list of apps while it's empty.</comment>
+  </data>
+  <data name="HotCornersRemoveApp" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Hot Corners page: button that removes an app from the list.</comment>
+  </data>
+  <data name="HotCornersRemoveAppName" xml:space="preserve">
+    <value>Remove {0}</value>
+    <comment>Hot Corners page: screen reader name of HotCornersRemoveApp. {0} is the app's name, such as Photos.</comment>
+  </data>
+  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+    <value>Choose a running app</value>
+    <comment>Title of the dialog that lists the apps with a window open.</comment>
+  </data>
+  <data name="HotCornersRunningAppList" xml:space="preserve">
+    <value>Running apps</value>
+    <comment>Running app dialog: screen reader name of the list of apps.</comment>
+  </data>
+  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+    <value>Finding the running apps</value>
+    <comment>Running app dialog: screen reader name of the progress ring shown while the apps are read.</comment>
+  </data>
+  <data name="HotCornersRunningAppNone" xml:space="preserve">
+    <value>No other app has a window open.</value>
+    <comment>Running app dialog: shown instead of the list when it's empty.</comment>
+  </data>
+  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+    <value>Add</value>
+    <comment>Running app dialog: button that adds the chosen app to the list.</comment>
+  </data>
+  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Running app dialog: button that closes it without adding an app.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Corners don't work while an app running as administrator is in front.</value>
     <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
@@ -421,7 +477,7 @@
     <comment>Hot Corners page: replaces HotCornersAdministratorInfo while Always run as administrator is on. "Run a program" is HotCornersActionRunProgram.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
+    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents, and while apps are listed, which app is in front. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
     <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">
