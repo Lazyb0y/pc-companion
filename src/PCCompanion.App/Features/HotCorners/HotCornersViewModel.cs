@@ -39,20 +39,7 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
     {
         _appSettings = appSettings;
 
-        Actions =
-        [
-            new(HotCornerAction.None, Strings.HotCornersActionNone),
-            new(HotCornerAction.TaskView, Strings.HotCornersActionTaskView),
-            new(HotCornerAction.ShowDesktop, Strings.HotCornersActionShowDesktop),
-            new(HotCornerAction.Start, Strings.HotCornersActionStart),
-            new(HotCornerAction.Search, Strings.HotCornersActionSearch),
-            new(HotCornerAction.Notifications, Strings.HotCornersActionNotifications),
-            new(HotCornerAction.Lock, Strings.HotCornersActionLock),
-            new(HotCornerAction.TurnOffDisplays, Strings.HotCornersActionTurnOffDisplays),
-            new(HotCornerAction.ScreenSaver, Strings.HotCornersActionScreenSaver),
-            new(HotCornerAction.KeepDisplaysOn, Strings.HotCornersActionKeepDisplaysOn),
-            new(HotCornerAction.RunProgram, Strings.HotCornersActionRunProgram),
-        ];
+        Actions = [.. HotCornerActionNames.InPageOrder.Select(action => new ActionOption(action, HotCornerActionNames.NameOf(action)))];
 
         Keys =
         [
