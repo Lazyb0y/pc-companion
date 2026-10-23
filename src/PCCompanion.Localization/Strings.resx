@@ -1033,7 +1033,7 @@
     <comment>Rule editor: box header for the program's command-line arguments.</comment>
   </data>
   <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
-    <value>{text} stands for the copied text, which stays in one argument. Some programs read an argument that starts with - or / as an option. Programs start with your rights, and don't run while PC Companion runs as administrator.</value>
+    <value>{text} stands for the copied text, which stays in one argument. Some programs read an argument that starts with - or / as an option. Programs start with your rights, also while PC Companion runs as administrator.</value>
     <comment>Rule editor: below the Arguments box. Keep {text} as written.</comment>
   </data>
   <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
@@ -1057,7 +1057,7 @@
     <comment>Rule editor and Clipboard Actions page: problem with a rule's program.</comment>
   </data>
   <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
-    <value>While PC Companion runs as administrator, rules that run a program don't run, and links and web addresses open in your browser without admin rights.</value>
+    <value>While PC Companion runs as administrator, programs still start with your rights, and links and web addresses open in your browser without admin rights.</value>
     <comment>Clipboard Actions page: note.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">

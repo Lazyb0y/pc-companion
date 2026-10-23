@@ -1033,7 +1033,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
-    <value>{text} représente le texte copié, qui reste dans un seul argument. Certains programmes lisent un argument qui commence par - ou / comme une option. Les programmes démarrent avec vos droits et ne s’exécutent pas tant que PC Companion est exécuté en tant qu’administrateur.</value>
+    <value>{text} représente le texte copié, qui reste dans un seul argument. Certains programmes lisent un argument qui commence par - ou / comme une option. Les programmes démarrent avec vos droits, même quand PC Companion est exécuté en tant qu’administrateur.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
@@ -1057,7 +1057,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
-    <value>Tant que PC Companion est exécuté en tant qu’administrateur, les règles qui exécutent un programme ne s’exécutent pas, et les liens et adresses web s’ouvrent dans votre navigateur sans droits d’administrateur.</value>
+    <value>Tant que PC Companion est exécuté en tant qu’administrateur, les programmes démarrent toujours avec vos droits, et les liens et adresses web s’ouvrent dans votre navigateur sans droits d’administrateur.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">

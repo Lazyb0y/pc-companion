@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Testing;
@@ -9,16 +6,13 @@ using Xunit;
 
 namespace PCCompanion.Modules.Clipboard.Tests;
 
-// A fake starter records what would start, and fake host commands what would open; nothing runs.
+// Fake host commands record what would open or start; nothing runs.
 public sealed class ClipboardActionRunnerTests
 {
     private const string Player = @"C:\Program Files\Example\player.exe";
 
     private readonly FakeHostCommands _commands = new();
     private readonly RecordingLogger<ClipboardActionRunnerTests> _logger = new();
-    private readonly List<ProcessStartInfo> _started = [];
-    private bool _isAdministrator;
-    private int _startError;
 
     [Fact]
     public void LinksAndAddressesOpenThroughTheHost()
@@ -49,27 +43,14 @@ public sealed class ClipboardActionRunnerTests
     }
 
     [Fact]
-    public void TheProgramStartsInItsFolderWithTheTextInOneArgumentAndNoShell()
+    public void TheHostStartsTheProgramWithTheTextInOneArgument()
     {
         Run(Program(Player, "--fullscreen", "say \"hi\" & del x"));
 
-        var startInfo = Assert.Single(_started);
-        Assert.Equal(Player, startInfo.FileName);
-        Assert.Equal(["--fullscreen", "say \"hi\" & del x"], startInfo.ArgumentList);
-        Assert.Equal(@"C:\Program Files\Example", startInfo.WorkingDirectory);
-        Assert.False(startInfo.UseShellExecute);
+        var (program, arguments) = Assert.Single(_commands.Programs);
+        Assert.Equal(Player, program);
+        Assert.Equal(["--fullscreen", "say \"hi\" & del x"], arguments);
         Assert.Equal([(LogLevel.Debug, "Clipboard Actions rule 1 started player.exe.")], _logger.Entries);
-    }
-
-    [Fact]
-    public void NothingStartsWhilePCCompanionRunsAsAdministrator()
-    {
-        _isAdministrator = true;
-
-        Run(Program(Player));
-
-        Assert.Empty(_started);
-        Assert.Equal([(LogLevel.Warning, "Clipboard Actions rule 1 doesn't run a program while PC Companion runs as administrator.")], _logger.Entries);
     }
 
     [Theory]
@@ -80,7 +61,7 @@ public sealed class ClipboardActionRunnerTests
     {
         Run(Program(program, "secret-123"));
 
-        Assert.Empty(_started);
+        Assert.Empty(_commands.Programs);
         var entry = Assert.Single(_logger.Entries);
         Assert.Equal((LogLevel.Warning, $"Clipboard Actions rule 1 didn't start {System.IO.Path.GetFileName(program)}: {problem}."), entry);
     }
@@ -88,7 +69,7 @@ public sealed class ClipboardActionRunnerTests
     [Fact]
     public void AStartThatWindowsRefusesIsLoggedWithItsErrorCode()
     {
-        _startError = 740; // ERROR_ELEVATION_REQUIRED
+        _commands.ProgramErrorCode = 740; // ERROR_ELEVATION_REQUIRED
 
         Run(Program(Player, "secret-123"));
 
@@ -104,18 +85,5 @@ public sealed class ClipboardActionRunnerTests
         || path.EndsWith("cmd.exe", StringComparison.OrdinalIgnoreCase)
         || path.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
 
-    private void Run(ClipboardOffer offer)
-    {
-        var runner = new ClipboardActionRunner(_commands, () => _isAdministrator, Exists, startInfo =>
-        {
-            if (_startError != 0)
-            {
-                throw new Win32Exception(_startError, $"An error occurred trying to start process '{startInfo.FileName}'.");
-            }
-
-            _started.Add(startInfo);
-        }, _logger);
-
-        runner.Run(offer);
-    }
+    private void Run(ClipboardOffer offer) => new ClipboardActionRunner(_commands, Exists, _logger).Run(offer);
 }

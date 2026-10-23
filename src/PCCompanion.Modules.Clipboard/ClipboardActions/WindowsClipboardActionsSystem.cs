@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -11,13 +10,11 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
 /// <summary>
-/// The shortcut, the clipboard, the menu and starting programs, from Windows.
+/// The shortcut, the clipboard and the menu, from Windows.
 /// </summary>
 internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
 {
     private const uint VirtualKeyV = 0x56;
-
-    public bool IsAdministrator => Environment.IsPrivilegedProcess;
 
     public IShortcut? RegisterShortcut(MessageWindow window) =>
         HotKey.Register(window, HotKeyModifiers.Windows | HotKeyModifiers.Alt, VirtualKeyV) is { } hotKey ? new Shortcut(hotKey) : null;
@@ -48,11 +45,6 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
     public void AllowFront() => Foreground.AllowAnyProcess();
 
     public bool FileExists(string path) => File.Exists(path);
-
-    public void StartProcess(ProcessStartInfo startInfo)
-    {
-        using var process = Process.Start(startInfo);
-    }
 
     public void RunInBackground(Action action) => Task.Run(action);
 

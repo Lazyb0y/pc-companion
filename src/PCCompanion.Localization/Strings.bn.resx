@@ -1033,7 +1033,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsArgumentsNote" xml:space="preserve">
-    <value>{text} কপি করা টেক্সট বোঝায়, যা একটি আর্গুমেন্টের মধ্যেই থাকে। কিছু প্রোগ্রাম - বা / দিয়ে শুরু হওয়া আর্গুমেন্টকে অপশন হিসেবে পড়ে। প্রোগ্রাম আপনার অধিকার নিয়ে চালু হয়, এবং PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললে চলে না।</value>
+    <value>{text} কপি করা টেক্সট বোঝায়, যা একটি আর্গুমেন্টের মধ্যেই থাকে। কিছু প্রোগ্রাম - বা / দিয়ে শুরু হওয়া আর্গুমেন্টকে অপশন হিসেবে পড়ে। প্রোগ্রাম আপনার অধিকার নিয়ে চালু হয়, PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চললেও।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsProgramNotChosen" xml:space="preserve">
@@ -1057,7 +1057,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsAdministratorInfo" xml:space="preserve">
-    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলার সময়, প্রোগ্রাম চালানোর নিয়মগুলো চলে না, এবং লিংক ও ওয়েব ঠিকানা অ্যাডমিন অধিকার ছাড়াই আপনার ব্রাউজারে খোলে।</value>
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলার সময়ও প্রোগ্রাম আপনার অধিকার নিয়ে চালু হয়, এবং লিংক ও ওয়েব ঠিকানা অ্যাডমিন অধিকার ছাড়াই আপনার ব্রাউজারে খোলে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
