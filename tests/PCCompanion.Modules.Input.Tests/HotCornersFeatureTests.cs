@@ -56,6 +56,19 @@ public sealed class HotCornersFeatureTests : IDisposable
     }
 
     [Fact]
+    public void TheSameSettingsAgainChangeNothing()
+    {
+        // As when another feature's settings are saved.
+        _feature.Apply(Section("""{ "enabled": true }"""));
+        _feature.Apply(Section("""{ "enabled": true }"""));
+        Assert.Single(_logger.Entries, entry => entry.Message.StartsWith("Hot Corners applied its settings", StringComparison.Ordinal));
+
+        _feature.Apply(Section("""{ "enabled": true, "activationDelayMilliseconds": 300 }"""));
+        Assert.Equal(2, _logger.Entries.Count(entry => entry.Message.StartsWith("Hot Corners applied its settings", StringComparison.Ordinal)));
+        Assert.True(_feature.IsRunning);
+    }
+
+    [Fact]
     public void UnreadableSettingsTurnTheFeatureOff()
     {
         _feature.Apply(Section("""{ "enabled": true }"""));
