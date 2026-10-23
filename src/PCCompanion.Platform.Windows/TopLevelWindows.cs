@@ -192,11 +192,14 @@ public static class TopLevelWindows
             IsShell: shellProcessId != 0 && ProcessIdOf(window) == shellProcessId);
     }
 
-    // A window that closed meanwhile keeps process ID 0.
-    private static unsafe uint ProcessIdOf(HWND window)
+    /// <summary>
+    /// The ID of the process that <paramref name="window"/> belongs to, or 0 when the window has
+    /// closed.
+    /// </summary>
+    public static unsafe uint ProcessIdOf(nint window)
     {
         uint processId = 0;
-        _ = PInvoke.GetWindowThreadProcessId(window, &processId);
+        _ = PInvoke.GetWindowThreadProcessId(new HWND(window), &processId);
         return processId;
     }
 

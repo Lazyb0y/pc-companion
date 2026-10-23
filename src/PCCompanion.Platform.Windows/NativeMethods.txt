@@ -252,3 +252,11 @@ GetClipCursor
 GetCursorInfo
 MonitorFromWindow
 GetMonitorInfo
+SHCreateItemInKnownFolder
+SHCreateItemFromParsingName
+IShellItemImageFactory
+SIIGBF
+FOLDERID_AppsFolder
+GetDIBits
+GetObject
+BITMAP
