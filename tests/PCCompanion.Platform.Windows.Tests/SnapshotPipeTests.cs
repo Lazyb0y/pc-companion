@@ -40,7 +40,11 @@ public sealed class SnapshotPipeTests
         var watch = Stopwatch.StartNew();
 
         Assert.Null(await SnapshotPipe.ReadAsync(_name, TimeSpan.FromMilliseconds(300), 1024, TestContext.Current.CancellationToken));
-        Assert.True(watch.Elapsed < TimeSpan.FromSeconds(3), $"took {watch.Elapsed}");
+
+        // Without the time limit the read would wait for a server forever. The bound is generous:
+        // while the other tests run, the thread pool can be slow to end the wait, as on CI, where
+        // it took 5 seconds.
+        Assert.True(watch.Elapsed < TimeSpan.FromSeconds(30), $"took {watch.Elapsed}");
     }
 
     [Fact]
