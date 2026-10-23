@@ -1,9 +1,10 @@
 ﻿# Clipboard Actions: the Home switch turns it on, and its page adds, edits, moves and deletes rules
 # in the rule editor, which says what's wrong with a pattern, an address or a program. Then, with
-# rules in the settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer for
-# text the checks copy: Open in browser and an address rule open the browser; a rule that runs a
-# program shows dimmed, since everything in the Sandbox runs as administrator; marked-private,
-# missing and too long text show only a note. Esc gives the front back to the window that had it,
+# rules in the settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer, below
+# the text cursor of Character Map's box or of a text area in Edge, and above it at the bottom of
+# the screen. For text the checks copy, Open in browser and an address rule open the browser; a rule
+# that runs a program shows dimmed, since everything in the Sandbox runs as administrator;
+# marked-private, missing and too long text show only a note. Esc gives the front back to the window that had it,
 # the shortcut again closes the menu, and turned off the shortcut opens no menu. The host's
 # --open-web-page opens only web addresses. Detailed logging is on for the host's Debug entries.
 [void] (Close-SettingsApp)
@@ -146,6 +147,13 @@ function Open-Menu {
 }
 function Close-Menu { if (Get-Menu) { Send-Key 0x1B; Start-Sleep -Milliseconds 500 } }
 function Test-CharmapInFront { [Win32]::GetForegroundWindow() -eq $charmap }
+function Test-Within([double] $Value, [double] $Low, [double] $High) { ($Value -ge $Low) -and ($Value -le $High) }
+# Where the last menu opened, from the host's Debug entry for the press, such as AtTextCursor.
+function Get-LastMenuPlace {
+    Start-Sleep -Milliseconds 300
+    $places = [regex]::Matches((Get-HostLog), 'menu: "?(\w+)"?\.')
+    if ($places.Count -gt 0) { $places[$places.Count - 1].Groups[1].Value } else { 'none' }
+}
 
 Write-ClipboardSettings $true
 if ((Get-Processes 'PCCompanion.Host').Count -eq 0) { Start-Process $hostExe }
@@ -168,6 +176,88 @@ Send-Key 0x1B
 Start-Sleep -Milliseconds 500
 Test-Check 'Esc closes the menu' (-not (Get-Menu))
 Test-Check 'the window in front gets the front back' (Test-CharmapInFront) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+Test-Check 'with the character grid focused, the host logs the menu at the pointer' ((Get-LastMenuPlace) -eq 'AtPointer') "menu: $(Get-LastMenuPlace)"
+
+# At the text cursor: below the line of Character Map's Characters to copy box, which uses Windows'
+# text cursor, and above it with the box at the bottom of the screen.
+$editCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Edit)
+$charmapBox = [System.Windows.Automation.AutomationElement]::FromHandle($charmap).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $editCondition)
+Test-Check 'Character Map has its Characters to copy box' ($null -ne $charmapBox)
+$charmapBox.SetFocus()
+Start-Sleep -Milliseconds 500
+$boxBounds = $charmapBox.Current.BoundingRectangle
+Test-Check 'the menu opens with the box focused' (Open-Menu)
+$menuBounds = (Get-Menu).Current.BoundingRectangle
+Test-Check 'the menu opens below the box''s text cursor, not at the pointer' ((Test-Within $menuBounds.Y $boxBounds.Y $boxBounds.Bottom) -and ((Test-Within $menuBounds.X $boxBounds.X $boxBounds.Right) -or (Test-Within $menuBounds.Right $boxBounds.X $boxBounds.Right))) "menu at $menuBounds, box at $boxBounds"
+Test-Check 'the host logs the menu at Windows'' text cursor' ((Get-LastMenuPlace) -eq 'AtTextCursor') "menu: $(Get-LastMenuPlace)"
+Save-Screenshot '13g-clipboard-actions-menu-at-text-cursor'
+Close-Menu
+Test-Check 'Esc gives the front back to Character Map' (Test-CharmapInFront)
+$charmapRect = New-Object Win32+RECT
+[void] [Win32]::GetWindowRect($charmap, [ref] $charmapRect)
+$charmapWidth = $charmapRect.Right - $charmapRect.Left
+$charmapHeight = $charmapRect.Bottom - $charmapRect.Top
+# Just above the taskbar, with less room below the line than the menu's height.
+$lowTop = $screen.Height - 50 - ([int] $boxBounds.Bottom - $charmapRect.Top)
+[void] [Win32]::MoveWindow($charmap, $charmapRect.Left, $lowTop, $charmapWidth, $charmapHeight, $true)
+Start-Sleep -Milliseconds 500
+$boxBounds = $charmapBox.Current.BoundingRectangle
+[void] (Open-Menu)
+$menuBounds = (Get-Menu).Current.BoundingRectangle
+Test-Check 'at the bottom of the screen, the menu opens above the box''s line' (($menuBounds.Bottom -le $boxBounds.Y + ($boxBounds.Height / 2)) -and ($menuBounds.Bottom -ge $boxBounds.Y - 10)) "menu at $menuBounds, box at $boxBounds"
+Close-Menu
+[void] [Win32]::MoveWindow($charmap, $charmapRect.Left, $charmapRect.Top, $charmapWidth, $charmapHeight, $true)
+Start-Sleep -Milliseconds 500
+
+# Edge draws its own text cursor and reports it to accessibility tools only: below the text cursor of
+# a page's text area, and at the pointer with the page's plain text clicked.
+$policy = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'
+New-Item -Path $policy -Force | Out-Null
+Set-ItemProperty -Path $policy -Name HideFirstRunExperience -Value 1 -Type DWord
+$page = Join-Path $env:TEMP 'text-cursor.html'
+Set-Content -Path $page -Encoding utf8 -Value @'
+<!doctype html><html><head><meta charset="utf-8"><title>Text cursor</title></head><body style="margin:0">
+<textarea autofocus style="position:fixed;left:0;top:0;width:100vw;height:50vh;margin:0;border:0;padding:8px;font-size:20px"></textarea>
+<div style="position:fixed;left:0;top:55vh;width:100vw;height:45vh;font-size:32px">Plain text on the page, which has no text cursor. Plain text on the page, which has no text cursor. Plain text on the page.</div>
+</body></html>
+'@
+$edgeExe = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+Start-Process $edgeExe -ArgumentList @('--no-first-run', '--no-default-browser-check', '--new-window', ([Uri] $page).AbsoluteUri)
+$script:edgeWindow = [IntPtr]::Zero
+$edgeOpened = Wait-Until {
+    $script:edgeWindow = [Win32]::TopLevelWindows() | Where-Object { [Win32]::IsWindowVisible($_) -and ([Win32]::WindowClass($_) -eq 'Chrome_WidgetWin_1') -and ([Win32]::WindowTitle($_) -like 'Text cursor*') } | Select-Object -First 1
+    $null -ne $script:edgeWindow
+} 60
+Test-Check 'Edge opens the page with a text area' $edgeOpened
+if ($edgeOpened) {
+    Start-Sleep -Seconds 3
+    [void] [Win32]::SetForegroundWindow($edgeWindow)
+    $edgeRect = New-Object Win32+RECT
+    [void] [Win32]::GetWindowRect($edgeWindow, [ref] $edgeRect)
+    $middleX = [int] (($edgeRect.Left + $edgeRect.Right) / 2)
+    [void] (Move-Pointer $middleX ([int] ($edgeRect.Top + ($edgeRect.Bottom - $edgeRect.Top) * 0.35)))
+    [void] [Win32]::LeftButton($true); [void] [Win32]::LeftButton($false)
+    Start-Sleep -Milliseconds 500
+    Test-Check 'the menu opens in Edge' (Open-Menu)
+    $menuBounds = (Get-Menu).Current.BoundingRectangle
+    Test-Check 'the menu opens below the text area''s text cursor, at its start, not at the pointer' ((Test-Within $menuBounds.X $edgeRect.Left ($edgeRect.Left + 80)) -and (Test-Within $menuBounds.Y ($edgeRect.Top + 40) ($edgeRect.Top + 200))) "menu at $menuBounds, Edge at $($edgeRect.Left),$($edgeRect.Top),$($edgeRect.Right),$($edgeRect.Bottom), $(Get-PointerText)"
+    Test-Check 'the host logs the menu at Edge''s accessibility text cursor' ((Get-LastMenuPlace) -eq 'AtAppTextCursor') "menu: $(Get-LastMenuPlace)"
+    Save-Screenshot '13h-clipboard-actions-menu-at-edge-text-cursor'
+    Close-Menu
+    Test-Check 'Esc gives the front back to Edge' ([Win32]::GetForegroundWindow() -eq $edgeWindow) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+    $textY = [int] ($edgeRect.Top + ($edgeRect.Bottom - $edgeRect.Top) * 0.75)
+    [void] (Move-Pointer ($edgeRect.Left + 120) $textY)
+    [void] [Win32]::LeftButton($true); [void] [Win32]::LeftButton($false)
+    Start-Sleep -Milliseconds 500
+    [void] (Open-Menu)
+    $menuBounds = (Get-Menu).Current.BoundingRectangle
+    Test-Check 'with plain text clicked, the menu opens at the pointer' ((Get-LastMenuPlace) -eq 'AtPointer') "menu: $(Get-LastMenuPlace), menu at $menuBounds, $(Get-PointerText)"
+    Close-Menu
+}
+Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Seconds 2
+[void] [Win32]::SetForegroundWindow($charmap)
+[void] (Move-Pointer 700 400)
 
 $edgeBefore = (Get-Processes 'msedge').Count
 Test-Check 'the menu opens again' (Open-Menu)
