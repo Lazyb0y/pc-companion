@@ -56,7 +56,7 @@ internal sealed partial class UpdateNotifier : IDisposable
 
         _window = window;
         _tray = tray;
-        tray.NotificationSelected += (_, _) => OpenReleasePage();
+        tray.NotificationSelected += (_, _) => Task.Run(OpenReleasePage);
     }
 
     /// <summary>Starts or stops the checks; call it at startup and after every settings change.</summary>
@@ -96,7 +96,8 @@ internal sealed partial class UpdateNotifier : IDisposable
         }
     }
 
-    // Like a feature's web page, never with admin rights: see WebPageCommand.
+    // Like a feature's web page, never with admin rights: see WebPageCommand. On the thread pool,
+    // since a host running as administrator waits for its copy to open it.
     private void OpenReleasePage()
     {
         LogSelected(_logger);

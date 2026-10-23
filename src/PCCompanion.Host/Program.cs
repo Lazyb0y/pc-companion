@@ -51,7 +51,7 @@ internal static partial class Program
 
         if (args.Contains(HostProcess.OpenWebPageArgument, StringComparer.OrdinalIgnoreCase))
         {
-            WebPageCommand.Run(args);
+            Environment.ExitCode = WebPageCommand.Run(args);
             return;
         }
 

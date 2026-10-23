@@ -6,7 +6,7 @@
 # rule that runs a program starts Character Map; marked-private, missing and too long text show
 # only a note. Esc gives the front back to the window that had it,
 # the shortcut again closes the menu, and turned off the shortcut opens no menu. The host's
-# --open-web-page opens only web addresses. Detailed logging is on for the host's Debug entries.
+# --open-web-page opens a long web address it reads from a pipe, and only web addresses. Detailed logging is on for the host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 Start-Sleep -Seconds 2
@@ -362,15 +362,36 @@ Test-Check 'turned off, the shortcut opens no menu' (-not (Get-Menu))
 Close-Menu
 Get-Processes 'charmap' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 
-# The copy a host running as administrator starts to open a web page opens only web addresses.
+# The copy a host running as administrator starts to open a web page reads the address from a
+# one-time pipe, as the host hands it over, and opens only web addresses, also long ones. Returns
+# the copy's exit code, or $null when it didn't exit.
+function Invoke-WebPageCopy([string] $Address) {
+    $name = 'PCCompanion.OpenWebPage.Check.' + [Guid]::NewGuid().ToString('N')
+    $server = New-Object IO.Pipes.NamedPipeServerStream($name, [IO.Pipes.PipeDirection]::Out, 1, [IO.Pipes.PipeTransmissionMode]::Byte, [IO.Pipes.PipeOptions]::Asynchronous)
+    $waiting = $server.WaitForConnectionAsync()
+    $copy = Start-Process $hostExe -ArgumentList @('--open-web-page', $name) -PassThru
+    if ($waiting.Wait(15000)) {
+        $bytes = [Text.Encoding]::UTF8.GetBytes($Address)
+        $server.Write($bytes, 0, $bytes.Length)
+        $server.Flush()
+    }
+
+    $server.Dispose()
+    if (-not $copy.WaitForExit(30000)) { return $null }
+    return $copy.ExitCode
+}
+
 $edgeBefore = (Get-Processes 'msedge').Count
-Start-Process $hostExe -ArgumentList @('--open-web-page', 'https://example.com/opened-by-the-copy')
-Test-Check '--open-web-page opens a web address in the browser' (Wait-Until { (Get-Processes 'msedge').Count -gt $edgeBefore } 20)
+$exitCode = Invoke-WebPageCopy ('https://example.com/opened-by-the-copy?text=' + ('a' * 2000))
+Test-Check '--open-web-page opens a long web address from its pipe in the browser' (($exitCode -eq 0) -and (Wait-Until { (Get-Processes 'msedge').Count -gt $edgeBefore } 20)) "exit code: $exitCode"
 Start-Sleep -Seconds 2
+$edgeCommandLines = (Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe'" | ForEach-Object { $_.CommandLine }) -join ' '
+$received = if ($edgeCommandLines -match 'opened-by-the-copy\?text=(a*)') { $Matches[1].Length } else { 0 }
+Test-Check 'the browser got the whole address' ($received -eq 2000) "characters of text received: $received"
 Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 2
 $calcBefore = (Get-Processes 'CalculatorApp').Count + (Get-Processes 'calc').Count
-Start-Process $hostExe -ArgumentList @('--open-web-page', 'file:///C:/Windows/System32/calc.exe') -Wait
+$exitCode = Invoke-WebPageCopy 'file:///C:/Windows/System32/calc.exe'
 Start-Sleep -Seconds 3
-Test-Check '--open-web-page opens nothing for another kind of address' ((Get-Processes 'msedge').Count -eq 0 -and ((Get-Processes 'CalculatorApp').Count + (Get-Processes 'calc').Count) -eq $calcBefore)
+Test-Check '--open-web-page opens nothing for another kind of address' (($exitCode -eq 13) -and (Get-Processes 'msedge').Count -eq 0 -and ((Get-Processes 'CalculatorApp').Count + (Get-Processes 'calc').Count) -eq $calcBefore) "exit code: $exitCode"
 Stop-All
