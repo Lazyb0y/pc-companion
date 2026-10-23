@@ -144,7 +144,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 ## Detecting the pointer
 
-- The host watches pointer movement with **raw input** and reads the pointer position on each event. Raw input is Microsoft's recommendation for monitoring input. A low-level mouse hook is silently removed by Windows when one call is too slow, and polling the position wakes the CPU many times a second even when nothing moves.
+- The host watches pointer movement with **raw input** and reads the pointer position on each event. Windows allows one raw input registration for the mouse per process, so Hot Corners shares it with any other feature that watches the pointer (`RawPointerMonitor`). Raw input is Microsoft's recommendation for monitoring input. A low-level mouse hook is silently removed by Windows when one call is too slow, and polling the position wakes the CPU many times a second even when nothing moves.
 - A spike confirmed that raw input gets the same pointer events as a low-level hook (791 and 787 for the same mouse movement), costs nothing while the pointer is still, and that `SHQueryUserNotificationState` reports full-screen apps.
 - While an app running as administrator is in front, Windows doesn't deliver pointer events to PC Companion, by raw input or by a hook, and silently drops the shortcuts it sends. Corners don't trigger then; the feature page says so. Running PC Companion as administrator avoids it.
 
