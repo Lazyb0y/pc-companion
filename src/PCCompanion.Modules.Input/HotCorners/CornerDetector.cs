@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
 
@@ -13,6 +14,7 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
 {
     private HotCornersSettings _settings = new();
     private Corner[] _corners = [];
+    private Rectangle _allDisplays;
     private Corner? _current;
     private long _enteredAt;
     private bool _finished;
@@ -36,6 +38,7 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
         _corners = [.. displays
             .SelectMany(display => CornersOf(display, displays))
             .Where(corner => settings.For(corner.Position).Action != HotCornerAction.None)];
+        _allDisplays = displays.Count == 0 ? Rectangle.Empty : displays.Aggregate(Rectangle.Union);
         _current = Find(environment.PointerPosition);
         _finished = true;
     }
@@ -69,14 +72,20 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
             return new CornerDecision(CornerOutcome.Waiting, current.Position, _settings.For(current.Position).Action, delay - elapsed);
         }
 
+        // A corner that an app pins the pointer to isn't one the user aimed for, so a captured
+        // pointer skips it whatever the full-screen setting.
         var key = _settings.For(current.Position).Key;
         return Finish(
             current,
             environment.IsMouseButtonHeld ? CornerOutcome.MouseButtonHeld
             : key != HotCornerKey.None && !environment.IsKeyHeld(key) ? CornerOutcome.KeyNotHeld
-            : _settings.IgnoreFullScreenApps && environment.IsFullScreenAppInFront ? CornerOutcome.FullScreenApp
+            : IsPointerConfined() ? CornerOutcome.PointerConfined
+            : environment.PointerVisibility == PointerVisibility.Hidden ? CornerOutcome.PointerHidden
+            : _settings.IgnoreFullScreenApps && FullScreenCheck.IsFullScreen(environment, current.Display) ? CornerOutcome.FullScreenApp
             : CornerOutcome.Triggered);
     }
+
+    private bool IsPointerConfined() => environment.PointerClip is { } clip && !clip.Contains(_allDisplays);
 
     private CornerDecision Finish(Corner corner, CornerOutcome outcome)
     {
@@ -121,10 +130,10 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
 
             if (!touchesAnotherDisplay)
             {
-                yield return new Corner(new Point(x, y), position);
+                yield return new Corner(new Point(x, y), position, display);
             }
         }
     }
 
-    private readonly record struct Corner(Point Point, ScreenCorner Position);
+    private readonly record struct Corner(Point Point, ScreenCorner Position, Rectangle Display);
 }
