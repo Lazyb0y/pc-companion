@@ -28,6 +28,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     private SnapshotPipe? _resultsPipe;
     private DisplayKeeper? _displays;
     private ITimer? _timer;
+    private bool _timerSet;
     private bool _failed;
 
     public static FeatureInfo Definition { get; } = new("hotCorners", InputModule.Id, "HotCornersName", "HotCornersDescription", "");
@@ -127,6 +128,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         _resultsPipe?.Dispose();
         _window.Dispose();
         (_displays, _timer, _monitor, _resultsPipe, _window) = (null, null, null, null, null);
+        _timerSet = false;
         _results.Clear();
         LogStopped(logger);
     }
@@ -135,6 +137,9 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     {
         var displays = Displays.GetAreas();
         _detector.Configure(_settings, displays);
+
+        // Configuring ends any wait: a corner the pointer is in counts as decided.
+        CancelTimer();
         _displays?.Check(_detector.CurrentCorner, _settings);
         LogConfigured(logger, displays.Count, _settings.ActivationDelayMilliseconds);
     }
@@ -159,10 +164,18 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
         var decision = _detector.Update();
         _displays?.Check(_detector.CurrentCorner, _settings);
+
+        // Once the pointer has left the corner or the corner was decided, the timer has nothing to wait for.
+        if (decision.Outcome != CornerOutcome.Waiting)
+        {
+            CancelTimer();
+        }
+
         switch (decision.Outcome)
         {
             case CornerOutcome.Waiting:
                 _timer?.Change(decision.Wait, Timeout.InfiniteTimeSpan);
+                _timerSet = true;
                 break;
             case CornerOutcome.Triggered:
                 LogTriggered(logger, decision.Corner, decision.Action);
@@ -185,6 +198,16 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 break;
         }
     });
+
+    // Only while it's set: most pointer events come while no corner waits.
+    private void CancelTimer()
+    {
+        if (_timerSet)
+        {
+            _timer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+            _timerSet = false;
+        }
+    }
 
     private bool Run(CornerDecision decision, MessageWindow window) => decision.Action switch
     {
