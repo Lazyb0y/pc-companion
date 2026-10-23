@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 
@@ -42,8 +43,11 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
 
     public bool HasNoRules => Rules.Count == 0;
 
-    /// <summary>What keeps a rule out of the menu, or an empty string.</summary>
-    public static string ProblemOf(ClipboardRule rule)
+    /// <summary>
+    /// What keeps a rule out of the menu, or an empty string. Whether the program of a rule that
+    /// runs one exists is given, since it's read off the UI thread.
+    /// </summary>
+    public static string ProblemOf(ClipboardRule rule, bool programFound)
     {
         var problem = ClipboardRuleCheck.Check(rule, out _) switch
         {
@@ -61,8 +65,7 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
             _ => string.Empty,
         };
 
-        if (problem.Length == 0 && rule.KnownAction == ClipboardRuleAction.RunProgram
-            && ClipboardRuleCheck.CheckProgram(rule.Program, File.Exists) == RuleProgramProblem.NotFound)
+        if (problem.Length == 0 && rule.KnownAction == ClipboardRuleAction.RunProgram && !programFound)
         {
             problem = Strings.ClipboardActionsProgramNotFound;
         }
@@ -108,27 +111,58 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
         RefreshRules();
     }
 
+    // The list shows at once; the programs that weren't found are added once they've been looked for.
     private void RefreshRules()
     {
         Rules.Clear();
         var rules = Settings.Rules;
         for (var index = 0; index < rules.Count; index++)
         {
-            var rule = rules[index];
-            var problem = ProblemOf(rule);
-            var name = rule.Name.Trim();
-            Rules.Add(new ClipboardRuleItem(
-                index,
-                rule,
-                name,
-                Summary(rule, problem),
-                problem.Length > 0,
-                string.Format(CultureInfo.CurrentCulture, EditFormat, name),
-                string.Format(CultureInfo.CurrentCulture, MoreFormat, name),
-                index > 0,
-                index < rules.Count - 1));
+            Rules.Add(ItemOf(rules, index, programFound: true));
         }
 
         OnPropertyChanged(nameof(HasNoRules));
+        _ = ShowMissingProgramsAsync(rules);
+    }
+
+    // Whether the rules' programs exist is read off the UI thread, since a program on a network
+    // share that's offline can take seconds to find. A result for rules that changed meanwhile is dropped.
+    private async Task ShowMissingProgramsAsync(IReadOnlyList<ClipboardRule> rules)
+    {
+        var missing = await Task.Run(() => Enumerable.Range(0, rules.Count)
+            .Where(index => rules[index].KnownAction == ClipboardRuleAction.RunProgram
+                && ClipboardRuleCheck.CheckProgram(rules[index].Program, File.Exists) == RuleProgramProblem.NotFound)
+            .ToList()).ConfigureAwait(true);
+
+        if (!ReferenceEquals(rules, Settings.Rules) || Rules.Count != rules.Count)
+        {
+            return;
+        }
+
+        foreach (var index in missing)
+        {
+            var item = ItemOf(rules, index, programFound: false);
+            if (item != Rules[index])
+            {
+                Rules[index] = item;
+            }
+        }
+    }
+
+    private static ClipboardRuleItem ItemOf(IReadOnlyList<ClipboardRule> rules, int index, bool programFound)
+    {
+        var rule = rules[index];
+        var problem = ProblemOf(rule, programFound);
+        var name = rule.Name.Trim();
+        return new ClipboardRuleItem(
+            index,
+            rule,
+            name,
+            Summary(rule, problem),
+            problem.Length > 0,
+            string.Format(CultureInfo.CurrentCulture, EditFormat, name),
+            string.Format(CultureInfo.CurrentCulture, MoreFormat, name),
+            index > 0,
+            index < rules.Count - 1);
     }
 }
