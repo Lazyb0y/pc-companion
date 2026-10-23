@@ -1,5 +1,6 @@
 ﻿# Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
-# it, not while a mouse button is held, and only with the key it requires.
+# it, not while a mouse button is held, an app is full screen or has captured the pointer, and
+# only with the key it requires.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
@@ -105,13 +106,94 @@ Test-Check 'leaving the corner ends Keep displays on' (Wait-Until { (Get-HostLog
 $requests = Get-HostPowerRequests
 Test-Check 'powercfg lists no request of the host once the pointer leaves' (-not $requests.Any) $requests.Text
 
+# Full screen and a captured pointer: a borderless window covering the display skips the corner,
+# which runs again once the window closes, and so do a pointer confined with ClipCursor and a
+# window in the corner that hides the pointer. The windows run in a process of their own, like
+# another app's.
+Add-Type @'
+using System;
+using System.Runtime.InteropServices;
+public static class PointerClip {
+    [StructLayout(LayoutKind.Sequential)] private struct RECT { public int Left, Top, Right, Bottom; }
+    [DllImport("user32.dll")] private static extern bool ClipCursor(ref RECT rect);
+    [DllImport("user32.dll")] private static extern bool ClipCursor(IntPtr rect);
+    public static bool Confine(int left, int top, int right, int bottom) {
+        var rect = new RECT { Left = left, Top = top, Right = right, Bottom = bottom };
+        return ClipCursor(ref rect);
+    }
+    public static bool Release() { return ClipCursor(IntPtr.Zero); }
+}
+'@
+$testWindowScript = Join-Path $env:TEMP 'PCCompanion-test-window.ps1'
+Set-Content -Path $testWindowScript -Encoding utf8 -Value @'
+param([string] $Title, [string] $Kind)
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -Namespace TestWindow -Name Native -MemberDefinition @"
+[DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+"@
+[void] [TestWindow.Native]::SetProcessDPIAware()
+$form = New-Object System.Windows.Forms.Form
+$form.Text = $Title
+$form.FormBorderStyle = 'None'
+$form.StartPosition = 'Manual'
+$form.BackColor = [System.Drawing.Color]::Black
+$form.TopMost = $true
+if ($Kind -eq 'FullScreen') {
+    $form.Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+} else {
+    $form.Bounds = New-Object System.Drawing.Rectangle(0, 0, 300, 300)
+    $form.Add_Shown({ [System.Windows.Forms.Cursor]::Hide() })
+}
+# Started hidden, the process would hide the first window it shows; this uses that up.
+[void] [TestWindow.Native]::ShowWindow($form.Handle, 0)
+[System.Windows.Forms.Application]::Run($form)
+'@
+# PowerShell would pass $null to FindWindow as an empty class name, which no window has.
+function Find-TestWindow([string] $Kind) { [Win32]::FindWindow([NullString]::Value, "PCCompanionTestWindow-$Kind") }
+function Start-TestWindow([string] $Kind) {
+    $process = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $testWindowScript, '-Title', "PCCompanionTestWindow-$Kind", '-Kind', $Kind -WindowStyle Hidden -PassThru
+    [void] (Wait-Until { (Find-TestWindow $Kind) -ne [IntPtr]::Zero } 30)
+    Start-Sleep -Seconds 1
+    return $process
+}
+function Get-SkippedPattern([string] $Reason) { "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?$Reason`"?\." }
+
+Write-HotCornersSettings $true 'None'
+$window = Start-TestWindow 'FullScreen'
+$found = Find-TestWindow 'FullScreen'
+$area = New-Object Win32+RECT
+$covers = ($found -ne [IntPtr]::Zero) -and [Win32]::GetWindowRect($found, [ref] $area) -and ($area.Left -le 0) -and ($area.Top -le 0) -and ($area.Right -ge $screen.Width) -and ($area.Bottom -ge $screen.Height)
+Test-Check 'the full-screen test window covers the display' $covers "window $found at $($area.Left), $($area.Top), $($area.Right), $($area.Bottom); display $($screen.Width) x $($screen.Height)"
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'a borderless window covering the display skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'FullScreenApp') } 5) (Get-PointerText)
+Stop-Process -Id $window.Id -Force -ErrorAction SilentlyContinue
+[void] (Wait-Until { (Find-TestWindow 'FullScreen') -eq [IntPtr]::Zero } 10)
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'the corner runs again once the full-screen window closes' (Wait-Until { (Get-MatchCount (Get-HostLog) $ran) -eq 3 } 5) (Get-PointerText)
+
+[void] (Move-Pointer 400 300)
+Test-Check 'the pointer can be confined to part of the screen' ([PointerClip]::Confine(0, 0, 800, 600))
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'a pointer confined to part of the screen skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'PointerConfined') } 5) (Get-PointerText)
+[void] [PointerClip]::Release()
+
+[void] (Move-Pointer $middleX $middleY)
+$window = Start-TestWindow 'HidesPointer'
+[void] (Move-IntoTopLeftCorner)
+Test-Check 'a window in the corner that hides the pointer skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'PointerHidden') } 5) (Get-PointerText)
+Stop-Process -Id $window.Id -Force -ErrorAction SilentlyContinue
+Remove-Item $testWindowScript -ErrorAction SilentlyContinue
+
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
 Test-Check 'turning Hot Corners off stops it' ((Get-HostLog) -match 'Hot Corners stopped\.')
 [void] (Move-Pointer $middleX $middleY)
 [void] (Move-IntoTopLeftCorner)
 Start-Sleep -Seconds 1
-Test-Check 'a corner does nothing while Hot Corners is off' ((Get-MatchCount (Get-HostLog) $ran) -eq 2)
+Test-Check 'a corner does nothing while Hot Corners is off' ((Get-MatchCount (Get-HostLog) $ran) -eq 3)
 [void] (Move-Pointer $middleX $middleY)
 Save-Screenshot '11-hot-corners-off'
 
