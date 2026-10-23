@@ -93,16 +93,17 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         return AppAnswer;
     }
 
+    // The menu and its event are recorded together, so a test that waits for the menu sees the event.
     public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position, Rectangle? keepClear)
     {
         lock (Gate)
         {
             _menus.Add(items);
+            Record(keepClear is { } line
+                ? $"menu at {position.X},{position.Y} below {line.Left},{line.Top},{line.Right},{line.Bottom}"
+                : $"menu at {position.X},{position.Y}");
         }
 
-        Record(keepClear is { } line
-            ? $"menu at {position.X},{position.Y} below {line.Left},{line.Top},{line.Right},{line.Bottom}"
-            : $"menu at {position.X},{position.Y}");
         foreach (var item in items)
         {
             if (item.Text == Choice && item.IsEnabled)
@@ -123,9 +124,8 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         lock (Gate)
         {
             Started.Add(startInfo);
+            Record("start");
         }
-
-        Record("start");
     }
 
     // Runs at once, on the feature's thread, so a test sees the action's result as soon as the menu closes.
