@@ -82,10 +82,17 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
             : IsPointerConfined() ? CornerOutcome.PointerConfined
             : environment.PointerVisibility == PointerVisibility.Hidden ? CornerOutcome.PointerHidden
             : _settings.IgnoreFullScreenApps && FullScreenCheck.IsFullScreen(environment, current.Display) ? CornerOutcome.FullScreenApp
+            : IsListedAppInFront() ? CornerOutcome.AppExcluded
             : CornerOutcome.Triggered);
     }
 
     private bool IsPointerConfined() => environment.PointerClip is { } clip && !clip.Contains(_allDisplays);
+
+    // The app in front is read only while apps are listed.
+    private bool IsListedAppInFront() =>
+        _settings.ExcludedApps.Count > 0
+        && environment.AppInFront is { } app
+        && _settings.ExcludedApps.Any(listed => listed.Matches(app));
 
     private CornerDecision Finish(Corner corner, CornerOutcome outcome)
     {

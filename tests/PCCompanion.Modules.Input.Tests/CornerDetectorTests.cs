@@ -20,6 +20,9 @@ public sealed class CornerDetectorTests
     // The desktop covers every display and belongs to the shell.
     private static readonly WindowPlace Desktop = Window(Rectangle.FromLTRB(0, 0, 3840, 1080), isShell: true);
 
+    private static readonly ExcludedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
+    private static readonly ExcludedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
+
     private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
     private readonly ManualTimeProvider _clock = new();
     private readonly CornerDetector _detector;
@@ -309,6 +312,67 @@ public sealed class CornerDetectorTests
         Assert.Equal(Decision(CornerOutcome.FullScreenApp), MoveTo(TopLeft));
         MoveTo(Middle);
         Assert.Equal(CornerOutcome.FullScreenApp, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void AListedAppInFrontSkipsTheCornersOfEveryDisplayWhateverTheFullScreenSetting(bool ignoreFullScreenApps)
+    {
+        _detector.Configure(
+            new HotCornersSettings
+            {
+                TopRight = new CornerSettings { Action = HotCornerAction.Start },
+                ActivationDelayMilliseconds = 0,
+                IgnoreFullScreenApps = ignoreFullScreenApps,
+                ExcludedApps = [RemoteDesktop],
+            },
+            [Main, Second]);
+        _environment.FrontApp = new AppInFront(null, null, @"C:\WINDOWS\system32\MSTSC.EXE");
+
+        Assert.Equal(Decision(CornerOutcome.AppExcluded), MoveTo(TopLeft));
+        MoveTo(Middle);
+        Assert.Equal(CornerOutcome.AppExcluded, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Theory]
+    [InlineData("Microsoft.Windows.Photos_8wekyb3d8bbwe!App", null, CornerOutcome.AppExcluded)]
+    [InlineData(null, "microsoft.windows.photos_8wekyb3d8bbwe!app", CornerOutcome.AppExcluded)]
+    [InlineData("Chrome.Profile.1", null, CornerOutcome.Triggered)]
+    public void AnAppIdMatchesWhetherTheWindowOrItsPackageHasIt(string? windowAppId, string? packageAppId, CornerOutcome outcome)
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, ExcludedApps = [Photos] }, [Main]);
+        _environment.FrontApp = new AppInFront(windowAppId, packageAppId, @"C:\Windows\System32\ApplicationFrameHost.exe");
+
+        Assert.Equal(Decision(outcome), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void AnAppThatIsntListedDoesntSkipTheCorner()
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, ExcludedApps = [RemoteDesktop, Photos] }, [Main]);
+        _environment.FrontApp = new AppInFront(null, null, @"C:\Windows\System32\notepad.exe");
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void TheAppInFrontIsReadOnlyWhenTheDelayEndsAndOnlyWhileAppsAreListed()
+    {
+        _environment.FrontApp = new AppInFront(null, null, @"C:\Windows\System32\mstsc.exe");
+
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+        Assert.Equal(0, _environment.AppReads);
+
+        _detector.Configure(new HotCornersSettings { ExcludedApps = [RemoteDesktop] }, [Main]);
+        MoveTo(Middle);
+        MoveTo(TopLeft);
+        Assert.Equal(0, _environment.AppReads);
+
+        _clock.Advance(TimeSpan.FromMilliseconds(150));
+        Assert.Equal(Decision(CornerOutcome.AppExcluded), _detector.Update());
+        Assert.Equal(1, _environment.AppReads);
     }
 
     [Fact]
