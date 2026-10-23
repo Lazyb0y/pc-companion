@@ -14,8 +14,10 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - A corner can require a key: hold Ctrl, Alt, Shift or the Windows key while the pointer reaches it. This avoids accidental triggers, as in macOS.
 - A corner doesn't trigger:
   - when a mouse button is held as the pointer reaches it or when the delay ends, because dragging a window into a corner snaps it there;
-  - while an app is full screen, such as a game, a video or a presentation, unless the user turns this off;
+  - while an app has captured the pointer: confined it to part of the screen, as games and virtual machines do, or hidden it, as browser games do;
+  - while an app is full screen on the corner's display, such as a game, a video or a presentation, unless the user turns this off. A full-screen app on another display doesn't stop it;
   - on the lock screen or a UAC prompt, which Windows shows on a separate desktop.
+- See [Full screen and a captured pointer](#full-screen-and-a-captured-pointer) for how these are checked.
 - A corner the pointer is already in when Hot Corners starts, or when its settings or the displays change, triggers only after the pointer leaves it and comes back.
 
 ## Actions
@@ -61,10 +63,24 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - **While PC Companion runs as administrator, Run a program does nothing** and a warning is logged; the feature page says so. Any program running as the user can change the settings file, so that file must never make PC Companion run code as administrator.
 - A corner without a program, or whose program is missing or isn't an `.exe`, does nothing and logs a warning when it triggers. The feature page shows the problem below the box.
 
+## Full screen and a captured pointer
+
+- Inspired by GNOME, which checks full screen for each display. KDE Plasma checks only the active window, and Windows' own full-screen state (`SHQueryUserNotificationState`) sees exclusive full screen but not a borderless game, and doesn't say which display a full-screen app is on.
+- Both checks run only when a corner's delay ends, never on each pointer move.
+- **Captured pointer:** the corner is skipped when the pointer is confined to less than the area of all displays (`GetClipCursor`), or hidden (`GetCursorInfo`). A pointer that Windows hides during touch or pen input doesn't count. This applies whether or not **Don't trigger when an app is full screen** is on: a corner that an app pins the pointer to isn't one the user aimed for.
+- **Full screen, for the corner's display:** PC Companion looks at the visible top-level windows from front to back (`EnumWindows`) and skips:
+  - windows that are cloaked, as on another virtual desktop, or minimized, or that don't overlap the display;
+  - overlays: click-through windows (`WS_EX_TRANSPARENT`), windows that can't be activated (`WS_EX_NOACTIVATE`) and tool windows, such as the overlays of graphics drivers, game launchers and chat apps;
+  - always-on-top windows that don't cover the whole display, such as the taskbar or a picture-in-picture video.
+- The first window left decides. The display is full screen when that window covers the whole display, has no title bar or resizable frame (`WS_CAPTION`, `WS_THICKFRAME`), and doesn't belong to the Windows shell's process, which shows the desktop and Task View. So a maximized window, which keeps its frame, isn't full screen, even with a taskbar that hides itself.
+- Windows' own state adds two cases: exclusive full screen (`QUNS_RUNNING_D3D_FULL_SCREEN`) counts on the display of the window in front, which such an app always is, and presentation mode (`QUNS_PRESENTATION_MODE`) counts on every display. Its busy state (`QUNS_BUSY`) isn't used, since it doesn't say which display: a video on one display stopped the corners of every display.
+- A skipped corner logs why at Debug level: the pointer was confined or hidden, or an app was full screen.
+
 ## Multiple displays
 
 - Every display's corners can trigger, except a corner that touches another display: the pointer passes into the next display there instead of stopping.
 - Positions are in physical pixels, so different scaling on each display doesn't matter.
+- A full-screen app stops only the corners of its own display.
 
 ## Settings
 
@@ -102,10 +118,11 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - Windows 10 version 2004 and later, and Windows 11.
 - The Notifications shortcut differs between Windows 10 and 11.
 - Power requests, which Keep displays on uses, are in every supported version.
+- The full-screen and captured-pointer checks use documented APIs that every supported version has: `GetClipCursor`, `GetCursorInfo`, `EnumWindows`, `GetWindowRect`, `GetWindowLongPtr`, `DwmGetWindowAttribute` with `DWMWA_CLOAKED`, `GetShellWindow`, `GetWindowThreadProcessId` and `MonitorFromWindow`.
 
 ## Security and privacy
 
-- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. Nothing is stored or sent, and only which corner ran which action, and why Keep displays on ended, is logged, as Debug entries. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
+- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. When a corner's delay ends, it also reads whether the pointer is confined or hidden, and for the windows on the corner's display, front to back until one decides, their position, style flags and whether they're cloaked or minimized, and whether each belongs to the Windows shell's process, by comparing process IDs. It reads no window titles, class names, process names or contents. Nothing is stored or sent, and only which corner ran which action or why it was skipped, and why Keep displays on ended, is logged, as Debug entries. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
 - **Keyboard:** reads only the state of the chosen key, when a corner is reached; no keyboard hook.
 - **Changes:** sends only the fixed Windows shortcuts in the table, and starts only the program the user chose for a corner; nothing the user types or configures is sent as input. Keep displays on changes no setting; it holds a power request only while the pointer stays in its corner.
 - **Screen saver and locking:** like a video player, Keep displays on delays the screen saver, and a lock that comes with it, while the pointer rests in the corner. Someone at the PC must put the pointer there, any app running as the user can make the same request, `powercfg /requests` shows it with its reason, and locking the PC ends it.
@@ -115,6 +132,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 ## Performance
 
 - No timer runs while the pointer is away from the corners; each pointer event costs a few comparisons. A timer runs only while the pointer is in a corner, for the activation delay.
+- The full-screen and captured-pointer checks run once per trigger, when the delay ends. They read windows only until one decides and send no messages to other apps' windows, so an app that stopped responding can't hold them.
 - Keep displays on adds no timer or polling: the power request is set and cleared on pointer and session events.
 
 ## Accessibility and localization
@@ -127,7 +145,8 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 ## Testing
 
 - **Unit tests** with fake displays, a fake clock and fake pointer events: the activation delay, leaving and coming back, held buttons, required keys, full-screen apps, and display layouts (side by side, stacked, different sizes and scaling, displays left of or above the main one).
+- **Unit tests for full screen and a captured pointer**, with fake windows from front to back: a confined or hidden pointer skips the corner with the full-screen setting on or off, a pointer hidden for touch doesn't; a borderless window covering the corner's display skips it, one on another display doesn't; overlays, always-on-top windows that don't cover the display, cloaked and minimized windows are passed over; a maximized window with its frame, the desktop and Task View aren't full screen; exclusive full screen counts only on the display of the window in front, and presentation mode on every display.
 - **Unit tests for Keep displays on**, with a fake power request: it starts after the delay; it ends when the pointer leaves, the corner's action changes, the feature stops or the PC is locked; it lasts through other settings and display changes while the pointer stays in the corner; and after a lock it starts again only once the pointer leaves and comes back.
 - **Unit tests for Run a program**, with a fake process starter: splitting the arguments, which paths are accepted, the program and arguments in the settings, that nothing starts while PC Companion runs as administrator, and that the program is checked and started in the background, each corner's on its own.
-- **Sandbox checks** (`scripts/sandbox/groups/HotCorners.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged. For Keep displays on, `powercfg /requests` lists the host's display and system requests with their reason while the pointer is in the corner, and neither after it leaves.
-- **By hand:** a real mouse on one and several displays, a full-screen game or video, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights. For Keep displays on, on Windows 10 and 11 with the screen saver and display timeout at 1 minute: neither starts while the pointer rests in the corner, both do after it leaves, the displays turn off on the lock screen after locking, and Sleep in Start works.
+- **Sandbox checks** (`scripts/sandbox/groups/HotCorners.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged. For Keep displays on, `powercfg /requests` lists the host's display and system requests with their reason while the pointer is in the corner, and neither after it leaves. For full screen and a captured pointer: a borderless window covering the display skips the corner and the host logs why, and the corner triggers again once the window closes; a pointer confined with `ClipCursor` skips the corner; a window in the corner that hides the pointer skips it.
+- **By hand:** a real mouse on one and several displays, a full-screen game or video, an exclusive and a borderless full-screen game, a virtual machine and a browser game that capture the pointer, a full-screen video on a second display while working on the first, an overlay of a graphics driver or game launcher, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights. For Keep displays on, on Windows 10 and 11 with the screen saver and display timeout at 1 minute: neither starts while the pointer rests in the corner, both do after it leaves, the displays turn off on the lock screen after locking, and Sleep in Start works.
