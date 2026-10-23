@@ -185,7 +185,6 @@ $window = Start-TestWindow 'HidesPointer'
 [void] (Move-IntoTopLeftCorner)
 Test-Check 'a window in the corner that hides the pointer skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'PointerHidden') } 5) (Get-PointerText)
 Stop-Process -Id $window.Id -Force -ErrorAction SilentlyContinue
-Remove-Item $testWindowScript -ErrorAction SilentlyContinue
 
 # Apps that turn corners off: with Character Map listed and in front, the corner is skipped and the
 # host logs why. The page shows the listed app; Remove removes it, Running app lists Character Map
@@ -272,6 +271,43 @@ if ($removeButton -and $removeButton.TryGetCurrentPattern([System.Windows.Automa
 Save-Screenshot '10d-hot-corners-apps-added'
 [void] (Close-SettingsApp)
 Stop-Process -Id $characterMap.Id -Force -ErrorAction SilentlyContinue
+
+# Recent results: with the page open, the pointer leaving a corner before the delay ends, and a
+# corner skipped by a full-screen window, show on the page as they happen. Turning Hot Corners off
+# first clears the results of the checks above.
+Write-HotCornersSettings $false 'None'
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": true, ""topLeft"": { ""action"": ""ShowDesktop"", ""key"": ""None"" }, ""activationDelayMilliseconds"": 500 } } }"
+Start-Sleep -Seconds 3
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Hot Corners for its recent results' (Select-NavigationItem 'Hot Corners')
+Start-Sleep -Seconds 2
+Test-Check 'the page says that no corner has been reached yet' (Wait-Until { (Get-WindowText) -contains 'No corner has been reached yet.' } 5)
+# In and out of the corner at once, as when the pointer passes through it.
+[void] (Move-Pointer $middleX $middleY)
+[void] [Win32]::MovePointer(0, 0, $screen.Width, $screen.Height)
+[void] [Win32]::PushPointer(-10, -10)
+Start-Sleep -Milliseconds 100
+[void] [Win32]::MovePointer($middleX, $middleY, $screen.Width, $screen.Height)
+$leftEarly = 'Top left, Show desktop: skipped because the pointer left before the delay ended'
+Test-Check 'the page shows that the pointer left before the delay ended' (Wait-Until { (Get-WindowText) -contains $leftEarly } 5) (Get-PointerText)
+$window = Start-TestWindow 'FullScreen'
+[void] (Move-IntoTopLeftCorner)
+$fullScreen = 'Top left, Show desktop: skipped because an app was full screen'
+Test-Check 'the page shows that an app was full screen' (Wait-Until { (Get-WindowText) -contains $fullScreen } 5) (Get-PointerText)
+Stop-Process -Id $window.Id -Force -ErrorAction SilentlyContinue
+[void] (Wait-Until { (Find-TestWindow 'FullScreen') -eq [IntPtr]::Zero } 10)
+[void] (Move-Pointer $middleX $middleY)
+# The results are at the end of the page, which scrolls apart from the navigation pane.
+$scroller = Find-AppText $fullScreen
+while ($scroller -and -not [bool] $scroller.GetCurrentPropertyValue([System.Windows.Automation.AutomationElement]::IsScrollPatternAvailableProperty)) {
+    $scroller = [System.Windows.Automation.TreeWalker]::ControlViewWalker.GetParent($scroller)
+}
+if ($scroller) { $scroller.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern).SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100); Start-Sleep -Seconds 1 }
+Save-Screenshot '10e-hot-corners-recent-results'
+[void] (Close-SettingsApp)
+Remove-Item $testWindowScript -ErrorAction SilentlyContinue
 
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
