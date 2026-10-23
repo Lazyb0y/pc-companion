@@ -122,7 +122,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - The switch on Home changes only `enabled` and keeps the other settings.
 - A corner keeps its `program` and `arguments` when its action changes, so choosing Run a program again brings them back.
 - A program path that doesn't fit its box shows its end after an ellipsis, such as `…\System32\charmap.exe`; the tooltip, and the box while editing, show the whole path.
-- A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing. A blank app ID or program counts as none, and a listed app with neither an app ID nor a program, or with both, is left out.
+- A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing. A blank app ID or program counts as none, and a listed app with neither an app ID nor a program, or with both, is left out, as is a `null` in the list.
 
 ```json
 "features": {
