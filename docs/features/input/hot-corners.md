@@ -16,8 +16,9 @@ Move the pointer into a corner of the screen to run an action, such as showing a
   - when a mouse button is held as the pointer reaches it or when the delay ends, because dragging a window into a corner snaps it there;
   - while an app has captured the pointer: confined it to part of the screen, as games and virtual machines do, or hidden it, as browser games do;
   - while an app is full screen on the corner's display, such as a game, a video or a presentation, unless the user turns this off. A full-screen app on another display doesn't stop it;
+  - while an app the user listed is in front, on any display;
   - on the lock screen or a UAC prompt, which Windows shows on a separate desktop.
-- See [Full screen and a captured pointer](#full-screen-and-a-captured-pointer) for how these are checked.
+- See [Full screen and a captured pointer](#full-screen-and-a-captured-pointer) and [Apps that turn corners off](#apps-that-turn-corners-off) for how these are checked.
 - A corner the pointer is already in when Hot Corners starts, or when its settings or the displays change, triggers only after the pointer leaves it and comes back.
 
 ## Actions
@@ -38,7 +39,7 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - Shortcuts are sent as keyboard input only where Windows has no API for the action.
 - A modifier the user is holding, such as the key a corner requires, is released before the shortcut is sent: Ctrl + Windows + D would add a virtual desktop. An unassigned key is pressed first, so releasing the Windows key or Alt doesn't open Start or the menu bar.
 - Screen saver does nothing when no screen saver is chosen in Windows settings.
-- Not included: command lines in cmd or PowerShell syntax, such as pipes, custom shortcuts, per-app settings, and screen edges.
+- Not included: command lines in cmd or PowerShell syntax, such as pipes, custom shortcuts, per-app actions, and screen edges. The only setting for each app is the list of apps that turn corners off.
 
 ## Keep displays on
 
@@ -76,6 +77,15 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - Windows' own state adds two cases: exclusive full screen (`QUNS_RUNNING_D3D_FULL_SCREEN`) counts on the display of the window in front, which such an app always is, and presentation mode (`QUNS_PRESENTATION_MODE`) counts on every display. Its busy state (`QUNS_BUSY`) isn't used, since it doesn't say which display: a video on one display stopped the corners of every display.
 - A skipped corner logs why at Debug level: the pointer was confined or hidden, or an app was full screen.
 
+## Apps that turn corners off
+
+- Like the app exceptions of hot corner tools for macOS, and a frequent request for hot corner tools on Windows. For apps that need their corners, or shouldn't get a corner's shortcut: remote desktop and virtual machine windows, where the shortcut can reach the other PC, drawing and design apps, and games that the full-screen checks miss.
+- While a listed app is in front, no corner triggers, on any display: a corner's shortcut goes to the app in front wherever the corner is. This applies whatever the full-screen setting. The list can only turn corners off, never on.
+- **What counts as one app**, as the taskbar groups them and as in App Windows: the app ID that the window in front sets for itself, as browsers do for each profile; otherwise the app ID of its Store app package; otherwise its program file. An app ID matches whichever way it was read, and a program matches by its full path, ignoring case. An app that moves its program file when it updates, as some apps installed in a folder named after their version do, must be added again.
+- **When:** once per trigger, when the delay ends, after the other checks, and only while the list has apps. It reads the window in front's app ID, a property of the window, and its process's package and program path (`OpenProcess` with `PROCESS_QUERY_LIMITED_INFORMATION`). None of these waits for the app, so a trigger never waits for another program.
+- While an app running as administrator is in front, corners don't trigger anyway unless PC Companion runs as administrator; then the list works for that app too.
+- A skipped corner logs `AppExcluded` at Debug level, never which app.
+
 ## Multiple displays
 
 - Every display's corners can trigger, except a corner that touches another display: the pointer passes into the next display there instead of stopping.
@@ -84,14 +94,18 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 
 ## Settings
 
-- **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key, and for **Run a program**, the program with **Browse** and its arguments; the activation delay; **Don't trigger when an app is full screen** (on by default); and a **Permissions & data** card.
+- **Feature page:** the on/off switch; a picture of a screen with a list for each corner's action and an optional key, and for **Run a program**, the program with **Browse** and its arguments; the activation delay; **Don't trigger when an app is full screen** (on by default); **Don't trigger while these apps are in front**, a list of apps with **Add** and a **Remove** button for each; and a **Permissions & data** card.
+- The apps list shows each app's icon and name, and for a program its path in the tooltip; an empty list says so. **Add** offers:
+  - **Running app**, a dialog that lists the apps with a window open, by icon and name, without PC Companion and the apps already listed;
+  - **Program file**, the Open dialog for an `.exe`, for an app that isn't running.
+- An app's name is its display name in the Windows Apps folder for an app ID, otherwise the program's description, otherwise its file name. The name is stored with the app, so the list shows it while the app isn't installed. The settings app reads names and icons off its UI thread. An app that's already listed isn't added again.
 - The picture shows physical corners, so it isn't mirrored for right-to-left languages.
 - Without room for the picture, as in a narrow window, the corners are listed one below another, without the screen, in the language's direction.
 - When the feature is first turned on, the top-left corner shows Task View and the others do nothing, close to GNOME's Activities corner.
 - The switch on Home changes only `enabled` and keeps the other settings.
 - A corner keeps its `program` and `arguments` when its action changes, so choosing Run a program again brings them back.
 - A program path that doesn't fit its box shows its end after an ellipsis, such as `…\System32\charmap.exe`; the tooltip, and the box while editing, show the whole path.
-- A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing.
+- A section that can't be read, for example after a hand edit, turns Hot Corners off with a warning in the log. A delay outside 0 to 1,000 ms is brought into range, and a corner with an unknown action or key does nothing. A listed app with neither an app ID nor a program, or with both, is left out.
 
 ```json
 "features": {
@@ -102,7 +116,11 @@ Move the pointer into a corner of the screen to run an action, such as showing a
     "bottomLeft": { "action": "RunProgram", "key": "None", "program": "C:\\Windows\\System32\\notepad.exe", "arguments": "" },
     "bottomRight": { "action": "None", "key": "Control" },
     "activationDelayMilliseconds": 150,
-    "ignoreFullScreenApps": true
+    "ignoreFullScreenApps": true,
+    "excludedApps": [
+      { "name": "Remote Desktop Connection", "program": "C:\\Windows\\System32\\mstsc.exe" },
+      { "name": "Photos", "appId": "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" }
+    ]
   }
 }
 ```
@@ -119,20 +137,22 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - The Notifications shortcut differs between Windows 10 and 11.
 - Power requests, which Keep displays on uses, are in every supported version.
 - The full-screen and captured-pointer checks use documented APIs that every supported version has: `GetClipCursor`, `GetCursorInfo`, `EnumWindows`, `GetWindowRect`, `GetWindowLongPtr`, `DwmGetWindowAttribute` with `DWMWA_CLOAKED`, `GetShellWindow`, `GetWindowThreadProcessId` and `MonitorFromWindow`.
+- Apps that turn corners off use the same documented APIs as App Windows, in every supported version: `SHGetPropertyStoreForWindow` for a window's app ID, `GetApplicationUserModelId` and `QueryFullProcessImageName`, and the Windows Apps folder (`FOLDERID_AppsFolder`) for names and icons.
 
 ## Security and privacy
 
-- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. When a corner's delay ends, it also reads whether the pointer is confined or hidden, and for the windows on the corner's display, front to back until one decides, their position, style flags and whether they're cloaked or minimized, and whether each belongs to the Windows shell's process, by comparing process IDs. It reads no window titles, class names, process names or contents. Nothing is stored or sent, and only which corner ran which action or why it was skipped, and why Keep displays on ended, is logged, as Debug entries. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
+- **Reads:** the pointer position and whether a mouse button or the chosen key is pressed, only while the feature is on and only to compare with the corners. When a corner's delay ends, it also reads whether the pointer is confined or hidden, and for the windows on the corner's display, front to back until one decides, their position, style flags and whether they're cloaked or minimized, and whether each belongs to the Windows shell's process, by comparing process IDs. It reads no window titles, class names, process names or contents. While apps are listed, it also reads, when a corner's delay ends, the app ID, package and program path of the window in front, only to compare them with the list. Nothing is stored or sent, and only which corner ran which action or why it was skipped, and why Keep displays on ended, is logged, as Debug entries. For Run a program, the log names the program's file name, never its folder or arguments, which can hold personal paths or secrets.
 - **Keyboard:** reads only the state of the chosen key, when a corner is reached; no keyboard hook.
 - **Changes:** sends only the fixed Windows shortcuts in the table, and starts only the program the user chose for a corner; nothing the user types or configures is sent as input. Keep displays on changes no setting; it holds a power request only while the pointer stays in its corner.
 - **Screen saver and locking:** like a video player, Keep displays on delays the screen saver, and a lock that comes with it, while the pointer rests in the corner. Someone at the PC must put the pointer there, any app running as the user can make the same request, `powercfg /requests` shows it with its reason, and locking the PC ends it.
 - **Programs:** the program and its arguments are stored in `settings.json` and used only to start that program. Any program running as the user can change that file, but it could also start the same program itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so the action doesn't run then. Programs start directly from a full path to an `.exe`, without a shell or a search of folders.
+- **Apps that turn corners off:** the list, each app's name and its app ID or program path, is stored in `settings.json`, and never logged or sent. A program path can include the user's folder name. The list can only turn corners off, so a changed settings file can't make a corner do more. The settings app's **Running app** dialog reads the apps of the open windows, their app IDs, packages, program paths, names and icons, only while it's open, and keeps only the app chosen.
 - **Rights:** runs without admin rights, and never starts a program with them. Turning the feature off stops reading the pointer.
 
 ## Performance
 
 - No timer runs while the pointer is away from the corners; each pointer event costs a few comparisons. A timer runs only while the pointer is in a corner, for the activation delay.
-- The full-screen and captured-pointer checks run once per trigger, when the delay ends. They read windows only until one decides and send no messages to other apps' windows, so an app that stopped responding can't hold them.
+- The full-screen and captured-pointer checks run once per trigger, when the delay ends. They read windows only until one decides and send no messages to other apps' windows, so an app that stopped responding can't hold them. The app check reads only the window in front, once per trigger and only while apps are listed.
 - Keep displays on adds no timer or polling: the power request is set and cleared on pointer and session events.
 
 ## Accessibility and localization
@@ -141,12 +161,14 @@ Move the pointer into a corner of the screen to run an action, such as showing a
 - Corner names are physical ("Top left") in every language.
 - The program and arguments boxes and **Browse** carry their corner's name for screen readers, such as "Top left program".
 - The reason of the Keep displays on power request is translated like the page's strings.
+- Each listed app's **Remove** button carries the app's name for screen readers, such as "Remove Photos", and the **Running app** dialog's list works with the keyboard.
 
 ## Testing
 
 - **Unit tests** with fake displays, a fake clock and fake pointer events: the activation delay, leaving and coming back, held buttons, required keys, full-screen apps, and display layouts (side by side, stacked, different sizes and scaling, displays left of or above the main one).
 - **Unit tests for full screen and a captured pointer**, with fake windows from front to back: a confined or hidden pointer skips the corner with the full-screen setting on or off, a pointer hidden for touch doesn't; a borderless window covering the corner's display skips it, one on another display doesn't; overlays, always-on-top windows that don't cover the display, cloaked and minimized windows are passed over; a maximized window with its frame, the desktop and Task View aren't full screen; exclusive full screen counts only on the display of the window in front, and presentation mode on every display.
+- **Unit tests for apps that turn corners off**, with a fake app in front: an app ID set by the window or by the package matches, and a program matches by path whatever its case; a listed app in front skips corners on every display, with the full-screen setting on or off; nothing about the app in front is read while the list is empty; the settings keep the list, and leave out an app with neither or both of an app ID and a program; the page adds an app once, from a program file or a running app, and removes it.
 - **Unit tests for Keep displays on**, with a fake power request: it starts after the delay; it ends when the pointer leaves, the corner's action changes, the feature stops or the PC is locked; it lasts through other settings and display changes while the pointer stays in the corner; and after a lock it starts again only once the pointer leaves and comes back.
 - **Unit tests for Run a program**, with a fake process starter: splitting the arguments, which paths are accepted, the program and arguments in the settings, that nothing starts while PC Companion runs as administrator, and that the program is checked and started in the background, each corner's on its own.
-- **Sandbox checks** (`scripts/sandbox/groups/HotCorners.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged. For Keep displays on, `powercfg /requests` lists the host's display and system requests with their reason while the pointer is in the corner, and neither after it leaves. For full screen and a captured pointer: a borderless window covering the display skips the corner and the host logs why, and the corner triggers again once the window closes; a pointer confined with `ClipCursor` skips the corner; a window in the corner that hides the pointer skips it.
-- **By hand:** a real mouse on one and several displays, a full-screen game or video, an exclusive and a borderless full-screen game, a virtual machine and a browser game that capture the pointer, a full-screen video on a second display while working on the first, an overlay of a graphics driver or game launcher, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights. For Keep displays on, on Windows 10 and 11 with the screen saver and display timeout at 1 minute: neither starts while the pointer rests in the corner, both do after it leaves, the displays turn off on the lock screen after locking, and Sleep in Start works.
+- **Sandbox checks** (`scripts/sandbox/groups/HotCorners.ps1`): the Home switch turns the feature on, the page shows its settings in English and Arabic with Task View in the top-left corner, and with the pointer moved by `SendInput`, a corner shows the desktop and the host logs it; a held mouse button or a missing required key skips the corner; holding the required key adds no virtual desktop; turned off, the feature stops. For Run a program, the page shows the program and its arguments and **Browse** opens the Open dialog; everything in Windows Sandbox runs as administrator, so there the checks confirm that the program doesn't start and that a warning is logged. For Keep displays on, `powercfg /requests` lists the host's display and system requests with their reason while the pointer is in the corner, and neither after it leaves. For full screen and a captured pointer: a borderless window covering the display skips the corner and the host logs why, and the corner triggers again once the window closes; a pointer confined with `ClipCursor` skips the corner; a window in the corner that hides the pointer skips it. For apps that turn corners off: with Character Map listed and in front, the corner is skipped and the host logs `AppExcluded`; the page shows the listed apps, **Running app** lists Character Map and adds it, **Program file** adds a program through the Open dialog, and **Remove** removes it, each saved in the settings.
+- **By hand:** a real mouse on one and several displays, a full-screen game or video, an exclusive and a borderless full-screen game, a virtual machine and a browser game that capture the pointer, a full-screen video on a second display while working on the first, an overlay of a graphics driver or game launcher, listed apps such as Remote Desktop Connection, a Store app and one browser profile, an app running as administrator in the foreground, and Run a program on a PC with UAC on: arguments, a path with spaces, a missing program, and a program that needs admin rights. For Keep displays on, on Windows 10 and 11 with the screen saver and display timeout at 1 minute: neither starts while the pointer rests in the corner, both do after it leaves, the displays turn off on the lock screen after locking, and Sleep in Start works.
