@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -48,7 +49,7 @@ public static class PopupMenu
     /// <param name="owner">The window that owns the menu while it is open.</param>
     /// <param name="rightToLeft">Lays out the menu from right to left.</param>
     public static uint Show(MessageWindow owner, IReadOnlyList<PopupMenuItem> items, int x, int y, bool rightToLeft) =>
-        Show(owner, items, x, y, rightToLeft, dropWaitingKeys: false);
+        Show(owner, items, x, y, rightToLeft, keepClear: null, dropWaitingKeys: false);
 
     /// <summary>
     /// Shows the menu for a keyboard shortcut the user pressed, at a screen point, and returns the
@@ -60,12 +61,16 @@ public static class PopupMenu
     /// </summary>
     /// <param name="owner">The window that owns the menu while it is open.</param>
     /// <param name="rightToLeft">Lays out the menu from right to left.</param>
-    public static uint ShowForShortcut(MessageWindow owner, IReadOnlyList<PopupMenuItem> items, int x, int y, bool rightToLeft)
+    /// <param name="keepClear">
+    /// A screen rectangle the menu doesn't cover, such as the line with the text cursor: the menu
+    /// moves below or above it, on the display that has the point.
+    /// </param>
+    public static uint ShowForShortcut(MessageWindow owner, IReadOnlyList<PopupMenuItem> items, int x, int y, bool rightToLeft, Rectangle? keepClear = null)
     {
         ArgumentNullException.ThrowIfNull(owner);
 
         var previous = PInvoke.GetForegroundWindow();
-        var chosen = Show(owner, items, x, y, rightToLeft, dropWaitingKeys: true);
+        var chosen = Show(owner, items, x, y, rightToLeft, keepClear, dropWaitingKeys: true);
 
         var window = (HWND)owner.Handle;
         if (chosen == 0 && !previous.IsNull && previous != window && PInvoke.GetForegroundWindow() == window && PInvoke.IsWindow(previous))
@@ -106,7 +111,7 @@ public static class PopupMenu
         return text.Replace("&", "&&", StringComparison.Ordinal);
     }
 
-    private static uint Show(MessageWindow owner, IReadOnlyList<PopupMenuItem> items, int x, int y, bool rightToLeft, bool dropWaitingKeys)
+    private static unsafe uint Show(MessageWindow owner, IReadOnlyList<PopupMenuItem> items, int x, int y, bool rightToLeft, Rectangle? keepClear, bool dropWaitingKeys)
     {
         ArgumentNullException.ThrowIfNull(owner);
         ArgumentNullException.ThrowIfNull(items);
@@ -122,6 +127,18 @@ public static class PopupMenu
             flags |= TRACK_POPUP_MENU_FLAGS.TPM_LAYOUTRTL;
         }
 
+        // Windows moves the menu up or down, rather than sideways, to keep the rectangle clear.
+        TPMPARAMS? parameters = null;
+        if (keepClear is { } clear)
+        {
+            flags |= TRACK_POPUP_MENU_FLAGS.TPM_VERTICAL;
+            parameters = new TPMPARAMS
+            {
+                cbSize = (uint)sizeof(TPMPARAMS),
+                rcExclude = new RECT { left = clear.Left, top = clear.Top, right = clear.Right, bottom = clear.Bottom },
+            };
+        }
+
         // The owner must be the foreground window, or the menu stays open when the user
         // clicks elsewhere; the posted message lets the menu close properly.
         var window = (HWND)owner.Handle;
@@ -131,7 +148,7 @@ public static class PopupMenu
             DropWaitingKeys();
         }
 
-        var chosen = PInvoke.TrackPopupMenuEx(menu, (uint)flags, x, y, window, null);
+        var chosen = PInvoke.TrackPopupMenuEx(menu, (uint)flags, x, y, window, parameters);
         PInvoke.PostMessage(window, PInvoke.WM_NULL, 0, 0);
 
         return (uint)chosen.Value;
