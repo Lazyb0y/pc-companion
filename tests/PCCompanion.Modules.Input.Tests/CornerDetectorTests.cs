@@ -72,10 +72,43 @@ public sealed class CornerDetectorTests
     {
         MoveTo(TopLeft);
         _clock.Advance(TimeSpan.FromMilliseconds(100));
-        MoveTo(Middle);
+        Assert.Equal(Decision(CornerOutcome.LeftEarly), MoveTo(Middle));
 
         _clock.Advance(TimeSpan.FromMilliseconds(100));
         Assert.Equal(CornerDecision.Nothing, _detector.Update());
+    }
+
+    [Fact]
+    public void LeavingAfterTheCornerTriggeredOrWasSkippedIsntLeavingEarly()
+    {
+        TriggerTopLeft();
+        Assert.Equal(CornerDecision.Nothing, MoveTo(Middle));
+
+        _environment.IsMouseButtonHeld = true;
+        Assert.Equal(Decision(CornerOutcome.MouseButtonHeld), MoveTo(TopLeft));
+        _environment.IsMouseButtonHeld = false;
+        Assert.Equal(CornerDecision.Nothing, MoveTo(Middle));
+    }
+
+    [Fact]
+    public void LeavingACornerThePointerWasInWhenConfiguredIsntLeavingEarly()
+    {
+        _environment.PointerPosition = TopLeft;
+        _detector.Configure(new HotCornersSettings(), [Main]);
+
+        Assert.Equal(CornerDecision.Nothing, MoveTo(Middle));
+    }
+
+    [Fact]
+    public void JumpingStraightIntoAnotherCornerWaitsForItsDelay()
+    {
+        // A pen or touch can put the pointer anywhere at once.
+        _detector.Configure(new HotCornersSettings { BottomRight = new CornerSettings { Action = HotCornerAction.Lock } }, [Main]);
+        MoveTo(TopLeft);
+
+        var decision = MoveTo(new Point(1919, 1079));
+
+        Assert.Equal((CornerOutcome.Waiting, ScreenCorner.BottomRight), (decision.Outcome, decision.Corner));
     }
 
     [Fact]

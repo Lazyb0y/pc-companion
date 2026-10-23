@@ -460,6 +460,90 @@
     <value>取消</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsHeader" xml:space="preserve">
+    <value>最近的结果</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsDescription" xml:space="preserve">
+    <value>指针最近到达的每个角是否运行了其操作及原因，最新的在前。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsNone" xml:space="preserve">
+    <value>指针尚未到达任何角。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsUnavailable" xml:space="preserve">
+    <value>触发角打开时显示结果。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResult" xml:space="preserve">
+    <value>{0}，{1}：{2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTimeAndCount" xml:space="preserve">
+    <value>{0}（{1}）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_other" xml:space="preserve">
+    <value>{0} 次</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRan" xml:space="preserve">
+    <value>已运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultLeftEarly" xml:space="preserve">
+    <value>已跳过，因为指针在延迟结束前离开了</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
+    <value>已跳过，因为按住了鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultKeyNotHeld" xml:space="preserve">
+    <value>已跳过，因为未按住所选按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerConfined" xml:space="preserve">
+    <value>已跳过，因为某个应用限制了指针</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerHidden" xml:space="preserve">
+    <value>已跳过，因为某个应用隐藏了指针</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultFullScreenApp" xml:space="preserve">
+    <value>已跳过，因为某个应用处于全屏状态</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultAppExcluded" xml:space="preserve">
+    <value>已跳过，因为列表中的某个应用位于前台</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRefused" xml:space="preserve">
+    <value>Windows 未运行该操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
+    <value>未启动程序，因为 PC Companion 以管理员身份运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
+    <value>未启动程序，因为未选择程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotFound" xml:space="preserve">
+    <value>未启动程序，因为找不到该程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotExe" xml:space="preserve">
+    <value>未启动程序，因为它不是 .exe 文件的完整路径</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramCantStart" xml:space="preserve">
+    <value>Windows 无法启动该程序</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>以管理员身份运行的应用位于前台时，触发角不起作用。</value>
     <comment>Needs native review.</comment>

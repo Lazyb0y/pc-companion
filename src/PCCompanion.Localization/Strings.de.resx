@@ -468,6 +468,94 @@
     <value>Abbrechen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsHeader" xml:space="preserve">
+    <value>Letzte Ergebnisse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsDescription" xml:space="preserve">
+    <value>Warum die letzten Ecken, die der Zeiger erreicht hat, ihre Aktion ausgeführt haben oder nicht, die neuesten zuerst.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsNone" xml:space="preserve">
+    <value>Es wurde noch keine Ecke erreicht.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsUnavailable" xml:space="preserve">
+    <value>Ergebnisse werden angezeigt, solange Aktive Ecken eingeschaltet ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResult" xml:space="preserve">
+    <value>{0}, {1}: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_one" xml:space="preserve">
+    <value>{0}-mal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_other" xml:space="preserve">
+    <value>{0}-mal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRan" xml:space="preserve">
+    <value>ausgeführt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultLeftEarly" xml:space="preserve">
+    <value>übersprungen, weil der Zeiger die Ecke vor Ablauf der Verzögerung verlassen hat</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
+    <value>übersprungen, weil eine Maustaste gedrückt war</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultKeyNotHeld" xml:space="preserve">
+    <value>übersprungen, weil die gewählte Taste nicht gedrückt war</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerConfined" xml:space="preserve">
+    <value>übersprungen, weil eine App den Zeiger eingeschränkt hatte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerHidden" xml:space="preserve">
+    <value>übersprungen, weil eine App den Zeiger ausgeblendet hatte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultFullScreenApp" xml:space="preserve">
+    <value>übersprungen, weil eine App im Vollbildmodus war</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultAppExcluded" xml:space="preserve">
+    <value>übersprungen, weil eine aufgeführte App im Vordergrund war</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRefused" xml:space="preserve">
+    <value>Windows hat die Aktion nicht ausgeführt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
+    <value>Programm nicht gestartet, weil PC Companion als Administrator ausgeführt wird</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
+    <value>kein Programm gestartet, weil keines ausgewählt ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotFound" xml:space="preserve">
+    <value>Programm nicht gestartet, weil es fehlt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotExe" xml:space="preserve">
+    <value>Programm nicht gestartet, weil es nicht der vollständige Pfad einer EXE-Datei ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramCantStart" xml:space="preserve">
+    <value>Windows konnte das Programm nicht starten</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Die Ecken funktionieren nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
     <comment>Needs native review.</comment>

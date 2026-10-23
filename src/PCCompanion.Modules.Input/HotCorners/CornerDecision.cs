@@ -28,6 +28,11 @@ public enum CornerOutcome
     /// </summary>
     Triggered,
 
+    /// <summary>
+    /// The pointer left the corner before the delay ended.
+    /// </summary>
+    LeftEarly,
+
     MouseButtonHeld,
 
     KeyNotHeld,

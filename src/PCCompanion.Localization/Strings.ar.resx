@@ -500,6 +500,110 @@
     <value>إلغاء</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsHeader" xml:space="preserve">
+    <value>النتائج الأخيرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsDescription" xml:space="preserve">
+    <value>سبب تشغيل كل زاوية من آخر الزوايا التي وصل إليها المؤشر لإجرائها أو عدم تشغيله، الأحدث أولاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsNone" xml:space="preserve">
+    <value>لم يصل المؤشر إلى أي زاوية بعد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultsUnavailable" xml:space="preserve">
+    <value>تظهر النتائج عندما تكون الزوايا النشطة قيد التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResult" xml:space="preserve">
+    <value>{0}، {1}: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_zero" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_one" xml:space="preserve">
+    <value>مرة واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_two" xml:space="preserve">
+    <value>مرتان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_few" xml:space="preserve">
+    <value>{0} مرات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_many" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultCount_other" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRan" xml:space="preserve">
+    <value>تم التشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultLeftEarly" xml:space="preserve">
+    <value>تم التخطي لأن المؤشر غادر قبل انتهاء التأخير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
+    <value>تم التخطي لأن زر الماوس كان مضغوطاً</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultKeyNotHeld" xml:space="preserve">
+    <value>تم التخطي لأن المفتاح المختار لم يكن مضغوطاً</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerConfined" xml:space="preserve">
+    <value>تم التخطي لأن أحد التطبيقات قيّد المؤشر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultPointerHidden" xml:space="preserve">
+    <value>تم التخطي لأن أحد التطبيقات أخفى المؤشر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultFullScreenApp" xml:space="preserve">
+    <value>تم التخطي لأن أحد التطبيقات كان بملء الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultAppExcluded" xml:space="preserve">
+    <value>تم التخطي لأن تطبيقاً من القائمة كان في المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultRefused" xml:space="preserve">
+    <value>لم يشغّله Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
+    <value>لم يبدأ البرنامج لأن PC Companion يعمل كمسؤول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
+    <value>لم يبدأ أي برنامج لأنه لم يتم اختيار برنامج</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotFound" xml:space="preserve">
+    <value>لم يبدأ البرنامج لأنه غير موجود</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotExe" xml:space="preserve">
+    <value>لم يبدأ البرنامج لأنه ليس المسار الكامل لملف .exe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultProgramCantStart" xml:space="preserve">
+    <value>تعذّر على Windows بدء البرنامج</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>لا تعمل الزوايا عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
     <comment>Needs native review.</comment>

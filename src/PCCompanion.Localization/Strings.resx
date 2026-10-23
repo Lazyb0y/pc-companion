@@ -468,6 +468,94 @@
     <value>Cancel</value>
     <comment>Running app dialog: button that closes it without adding an app.</comment>
   </data>
+  <data name="HotCornersResultsHeader" xml:space="preserve">
+    <value>Recent results</value>
+    <comment>Hot Corners page: header of the list of recent results.</comment>
+  </data>
+  <data name="HotCornersResultsDescription" xml:space="preserve">
+    <value>Why each of the last corners the pointer reached ran its action or not, newest first.</value>
+    <comment>Hot Corners page: below HotCornersResultsHeader.</comment>
+  </data>
+  <data name="HotCornersResultsNone" xml:space="preserve">
+    <value>No corner has been reached yet.</value>
+    <comment>Hot Corners page: shown instead of the recent results while there are none.</comment>
+  </data>
+  <data name="HotCornersResultsUnavailable" xml:space="preserve">
+    <value>Results show while Hot Corners is on.</value>
+    <comment>Hot Corners page: shown instead of the recent results while Hot Corners is off or PC Companion isn't running.</comment>
+  </data>
+  <data name="HotCornersResult" xml:space="preserve">
+    <value>{0}, {1}: {2}</value>
+    <comment>Hot Corners page: a recent result. {0} is a corner, such as HotCornersTopLeft; {1} is its action, such as HotCornersActionTaskView; {2} is what happened, such as HotCornersResultRan.</comment>
+  </data>
+  <data name="HotCornersResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Hot Corners page: when a recent result happened. {0} is the time of the latest one; {1} is HotCornersResultCount.</comment>
+  </data>
+  <data name="HotCornersResultCount_one" xml:space="preserve">
+    <value>{0} time</value>
+    <comment>Plural form "one". Hot Corners page: how many times in a row a recent result happened. {0} is the number.</comment>
+  </data>
+  <data name="HotCornersResultCount_other" xml:space="preserve">
+    <value>{0} times</value>
+    <comment>Plural form "other". Hot Corners page: how many times in a row a recent result happened. {0} is the number.</comment>
+  </data>
+  <data name="HotCornersResultRan" xml:space="preserve">
+    <value>ran</value>
+    <comment>Recent result ({2} of HotCornersResult): the corner ran its action.</comment>
+  </data>
+  <data name="HotCornersResultLeftEarly" xml:space="preserve">
+    <value>skipped because the pointer left before the delay ended</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
+    <value>skipped because a mouse button was held</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultKeyNotHeld" xml:space="preserve">
+    <value>skipped because the chosen key wasn't held</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultPointerConfined" xml:space="preserve">
+    <value>skipped because an app had confined the pointer</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultPointerHidden" xml:space="preserve">
+    <value>skipped because an app had hidden the pointer</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultFullScreenApp" xml:space="preserve">
+    <value>skipped because an app was full screen</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultAppExcluded" xml:space="preserve">
+    <value>skipped because a listed app was in front</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultRefused" xml:space="preserve">
+    <value>Windows didn't run it</value>
+    <comment>Recent result ({2} of HotCornersResult).</comment>
+  </data>
+  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
+    <value>didn't start the program, because PC Companion runs as administrator</value>
+    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
+    <value>didn't start a program, because none is chosen</value>
+    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotFound" xml:space="preserve">
+    <value>didn't start the program, because it's missing</value>
+    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
+  </data>
+  <data name="HotCornersResultProgramNotExe" xml:space="preserve">
+    <value>didn't start the program, because it isn't the full path of an .exe file</value>
+    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
+  </data>
+  <data name="HotCornersResultProgramCantStart" xml:space="preserve">
+    <value>Windows couldn't start the program</value>
+    <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
+  </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Corners don't work while an app running as administrator is in front.</value>
     <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
