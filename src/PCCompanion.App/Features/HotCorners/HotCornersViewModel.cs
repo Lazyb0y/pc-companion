@@ -70,8 +70,8 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         RefreshExcludedApps();
     }
 
-    /// <summary>What happens while an app running as administrator is in front.</summary>
-    public string AdministratorInfo => _appSettings.General.AlwaysRunAsAdministrator
+    /// <summary>What happens while an app running as administrator is in front, with the host's rights now.</summary>
+    public string AdministratorInfo => HostLauncher.RunsAsAdministrator(_appSettings.General)
         ? Strings.HotCornersAdministratorInfoOn
         : Strings.HotCornersAdministratorInfo;
 

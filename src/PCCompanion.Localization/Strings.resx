@@ -558,11 +558,11 @@
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
     <value>Corners don't work while an app running as administrator is in front.</value>
-    <comment>Hot Corners page: a limitation of Windows, shown at all times.</comment>
+    <comment>Hot Corners page: a limitation of Windows, shown while PC Companion runs without admin rights.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
     <value>PC Companion runs as administrator, so corners also work while an app running as administrator is in front. Run a program doesn't run.</value>
-    <comment>Hot Corners page: replaces HotCornersAdministratorInfo while Always run as administrator is on. "Run a program" is HotCornersActionRunProgram.</comment>
+    <comment>Hot Corners page: replaces HotCornersAdministratorInfo while PC Companion runs as administrator. "Run a program" is HotCornersActionRunProgram.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
     <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents, and while apps are listed, which app is in front. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
@@ -610,11 +610,11 @@
   </data>
   <data name="AppWindowsAdministratorInfo" xml:space="preserve">
     <value>App Windows doesn't work while an app running as administrator is in front.</value>
-    <comment>App Windows page: a limitation of Windows, shown while Always run as administrator is off.</comment>
+    <comment>App Windows page: a limitation of Windows, shown while PC Companion runs without admin rights.</comment>
   </data>
   <data name="AppWindowsAdministratorInfoOn" xml:space="preserve">
     <value>PC Companion runs as administrator, so App Windows also works while an app running as administrator is in front.</value>
-    <comment>App Windows page: shown instead of AppWindowsAdministratorInfo while Always run as administrator is on.</comment>
+    <comment>App Windows page: shown instead of AppWindowsAdministratorInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="AppWindowsPermissions" xml:space="preserve">
     <value>When you press the shortcut, reads which windows are open, their state and which app they belong to, and while App Windows is on, the keyboard layout of the window in front. Never reads window titles or contents. Changes only which of the app's windows is in front. Stores and sends nothing.</value>

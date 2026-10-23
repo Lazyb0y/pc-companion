@@ -61,6 +61,13 @@ public sealed partial class HostLauncher(ILogger<HostLauncher> logger)
     public static bool RunsWithoutAdminRights(GeneralSettings general) =>
         HostProcess.RunsWithoutAdminRights(general, Elevation.IsUacLimited, IsHostElevated());
 
+    /// <summary>
+    /// Whether the host runs as administrator, for the feature pages' notes about apps running as
+    /// administrator. See <see cref="HostProcess.RunsAsAdministrator"/>.
+    /// </summary>
+    public static bool RunsAsAdministrator(GeneralSettings general) =>
+        HostProcess.RunsAsAdministrator(general, IsHostElevated());
+
     private static bool IsRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
 
     // Read from the process that owns the host's window; null when no host runs or it can't be read.

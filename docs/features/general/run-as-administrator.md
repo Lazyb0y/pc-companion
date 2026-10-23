@@ -33,7 +33,7 @@ Runs the background host as administrator, so features also work while an app ru
 ## Settings
 
 - General page: **Always run as administrator**, with the description "Lets features work while an app running as administrator is in front. Windows asks for permission when you turn it on or off."
-- When turned on, the Hot Corners page's note changes to say that corners work in front of apps running as administrator, and that Run a program doesn't run.
+- While the host runs as administrator, the Hot Corners page's note says that corners work in front of apps running as administrator and that Run a program doesn't run, and the App Windows page's note says that App Windows works there too. The pages read this from the host's process when they open, as the General page does, so the notes are also right with UAC off, where the host runs as administrator without this setting, and after a failed hand-off. When no host runs, or its rights can't be read, they follow the setting.
 - If the user cancels the UAC prompt, the switch goes back and nothing changes. If the change fails, the page says so.
 - While it's on and UAC is on, if the host runs without admin rights, a warning above the switch says so: features don't work while an app running as administrator is in front; to fix it, turn the setting off and on again, or sign out and back in. The page checks when it opens and after the switch changes. With UAC off, every program runs with the user's full rights, so the page shows no warning. When no host runs, or its rights can't be read, the page shows no warning either.
 - While it's on, and UAC is on, the Logs card also has **Open host logs**, unless the warning shows. With UAC off, or while the host runs without admin rights, the host's logs are in the user's logs folder, which **Open logs folder** opens.
@@ -52,7 +52,7 @@ Runs the background host as administrator, so features also work while an app ru
 
 ## Testing
 
-- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task), when the General page warns that the host runs without admin rights, reading a process's elevation, and finding the process that owns a window.
+- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task), when the General page warns that the host runs without admin rights, which note the Hot Corners and App Windows pages show, reading a process's elevation, and finding the process that owns a window.
 - **Sandbox checks:** UAC is off in Windows Sandbox and everything runs as administrator, so the checks cover:
   - creating and deleting the tasks, and their definitions;
   - the host started through the on-request task;
@@ -65,4 +65,4 @@ Runs the background host as administrator, so features also work while an app ru
   - the tray icon opening the settings app without admin rights;
   - Hot Corners in front of an app running as administrator;
   - the host's logs in the protected folder, and **Open host logs**;
-  - a failed hand-off, forced by deleting the on-request task: the General page warning, with **Open host logs** hidden, and no warning once the host runs as administrator.
+  - a failed hand-off, forced by deleting the on-request task: the General page warning, with **Open host logs** hidden, the Hot Corners and App Windows pages' notes saying that corners and App Windows don't work in front of apps running as administrator, and no warning once the host runs as administrator.

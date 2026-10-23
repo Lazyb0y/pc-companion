@@ -66,4 +66,18 @@ public sealed class HostStartTests
 
         Assert.Equal(expected, HostProcess.RunsWithoutAdminRights(general, uacLimited, hostElevated));
     }
+
+    [Theory]
+    [InlineData(true, true, true)]
+    [InlineData(false, false, false)]
+    [InlineData(false, true, true)] // With UAC off, the host runs as administrator without the setting.
+    [InlineData(true, false, false)] // The host's hand-off to the scheduled task failed.
+    [InlineData(true, null, true)] // No host runs, or its rights can't be read.
+    [InlineData(false, null, false)]
+    public void WhetherTheHostRunsAsAdministratorComesFromItsProcessBeforeTheSetting(bool runAsAdministrator, bool? hostElevated, bool expected)
+    {
+        var general = new GeneralSettings { AlwaysRunAsAdministrator = runAsAdministrator };
+
+        Assert.Equal(expected, HostProcess.RunsAsAdministrator(general, hostElevated));
+    }
 }
