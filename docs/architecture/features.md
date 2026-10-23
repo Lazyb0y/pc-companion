@@ -40,6 +40,7 @@ public interface IFeature : IDisposable
 
 - Each module registers its features with the host: `services.AddInputModule()`.
 - A feature that offers the host's Settings or Exit, as in its own menu, takes `IHostCommands` from the host. It may call them from any thread; the host runs them on its UI thread.
+- A feature opens web pages and starts programs only through `IHostCommands` too, never with admin rights; see [Always run as administrator](../features/general/run-as-administrator.md#between-the-host-and-other-programs). They run on the calling thread and can wait for Windows, so a feature calls them off the UI thread.
 - A feature that adds items to the PC Companion icon's menu, such as a submenu above Settings and Exit, implements `IHostMenuItems` from Core. The host asks each running feature for its `HostMenuItem`s each time the menu opens, on its UI thread, so a feature answers from what it already knows, and passes the chosen item back with the feature's own ID. A feature whose items or choice fail is stopped, like one whose `Apply` fails.
 - **Isolation:** the host's `FeatureRunner` calls each feature inside its own error boundary. When `Apply` throws, it logs the error, stops that feature for the rest of the session, and the other features keep running.
 - A feature guards its own handlers of window messages, input and timers the same way: an exception there would end the host.
