@@ -90,18 +90,21 @@ public sealed partial class HotCornersPage : Page
         }
     }
 
-    // Only the full path of an .exe file can be the app in front.
+    // Only the full path of an .exe file can be the app in front. Whether it exists, and its name,
+    // are read off the UI thread.
     private async void OnAddProgramFileClick(object sender, RoutedEventArgs e)
     {
         if (App.Current.MainWindow is not { } window
-            || OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.HotCornersProgramDialogTitle, Strings.HotCornersProgramFilter, "*.exe") is not { } program
-            || ProgramFile.Check(program, File.Exists) != ProgramProblem.None)
+            || OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.HotCornersProgramDialogTitle, Strings.HotCornersProgramFilter, "*.exe") is not { } program)
         {
             return;
         }
 
-        var name = await Task.Run(() => AppDisplay.NameOfProgram(program)).ConfigureAwait(true);
-        ViewModel.AddExcludedApp(new ExcludedApp { Name = name, Program = program });
+        var name = await Task.Run(() => ProgramFile.Check(program, File.Exists) == ProgramProblem.None ? AppDisplay.NameOfProgram(program) : null).ConfigureAwait(true);
+        if (name is not null)
+        {
+            ViewModel.AddExcludedApp(new ExcludedApp { Name = name, Program = program });
+        }
     }
 
     private void OnRemoveAppClick(object sender, RoutedEventArgs e)

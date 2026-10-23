@@ -261,6 +261,7 @@ public sealed partial class CornerViewModel : ObservableObject
     private readonly ScreenCorner _corner;
     private ActionOption _selectedAction;
     private KeyOption _selectedKey;
+    private string _programProblem = string.Empty;
 
     public CornerViewModel(HotCornersViewModel page, ScreenCorner corner, string name)
     {
@@ -278,6 +279,7 @@ public sealed partial class CornerViewModel : ObservableObject
         var settings = page.GetCorner(corner);
         _selectedAction = page.Actions.First(option => option.Action == settings.Action);
         _selectedKey = page.Keys.First(option => option.Key == settings.Key);
+        _ = CheckProgramAsync();
     }
 
     public string Name { get; }
@@ -344,8 +346,7 @@ public sealed partial class CornerViewModel : ObservableObject
             {
                 _page.SetCorner(_corner, _page.GetCorner(_corner) with { Program = program });
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ProgramProblem));
-                OnPropertyChanged(nameof(HasProgramProblem));
+                _ = CheckProgramAsync();
             }
         }
     }
@@ -364,17 +365,47 @@ public sealed partial class CornerViewModel : ObservableObject
         }
     }
 
-    /// <summary>What keeps the program from starting, or an empty string.</summary>
-    public string ProgramProblem => Platform.Windows.ProgramFile.Check(_page.GetCorner(_corner).Program, File.Exists) switch
+    /// <summary>What keeps the program from starting, or an empty string, also while it's being checked.</summary>
+    public string ProgramProblem
     {
-        Platform.Windows.ProgramProblem.NotChosen => Strings.HotCornersProgramNotChosen,
-        Platform.Windows.ProgramProblem.NotFullPath => Strings.HotCornersProgramNotFullPath,
-        Platform.Windows.ProgramProblem.NotExe => Strings.HotCornersProgramNotExe,
-        Platform.Windows.ProgramProblem.NotFound => Strings.HotCornersProgramNotFound,
-        _ => string.Empty,
-    };
+        get => _programProblem;
+        private set
+        {
+            if (SetProperty(ref _programProblem, value))
+            {
+                OnPropertyChanged(nameof(HasProgramProblem));
+            }
+        }
+    }
 
     public bool HasProgramProblem => ProgramProblem.Length > 0;
+
+    // The path's form is checked at once. Whether the file exists is read off the UI thread, since a
+    // program on a network share that's offline can take seconds to find, and the result is dropped
+    // when the program changed meanwhile.
+    private async Task CheckProgramAsync()
+    {
+        var program = _page.GetCorner(_corner).Program;
+        var problem = Platform.Windows.ProgramFile.Check(program, _ => true);
+        if (problem == Platform.Windows.ProgramProblem.None)
+        {
+            ProgramProblem = string.Empty;
+            problem = await Task.Run(() => Platform.Windows.ProgramFile.Check(program, File.Exists)).ConfigureAwait(true);
+            if (program != _page.GetCorner(_corner).Program)
+            {
+                return;
+            }
+        }
+
+        ProgramProblem = problem switch
+        {
+            Platform.Windows.ProgramProblem.NotChosen => Strings.HotCornersProgramNotChosen,
+            Platform.Windows.ProgramProblem.NotFullPath => Strings.HotCornersProgramNotFullPath,
+            Platform.Windows.ProgramProblem.NotExe => Strings.HotCornersProgramNotExe,
+            Platform.Windows.ProgramProblem.NotFound => Strings.HotCornersProgramNotFound,
+            _ => string.Empty,
+        };
+    }
 }
 
 /// <summary>

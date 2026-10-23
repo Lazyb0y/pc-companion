@@ -362,3 +362,15 @@ $running = (Get-Processes 'charmap').Count
 Test-Check 'Run a program logs that it doesn''t run as administrator' (Wait-Until { (Get-HostLog) -match "Run a program doesn't run while PC Companion runs as administrator\." } 5) (Get-PointerText)
 Test-Check 'no program starts while PC Companion runs as administrator' ((Get-Processes 'charmap').Count -eq $running) "charmap processes before: $running, after: $((Get-Processes 'charmap').Count)"
 [void] (Move-Pointer $middleX $middleY)
+
+# A program that doesn't exist shows its problem below the box once the box is left. Whether the
+# file exists is read off the page's thread, so the problem shows a moment later.
+$missing = Join-Path $env:WINDIR 'System32\PCCompanionMissing.exe'
+$programBox = Find-AppBox 'Top left program'
+if ($programBox) { $programBox.SetFocus() }
+[void] (Set-AppBox 'Top left program' $missing)
+$argumentsBox = Find-AppBox 'Top left arguments'
+if ($argumentsBox) { $argumentsBox.SetFocus() }
+$savedProgram = { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners.topLeft.program }
+Test-Check 'a program that doesn''t exist shows its problem below the box' (Wait-Until { (& $savedProgram) -eq $missing -and (Find-AppText "This program wasn't found.") } 10) "saved: $(& $savedProgram)"
+Save-Screenshot '12d-hot-corners-program-missing'
