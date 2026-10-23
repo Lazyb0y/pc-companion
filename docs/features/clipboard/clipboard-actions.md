@@ -8,7 +8,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 ## Behavior
 
-- **Windows + Alt + V** shows a menu at the pointer with the actions for the text on the clipboard. Choosing one runs it; Esc or a click elsewhere closes the menu.
+- **Windows + Alt + V** shows a menu with the actions for the text on the clipboard, at the text cursor of the app in front, or at the pointer when the app doesn't report one; see [Where the menu opens](#where-the-menu-opens). Choosing an action runs it; Esc or a click elsewhere closes the menu.
 - The menu shows, in this order:
   - the start of the copied text, dimmed, so the user sees what the action gets: its first line, up to 50 characters, with an ellipsis when there's more;
   - **Open in browser**, when the text is a web link and **Open copied links** is on;
@@ -25,6 +25,19 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - Pressing the shortcut again closes the menu.
 - A letter chooses the item that starts with it, when only one does, as in other Windows menus.
 - The browser or program that an action opens comes to the front. When the menu closes without an action, as with Esc, the window that was in front gets the front back, so typing goes on there; see [Showing the menu](#showing-the-menu).
+
+## Where the menu opens
+
+- The menu opens at the text cursor of the app in front, where the user is typing, as Windows' emoji panel does. Keyboard and Magnifier users then find it where they're looking. When the app doesn't report a text cursor, the menu opens at the pointer.
+- At the text cursor, the menu opens below the cursor's line, starting where the cursor is, or above the line when there isn't room below. It never covers the line, and it stays on the display that has the text cursor. Windows places it so: `TrackPopupMenuEx` gets the line as the rectangle to keep clear (`TPM_VERTICAL`).
+- The text cursor is read when the shortcut is pressed, before the clipboard, in one of two ways:
+  - **Windows' text cursor**, with `GetGUIThreadInfo`, for apps that use it, such as Windows' own text boxes, WinForms and WPF apps. Windows keeps its position, so nothing asks the app or waits for it.
+  - Otherwise **the app's accessibility text cursor** (`OBJID_CARET`), which browsers and apps built on them, such as Edge and Visual Studio Code, report instead, for screen readers and Magnifier. This asks the app, with `WM_GETOBJECT` sent by `SendMessageTimeout`, for the cursor's place and whether it's shown. It runs on a thread of its own, in COM's multithreaded apartment, and the feature's thread waits for it at most 100 ms, so an app that stopped responding delays the menu by at most that. While an earlier request still waits for its app, a press doesn't ask again.
+- When an app reports neither, the menu opens at the pointer: apps such as WinUI apps and Windows Terminal, and text that can't be typed in, such as a paragraph on a web page or a button, which has no text cursor.
+- A text cursor that the user can't be looking at isn't used: one marked hidden, one with no height, one in a hidden or minimized window, outside its window, or on no display.
+- PC Companion asks only an app that runs with the same rights as itself, at the same integrity level (`GetTokenInformation` with `TokenIntegrityLevel`): without admin rights while PC Companion runs without them, and as administrator while it runs as administrator. The answer is an object from the app, which a program shouldn't take in from a less trusted one, such as PC Companion running as administrator from an app without admin rights, or from an app in an AppContainer; Windows' text cursor is still used for them. Windows already blocks the request to an app with more rights.
+- An app that isn't aware of each display's scale reports the text cursor in its own pixels, which Windows scales. PC Companion reads Windows' text cursor as that app sees it, with the app window's DPI awareness (`GetWindowDpiAwarenessContext` and `SetThreadDpiAwarenessContext`), and converts both kinds to the display's pixels with `LogicalToPhysicalPointForPerMonitorDPI`.
+- Compared with other systems: KDE Plasma's clipboard tool and clipboard tools on macOS open at the pointer. Windows' emoji panel and clipboard history open at the text cursor, which apps tell Windows' text input. Clipboard tools for Windows that open at the text cursor find it in the same two ways, and some open over the middle of the app's window when there's none; PC Companion opens at the pointer then, as it always did.
 
 ## Web links
 
@@ -83,7 +96,8 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - Clipboard Actions runs on a thread of its own, as [Threads and processes](../../architecture/features.md#threads-and-processes) requires: an STA thread with its own hidden window and message loop. Reading the clipboard can wait for the app that copied the text, and the menu runs its own message loop while it's open. On their own thread, neither delays the other features.
 - **The host's UI thread** runs only `Apply`: it reads the section, then starts the feature's thread, passes it the new settings with `MessageWindow.BeginInvoke` on its window, or asks it to stop. It never waits for the feature's thread.
-- **The feature's thread** registers the shortcut, compiles the patterns when the settings change, and at each press reads the clipboard, matches the rules and shows the menu. It gets its own copy of the settings, so the two threads share no state.
+- **The feature's thread** registers the shortcut, compiles the patterns when the settings change, and at each press reads the text cursor, reads the clipboard, matches the rules and shows the menu. It gets its own copy of the settings, so the two threads share no state.
+- **Asking an app for its text cursor** runs on a thread of its own, in COM's multithreaded apartment, since the app's object needs COM and the call waits for the app. The feature's thread waits for it at most 100 ms, and a press during that wait is left out. A request that an app doesn't answer in time ends when the app answers or ends.
 - **The chosen action** starts on the thread pool: Windows can take a while to start a program or the browser, for example while antivirus software checks it.
 - **Settings** in the menu runs on the host's UI thread, through `IHostCommands`.
 - **Stopping:** the feature's thread closes an open menu, removes the shortcut and its window, and ends. When the feature is turned on again before the old thread has ended, the new thread waits for it before registering the shortcut, which Windows would otherwise refuse. It's a background thread, so one that doesn't end doesn't keep the host running.
@@ -106,6 +120,16 @@ A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by
 - Windows menus draw the isolate characters (U+2068, U+2069) as boxes. The embedding characters show nothing and give Arabic text its own direction in a left-to-right menu.
 - 50 non-backtracking patterns compiled in 96 to 130 ms. Matching all 50 against 4,096 characters took up to 17 ms the first time, while each pattern builds its matcher, and under 1 ms after that. The same harmful patterns with backtracking stopped at the 100 ms limit. With the invariant culture, Match case off doesn't match `i` with the Turkish `İ`.
 - A rule's first match took about 11 ms, and with 32 busy threads on 8 processors 108 to 123 ms, so 3 of 4 ran out of time. After a match of our own, the first match took about 1 ms, also with 32 busy threads, and with Match case on or off.
+
+A later spike, for [Where the menu opens](#where-the-menu-opens), in a process that is per-monitor DPI aware as the host is, found:
+
+- `GetGUIThreadInfo` took 0.4 µs on average. The first conversion of a position took about 0.2 ms, later ones about 5 µs.
+- Character Map's Characters to copy box, the Run dialog's box, a WinForms text box in a process that isn't DPI aware and a WPF text box in a system-aware one reported their text cursor, where the box was on screen, and it moved as text was typed. WPF doesn't mark its text cursor as blinking, so that mark isn't checked. Character Map's character grid reported none.
+- Edge reported none to Windows: not in a text area, the address bar or elsewhere, before or after UI Automation asked it, and not with `--force-renderer-accessibility`. Its accessibility text cursor gave the place in a text area, where the box was on screen, moving as text was typed, and in the address bar, in about 2 ms, 6 ms the first time. With a button or plain text focused, it was marked hidden, with no width.
+- Asked for their accessibility text cursor, Character Map's box and the WPF box didn't answer themselves; Windows' standard answer is made from `GetGUIThreadInfo`, already read first, so only an app's own answer is used. Character Map's dialog window, rather than its box, which has the keyboard focus, reported none, so the window with the keyboard focus is asked.
+- A read-only WinForms box kept Windows' text cursor; a read-only WPF box reported none.
+- With the line kept clear, the menu opened below it, and above it when the line was less than the menu's height from the bottom of the screen, also for a line that ended at the screen's bottom edge. At the right edge, it moved left and stayed below the line. Without keeping the line clear, at the bottom, the menu covered it.
+- Windows Sandbox has one display, and its scale can't be changed there, so other scales and several displays are tested by hand.
 
 ## Settings
 
@@ -158,20 +182,23 @@ A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by
 - Parts of the match in the actions, such as a pattern's groups; only the whole text.
 - Built-in patterns other than web links, such as email addresses, phone numbers and file paths, and links without `http://` or `https://`, such as `www.example.com`.
 - Importing and exporting rules.
+- Choosing between the text cursor and the pointer: the menu opens at the text cursor whenever the app reports one.
+- Finding the text cursor through UI Automation, for WinUI apps and Windows Terminal. It makes several calls into the app, each of which can wait up to 2 seconds, and browsers build their whole accessibility tree when it asks them.
 
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11.
-- Every API is documented and in every supported version: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, and `TrackPopupMenuEx`. `RegexOptions.NonBacktracking` is part of .NET.
+- Every API is documented and in every supported version: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, `TrackPopupMenuEx`, and for the text cursor `GetGUIThreadInfo`, `SendMessageTimeout` with `WM_GETOBJECT`, `ObjectFromLresult` and `IAccessible`, `GetWindowDpiAwarenessContext`, `SetThreadDpiAwarenessContext` and `LogicalToPhysicalPointForPerMonitorDPI`, the last three since Windows 10 version 1607. `RegexOptions.NonBacktracking` is part of .NET.
 - Windows doesn't use Windows + Alt + V, according to Microsoft's list of keyboard shortcuts, and registering it succeeded where Windows' own shortcuts were refused. When another program already has it, Windows refuses it: the shortcut then does nothing, and a warning is logged.
 
 ## Security and privacy
 
 - **Reads:** the clipboard's text, only when the shortcut is pressed; no clipboard listener and no hook. First the private marks, and the text only when there are none, at most 4,097 characters. The text stays in memory until the menu closes and the action has started; it's never stored, logged or sent.
+- **The text cursor:** where the app in front has its text cursor, only when the shortcut is pressed, to place the menu; never anything typed, and the position is never stored or logged. Windows' text cursor is read from Windows, without rights and without asking the app. The accessibility text cursor asks the app for only the cursor's place and whether it's shown; the answer is checked like any untrusted input, as a place on a display, and a slow app can't delay the menu by more than 100 ms. Only apps with the same integrity level as PC Companion are asked, so no less trusted program hands it an object, also while it runs as administrator.
 - **On screen:** the menu shows the start of the copied text, only after the user pressed the shortcut. For a link, it shows where the link goes before it opens.
 - **Untrusted text:** the copied text can come from any app or web page, so it's treated as untrusted. Patterns run in time that grows only with the text's length, with a time limit. Addresses get the text encoded and open only as `http` or `https`. Programs get it inside one argument, without a shell, and command interpreters don't run from a rule.
 - **Network:** PC Companion makes no connections. Choosing an action that opens a link or web address has the browser open it, and a rule's address sends the copied text to the site the user named. `PRIVACY.md` gets a line on Clipboard Actions.
-- **Logs:** Debug entries when the shortcut is pressed, how many rules matched, which rule's action ran, by number, and why the menu had no actions, such as private text. Warnings when Windows refuses the shortcut, a rule can't be used, a program doesn't start (with its file name only, as in Hot Corners) or the browser doesn't open. Never the copied text, addresses, patterns or rule names, which can hold personal data.
+- **Logs:** Debug entries when the shortcut is pressed, how many rules matched, whether the menu opened at Windows' text cursor, the app's accessibility text cursor or the pointer, without where, and whether the app didn't answer in time, which rule's action ran, by number, and why the menu had no actions, such as private text. Warnings when Windows refuses the shortcut, a rule can't be used, a program doesn't start (with its file name only, as in Hot Corners) or the browser doesn't open. Never the copied text, addresses, patterns or rule names, which can hold personal data.
 - **Settings:** the rules are in `settings.json`. Any program running as the user can change that file, but it could also open the same addresses and start the same programs itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so programs don't run then, and links open without admin rights.
 - **Rights:** runs without admin rights, and never starts a program or the browser with them. Turning the feature off removes the shortcut.
 - **Failures:** everything on the feature's thread runs inside the feature's error boundary, and the other features keep running.
@@ -179,7 +206,7 @@ A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by
 ## Performance
 
 - Between presses nothing runs: no clipboard listener, no timer and no hook. The feature's thread waits in its message loop.
-- Patterns compile only when the settings change, on the feature's thread: about 0.1 seconds for 50 rules. A press reads at most 4,097 characters, in well under a millisecond unless the copying app provides its data on request, and matches up to 50 patterns, each in time that grows only with the length of the text: under 20 ms for 50 patterns and 4,096 characters, and under 1 ms once each pattern has matched once.
+- Patterns compile only when the settings change, on the feature's thread: about 0.1 seconds for 50 rules. A press reads the text cursor in well under a millisecond from Windows, or in a few milliseconds from the app, at most 100 ms, reads at most 4,097 characters, in well under a millisecond unless the copying app provides its data on request, and matches up to 50 patterns, each in time that grows only with the length of the text: under 20 ms for 50 patterns and 4,096 characters, and under 1 ms once each pattern has matched once.
 
 ## Accessibility and localization
 
@@ -199,13 +226,15 @@ A spike in Windows Sandbox, with keys sent by scan code and the clipboard set by
   - programs: `{text}` stays one argument with spaces, quotes and `&`; command interpreters are refused; nothing starts while PC Companion runs as administrator;
   - private text: each mark keeps the text from being read;
   - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, `&` in names, and dimmed programs while running as administrator;
+  - where the menu opens: at Windows' text cursor with its line kept clear, at the app's accessibility text cursor when Windows has none, and at the pointer when there's neither, when the app doesn't answer within 100 ms, while an earlier request still waits, and for an app with another integrity level, which isn't asked; a text cursor marked hidden, with no height or outside its window isn't used;
   - the front: given back after the menu closes without an action, kept after a click in another window;
   - settings: unknown actions, missing fields and unusable rules are left out with a warning.
-- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them, and the rule editor refuses a pattern with a lookahead, an address that isn't a web address and a command interpreter. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu at the pointer with the expected items, read with UI Automation. Open in browser and an address rule start the default browser with the address; a rule that runs a program shows dimmed, since everything in Windows Sandbox runs as administrator; text marked private, text that's too long and an empty clipboard show only their note. Esc and the shortcut again give the front back to the window that had it. Turned off, the shortcut opens no menu. The host's `--open-web-page` opens only web addresses.
+- **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them, and the rule editor refuses a pattern with a lookahead, an address that isn't a web address and a command interpreter. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation: at the pointer while Character Map's character grid has the focus, below the text cursor of its Characters to copy box, and above it with the window at the bottom of the screen; in Edge, below the text cursor of a local page's text area, and at the pointer with the page's plain text clicked. Open in browser and an address rule start the default browser with the address; a rule that runs a program shows dimmed, since everything in Windows Sandbox runs as administrator; text marked private, text that's too long and an empty clipboard show only their note. Esc and the shortcut again give the front back to the window that had it. Turned off, the shortcut opens no menu. The host's `--open-web-page` opens only web addresses.
 - **By hand:**
   - that the menu and the browser come to the front on a PC, where Windows' foreground lock applies;
   - a rule that runs a program, without admin rights, getting the text as one argument;
   - Always run as administrator with UAC on: links open in a browser without admin rights, and rules that run a program show dimmed;
   - an app running as administrator in front, with and without Always run as administrator;
   - text copied from a browser, Office and a terminal, and from a password manager that marks it private;
-  - a screen reader reading the menu, and a right-to-left language.
+  - a screen reader reading the menu, and a right-to-left language;
+  - the menu at the text cursor in Notepad, Word, Chrome and Visual Studio Code, at 125% and 150% scale, in an app that isn't DPI aware, with Magnifier, and on a second display with another scale; and at the pointer in a browser while PC Companion runs as administrator.
