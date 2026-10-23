@@ -1,7 +1,7 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
@@ -10,18 +10,18 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// Starts the program of a corner whose action is Run a program. See "Run a program" in
 /// docs/features/input/hot-corners.md.
 /// </summary>
-/// <param name="isAdministrator">Whether PC Companion runs as administrator; programs don't start then.</param>
 /// <param name="fileExists">Whether a file exists.</param>
-/// <param name="start">Starts a process.</param>
+/// <param name="commands">The host's commands, which start the program without admin rights.</param>
 /// <param name="runInBackground">Runs an action on the thread pool.</param>
-public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministrator, Func<string, bool> fileExists, Action<ProcessStartInfo> start, Action<Action> runInBackground)
+public sealed partial class ProgramRunner(ILogger logger, Func<string, bool> fileExists, IHostCommands commands, Action<Action> runInBackground)
 {
     /// <summary>
-    /// Starts the corner's program, in its own folder, with its arguments passed one by one and
-    /// no shell. The program is checked and started on the thread pool, and this returns at once:
-    /// a program on a network share that's offline can take many seconds. Problems are logged,
-    /// with the program's file name only: its folder and arguments can hold personal paths or
-    /// secrets. <paramref name="done"/> gets the result on the thread pool.
+    /// Starts the corner's program with the user's rights, also while PC Companion runs as
+    /// administrator, in its own folder, with its arguments passed one by one and no shell. The
+    /// program is checked and started on the thread pool, and this returns at once: a program on
+    /// a network share that's offline can take many seconds. Problems are logged, with the
+    /// program's file name only: its folder and arguments can hold personal paths or secrets.
+    /// <paramref name="done"/> gets the result on the thread pool.
     /// </summary>
     public void Run(CornerSettings corner, Action<CornerResultKind> done)
     {
@@ -49,12 +49,6 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
 
     private CornerResultKind Start(CornerSettings corner, string fileName)
     {
-        if (isAdministrator())
-        {
-            LogAdministrator(logger);
-            return CornerResultKind.ProgramAsAdministrator;
-        }
-
         var program = corner.Program;
         var problem = ProgramFile.Check(program, fileExists);
         if (problem != ProgramProblem.None)
@@ -68,7 +62,7 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
             };
         }
 
-        if (ProgramFile.TryStart(program!, CommandLine.SplitArguments(corner.Arguments), start, out var errorCode))
+        if (commands.StartProgram(program!, CommandLine.SplitArguments(corner.Arguments), out var errorCode))
         {
             LogStarted(logger, fileName);
             return CornerResultKind.Ran;
@@ -80,9 +74,6 @@ public sealed partial class ProgramRunner(ILogger logger, Func<bool> isAdministr
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Started {FileName}.")]
     private static partial void LogStarted(ILogger logger, string fileName);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Run a program doesn't run while PC Companion runs as administrator.")]
-    private static partial void LogAdministrator(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Run a program didn't start {FileName}: {Problem}.")]
     private static partial void LogNotStarted(ILogger logger, string fileName, ProgramProblem problem);

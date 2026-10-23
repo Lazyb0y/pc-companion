@@ -381,7 +381,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>以你的权限启动。PC Companion 以管理员身份运行时不会运行。</value>
+    <value>以你的权限启动，PC Companion 以管理员身份运行时也是如此。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -528,10 +528,6 @@
     <value>Windows 未运行该操作</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>未启动程序，因为 PC Companion 以管理员身份运行</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>未启动程序，因为未选择程序</value>
     <comment>Needs native review.</comment>
@@ -553,7 +549,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，触发角也能工作。“运行程序”不会运行。</value>
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，触发角也能工作。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

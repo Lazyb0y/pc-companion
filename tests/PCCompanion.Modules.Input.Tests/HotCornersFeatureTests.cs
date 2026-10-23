@@ -17,7 +17,7 @@ public sealed class HotCornersFeatureTests : IDisposable
 
     public HotCornersFeatureTests()
     {
-        _feature = new HotCornersFeature(_logger, TimeProvider.System);
+        _feature = new HotCornersFeature(_logger, TimeProvider.System, new FakeHostCommands());
     }
 
     public void Dispose() => _feature.Dispose();

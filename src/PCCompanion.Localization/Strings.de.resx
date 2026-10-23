@@ -389,7 +389,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersProgramNote" xml:space="preserve">
-    <value>Wird mit Ihren Rechten gestartet. Wird nicht ausgeführt, solange PC Companion als Administrator ausgeführt wird.</value>
+    <value>Wird mit Ihren Rechten gestartet, auch wenn PC Companion als Administrator ausgeführt wird.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayHeader" xml:space="preserve">
@@ -540,10 +540,6 @@
     <value>Windows hat die Aktion nicht ausgeführt</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersResultProgramAsAdministrator" xml:space="preserve">
-    <value>Programm nicht gestartet, weil PC Companion als Administrator ausgeführt wird</value>
-    <comment>Needs native review.</comment>
-  </data>
   <data name="HotCornersResultProgramNotChosen" xml:space="preserve">
     <value>kein Programm gestartet, weil keines ausgewählt ist</value>
     <comment>Needs native review.</comment>
@@ -565,7 +561,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren die Ecken auch, wenn eine als Administrator ausgeführte App im Vordergrund ist. „Programm ausführen“ wird nicht ausgeführt.</value>
+    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren die Ecken auch, wenn eine als Administrator ausgeführte App im Vordergrund ist.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">

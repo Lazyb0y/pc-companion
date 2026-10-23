@@ -320,7 +320,8 @@ Test-Check 'a corner does nothing while Hot Corners is off' ((Get-MatchCount (Ge
 Save-Screenshot '11-hot-corners-off'
 
 # Run a program: the page shows the program, and Browse opens the Open dialog. Everything in the
-# Sandbox runs as administrator, so the program must not start; the host logs why.
+# Sandbox runs as administrator with UAC off, so the host starts the program itself. Handing it to a
+# copy of the host without admin rights, with UAC on, is checked by hand.
 [void] (Close-SettingsApp)
 $program = Join-Path $env:WINDIR 'System32\charmap.exe'
 Test-Check 'the test program exists' (Test-Path $program) $program
@@ -363,9 +364,11 @@ Test-Check 'cancelling the Open dialog keeps the program' ((Get-BoxText 'Top lef
 $running = (Get-Processes 'charmap').Count
 [void] (Move-Pointer $middleX $middleY)
 [void] (Move-IntoTopLeftCorner)
-Test-Check 'Run a program logs that it doesn''t run as administrator' (Wait-Until { (Get-HostLog) -match "Run a program doesn't run while PC Companion runs as administrator\." } 5) (Get-PointerText)
-Test-Check 'no program starts while PC Companion runs as administrator' ((Get-Processes 'charmap').Count -eq $running) "charmap processes before: $running, after: $((Get-Processes 'charmap').Count)"
+Test-Check 'Run a program starts the program' (Wait-Until { (Get-Processes 'charmap').Count -gt $running } 10) "charmap processes before: $running, after: $((Get-Processes 'charmap').Count); $(Get-PointerText)"
+Test-Check 'the host logs the program by its file name' (Wait-Until { (Get-HostLog) -match 'Started charmap\.exe\.' } 5)
 [void] (Move-Pointer $middleX $middleY)
+Get-Processes 'charmap' | Stop-Process -Force -ErrorAction SilentlyContinue
+[void] (Wait-Until { (Get-Processes 'charmap').Count -eq 0 } 10)
 
 # A program that doesn't exist shows its problem below the box once the box is left. Whether the
 # file exists is read off the page's thread, so the problem shows a moment later.
