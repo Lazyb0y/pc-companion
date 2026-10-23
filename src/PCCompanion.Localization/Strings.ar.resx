@@ -733,7 +733,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
-    <value>يعرض الإجراءات الخاصة بالنص المنسوخ في قائمة عند المؤشر.</value>
+    <value>يعرض الإجراءات الخاصة بالنص المنسوخ في قائمة حيث تكتب، أو عند المؤشر.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcut" xml:space="preserve">

@@ -20,9 +20,11 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     private readonly IHostCommands _commands;
     private readonly ILogger _logger;
     private readonly ClipboardActionRunner _runner;
+    private readonly MenuPlacer _placer;
 
     // The thread's own, while its message loop runs.
     private ClipboardRules? _rules;
+    private bool _pressed;
     private bool _menuOpen;
 
     /// <summary>Starts the thread, which registers the shortcut and compiles the rules in <paramref name="settings"/>.</summary>
@@ -41,6 +43,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         _commands = commands;
         _logger = logger;
         _runner = new ClipboardActionRunner(commands, () => system.IsAdministrator, system.FileExists, system.StartProcess, logger);
+        _placer = new MenuPlacer(system);
         Start();
     }
 
@@ -81,23 +84,38 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     private void Pressed(MessageWindow window)
     {
-        // A press while the menu is open arrives through the menu's own loop; its keys close the menu.
-        if (_menuOpen || _rules is null)
+        // A press while the menu is open arrives through the menu's own loop; its keys close the
+        // menu. One while this press waits for the app's text cursor is left out too.
+        if (_pressed || _rules is null)
         {
             return;
         }
 
+        _pressed = true;
+        try
+        {
+            ShowActions(window, _rules);
+        }
+        finally
+        {
+            _pressed = false;
+        }
+    }
+
+    private void ShowActions(MessageWindow window, ClipboardRules rules)
+    {
+        var position = _placer.Find();
         var read = _system.ReadClipboard(window);
         var text = read.Status == ClipboardTextStatus.Text ? read.Text!.Trim() : null;
-        var offers = string.IsNullOrEmpty(text) ? [] : _rules.Match(text);
-        LogPressed(_logger, read.Status, offers.Count);
+        var offers = string.IsNullOrEmpty(text) ? [] : rules.Match(text);
+        LogPressed(_logger, read.Status, offers.Count, position.Place);
 
         var plan = ClipboardMenu.Build(read, offers, _system.IsAdministrator);
         uint chosen;
         _menuOpen = true;
         try
         {
-            chosen = _system.ShowMenu(window, plan.Items, _system.PointerPosition());
+            chosen = _system.ShowMenu(window, plan.Items, position.Point, position.KeepClear);
         }
         finally
         {
@@ -142,8 +160,8 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions applied its settings: {Usable} of {Rules} rules can be used; Open copied links {OpenLinks}.")]
     private static partial void LogApplied(ILogger logger, int usable, int rules, bool openLinks);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions' shortcut was pressed; clipboard: {Status}, actions offered: {Offers}.")]
-    private static partial void LogPressed(ILogger logger, ClipboardTextStatus status, int offers);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions' shortcut was pressed; clipboard: {Status}, actions offered: {Offers}, menu: {Place}.")]
+    private static partial void LogPressed(ILogger logger, ClipboardTextStatus status, int offers, MenuPlace place);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions runs rule {Rule} (0 is Open in browser): {Kind}.")]
     private static partial void LogChosen(ILogger logger, int rule, OfferKind kind);

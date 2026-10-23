@@ -26,8 +26,15 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
 
     public Point PointerPosition() => InputState.PointerPosition ?? Point.Empty;
 
+    public ForegroundTextCursor ReadTextCursor() => TextCursor.Read();
+
+    public bool CanAskTextCursor(nint window) => TextCursor.CanAsk(window);
+
+    // The app gets as long to answer the message as the press waits for it.
+    public Task<Rectangle?> AskTextCursor(nint window) => TextCursor.AskAsync(window, MenuPlacer.AnswerLimit);
+
     // The menu follows the Windows mode and the language, as the PC Companion icon's menu does.
-    public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position)
+    public uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position, Rectangle? keepClear)
     {
         var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
         if (MenuTheme.IsSupported)
@@ -35,7 +42,7 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
             MenuTheme.Set(MenuTheme.ForWindowsMode());
         }
 
-        return PopupMenu.ShowForShortcut(window, items, position.X, position.Y, rightToLeft);
+        return PopupMenu.ShowForShortcut(window, items, position.X, position.Y, rightToLeft, keepClear);
     }
 
     public void AllowFront() => Foreground.AllowAnyProcess();

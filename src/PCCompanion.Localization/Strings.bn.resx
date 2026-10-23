@@ -685,7 +685,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
-    <value>কপি করা টেক্সটের অ্যাকশনগুলো পয়েন্টারের কাছে একটি মেনুতে দেখায়।</value>
+    <value>কপি করা টেক্সটের অ্যাকশনগুলো আপনি যেখানে টাইপ করছেন সেখানে, বা পয়েন্টারের কাছে, একটি মেনুতে দেখায়।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcut" xml:space="preserve">

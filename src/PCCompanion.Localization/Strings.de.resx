@@ -685,7 +685,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
-    <value>Zeigt die Aktionen für den kopierten Text in einem Menü am Zeiger an.</value>
+    <value>Zeigt die Aktionen für den kopierten Text in einem Menü dort an, wo Sie gerade Text eingeben, oder am Zeiger.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcut" xml:space="preserve">

@@ -673,7 +673,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcutDescription" xml:space="preserve">
-    <value>在指针处的菜单中显示针对所复制文本的操作。</value>
+    <value>在你正在键入的位置或指针处的菜单中显示针对所复制文本的操作。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsShortcut" xml:space="preserve">
