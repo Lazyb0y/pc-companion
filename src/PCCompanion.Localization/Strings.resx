@@ -482,7 +482,11 @@
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
     <value>Results show while Hot Corners is on.</value>
-    <comment>Hot Corners page: shown instead of the recent results while Hot Corners is off or PC Companion isn't running.</comment>
+    <comment>Hot Corners page: shown instead of the recent results while Hot Corners is off.</comment>
+  </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>Recent results aren't available right now. If corners don't work either, restart PC Companion.</value>
+    <comment>Hot Corners page: shown instead of the recent results while Hot Corners is on but PC Companion hasn't given them for a few seconds, for example because it stopped.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}, {1}: {2}</value>

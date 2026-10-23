@@ -484,6 +484,10 @@
     <value>Los resultados se muestran mientras Esquinas activas está activado.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>Los resultados recientes no están disponibles ahora. Si las esquinas tampoco funcionan, reinicia PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}, {1}: {2}</value>
     <comment>Needs native review.</comment>

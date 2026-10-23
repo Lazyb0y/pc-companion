@@ -516,6 +516,10 @@
     <value>تظهر النتائج عندما تكون الزوايا النشطة قيد التشغيل.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>النتائج الأخيرة غير متاحة الآن. إذا لم تعمل الزوايا أيضاً، فأعد تشغيل PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}، {1}: {2}</value>
     <comment>Needs native review.</comment>

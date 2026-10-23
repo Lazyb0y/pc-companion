@@ -476,6 +476,10 @@
     <value>触发角打开时显示结果。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>最近的结果暂时不可用。如果触发角也不起作用，请重启 PC Companion。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}，{1}：{2}</value>
     <comment>Needs native review.</comment>

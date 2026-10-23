@@ -484,6 +484,10 @@
     <value>Les résultats s’affichent quand Coins actifs est activé.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>Les résultats récents ne sont pas disponibles pour le moment. Si les coins ne fonctionnent pas non plus, redémarrez PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}, {1} : {2}</value>
     <comment>Needs native review.</comment>

@@ -484,6 +484,10 @@
     <value>হট কর্নার চালু থাকলে ফলাফল দেখানো হয়।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>সাম্প্রতিক ফলাফল এখন পাওয়া যাচ্ছে না। কোণগুলোও কাজ না করলে PC Companion আবার চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}, {1}: {2}</value>
     <comment>Needs native review.</comment>
