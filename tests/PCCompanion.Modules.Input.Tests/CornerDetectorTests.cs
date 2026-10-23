@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 
@@ -11,8 +12,13 @@ namespace PCCompanion.Modules.Input.Tests;
 public sealed class CornerDetectorTests
 {
     private static readonly Rectangle Main = Rectangle.FromLTRB(0, 0, 1920, 1080);
+    private static readonly Rectangle Second = Rectangle.FromLTRB(1920, 0, 3840, 1080);
     private static readonly Point Middle = new(960, 540);
     private static readonly Point TopLeft = new(0, 0);
+    private static readonly Point SecondTopRight = new(3839, 0);
+
+    // The desktop covers every display and belongs to the shell.
+    private static readonly WindowPlace Desktop = Window(Rectangle.FromLTRB(0, 0, 3840, 1080), isShell: true);
 
     private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
     private readonly ManualTimeProvider _clock = new();
@@ -141,14 +147,181 @@ public sealed class CornerDetectorTests
     }
 
     [Theory]
-    [InlineData(true, CornerOutcome.FullScreenApp)]
-    [InlineData(false, CornerOutcome.Triggered)]
-    public void AFullScreenAppSkipsTheCornerUnlessTurnedOff(bool ignoreFullScreenApps, CornerOutcome outcome)
+    [InlineData(true)]
+    [InlineData(false)]
+    public void APointerConfinedToPartOfTheScreenSkipsTheCornerWhateverTheFullScreenSetting(bool ignoreFullScreenApps)
     {
         _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, IgnoreFullScreenApps = ignoreFullScreenApps }, [Main]);
-        _environment.IsFullScreenAppInFront = true;
+        _environment.PointerClip = Rectangle.FromLTRB(0, 0, 800, 600);
+
+        Assert.Equal(Decision(CornerOutcome.PointerConfined), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void APointerClipThatCoversEveryDisplayConfinesNothing()
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main, Second]);
+        _environment.PointerClip = Rectangle.FromLTRB(0, 0, 3840, 1080);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void APointerConfinedToOneOfTwoDisplaysSkipsItsCorners()
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main, Second]);
+        _environment.PointerClip = Main;
+
+        Assert.Equal(Decision(CornerOutcome.PointerConfined), MoveTo(TopLeft));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void APointerAnAppHidSkipsTheCornerWhateverTheFullScreenSetting(bool ignoreFullScreenApps)
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, IgnoreFullScreenApps = ignoreFullScreenApps }, [Main]);
+        _environment.PointerVisibility = PointerVisibility.Hidden;
+
+        Assert.Equal(Decision(CornerOutcome.PointerHidden), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void APointerWindowsHidesForTouchDoesntSkipTheCorner()
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        _environment.PointerVisibility = PointerVisibility.Suppressed;
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Theory]
+    [InlineData(true, CornerOutcome.FullScreenApp)]
+    [InlineData(false, CornerOutcome.Triggered)]
+    public void ABorderlessWindowCoveringTheDisplaySkipsTheCornerUnlessTurnedOff(bool ignoreFullScreenApps, CornerOutcome outcome)
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, IgnoreFullScreenApps = ignoreFullScreenApps }, [Main]);
+        _environment.Windows.AddRange([Window(Main), Desktop]);
 
         Assert.Equal(Decision(outcome), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void AFullScreenAppSkipsOnlyTheCornersOfItsOwnDisplay()
+    {
+        ConfigureTwoDisplays();
+        _environment.Windows.AddRange([Window(Second), Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+        MoveTo(Middle);
+        Assert.Equal(CornerOutcome.FullScreenApp, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Fact]
+    public void AFullScreenAppThatIsntInFrontStillSkipsTheCornersOfItsDisplay()
+    {
+        // A video on the second display while a window on the main display is in front.
+        ConfigureTwoDisplays();
+        _environment.Windows.AddRange([Window(Rectangle.FromLTRB(100, 100, 900, 700), hasFrame: true), Window(Second), Desktop]);
+
+        Assert.Equal(CornerOutcome.FullScreenApp, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Theory]
+    [InlineData("click-through")]
+    [InlineData("no-activate")]
+    [InlineData("tool window")]
+    [InlineData("cloaked")]
+    [InlineData("minimized")]
+    public void OverlaysAndWindowsOutOfSightArePassedOver(string kind)
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        var window = kind switch
+        {
+            "click-through" => Window(Main) with { IsClickThrough = true },
+            "no-activate" => Window(Main) with { IsNoActivate = true },
+            "tool window" => Window(Main) with { IsToolWindow = true },
+            "cloaked" => Window(Main) with { IsCloaked = true },
+            _ => Window(Main) with { IsMinimized = true },
+        };
+        _environment.Windows.AddRange([window, Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void AnAlwaysOnTopWindowThatDoesntCoverTheDisplayIsPassedOver()
+    {
+        // A picture-in-picture video in front of a full-screen game.
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        _environment.Windows.AddRange([Window(Rectangle.FromLTRB(1500, 700, 1900, 1000), isTopmost: true), Window(Main), Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.FullScreenApp), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void AWindowInFrontOfAFullScreenAppDecides()
+    {
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        _environment.Windows.AddRange([Window(Rectangle.FromLTRB(100, 100, 900, 700), hasFrame: true), Window(Main), Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void AMaximizedWindowWithItsFrameIsntFullScreen()
+    {
+        // With a taskbar that hides itself, a maximized window's frame reaches past the display.
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        _environment.Windows.AddRange([Window(Rectangle.FromLTRB(-8, -8, 1928, 1088), hasFrame: true), Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void TheShellsWindowsArentFullScreen()
+    {
+        // Task View, then the desktop.
+        _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
+        _environment.Windows.AddRange([Window(Main, isShell: true), Desktop]);
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+    }
+
+    [Fact]
+    public void ExclusiveFullScreenCountsOnlyOnTheDisplayOfTheWindowInFront()
+    {
+        ConfigureTwoDisplays();
+        _environment.FullScreenMode = FullScreenMode.Exclusive;
+        _environment.FrontWindowDisplay = Second;
+
+        Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
+        MoveTo(Middle);
+        Assert.Equal(CornerOutcome.FullScreenApp, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Fact]
+    public void PresentationModeCountsOnEveryDisplay()
+    {
+        ConfigureTwoDisplays();
+        _environment.FullScreenMode = FullScreenMode.Presentation;
+
+        Assert.Equal(Decision(CornerOutcome.FullScreenApp), MoveTo(TopLeft));
+        MoveTo(Middle);
+        Assert.Equal(CornerOutcome.FullScreenApp, MoveTo(SecondTopRight).Outcome);
+    }
+
+    [Fact]
+    public void WindowsAreReadOnlyWhenTheDelayEndsAndOnlyUntilOneDecides()
+    {
+        _environment.Windows.AddRange([Window(Main), Window(Rectangle.FromLTRB(100, 100, 900, 700), hasFrame: true), Desktop]);
+
+        MoveTo(TopLeft);
+        Assert.Equal(0, _environment.WindowSearches);
+
+        _clock.Advance(TimeSpan.FromMilliseconds(150));
+        Assert.Equal(Decision(CornerOutcome.FullScreenApp), _detector.Update());
+        Assert.Equal((1, 1), (_environment.WindowSearches, _environment.WindowsRead));
     }
 
     [Fact]
@@ -250,8 +423,18 @@ public sealed class CornerDetectorTests
         Assert.Null(_detector.CurrentCorner);
     }
 
+    // A borderless window that isn't an overlay, the shell's or out of sight, unless the test says so.
+    private static WindowPlace Window(Rectangle bounds, bool hasFrame = false, bool isTopmost = false, bool isShell = false) =>
+        new(0, bounds, IsCloaked: false, IsMinimized: false, IsClickThrough: false, IsNoActivate: false, IsToolWindow: false, isTopmost, hasFrame, isShell);
+
     private static CornerDecision Decision(CornerOutcome outcome) =>
         new(outcome, ScreenCorner.TopLeft, HotCornerAction.TaskView, TimeSpan.Zero);
+
+    // The main display and one to its right, with the top-right corner on Start.
+    private void ConfigureTwoDisplays() =>
+        _detector.Configure(
+            new HotCornersSettings { TopRight = new CornerSettings { Action = HotCornerAction.Start }, ActivationDelayMilliseconds = 0 },
+            [Main, Second]);
 
     private static CornerDecision Waiting(TimeSpan wait) =>
         new(CornerOutcome.Waiting, ScreenCorner.TopLeft, HotCornerAction.TaskView, wait);

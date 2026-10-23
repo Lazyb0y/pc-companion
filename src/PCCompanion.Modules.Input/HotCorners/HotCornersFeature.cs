@@ -153,7 +153,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 }
 
                 break;
-            case CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.FullScreenApp:
+            case CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.PointerConfined or CornerOutcome.PointerHidden or CornerOutcome.FullScreenApp:
                 LogSkipped(logger, decision.Corner, decision.Action, decision.Outcome);
                 break;
         }
