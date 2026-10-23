@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
@@ -19,7 +20,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     private const string WindowClassName = "PCCompanion.HotCorners";
 
     private readonly CornerDetector _detector = new(new WindowsHotCornerEnvironment(), time);
-    private readonly ProgramRunner _programs = new(logger, () => Environment.IsPrivilegedProcess, File.Exists, StartProcess);
+    private readonly ProgramRunner _programs = new(logger, () => Environment.IsPrivilegedProcess, File.Exists, StartProcess, action => Task.Run(action));
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
     private RawPointerMonitor? _monitor;
@@ -196,7 +197,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         return new DisplaysKeptOn(request, sessions);
     }
 
-    // The runner logs its own problems.
+    // The runner starts the program on the thread pool and logs its own problems.
     private bool RunProgram(ScreenCorner corner)
     {
         _programs.Run(_settings.For(corner));
