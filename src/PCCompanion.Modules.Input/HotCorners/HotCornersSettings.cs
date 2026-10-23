@@ -43,7 +43,7 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
     /// Reads the feature's section, or returns the defaults when there is none. Values a
     /// hand-edited file can get wrong are corrected: the delay is kept in range, a corner
     /// with an unknown action or key does nothing, a blank app ID or program counts as none, and
-    /// a listed app without an app ID or a program, or with both, is left out.
+    /// a listed app without an app ID or a program, or with both, is left out, as is a null in the list.
     /// </summary>
     /// <exception cref="JsonException">The section doesn't match the format.</exception>
     public static HotCornersSettings Read(JsonElement? section)
@@ -57,7 +57,10 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
             BottomLeft = settings.BottomLeft.Checked(),
             BottomRight = settings.BottomRight.Checked(),
             ActivationDelayMilliseconds = Math.Clamp(settings.ActivationDelayMilliseconds, 0, MaximumActivationDelayMilliseconds),
-            ExcludedApps = [.. settings.ExcludedApps.Select(app => app.Checked()).Where(app => app.IsValid)],
+
+            // The JSON reader checks nullable annotations on properties but not on a list's items,
+            // so a null in the file's list of apps reads as one.
+            ExcludedApps = [.. settings.ExcludedApps.Where(app => app is not null).Select(app => app.Checked()).Where(app => app.IsValid)],
         };
     }
 

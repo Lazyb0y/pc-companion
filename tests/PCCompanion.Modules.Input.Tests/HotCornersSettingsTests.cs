@@ -161,6 +161,21 @@ public sealed class HotCornersSettingsTests
     }
 
     [Fact]
+    public void ReadLeavesOutANullInTheListedApps()
+    {
+        var settings = HotCornersSettings.Read(Section("""
+            {
+              "excludedApps": [
+                null,
+                { "name": "Remote Desktop Connection", "program": "C:\\Windows\\System32\\mstsc.exe" }
+              ]
+            }
+            """));
+
+        Assert.Equal([RemoteDesktop], settings.ExcludedApps);
+    }
+
+    [Fact]
     public void AnAppIsListedOnce()
     {
         var settings = new HotCornersSettings()
