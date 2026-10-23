@@ -39,8 +39,8 @@ public sealed partial class AppWindowsViewModel : FeatureViewModel<AppWindowsSet
         _selectedShortcut = Shortcuts.FirstOrDefault(option => option.Shortcut == Settings.Shortcut);
     }
 
-    /// <summary>What happens while an app running as administrator is in front.</summary>
-    public string AdministratorInfo => _appSettings.General.AlwaysRunAsAdministrator
+    /// <summary>What happens while an app running as administrator is in front, with the host's rights now.</summary>
+    public string AdministratorInfo => HostLauncher.RunsAsAdministrator(_appSettings.General)
         ? Strings.AppWindowsAdministratorInfoOn
         : Strings.AppWindowsAdministratorInfo;
 

@@ -155,4 +155,21 @@ public static class HostProcess
         ArgumentNullException.ThrowIfNull(general);
         return general.AlwaysRunAsAdministrator && uacLimited && hostElevated == false;
     }
+
+    /// <summary>
+    /// Whether the host runs as administrator, for the feature pages' notes about apps running as
+    /// administrator: as read from its process, or, when no host runs or that can't be read, as
+    /// Always run as administrator would have it. The setting alone is wrong with UAC off, where the
+    /// host runs as administrator without it, and after the host's hand-off to the scheduled task failed.
+    /// </summary>
+    /// <param name="general">The user's general settings.</param>
+    /// <param name="hostElevated">
+    /// Whether the running host runs as administrator, read from its process, or
+    /// <see langword="null"/> when no host runs or that can't be read.
+    /// </param>
+    public static bool RunsAsAdministrator(GeneralSettings general, bool? hostElevated)
+    {
+        ArgumentNullException.ThrowIfNull(general);
+        return hostElevated ?? general.AlwaysRunAsAdministrator;
+    }
 }
