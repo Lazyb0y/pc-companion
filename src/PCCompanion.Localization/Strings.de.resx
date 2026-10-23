@@ -421,7 +421,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
+    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Erreicht der Zeiger eine Ecke, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppWindowsName" xml:space="preserve">
