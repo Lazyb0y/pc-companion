@@ -1,3 +1,5 @@
+using System;
+using System.Drawing;
 using System.Linq;
 using Xunit;
 
@@ -18,6 +20,30 @@ public sealed class DisplaysTests
         var areas = Displays.GetAreas();
 
         Assert.DoesNotContain(areas, area => areas.Any(other => other != area && other.IntersectsWith(area)));
+    }
+
+    [Fact]
+    public void AWindowIsOnOneOfTheDisplays()
+    {
+        // Never shown, so nothing appears.
+        using var window = new MessageWindow("PCCompanion.Tests." + Guid.NewGuid().ToString("N"));
+
+        Assert.Contains(Displays.AreaOf(window.Handle) ?? Rectangle.Empty, Displays.GetAreas());
+    }
+
+    [Fact]
+    public void NoWindowIsOnNoDisplay()
+    {
+        Assert.Null(Displays.AreaOf(0));
+    }
+
+    [Fact]
+    public void ThePointerClipCoversEveryDisplayWhenNoAppConfinesIt()
+    {
+        var clip = InputState.PointerClip;
+
+        Assert.NotNull(clip);
+        Assert.All(Displays.GetAreas(), area => Assert.True(clip.Value.Contains(area), $"clip {clip}, display {area}"));
     }
 
     [Fact]

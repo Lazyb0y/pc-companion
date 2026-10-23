@@ -30,6 +30,28 @@ public static class Displays
     }
 
     /// <summary>
+    /// The area of the display that <paramref name="window"/> is on, mostly on or nearest to, in
+    /// physical pixels when the process is per-monitor DPI aware; <see langword="null"/> when
+    /// there's no window.
+    /// </summary>
+    public static unsafe Rectangle? AreaOf(nint window)
+    {
+        if (window == 0)
+        {
+            return null;
+        }
+
+        var monitor = PInvoke.MonitorFromWindow(new HWND(window), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
+        if (monitor.IsNull || !PInvoke.GetMonitorInfo(monitor, &info))
+        {
+            return null;
+        }
+
+        return Rectangle.FromLTRB(info.rcMonitor.left, info.rcMonitor.top, info.rcMonitor.right, info.rcMonitor.bottom);
+    }
+
+    /// <summary>
     /// Whether a message, which every top-level window receives, says that a display was added,
     /// removed or changed.
     /// </summary>
