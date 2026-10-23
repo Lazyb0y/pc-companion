@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using Windows.Win32;
 using Windows.Win32.Security;
@@ -52,6 +53,44 @@ public static class Elevation
             return PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenElevation, &elevation, (uint)sizeof(TOKEN_ELEVATION), out _)
                 ? elevation.TokenIsElevated != 0
                 : null;
+        }
+    }
+
+    /// <summary>
+    /// Whether the process with ID <paramref name="processId"/> runs at this process's integrity
+    /// level: both without admin rights, or both as administrator. It's false for a process in an
+    /// AppContainer, such as a Store app, and when the level can't be read.
+    /// </summary>
+    public static bool HasSameIntegrityLevel(uint processId) =>
+        IntegrityLevel(PInvoke.GetCurrentProcess_SafeHandle()) is { } own && IntegrityLevel(processId) == own;
+
+    // The integrity level, the last part of the token's mandatory label, such as 0x2000 for medium.
+    private static uint? IntegrityLevel(uint processId)
+    {
+        using var process = PInvoke.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
+        return process.IsInvalid ? null : IntegrityLevel(process);
+    }
+
+    private static unsafe uint? IntegrityLevel(SafeHandle process)
+    {
+        if (!PInvoke.OpenProcessToken(process, TOKEN_ACCESS_MASK.TOKEN_QUERY, out var token))
+        {
+            return null;
+        }
+
+        using (token)
+        {
+            // The label holds a SID, which is at most 68 bytes.
+            const int Size = 128;
+            var buffer = stackalloc byte[Size];
+            if (!PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenIntegrityLevel, buffer, Size, out _))
+            {
+                return null;
+            }
+
+            var sid = ((TOKEN_MANDATORY_LABEL*)buffer)->Label.Sid;
+            var count = *PInvoke.GetSidSubAuthorityCount(sid);
+            return count > 0 ? *PInvoke.GetSidSubAuthority(sid, count - 1u) : null;
         }
     }
 
