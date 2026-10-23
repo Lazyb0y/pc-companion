@@ -29,9 +29,9 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
     private static readonly TimeSpan ResultsTimeout = TimeSpan.FromMilliseconds(500);
 
     private readonly AppSettings _appSettings;
+    private readonly CornerResultsReading _resultsReading = new();
     private DispatcherQueueTimer? _resultsTimer;
     private bool _readingResults;
-    private IReadOnlyList<CornerResult> _shownResults = [];
     private string _resultsMessage = string.Empty;
 
     public HotCornersViewModel(FeatureSettingsEditor editor, AppSettings appSettings)
@@ -191,10 +191,11 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         _readingResults = true;
         try
         {
-            var snapshot = IsOn
+            var isOn = IsOn;
+            var snapshot = isOn
                 ? await Task.Run(() => SnapshotPipe.ReadAsync(CornerResults.PipeName, ResultsTimeout, CornerResults.MaximumSnapshotLength)).ConfigureAwait(true)
                 : null;
-            ShowResults(snapshot is null ? null : CornerResults.FromJson(snapshot));
+            ShowResults(isOn, snapshot is null ? null : CornerResults.FromJson(snapshot));
         }
         finally
         {
@@ -202,21 +203,23 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         }
     }
 
-    private void ShowResults(IReadOnlyList<CornerResult>? results)
+    private void ShowResults(bool isOn, IReadOnlyList<CornerResult>? results)
     {
-        ResultsMessage = results is null ? Strings.HotCornersResultsUnavailable
-            : results.Count == 0 ? Strings.HotCornersResultsNone
-            : string.Empty;
-
-        results ??= [];
-        if (results.SequenceEqual(_shownResults))
+        if (!_resultsReading.Read(isOn, results))
         {
             return;
         }
 
-        _shownResults = results;
+        ResultsMessage = _resultsReading.Note switch
+        {
+            CornerResultsNote.HotCornersOff => Strings.HotCornersResultsUnavailable,
+            CornerResultsNote.NoCornerReached => Strings.HotCornersResultsNone,
+            CornerResultsNote.NotAvailable => Strings.HotCornersResultsNotAvailable,
+            _ => string.Empty,
+        };
+
         Results.Clear();
-        foreach (var result in results)
+        foreach (var result in _resultsReading.Results)
         {
             Results.Add(new CornerResultItem(result));
         }

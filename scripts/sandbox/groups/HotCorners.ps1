@@ -374,3 +374,10 @@ if ($argumentsBox) { $argumentsBox.SetFocus() }
 $savedProgram = { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners.topLeft.program }
 Test-Check 'a program that doesn''t exist shows its problem below the box' (Wait-Until { (& $savedProgram) -eq $missing -and (Find-AppText "This program wasn't found.") } 10) "saved: $(& $savedProgram)"
 Save-Screenshot '12d-hot-corners-program-missing'
+
+# With Hot Corners on and the page open, a host that no longer answers makes the page say, after a
+# few reads, that recent results aren't available. It's the last check, since it ends the host.
+Get-Processes 'PCCompanion.Host' | Stop-Process -Force -ErrorAction SilentlyContinue
+$notAvailable = 'Recent results aren''t available right now. If corners don''t work either, restart PC Companion.'
+Test-Check 'without the host, the page says that recent results aren''t available' (Wait-Until { (Get-WindowText) -contains $notAvailable } 10)
+Save-Screenshot '12e-hot-corners-results-not-available'

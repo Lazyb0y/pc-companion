@@ -484,6 +484,10 @@
     <value>Ergebnisse werden angezeigt, solange Aktive Ecken eingeschaltet ist.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HotCornersResultsNotAvailable" xml:space="preserve">
+    <value>Die letzten Ergebnisse sind gerade nicht verfügbar. Wenn auch die Ecken nicht funktionieren, starten Sie PC Companion neu.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="HotCornersResult" xml:space="preserve">
     <value>{0}, {1}: {2}</value>
     <comment>Needs native review.</comment>
