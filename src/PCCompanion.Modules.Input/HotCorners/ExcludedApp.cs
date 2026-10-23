@@ -44,6 +44,13 @@ public sealed record ExcludedApp
             ? string.Equals(AppId, other.AppId, StringComparison.OrdinalIgnoreCase)
             : Program is not null && string.Equals(Program, other.Program, StringComparison.OrdinalIgnoreCase);
     }
+
+    // A hand-edited file can hold a blank app ID or program, which counts as none.
+    internal ExcludedApp Checked() => this with
+    {
+        AppId = string.IsNullOrWhiteSpace(AppId) ? null : AppId,
+        Program = string.IsNullOrWhiteSpace(Program) ? null : Program,
+    };
 }
 
 /// <summary>

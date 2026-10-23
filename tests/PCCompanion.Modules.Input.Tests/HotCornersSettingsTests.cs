@@ -145,6 +145,22 @@ public sealed class HotCornersSettingsTests
     }
 
     [Fact]
+    public void ABlankAppIdOrProgramCountsAsNone()
+    {
+        var settings = HotCornersSettings.Read(Section("""
+            {
+              "excludedApps": [
+                { "name": "Remote Desktop Connection", "appId": " ", "program": "C:\\Windows\\System32\\mstsc.exe" },
+                { "name": "Photos", "appId": "Microsoft.Windows.Photos_8wekyb3d8bbwe!App", "program": "" }
+              ]
+            }
+            """));
+
+        Assert.Equal([RemoteDesktop, Photos], settings.ExcludedApps);
+        Assert.True(settings.ExcludedApps[0].Matches(new AppInFront(null, null, @"C:\Windows\System32\mstsc.exe")));
+    }
+
+    [Fact]
     public void AnAppIsListedOnce()
     {
         var settings = new HotCornersSettings()
