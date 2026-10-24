@@ -2,7 +2,7 @@
 
 Press Alt and the key above Tab to switch to another window of the app in front, such as another File Explorer window.
 
-- Module: Window Management (`PCCompanion.Modules.Windows`). Settings section: `features.appWindows`.
+- Module: Window Management (`PCCompanion.Modules.Windows`). Settings section: `features.appWindows`. Issue: [#25](https://github.com/Lazyb0y/pc-companion/issues/25).
 - Inspired by Command + `` ` `` in macOS, and by switching between an app's windows in GNOME and KDE Plasma, which use Alt and the same key.
 - Off until the user turns it on.
 
