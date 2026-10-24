@@ -112,6 +112,16 @@ public sealed class MetersThreadTests : IDisposable
     }
 
     [Fact]
+    public void AnIconTheTaskbarTookAgainIsLogged()
+    {
+        Start(AllMeters);
+
+        _system.OnMetersThread(icons => icons.AddAgain(Meter.Memory));
+
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "The taskbar restarted, and Windows took the Memory meter's icon again."))));
+    }
+
+    [Fact]
     public void UpdatesPauseWhileTheSessionIsLocked()
     {
         Start(AllMeters);

@@ -109,6 +109,9 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
     [LoggerMessage(Level = LogLevel.Debug, Message = "Closed the meters' menu; chose {Command}.")]
     private static partial void LogMenuClosed(ILogger logger, MeterMenuCommand command);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The taskbar restarted, and Windows took the {Meter} meter's icon again.")]
+    private static partial void LogIconAddedAgain(ILogger logger, Meter meter);
+
     [LoggerMessage(Level = LogLevel.Error, Message = "System Meters failed, so it's stopped until PC Companion restarts.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
 
@@ -135,6 +138,7 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
                 _icons = owner._system.CreateIcons(Window);
                 _icons.Selected += (_, _) => owner.Guard(owner.OpenTaskManager);
                 _icons.MenuRequested += (_, e) => owner.Guard(() => owner.ShowMenu(Window, e.X, e.Y));
+                _icons.AddedAgain += (_, e) => owner.Guard(() => LogIconAddedAgain(owner._logger, e.Meter));
                 _controller = new MetersController(owner._system.Readings, owner._system.Appearance, _icons, CreateStrip, owner._time, owner._logger);
 
                 // It reports the displays' state at once.

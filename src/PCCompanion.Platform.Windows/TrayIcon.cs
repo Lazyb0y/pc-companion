@@ -99,6 +99,9 @@ public sealed class TrayIcon : IDisposable
     /// <summary>Raised when the user selects the notification <see cref="ShowNotification"/> showed.</summary>
     public event EventHandler? NotificationSelected;
 
+    /// <summary>Raised when the taskbar restarted and Windows took the icon again.</summary>
+    public event EventHandler? AddedAgain;
+
     /// <summary>
     /// False when Windows couldn't add the icon, for example because the taskbar isn't running yet.
     /// The icon is added when the taskbar starts.
@@ -231,6 +234,11 @@ public sealed class TrayIcon : IDisposable
         if (e.Message == _taskbarCreatedMessage)
         {
             IsShown = Add();
+            if (IsShown)
+            {
+                AddedAgain?.Invoke(this, EventArgs.Empty);
+            }
+
             return;
         }
 
