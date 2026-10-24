@@ -116,6 +116,8 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
         public event EventHandler<TrayMenuEventArgs>? MenuRequested;
 
+        public event EventHandler<MeterEventArgs>? AddedAgain;
+
         public bool Show(Meter meter, uint[] pixels, int size, string name, string toolTip)
         {
             var image = IconImage.FromPixels(pixels, size);
@@ -134,6 +136,7 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
                 icon.Selected += (_, e) => Selected?.Invoke(this, e);
                 icon.MenuRequested += (_, e) => MenuRequested?.Invoke(this, e);
+                icon.AddedAgain += (_, _) => AddedAgain?.Invoke(this, new MeterEventArgs(meter));
                 _icons[meter] = icon;
             }
 

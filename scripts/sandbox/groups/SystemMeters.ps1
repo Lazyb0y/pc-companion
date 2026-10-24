@@ -11,11 +11,11 @@
 # As notification icons, chosen with Show on: an icon per meter with a fixed ID and the meter's
 # name, which Windows puts in the hidden icons menu, each with its values in its tooltip.
 # Selecting a meter opens Task Manager, and its menu, dark in the dark Windows mode, has Task
-# Manager, Settings and Exit. The icons come back with their names after Explorer restarts, a
-# meter turned off goes away, and turning System Meters off or Exit removes them all. The values
-# follow busy processors, memory in use, and network traffic, for which the group needs networking;
-# the update check stays off, and api.github.com points at the Sandbox. Detailed logging is on for
-# the host's Debug entries.
+# Manager, Settings and Exit. The icons come back with their names after Explorer restarts, and
+# the host logs each one; a meter turned off goes away, and turning System Meters off or Exit
+# removes them all. The values follow busy processors, memory in use, and network traffic, for
+# which the group needs networking; the update check stays off, and api.github.com points at the
+# Sandbox. Detailed logging is on for the host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 function Write-MetersSettings([string] $Section) {
@@ -406,7 +406,7 @@ else {
     [void] (New-ItemProperty $personalize -Name SystemUsesLightTheme -Value $windowsMode -PropertyType DWord -Force)
 }
 
-# Explorer restarts: the icons are added again, with their names.
+# Explorer restarts: the icons are added again, with their names, and the host logs each one.
 $taskbarBefore = [Win32]::FindWindow('Shell_TrayWnd', $null)
 Get-Process explorer -ErrorAction SilentlyContinue | Stop-Process -Force
 if (-not (Wait-Until { $taskbar = [Win32]::FindWindow('Shell_TrayWnd', $null); ($taskbar -ne [IntPtr]::Zero) -and ($taskbar -ne $taskbarBefore) } 20)) {
@@ -414,6 +414,7 @@ if (-not (Wait-Until { $taskbar = [Win32]::FindWindow('Shell_TrayWnd', $null); (
 }
 Test-Check 'the taskbar restarts' (Wait-Until { $taskbar = [Win32]::FindWindow('Shell_TrayWnd', $null); ($taskbar -ne [IntPtr]::Zero) -and ($taskbar -ne $taskbarBefore) } 30)
 Test-Check 'the meters come back after the taskbar restarts, with their names' (Wait-Until { $script:shown = Get-MeterButtons (Get-Taskbar); ($shown.Count -eq 3) -and ((Get-ButtonText $shown) -match '^CPU CPU: \d+% \| Memory Memory: \d+% / .* \| Network Network / ') } 30) (Get-ButtonText $shown)
+Test-Check 'the host logs each icon Windows took again' (Wait-Until { $log = Get-HostLog; @('Cpu', 'Memory', 'Network' | Where-Object { $log -match ('Windows took the "?{0}"? meter''s icon again\.' -f $_) }).Count -eq 3 } 10)
 Save-Screenshot '15h-system-meters-icons-after-explorer-restart'
 
 # A meter turned off goes away, and turning System Meters off removes them all.

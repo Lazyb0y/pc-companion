@@ -150,6 +150,8 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
 
         public event EventHandler<TrayMenuEventArgs>? MenuRequested;
 
+        public event EventHandler<MeterEventArgs>? AddedAgain;
+
         /// <summary>The last tooltip shown for each meter.</summary>
         public Dictionary<Meter, string> ToolTips { get; } = [];
 
@@ -181,6 +183,9 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
         public void Select() => Selected?.Invoke(this, EventArgs.Empty);
 
         public void OpenMenu() => MenuRequested?.Invoke(this, new TrayMenuEventArgs(10, 20));
+
+        /// <summary>Raises <see cref="AddedAgain"/>, as after the taskbar restarted.</summary>
+        public void AddAgain(Meter meter) => AddedAgain?.Invoke(this, new MeterEventArgs(meter));
 
         public void Dispose()
         {

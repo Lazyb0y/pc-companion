@@ -87,6 +87,9 @@ public interface IMeterIcons : IDisposable
     /// <summary>Raised when the user asks for a meter's menu, with the screen point to show it at.</summary>
     event EventHandler<TrayMenuEventArgs>? MenuRequested;
 
+    /// <summary>Raised when the taskbar restarted and Windows took a meter's icon again.</summary>
+    event EventHandler<MeterEventArgs>? AddedAgain;
+
     /// <summary>
     /// Shows a meter's picture and tooltip, adding its icon with the meter's name the first time.
     /// Returns false when Windows refused.
@@ -94,6 +97,12 @@ public interface IMeterIcons : IDisposable
     bool Show(Meter meter, uint[] pixels, int size, string name, string toolTip);
 
     void Remove(Meter meter);
+}
+
+/// <summary>Which meter an event is about.</summary>
+public sealed class MeterEventArgs(Meter meter) : EventArgs
+{
+    public Meter Meter { get; } = meter;
 }
 
 /// <summary>
