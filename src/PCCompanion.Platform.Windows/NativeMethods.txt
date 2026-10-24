@@ -116,6 +116,7 @@ SetWinEventHook
 Shell_NotifyIcon
 SHGetPropertyStoreForWindow
 ShowWindow
+ShowWindowAsync
 SHQueryUserNotificationState
 SIGDN
 SystemParametersInfo

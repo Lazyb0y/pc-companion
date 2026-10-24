@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Xunit;
 using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
@@ -132,6 +133,40 @@ public sealed class TopLevelWindowsTests
         if (TopLevelWindows.List().FirstOrDefault(listed => listed.IsDesktop) is { } desktop)
         {
             Assert.True(order.IndexOf(front.Handle) < order.IndexOf(desktop.Handle));
+        }
+    }
+
+    [Fact]
+    public void SendToBackDoesNotWaitForTheWindowsThread()
+    {
+        // The window's thread handles no messages until it's released or 30 seconds pass, like a
+        // program that stopped responding.
+        using var shown = new ManualResetEventSlim();
+        using var release = new ManualResetEventSlim();
+        using var responding = new ManualResetEventSlim();
+        nint handle = 0;
+        var thread = new Thread(() =>
+        {
+            using var window = new MessageWindow(UniqueClassName());
+            Show(window.Handle);
+            handle = window.Handle;
+            shown.Set();
+            _ = release.Wait(TimeSpan.FromSeconds(30));
+            responding.Set();
+        });
+        thread.Start();
+
+        try
+        {
+            Assert.True(shown.Wait(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+
+            Assert.True(TopLevelWindows.SendToBack(handle));
+            Assert.False(responding.IsSet);
+        }
+        finally
+        {
+            release.Set();
+            Assert.True(thread.Join(TimeSpan.FromSeconds(30)));
         }
     }
 
