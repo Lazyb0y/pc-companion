@@ -211,6 +211,16 @@ public sealed class WindowSwitcherTests
     }
 
     [Fact]
+    public void AnAppIdAWindowSetsMatchesTheSameIdOfAStoreAppPackage()
+    {
+        _environment.WindowIds[1] = "Store.App_1!App";
+        _environment.Packages[3] = "Store.App_1!App";
+        Add(Window(1, 1), Window(10, 2), Window(3, 3));
+
+        Assert.Equal(3, Forward());
+    }
+
+    [Fact]
     public void ProcessesWhoseProgramCanNotBeReadAreNotGroupedTogether()
     {
         _environment.Paths.Remove(1);

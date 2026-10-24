@@ -41,6 +41,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
   - the ID a window sets for itself, as browsers do for each profile;
   - otherwise the ID of the window's Store app package;
   - otherwise the program file.
+- An app ID matches whichever way it was read, as on the taskbar: a window that sets the same ID as another window's Store app package belongs to the same app.
 - Store apps' windows belong to one shared frame process, `ApplicationFrameHost.exe`, so the process alone can't tell them apart.
 - An app can also set one ID for its whole process. Windows offers no documented way for another program to read it, so such an app's windows are grouped by program file, which rarely differs from the taskbar.
 
@@ -146,7 +147,7 @@ A spike in Windows Sandbox, with keys sent by scan code, confirmed:
 
 - **Unit tests** with fake window lists:
   - which windows count: hidden, cloaked, tool and owned windows, windows that can't take the keyboard focus, minimized windows with and without Include minimized windows, and the desktop and the taskbar;
-  - what counts as one app: a window's own app ID, a Store app in the shared frame process, and the program file;
+  - what counts as one app: a window's own app ID, the same app ID set by one window and read from another's package, a Store app in the shared frame process, and the program file;
   - forward and back visit every window and undo each other;
   - one window, no app in front, a dialog in front, always-on-top windows, and Windows refusing to bring a window to the front, which leaves the window in front where it is when going back.
 - **Unit tests for the shortcut**, with fake layouts, a fake clock and fake registration: Shift for back, registering again only when the virtual key changes, the once-a-second check running only while the layouts disagree, and a warning when Windows refuses the shortcut.

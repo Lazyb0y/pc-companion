@@ -71,7 +71,8 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
     private SwitchResult Activate(TopLevelWindow window, int count) =>
         new(environment.Activate(window.Handle) ? SwitchOutcome.Switched : SwitchOutcome.Refused, count);
 
-    // Groups windows as the taskbar does, reading each process's identity once per press.
+    // Groups windows as the taskbar does, reading each process's identity once per press. An app
+    // ID matches whether the window sets it or it comes from the process's Store app package.
     private sealed class AppKeys(IAppWindowsEnvironment environment)
     {
         private readonly Dictionary<uint, string> _processes = [];
@@ -80,12 +81,12 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
         {
             if (environment.WindowAppId(window.Handle) is { } id)
             {
-                return "window:" + id;
+                return "id:" + id;
             }
 
             if (!_processes.TryGetValue(window.ProcessId, out var key))
             {
-                key = environment.PackageAppId(window.ProcessId) is { } package ? "package:" + package
+                key = environment.PackageAppId(window.ProcessId) is { } package ? "id:" + package
                     : environment.ProgramPath(window.ProcessId) is { } path ? "file:" + path
                     : "process:" + window.ProcessId;
                 _processes[window.ProcessId] = key;
