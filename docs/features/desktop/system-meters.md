@@ -290,7 +290,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
   - with an auto-hiding taskbar, or with **Show on** set to Notification area, the meters show as notification icons, found with UI Automation in the hidden icons menu by their names, which are their tooltips; **Open taskbar settings** opens Settings; selecting an icon starts Task Manager, and restarting Explorer brings the icons back, which the host logs for each;
   - busy processes on every logical processor raise CPU above 80%, and it falls once they stop; allocating 1 GB raises memory by about its share;
   - with networking on, pings to the Sandbox's gateway show in send, and requests to Windows' connectivity check address in receive;
-  - turning a meter off removes it, and turning the feature off removes the strip and the icons.
+  - turning a meter off removes it, and turning it on again brings it back in its place on the taskbar; turning the feature off removes the strip and the icons.
 - **Sandbox networking:** this group needs networking, for real adapter counts, and says so with a `# Networking: on` line at its top. When a run includes such a group, `sandbox-test.ps1` turns networking on in the Sandbox's configuration, and `run-checks.ps1` turns every network adapter off before Smoke and on only during such groups. While they're on, the hosts file points `api.github.com` at 127.0.0.1 and the group's settings turn the update check off, so the real GitHub gets nothing. Runs without such a group keep networking off.
 - The App group checks the page's layout at each window width, and the Languages group checks it in Arabic, as for the other feature pages.
 - **By hand:**

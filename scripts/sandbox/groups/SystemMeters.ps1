@@ -12,10 +12,11 @@
 # name, which Windows puts in the hidden icons menu, each with its values in its tooltip.
 # Selecting a meter opens Task Manager, and its menu, dark in the dark Windows mode, has Task
 # Manager, Settings and Exit. The icons come back with their names after Explorer restarts, and
-# the host logs each one; a meter turned off goes away, and turning System Meters off or Exit
-# removes them all. The values follow busy processors, memory in use, and network traffic, for
-# which the group needs networking; the update check stays off, and api.github.com points at the
-# Sandbox. Detailed logging is on for the host's Debug entries.
+# the host logs each one; a meter turned off goes away and comes back in its place when it's
+# turned on again, and turning System Meters off or Exit removes them all. The values follow
+# busy processors, memory in use, and network traffic, for which the group needs networking; the
+# update check stays off, and api.github.com points at the Sandbox. Detailed logging is on for the
+# host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 function Write-MetersSettings([string] $Section) {
@@ -421,6 +422,11 @@ Save-Screenshot '15h-system-meters-icons-after-explorer-restart'
 Write-MetersSettings '{ "enabled": true, "memory": false, "showOn": "NotificationArea" }'
 Test-Check 'the host applies the meters turned off' (Wait-Until { (Get-HostLog) -match 'System Meters applied its settings: CPU True, memory False, network True, every 1 s\.' } 10)
 Test-Check 'the memory meter goes away' (Wait-Until { $script:shown = Get-MeterButtons (Get-Taskbar); ($shown.Count -eq 2) -and ((Get-ButtonText $shown) -notmatch 'Memory') } 10) (Get-ButtonText $shown)
+
+# A meter turned on again comes back in its place: Windows remembers each icon's place by its
+# program and ID, although it puts icons it hasn't seen before first.
+Write-MetersSettings '{ "enabled": true, "showOn": "NotificationArea" }'
+Test-Check 'the memory meter comes back between CPU and network' (Wait-Until { $script:shown = Get-MeterButtons (Get-Taskbar); ($shown.Count -eq 3) -and ((Get-ButtonText $shown) -match '^CPU.* \| Memory.* \| Network') } 15) (Get-ButtonText $shown)
 Write-MetersSettings '{ "enabled": false, "memory": false, "showOn": "NotificationArea" }'
 Test-Check 'turning System Meters off ends its thread' (Wait-Until { (Get-HostLog) -match $ended } 10)
 Test-Check 'turning System Meters off removes the meters' (Wait-Until { (Get-MeterButtons (Get-Taskbar)).Count -eq 0 } 10) (Get-ButtonText (Get-MeterButtons (Get-Taskbar)))
