@@ -22,7 +22,7 @@ public enum StripState
     /// <summary>The taskbar hides itself.</summary>
     AutoHide,
 
-    /// <summary>The taskbar has no room for the strip, or isn't along the bottom of the display.</summary>
+    /// <summary>The taskbar has no room for the strip, is too low for two lines of text, or stands on a side of the display.</summary>
     NoRoom,
 }
 
