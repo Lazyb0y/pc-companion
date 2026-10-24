@@ -12,6 +12,7 @@ Each feature is off until you turn it on in the settings app.
 
 - **[Hot Corners](docs/features/input/hot-corners.md):** move the pointer into a corner of the screen to show all windows, show the desktop, lock the PC, start a program and more. **Keep displays on** stops the screen saver and the display timeout while the pointer rests in its corner.
 - **[App Windows](docs/features/windows/app-windows.md):** press Alt and the key above Tab to switch between the windows of the app in front, such as File Explorer windows.
+- **[System Meters](docs/features/desktop/system-meters.md):** see how busy your PC is, with live CPU, memory and network use on the taskbar, or with an icon for each meter in the notification area. Select the meters to open Task Manager.
 - **General:** the language, light or dark theme, starting with Windows, and logs. [Always run as administrator](docs/features/general/run-as-administrator.md) lets features work in front of apps that run as administrator, and the [update check](docs/features/general/update-check.md) tells you when a new version is out.
 
 PC Companion is in English, Arabic, Bangla, Chinese (Simplified), French, German and Spanish. The translations still need review by native speakers; corrections are welcome.
