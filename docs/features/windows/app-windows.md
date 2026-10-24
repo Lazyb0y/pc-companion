@@ -17,6 +17,16 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 - No window moves or changes size, and always-on-top windows stay on top. Windows of other apps keep their places, except that going back puts the app's old front window behind them.
 - Holding the key down switches once; it doesn't repeat.
 
+## Compared with other systems
+
+- **It switches at once, with no list.** Window switchers for Windows that show previews switch only when Alt is released, and their users ask for switching at once.
+- **It finds the key above Tab by its position, and follows layout switches.** macOS binds the character: on German keyboards the shortcut is Command + <, and with French layouts the dead key types a character instead ([Apple](https://support.apple.com/en-us/102650)). KDE Plasma binds the character too and fails on several layouts ([309754](https://bugs.kde.org/show_bug.cgi?id=309754), [384440](https://bugs.kde.org/show_bug.cgi?id=384440), [407703](https://bugs.kde.org/show_bug.cgi?id=407703)), and GNOME has a dead-key bug with the Super key ([mutter#3153](https://gitlab.gnome.org/GNOME/mutter/-/issues/3153)). Several Windows tools read the key code once when they start and break after a layout switch.
+- **It registers a shortcut, with no keyboard hook,** so it never sees the other keys the user types. A low-level keyboard hook sees every key, and Windows removes one that's slow without telling it.
+- **It groups windows as the taskbar does.** KDE Plasma, GNOME and Xfce group them by window class, process or client leader and mix up apps ([386539](https://bugs.kde.org/show_bug.cgi?id=386539), [335741](https://bugs.kde.org/show_bug.cgi?id=335741), [Xfce 10618](https://bugzilla.xfce.org/show_bug.cgi?id=10618)). Windows tools usually group them by program file, which puts a browser's profiles together.
+- **It visits every window in turn.** Going by recent use reorders the windows while cycling, so users of such switchers report never reaching the last one.
+- **Minimized windows are optional.** Command + `` ` `` in macOS never visits them.
+- **It reads no window titles,** which can name documents. Switchers that show a list or previews read every window's title.
+
 ## Which windows
 
 - The app's windows that Alt + Tab shows: visible windows that aren't tool windows, and aren't owned by another window unless they show on the taskbar.
@@ -94,10 +104,15 @@ A spike in Windows Sandbox, with keys sent by scan code, confirmed:
 
 ## Not included
 
-- Showing all of the app's windows at once, as App Exposé in macOS does.
-- A list of the windows while Alt is held, as in GNOME and KDE Plasma.
-- Windows on other virtual desktops.
-- Other shortcuts.
+- Showing all of the app's windows at once, as App Exposé in macOS does: a view with a window of its own, rather than a shortcut that switches at once. App Exposé's recent documents would also read document names and paths, and Windows keeps no live picture of a minimized window.
+- A list of the windows while Alt is held, as in GNOME and KDE Plasma, which switches only when Alt is released: it gives up switching at once.
+- Windows on other virtual desktops. Alt + Tab leaves them out by default, and telling them apart from suspended Store apps, which Windows also hides, needs File Explorer's virtual desktop service, whose calls go to File Explorer's process and can't run on the host's UI thread.
+- Going by recent use, as GNOME and KDE Plasma do: it reorders the windows while cycling, so the windows furthest back are rarely reached.
+- Other shortcuts, which belong to shortcuts and mouse buttons as triggers ([#39](https://github.com/Lazyb0y/pc-companion/issues/39)).
+- Switching tabs, such as File Explorer's or a browser's: there's no public API for them, and UI Automation into other programs is slow and can wait for them.
+- Switching by clicking an app's taskbar button, which needs code running inside File Explorer.
+- Groups of apps the user defines, or one group for all of a browser's profiles: they would differ from the taskbar's, and few people ask for them.
+- Switching the windows of apps running as administrator without admin rights, which Windows blocks by design; Always run as administrator covers it.
 
 ## Compatibility
 
