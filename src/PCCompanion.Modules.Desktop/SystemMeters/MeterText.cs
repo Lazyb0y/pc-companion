@@ -46,7 +46,9 @@ public static class MeterText
             unit++;
         }
 
-        return string.Format(culture, CompositeFormat.Parse(units[unit]), value.ToString(value < 100 ? "F1" : "F0", culture));
+        // Decided after rounding, so 99.97 shows as 100, not 100.0.
+        var format = Math.Round(value, 1, MidpointRounding.AwayFromZero) < 100 ? "F1" : "F0";
+        return string.Format(culture, CompositeFormat.Parse(units[unit]), value.ToString(format, culture));
     }
 
     public static string CpuToolTip(double percent, CultureInfo culture) =>

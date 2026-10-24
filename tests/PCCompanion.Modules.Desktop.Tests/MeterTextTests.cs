@@ -28,9 +28,12 @@ public sealed class MeterTextTests
     [InlineData(0, "0 Kbps")]
     [InlineData(400, "0.4 Kbps")]
     [InlineData(56_000, "56.0 Kbps")]
+    [InlineData(99_940, "99.9 Kbps")]
+    [InlineData(99_970, "100 Kbps")]
     [InlineData(120_000, "120 Kbps")]
     [InlineData(999_960, "1.0 Mbps")]
     [InlineData(1_200_000, "1.2 Mbps")]
+    [InlineData(99_960_000, "100 Mbps")]
     [InlineData(940_000_000, "940 Mbps")]
     [InlineData(2_500_000_000, "2.5 Gbps")]
     public void RatesAreInBitsPerSecondAsTaskManagerShowsThem(double bitsPerSecond, string text)
