@@ -17,10 +17,10 @@ internal sealed class WindowsStripHost : IStripHost
     private const uint SettingChangeMessage = 0x001A; // WM_SETTINGCHANGE
     private const uint DpiChangedMessage = 0x02E0; // WM_DPICHANGED
 
-    // Explorer's events that come with the taskbar rising: capture and menus, and window order and focus.
-    private const uint ExplorerFirstSystemEvent = 0x0004;
-    private const uint ExplorerLastSystemEvent = 0x0009;
-    private const uint ExplorerFocusEvent = 0x8005;
+    // Explorer's events that come with the taskbar rising: menus and capture, and window order and focus.
+    private const uint ExplorerFirstSystemEvent = 0x0004; // EVENT_SYSTEM_MENUSTART
+    private const uint ExplorerLastSystemEvent = 0x0009; // EVENT_SYSTEM_CAPTUREEND
+    private const uint ExplorerFocusEvent = 0x8005; // EVENT_OBJECT_FOCUS
 
     private static readonly TimeSpan LayoutDelay = TimeSpan.FromMilliseconds(500);
     private static readonly TimeSpan LayoutInterval = TimeSpan.FromSeconds(30);

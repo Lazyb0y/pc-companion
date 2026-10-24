@@ -110,7 +110,7 @@ public interface IStripHost : IDisposable
 
     /// <summary>
     /// Raised when the taskbar may have come in front of the strip: when Explorer's windows change
-    /// order or take the mouse, or another window comes to the front.
+    /// order, take the focus or the mouse, or open a menu, or another window comes to the front.
     /// </summary>
     event EventHandler? ZOrderMayHaveChanged;
 
