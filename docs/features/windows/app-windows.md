@@ -52,6 +52,14 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 
 - Windows keeps the input and windows of apps running as administrator away from programs that don't run as administrator. While such an app is in front, the shortcut does nothing; the feature page says so. Always run as administrator avoids it.
 
+## Threads
+
+- App Windows has no thread of its own: between presses it only checks the layout, and a press is short.
+- **The host's UI thread** runs `Apply`, which reads the section and registers or removes the shortcut and the foreground hook, the layout checks, and each press: listing the windows, reading their apps' identity and switching.
+- **The thread pool** runs only the layout check's timer, which passes the check to the UI thread with `MessageWindow.BeginInvoke`.
+- **Nothing waits for the windows' programs,** so one that stopped responding can't hold the host. Listing the windows and reading their apps' identity send them no messages. Restoring a minimized window (`ShowWindowAsync`) and putting the old front window behind the others (`SetWindowPos` with `SWP_ASYNCWINDOWPOS`) are passed on to the window's program, which carries them out when it handles its messages, and `SetForegroundWindow` doesn't wait for it either. So the windows of a program that stopped responding switch once it responds again.
+- **Failures:** the press and the checks run inside the feature's error boundary. A failure is logged and keeps the feature off until the host restarts, like a failing `Apply`.
+
 ## Spike results
 
 A spike in Windows Sandbox, with keys sent by scan code, confirmed:

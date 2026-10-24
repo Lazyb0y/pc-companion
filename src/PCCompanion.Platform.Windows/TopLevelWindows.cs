@@ -74,14 +74,15 @@ public static class TopLevelWindows
     /// Brings another program's <paramref name="window"/> to the front, with the dialog it has
     /// open, if any, restoring it first when it's minimized. Windows allows it only in some cases,
     /// for example right after the user pressed one of this process's <see cref="HotKey"/>s.
-    /// Returns false when Windows refused.
+    /// Returns false when Windows refused. It doesn't wait for the window's program: Windows passes
+    /// the restore on to it, so one that stopped responding restores the window when it responds.
     /// </summary>
     public static bool Activate(nint window)
     {
         var handle = new HWND(window);
         if (PInvoke.IsIconic(handle))
         {
-            PInvoke.ShowWindow(handle, SHOW_WINDOW_CMD.SW_RESTORE);
+            PInvoke.ShowWindowAsync(handle, SHOW_WINDOW_CMD.SW_RESTORE);
         }
 
         return PInvoke.SetForegroundWindow(PInvoke.GetLastActivePopup(handle));
@@ -90,7 +91,8 @@ public static class TopLevelWindows
     /// <summary>
     /// Puts <paramref name="window"/> behind all other windows, as Alt + Esc does, without moving,
     /// resizing or activating it. An always-on-top window loses always-on-top. Returns false when
-    /// Windows refused.
+    /// Windows refused. For another thread's window, it doesn't wait: Windows passes the request on
+    /// to the window's thread, so a program that stopped responding moves it when it responds.
     /// </summary>
     /// <remarks>
     /// Putting another program's window right behind a given window instead, with
@@ -104,7 +106,7 @@ public static class TopLevelWindows
             0,
             0,
             0,
-            SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+            SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
 
     /// <summary>
     /// Whether a window is always on top. Windows takes that from the taskbar while a full-screen
