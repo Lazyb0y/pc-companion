@@ -44,8 +44,8 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
             return Activate(others[^1], count);
         }
 
-        // Sent back first: the other way round takes longer when the windows belong to separate
-        // processes. Always-on-top windows stay on top.
+        // The old front window goes behind all windows first, then the second one comes to the
+        // front; neither call waits for the windows' programs. Always-on-top windows stay on top.
         if (!frontWindow.IsTopmost)
         {
             environment.SendToBack(frontWindow.Handle);
