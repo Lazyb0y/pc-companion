@@ -9,7 +9,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 ## Behavior
 
 - **Alt + the key above Tab** brings the app's window that is furthest back to the front. Pressing it again goes on to the next one, so repeated presses visit every window of the app and then come back to the first, as in macOS.
-- **Alt + Shift + the key above Tab** goes the other way: the app's second window comes to the front, and the one that was in front goes behind all windows, as with Alt + Esc. One press each way leaves the app's windows in the order they were.
+- **Alt + Shift + the key above Tab** goes the other way: the app's second window comes to the front, and the one that was in front goes behind all windows, as with Alt + Esc. One press each way leaves the app's windows in the order they were. When Windows doesn't bring the second window to the front, the one in front stays where it is.
 - Each press switches right away, whether Alt is still held or not. No list or preview appears.
 - The app in front is the app of the window in front, or of the window that owns it, such as a dialog's main window.
 - With only one window, or when no app is in front, such as the desktop or the taskbar, the shortcut does nothing.
@@ -148,7 +148,7 @@ A spike in Windows Sandbox, with keys sent by scan code, confirmed:
   - which windows count: hidden, cloaked, tool and owned windows, windows that can't take the keyboard focus, minimized windows with and without Include minimized windows, and the desktop and the taskbar;
   - what counts as one app: a window's own app ID, a Store app in the shared frame process, and the program file;
   - forward and back visit every window and undo each other;
-  - one window, no app in front, a dialog in front, and always-on-top windows.
+  - one window, no app in front, a dialog in front, always-on-top windows, and Windows refusing to bring a window to the front, which leaves the window in front where it is when going back.
 - **Unit tests for the shortcut**, with fake layouts, a fake clock and fake registration: Shift for back, registering again only when the virtual key changes, the once-a-second check running only while the layouts disagree, and a warning when Windows refuses the shortcut.
 - **Sandbox checks** (`scripts/sandbox/groups/AppWindows.ps1`), with three File Explorer windows the checks open: the Home switch turns the feature on, and its page saves the shortcut and Include minimized windows. Alt + the key above Tab, sent by `SendInput` by scan code, brings each window to the front in turn, the one furthest back first, and a press for each window leaves them in their first order; Shift goes back, and a press forward undoes it; the host logs the switches. With the German layout added, the same key still switches after switching to it in the same window. With Include minimized windows on, a minimized window comes back restored and in front. A test program with two windows, which stops responding for a few seconds when asked, doesn't hold the host: going back from one of its windows, and restoring the other while it's minimized, end at once, as the host's log shows, and once the program responds again, its windows are where the switch put them. Turned off, the key switches no window. Everything runs as administrator in Windows Sandbox, so apps running as administrator are tested by hand.
 - **By hand:**

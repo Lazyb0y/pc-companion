@@ -44,14 +44,16 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
             return Activate(others[^1], count);
         }
 
-        // The old front window goes behind all windows first, then the second one comes to the
-        // front; neither call waits for the windows' programs. Always-on-top windows stay on top.
-        if (!frontWindow.IsTopmost)
+        // The second window comes to the front first, so the old front window goes behind all
+        // windows only when Windows allowed that; neither call waits for the windows' programs.
+        // Always-on-top windows stay on top.
+        var result = Activate(others[0], count);
+        if (result.Outcome == SwitchOutcome.Switched && !frontWindow.IsTopmost)
         {
             environment.SendToBack(frontWindow.Handle);
         }
 
-        return Activate(others[0], count);
+        return result;
     }
 
     /// <summary>

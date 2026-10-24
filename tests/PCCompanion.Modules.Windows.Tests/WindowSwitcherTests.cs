@@ -52,7 +52,7 @@ public sealed class WindowSwitcherTests
 
         Assert.Equal(new SwitchResult(SwitchOutcome.Switched, 3), result);
         Assert.Equal([2, 3, 1], _environment.Order(1, 2, 3));
-        Assert.Equal(["send 1 to the back", "activate 2"], _environment.Calls);
+        Assert.Equal(["activate 2", "send 1 to the back"], _environment.Calls);
     }
 
     [Fact]
@@ -158,6 +158,17 @@ public sealed class WindowSwitcherTests
         _environment.RefusesActivation = true;
 
         Assert.Equal(SwitchOutcome.Refused, _switcher.Switch(SwitchDirection.Forward, includeMinimized: false).Outcome);
+    }
+
+    [Fact]
+    public void WhenWindowsRefusesGoingBackTheWindowInFrontStaysWhereItIs()
+    {
+        ThreeWindowsOfOneAppAndAnother();
+        _environment.RefusesActivation = true;
+
+        Assert.Equal(SwitchOutcome.Refused, _switcher.Switch(SwitchDirection.Back, includeMinimized: false).Outcome);
+        Assert.Equal(["activate 2"], _environment.Calls);
+        Assert.Equal([1, 10, 2, 3], _environment.Order(1, 10, 2, 3));
     }
 
     [Fact]
