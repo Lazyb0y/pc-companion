@@ -29,7 +29,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 
 ## Which windows
 
-- The app's windows that Alt + Tab shows: visible windows that aren't tool windows, and aren't owned by another window unless they show on the taskbar.
+- The app's windows that Alt + Tab shows: visible windows that aren't tool windows, aren't owned by another window and can take the keyboard focus, unlike an on-screen keyboard. A window that asks to be on the taskbar counts even when it's owned, a tool window or doesn't take the focus.
 - Only windows on the current virtual desktop, as Alt + Tab shows by default. Windows hides the others from the screen (cloaks them), as it does for suspended Store apps, and cloaked windows are skipped.
 - Minimized windows are skipped, as in macOS, unless **Include minimized windows** is on. Then a minimized window is restored when its turn comes.
 - Windows on every display count.
@@ -145,7 +145,7 @@ A spike in Windows Sandbox, with keys sent by scan code, confirmed:
 ## Testing
 
 - **Unit tests** with fake window lists:
-  - which windows count: hidden, cloaked, tool, owned and minimized windows, with and without Include minimized windows, and the desktop and the taskbar;
+  - which windows count: hidden, cloaked, tool and owned windows, windows that can't take the keyboard focus, minimized windows with and without Include minimized windows, and the desktop and the taskbar;
   - what counts as one app: a window's own app ID, a Store app in the shared frame process, and the program file;
   - forward and back visit every window and undo each other;
   - one window, no app in front, a dialog in front, and always-on-top windows.
