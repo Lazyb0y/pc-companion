@@ -56,11 +56,12 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 - While the layouts disagree, the host also checks again 100 ms after another window comes to the front: Windows can switch that window's layout a moment after it comes to the front, so a quick next press would otherwise miss.
 - While the feature is on, other apps don't get the shortcut. JetBrains IDEs, for example, use Alt + `` ` `` for their version control menu. The feature page says so.
 - The Microsoft Japanese IME uses Alt + `` ` `` to turn Japanese input on and off, and keeps it: while Japanese input is active, Alt + the key above Tab doesn't reach PC Companion. Windows + the key above Tab works with it.
-- When another program already has the shortcut, Windows refuses it. The shortcut then does nothing, and a warning is logged.
+- When another program already has the shortcut or its Shift version, Windows refuses that one, and a warning is logged; the other still works. PC Companion tries again when the key above Tab means another virtual key, and after any change to the settings.
 
 ## Apps running as administrator
 
-- Windows keeps the input and windows of apps running as administrator away from programs that don't run as administrator. While such an app is in front, the shortcut does nothing; the feature page says so. Always run as administrator avoids it.
+- Windows keeps the input and windows of apps running as administrator away from programs that don't run as administrator. While such an app is in front, the shortcut does nothing, unless PC Companion runs as administrator: with Always run as administrator, or with UAC off, where every program runs with the user's full rights.
+- The feature page's note says which applies. It reads whether the host runs as administrator from its process when the page opens, as the General page does, and follows the setting when no host runs or its rights can't be read.
 
 ## Threads
 
@@ -124,9 +125,9 @@ A spike in Windows Sandbox, with keys sent by scan code, confirmed:
 - **Reads:** when the shortcut is pressed, the top-level windows' styles, owners, state and whether they're cloaked, and their app's identity: the window's app ID, the app's package, or the program's path. Never window titles or contents. Nothing is stored or sent; the list is dropped after the press.
 - **Keyboard:** no keyboard hook; Windows reports only the shortcut. The foreground hook and the once-a-second check read only which window is in front and its keyboard layout.
 - **Changes:** only the front app's windows: which one is in front, their order behind it, and restoring a minimized one. No input is sent, no program starts and no file is written.
-- **Logs:** Debug entries with the direction and the number of the app's windows. Never titles, app IDs or paths, which can name documents, profiles or users. A refused shortcut is logged as a warning.
+- **Logs:** Debug entries with the direction and the number of the app's windows, or why nothing switched, the settings applied and the shortcut's virtual key, never the keyboard layout. Never titles, app IDs or paths, which can name documents, profiles or users. Warnings when Windows refuses the shortcut or doesn't bring a window to the front, and an error when a failure stops the feature.
 - **Settings:** only the shortcut choice and the switch, so a changed settings file can't make PC Companion do anything else, also while it runs as administrator.
-- **Rights:** runs without admin rights. With Always run as administrator, it also switches the windows of apps running as administrator, as the user could with Alt + Tab. Turning the feature off removes the shortcut and the foreground hook.
+- **Rights:** runs with the host's rights: without admin rights, unless Always run as administrator is on or UAC is off. Running as administrator, it also switches the windows of apps running as administrator, as the user could with Alt + Tab. Turning the feature off removes the shortcut and the foreground hook.
 
 ## Performance
 
