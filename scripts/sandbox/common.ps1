@@ -21,6 +21,14 @@ using System.Runtime.InteropServices;
 public static class Win32 {
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern IntPtr FindWindow(string className, string title);
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam);
+    [DllImport("user32.dll")] private static extern IntPtr SendMessageTimeout(IntPtr window, uint message, UIntPtr wParam, IntPtr lParam, uint flags, uint timeout, out UIntPtr result);
+
+    // Whether the window's thread handles a message within the time, as a program that responds does.
+    // A thread that waits for another program's window in SendMessage still answers.
+    public static bool Responds(IntPtr window, int milliseconds) {
+        UIntPtr result;
+        return SendMessageTimeout(window, 0, UIntPtr.Zero, IntPtr.Zero, 0x0002, (uint)milliseconds, out result) != IntPtr.Zero; // WM_NULL, SMTO_ABORTIFHUNG
+    }
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
     [DllImport("user32.dll")] public static extern bool IsWindow(IntPtr window);
