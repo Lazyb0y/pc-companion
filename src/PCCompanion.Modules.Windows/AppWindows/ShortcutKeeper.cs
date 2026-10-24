@@ -131,13 +131,20 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
             return;
         }
 
+        // Windows takes the two shortcuts one by one, so one it refuses leaves the other working.
         _forward = environment.Register(modifiers, key, () => Pressed?.Invoke(this, SwitchDirection.Forward));
         _back = environment.Register(modifiers | HotKeyModifiers.Shift, key, () => Pressed?.Invoke(this, SwitchDirection.Back));
-        if (_forward is null || _back is null)
+        if (_forward is null)
         {
             LogRefused(logger, modifiers, key);
         }
-        else
+
+        if (_back is null)
+        {
+            LogRefused(logger, modifiers | HotKeyModifiers.Shift, key);
+        }
+
+        if (_forward is not null && _back is not null)
         {
             LogRegistered(logger, modifiers, key);
         }

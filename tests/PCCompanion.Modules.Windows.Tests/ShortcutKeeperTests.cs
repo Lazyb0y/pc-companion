@@ -110,8 +110,20 @@ public sealed class ShortcutKeeperTests : IDisposable
         _keeper.Check();
         _keeper.Check();
 
-        Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        var warning = Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        Assert.DoesNotContain("Shift", warning.Message, StringComparison.Ordinal);
         Assert.Equal(1, _environment.Registrations);
+    }
+
+    [Fact]
+    public void ARefusedShiftShortcutIsTheOneLoggedAndTheOtherStillWorks()
+    {
+        _environment.Taken.Add((AltShift, 0xC0));
+        _keeper.Configure(Alt);
+
+        var warning = Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        Assert.Contains("Alt, Shift", warning.Message, StringComparison.Ordinal);
+        Assert.Equal([(Alt, 0xC0u)], Registered());
     }
 
     [Fact]
