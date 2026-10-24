@@ -56,7 +56,8 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
 
     /// <summary>
     /// Whether Alt + Tab would show the window: on this virtual desktop, not the desktop itself,
-    /// and not a tool window or an owned window unless it asks to be on the taskbar.
+    /// and not a tool window, an owned window or one that can't take the keyboard focus, unless
+    /// it asks to be on the taskbar.
     /// </summary>
     internal static bool IsSwitchable(TopLevelWindow window, bool includeMinimized) =>
         window.ProcessId != 0
