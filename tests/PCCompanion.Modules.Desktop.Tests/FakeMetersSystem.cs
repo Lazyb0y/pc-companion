@@ -18,6 +18,7 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
 {
     private int _updates;
     private int _taskManagerOpened;
+    private bool _menuClosed;
 
     public FakeMetersSystem()
     {
@@ -41,6 +42,9 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
 
     /// <summary>The command the next menu returns.</summary>
     public MeterMenuCommand MenuChoice { get; set; }
+
+    /// <summary>Whether the menu stays open until <see cref="CloseMenu"/>, as a real one does until the user closes it.</summary>
+    public bool MenuStaysOpen { get; set; }
 
     /// <summary>Thrown by each icon shown, to fail the meters.</summary>
     public Exception? ShowFailure { get; set; }
@@ -97,7 +101,31 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
         return true;
     }
 
-    public MeterMenuCommand ShowMenu(MessageWindow window, int x, int y) => MenuChoice;
+    public MeterMenuCommand ShowMenu(MessageWindow window, int x, int y)
+    {
+        if (!MenuStaysOpen)
+        {
+            return MenuChoice;
+        }
+
+        // As a real menu's loop does: it delivers the thread's messages and takes each request
+        // to end the thread's loop, until the menu is closed.
+        Record("menu open");
+        _menuClosed = false;
+        while (!_menuClosed)
+        {
+            MessageLoop.Run();
+        }
+
+        return MeterMenuCommand.None;
+    }
+
+    public void CloseMenu()
+    {
+        Record("menu close");
+        _menuClosed = true;
+        MessageLoop.Quit();
+    }
 
     /// <summary>Runs <paramref name="action"/> on the meters thread, as Windows' messages would.</summary>
     public void OnMetersThread(Action<FakeMeterIcons> action)

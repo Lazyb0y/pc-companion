@@ -54,6 +54,8 @@ internal sealed class WindowsMetersSystem : IMetersSystem
         };
     }
 
+    public void CloseMenu() => PopupMenu.CloseOpenMenu();
+
     private sealed class WindowsMeterAppearance : IMeterAppearance
     {
         private const uint White = 0xFFFFFF;
