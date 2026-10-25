@@ -107,6 +107,18 @@ public sealed class ClipboardMenuTests
         Assert.Equal(new string('n', 60) + "\u2026", ClipboardMenu.Label(Track with { Name = new string('n', 70) }));
     }
 
+    // An emoji takes two characters, and a letter can carry accents of its own, so the text is cut
+    // between what shows as one character, rather than leaving half an emoji, which shows as a box.
+    [Fact]
+    public void ThePreviewAndNamesAreCutBetweenWhatShowsAsOneCharacter()
+    {
+        const string emoji = "\U0001F600";
+
+        Assert.Equal(Lre + new string('a', 49) + "\u2026" + Pdf, ClipboardMenu.Preview(new string('a', 49) + emoji + "b"));
+        Assert.Equal(Lre + new string('a', 48) + "\u2026" + Pdf, ClipboardMenu.Preview(new string('a', 48) + "e\u0301\u0301b"));
+        Assert.Equal(new string('n', 59) + "\u2026", ClipboardMenu.Label(Track with { Name = new string('n', 59) + emoji + "n" }));
+    }
+
     private static ClipboardTextResult Text(string text) => new(ClipboardTextStatus.Text, text);
 
     private static (string Text, bool Enabled) Describe(PopupMenuItem item) => item.IsSeparator ? ("-", false) : (item.Text, item.IsEnabled);
