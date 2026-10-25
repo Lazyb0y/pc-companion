@@ -113,6 +113,22 @@ public sealed class MetersThreadTests : IDisposable
     }
 
     [Fact]
+    public void StoppingWithTheMenuOpenClosesItAndEndsTheThread()
+    {
+        _system.MenuStaysOpen = true;
+        var thread = Start(AllMeters);
+        _system.OnMetersThread(icons => icons.OpenMenu());
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("menu open")));
+
+        thread.Stop();
+
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)));
+        Assert.Contains("menu close", _system.Events);
+        Assert.Equal("dispose", _system.Events[^1]);
+        Assert.False(thread.HasFailed);
+    }
+
+    [Fact]
     public void AnIconTheTaskbarTookAgainIsLogged()
     {
         Start(AllMeters);

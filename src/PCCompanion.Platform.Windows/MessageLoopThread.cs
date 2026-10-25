@@ -58,6 +58,22 @@ public abstract class MessageLoopThread<TSettings>
     /// <summary>Whether the thread stopped because of a failure, which <see cref="OnFailed"/> was told.</summary>
     public bool HasFailed => _failed;
 
+    /// <summary>
+    /// Whether the thread was asked to stop. A modal loop on the thread, such as an open menu's,
+    /// takes the request to end its message loop, so a feature that ran one asks again with
+    /// <see cref="MessageLoop.Quit"/> once it's closed.
+    /// </summary>
+    protected bool IsStopping
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _stopping;
+            }
+        }
+    }
+
     private TSettings Latest
     {
         get

@@ -451,8 +451,16 @@ Test-Check 'the memory meter goes away' (Wait-Until { $script:shown = Get-MeterB
 # program and ID, although it puts icons it hasn't seen before first.
 Write-MetersSettings '{ "enabled": true, "showOn": "NotificationArea" }'
 Test-Check 'the memory meter comes back between CPU and network' (Wait-Until { $script:shown = Get-MeterButtons (Get-Taskbar); ($shown.Count -eq 3) -and ((Get-ButtonText $shown) -match '^CPU.* \| Memory.* \| Network') } 15) (Get-ButtonText $shown)
+
+# Turning System Meters off while the meters' menu is open closes the menu and ends the thread.
+Test-Check 'the CPU meter''s menu requested before System Meters turns off' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY -IconId 2 -WindowClass $metersWindow)
+Test-Check 'the meters'' menu is open' (Wait-Until { (Get-MenuItemNames) -eq 'Task Manager, Settings, Exit' } 10) (Get-MenuItemNames)
 Write-MetersSettings '{ "enabled": false, "memory": false, "showOn": "NotificationArea" }'
-Test-Check 'turning System Meters off ends its thread' (Wait-Until { (Get-HostLog) -match $ended } 10)
+Test-Check 'turning System Meters off with its menu open ends its thread' (Wait-Until { (Get-HostLog) -match $ended } 5)
+Test-Check 'turning System Meters off closes the meters'' menu' (Wait-Until { -not (Get-MenuItemNames) } 5) (Get-MenuItemNames)
+if (Get-MenuItemNames) {
+    [void] (Close-TrayMenu -WindowClass $metersWindow)
+}
 Test-Check 'turning System Meters off removes the meters' (Wait-Until { (Get-MeterButtons (Get-Taskbar)).Count -eq 0 } 10) (Get-ButtonText (Get-MeterButtons (Get-Taskbar)))
 Test-Check 'turning System Meters off removes its window' ([Win32]::FindWindow($metersWindow, $null) -eq [IntPtr]::Zero)
 

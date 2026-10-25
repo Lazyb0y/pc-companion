@@ -24,6 +24,9 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
     // disposes it, so this is only where Apply finds it.
     private Meters? _meters;
 
+    // The meters thread's own: whether the meters' menu is open.
+    private bool _menuOpen;
+
     /// <summary>Starts the thread, which shows the meters <paramref name="settings"/> turn on.</summary>
     /// <param name="previous">
     /// A thread that was asked to stop, which this one waits for before it creates its window.
@@ -52,6 +55,15 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
 
     protected override void Apply(SystemMetersSettings settings) => _meters!.Apply(settings);
 
+    // The menu would otherwise stay open, and the thread with it.
+    protected override void OnStopping()
+    {
+        if (_menuOpen)
+        {
+            _system.CloseMenu();
+        }
+    }
+
     protected override void OnStarted() => LogStarted(_logger);
 
     protected override void OnStopped() => LogStopped(_logger);
@@ -72,8 +84,26 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
 
     private void ShowMenu(MessageWindow window, int x, int y)
     {
-        var command = _system.ShowMenu(window, x, y);
+        MeterMenuCommand command;
+        _menuOpen = true;
+        try
+        {
+            command = _system.ShowMenu(window, x, y);
+        }
+        finally
+        {
+            _menuOpen = false;
+        }
+
         LogMenuClosed(_logger, command);
+
+        // The menu's own loop took the request to stop, so the thread asks again and runs no command.
+        if (IsStopping)
+        {
+            MessageLoop.Quit();
+            return;
+        }
+
         switch (command)
         {
             case MeterMenuCommand.TaskManager:

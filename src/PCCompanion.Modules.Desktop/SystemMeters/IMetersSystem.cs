@@ -50,6 +50,9 @@ public interface IMetersSystem
 
     /// <summary>Shows the meters' menu at a screen point and returns the command chosen.</summary>
     MeterMenuCommand ShowMenu(MessageWindow window, int x, int y);
+
+    /// <summary>Closes the meters' menu open on the calling thread, as if the user pressed Esc.</summary>
+    void CloseMenu();
 }
 
 /// <summary>
