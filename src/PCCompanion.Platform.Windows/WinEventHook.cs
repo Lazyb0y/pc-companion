@@ -59,12 +59,14 @@ public sealed class WinEventHook : IDisposable
         _hook.Dispose();
     }
 
-    // Reports queued before the hook was removed can still arrive.
+    // Reports queued before the hook was removed can still arrive. Timed on a watched thread.
     private void OnEvent(HWINEVENTHOOK hook, uint @event, HWND window, int objectId, int childId, uint thread, uint time)
     {
         if (!_disposed)
         {
+            var timing = SlowHandlerWatch.Begin();
             Raised?.Invoke(this, new WinEventArgs(@event, window, objectId, childId));
+            SlowHandlerWatch.End(timing, SlowHandlerWatch.WindowEventSource, @event);
         }
     }
 }

@@ -141,7 +141,10 @@ internal static partial class Program
         using var watcher = new SettingsWatcher(paths);
         watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, updates, logger));
 
+        // Every feature waits while one holds this thread, so each handler that takes long is logged.
+        SlowHandlerWatch.Watch(TimeSpan.FromMilliseconds(50), slow => LogSlowHandler(logger, slow.Source, slow.Elapsed.TotalMilliseconds, slow.Message));
         MessageLoop.Run();
+        SlowHandlerWatch.StopWatching();
         LogStopped(logger);
     }
 
@@ -225,6 +228,9 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Stopped.")]
     private static partial void LogStopped(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "{Source} held the host's UI thread for {Milliseconds:F0} ms, handling message 0x{Message:X4}, so every feature waited.")]
+    private static partial void LogSlowHandler(ILogger logger, string source, double milliseconds, uint message);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The settings changed and were loaded again.")]
     private static partial void LogSettingsReloaded(ILogger logger);

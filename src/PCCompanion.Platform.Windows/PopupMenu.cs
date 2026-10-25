@@ -148,10 +148,16 @@ public static class PopupMenu
             DropWaitingKeys();
         }
 
-        var chosen = PInvoke.TrackPopupMenuEx(menu, (uint)flags, x, y, window, parameters);
+        // The menu runs a loop of its own until it closes, which isn't the handler's time.
+        int chosen;
+        using (SlowHandlerWatch.EnterModal())
+        {
+            chosen = PInvoke.TrackPopupMenuEx(menu, (uint)flags, x, y, window, parameters).Value;
+        }
+
         PInvoke.PostMessage(window, PInvoke.WM_NULL, 0, 0);
 
-        return (uint)chosen.Value;
+        return (uint)chosen;
     }
 
     // A menu with the items, and their submenus, which Windows destroys with it.

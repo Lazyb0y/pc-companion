@@ -112,6 +112,8 @@ function Test-GroupLogs([string] $Group, [string] $Folder) {
     Copy-Item -Path $files.FullName -Destination $Folder -ErrorAction SilentlyContinue
     $text = ($files | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
     Test-Check "${Group}: the logs have no errors" (-not ($text -match '\[(ERR|FTL)\]'))
+    $slow = @([regex]::Matches($text, "[^\r\n]*held the host's UI thread[^\r\n]*") | ForEach-Object { $_.Value -replace '^.*?\[WRN\] ', '' } | Select-Object -First 3)
+    Test-Check "${Group}: no feature held the host's UI thread" ($slow.Count -eq 0) ($slow -join ' | ')
     Test-Check "${Group}: the logs don't show the user name" (-not ($text -match [regex]::Escape($env:USERNAME)))
 }
 
