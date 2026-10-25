@@ -123,7 +123,7 @@ With **Show on** set to **Notification area**, or where the strip can't show, ea
 - A rate is the change since the last reading divided by the time between the two readings. That time is measured rather than assumed, so a late update doesn't inflate the rate. An adapter that appears or disappears between two readings, or whose counts go back, as when it's reset, adds nothing to that update.
 - Each meter reads only while it shows; the PDH query is open only while the CPU meter is on.
 - **When:** a coalescable timer on the meters thread's window (`SetCoalescableTimer`), so Windows can serve it with the same wakeup as other timers.
-- **Pauses:** while the session is locked or disconnected (`WTSRegisterSessionNotification`, as Hot Corners uses it) and while the display is off (`RegisterPowerSettingNotification` with `GUID_CONSOLE_DISPLAY_STATE`), since no one can see the meters then. They keep their last values, and the next values show one update after the meters resume.
+- **Pauses:** while the session is locked or disconnected (`WTSRegisterSessionNotification`, as Hot Corners uses it) and while the display is off (`RegisterPowerSettingNotification` with `GUID_CONSOLE_DISPLAY_STATE`), since no one can see the meters then. They resume once Windows reports the session unlocked or connected again, whichever it reports first, while the display is on. They keep their last values, and the next values show one update after the meters resume.
 
 ## Threads
 
@@ -301,5 +301,6 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
   - UAC on, as an administrator and as a standard user, for starting Task Manager;
   - Ethernet, Wi-Fi and a VPN, which mustn't count twice;
   - sleep and resume, and Explorer's and the host's CPU use over an hour with the strip and with the icons;
+  - switching to another user and back, and disconnecting and reconnecting over Remote Desktop, where the meters mustn't resume while the lock screen still shows;
   - Narrator with the strip and with Windows + B on the icons;
   - bringing the icons out of the hidden icons menu, then checking that they keep their place after a restart and an update.
