@@ -44,6 +44,16 @@ public static class Foreground
     /// and nothing let this process come to the front.
     /// </summary>
     public static bool Bring(nint window) => PInvoke.SetForegroundWindow(new HWND(window));
+
+    /// <summary>
+    /// Gives the front back to <paramref name="previous"/> while <paramref name="owner"/>, a window
+    /// of this process, still has it, as after a shortcut's menu closed with nothing started:
+    /// otherwise typing would go to <paramref name="owner"/>. A window the user chose meanwhile
+    /// keeps the front. Returns whether the front went back.
+    /// </summary>
+    public static bool GiveBack(nint owner, nint previous) =>
+        previous != 0 && previous != owner && PInvoke.GetForegroundWindow() == new HWND(owner) && PInvoke.IsWindow(new HWND(previous))
+        && PInvoke.SetForegroundWindow(new HWND(previous));
 }
 
 /// <summary>
