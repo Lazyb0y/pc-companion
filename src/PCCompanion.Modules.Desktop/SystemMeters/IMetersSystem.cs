@@ -117,7 +117,8 @@ public interface IStripHost : IDisposable
     /// <summary>
     /// Raised when the taskbar's buttons, its settings or the displays may have changed: half a
     /// second after windows that get taskbar buttons appear or go away, when Windows' settings or
-    /// the displays change, when the taskbar restarts, and every 30 seconds.
+    /// the displays change, when the taskbar restarts, and every 30 seconds, unless watching is
+    /// paused.
     /// </summary>
     event EventHandler? LayoutMayHaveChanged;
 
@@ -159,4 +160,13 @@ public interface IStripHost : IDisposable
 
     /// <summary>Brings the strip back in front of the taskbar when the taskbar came in front of it.</summary>
     bool KeepInFrontOf(nint taskbar);
+
+    /// <summary>
+    /// Stops watching the taskbar for changes while the meters are paused: no timer runs and
+    /// <see cref="LayoutMayHaveChanged"/> isn't raised until <see cref="ResumeWatching"/>.
+    /// </summary>
+    void PauseWatching();
+
+    /// <summary>Watches the taskbar for changes again after <see cref="PauseWatching"/>.</summary>
+    void ResumeWatching();
 }

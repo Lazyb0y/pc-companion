@@ -205,12 +205,18 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
             Schedule();
         }
 
-        // Runs the timer only while someone can see the meters. The meters start their readings
-        // over when the timer starts again, so the next values cover only the time since.
+        // Runs the timer only while someone can see the meters, and pauses the meters, the strip's
+        // watch on the taskbar included, while no one can. The meters start their readings over
+        // when the timer starts again, so the next values cover only the time since.
         private void Schedule()
         {
             if (IsPaused || _settings is null)
             {
+                if (IsPaused)
+                {
+                    _controller!.Pause();
+                }
+
                 _timer?.Dispose();
                 _timer = null;
                 return;

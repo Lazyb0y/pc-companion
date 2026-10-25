@@ -49,6 +49,9 @@ internal sealed class FakeStripHost(Action<string>? record = null) : IStripHost
 
     public bool IsDisposed { get; private set; }
 
+    /// <summary>Whether the host watches the taskbar for changes, as it does until the meters pause.</summary>
+    public bool IsWatching { get; private set; } = true;
+
     public (uint[] Pixels, Rectangle Bounds, string Description)? Last { get; private set; }
 
     public static List<TaskbarElement> DefaultElements()
@@ -109,6 +112,18 @@ internal sealed class FakeStripHost(Action<string>? record = null) : IStripHost
         TaskbarInFront = false;
         Raises++;
         return true;
+    }
+
+    public void PauseWatching()
+    {
+        IsWatching = false;
+        record?.Invoke("strip pause");
+    }
+
+    public void ResumeWatching()
+    {
+        IsWatching = true;
+        record?.Invoke("strip resume");
     }
 
     public void RaiseLayoutMayHaveChanged() => LayoutMayHaveChanged?.Invoke(this, EventArgs.Empty);

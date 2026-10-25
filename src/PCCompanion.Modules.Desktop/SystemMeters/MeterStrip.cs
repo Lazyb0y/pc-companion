@@ -156,6 +156,15 @@ public sealed class MeterStrip : IDisposable
     /// <summary>Draws the strip again, as when the pointer comes onto it or leaves it.</summary>
     public void Redraw() => Draw();
 
+    /// <summary>Stops watching the taskbar for changes while the meters are paused.</summary>
+    public void PauseWatching() => _host.PauseWatching();
+
+    /// <summary>
+    /// Watches the taskbar for changes again; lay the strip out then, since the taskbar may have
+    /// changed meanwhile.
+    /// </summary>
+    public void ResumeWatching() => _host.ResumeWatching();
+
     public void Dispose()
     {
         _host.Hide();
