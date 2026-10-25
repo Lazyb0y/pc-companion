@@ -116,6 +116,22 @@ Test-Check 'a rule whose program doesn''t exist shows why in the list' (Wait-Unt
 Save-Screenshot '13e-clipboard-actions-missing-program'
 [void] (Close-SettingsApp)
 
+# The menu uses only the first 50 rules, so the list says so for each rule after them.
+$manyRules = @(1..51 | ForEach-Object { @{ name = "Rule $_"; pattern = "rule-$_"; action = 'OpenAddress'; address = 'https://example.com/?q={text}' } })
+$settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; features = @{ clipboardActions = @{ enabled = $true; openLinks = $true; rules = $manyRules } } }
+Write-Settings ($settings | ConvertTo-Json -Depth 6)
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Clipboard Actions with 51 rules' (Select-NavigationItem 'Clipboard Actions')
+$beyond = 'Not in the menu. The menu uses only the first 50 rules.'
+Test-Check 'the rule after the first 50 says it isn''t in the menu' (Wait-Until { Find-AppText $beyond } 5)
+$beyondCount = @((Get-AppWindow).FindAll([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $beyond)))).Count
+$opensCount = @((Get-AppWindow).FindAll([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'Opens example.com')))).Count
+Test-Check 'and the first 50 rules say what they open' (($beyondCount -gt 0) -and ($opensCount -eq 50 * $beyondCount)) "rules after the first 50: $beyondCount, rules that open example.com: $opensCount"
+[void] (Close-SettingsApp)
+
 # The menu, with the rules in the settings file.
 function Write-ClipboardSettings([bool] $Enabled) {
     $section = @{

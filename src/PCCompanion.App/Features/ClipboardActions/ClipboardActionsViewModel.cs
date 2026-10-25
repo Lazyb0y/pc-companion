@@ -26,6 +26,7 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
     private static readonly CompositeFormat AddressFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryAddress);
     private static readonly CompositeFormat ProgramFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryProgram);
     private static readonly CompositeFormat ProblemFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryProblem);
+    private static readonly CompositeFormat BeyondMaximumFormat = CompositeFormat.Parse(Strings.ClipboardActionsBeyondMaximum);
 
     public ClipboardActionsViewModel(FeatureSettingsEditor editor)
         : base(editor, ClipboardActionsFeature.Definition)
@@ -149,10 +150,13 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
         }
     }
 
+    // A rule after the first ones the menu uses is left out of it, whatever else it has.
     private static ClipboardRuleItem ItemOf(IReadOnlyList<ClipboardRule> rules, int index, bool programFound)
     {
         var rule = rules[index];
-        var problem = ProblemOf(rule, programFound);
+        var problem = index < ClipboardActionsSettings.MaximumRules
+            ? ProblemOf(rule, programFound)
+            : string.Format(CultureInfo.CurrentCulture, BeyondMaximumFormat, ClipboardActionsSettings.MaximumRules);
         var name = rule.Name.Trim();
         return new ClipboardRuleItem(
             index,

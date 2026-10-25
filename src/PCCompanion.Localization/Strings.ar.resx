@@ -984,6 +984,10 @@
     <value>يتطلب إجراؤها إصدارًا أحدث من PC Companion.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsBeyondMaximum" xml:space="preserve">
+    <value>لا تستخدم القائمة إلا أول {0} قاعدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="ClipboardActionsNameHeader" xml:space="preserve">
     <value>الاسم</value>
     <comment>Needs native review.</comment>
