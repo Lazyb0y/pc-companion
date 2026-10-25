@@ -23,7 +23,7 @@ internal sealed class FakeHotCornerEnvironment : IHotCornerEnvironment
 
     public Rectangle? FrontWindowDisplay { get; set; }
 
-    public AppInFront? AppInFront
+    public AppOfWindow? AppInFront
     {
         get
         {
@@ -33,7 +33,7 @@ internal sealed class FakeHotCornerEnvironment : IHotCornerEnvironment
     }
 
     /// <summary>The app <see cref="AppInFront"/> returns.</summary>
-    public AppInFront? FrontApp { get; set; }
+    public AppOfWindow? FrontApp { get; set; }
 
     /// <summary>How many times the app in front was read.</summary>
     public int AppReads { get; private set; }

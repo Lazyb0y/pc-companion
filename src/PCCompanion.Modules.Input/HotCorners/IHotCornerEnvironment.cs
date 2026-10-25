@@ -36,7 +36,7 @@ public interface IHotCornerEnvironment
     /// <summary>
     /// The app of the window in front, or <see langword="null"/> when no window is in front.
     /// </summary>
-    AppInFront? AppInFront { get; }
+    AppOfWindow? AppInFront { get; }
 
     bool IsKeyHeld(HotCornerKey key);
 

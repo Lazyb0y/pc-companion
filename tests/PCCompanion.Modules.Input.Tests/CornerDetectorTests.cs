@@ -361,7 +361,7 @@ public sealed class CornerDetectorTests
                 ExcludedApps = [RemoteDesktop],
             },
             [Main, Second]);
-        _environment.FrontApp = new AppInFront(null, null, @"C:\WINDOWS\system32\MSTSC.EXE");
+        _environment.FrontApp = new AppOfWindow(null, null, @"C:\WINDOWS\system32\MSTSC.EXE", 1);
 
         Assert.Equal(Decision(CornerOutcome.AppExcluded), MoveTo(TopLeft));
         MoveTo(Middle);
@@ -375,7 +375,7 @@ public sealed class CornerDetectorTests
     public void AnAppIdMatchesWhetherTheWindowOrItsPackageHasIt(string? windowAppId, string? packageAppId, CornerOutcome outcome)
     {
         _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, ExcludedApps = [Photos] }, [Main]);
-        _environment.FrontApp = new AppInFront(windowAppId, packageAppId, @"C:\Windows\System32\ApplicationFrameHost.exe");
+        _environment.FrontApp = new AppOfWindow(windowAppId, packageAppId, @"C:\Windows\System32\ApplicationFrameHost.exe", 1);
 
         Assert.Equal(Decision(outcome), MoveTo(TopLeft));
     }
@@ -384,7 +384,7 @@ public sealed class CornerDetectorTests
     public void AnAppThatIsntListedDoesntSkipTheCorner()
     {
         _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0, ExcludedApps = [RemoteDesktop, Photos] }, [Main]);
-        _environment.FrontApp = new AppInFront(null, null, @"C:\Windows\System32\notepad.exe");
+        _environment.FrontApp = new AppOfWindow(null, null, @"C:\Windows\System32\notepad.exe", 1);
 
         Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));
     }
@@ -392,7 +392,7 @@ public sealed class CornerDetectorTests
     [Fact]
     public void TheAppInFrontIsReadOnlyWhenTheDelayEndsAndOnlyWhileAppsAreListed()
     {
-        _environment.FrontApp = new AppInFront(null, null, @"C:\Windows\System32\mstsc.exe");
+        _environment.FrontApp = new AppOfWindow(null, null, @"C:\Windows\System32\mstsc.exe", 1);
 
         _detector.Configure(new HotCornersSettings { ActivationDelayMilliseconds = 0 }, [Main]);
         Assert.Equal(Decision(CornerOutcome.Triggered), MoveTo(TopLeft));

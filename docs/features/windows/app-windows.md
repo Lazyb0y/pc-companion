@@ -42,6 +42,7 @@ Press Alt and the key above Tab to switch to another window of the app in front,
   - otherwise the ID of the window's Store app package;
   - otherwise the program file.
 - An app ID matches whichever way it was read, as on the taskbar: a window that sets the same ID as another window's Store app package belongs to the same app.
+- Hot Corners tells apps apart with the same code, `AppOfWindow` and `AppOfWindowReader` in `PCCompanion.Platform.Windows`, so the two features can't drift apart.
 - Store apps' windows belong to one shared frame process, `ApplicationFrameHost.exe`, so the process alone can't tell them apart.
 - An app can also set one ID for its whole process. Windows offers no documented way for another program to read it, so such an app's windows are grouped by program file, which rarely differs from the taskbar.
 

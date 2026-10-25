@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Platform.Windows;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
 
@@ -157,7 +158,7 @@ public sealed class HotCornersSettingsTests
             """));
 
         Assert.Equal([RemoteDesktop, Photos], settings.ExcludedApps);
-        Assert.True(settings.ExcludedApps[0].Matches(new AppInFront(null, null, @"C:\Windows\System32\mstsc.exe")));
+        Assert.True(settings.ExcludedApps[0].Matches(new AppOfWindow(null, null, @"C:\Windows\System32\mstsc.exe", 1)));
     }
 
     [Fact]

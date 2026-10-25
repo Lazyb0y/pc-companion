@@ -21,13 +21,13 @@ internal sealed class WindowsHotCornerEnvironment : IHotCornerEnvironment
 
     public Rectangle? FrontWindowDisplay => Displays.AreaOf(Foreground.Window);
 
-    public AppInFront? AppInFront
+    public AppOfWindow? AppInFront
     {
         get
         {
             var window = Foreground.Window;
             var processId = window == 0 ? 0 : TopLevelWindows.ProcessIdOf(window);
-            return processId == 0 ? null : new AppInFront(AppIdentity.OfWindow(window), AppIdentity.OfPackagedProcess(processId), AppIdentity.ProgramPath(processId));
+            return processId == 0 ? null : new AppOfWindow(AppIdentity.OfWindow(window), AppIdentity.OfPackagedProcess(processId), AppIdentity.ProgramPath(processId), processId);
         }
     }
 
