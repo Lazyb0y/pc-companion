@@ -76,8 +76,8 @@ public sealed class MeterStrip : IDisposable
     public StripState State { get; private set; } = StripState.NoTaskbar;
 
     /// <summary>
-    /// Whether the strip runs on a Windows build: the Windows 11 builds it was tested on, and Windows
-    /// 10 from version 2004. Elsewhere the meters use notification icons.
+    /// Whether the strip runs on a Windows build: Windows 11 from version 22H2 to the newest build it
+    /// was tested on, and Windows 10 from version 2004. Elsewhere the meters use notification icons.
     /// </summary>
     public static bool IsSupportedBuild(int build) =>
         build is (>= MinimumBuild and <= MaxTestedBuild) or (>= Windows10FirstBuild and <= Windows10LastBuild);
