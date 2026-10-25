@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
@@ -17,10 +18,14 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
     private static readonly string SettingsAppPath = Path.Combine(AppContext.BaseDirectory, SettingsAppProcess.FileName);
 
     /// <summary>
-    /// Starts the settings app, which hands over to the one that's open, if any.
+    /// Starts the settings app, which hands over to the one that's open, if any, on the thread pool:
+    /// listing the processes and starting one can take seconds, and the host's UI thread, which
+    /// every feature shares, doesn't wait for it. Returns at once.
     /// </summary>
     /// <param name="featureId">The feature whose page to show, or null for the page the settings app shows first.</param>
-    public void Open(string? featureId = null)
+    public void Open(string? featureId = null) => _ = Task.Run(() => Start(featureId));
+
+    private void Start(string? featureId)
     {
         LetOpenSettingsAppComeToFront();
         IReadOnlyList<string> arguments = featureId is null ? [] : SettingsAppProcess.FeatureArguments(featureId);
@@ -49,8 +54,8 @@ internal sealed partial class SettingsAppLauncher(ILogger<SettingsAppLauncher> l
         }
     }
 
-    // Selecting the tray icon lets the host bring a window to the front. A settings app that's
-    // already open gets that right too, to bring its window forward when the new launch hands over
+    // Selecting the tray icon lets the host, any of its threads, bring a window to the front. A
+    // settings app that's already open gets that right too, to bring its window forward when the new launch hands over
     // to it; without it, Windows only flashes the window's taskbar button. The new launch itself
     // can't be given the right: Windows refuses it to a process that hasn't set up its windows yet.
     private void LetOpenSettingsAppComeToFront()

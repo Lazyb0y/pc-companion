@@ -138,8 +138,27 @@ internal static partial class Program
         // Features started before the window existed; their Settings and Exit work from now on.
         services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open, ProgramCommand.Start);
 
+        // The file is read on the watcher's thread, so the UI thread, which every feature shares,
+        // only applies it; a read that ends after a later one isn't applied.
         using var watcher = new SettingsWatcher(paths);
-        watcher.Changed += (_, _) => window.BeginInvoke(() => ReloadSettings(store, detailedLogging, features, updates, logger));
+        var reads = 0;
+        var applied = 0;
+        watcher.Changed += (_, _) =>
+        {
+            var read = Interlocked.Increment(ref reads);
+            if (LoadChanged(store, logger) is { } settings)
+            {
+                window.BeginInvoke(() =>
+                {
+                    if (read > applied)
+                    {
+                        applied = read;
+                        ApplySettings(settings, detailedLogging, features, updates, logger);
+                        LogSettingsReloaded(logger);
+                    }
+                });
+            }
+        };
 
         // Every feature waits while one holds this thread, so each handler that takes long is logged.
         SlowHandlerWatch.Watch(TimeSpan.FromMilliseconds(50), slow => LogSlowHandler(logger, slow.Source, slow.Elapsed.TotalMilliseconds, slow.Message));
@@ -207,16 +226,17 @@ internal static partial class Program
         updates.Apply(settings.Updates);
     }
 
-    private static void ReloadSettings(SettingsStore store, DetailedLogging detailedLogging, FeatureRunner features, UpdateNotifier updates, ILogger logger)
+    // Reads the settings after a save, off the UI thread; returns null when the file can't be read.
+    private static AppSettings? LoadChanged(SettingsStore store, ILogger logger)
     {
         try
         {
-            ApplySettings(store.Load(), detailedLogging, features, updates, logger);
-            LogSettingsReloaded(logger);
+            return store.Load();
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             LogCantReloadSettings(logger, exception);
+            return null;
         }
     }
 
