@@ -189,7 +189,8 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11.
-- Every API is documented and in every supported version: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, `TrackPopupMenuEx`, and for the text cursor `GetGUIThreadInfo`, `SendMessageTimeout` with `WM_GETOBJECT`, `ObjectFromLresult` and `IAccessible`, `GetWindowDpiAwarenessContext`, `SetThreadDpiAwarenessContext` and `LogicalToPhysicalPointForPerMonitorDPI`, the last three since Windows 10 version 1607. `RegexOptions.NonBacktracking` is part of .NET.
+- Every API is documented and in every supported version, except the one that draws the menu dark: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, `TrackPopupMenuEx`, and for the text cursor `GetGUIThreadInfo`, `SendMessageTimeout` with `WM_GETOBJECT`, `ObjectFromLresult` and `IAccessible`, `GetWindowDpiAwarenessContext`, `SetThreadDpiAwarenessContext` and `LogicalToPhysicalPointForPerMonitorDPI`, the last three since Windows 10 version 1607. `RegexOptions.NonBacktracking` is part of .NET.
+- The menu is dark in the dark Windows mode through `MenuTheme`, as the PC Companion icon's menu is, which calls two undocumented uxtheme.dll functions, only on the Windows builds they were tested on; on other builds, the menu stays light. See [Windows support](../../compatibility/windows-support.md).
 - Windows doesn't use Windows + Alt + V, according to Microsoft's list of keyboard shortcuts, and registering it succeeded where Windows' own shortcuts were refused. When another program already has it, Windows refuses it: the shortcut then does nothing, and a warning is logged.
 
 ## Security and privacy
