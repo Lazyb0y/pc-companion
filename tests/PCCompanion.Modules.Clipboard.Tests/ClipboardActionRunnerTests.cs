@@ -20,8 +20,8 @@ public sealed class ClipboardActionRunnerTests
         var link = new Uri("https://example.com/");
         var address = new Uri("https://tracking.example.com/?n=1");
 
-        Run(new ClipboardOffer(OfferKind.OpenLink, string.Empty, 0, link));
-        Run(new ClipboardOffer(OfferKind.OpenAddress, "Track", 3, address));
+        Assert.True(Run(new ClipboardOffer(OfferKind.OpenLink, string.Empty, 0, link)));
+        Assert.True(Run(new ClipboardOffer(OfferKind.OpenAddress, "Track", 3, address)));
 
         Assert.Equal([link, address], _commands.WebPages);
         Assert.Equal(
@@ -37,7 +37,7 @@ public sealed class ClipboardActionRunnerTests
     {
         _commands.OpensWebPages = false;
 
-        Run(new ClipboardOffer(OfferKind.OpenAddress, "Track", 2, new Uri("https://example.com/")));
+        Assert.False(Run(new ClipboardOffer(OfferKind.OpenAddress, "Track", 2, new Uri("https://example.com/"))));
 
         Assert.Equal([(LogLevel.Warning, "Clipboard Actions couldn't open the address of rule 2 (0 is Open in browser).")], _logger.Entries);
     }
@@ -45,7 +45,7 @@ public sealed class ClipboardActionRunnerTests
     [Fact]
     public void TheHostStartsTheProgramWithTheTextInOneArgument()
     {
-        Run(Program(Player, "--fullscreen", "say \"hi\" & del x"));
+        Assert.True(Run(Program(Player, "--fullscreen", "say \"hi\" & del x")));
 
         var (program, arguments) = Assert.Single(_commands.Programs);
         Assert.Equal(Player, program);
@@ -59,7 +59,7 @@ public sealed class ClipboardActionRunnerTests
     [InlineData(@"C:\Scripts\Open.bat", "NotExe")]
     public void AProgramThatCantRunIsLoggedByItsFileNameOnly(string program, string problem)
     {
-        Run(Program(program, "secret-123"));
+        Assert.False(Run(Program(program, "secret-123")));
 
         Assert.Empty(_commands.Programs);
         var entry = Assert.Single(_logger.Entries);
@@ -71,7 +71,7 @@ public sealed class ClipboardActionRunnerTests
     {
         _commands.ProgramErrorCode = 740; // ERROR_ELEVATION_REQUIRED
 
-        Run(Program(Player, "secret-123"));
+        Assert.False(Run(Program(Player, "secret-123")));
 
         Assert.Equal([(LogLevel.Warning, "Windows couldn't start player.exe (error 740).")], _logger.Entries);
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("Program Files", StringComparison.Ordinal) || entry.Message.Contains("secret", StringComparison.Ordinal));
@@ -85,5 +85,5 @@ public sealed class ClipboardActionRunnerTests
         || path.EndsWith("cmd.exe", StringComparison.OrdinalIgnoreCase)
         || path.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
 
-    private void Run(ClipboardOffer offer) => new ClipboardActionRunner(_commands, Exists, _logger).Run(offer);
+    private bool Run(ClipboardOffer offer) => new ClipboardActionRunner(_commands, Exists, _logger).Run(offer);
 }

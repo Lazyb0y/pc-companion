@@ -42,7 +42,11 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
         return PopupMenu.ShowForShortcut(window, items, position.X, position.Y, rightToLeft, keepClear);
     }
 
+    public nint FrontWindow() => Foreground.Window;
+
     public void AllowFront() => Foreground.AllowAnyProcess();
+
+    public void GiveFrontBack(MessageWindow window, nint previous) => Foreground.GiveBack(window.Handle, previous);
 
     public bool FileExists(string path) => File.Exists(path);
 

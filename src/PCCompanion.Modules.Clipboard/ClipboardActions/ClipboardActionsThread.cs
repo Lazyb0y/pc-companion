@@ -111,6 +111,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         LogPressed(_logger, read.Status, offers.Count, position.Place);
 
         var plan = ClipboardMenu.Build(read, offers);
+        var previous = _system.FrontWindow();
         uint chosen;
         _menuOpen = true;
         try
@@ -131,20 +132,29 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         {
             LogChosen(_logger, offer.Rule, offer.Kind);
             _system.AllowFront();
-            _system.RunInBackground(() => RunGuarded(offer));
+            _system.RunInBackground(() => RunGuarded(window, offer, previous));
         }
     }
 
-    // On the thread pool, where an exception wouldn't reach the feature's error boundary.
-    private void RunGuarded(ClipboardOffer offer)
+    // On the thread pool, where an exception wouldn't reach the feature's error boundary. An action
+    // that didn't start gives the front back, as Esc does, so typing doesn't go to the hidden window.
+    private void RunGuarded(MessageWindow window, ClipboardOffer offer, nint previous)
     {
+        var started = false;
         try
         {
-            _runner.Run(offer);
+            started = _runner.Run(offer);
         }
         catch (Exception exception)
         {
             LogActionFailed(_logger, exception, offer.Rule);
+        }
+        finally
+        {
+            if (!started)
+            {
+                _system.GiveFrontBack(window, previous);
+            }
         }
     }
 
