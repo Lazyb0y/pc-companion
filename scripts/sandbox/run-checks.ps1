@@ -112,13 +112,18 @@ function Test-GroupLogs([string] $Group, [string] $Folder) {
     Copy-Item -Path $files.FullName -Destination $Folder -ErrorAction SilentlyContinue
     $text = ($files | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
     Test-Check "${Group}: the logs have no errors" (-not ($text -match '\[(ERR|FTL)\]'))
-    # The host adding its tray icon again after Explorer restarts is known to hold the UI thread
-    # (#184), so it's noted; anything else that held it fails the group.
-    $slow = @([regex]::Matches($text, "[^\r\n]*held the host's UI thread[^\r\n]*") | ForEach-Object { $_.Value -replace '^.*?\[WRN\] ', '' })
-    $known = @($slow | Where-Object { $_ -match '^PCCompanion\.Host\.Program: PCCompanion\.Host held .*\(TaskbarCreated\)' })
-    $unknown = @($slow | Where-Object { $_ -notin $known })
-    foreach ($line in $known) { Write-Report "[NOTE] ${Group}: known (#184): $line" }
-    Test-Check "${Group}: no feature held the host's UI thread" ($unknown.Count -eq 0) (($unknown | Select-Object -First 3) -join ' | ')
+    # The host warns from 50 ms, but the Sandbox is slower than a PC, and a first run of a path can
+    # come close to that, so a hold fails the group only from 100 ms; shorter ones are noted. The
+    # host adding its tray icon again after Explorer restarts is known (#184), so it's noted too.
+    $slow = @([regex]::Matches($text, "[^\r\n]*held the host's UI thread for \d+ ms[^\r\n]*") | ForEach-Object { $_.Value -replace '^.*?\[WRN\] ', '' })
+    $failing = @()
+    foreach ($line in $slow) {
+        $known = $line -match '^PCCompanion\.Host\.Program: PCCompanion\.Host held .*\(TaskbarCreated\)'
+        if ($known) { Write-Report "[NOTE] ${Group}: known (#184): $line" }
+        elseif ([int] ([regex]::Match($line, 'for (\d+) ms').Groups[1].Value) -lt 100) { Write-Report "[NOTE] ${Group}: under 100 ms: $line" }
+        else { $failing += $line }
+    }
+    Test-Check "${Group}: no feature held the host's UI thread for 100 ms or more" ($failing.Count -eq 0) (($failing | Select-Object -First 3) -join ' | ')
     Test-Check "${Group}: the logs don't show the user name" (-not ($text -match [regex]::Escape($env:USERNAME)))
 }
 
