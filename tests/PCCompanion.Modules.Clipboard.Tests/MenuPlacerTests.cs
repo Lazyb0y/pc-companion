@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -39,6 +40,16 @@ public sealed class MenuPlacerTests
     {
         _system.Front = new ForegroundTextCursor(Window, null);
         _system.AppAnswer = Task.FromResult<Rectangle?>(null);
+
+        Assert.Equal(new MenuPosition(Pointer, null, MenuPlace.AtPointer), new MenuPlacer(_system).Find());
+    }
+
+    // An app's object reports errors such as E_NOTIMPL, which .NET turns into exceptions of their own.
+    [Fact]
+    public void AnAppWhoseAnswerFailsGetsTheMenuAtThePointer()
+    {
+        _system.Front = new ForegroundTextCursor(Window, null);
+        _system.AppAnswer = Task.FromException<Rectangle?>(new NotImplementedException());
 
         Assert.Equal(new MenuPosition(Pointer, null, MenuPlace.AtPointer), new MenuPlacer(_system).Find());
     }
