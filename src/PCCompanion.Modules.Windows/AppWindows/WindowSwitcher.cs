@@ -27,11 +27,11 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
             return new SwitchResult(SwitchOutcome.NoAppInFront, 0);
         }
 
-        var apps = new AppKeys(environment);
+        var apps = new AppOfWindowReader(environment);
         var app = apps.Of(frontWindow);
         var others = windows
             .Where(window => window.Handle != frontWindow.Handle && IsSwitchable(window, includeMinimized))
-            .Where(window => string.Equals(apps.Of(window), app, StringComparison.OrdinalIgnoreCase))
+            .Where(window => apps.Of(window).IsSameAppAs(app))
             .ToList();
         var count = others.Count + 1;
         if (others.Count == 0)
@@ -70,31 +70,6 @@ public sealed class WindowSwitcher(IAppWindowsEnvironment environment)
 
     private SwitchResult Activate(TopLevelWindow window, int count) =>
         new(environment.Activate(window.Handle) ? SwitchOutcome.Switched : SwitchOutcome.Refused, count);
-
-    // Groups windows as the taskbar does, reading each process's identity once per press. An app
-    // ID matches whether the window sets it or it comes from the process's Store app package.
-    private sealed class AppKeys(IAppWindowsEnvironment environment)
-    {
-        private readonly Dictionary<uint, string> _processes = [];
-
-        public string Of(TopLevelWindow window)
-        {
-            if (environment.WindowAppId(window.Handle) is { } id)
-            {
-                return "id:" + id;
-            }
-
-            if (!_processes.TryGetValue(window.ProcessId, out var key))
-            {
-                key = environment.PackageAppId(window.ProcessId) is { } package ? "id:" + package
-                    : environment.ProgramPath(window.ProcessId) is { } path ? "file:" + path
-                    : "process:" + window.ProcessId;
-                _processes[window.ProcessId] = key;
-            }
-
-            return key;
-        }
-    }
 }
 
 public enum SwitchDirection

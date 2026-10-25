@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
 
@@ -23,16 +24,14 @@ public sealed record ExcludedApp
     public bool IsValid => string.IsNullOrWhiteSpace(AppId) != string.IsNullOrWhiteSpace(Program);
 
     /// <summary>
-    /// Whether this is the app in front: its app ID is the one the window sets or its package's,
-    /// or its program is the window's program, whatever their case.
+    /// Whether this is the app of the window in front: its app ID is the one the window sets or its
+    /// package's, or its program is the window's program, whatever their case.
     /// </summary>
-    public bool Matches(AppInFront app)
+    public bool Matches(AppOfWindow app)
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        return AppId is { } id
-            ? string.Equals(id, app.WindowAppId, StringComparison.OrdinalIgnoreCase) || string.Equals(id, app.PackageAppId, StringComparison.OrdinalIgnoreCase)
-            : string.Equals(Program, app.Program, StringComparison.OrdinalIgnoreCase);
+        return AppId is { } id ? app.HasAppId(id) : Program is { } program && app.HasProgram(program);
     }
 
     /// <summary>Whether <paramref name="other"/> has the same app ID or program, whatever its case.</summary>
@@ -52,11 +51,3 @@ public sealed record ExcludedApp
         Program = string.IsNullOrWhiteSpace(Program) ? null : Program,
     };
 }
-
-/// <summary>
-/// The app of the window in front, as Hot Corners compares it with the listed apps.
-/// </summary>
-/// <param name="WindowAppId">The app ID the window sets for itself, as browsers do for each profile.</param>
-/// <param name="PackageAppId">The app ID of the window's Store app package.</param>
-/// <param name="Program">The full path of the window's program file.</param>
-public sealed record AppInFront(string? WindowAppId, string? PackageAppId, string? Program);
