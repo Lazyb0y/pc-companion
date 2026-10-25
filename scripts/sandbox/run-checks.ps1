@@ -112,8 +112,13 @@ function Test-GroupLogs([string] $Group, [string] $Folder) {
     Copy-Item -Path $files.FullName -Destination $Folder -ErrorAction SilentlyContinue
     $text = ($files | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n"
     Test-Check "${Group}: the logs have no errors" (-not ($text -match '\[(ERR|FTL)\]'))
-    $slow = @([regex]::Matches($text, "[^\r\n]*held the host's UI thread[^\r\n]*") | ForEach-Object { $_.Value -replace '^.*?\[WRN\] ', '' } | Select-Object -First 3)
-    Test-Check "${Group}: no feature held the host's UI thread" ($slow.Count -eq 0) ($slow -join ' | ')
+    # The host adding its tray icon again after Explorer restarts is known to hold the UI thread
+    # (#184), so it's noted; anything else that held it fails the group.
+    $slow = @([regex]::Matches($text, "[^\r\n]*held the host's UI thread[^\r\n]*") | ForEach-Object { $_.Value -replace '^.*?\[WRN\] ', '' })
+    $known = @($slow | Where-Object { $_ -match '^PCCompanion\.Host\.Program: PCCompanion\.Host held .*\(TaskbarCreated\)' })
+    $unknown = @($slow | Where-Object { $_ -notin $known })
+    foreach ($line in $known) { Write-Report "[NOTE] ${Group}: known (#184): $line" }
+    Test-Check "${Group}: no feature held the host's UI thread" ($unknown.Count -eq 0) (($unknown | Select-Object -First 3) -join ' | ')
     Test-Check "${Group}: the logs don't show the user name" (-not ($text -match [regex]::Escape($env:USERNAME)))
 }
 

@@ -73,6 +73,23 @@ public sealed class MessageWindow : IDisposable
     }
 
     /// <summary>
+    /// The name a message was registered with (<see cref="RegisterMessage"/>), such as
+    /// <c>TaskbarCreated</c>, or <see langword="null"/> for a message that wasn't registered.
+    /// </summary>
+    public static string? RegisteredName(uint message)
+    {
+        // Registered messages are 0xC000 to 0xFFFF, and share their names with clipboard formats.
+        if (message is < 0xC000 or > 0xFFFF)
+        {
+            return null;
+        }
+
+        Span<char> name = stackalloc char[256];
+        var length = PInvoke.GetClipboardFormatName(message, name);
+        return length > 0 ? new string(name[..length]) : null;
+    }
+
+    /// <summary>
     /// Posts a message to the window of another process, created with <paramref name="className"/>.
     /// Returns false when there is no such window.
     /// </summary>

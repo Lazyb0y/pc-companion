@@ -102,6 +102,7 @@ RegisterHotKey
 RegisterPowerSettingNotification
 RegisterRawInputDevices
 RegisterWindowMessage
+GetClipboardFormatName
 SC_MONITORPOWER
 SC_SCREENSAVE
 SelectObject
