@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
@@ -117,7 +118,28 @@ public static class ClipboardMenu
     private static PopupMenuItem Note(string text) => new(NoteCommand, text) { IsEnabled = false };
 
     private static string Shorten(string text, int length, bool more) =>
-        text.Length > length ? text[..length] + Ellipsis : more ? text + Ellipsis : text;
+        text.Length > length ? text[..CutAt(text, length)] + Ellipsis : more ? text + Ellipsis : text;
+
+    // Where to cut text to at most length characters, between what shows as one character, so an
+    // emoji, which takes two, or a letter with its accents isn't split; half an emoji shows as a box.
+    private static int CutAt(string text, int length)
+    {
+        var end = 0;
+        while (end < text.Length)
+        {
+            var next = end + StringInfo.GetNextTextElementLength(text, end);
+            if (next > length)
+            {
+                break;
+            }
+
+            end = next;
+        }
+
+        // A first character longer than the limit, such as a letter with many accents, is cut
+        // between characters, but never within an emoji.
+        return end > 0 ? end : char.IsHighSurrogate(text[length - 1]) ? length - 1 : length;
+    }
 
     // Whether the first letter is written right to left, as in Arabic and Hebrew.
     private static bool StartsRightToLeft(string text)

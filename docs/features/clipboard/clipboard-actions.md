@@ -10,7 +10,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - **Windows + Alt + V** shows a menu with the actions for the text on the clipboard, at the text cursor of the app in front, or at the pointer when the app doesn't report one; see [Where the menu opens](#where-the-menu-opens). Choosing an action runs it; Esc or a click elsewhere closes the menu.
 - The menu shows, in this order:
-  - the start of the copied text, dimmed, so the user sees what the action gets: its first line, up to 50 characters, with an ellipsis when there's more;
+  - the start of the copied text, dimmed, so the user sees what the action gets: its first line, up to 50 characters, cut between whole characters so that an emoji or a letter with its accents isn't split, with an ellipsis when there's more;
   - **Open in browser**, when the text is a web link and **Open copied links** is on;
   - the name of each rule whose pattern matches, in the order of the rule list;
   - **Settings**, which opens PC Companion's settings, as selecting the PC Companion icon does.
@@ -53,7 +53,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - Patterns are .NET regular expressions. A pattern must match the whole text, as if it started with `^` and ended with `$`, so a pattern for a number doesn't match a paragraph that contains one. **Match case** is off by default.
 - Patterns run with `RegexOptions.NonBacktracking`, whose time grows only with the length of the text, so no copied text can keep a pattern busy; each match also stops after 100 ms. The first match in a process takes about 10 ms longer while .NET prepares its matching code, so a match of a pattern of our own, without a time limit, comes first: otherwise the first rule to match could run out of time on a busy PC and be left out of the menu. Backreferences, lookarounds, atomic groups and conditionals aren't available with it. The rule editor says so in the user's language; .NET's own message for them is in English only.
 - Patterns match with the invariant culture, so Match case off works the same in every language, as with the Turkish dotted and dotless i.
-- Every rule needs a name; the menu shows up to 60 characters of it.
+- Every rule needs a name; the menu shows up to 60 characters of it, cut between whole characters as the preview is.
 - Several rules can match the same text. Two rules with the same pattern give two actions for the same text.
 - Up to 50 rules; more are left out, with a warning in the log.
 - A rule that can't be used, such as one with an unknown action, a pattern that doesn't compile or an address that isn't `http` or `https`, is left out of the menu, with a warning in the log that gives its number.
@@ -228,7 +228,7 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
   - web addresses: encoding of spaces, `&`, `#`, `/` and non-Latin text, and addresses that stop being `http` or `https` after the replacement;
   - programs: `{text}` stays one argument with spaces, quotes and `&`; command interpreters are refused; the host starts the program;
   - an action that doesn't start gives the front back;
-  - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, and `&` in names;
+  - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, cutting the preview and names between whole characters, and `&` in names;
   - where the menu opens: at Windows' text cursor with its line kept clear, at the app's accessibility text cursor when Windows has none, and at the pointer when there's neither, when the app doesn't answer within 100 ms or its answer fails, while an earlier request still waits, and for an app with another integrity level, which isn't asked;
   - settings: unknown actions, missing fields and unusable rules are left out with a warning;
   - a second `Dispose`, as the host's exit makes, doesn't wait for the feature's thread again.
