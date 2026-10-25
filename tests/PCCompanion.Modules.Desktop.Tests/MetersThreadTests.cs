@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Testing;
@@ -152,6 +153,28 @@ public sealed class MetersThreadTests : IDisposable
     }
 
     [Fact]
+    public void TheStripDoesntLookForRoomWhileTheMetersArePaused()
+    {
+        _system.WindowsBuild = 26100;
+        Start(AllMeters);
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("strip show")));
+
+        _system.Pauses!.Lock();
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("System Meters paused: True", StringComparison.Ordinal))));
+
+        // As when a window opens or the strip's 30-second timer fires while the meters wait.
+        Assert.Equal(0, TaskbarReadsAfterALayoutEvent());
+        Assert.Contains("strip pause", _system.Events);
+
+        var reads = _system.StripHost!.TaskbarReads;
+        _system.Pauses.Unlock();
+
+        // The taskbar may have changed while the meters waited, so the strip looks for room once.
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("strip resume") && system.StripHost!.TaskbarReads == reads + 1));
+        Assert.Equal(1, TaskbarReadsAfterALayoutEvent());
+    }
+
+    [Fact]
     public void AFailureEndsTheThreadAndRemovesTheMeters()
     {
         _system.ShowFailure = new InvalidOperationException("The test fails the meters.");
@@ -177,6 +200,25 @@ public sealed class MetersThreadTests : IDisposable
         Assert.True(thread.HasFailed);
         Assert.Contains((LogLevel.Error, "System Meters failed, so it's stopped until PC Companion restarts."), _logger.Entries);
         Assert.True(_system.StripHost!.IsDisposed);
+    }
+
+    // Raises the strip host's layout event on the meters thread, and returns how often the strip
+    // read the taskbar for it.
+    private int TaskbarReadsAfterALayoutEvent()
+    {
+        var host = _system.StripHost!;
+        var reads = -1;
+        using var done = new ManualResetEventSlim();
+        _system.OnMetersThread(_ =>
+        {
+            var before = host.TaskbarReads;
+            host.RaiseLayoutMayHaveChanged();
+            reads = host.TaskbarReads - before;
+            done.Set();
+        });
+
+        Assert.True(done.Wait(TimeSpan.FromSeconds(10)));
+        return reads;
     }
 
     private static void StopAndJoin(MetersThread thread)

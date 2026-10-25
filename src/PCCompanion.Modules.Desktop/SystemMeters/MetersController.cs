@@ -59,6 +59,7 @@ public sealed partial class MetersController : IDisposable
     private bool _stripUnavailable;
     private (double? Cpu, MemoryUse? Memory, NetworkRates? Network) _values;
     private bool _hasValues;
+    private bool _paused;
 
     /// <param name="createStrip">
     /// Creates the strip, or returns <see langword="null"/> when it can't run on this Windows build.
@@ -127,6 +128,10 @@ public sealed partial class MetersController : IDisposable
             {
                 _strip = _createStrip();
                 _stripUnavailable = _strip is null;
+                if (_paused)
+                {
+                    _strip?.PauseWatching();
+                }
             }
         }
         else
@@ -135,8 +140,9 @@ public sealed partial class MetersController : IDisposable
             _strip = null;
         }
 
-        // A new layout or style shows at once, with the values the meters have.
-        if (_hasValues)
+        // A new layout or style shows at once, with the values the meters have, or when the
+        // meters resume.
+        if (_hasValues && !_paused)
         {
             Present();
         }
@@ -149,10 +155,13 @@ public sealed partial class MetersController : IDisposable
         Present();
     }
 
-    /// <summary>Finds the strip's place again, as when the taskbar may have changed.</summary>
+    /// <summary>
+    /// Finds the strip's place again, as when the taskbar may have changed. While the meters are
+    /// paused, it waits until they resume.
+    /// </summary>
     public void LayOutStrip()
     {
-        if (_strip is null)
+        if (_strip is null || _paused)
         {
             return;
         }
@@ -171,13 +180,41 @@ public sealed partial class MetersController : IDisposable
     public void RedrawStrip() => _strip?.Redraw();
 
     /// <summary>
-    /// Starts the readings over after a pause, so the next update covers only the time from now.
-    /// The meters keep their last values until then.
+    /// Pauses the meters, as while the session is locked or the displays are off: the strip stops
+    /// watching the taskbar, and nothing is laid out or shown until <see cref="Resume"/>.
+    /// </summary>
+    public void Pause()
+    {
+        if (_paused)
+        {
+            return;
+        }
+
+        _paused = true;
+        _strip?.PauseWatching();
+    }
+
+    /// <summary>
+    /// Starts the readings over, so the next update covers only the time from now, as when the
+    /// meters start and after a pause. The meters keep their last values until then. After a
+    /// pause, the strip watches the taskbar again and finds its place once, since the taskbar may
+    /// have changed meanwhile.
     /// </summary>
     public void Resume()
     {
         _cpu?.Restart();
         _network?.Restart();
+        if (!_paused)
+        {
+            return;
+        }
+
+        _paused = false;
+        if (_strip is not null)
+        {
+            _strip.ResumeWatching();
+            LayOutStrip();
+        }
     }
 
     /// <summary>Removes the strip and every icon.</summary>

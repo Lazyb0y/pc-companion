@@ -347,13 +347,37 @@ Start-Sleep -Seconds 3
 Save-Screenshot '15d-system-meters-strip-after-explorer-restart'
 
 # An auto-hiding taskbar has no strip; the meters use notification icons until it stops hiding.
+# While the meters are paused, the strip doesn't look for room, so the change shows only once they
+# resume. The Sandbox can't lock its session, so the meters' window gets the reports Windows sends
+# then (WM_WTSSESSION_CHANGE with WTS_SESSION_LOCK, and later WTS_SESSION_UNLOCK).
+$stuckRects = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3'
+$savedTaskbar = (Get-ItemProperty $stuckRects -ErrorAction SilentlyContinue).Settings
 $onTaskbar = Get-MatchCount (Get-HostLog) 'System Meters show: "?OnTaskbar"?\.'
+$autoHide = Get-MatchCount (Get-HostLog) 'System Meters show: "?IconsAutoHide"?\.'
+$pauses = Get-MatchCount (Get-HostLog) 'System Meters paused: [Tt]rue'
+$metersHandle = [Win32]::FindWindow($metersWindow, $null)
+[void] [Win32]::PostMessage($metersHandle, 0x02B1, [UIntPtr] [uint32] 7, [IntPtr]::Zero)
+Test-Check 'the meters pause when Windows reports the session locked' (Wait-Until { (Get-MatchCount (Get-HostLog) 'System Meters paused: [Tt]rue') -gt $pauses } 10)
 [MetersChecks]::SetTaskbarAutoHide($true)
-Test-Check 'with an auto-hiding taskbar, the meters move to the notification area' (Wait-Until { (Get-HostLog) -match 'System Meters show: "?IconsAutoHide"?\.' } 40)
+Test-Check 'while the meters are paused, the strip doesn''t look for room' (-not (Wait-Until { (Get-MatchCount (Get-HostLog) 'System Meters show: "?IconsAutoHide"?\.') -gt $autoHide } 5))
+$resumes = Get-MatchCount (Get-HostLog) 'System Meters paused: [Ff]alse'
+[void] [Win32]::PostMessage($metersHandle, 0x02B1, [UIntPtr] [uint32] 8, [IntPtr]::Zero)
+Test-Check 'the meters resume when Windows reports the session unlocked' (Wait-Until { (Get-MatchCount (Get-HostLog) 'System Meters paused: [Ff]alse') -gt $resumes } 10)
+Test-Check 'once the meters resume, the strip looks for room at once, and with an auto-hiding taskbar the meters move to the notification area' (Wait-Until { (Get-MatchCount (Get-HostLog) 'System Meters show: "?IconsAutoHide"?\.') -gt $autoHide } 10)
 Test-Check 'with an auto-hiding taskbar, the strip is hidden' ($null -eq (Get-StripWindow))
 Test-Check 'with an auto-hiding taskbar, Windows takes an icon per meter' (Wait-Until { (Get-SettingsText (Get-MeterIconSettings)) -eq '2 CPU, 3 Memory, 4 Network' } 15) (Get-SettingsText (Get-MeterIconSettings))
 [MetersChecks]::SetTaskbarAutoHide($false)
 Test-Check 'once the taskbar stops hiding, the strip is back' (Wait-Until { (Get-MatchCount (Get-HostLog) 'System Meters show: "?OnTaskbar"?\.') -gt $onTaskbar -and $null -ne (Get-StripWindow) } 40)
+
+# Windows saves the taskbar's auto-hide for its next start (StuckRects3) some seconds after it's
+# turned on, and in the Sandbox hadn't saved turning it off 20 seconds later, so the Explorer
+# restarts further down would start with a hiding taskbar. The saved settings go back to how they were.
+if ($null -eq $savedTaskbar) {
+    Remove-ItemProperty $stuckRects -Name Settings -ErrorAction SilentlyContinue
+}
+else {
+    Set-ItemProperty $stuckRects -Name Settings -Value $savedTaskbar
+}
 
 # Notification icons, chosen with Show on.
 Write-MetersSettings '{ "enabled": true, "showOn": "NotificationArea" }'

@@ -235,6 +235,64 @@ public sealed class MetersControllerTests : IDisposable
         Assert.True(_strip.IsShown);
     }
 
+    [Fact]
+    public void WhileThePausedMetersWaitTheStripDoesntLookForRoom()
+    {
+        _strip = new FakeStripHost();
+        _controller.Apply(AllMeters);
+        UpdateAfter(TimeSpan.FromSeconds(1));
+        var (reads, width) = (_strip.TaskbarReads, _strip.Last!.Value.Bounds.Width);
+
+        _controller.Pause();
+        _controller.LayOutStrip();
+        _controller.Apply(AllMeters with { Layout = StripLayout.Compact });
+
+        Assert.False(_strip.IsWatching);
+        Assert.Equal(reads, _strip.TaskbarReads);
+        Assert.Equal(width, _strip.Last!.Value.Bounds.Width);
+
+        // It looks once, since the taskbar may have changed, and shows the new layout.
+        _controller.Resume();
+
+        Assert.True(_strip.IsWatching);
+        Assert.Equal(reads + 1, _strip.TaskbarReads);
+        Assert.True(_strip.Last!.Value.Bounds.Width < width);
+    }
+
+    [Fact]
+    public void AStripCreatedWhileTheMetersArePausedWaitsForThemToResume()
+    {
+        _controller.Apply(AllMeters with { ShowOn = ShowOn.NotificationArea });
+        UpdateAfter(TimeSpan.FromSeconds(1));
+        _controller.Pause();
+
+        _strip = new FakeStripHost();
+        _controller.Apply(AllMeters);
+
+        Assert.False(_strip.IsWatching);
+        Assert.Equal(0, _strip.TaskbarReads);
+
+        _controller.Resume();
+
+        Assert.True(_strip.IsWatching);
+        Assert.True(_strip.IsShown);
+        Assert.Equal(MetersPlace.OnTaskbar, _controller.Place);
+    }
+
+    [Fact]
+    public void ResumingWithoutAPauseDoesntLookForRoom()
+    {
+        _strip = new FakeStripHost();
+        _controller.Apply(AllMeters);
+        UpdateAfter(TimeSpan.FromSeconds(1));
+        var reads = _strip.TaskbarReads;
+
+        _controller.Resume();
+
+        Assert.Equal(reads, _strip.TaskbarReads);
+        Assert.True(_strip.IsWatching);
+    }
+
     private static NetworkAdapterCounts Adapter(ulong received) =>
         new(1, IsHardware: true, IsFilter: false, IsLoopback: false, IsUp: true, BytesReceived: received, BytesSent: 0);
 

@@ -9,8 +9,9 @@ namespace PCCompanion.Modules.Desktop.SystemMeters;
 /// <summary>
 /// The strip's window over the taskbar, and what tells it the taskbar may have changed: window
 /// events from every program, Explorer's own events, Windows' settings and display changes, the
-/// taskbar restarting, and a 30-second timer. Its own handlers run their work inside the meters
-/// thread's error boundary; the handlers of its events run inside it too.
+/// taskbar restarting, and a 30-second timer. While the meters are paused, the timer stops and it
+/// reports no layout changes. Its own handlers run their work inside the meters thread's error
+/// boundary; the handlers of its events run inside it too.
 /// </summary>
 internal sealed class WindowsStripHost : IStripHost
 {
@@ -33,11 +34,12 @@ internal sealed class WindowsStripHost : IStripHost
     private readonly TaskbarLayoutReader _reader;
     private readonly WinEventHook _windowEvents;
     private readonly WinEventHook _foreground;
-    private readonly CoalescableTimer _interval;
+    private CoalescableTimer? _interval;
     private WinEventHook? _explorerSystem;
     private WinEventHook? _explorerOrder;
     private uint _explorer;
     private CoalescableTimer? _delay;
+    private bool _paused;
     private string _description = string.Empty;
 
     /// <param name="guard">Runs work inside the meters thread's error boundary.</param>
@@ -64,8 +66,7 @@ internal sealed class WindowsStripHost : IStripHost
 
             _foreground = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent);
             _foreground.Raised += (_, _) => ZOrderMayHaveChanged?.Invoke(this, EventArgs.Empty);
-            _interval = new CoalescableTimer(messages, LayoutInterval, TimeSpan.FromSeconds(1));
-            _interval.Elapsed += (_, _) => LayoutMayHaveChanged?.Invoke(this, EventArgs.Empty);
+            StartInterval();
         }
         catch
         {
@@ -130,6 +131,26 @@ internal sealed class WindowsStripHost : IStripHost
 
     public bool KeepInFrontOf(nint taskbar) => _window.KeepInFrontOf(taskbar);
 
+    public void PauseWatching()
+    {
+        _paused = true;
+        _delay?.Dispose();
+        _delay = null;
+        _interval?.Dispose();
+        _interval = null;
+    }
+
+    public void ResumeWatching()
+    {
+        if (!_paused)
+        {
+            return;
+        }
+
+        _paused = false;
+        StartInterval();
+    }
+
     public void Dispose()
     {
         _messages.MessageReceived -= OnMessageReceived;
@@ -156,9 +177,22 @@ internal sealed class WindowsStripHost : IStripHost
         _explorerOrder.Raised += (_, _) => ZOrderMayHaveChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    // Waits for a burst of changes to end, such as an app opening several windows.
+    // For changes nothing reports, such as pinning an app.
+    private void StartInterval()
+    {
+        _interval = new CoalescableTimer(_messages, LayoutInterval, TimeSpan.FromSeconds(1));
+        _interval.Elapsed += (_, _) => LayoutMayHaveChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    // Waits for a burst of changes to end, such as an app opening several windows. While the
+    // meters are paused, the strip lays itself out once they resume instead.
     private void LayOutSoon()
     {
+        if (_paused)
+        {
+            return;
+        }
+
         _delay?.Dispose();
         _delay = new CoalescableTimer(_messages, LayoutDelay, TimeSpan.FromMilliseconds(100));
         _delay.Elapsed += (_, _) =>
