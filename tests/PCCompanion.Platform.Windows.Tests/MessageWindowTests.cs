@@ -32,6 +32,15 @@ public sealed class MessageWindowTests
     }
 
     [Fact]
+    public void ARegisteredMessageIsKnownByItsName()
+    {
+        var name = "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
+
+        Assert.Equal(name, MessageWindow.RegisteredName(MessageWindow.RegisterMessage(name)));
+        Assert.Null(MessageWindow.RegisteredName(TestMessage));
+    }
+
+    [Fact]
     public void PostToWindowFindsTheWindowByClassName()
     {
         var className = UniqueClassName();

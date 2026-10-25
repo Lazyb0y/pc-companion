@@ -161,7 +161,7 @@ internal static partial class Program
         };
 
         // Every feature waits while one holds this thread, so each handler that takes long is logged.
-        SlowHandlerWatch.Watch(TimeSpan.FromMilliseconds(50), slow => LogSlowHandler(logger, slow.Source, slow.Elapsed.TotalMilliseconds, slow.Message));
+        SlowHandlerWatch.Watch(TimeSpan.FromMilliseconds(50), slow => LogSlowHandler(logger, slow.Source, slow.Elapsed.TotalMilliseconds, Describe(slow)));
         MessageLoop.Run();
         SlowHandlerWatch.StopWatching();
         LogStopped(logger);
@@ -226,6 +226,13 @@ internal static partial class Program
         updates.Apply(settings.Updates);
     }
 
+    // What a slow handler handled: a window event, or a window message, with the name it was
+    // registered with, such as TaskbarCreated.
+    private static string Describe(SlowHandler slow) =>
+        slow.Source == SlowHandlerWatch.WindowEventSource ? FormattableString.Invariant($"event 0x{slow.Message:X4}")
+        : MessageWindow.RegisteredName(slow.Message) is { } name ? FormattableString.Invariant($"message 0x{slow.Message:X4} ({name})")
+        : FormattableString.Invariant($"message 0x{slow.Message:X4}");
+
     // Reads the settings after a save, off the UI thread; returns null when the file can't be read.
     private static AppSettings? LoadChanged(SettingsStore store, ILogger logger)
     {
@@ -249,8 +256,8 @@ internal static partial class Program
     [LoggerMessage(Level = LogLevel.Information, Message = "Stopped.")]
     private static partial void LogStopped(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "{Source} held the host's UI thread for {Milliseconds:F0} ms, handling message 0x{Message:X4}, so every feature waited.")]
-    private static partial void LogSlowHandler(ILogger logger, string source, double milliseconds, uint message);
+    [LoggerMessage(Level = LogLevel.Warning, Message = "{Source} held the host's UI thread for {Milliseconds:F0} ms, handling {Handled}, so every feature waited.")]
+    private static partial void LogSlowHandler(ILogger logger, string source, double milliseconds, string handled);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The settings changed and were loaded again.")]
     private static partial void LogSettingsReloaded(ILogger logger);
