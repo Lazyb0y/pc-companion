@@ -69,13 +69,11 @@ public static class PopupMenu
     {
         ArgumentNullException.ThrowIfNull(owner);
 
-        var previous = PInvoke.GetForegroundWindow();
+        var previous = Foreground.Window;
         var chosen = Show(owner, items, x, y, rightToLeft, keepClear, dropWaitingKeys: true);
-
-        var window = (HWND)owner.Handle;
-        if (chosen == 0 && !previous.IsNull && previous != window && PInvoke.GetForegroundWindow() == window && PInvoke.IsWindow(previous))
+        if (chosen == 0)
         {
-            PInvoke.SetForegroundWindow(previous);
+            Foreground.GiveBack(owner.Handle, previous);
         }
 
         return chosen;
