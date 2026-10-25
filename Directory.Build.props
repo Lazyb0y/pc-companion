@@ -2,6 +2,9 @@
   <PropertyGroup>
     <!-- The version of every executable, library and the installer. -->
     <Version>0.2.0</Version>
+    <!-- Every file's details name the project, as the installer's manufacturer does, not each assembly. -->
+    <Product>PC Companion</Product>
+    <Company>PC Companion</Company>
     <Nullable>enable</Nullable>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

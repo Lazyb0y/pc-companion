@@ -5,6 +5,8 @@
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <AssemblyName>PCCompanion</AssemblyName>
+    <!-- The file description: the name Task Manager shows for the settings app. -->
+    <AssemblyTitle>PC Companion</AssemblyTitle>
     <RootNamespace>PCCompanion.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\PCCompanion.ico</ApplicationIcon>
