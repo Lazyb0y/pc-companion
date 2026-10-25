@@ -47,7 +47,7 @@ The meters share one item on the taskbar, the strip, in the free space next to t
 
 ### How the strip works
 
-- **Window:** a layered, topmost tool window that never takes the focus (`WS_EX_LAYERED`, `WS_EX_TOPMOST`, `WS_EX_TOOLWINDOW` and `WS_EX_NOACTIVATE`), drawn pixel by pixel with `UpdateLayeredWindow`. Its background is almost transparent, so clicks between the letters still reach it. Drawn text and icons are kept, so an update draws only text that changed.
+- **Window:** a layered, topmost tool window that never takes the focus (`WS_EX_LAYERED`, `WS_EX_TOPMOST`, `WS_EX_TOOLWINDOW` and `WS_EX_NOACTIVATE`), drawn pixel by pixel with `UpdateLayeredWindow`. Its background is almost transparent, so clicks between the letters still reach it. Drawn text and icons are kept, so an update draws only text it hasn't drawn before, puts the strip together from them, and sends it to the window only when the picture changed.
 - **Finding room:** UI Automation (`IUIAutomation`, a COM API, not a UI framework) lists the taskbar's buttons, with a cache request for three properties only: the bounding rectangle, the automation ID and the class name. App buttons have the class `Taskbar.TaskListButtonAutomationPeer`; Start, Search, Task View and Widgets have the automation IDs `StartButton`, `SearchButton`, `TaskViewButton` and `WidgetsButton`; the notification area is the taskbar's child window `TrayNotifyWnd`. The free space runs from the last app button to the Widgets entry, when it's on the notification area's side, or else to the notification area. The strip stands at the end of that space, 4 pixels from the Widgets entry or the notification area.
 - The positions of the taskbar's own child windows can't be used: on Windows 11 they're out of date. The task list's window ends where its first buttons do.
 - **When it looks:** at start; when a window that gets a taskbar button appears or goes away (`EVENT_OBJECT_SHOW` and `EVENT_OBJECT_HIDE`, half a second after the last one, to group them); when the taskbar's settings change (`WM_SETTINGCHANGE`), as for its alignment or the Widgets entry; when the taskbar restarts (`TaskbarCreated`); when the displays or their scale change; and every 30 seconds, for changes nothing reports, such as pinning an app. While the meters are paused, it doesn't look; it looks once when they resume, since the taskbar may have changed meanwhile.
@@ -58,7 +58,7 @@ The meters share one item on the taskbar, the strip, in the free space next to t
 
 ### When the strip can't show
 
-- The automation IDs, class names and child windows above aren't a documented API, so, as with the tray menu's dark mode, the strip runs only on the Windows builds it was tested on: Windows 11 from build 22621 (version 22H2) to `MeterStrip.MaxTestedBuild`, now 26300. Raise it after testing a new release.
+- The automation IDs, class names and child windows above aren't a documented API, so, as with the tray menu's dark mode, the strip runs only on a fixed range of Windows builds: Windows 11 from build 22621 (version 22H2) to `MeterStrip.MaxTestedBuild`, now 26300, the newest one tested. Builds 26100 and 26300 are tested; versions 22H2 and 23H2 aren't yet. Raise `MaxTestedBuild` after testing a new release.
 - On Windows 10, from version 2004 to 22H2 (builds 19041 to 19045), the strip goes at the end of the task band, the taskbar's band of app buttons (`MSTaskSwWClass`), after its last button. Windows 10 keeps the task band's position up to date, and other toolbars and the news entry are outside it. The strip draws in Segoe UI and Segoe MDL2 Assets there, since Windows 10 has neither Segoe UI Variable nor Segoe Fluent Icons. It isn't tested on Windows 10 yet.
 - The meters show as notification icons instead:
   - on other builds;
@@ -117,11 +117,11 @@ With **Show on** set to **Notification area**, or where the strip can't show, ea
 ## Reading the values
 
 - **CPU:** the performance counter `\Processor Information(_Total)\% Processor Utility`, read through PDH. It's what Task Manager's Processes and Performance tabs show: it accounts for the processors' speed and covers every processor group. It's capped at 100%, as in Task Manager, since it goes above 100 while processors run faster than their base speed. The counter is added by its English name (`PdhAddEnglishCounter`), so it's found in every Windows language.
-- When the counter can't be added or read, for example because performance counters are turned off, the CPU meter uses `GetSystemTimes`: the share of time the processors weren't idle. That can differ from Task Manager under load, and on PCs with more than 64 logical processors it covers only one processor group. A warning is logged once.
+- When the counter can't be added or read, for example because performance counters are turned off, the CPU meter uses `GetSystemTimes`: the share of time the processors weren't idle. That can differ from Task Manager under load, and on PCs with more than 64 logical processors it covers only one processor group. A warning is logged each time the CPU meter starts without the counter, and once when the counter fails three readings in a row.
 - **Memory:** `GlobalMemoryStatusEx`. In use is the physical memory minus the available memory, as in Task Manager.
 - **Network:** `GetIfTable2`: the bytes received and sent (`InOctets` and `OutOctets`) by the adapters that are up and are hardware, such as Ethernet, Wi-Fi and cellular adapters. Filter, loopback and virtual adapters, such as VPNs and Hyper-V's virtual switch, are left out: their traffic also passes through a hardware adapter, so it would count twice.
 - A rate is the change since the last reading divided by the time between the two readings. That time is measured rather than assumed, so a late update doesn't inflate the rate. An adapter that appears or disappears between two readings, or whose counts go back, as when it's reset, adds nothing to that update.
-- Each meter reads only while it shows; the PDH query is open only while the CPU meter is on.
+- Each meter reads only while it's on, and not while the meters are paused; it goes on reading while a full-screen app hides the strip. The PDH query is open only while the CPU meter is on.
 - **When:** a coalescable timer on the meters thread's window (`SetCoalescableTimer`), so Windows can serve it with the same wakeup as other timers.
 - **Pauses:** while the session is locked or disconnected (`WTSRegisterSessionNotification`, as Hot Corners uses it) and while the display is off (`RegisterPowerSettingNotification` with `GUID_CONSOLE_DISPLAY_STATE`), since no one can see the meters then. They resume once Windows reports the session unlocked or connected again, whichever it reports first, while the display is on. They keep their last values, and the next values show one update after the meters resume. While they're paused, the strip doesn't look for room either.
 
@@ -191,7 +191,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11, on x64 and ARM64.
-- The strip runs on Windows 11 builds 22621 to the newest tested one, and on Windows 10 versions 2004 to 22H2, where it isn't tested yet; elsewhere the meters show as notification icons. See [When the strip can't show](#when-the-strip-cant-show).
+- The strip runs on Windows 11 builds 22621 to the newest tested one, and on Windows 10 versions 2004 to 22H2; builds 26100 and 26300 are tested, and Windows 11 versions 22H2 and 23H2 and Windows 10 aren't yet. Elsewhere the meters show as notification icons. See [When the strip can't show](#when-the-strip-cant-show).
 - Every API is documented and in every supported version: processor utility since Windows 8, `SetCoalescableTimer` since Windows 8, `GetSystemMetricsForDpi` since Windows 10 version 1607, and the others earlier. What the strip relies on about the taskbar's layout isn't documented, so [Windows support](../../compatibility/windows-support.md) lists it with the tested builds.
 
 ## Security and privacy
@@ -210,7 +210,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 
 - No timer runs while the feature is off, while every meter is off, while the PC is locked or while the display is off.
 - The meters add one thread while the feature is on, which sleeps between updates. The host's UI thread does only `Apply`'s part, so the meters add nothing to the time other features wait.
-- An update makes one PDH reading, one `GlobalMemoryStatusEx` call and one `GetIfTable2` call, each only for a meter that shows, then draws only what changed: on the strip, the text whose value changed; in the notification area, the icons that changed. Memory changes slowly, so its icon is seldom sent.
+- An update makes one PDH reading, one `GlobalMemoryStatusEx` call and one `GetIfTable2` call, each only for a meter that's on, then sends only what changed: on the strip, a new picture when a value changed, drawing only text it hasn't drawn before; in the notification area, the icons that changed. Memory changes slowly, so its icon is seldom sent.
 - The strip looks for room only on the events above and every 30 seconds, never while the meters are paused, each time for 30 to 70 ms. Checking its place above the taskbar takes about 10 µs.
 - Each icon sent makes Explorer draw it again, which adds to Explorer's CPU use rather than the host's.
 

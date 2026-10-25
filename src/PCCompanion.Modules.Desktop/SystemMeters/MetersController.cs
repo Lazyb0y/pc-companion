@@ -21,7 +21,7 @@ public enum MetersPlace
     /// <summary>Notification icons, as the user chose.</summary>
     IconsChosen,
 
-    /// <summary>Notification icons, since the strip wasn't tested on this Windows build.</summary>
+    /// <summary>Notification icons, since the strip doesn't run on this Windows build.</summary>
     IconsUntestedBuild,
 
     /// <summary>Notification icons, since the taskbar isn't running or didn't answer.</summary>
