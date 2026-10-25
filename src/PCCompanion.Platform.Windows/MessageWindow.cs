@@ -162,7 +162,16 @@ public sealed class MessageWindow : IDisposable
         PInvoke.UnregisterClass(_className, PInvoke.GetModuleHandle((string?)null));
     }
 
+    // Timed on a watched thread, such as the host's UI thread, which every feature shares.
     private LRESULT WindowProcedure(HWND window, uint message, WPARAM wParam, LPARAM lParam)
+    {
+        var timing = SlowHandlerWatch.Begin();
+        var result = HandleMessage(window, message, wParam, lParam);
+        SlowHandlerWatch.End(timing, _className, message);
+        return result;
+    }
+
+    private LRESULT HandleMessage(HWND window, uint message, WPARAM wParam, LPARAM lParam)
     {
         if (window == _handle && message == InvokeMessage.Value)
         {
