@@ -350,8 +350,14 @@ Start-Sleep -Milliseconds 500
 Test-Check 'and gives the front back' (Test-CharmapInFront) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
 Test-Check 'the log never holds the copied text' (((Get-HostLog) -notmatch 'secret-4711') -and ((Get-HostLog) -notmatch '1Z999AA') -and ((Get-HostLog) -notmatch 'tracking\.example'))
 
+# Turning Clipboard Actions off while its menu is open closes the menu and ends the thread.
+Copy-Text 'PC-12'
+[void] [Win32]::SetForegroundWindow($charmap)
+Test-Check 'the menu is open before Clipboard Actions turns off' (Open-Menu)
 Write-ClipboardSettings $false
-Test-Check 'turning it off ends its thread' (Wait-Until { (Get-HostLog) -match "Clipboard Actions' thread ended\." } 10)
+Test-Check 'turning it off with its menu open ends its thread' (Wait-Until { (Get-HostLog) -match "Clipboard Actions' thread ended\." } 5)
+Test-Check 'turning it off closes its menu' (Wait-Until { -not (Get-Menu) } 5) (Get-MenuItems)
+Close-Menu
 Write-ClipboardSettings $true
 Test-Check 'turning it on again starts its thread' (Wait-Until { (Get-HostLog) -match 'Clipboard Actions started on its own thread\.' } 10)
 Write-ClipboardSettings $false
