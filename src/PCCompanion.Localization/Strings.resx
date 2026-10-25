@@ -920,6 +920,10 @@
     <value>Its action needs a newer version of PC Companion.</value>
     <comment>Clipboard Actions page: why a rule whose action this version doesn't know can't be used.</comment>
   </data>
+  <data name="ClipboardActionsBeyondMaximum" xml:space="preserve">
+    <value>The menu uses only the first {0} rules.</value>
+    <comment>Clipboard Actions page: why a rule after the first 50 isn't in the menu. {0} is that number, 50.</comment>
+  </data>
   <data name="ClipboardActionsNameHeader" xml:space="preserve">
     <value>Name</value>
     <comment>Rule editor: box header. The rule's name is its item in the menu.</comment>

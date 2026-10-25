@@ -904,6 +904,10 @@
     <value>其操作需要更新版本的 PC Companion。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsBeyondMaximum" xml:space="preserve">
+    <value>菜单只使用前 {0} 条规则。</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="ClipboardActionsNameHeader" xml:space="preserve">
     <value>名称</value>
     <comment>Needs native review.</comment>

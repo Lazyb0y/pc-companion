@@ -920,6 +920,10 @@
     <value>এর অ্যাকশনের জন্য PC Companion-এর নতুন সংস্করণ প্রয়োজন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsBeyondMaximum" xml:space="preserve">
+    <value>মেনু শুধু প্রথম {0}টি নিয়ম ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="ClipboardActionsNameHeader" xml:space="preserve">
     <value>নাম</value>
     <comment>Needs native review.</comment>

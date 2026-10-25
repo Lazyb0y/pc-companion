@@ -920,6 +920,10 @@
     <value>Su acción requiere una versión más reciente de PC Companion.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsBeyondMaximum" xml:space="preserve">
+    <value>El menú solo usa las primeras {0} reglas.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="ClipboardActionsNameHeader" xml:space="preserve">
     <value>Nombre</value>
     <comment>Needs native review.</comment>
