@@ -9,7 +9,8 @@ namespace PCCompanion.Modules.Desktop.SystemMeters;
 /// <summary>
 /// The strip's window over the taskbar, and what tells it the taskbar may have changed: window
 /// events from every program, Explorer's own events, Windows' settings and display changes, the
-/// taskbar restarting, and a 30-second timer.
+/// taskbar restarting, and a 30-second timer. Its own handlers run their work inside the meters
+/// thread's error boundary; the handlers of its events run inside it too.
 /// </summary>
 internal sealed class WindowsStripHost : IStripHost
 {
@@ -26,6 +27,7 @@ internal sealed class WindowsStripHost : IStripHost
     private static readonly TimeSpan LayoutInterval = TimeSpan.FromSeconds(30);
 
     private readonly MessageWindow _messages;
+    private readonly Action<Action> _guard;
     private readonly uint _taskbarCreatedMessage;
     private readonly LayeredWindow _window;
     private readonly TaskbarLayoutReader _reader;
@@ -38,22 +40,25 @@ internal sealed class WindowsStripHost : IStripHost
     private CoalescableTimer? _delay;
     private string _description = string.Empty;
 
-    public WindowsStripHost(MessageWindow messages)
+    /// <param name="guard">Runs work inside the meters thread's error boundary.</param>
+    public WindowsStripHost(MessageWindow messages, Action<Action> guard)
     {
         _messages = messages;
+        _guard = guard;
         _taskbarCreatedMessage = MessageWindow.RegisterMessage("TaskbarCreated");
         _window = new LayeredWindow(WindowClassName, Strings.SystemMetersName);
         try
         {
             _reader = new TaskbarLayoutReader();
 
-            // Windows that get taskbar buttons appearing or going away, in other programs.
+            // Windows that get taskbar buttons appearing or going away, in other programs. The
+            // checks, which run for every window event, can't fail.
             _windowEvents = new WinEventHook(WinEventHook.ObjectShowEvent, WinEventHook.ObjectHideEvent, skipOwnProcess: true);
             _windowEvents.Raised += (_, e) =>
             {
                 if (e.IsAboutWindow && TopLevelWindows.MayHaveTaskbarButton(e.Window))
                 {
-                    LayOutSoon();
+                    _guard(LayOutSoon);
                 }
             };
 
@@ -168,7 +173,7 @@ internal sealed class WindowsStripHost : IStripHost
     {
         if (e.Message == _taskbarCreatedMessage || e.Message == SettingChangeMessage || e.Message == DpiChangedMessage || Displays.IsChangeMessage(e.Message))
         {
-            LayOutSoon();
+            _guard(LayOutSoon);
         }
     }
 }

@@ -184,7 +184,7 @@ public sealed partial class MetersThread : MessageLoopThread<SystemMetersSetting
                 return null;
             }
 
-            var host = _owner._system.CreateStripHost(Window);
+            var host = _owner._system.CreateStripHost(Window, _owner.Guard);
             host.Clicked += (_, _) => _owner.Guard(_owner.OpenTaskManager);
             host.MenuRequested += (_, e) => _owner.Guard(() => _owner.ShowMenu(Window, e.X, e.Y));
             host.PointerOverChanged += (_, _) => _owner.Guard(() => _controller?.RedrawStrip());
