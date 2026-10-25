@@ -123,19 +123,22 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         LogConfigured(logger, _settings.Shortcut, _settings.IncludeMinimized, _shortcut?.ChecksLayout ?? false);
     }
 
+    // A press runs on the host's UI thread, so its time is logged.
     private void Switch(SwitchDirection direction)
     {
+        var started = time.GetTimestamp();
         var result = _switcher.Switch(direction, _settings.IncludeMinimized);
+        var milliseconds = time.GetElapsedTime(started).TotalMilliseconds;
         switch (result.Outcome)
         {
             case SwitchOutcome.Switched:
-                LogSwitched(logger, direction, result.WindowCount);
+                LogSwitched(logger, direction, result.WindowCount, milliseconds);
                 break;
             case SwitchOutcome.Refused:
                 LogRefused(logger, direction);
                 break;
             default:
-                LogNotSwitched(logger, direction, result.Outcome);
+                LogNotSwitched(logger, direction, result.Outcome, milliseconds);
                 break;
         }
     }
@@ -165,11 +168,11 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     [LoggerMessage(Level = LogLevel.Debug, Message = "App Windows applied its settings: shortcut {Shortcut}, minimized windows {IncludeMinimized}, layout checks {ChecksLayout}.")]
     private static partial void LogConfigured(ILogger logger, AppWindowsShortcut shortcut, bool includeMinimized, bool checksLayout);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "App Windows went {Direction}; the app has {WindowCount} windows.")]
-    private static partial void LogSwitched(ILogger logger, SwitchDirection direction, int windowCount);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "App Windows went {Direction}; the app has {WindowCount} windows; the press took {Milliseconds:F1} ms.")]
+    private static partial void LogSwitched(ILogger logger, SwitchDirection direction, int windowCount, double milliseconds);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "App Windows didn't go {Direction}: {Reason}.")]
-    private static partial void LogNotSwitched(ILogger logger, SwitchDirection direction, SwitchOutcome reason);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "App Windows didn't go {Direction}: {Reason}; the press took {Milliseconds:F1} ms.")]
+    private static partial void LogNotSwitched(ILogger logger, SwitchDirection direction, SwitchOutcome reason, double milliseconds);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't bring the app's window to the front when App Windows went {Direction}.")]
     private static partial void LogRefused(ILogger logger, SwitchDirection direction);
