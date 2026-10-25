@@ -61,13 +61,27 @@ public sealed class MenuPlacer(IClipboardActionsSystem system)
         }
 
         var answer = system.AskTextCursor(front.Window);
-        if (!answer.Wait(AnswerLimit))
+        if (!Ended(answer))
         {
             _waiting = answer;
             return AtPointer(MenuPlace.AtPointerNoAnswer);
         }
 
-        return answer.Result is { } appCursor ? AtTextCursor(appCursor, MenuPlace.AtAppTextCursor) : AtPointer(MenuPlace.AtPointer);
+        // A request that failed gives no text cursor, so nothing an app answers can stop the feature.
+        return answer.IsCompletedSuccessfully && answer.Result is { } appCursor ? AtTextCursor(appCursor, MenuPlace.AtAppTextCursor) : AtPointer(MenuPlace.AtPointer);
+    }
+
+    // Whether the request ended within the limit, also when it failed.
+    private static bool Ended(Task<Rectangle?> answer)
+    {
+        try
+        {
+            return answer.Wait(AnswerLimit);
+        }
+        catch (AggregateException)
+        {
+            return true;
+        }
     }
 
     // The menu starts at the text cursor and Windows moves it below or above the cursor's line.

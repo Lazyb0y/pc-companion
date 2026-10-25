@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -72,6 +73,20 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         Assert.Equal(["register", "read", "menu at 300,200 below 300,200,301,218"], _system.Events);
         Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.EndsWith("menu: AtTextCursor.", StringComparison.Ordinal))));
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("300", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AnAppWhoseTextCursorRequestFailsGetsTheMenuAtThePointer()
+    {
+        _system.Front = new ForegroundTextCursor(42, null);
+        _system.AppAnswer = Task.FromException<Rectangle?>(new NotImplementedException());
+        var thread = Start(TrackParcels);
+
+        Press();
+
+        Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
+        Assert.Equal(["register", "ask 42", "read", "menu at 10,20"], _system.Events);
+        Assert.False(thread.HasFailed);
     }
 
     [Fact]

@@ -157,9 +157,10 @@ public static class TextCursor
             var place = OnDisplay(window, new Point(left, top), new Point(left + width, top + height));
             return place is { } cursor && cursor.IntersectsWith(Rectangle.FromLTRB(frame.left, frame.top, frame.right, frame.bottom)) ? cursor : null;
         }
-        catch (Exception exception) when (exception is COMException or InvalidCastException)
+        catch (Exception)
         {
-            // The app ended, or its object isn't what it says.
+            // The app ended, or its object isn't what it says or reported an error, which .NET
+            // turns into exceptions of many kinds, such as NotImplementedException for E_NOTIMPL.
             return null;
         }
         finally
