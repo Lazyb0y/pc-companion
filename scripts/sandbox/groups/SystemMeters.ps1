@@ -452,6 +452,14 @@ Test-Check 'the memory meter goes away' (Wait-Until { $script:shown = Get-MeterB
 Write-MetersSettings '{ "enabled": true, "showOn": "NotificationArea" }'
 Test-Check 'the memory meter comes back between CPU and network' (Wait-Until { $script:shown = Get-MeterButtons (Get-Taskbar); ($shown.Count -eq 3) -and ((Get-ButtonText $shown) -match '^CPU.* \| Memory.* \| Network') } 15) (Get-ButtonText $shown)
 
+# Saves in quick succession: the host reads each one off its UI thread and applies the last.
+foreach ($seconds in 5, 1, 2) {
+    Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""updates"": { ""checkAutomatically"": false }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""systemMeters"": { ""enabled"": true, ""showOn"": ""NotificationArea"", ""updateIntervalSeconds"": $seconds } } }"
+    Start-Sleep -Milliseconds 300
+}
+function Get-LastInterval { $applied = [regex]::Matches((Get-HostLog), 'applied its settings: CPU \w+, memory \w+, network \w+, every (\d+) s'); if ($applied.Count -gt 0) { $applied[$applied.Count - 1].Groups[1].Value } else { '' } }
+Test-Check 'after saves in quick succession, the host applies the last one' (Wait-Until { (Get-LastInterval) -eq '2' } 10) "last applied: every $(Get-LastInterval) s"
+
 # Turning System Meters off while the meters' menu is open closes the menu and ends the thread.
 Test-Check 'the CPU meter''s menu requested before System Meters turns off' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY -IconId 2 -WindowClass $metersWindow)
 Test-Check 'the meters'' menu is open' (Wait-Until { (Get-MenuItemNames) -eq 'Task Manager, Settings, Exit' } 10) (Get-MenuItemNames)
