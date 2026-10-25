@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Testing;
@@ -29,6 +30,23 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
 
         Assert.False(_feature.IsRunning);
         Assert.Empty(_system.Events);
+    }
+
+    [Fact]
+    public void ASecondDisposeDoesntWaitAgain()
+    {
+        using var gate = new ManualResetEventSlim();
+        _system.DisposeGate = gate;
+        _feature.Apply(Section("""{ "enabled": true }"""));
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("register")));
+
+        // As the host does at exit: its feature runner, then its services.
+        _feature.Dispose();
+        _feature.Dispose();
+
+        Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        gate.Set();
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "Clipboard Actions' thread ended."))));
     }
 
     [Fact]

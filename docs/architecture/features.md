@@ -45,6 +45,7 @@ public interface IFeature : IDisposable
 - **Isolation:** the host's `FeatureRunner` calls each feature inside its own error boundary. When `Apply` throws, it logs the error, stops that feature for the rest of the session, and the other features keep running.
 - A feature guards its own handlers of window messages, input and timers the same way: an exception there would end the host.
 - A feature that isn't supported on this PC is never started.
+- **Disposing:** as the host exits, `FeatureRunner` disposes each feature inside its error boundary, and then the host's service container, which owns every feature it created, disposes it again. So `Dispose` does nothing the second time: a feature with a thread of its own waits for it only once.
 
 ## Threads and processes
 

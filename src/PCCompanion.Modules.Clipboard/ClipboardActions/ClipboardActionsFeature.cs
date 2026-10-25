@@ -78,6 +78,7 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
         }
     }
 
+    // The host disposes features twice as it exits, so the thread is waited for only once.
     public void Dispose()
     {
         Stop();
@@ -85,6 +86,8 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
         {
             LogNotStoppedInTime(logger, StopTimeout.TotalSeconds);
         }
+
+        _stopped = null;
     }
 
     // Doesn't wait: a new thread waits for this one before it registers the shortcut.

@@ -52,6 +52,9 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
     /// <summary>Thrown when the meters create the strip's host, as when Windows refuses its window.</summary>
     public Exception? StripHostFailure { get; set; }
 
+    /// <summary>Holds the icons' removal as the meters stop until it's set, as a taskbar that doesn't answer would.</summary>
+    public ManualResetEventSlim? DisposeGate { get; set; }
+
     /// <summary>The icons the meters created last, and their window.</summary>
     public FakeMeterIcons? Icons { get; private set; }
 
@@ -229,6 +232,7 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
 
         public void Dispose()
         {
+            system.DisposeGate?.Wait();
             IsDisposed = true;
             system.Record("dispose");
         }
