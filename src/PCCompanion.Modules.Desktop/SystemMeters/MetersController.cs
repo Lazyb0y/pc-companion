@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
 
@@ -23,6 +24,12 @@ public enum MetersPlace
 
     /// <summary>Notification icons, since the strip doesn't run on this Windows build.</summary>
     IconsUntestedBuild,
+
+    /// <summary>
+    /// Notification icons, since Windows refused the strip's window, its event hooks, its timer or
+    /// UI Automation, until the meters start again.
+    /// </summary>
+    IconsStripRefused,
 
     /// <summary>Notification icons, since the taskbar isn't running or didn't answer.</summary>
     IconsNoTaskbar,
@@ -57,12 +64,14 @@ public sealed partial class MetersController : IDisposable
     private NetworkMeter? _network;
     private MeterStrip? _strip;
     private bool _stripUnavailable;
+    private bool _stripRefused;
     private (double? Cpu, MemoryUse? Memory, NetworkRates? Network) _values;
     private bool _hasValues;
     private bool _paused;
 
     /// <param name="createStrip">
-    /// Creates the strip, or returns <see langword="null"/> when it can't run on this Windows build.
+    /// Creates the strip, or returns <see langword="null"/> when it can't run on this Windows build;
+    /// throws an <see cref="ExternalException"/> when Windows refuses it.
     /// </param>
     public MetersController(ISystemReadings readings, IMeterAppearance appearance, IMeterIcons icons, Func<MeterStrip?> createStrip, TimeProvider time, ILogger logger)
     {
@@ -126,7 +135,17 @@ public sealed partial class MetersController : IDisposable
         {
             if (_strip is null && !_stripUnavailable)
             {
-                _strip = _createStrip();
+                // Win32Exception and COMException alike; the strip's host lets go of what it created.
+                try
+                {
+                    _strip = _createStrip();
+                }
+                catch (ExternalException exception)
+                {
+                    _stripRefused = true;
+                    LogStripRefused(_logger, exception);
+                }
+
                 _stripUnavailable = _strip is null;
                 if (_paused)
                 {
@@ -287,7 +306,7 @@ public sealed partial class MetersController : IDisposable
         }
         else
         {
-            Move(_settings.ShowOn == ShowOn.Taskbar ? MetersPlace.IconsUntestedBuild : MetersPlace.IconsChosen);
+            Move(_settings.ShowOn != ShowOn.Taskbar ? MetersPlace.IconsChosen : _stripRefused ? MetersPlace.IconsStripRefused : MetersPlace.IconsUntestedBuild);
         }
 
         ShowIcons(culture);
@@ -390,6 +409,9 @@ public sealed partial class MetersController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't show the {Meter} meter; it's shown when the taskbar is back.")]
     private static partial void LogRefused(ILogger logger, Meter meter);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused the taskbar strip, so the meters use notification icons.")]
+    private static partial void LogStripRefused(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "System Meters show: {Place}.")]
     private static partial void LogMoved(ILogger logger, MetersPlace place);

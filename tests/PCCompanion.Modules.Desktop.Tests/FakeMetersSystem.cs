@@ -49,6 +49,9 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
     /// <summary>Thrown by each icon shown, to fail the meters.</summary>
     public Exception? ShowFailure { get; set; }
 
+    /// <summary>Thrown when the meters create the strip's host, as when Windows refuses its window.</summary>
+    public Exception? StripHostFailure { get; set; }
+
     /// <summary>The icons the meters created last, and their window.</summary>
     public FakeMeterIcons? Icons { get; private set; }
 
@@ -72,6 +75,11 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
 
     public IStripHost CreateStripHost(MessageWindow window, Action<Action> guard)
     {
+        if (StripHostFailure is { } failure)
+        {
+            throw failure;
+        }
+
         lock (Gate)
         {
             StripGuard = guard;
