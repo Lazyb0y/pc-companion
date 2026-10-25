@@ -114,7 +114,12 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         return 0;
     }
 
+    /// <summary>The window in front before the menu; always 7.</summary>
+    public nint FrontWindow() => 7;
+
     public void AllowFront() => Record("allow front");
+
+    public void GiveFrontBack(MessageWindow window, nint previous) => Record($"front back to {previous}");
 
     public bool FileExists(string path) => true;
 

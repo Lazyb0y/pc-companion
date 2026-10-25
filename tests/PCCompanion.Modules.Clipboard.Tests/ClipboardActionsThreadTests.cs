@@ -76,6 +76,20 @@ public sealed class ClipboardActionsThreadTests : IDisposable
     }
 
     [Fact]
+    public void AnActionThatDoesntStartGivesTheFrontBack()
+    {
+        _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
+        _system.Choice = "Track the parcel";
+        _commands.OpensWebPages = false;
+        Start(TrackParcels);
+
+        Press();
+
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("background")));
+        Assert.Equal(["register", "read", "menu at 10,20", "allow front", "front back to 7", "background"], _system.Events);
+    }
+
+    [Fact]
     public void AnAppWhoseTextCursorRequestFailsGetsTheMenuAtThePointer()
     {
         _system.Front = new ForegroundTextCursor(42, null);

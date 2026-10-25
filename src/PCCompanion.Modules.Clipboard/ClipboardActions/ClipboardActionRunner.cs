@@ -14,44 +14,46 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 /// <param name="fileExists">Whether a file exists.</param>
 public sealed partial class ClipboardActionRunner(IHostCommands commands, Func<string, bool> fileExists, ILogger logger)
 {
-    public void Run(ClipboardOffer offer)
+    /// <summary>Runs the action, and returns whether its address opened or its program started.</summary>
+    public bool Run(ClipboardOffer offer)
     {
         ArgumentNullException.ThrowIfNull(offer);
 
         if (offer.Kind == OfferKind.RunProgram)
         {
-            RunProgram(offer);
+            return RunProgram(offer);
         }
-        else if (offer.Address is { } address && commands.OpenWebPage(address))
+
+        if (offer.Address is { } address && commands.OpenWebPage(address))
         {
             LogOpened(logger, offer.Rule);
+            return true;
         }
-        else
-        {
-            LogNotOpened(logger, offer.Rule);
-        }
+
+        LogNotOpened(logger, offer.Rule);
+        return false;
     }
 
     // Problems are logged with the program's file name only: its folder and arguments can hold
     // personal paths, and the arguments hold the copied text.
-    private void RunProgram(ClipboardOffer offer)
+    private bool RunProgram(ClipboardOffer offer)
     {
         var fileName = Path.GetFileName(offer.Program);
         var problem = ClipboardRuleCheck.CheckProgram(offer.Program, fileExists);
         if (problem != RuleProgramProblem.None)
         {
             LogNotStarted(logger, offer.Rule, fileName, problem);
-            return;
+            return false;
         }
 
         if (commands.StartProgram(offer.Program, offer.Arguments ?? [], out var errorCode))
         {
             LogStarted(logger, offer.Rule, fileName);
+            return true;
         }
-        else
-        {
-            LogCantStart(logger, fileName, errorCode);
-        }
+
+        LogCantStart(logger, fileName, errorCode);
+        return false;
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions opened the address of rule {Rule} (0 is Open in browser).")]

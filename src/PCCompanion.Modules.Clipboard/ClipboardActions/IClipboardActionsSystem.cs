@@ -39,8 +39,17 @@ public interface IClipboardActionsSystem
     /// <param name="keepClear">The text cursor's line, which the menu doesn't cover, or <see langword="null"/>.</param>
     uint ShowMenu(MessageWindow window, IReadOnlyList<PopupMenuItem> items, Point position, Rectangle? keepClear);
 
+    /// <summary>The window in front, or 0.</summary>
+    nint FrontWindow();
+
     /// <summary>Lets the program an action starts come to the front.</summary>
     void AllowFront();
+
+    /// <summary>
+    /// Gives the front back to <paramref name="previous"/>, the window in front before the menu,
+    /// while the thread's window still has it, as when an action didn't start; from any thread.
+    /// </summary>
+    void GiveFrontBack(MessageWindow window, nint previous);
 
     bool FileExists(string path);
 
