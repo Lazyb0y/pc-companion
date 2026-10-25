@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -188,6 +189,19 @@ public sealed class MetersThreadTests : IDisposable
         // The taskbar may have changed while the meters waited, so the strip looks for room once.
         Assert.True(_system.WaitUntil(system => system.Events.Contains("strip resume") && system.StripHost!.TaskbarReads == reads + 1));
         Assert.Equal(1, TaskbarReadsAfterALayoutEvent());
+    }
+
+    [Fact]
+    public void WhenWindowsRefusesTheStripTheMetersUseIcons()
+    {
+        _system.WindowsBuild = 26100;
+        _system.StripHostFailure = new Win32Exception(5);
+        var thread = Start(AllMeters);
+
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("show Cpu")));
+        Assert.False(thread.HasFailed);
+        Assert.Contains((LogLevel.Warning, "Windows refused the taskbar strip, so the meters use notification icons."), _logger.Entries);
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "System Meters show: IconsStripRefused."))));
     }
 
     [Fact]

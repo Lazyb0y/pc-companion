@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Platform.Windows;
@@ -233,6 +235,38 @@ public sealed class MetersControllerTests : IDisposable
         _controller.KeepStripInSight();
 
         Assert.True(_strip.IsShown);
+    }
+
+    [Fact]
+    public void WhenWindowsRefusesTheStripTheMetersUseIconsAndSayWhy()
+    {
+        // REGDB_E_CLASSNOTREG, a COMException, as when UI Automation isn't available.
+        var controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => throw Marshal.GetExceptionForHR(unchecked((int)0x80040154))!, _time, _logger);
+        controller.Apply(AllMeters);
+
+        _time.Advance(TimeSpan.FromSeconds(1));
+        controller.Update();
+
+        Assert.Equal(MetersPlace.IconsStripRefused, controller.Place);
+        Assert.Equal(["show Network", "show Memory", "show Cpu"], _system.Events);
+        Assert.Contains((LogLevel.Warning, "Windows refused the taskbar strip, so the meters use notification icons."), _logger.Entries);
+        controller.Dispose();
+    }
+
+    [Fact]
+    public void AStripWindowsRefusedIsntTriedAgainUntilTheMetersStartAgain()
+    {
+        var created = 0;
+        var controller = new MetersController(_system.Readings, _system.Appearance, _icons, () => { created++; throw new Win32Exception(5); }, _time, _logger);
+        controller.Apply(AllMeters);
+
+        controller.Apply(AllMeters with { Layout = StripLayout.Compact });
+        controller.Apply(AllMeters with { ShowOn = ShowOn.NotificationArea });
+        controller.Apply(AllMeters);
+
+        Assert.Equal(1, created);
+        Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        controller.Dispose();
     }
 
     [Fact]
