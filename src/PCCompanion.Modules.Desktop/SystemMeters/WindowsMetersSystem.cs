@@ -23,7 +23,7 @@ internal sealed class WindowsMetersSystem : IMetersSystem
 
     public IMeterIcons CreateIcons(MessageWindow window) => new NotificationIcons(window);
 
-    public IStripHost CreateStripHost(MessageWindow window) => new WindowsStripHost(window);
+    public IStripHost CreateStripHost(MessageWindow window, Action<Action> guard) => new WindowsStripHost(window, guard);
 
     public IMeterPauses WatchPauses(MessageWindow window) => new WindowsMeterPauses(window);
 

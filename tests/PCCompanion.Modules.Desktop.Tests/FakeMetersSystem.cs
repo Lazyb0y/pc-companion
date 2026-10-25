@@ -36,6 +36,9 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
     /// <summary>The strip's host the meters created last.</summary>
     public FakeStripHost? StripHost { get; private set; }
 
+    /// <summary>The error boundary the meters gave the strip's host, which its own handlers run their work in.</summary>
+    public Action<Action>? StripGuard { get; private set; }
+
     /// <summary>The command the next menu returns.</summary>
     public MeterMenuCommand MenuChoice { get; set; }
 
@@ -63,10 +66,11 @@ internal sealed class FakeMetersSystem : RecordingFake<FakeMetersSystem>, IMeter
         }
     }
 
-    public IStripHost CreateStripHost(MessageWindow window)
+    public IStripHost CreateStripHost(MessageWindow window, Action<Action> guard)
     {
         lock (Gate)
         {
+            StripGuard = guard;
             StripHost = new FakeStripHost(Record);
             Changed();
             return StripHost;

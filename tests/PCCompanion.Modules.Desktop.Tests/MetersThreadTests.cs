@@ -164,6 +164,21 @@ public sealed class MetersThreadTests : IDisposable
         Assert.Equal("dispose", _system.Events[^1]);
     }
 
+    [Fact]
+    public void AFailureInTheStripsOwnHandlersEndsTheThreadAndRemovesTheStrip()
+    {
+        _system.WindowsBuild = 26100;
+        var thread = Start(AllMeters);
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("strip show")));
+
+        _system.OnMetersThread(_ => _system.StripGuard!(() => throw new InvalidOperationException("The test fails the strip.")));
+
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)));
+        Assert.True(thread.HasFailed);
+        Assert.Contains((LogLevel.Error, "System Meters failed, so it's stopped until PC Companion restarts."), _logger.Entries);
+        Assert.True(_system.StripHost!.IsDisposed);
+    }
+
     private static void StopAndJoin(MetersThread thread)
     {
         thread.Stop();

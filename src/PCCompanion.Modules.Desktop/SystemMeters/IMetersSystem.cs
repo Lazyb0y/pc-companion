@@ -35,8 +35,12 @@ public interface IMetersSystem
     /// <summary>Creates the meters' icons on the meters thread's window.</summary>
     IMeterIcons CreateIcons(MessageWindow window);
 
-    /// <summary>Creates the strip's window and starts watching the taskbar, on the meters thread's window.</summary>
-    IStripHost CreateStripHost(MessageWindow window);
+    /// <summary>
+    /// Creates the strip's window and starts watching the taskbar, on the meters thread's window.
+    /// The host's own handlers run their work inside <paramref name="guard"/>, the meters thread's
+    /// error boundary.
+    /// </summary>
+    IStripHost CreateStripHost(MessageWindow window, Action<Action> guard);
 
     /// <summary>Starts watching what pauses the meters, on the meters thread's window.</summary>
     IMeterPauses WatchPauses(MessageWindow window);
