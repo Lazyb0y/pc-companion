@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Platform.Windows;
@@ -26,6 +27,9 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
 
     /// <summary>Thrown when the clipboard is read, to fail the feature's thread.</summary>
     public Exception? ReadFailure { get; set; }
+
+    /// <summary>Holds the shortcut's removal as the feature stops until it's set, as an app that doesn't answer would.</summary>
+    public ManualResetEventSlim? DisposeGate { get; set; }
 
     /// <summary>Chooses an item of the menu shown, by its text; null closes the menu without a choice.</summary>
     public string? Choice { get; set; }
@@ -129,6 +133,10 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
 
         public void Press() => window.BeginInvoke(() => Pressed?.Invoke(this, EventArgs.Empty));
 
-        public void Dispose() => system.Record("dispose shortcut");
+        public void Dispose()
+        {
+            system.DisposeGate?.Wait();
+            system.Record("dispose shortcut");
+        }
     }
 }

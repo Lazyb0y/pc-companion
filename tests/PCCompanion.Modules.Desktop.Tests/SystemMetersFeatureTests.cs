@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Testing;
@@ -102,6 +103,23 @@ public sealed class SystemMetersFeatureTests : IDisposable
         _feature.Apply(Section("""{ "enabled": true, "updateIntervalSeconds": 2 }"""));
 
         Assert.False(_feature.IsRunning);
+    }
+
+    [Fact]
+    public void ASecondDisposeDoesntWaitAgain()
+    {
+        using var gate = new ManualResetEventSlim();
+        _system.DisposeGate = gate;
+        _feature.Apply(Section("""{ "enabled": true }"""));
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("show Cpu")));
+
+        // As the host does at exit: its feature runner, then its services.
+        _feature.Dispose();
+        _feature.Dispose();
+
+        Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
+        gate.Set();
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "System Meters' thread ended."))));
     }
 
     [Fact]
