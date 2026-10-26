@@ -64,6 +64,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - An organization can manage the proxy settings with Group Policy. PC Companion watches the policies and reads them each time it reads the settings, so a policy shows as soon as it's set or removed, and when either is set, switching isn't available: the profiles in the menu are dimmed, the submenu starts with a dimmed **Your organization manages the proxy settings**, and the page shows the same note, with its **Use** buttons off. The policies:
   - **Prevent changing proxy settings**: the value `Proxy` (or `Autoconfig`) set to 1 in `Software\Policies\Microsoft\Internet Explorer\Control Panel`, for the user or the computer. Only Windows Settings honors it: `InternetSetOption` changes the settings anyway, so PC Companion checks for it itself;
   - **Make proxy settings per-machine (rather than per-user)**: `ProxySettingsPerUser` set to 0 in `HKLM\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings`. WinINet then keeps the settings for the computer, in HKLM. A program running as administrator changes them for every user of the PC; one without admin rights is told the change succeeded, and nothing changes. PC Companion makes no changes then, even while it runs as administrator.
+- When Windows refuses to read the policies, the menu and the page keep showing what they last read, and a profile chosen then isn't applied, with a warning in the log: without the policies, there's no telling whether a change is allowed.
 
 ## Threads
 
@@ -74,7 +75,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - Each change gives two signals about 1 ms apart, from PC Companion, another program or Windows Settings alike, so a read starts 50 ms after a signal, and signals that come while a read is waiting or running lead to one more read, not one each.
 - **The settings app** reads, writes and watches the same way on its own thread pool while the page is open.
 - **Stopping** removes the wait and closes the key; a read or write that's running finishes, and its result is dropped.
-- **Failures:** the thread pool callbacks run inside the feature's error boundary. A failure there is logged, stops the watch and keeps the feature off until the host restarts, like a failing `Apply`.
+- **Failures:** the thread pool callbacks run inside the feature's error boundary. A failure there is logged, stops the watch and keeps the feature off until the host restarts, like a failing `Apply`. Windows refusing to read the settings or the policies isn't such a failure: it's logged as a warning, and the feature keeps running.
 
 ## The PC Companion icon's menu
 
@@ -190,7 +191,7 @@ A spike in Windows Sandbox (Windows 11 24H2), with a .NET 10 helper that reads a
   - matching: the parts that are on, case, spaces at the ends, `http://` before a server, the order of the exceptions, `<local>`, values of parts that are off;
   - applying: only the parts that are on are written; a refused change, or one Windows reports but doesn't make, keeps the check mark where it was; a profile moved while the menu is open is still the one applied, and one changed or deleted then isn't;
   - checks: server formats, port range, script addresses that aren't `http` or `https`, control characters, the lengths, duplicate names, the 20-profile limit; unusable profiles are left out with a warning;
-  - policies: each one dims the profiles and blocks applying, also while running as administrator;
+  - policies: each one dims the profiles and blocks applying, also while running as administrator; policies Windows refuses to read stay as they were last read, and block applying;
   - the menu: order, radio mark, Other proxy settings in use, the policy note, `&` in names, no submenu while off or with no profiles;
   - the watch: two signals 1 ms apart lead to one read; signals during a read lead to one more read; a result after stopping is dropped.
 - **Sandbox checks** (`scripts/sandbox/groups/NetworkProfiles.ps1`): the Home switch turns the feature on and adds Original settings with Windows' current settings; the page adds, edits, moves and deletes profiles, with keyboard focus staying on the profile, and the editor refuses a bad server, which screen readers announce, a script address that isn't a web address and a name another profile has. The submenu, read with UI Automation, lists the profiles; choosing one changes Windows' settings, read back with `InternetQueryOption`, and moves the radio mark, and **Network Profiles settings** opens the page, also in a settings app that's open. A change made by a helper with `InternetSetOption`, or saved in Windows Settings' Proxy page through UI Automation, moves the mark, or shows Other proxy settings in use. Edge, already open, uses the new proxy after a switch, with two fake proxies on the loopback address. Each policy value dims the profiles as soon as it's set and leaves the settings unchanged, and once it's removed the profiles can be chosen again. Turned off, the submenu is gone and the settings stay as they were. No network is needed.

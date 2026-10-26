@@ -164,17 +164,7 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
 
         var item = Profiles[index];
         UseProblem = string.Empty;
-        SwitchOutcome outcome;
-        try
-        {
-            outcome = await Task.Run(() => ProxySwitch.Apply(_system, item.Profile.Proxy)).ConfigureAwait(true);
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
-        {
-            LogCantRead(_logger, exception.HResult);
-            outcome = new SwitchOutcome(SwitchResult.Refused, Error: exception.HResult);
-        }
-
+        var outcome = await Task.Run(() => ProxySwitch.Apply(_system, item.Profile.Proxy)).ConfigureAwait(true);
         var number = index + 1;
         switch (outcome.Result)
         {
@@ -242,7 +232,7 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
     {
         Interlocked.Exchange(ref _readWaiting, 0);
         ProxySettings? windows = null;
-        var restrictions = ProxyRestrictions.None;
+        ProxyRestrictions? restrictions = null;
         try
         {
             restrictions = _system.ReadRestrictions();
@@ -254,13 +244,14 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
         {
-            LogCantRead(_logger, exception.HResult);
+            LogCantReadPolicies(_logger, exception.HResult);
         }
 
+        // What Windows refused to read stays as it was last read.
         _dispatcher.TryEnqueue(() =>
         {
             _windows = windows ?? _windows;
-            SetRestrictions(restrictions);
+            SetRestrictions(restrictions ?? _restrictions);
             RefreshProfiles();
         });
     }
@@ -330,6 +321,9 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused to read the proxy settings (error {Error}).")]
     private static partial void LogCantRead(ILogger logger, int error);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused to read the proxy policies (error {Error}).")]
+    private static partial void LogCantReadPolicies(ILogger logger, int error);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Switched to network profile {Number} from the page.")]
     private static partial void LogSwitched(ILogger logger, int number);

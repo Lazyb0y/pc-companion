@@ -278,6 +278,40 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     }
 
     [Fact]
+    public void PoliciesWindowsRefusesToReadStayAsTheyWereLastRead()
+    {
+        _system.Restrictions = ProxyRestrictions.PreventChanges;
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+
+        _system.Restrictions = ProxyRestrictions.None;
+        _system.Failure = new UnauthorizedAccessException();
+        _system.Signal();
+        _system.RunBackground();
+
+        Assert.True(_feature.IsRunning);
+        Assert.Equal($"0 {Strings.NetworkProfilesMenuManaged} (dimmed)", Menu().First());
+
+        // E_ACCESSDENIED, which UnauthorizedAccessException carries.
+        Assert.Contains((LogLevel.Warning, "Windows refused to read the proxy policies (error -2147024891)."), _logger.Entries);
+    }
+
+    [Fact]
+    public void PoliciesWindowsRefusesToReadBlockTheSwitch()
+    {
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+        _system.Failure = new UnauthorizedAccessException();
+
+        Choose(1);
+        _system.RunBackground();
+
+        Assert.True(_feature.IsRunning);
+        Assert.Empty(_system.Written);
+        Assert.Contains((LogLevel.Warning, "Windows refused network profile 1 (error -2147024891)."), _logger.Entries);
+    }
+
+    [Fact]
     public void AFailureTurnsTheFeatureOffUntilTheHostRestarts()
     {
         _system.Failure = new InvalidOperationException("Can't read.");

@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Security;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Network.NetworkProfiles;
@@ -16,7 +18,7 @@ public enum SwitchResult
     /// <summary>Group Policy manages the proxy settings, so nothing was changed.</summary>
     Managed,
 
-    /// <summary>Windows refused the change.</summary>
+    /// <summary>Windows refused the change, or to read the policies, so nothing was changed.</summary>
     Refused,
 }
 
@@ -33,22 +35,22 @@ public static class ProxySwitch
 {
     /// <summary>
     /// Reads the policies, and when none manages the settings, writes the profile's and reads them
-    /// back, since Windows can report a change it didn't make. Reads and writes the registry, so
-    /// call it on the thread pool.
+    /// back, since Windows can report a change it didn't make. Policies that can't be read refuse the
+    /// switch. Reads and writes the registry, so call it on the thread pool.
     /// </summary>
     public static SwitchOutcome Apply(INetworkProfilesSystem system, ProxyProfile profile)
     {
         ArgumentNullException.ThrowIfNull(system);
         ArgumentNullException.ThrowIfNull(profile);
 
-        var restrictions = system.ReadRestrictions();
-        if (restrictions != ProxyRestrictions.None)
-        {
-            return new SwitchOutcome(SwitchResult.Managed, Restrictions: restrictions);
-        }
-
         try
         {
+            var restrictions = system.ReadRestrictions();
+            if (restrictions != ProxyRestrictions.None)
+            {
+                return new SwitchOutcome(SwitchResult.Managed, Restrictions: restrictions);
+            }
+
             system.WriteProxy(ProxyMatching.ToWindows(profile));
             var after = system.ReadProxy();
             return new SwitchOutcome(ProxyMatching.Matches(profile, after) ? SwitchResult.Switched : SwitchResult.NotApplied, after);
@@ -56,6 +58,11 @@ public static class ProxySwitch
         catch (Win32Exception exception)
         {
             return new SwitchOutcome(SwitchResult.Refused, Error: exception.NativeErrorCode);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
+        {
+            // Without the policies, there's no telling whether a change is allowed.
+            return new SwitchOutcome(SwitchResult.Refused, Error: exception.HResult);
         }
     }
 }

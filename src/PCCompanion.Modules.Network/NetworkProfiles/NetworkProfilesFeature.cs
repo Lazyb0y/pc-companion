@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -243,6 +245,12 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
                 session.Invoker.Post(() => Guard(session, () => Update(proxy, restrictions, error)));
             }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or SecurityException)
+            {
+                // The menu keeps what it shows, and a switch reads the policies again first.
+                var error = exception.HResult;
+                session.Invoker.Post(() => Guard(session, () => LogCantReadPolicies(logger, error)));
+            }
             catch (Exception exception)
             {
                 session.Invoker.Post(() => Fail(session, exception));
@@ -405,6 +413,9 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused to read the proxy settings (error {Error}).")]
     private static partial void LogCantRead(ILogger logger, int error);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused to read the proxy policies (error {Error}).")]
+    private static partial void LogCantReadPolicies(ILogger logger, int error);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Network profile {Number} was chosen.")]
     private static partial void LogChosen(ILogger logger, int number);
