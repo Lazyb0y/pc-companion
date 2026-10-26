@@ -189,6 +189,19 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     }
 
     [Fact]
+    public void AReadThatEndsAfterTurningOffIsDropped()
+    {
+        _feature.Apply(On(Office, Home));
+        _system.DuringRead = () => _feature.Apply(Section("""{ "enabled": false }"""));
+
+        _system.RunBackground();
+
+        Assert.False(_feature.IsRunning);
+        Assert.Empty(_feature.GetMenuItems());
+        Assert.DoesNotContain(_logger.Entries, entry => entry.Message.StartsWith("Windows' proxy settings match", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void NetworkProfilesSettingsOpensTheFeaturesPage()
     {
         _feature.Apply(On(Office));
