@@ -177,7 +177,8 @@ function Write-ClipboardSettings([bool] $Enabled) {
             @{ name = 'Track the parcel'; pattern = '1Z[0-9A-Z]{16}'; action = 'OpenAddress'; address = 'https://tracking.example.com/?number={text}' },
             @{ name = 'Show in Character Map'; pattern = '.+\.txt'; action = 'RunProgram'; program = 'C:\Windows\System32\charmap.exe'; arguments = '{text}' },
             @{ name = 'Broken'; pattern = '[0-9'; address = 'https://example.com/{text}' },
-            @{ name = 'Run a removed program'; pattern = '.+\.gone'; action = 'RunProgram'; program = 'C:\Windows\System32\PCCompanionMissing.exe'; arguments = '{text}' }
+            @{ name = 'Run a removed program'; pattern = '.+\.gone'; action = 'RunProgram'; program = 'C:\Windows\System32\PCCompanionMissing.exe'; arguments = '{text}' },
+            @{ name = 'Run a program without a window'; pattern = '.+\.nowindow'; action = 'RunProgram'; program = $noWindowExe; arguments = '{text}' }
         )
     }
     $settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; diagnostics = @{ detailedLoggingUntil = $detailedUntil }; features = @{ clipboardActions = $section } }
@@ -232,7 +233,7 @@ function Get-LastMenuPlace {
 
 Write-ClipboardSettings $true
 if ((Get-Processes 'PCCompanion.Host').Count -eq 0) { Start-Process $hostExe }
-Test-Check 'the host uses the rules it can' (Wait-Until { (Get-HostLog) -match '3 of 4 rules can be used' } 10)
+Test-Check 'the host uses the rules it can' (Wait-Until { (Get-HostLog) -match '4 of 5 rules can be used' } 10)
 Test-Check 'the host leaves out the rule it can''t use, by number' ((Get-HostLog) -match 'Clipboard Actions rule 3 can''t be used: "?InvalidPattern"?\.')
 $charmapProcess = Start-Process charmap.exe -PassThru
 Test-Check 'Character Map opens to be the window in front' (Wait-Until { $charmapProcess.Refresh(); $charmapProcess.MainWindowHandle -ne [IntPtr]::Zero } 10)
@@ -375,6 +376,17 @@ Test-Check 'the shortcut opens the menu for a rule whose program was removed' (O
 Test-Check 'the rule whose program was removed starts nothing' ((Select-TrayMenuItem 'Run a removed program') -and (Wait-Until { (Get-HostLog) -match 'Clipboard Actions rule 4 didn''t start PCCompanionMissing\.exe: "?NotFound"?\.' } 5))
 Start-Sleep -Milliseconds 500
 Test-Check 'and the window in front gets the front back' (Test-CharmapInFront) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+[void] [Win32]::SetForegroundWindow($charmap)
+
+# A rule whose program shows no window starts it, and nothing else comes to the front: the first key
+# pressed gives the front back, so typing goes on in the window that had it.
+Copy-Text 'job.nowindow'
+Test-Check 'the shortcut opens the menu for a rule whose program shows no window' (Open-Menu)
+Test-Check 'the rule starts its program without a window' ((Select-TrayMenuItem 'Run a program without a window') -and (Wait-Until { (Get-HostLog) -match 'Clipboard Actions rule 5 started PCCompanionNoWindow\.exe\.' } 10))
+Start-Sleep -Seconds 1
+Send-Key 0x10
+Test-Check 'a key pressed then gives the front back' (Wait-Until { Test-CharmapInFront } 3) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+Get-Processes 'PCCompanionNoWindow' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 [void] [Win32]::SetForegroundWindow($charmap)
 
 Copy-Text 'PC-12'

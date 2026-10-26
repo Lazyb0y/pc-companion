@@ -51,6 +51,12 @@ public interface IClipboardActionsSystem
     /// </summary>
     void GiveFrontBack(MessageWindow window, nint previous);
 
+    /// <summary>
+    /// Calls <paramref name="typed"/> on the thread each time a key is pressed while the thread's
+    /// window has the front, as when it kept it after the menu closed.
+    /// </summary>
+    void WatchTyping(MessageWindow window, Action typed);
+
     bool FileExists(string path);
 
     /// <summary>Runs an action off the thread, on the thread pool.</summary>

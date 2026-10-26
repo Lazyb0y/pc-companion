@@ -27,6 +27,11 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     private bool _pressed;
     private bool _menuOpen;
 
+    // The window that was in front before the menu whose action or Settings was chosen last. The
+    // thread's window keeps the front when what that started doesn't come to the front, such as a
+    // program without a window, and gives it back at the first key.
+    private nint _frontToGiveBack;
+
     /// <summary>Starts the thread, which registers the shortcut and compiles the rules in <paramref name="settings"/>.</summary>
     /// <param name="previous">
     /// A thread that was asked to stop, which this one waits for before it registers the shortcut,
@@ -49,6 +54,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     protected override IDisposable? Open(MessageWindow window)
     {
+        _system.WatchTyping(window, () => Guard(() => Typed(window)));
         var shortcut = _system.RegisterShortcut(window);
         if (shortcut is null)
         {
@@ -125,15 +131,42 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
         if (chosen == ClipboardMenu.SettingsCommand)
         {
+            RememberFront(window, previous);
             _system.AllowFront();
             _commands.OpenSettings();
         }
         else if (plan.Offers.TryGetValue(chosen, out var offer))
         {
             LogChosen(_logger, offer.Rule, offer.Kind);
+            RememberFront(window, previous);
             _system.AllowFront();
             _system.RunInBackground(() => RunGuarded(window, offer, previous));
         }
+    }
+
+    // While the thread's window still has the front from an earlier action, the window before that
+    // one stays the one to give it back to.
+    private void RememberFront(MessageWindow window, nint previous)
+    {
+        if (previous != window.Handle)
+        {
+            _frontToGiveBack = previous;
+        }
+    }
+
+    // A key reached the thread's window, which kept the front after the menu closed because nothing
+    // the action started came to the front: typing would go nowhere, so the window that was in front
+    // gets it back. That key is lost; the next ones go there. Keys during a press are the menu's.
+    private void Typed(MessageWindow window)
+    {
+        if (_pressed || _frontToGiveBack == 0)
+        {
+            return;
+        }
+
+        LogTypedToWindow(_logger);
+        _system.GiveFrontBack(window, _frontToGiveBack);
+        _frontToGiveBack = 0;
     }
 
     // On the thread pool, where an exception wouldn't reach the feature's error boundary. An action
@@ -175,6 +208,9 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions runs rule {Rule} (0 is Open in browser): {Kind}.")]
     private static partial void LogChosen(ILogger logger, int rule, OfferKind kind);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "A key reached Clipboard Actions' window, which kept the front after its menu, so the window that was in front gets it back.")]
+    private static partial void LogTypedToWindow(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Clipboard Actions rule {Rule} failed to run.")]
     private static partial void LogActionFailed(ILogger logger, Exception exception, int rule);

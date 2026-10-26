@@ -15,6 +15,8 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
 {
     private const uint VirtualKeyV = 0x56;
+    private const uint KeyDownMessage = 0x0100; // WM_KEYDOWN
+    private const uint SystemKeyDownMessage = 0x0104; // WM_SYSKEYDOWN
 
     public IShortcut? RegisterShortcut(MessageWindow window) =>
         HotKey.Register(window, HotKeyModifiers.Windows | HotKeyModifiers.Alt, VirtualKeyV) is { } hotKey ? new Shortcut(hotKey) : null;
@@ -47,6 +49,21 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
     public void AllowFront() => Foreground.AllowAnyProcess();
 
     public void GiveFrontBack(MessageWindow window, nint previous) => Foreground.GiveBack(window.Handle, previous);
+
+    // A window in front without the keyboard focus gets its keys as system keys.
+    public void WatchTyping(MessageWindow window, Action typed)
+    {
+        ArgumentNullException.ThrowIfNull(window);
+        ArgumentNullException.ThrowIfNull(typed);
+
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message is KeyDownMessage or SystemKeyDownMessage)
+            {
+                typed();
+            }
+        };
+    }
 
     public bool FileExists(string path) => File.Exists(path);
 
