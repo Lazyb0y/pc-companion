@@ -11,6 +11,7 @@ public sealed class SlowHandlerWatchTests
 {
     private const uint SlowMessage = 0x8001; // WM_APP + 1
     private const uint FastMessage = 0x8002;
+    private const uint FirstOwnMessage = 0x8000; // WM_APP
     private static readonly TimeSpan Limit = TimeSpan.FromMilliseconds(50);
 
     [Fact]
@@ -101,7 +102,10 @@ public sealed class SlowHandlerWatchTests
         Assert.Empty(reported);
     }
 
-    // Watches this thread while action runs, and returns what was reported.
+    // Watches this thread while action runs, and returns what was reported for the tests' own
+    // messages: from WM_APP, which includes BeginInvoke's registered message. Windows' own messages,
+    // such as WM_DWMNCRENDERINGCHANGED for a new window, can take longer than the limit on a busy
+    // CI runner.
     private static List<SlowHandler> Watch(Action action)
     {
         var reported = new List<SlowHandler>();
@@ -115,6 +119,6 @@ public sealed class SlowHandlerWatchTests
             SlowHandlerWatch.StopWatching();
         }
 
-        return reported;
+        return reported.FindAll(slow => slow.Message >= FirstOwnMessage);
     }
 }
