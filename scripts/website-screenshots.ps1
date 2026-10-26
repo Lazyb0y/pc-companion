@@ -7,10 +7,10 @@ and replaces the ones of the pages given in website\images.
 Builds the installer for this PC's architecture, or takes the one given with -Msi, and starts
 Windows Sandbox with networking off. Inside it, scripts\sandbox\website-screenshots.ps1 installs
 PC Companion, turns its features on, and saves each page of the settings app in the light and dark
-themes, cropped to the window. The Sandbox window closes when it finishes. If every step passed, the
-screenshots of the pages in -Pages, or of every page without it, replace those in website\images;
-the report and every page's screenshots are also in TestResults\website-screenshots. See
-docs\development\website.md.
+themes: Home as the whole window, the other pages cropped to the page itself. The Sandbox window
+closes when it finishes. If every step passed, the screenshots of the pages in -Pages, or of every
+page without it, replace those in website\images; the report and every page's screenshots are also
+in TestResults\website-screenshots. See docs\development\website.md.
 
 Needs the Windows Sandbox feature. Only one Sandbox can run at a time. Keep the Sandbox window open
 and visible until it closes: while it's minimized, it draws nothing, so the screenshots come out
