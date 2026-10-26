@@ -36,6 +36,9 @@ public static class ProxyPolicies
     /// <summary>Where "Make proxy settings per-machine" is, under the computer's key.</summary>
     public const string PerMachinePath = @"Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings";
 
+    /// <exception cref="System.IO.IOException">The registry refused.</exception>
+    /// <exception cref="UnauthorizedAccessException">The registry refused.</exception>
+    /// <exception cref="System.Security.SecurityException">The registry refused.</exception>
     public static ProxyRestrictions Read() => Read(Registry.CurrentUser, Registry.LocalMachine);
 
     /// <summary>Reads the policies under other keys than the user's and the computer's, as tests do.</summary>

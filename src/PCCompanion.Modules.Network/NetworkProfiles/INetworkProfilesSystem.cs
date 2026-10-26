@@ -15,6 +15,9 @@ public interface INetworkProfilesSystem
     void WriteProxy(ProxySettings settings);
 
     /// <summary>Reads the Group Policy settings that manage the proxy. Runs on the thread pool.</summary>
+    /// <exception cref="System.IO.IOException">The registry refused.</exception>
+    /// <exception cref="UnauthorizedAccessException">The registry refused.</exception>
+    /// <exception cref="System.Security.SecurityException">The registry refused.</exception>
     ProxyRestrictions ReadRestrictions();
 
     /// <summary>
