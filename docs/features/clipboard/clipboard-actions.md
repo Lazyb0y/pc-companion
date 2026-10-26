@@ -18,7 +18,8 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - the clipboard holds no text, such as a picture or copied files;
   - the app that copied it marked it private, as password managers do; see [Private text](#private-text);
   - the text is longer than 4,096 characters;
-  - another app keeps the clipboard open, even after a few tries.
+  - another app keeps the clipboard open, even after a few tries;
+  - the app that copied the text didn't provide it when asked, such as one that stopped responding; see [Reading the clipboard](#reading-the-clipboard).
 - Spaces and line breaks at the ends of the text are removed before matching, such as the line break a terminal adds when copying a line. The actions get the same trimmed text.
 - Nothing happens when text is copied: PC Companion reads the clipboard only when the shortcut is pressed.
 - The menu opens as the shortcut is pressed. Releasing Alt and the Windows key keeps it open and opens neither Start nor a menu bar.
@@ -82,7 +83,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - Only plain text (`CF_UNICODETEXT`) is read; Windows converts other text formats to it.
 - PC Companion opens the clipboard, copies at most the first 4,097 characters, and closes it right away, so other apps can use it. When another app has it open, PC Companion tries again, five times in all, 20 ms apart, which takes about 150 ms with Windows' timer.
-- An app can provide its data only when someone asks for it (delayed rendering), and reading then waits for that app, up to 30 seconds, when Windows gives up. That happens on the feature's own thread; see [Threads](#threads). Until then the menu doesn't show, and another press waits its turn.
+- An app can provide its data only when someone asks for it (delayed rendering), and reading then waits for that app, up to 30 seconds, when Windows gives up. That happens on the feature's own thread; see [Threads](#threads). Until then the menu doesn't show, and another press waits its turn. When Windows gives up, the menu says the clipboard can't be read.
 - Clipboard tools and the Remote Desktop clipboard often read new data first and keep the clipboard open while such an app provides it. The menu then says another app has the clipboard open, rather than waiting.
 - The text stays in memory only until the menu closes and the chosen action has started.
 

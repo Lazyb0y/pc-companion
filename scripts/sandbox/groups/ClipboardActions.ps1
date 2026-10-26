@@ -1,12 +1,16 @@
 ﻿# Clipboard Actions: the Home switch turns it on, and its page adds, edits, moves and deletes rules
-# in the rule editor, which says what's wrong with a pattern, an address or a program. Then, with
-# rules in the settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer, below
-# the text cursor of Character Map's box or of a text area in Edge, and above it at the bottom of
-# the screen. For text the checks copy, Open in browser and an address rule open the browser, and a
-# rule that runs a program starts Character Map; marked-private, missing and too long text show
-# only a note. Esc gives the front back to the window that had it,
-# the shortcut again closes the menu, and turned off the shortcut opens no menu. The host's
-# --open-web-page opens a long web address it reads from a pipe, and only web addresses. Detailed logging is on for the host's Debug entries.
+# in the rule editor, which says what's wrong with a pattern, an address or a program. The list
+# says why a rule whose program doesn't exist, a rule after the first 50 and a rule from a newer
+# version aren't in the menu, and the editor keeps the newer rule's action. Then, with rules in the
+# settings, Windows + Alt + V, sent by scan code, opens the menu at the pointer, below the text
+# cursor of Character Map's box or of a text area in Edge, and above it at the bottom of the
+# screen. For text the checks copy, Open in browser and an address rule open the browser, and a
+# rule that runs a program starts Character Map; a rule whose program was removed gives the front
+# back, and so does a key pressed after a rule starts a program without a window; marked-private,
+# missing and too long text show only a note. Esc gives the front back to the window that had it,
+# the shortcut again closes the menu, turning the feature off closes its open menu, and turned off
+# the shortcut opens no menu. The host's --open-web-page opens a long web address it reads from a
+# pipe, and only web addresses. Detailed logging is on for the host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 Start-Sleep -Seconds 2
