@@ -965,7 +965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>Le modèle utilise une assertion de type lookaround, une référence arrière, un groupe atomique ou une condition, qui ne peuvent pas être utilisés ici.</value>
+    <value>Le modèle utilise une assertion de type lookaround, une référence arrière, un groupe atomique ou une condition, ou répète une partie trop de fois, comme avec {1,4096}. Cela ne peut pas être utilisé ici.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">

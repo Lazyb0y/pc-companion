@@ -965,8 +965,8 @@
     <comment>Rule editor and Clipboard Actions page: problem with a rule's pattern.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>The pattern uses a lookaround, a backreference, an atomic group or a conditional, which can't be used here.</value>
-    <comment>Rule editor and Clipboard Actions page: problem with a rule's pattern. Use the usual terms for these parts of regular expressions.</comment>
+    <value>The pattern uses a lookaround, a backreference, an atomic group or a conditional, or repeats a part too many times, such as {1,4096}. These can't be used here.</value>
+    <comment>Rule editor and Clipboard Actions page: problem with a rule's pattern. Use the usual terms for these parts of regular expressions. Keep {1,4096} as it is: it's part of a pattern, not a placeholder.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">
     <value>Try it</value>

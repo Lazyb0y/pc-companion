@@ -62,6 +62,8 @@ public sealed class ClipboardRuleCheckTests
     [InlineData("(?<!b)a", PatternProblem.NotSupported)]
     [InlineData(@"(a)\1", PatternProblem.NotSupported)]
     [InlineData("(?>a+)b", PatternProblem.NotSupported)]
+    [InlineData(".{1,4096}", PatternProblem.NotSupported)]
+    [InlineData("[A-Z0-9]{2,2000}", PatternProblem.NotSupported)]
     public void PatternsThatCantBeUsedSayWhy(string pattern, PatternProblem expected)
     {
         Assert.Null(ClipboardRuleCheck.CompilePattern(pattern, matchCase: false, out var problem));
@@ -158,7 +160,8 @@ public sealed class ClipboardRuleCheckTests
     [InlineData("", "x", "OpenAddress", "https://example.com/{text}", "", RuleProblem.NoName)]
     [InlineData("Name", "", "OpenAddress", "https://example.com/{text}", "", RuleProblem.NoPattern)]
     [InlineData("Name", "[x", "OpenAddress", "https://example.com/{text}", "", RuleProblem.InvalidPattern)]
-    [InlineData("Name", "(?=x)x", "OpenAddress", "https://example.com/{text}", "", RuleProblem.PatternNeedsBacktracking)]
+    [InlineData("Name", "(?=x)x", "OpenAddress", "https://example.com/{text}", "", RuleProblem.PatternNotSupported)]
+    [InlineData("Name", ".{1,4096}", "OpenAddress", "https://example.com/{text}", "", RuleProblem.PatternNotSupported)]
     [InlineData("Name", "x", "Translate", "https://example.com/{text}", "", RuleProblem.UnknownAction)]
     [InlineData("Name", "x", "OpenAddress", "", "", RuleProblem.NoAddress)]
     [InlineData("Name", "x", "OpenAddress", "file:///{text}", "", RuleProblem.NotWebAddress)]

@@ -965,7 +965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>El patrón usa una búsqueda anticipada o retrospectiva, una referencia inversa, un grupo atómico o una condición, que no se pueden usar aquí.</value>
+    <value>El patrón usa una búsqueda anticipada o retrospectiva, una referencia inversa, un grupo atómico o una condición, o repite una parte demasiadas veces, como con {1,4096}. Esto no se puede usar aquí.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">

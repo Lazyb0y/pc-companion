@@ -949,7 +949,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>该模式使用了环视、反向引用、原子组或条件，这些在此处不可用。</value>
+    <value>该模式使用了环视、反向引用、原子组或条件，或将某部分重复了太多次（例如 {1,4096}）。这些在此处不可用。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">

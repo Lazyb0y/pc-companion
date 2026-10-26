@@ -18,7 +18,10 @@ public enum PatternProblem
     /// <summary>It isn't a valid regular expression.</summary>
     Invalid,
 
-    /// <summary>It needs backtracking, which non-backtracking matching doesn't offer, such as a lookaround or a backreference.</summary>
+    /// <summary>
+    /// Non-backtracking matching can't run it: it needs backtracking, such as a lookaround or a
+    /// backreference, or repeats a part so many times that its matcher would be too large.
+    /// </summary>
     NotSupported,
 }
 
@@ -52,7 +55,7 @@ public enum RuleProblem
     NoName,
     NoPattern,
     InvalidPattern,
-    PatternNeedsBacktracking,
+    PatternNotSupported,
     UnknownAction,
     NoAddress,
     NotWebAddress,
@@ -226,7 +229,7 @@ public static class ClipboardRuleCheck
             case PatternProblem.Invalid:
                 return RuleProblem.InvalidPattern;
             case PatternProblem.NotSupported:
-                return RuleProblem.PatternNeedsBacktracking;
+                return RuleProblem.PatternNotSupported;
         }
 
         var problem = rule.KnownAction switch

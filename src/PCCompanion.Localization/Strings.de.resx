@@ -965,7 +965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>Das Muster verwendet eine Lookaround-Assertion, einen Rückverweis, eine atomare Gruppe oder eine Bedingung, die hier nicht verwendet werden können.</value>
+    <value>Das Muster verwendet eine Lookaround-Assertion, einen Rückverweis, eine atomare Gruppe oder eine Bedingung oder wiederholt einen Teil zu oft, etwa mit {1,4096}. Das kann hier nicht verwendet werden.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">

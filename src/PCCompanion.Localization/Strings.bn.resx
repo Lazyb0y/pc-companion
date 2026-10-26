@@ -965,7 +965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>প্যাটার্নটি একটি লুকঅ্যারাউন্ড, ব্যাকরেফারেন্স, অ্যাটমিক গ্রুপ বা শর্ত ব্যবহার করে, যা এখানে ব্যবহার করা যায় না।</value>
+    <value>প্যাটার্নটি একটি লুকঅ্যারাউন্ড, ব্যাকরেফারেন্স, অ্যাটমিক গ্রুপ বা শর্ত ব্যবহার করে, অথবা কোনো অংশ অনেক বেশি বার পুনরাবৃত্তি করে, যেমন {1,4096}। এগুলো এখানে ব্যবহার করা যায় না।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">

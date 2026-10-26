@@ -1029,7 +1029,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPatternNotSupported" xml:space="preserve">
-    <value>يستخدم النمط تأكيد نظر أو مرجعًا خلفيًا أو مجموعة ذرية أو شرطًا، ولا يمكن استخدامها هنا.</value>
+    <value>يستخدم النمط تأكيد نظر أو مرجعًا خلفيًا أو مجموعة ذرية أو شرطًا، أو يكرر جزءًا مرات كثيرة جدًا، مثل {1,4096}. ولا يمكن استخدام ذلك هنا.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsTryHeader" xml:space="preserve">
