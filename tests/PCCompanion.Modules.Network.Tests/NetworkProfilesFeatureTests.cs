@@ -16,6 +16,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
 {
     private const string Office = """{ "name": "Office", "proxy": { "useServer": true, "server": "proxy.example.com:8080", "exceptions": ["*.example.com"], "bypassLocal": true } }""";
     private const string Home = """{ "name": "Home", "proxy": { "autoDetect": true } }""";
+    private const string ChangedOffice = """{ "name": "Office", "proxy": { "useServer": true, "server": "other.example.com:3128" } }""";
     private static readonly string Settings = $"{NetworkProfilesMenu.SettingsItem} {Strings.NetworkProfilesMenuSettings}";
 
     private readonly FakeNetworkProfilesSystem _system = new();
@@ -75,12 +76,44 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _feature.Apply(On(Office, Home));
         _system.RunBackground();
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
         _system.RunBackground();
 
         Assert.Equal([new ProxySettings(false, false, "", true, "proxy.example.com:8080", "*.example.com;<local>")], _system.Written);
         Assert.Equal(["1 Office (checked)", "2 Home", "-", Settings], Menu());
         Assert.Contains((LogLevel.Debug, "Switched to network profile 1."), _logger.Entries);
+    }
+
+    [Fact]
+    public void AProfileMovedWhileTheMenuIsOpenIsTheOneSwitchedTo()
+    {
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+        _feature.GetMenuItems();
+
+        _feature.Apply(On(Home, Office));
+        _feature.ChooseMenuItem(1);
+        _system.RunBackground();
+
+        Assert.Equal([new ProxySettings(false, false, "", true, "proxy.example.com:8080", "*.example.com;<local>")], _system.Written);
+        Assert.Contains((LogLevel.Debug, "Switched to network profile 2."), _logger.Entries);
+    }
+
+    [Theory]
+    [InlineData(ChangedOffice + "," + Home)]
+    [InlineData(Home)]
+    public void AProfileChangedOrDeletedWhileTheMenuIsOpenIsntApplied(string profiles)
+    {
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+        _feature.GetMenuItems();
+
+        _feature.Apply(On(profiles));
+        _feature.ChooseMenuItem(1);
+        _system.RunBackground();
+
+        Assert.Empty(_system.Written);
+        Assert.Contains((LogLevel.Debug, "Network profile 1 was chosen, but there's no such profile any more."), _logger.Entries);
     }
 
     [Fact]
@@ -126,7 +159,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _feature.Apply(On(Office, Home));
         _system.RunBackground();
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
 
         Assert.Equal([$"0 {Strings.NetworkProfilesMenuManaged} (dimmed)", "1 Office (dimmed)", "2 Home (checked) (dimmed)", "-", Settings], Menu());
         Assert.Equal(0, _system.PendingBackground);
@@ -139,7 +172,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _feature.Apply(On(Office, Home));
         _system.RunBackground();
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
         _system.Restrictions = ProxyRestrictions.PerMachine;
         _system.RunBackground();
 
@@ -154,7 +187,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _system.RunBackground();
         _system.WriteError = 5;
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
         _system.RunBackground();
 
         Assert.Contains((LogLevel.Warning, "Windows refused network profile 1 (error 5)."), _logger.Entries);
@@ -168,7 +201,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _system.RunBackground();
         _system.IgnoresWrites = true;
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
         _system.RunBackground();
 
         Assert.Contains((LogLevel.Warning, "Windows reported switching to network profile 1, but its proxy settings don't match the profile."), _logger.Entries);
@@ -181,7 +214,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
         _feature.Apply(On(Office, Home));
         _system.RunBackground();
 
-        _feature.ChooseMenuItem(1);
+        Choose(1);
         _feature.Apply(Section("""{ "enabled": false }"""));
         _system.RunBackground();
 
@@ -206,7 +239,7 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     {
         _feature.Apply(On(Office));
 
-        _feature.ChooseMenuItem(NetworkProfilesMenu.SettingsItem);
+        Choose(NetworkProfilesMenu.SettingsItem);
 
         Assert.Equal(["networkProfiles"], _commands.FeaturePagesOpened);
     }
@@ -277,6 +310,13 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     }
 
     private static JsonElement On(params string[] profiles) => Section($$"""{ "enabled": true, "profiles": [{{string.Join(",", profiles)}}] }""");
+
+    // As the host does: an item of the menu that opened last is chosen.
+    private void Choose(int id)
+    {
+        _feature.GetMenuItems();
+        _feature.ChooseMenuItem(id);
+    }
 
     private List<string> Menu() => [.. NetworkProfilesMenuTests.Describe(_feature.GetMenuItems())];
 }

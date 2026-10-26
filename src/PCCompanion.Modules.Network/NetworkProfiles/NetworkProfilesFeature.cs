@@ -28,6 +28,10 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
     // On the host's UI thread.
     private IReadOnlyList<UsableProfile> _profiles = [];
+
+    // The profiles of the menu that opened last, as it numbered them. The settings can change while
+    // it's open, which moves or changes the profiles.
+    private IReadOnlyList<UsableProfile> _menuProfiles = [];
     private ProxySettings? _windows;
     private ProxyRestrictions _restrictions;
     private int? _inUse;
@@ -95,8 +99,11 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
         UpdateInUse();
     }
 
-    public IReadOnlyList<HostMenuItem> GetMenuItems() =>
-        _session is null ? [] : NetworkProfilesMenu.Build(_profiles, _inUse, _windows is not null, _restrictions != ProxyRestrictions.None);
+    public IReadOnlyList<HostMenuItem> GetMenuItems()
+    {
+        _menuProfiles = _session is null ? [] : _profiles;
+        return _session is null ? [] : NetworkProfilesMenu.Build(_menuProfiles, _inUse, _windows is not null, _restrictions != ProxyRestrictions.None);
+    }
 
     public void ChooseMenuItem(int id)
     {
@@ -111,7 +118,9 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
             return;
         }
 
-        if (_profiles.FirstOrDefault(profile => profile.Number == id) is not { } chosen)
+        // The profile the menu showed, wherever it is now, unless it was changed or deleted since.
+        if (_menuProfiles.FirstOrDefault(profile => profile.Number == id) is not { } shown
+            || _profiles.FirstOrDefault(profile => profile.Profile == shown.Profile) is not { } chosen)
         {
             LogNoSuchProfile(logger, id);
             return;
