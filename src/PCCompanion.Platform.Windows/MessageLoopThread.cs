@@ -60,8 +60,9 @@ public abstract class MessageLoopThread<TSettings>
 
     /// <summary>
     /// Whether the thread was asked to stop. A modal loop on the thread, such as an open menu's,
-    /// takes the request to end its message loop, so a feature that ran one asks again with
-    /// <see cref="MessageLoop.Quit"/> once it's closed.
+    /// can take the request to end its message loop. Closing the menu in <see cref="OnStopping"/>
+    /// keeps the request; a feature that ran one may still ask again with
+    /// <see cref="MessageLoop.Quit"/> once it's closed, in case its loop took it.
     /// </summary>
     protected bool IsStopping
     {
