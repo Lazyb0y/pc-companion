@@ -55,7 +55,7 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
             RuleProblem.NoName => Strings.ClipboardActionsNameMissing,
             RuleProblem.NoPattern => Strings.ClipboardActionsPatternMissing,
             RuleProblem.InvalidPattern => Strings.ClipboardActionsPatternInvalid,
-            RuleProblem.PatternNeedsBacktracking => Strings.ClipboardActionsPatternNotSupported,
+            RuleProblem.PatternNotSupported => Strings.ClipboardActionsPatternNotSupported,
             RuleProblem.UnknownAction => Strings.ClipboardActionsUnknownAction,
             RuleProblem.NoAddress => Strings.ClipboardActionsAddressMissing,
             RuleProblem.NotWebAddress => Strings.ClipboardActionsAddressNotWeb,
