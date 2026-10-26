@@ -523,35 +523,106 @@ Test-Check 'the settings app logs both requests' (Wait-Until { (Get-MatchCount (
 [void] (Close-SettingsApp)
 
 # Edge, already open, follows a switch: two fake proxies on the loopback address.
-$listen = {
-    param([int] $Port, [string] $File)
-    $listener = New-Object System.Net.Sockets.TcpListener ([System.Net.IPAddress]::Loopback, $Port)
-    $listener.Start()
-    Add-Content -Path $File -Value "listening on $Port"
-    $end = (Get-Date).AddSeconds(150)
-    while ((Get-Date) -lt $end) {
-        if (-not $listener.Pending()) { Start-Sleep -Milliseconds 50; continue }
-        $client = $listener.AcceptTcpClient()
-        try {
-            $stream = $client.GetStream()
-            $stream.ReadTimeout = 2000
-            $buffer = New-Object byte[] 4096
-            $read = $stream.Read($buffer, 0, $buffer.Length)
-            Add-Content -Path $File -Value (([System.Text.Encoding]::ASCII.GetString($buffer, 0, $read) -split "`r`n")[0])
-            $body = [System.Text.Encoding]::ASCII.GetBytes("<html><body>proxy $Port</body></html>")
-            $head = [System.Text.Encoding]::ASCII.GetBytes("HTTP/1.1 200 OK`r`nContent-Type: text/html`r`nContent-Length: $($body.Length)`r`nConnection: close`r`n`r`n")
-            $stream.Write($head, 0, $head.Length)
-            $stream.Write($body, 0, $body.Length)
-        }
-        catch { }
-        finally { $client.Close() }
+Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+// A fake proxy on the loopback address: it keeps the first line of each request and answers it
+// with a small web page. Each connection gets a thread of its own, so the connections Edge opens
+// ahead of time and sends nothing on, and its own background requests, don't hold the page's
+// request. CONNECT is refused at once, since the checks need only plain requests.
+public sealed class FakeProxy : IDisposable
+{
+    private readonly TcpListener _listener;
+    private readonly int _port;
+    private readonly List<string> _requests = new List<string>();
+
+    public FakeProxy(int port)
+    {
+        _port = port;
+        _listener = new TcpListener(IPAddress.Loopback, port);
+        _listener.Start();
+        Thread accept = new Thread(Accept);
+        accept.IsBackground = true;
+        accept.Start();
     }
-    $listener.Stop()
+
+    // The first lines of the requests so far, one per line.
+    public string Requests
+    {
+        get { lock (_requests) { return string.Join("\r\n", _requests); } }
+    }
+
+    public void Dispose()
+    {
+        _listener.Stop();
+    }
+
+    // An exception on these threads would end PowerShell, so each ends quietly instead.
+    private void Accept()
+    {
+        while (true)
+        {
+            TcpClient client;
+            try { client = _listener.AcceptTcpClient(); }
+            catch (Exception) { return; }
+
+            Thread serve = new Thread(() => Serve(client));
+            serve.IsBackground = true;
+            serve.Start();
+        }
+    }
+
+    private void Serve(TcpClient client)
+    {
+        try
+        {
+            using (client)
+            {
+                NetworkStream stream = client.GetStream();
+                stream.ReadTimeout = 30000;
+                byte[] buffer = new byte[4096];
+                int length = 0;
+                int end = -1;
+                while (end < 0 && length < buffer.Length)
+                {
+                    int read = stream.Read(buffer, length, buffer.Length - length);
+                    if (read <= 0) { return; }
+                    length += read;
+                    end = Encoding.ASCII.GetString(buffer, 0, length).IndexOf("\r\n", StringComparison.Ordinal);
+                }
+
+                if (end < 0) { return; }
+                string line = Encoding.ASCII.GetString(buffer, 0, end);
+                lock (_requests) { _requests.Add(line); }
+                string body = "<html><body>proxy " + _port + "</body></html>";
+                string answer = line.StartsWith("CONNECT ", StringComparison.Ordinal)
+                    ? "HTTP/1.1 405 Method Not Allowed\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+                    : "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " + body.Length + "\r\nConnection: close\r\n\r\n" + body;
+                byte[] bytes = Encoding.ASCII.GetBytes(answer);
+                stream.Write(bytes, 0, bytes.Length);
+            }
+        }
+        catch (Exception)
+        {
+            // Edge closed the connection, or sent nothing on it.
+        }
+    }
 }
-$listenA = Join-Path $results 'proxy-a.txt'
-$listenB = Join-Path $results 'proxy-b.txt'
-$jobs = @((Start-Job -ScriptBlock $listen -ArgumentList 18081, $listenA), (Start-Job -ScriptBlock $listen -ArgumentList 18082, $listenB))
-[void] (Wait-Until { (Test-Path $listenA) -and (Test-Path $listenB) } 20)
+'@
+# A proxy's plain requests without their queries, and how many CONNECTs it refused; proxy-a.txt and
+# proxy-b.txt keep every request.
+function Get-ProxyLog([object] $Proxy) {
+    $requests = @($Proxy.Requests -split "`r`n" | Where-Object { $_ })
+    $plain = @($requests | Where-Object { $_ -notlike 'CONNECT *' } | ForEach-Object { $_ -replace '\?\S*', '' -replace ' HTTP/1\.\d$', '' })
+    (@($plain) + "$(@($requests | Where-Object { $_ -like 'CONNECT *' }).Count) CONNECT refused") -join ' / '
+}
+$proxyA = New-Object FakeProxy 18081
+$proxyB = New-Object FakeProxy 18082
 Write-NetworkProfilesSettings $true @(
     @{ name = 'Proxy A'; proxy = @{ useServer = $true; server = '127.0.0.1:18081' } },
     @{ name = 'Proxy B'; proxy = @{ useServer = $true; server = '127.0.0.1:18082' } })
@@ -561,16 +632,19 @@ Test-Check 'the menu switches to proxy A' (Wait-Until { (Get-Proxy) -like '3|127
 $edge = 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 $edgeProfile = 'C:\Users\Public\edge-network-profiles'
 Start-Process $edge -ArgumentList '--no-first-run', '--no-default-browser-check', "--user-data-dir=$edgeProfile", 'http://first.network-profiles.test/'
-Test-Check 'Edge uses proxy A' (Wait-Until { (Get-Content $listenA -Raw) -match 'GET http://first\.network-profiles\.test/' } 40)
+Test-Check 'Edge uses proxy A' (Wait-Until { $proxyA.Requests -match 'GET http://first\.network-profiles\.test/' } 40) "proxy A: $(Get-ProxyLog $proxyA)"
 [void] (Open-ProfileMenu)
 [void] (Select-MenuItem 'Proxy B')
 Test-Check 'the menu switches to proxy B' (Wait-Until { (Get-Proxy) -like '3|127.0.0.1:18082|*' } 5) (Get-Proxy)
 Start-Sleep -Seconds 1
 Start-Process $edge -ArgumentList '--no-first-run', '--no-default-browser-check', "--user-data-dir=$edgeProfile", 'http://second.network-profiles.test/'
-Test-Check 'Edge, already open, uses proxy B after the switch' (Wait-Until { (Get-Content $listenB -Raw) -match 'GET http://second\.network-profiles\.test/' } 40) "proxy A: $((Get-Content $listenA) -join ' / ')"
+Test-Check 'Edge, already open, uses proxy B after the switch' (Wait-Until { $proxyB.Requests -match 'GET http://second\.network-profiles\.test/' } 40) "proxy A: $(Get-ProxyLog $proxyA); proxy B: $(Get-ProxyLog $proxyB)"
 Save-Screenshot '14e-network-profiles-edge'
 Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
-$jobs | Stop-Job -PassThru | Remove-Job -Force
+$proxyA.Dispose()
+$proxyB.Dispose()
+Set-Content -Path (Join-Path $results 'proxy-a.txt') -Value $proxyA.Requests
+Set-Content -Path (Join-Path $results 'proxy-b.txt') -Value $proxyB.Requests
 
 # Group Policy: each setting dims the profiles as soon as it's set and leaves the settings as they
 # are, and the profiles can be chosen again as soon as it's removed. The host watches each policy's
