@@ -43,7 +43,7 @@ public static class NetworkProfileCheck
     /// <summary>The longest name, which the menu shows.</summary>
     public const int MaximumNameLength = 60;
 
-    /// <summary>The longest proxy server, script address and exceptions, together.</summary>
+    /// <summary>The longest proxy server and script address, and the longest the exceptions can be together.</summary>
     public const int MaximumTextLength = 2048;
 
     // The protocols a server for each protocol can be for, as Windows stores them.
