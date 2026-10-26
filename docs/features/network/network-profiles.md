@@ -79,6 +79,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 ## The PC Companion icon's menu
 
 - A running feature adds a submenu through `IHostMenuItems` in Core: the host asks each feature for its items each time the menu opens, on the UI thread, and a feature answers from the state it already has, so the menu never waits. The chosen item goes back to its feature. See [Running in the host](../../architecture/features.md#running-in-the-host).
+- The profiles can change while the menu is open, when the settings are saved meanwhile. A profile chosen then is applied only if the list still has it unchanged, wherever it is now; otherwise nothing changes, with a Debug entry in the log.
 - `PopupMenu` gets submenus and radio check marks.
 
 ## Settings
@@ -187,7 +188,7 @@ A spike in Windows Sandbox (Windows 11 24H2), with a .NET 10 helper that reads a
 
 - **Unit tests** with a fake proxy store and a fake watch:
   - matching: the parts that are on, case, spaces at the ends, `http://` before a server, the order of the exceptions, `<local>`, values of parts that are off;
-  - applying: only the parts that are on are written; a refused change, or one Windows reports but doesn't make, keeps the check mark where it was;
+  - applying: only the parts that are on are written; a refused change, or one Windows reports but doesn't make, keeps the check mark where it was; a profile moved while the menu is open is still the one applied, and one changed or deleted then isn't;
   - checks: server formats, port range, script addresses that aren't `http` or `https`, control characters, the lengths, duplicate names, the 20-profile limit; unusable profiles are left out with a warning;
   - policies: each one dims the profiles and blocks applying, also while running as administrator;
   - the menu: order, radio mark, Other proxy settings in use, the policy note, `&` in names, no submenu while off or with no profiles;
