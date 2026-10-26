@@ -17,7 +17,7 @@
   --primary: #2155dc;
   --primary-hover: #1a46ba;
   --highlight: #fbbf24;
-  --shadow: 0 1px 2px light-dark(rgb(20 24 33 / 0.06), rgb(0 0 0 / 0.3)), 0 12px 32px light-dark(rgb(20 24 33 / 0.10), rgb(0 0 0 / 0.35));
+  --shadow: drop-shadow(0 2px 3px light-dark(rgb(20 24 33 / 0.10), rgb(0 0 0 / 0.40))) drop-shadow(0 18px 36px light-dark(rgb(20 24 33 / 0.18), rgb(0 0 0 / 0.55)));
   --radius: 8px;
   --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Noto Sans", sans-serif;
   --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Noto Sans", sans-serif;
@@ -351,19 +351,31 @@ kbd {
   color: #ffffff;
 }
 
-/* Screenshots: the window's rounded corners show what was behind it, so they're clipped. */
+/* Screenshots fade into the page at their edges, so neither the window's outline nor the desktop
+   shows, and a shadow raises them off it. The fade covers only the outer edge, inside the app's own
+   margin, so the content stays sharp. The shadow is a filter on the wrapper, which follows the faded
+   edges; a box-shadow would be cut off by the mask. The top screenshot is the whole window: it fades
+   less, and its rounded corners, which show the desktop behind them, are clipped. */
 
 .shot {
   display: block;
   margin: 0;
+  filter: var(--shadow);
 }
 
 .shot img {
+  --fade: 1.5%;
   display: block;
   width: 100%;
-  border: 1px solid var(--border);
+  mask-image:
+    linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+    linear-gradient(to bottom, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  mask-composite: intersect;
+}
+
+.hero-shot img {
+  --fade: 0.75%;
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
 }
 
 /* Each screenshot has a light and a dark image. The hidden one is lazy and never comes into view, so
