@@ -16,6 +16,11 @@ public sealed partial class ClipboardRuleEditor : ObservableObject
     private const int OpenAddressIndex = 0;
     private const int RunProgramIndex = 1;
 
+    // Neither action is chosen, for a rule whose action this version doesn't know.
+    private const int UnknownActionIndex = -1;
+
+    // The rule's action as written, which a rule from a newer version keeps until another is chosen.
+    private readonly string _action;
     private string _name;
     private string _pattern;
     private bool _matchCase;
@@ -37,7 +42,13 @@ public sealed partial class ClipboardRuleEditor : ObservableObject
         _name = rule.Name;
         _pattern = rule.Pattern;
         _matchCase = rule.MatchCase;
-        _actionIndex = rule.KnownAction == ClipboardRuleAction.RunProgram ? RunProgramIndex : OpenAddressIndex;
+        _action = rule.Action;
+        _actionIndex = rule.KnownAction switch
+        {
+            ClipboardRuleAction.OpenAddress => OpenAddressIndex,
+            ClipboardRuleAction.RunProgram => RunProgramIndex,
+            _ => UnknownActionIndex,
+        };
         _address = rule.Address;
         _program = rule.Program;
         _arguments = rule.Arguments;
@@ -73,16 +84,19 @@ public sealed partial class ClipboardRuleEditor : ObservableObject
         set => Change(ref _sample, value);
     }
 
-    /// <summary>0 for Open a web address, 1 for Run a program.</summary>
+    /// <summary>0 for Open a web address, 1 for Run a program, -1 for an action this version doesn't know.</summary>
     public int ActionIndex
     {
         get => _actionIndex;
         set => Change(ref _actionIndex, value);
     }
 
-    public bool IsOpenAddress => _actionIndex != RunProgramIndex;
+    public bool IsOpenAddress => _actionIndex == OpenAddressIndex;
 
     public bool IsRunProgram => _actionIndex == RunProgramIndex;
+
+    /// <summary>Whether the rule has an action from a newer version, which it keeps until another is chosen.</summary>
+    public bool IsUnknownAction => _actionIndex == UnknownActionIndex;
 
     public string Address
     {
@@ -165,14 +179,20 @@ public sealed partial class ClipboardRuleEditor : ObservableObject
 
     /// <summary>
     /// The rule as edited. It keeps the address, program and arguments of the action not chosen,
-    /// so choosing that action again brings them back.
+    /// so choosing that action again brings them back, and the action of a rule from a newer
+    /// version until another is chosen.
     /// </summary>
     public ClipboardRule ToRule() => new()
     {
         Name = _name.Trim(),
         Pattern = _pattern,
         MatchCase = _matchCase,
-        Action = (IsRunProgram ? ClipboardRuleAction.RunProgram : ClipboardRuleAction.OpenAddress).ToString(),
+        Action = _actionIndex switch
+        {
+            OpenAddressIndex => nameof(ClipboardRuleAction.OpenAddress),
+            RunProgramIndex => nameof(ClipboardRuleAction.RunProgram),
+            _ => _action,
+        },
         Address = _address.Trim(),
         Program = _program.Trim(),
         Arguments = _arguments,
@@ -210,6 +230,7 @@ public sealed partial class ClipboardRuleEditor : ObservableObject
 
         OnPropertyChanged(nameof(IsOpenAddress));
         OnPropertyChanged(nameof(IsRunProgram));
+        OnPropertyChanged(nameof(IsUnknownAction));
         OnPropertyChanged(nameof(PatternProblem));
         OnPropertyChanged(nameof(HasPatternProblem));
         OnPropertyChanged(nameof(SampleResult));

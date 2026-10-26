@@ -137,7 +137,38 @@ $opensCount = @((Get-AppWindow).FindAll([System.Windows.Automation.TreeScope]::D
 Test-Check 'and the first 50 rules say what they open' (($beyondCount -gt 0) -and ($opensCount -eq 50 * $beyondCount)) "rules after the first 50: $beyondCount, rules that open example.com: $opensCount"
 [void] (Close-SettingsApp)
 
-# The menu, with the rules in the settings file.
+# A rule from a newer version, with an action this version doesn't know, keeps its action: the
+# editor chooses neither action and says why, so Save stays off until the user chooses one.
+function Test-AppSelected([string] $Name) {
+    $element = Find-AppElement $Name
+    $pattern = $null
+    return ($null -ne $element) -and $element.TryGetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern, [ref] $pattern) -and $pattern.Current.IsSelected
+}
+$newerRule = @{ name = 'From a newer version'; pattern = 'x'; action = 'Translate'; address = 'https://example.com/?q={text}' }
+$settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; features = @{ clipboardActions = @{ enabled = $true; openLinks = $true; rules = @($newerRule) } } }
+Write-Settings ($settings | ConvertTo-Json -Depth 6)
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Clipboard Actions with a rule from a newer version' (Select-NavigationItem 'Clipboard Actions')
+Test-Check 'a rule from a newer version says why it isn''t in the menu' (Wait-Until { Find-AppText 'Not in the menu. Its action needs a newer version of PC Companion.' } 5)
+Test-Check 'Edit opens the rule from a newer version' ((Invoke-AppElement 'Edit From a newer version') -and (Wait-Until { Find-AppElement 'Edit the rule' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'the editor chooses neither action for it' ((-not (Test-AppSelected 'Open a web address')) -and (-not (Test-AppSelected 'Run a program'))) "web address: $(Test-AppSelected 'Open a web address'), program: $(Test-AppSelected 'Run a program')"
+Test-Check 'the editor says its action needs a newer version' ($null -ne (Find-AppText 'Its action needs a newer version of PC Companion.'))
+[void] (Set-AppBox 'Name' 'Renamed')
+Test-Check 'Save stays off for it' (-not (Test-AppEnabled 'Save'))
+Save-Screenshot '13e-clipboard-actions-newer-rule'
+[void] (Invoke-AppElement 'Cancel')
+Start-Sleep -Seconds 2
+Test-Check 'the rule keeps its action' ((@((Get-ClipboardActionsSettings).rules)[0].action) -eq 'Translate')
+[void] (Close-SettingsApp)
+
+# The menu, with the rules in the settings file. One rule starts a program without a window of its
+# own, which leaves the front with the feature's hidden window.
+$noWindowExe = Join-Path $env:TEMP 'PCCompanionNoWindow.exe'
+Add-Type -OutputType WindowsApplication -OutputAssembly $noWindowExe -TypeDefinition 'public static class NoWindow { public static void Main() { System.Threading.Thread.Sleep(20000); } }'
 function Write-ClipboardSettings([bool] $Enabled) {
     $section = @{
         enabled = $Enabled
