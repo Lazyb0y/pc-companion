@@ -9,8 +9,12 @@ The project website, [lazyb0y.github.io/pc-companion](https://lazyb0y.github.io/
 - The download buttons link to `releases/latest`, so a release needs no change to the site unless its features change.
 - In English.
 - `website/icon.png` is the 256-pixel image of the app icon, `src/PCCompanion.App/Assets/PCCompanion.ico`. Replace it when the icon changes.
-- Each feature is a row of two equal columns, its text and its screenshot, which swap sides from row to row (`feature-reverse`), so every screenshot is the same size.
-- Screenshots are `website/images/<page>-light.png` and `<page>-dark.png`: the settings app's window at 1,086 × 736 pixels and 100% scaling, without its borders, with the features turned on. The page shows the ones of its theme; the other one is never downloaded.
+- Each feature is a row of two equal columns, its text and its screenshot, which swap sides from row to row (`feature-reverse`), so every feature's screenshot is the same width.
+- Screenshots are `website/images/<page>-light.png` and `<page>-dark.png`, at 100% scaling with the features turned on. The page shows the ones of its theme; the other one is never downloaded.
+  - Home's, at the top, is the settings app's whole window at 1,086 × 736 pixels, without its borders.
+  - A feature's is only its page, without the navigation pane, so it stays the same when a release adds a feature to the pane. It's as wide as the page in that window, and goes down to the last part of the page in view whole, such as a card, with the page's 24-pixel margin below it, so no part is cut off.
+  - The desktop is plain gray while they're taken: the window's Mica backdrop takes its tint from the desktop, and a gray one leaves it neutral.
+- Screenshots fade into the page at their edges, over 1.5% of each side and 0.75% for Home's, so neither the window's outline nor the desktop shows, and a shadow raises them off the page. The fade stays inside the app's own margin, so the content stays sharp.
 
 ## Theme
 
@@ -31,7 +35,8 @@ powershell -ExecutionPolicy Bypass -File scripts\website-screenshots.ps1 -Msi <f
 - Takes the screenshots in Windows Sandbox with networking off, so they show nothing of this PC, from the installer of the release the site describes. Without `-Msi`, it builds the installer; `-NoBuild` uses the one already built.
 - When every step passes, the screenshots of the pages named in `-Pages` replace those in `website/images`. The report and every page's screenshots are also in `TestResults\website-screenshots`. Look through them before committing them.
 - Commit only the screenshots of new or changed pages: every version of an image stays in the repository's history. All of them are taken again from time to time, without `-Pages`, when the maintainer asks.
-- `scripts/sandbox/website-screenshots.ps1` runs inside the Sandbox and lists the pages and the settings they're taken with. When a release adds a feature, add its page there and turn the feature on, then add it to `index.html`.
+- `scripts/sandbox/website-screenshots.ps1` runs inside the Sandbox and lists the pages and the settings they're taken with. When a release adds a feature, add its page there and turn the feature on, then add it to `index.html`, with each screenshot's width and height from the report.
+- A program in a rule must exist in the Sandbox, and not be one that PC Companion refuses, such as File Explorer; otherwise the page shows a warning.
 - Needs the Windows Sandbox feature, and only one Sandbox can run at a time. Keep the Sandbox window visible until it closes: a minimized Sandbox draws nothing, so its screenshots come out blank.
 
 ## Rules

@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
   <meta name="color-scheme" content="light dark">
   <title>PC Companion: useful features from macOS and Linux, on Windows</title>
-  <meta name="description" content="PC Companion is a free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows, such as Hot Corners, switching between an app's windows, and system meters on the taskbar.">
+  <meta name="description" content="PC Companion is a free, open-source app that brings useful features from macOS, Linux, KDE Plasma and GNOME to Windows, such as Hot Corners, switching between an app's windows, system meters on the taskbar, actions for copied text and proxy profiles.">
   <link rel="canonical" href="https://lazyb0y.github.io/pc-companion/">
   <link rel="icon" href="icon.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
@@ -97,12 +97,13 @@
               <li>Show Task View or the desktop, open Start, Search or Notifications, lock the PC, turn off the displays, start the screen saver, or run a program.</li>
               <li><strong>Keep displays on</strong> holds off the screen saver and the display timeout while the pointer rests in its corner.</li>
               <li>A short delay, and optionally a key to hold, so corners don't trigger by accident.</li>
-              <li>Corners stay quiet while you drag a window into them, and while a game, video or presentation is full screen.</li>
+              <li>Corners stay quiet while you drag a window into them, while a game or virtual machine holds the pointer, and while an app is full screen on that display.</li>
+              <li>Turn corners off while apps you choose are in front, and see on the page why a corner did or didn't trigger.</li>
             </ul>
           </div>
           <div class="shot">
-            <img class="shot-light" src="images/hot-corners-light.png" width="1086" height="736" loading="lazy" alt="The Hot Corners page, with an action chosen for each corner of the screen and a key to hold for the bottom-right one.">
-            <img class="shot-dark" src="images/hot-corners-dark.png" width="1086" height="736" loading="lazy" alt="The Hot Corners page, with an action chosen for each corner of the screen and a key to hold for the bottom-right one.">
+            <img class="shot-light" src="images/hot-corners-light.png" width="763" height="664" loading="lazy" alt="The Hot Corners page, with an action chosen for each corner of the screen and a key to hold for the bottom-right one.">
+            <img class="shot-dark" src="images/hot-corners-dark.png" width="763" height="664" loading="lazy" alt="The Hot Corners page, with an action chosen for each corner of the screen and a key to hold for the bottom-right one.">
           </div>
         </article>
 
@@ -119,8 +120,8 @@
             </ul>
           </div>
           <div class="shot">
-            <img class="shot-light" src="images/app-windows-light.png" width="1086" height="736" loading="lazy" alt="The App Windows page, with the shortcut and the option to include minimized windows.">
-            <img class="shot-dark" src="images/app-windows-dark.png" width="1086" height="736" loading="lazy" alt="The App Windows page, with the shortcut and the option to include minimized windows.">
+            <img class="shot-light" src="images/app-windows-light.png" width="763" height="590" loading="lazy" alt="The App Windows page, with the shortcut and the option to include minimized windows.">
+            <img class="shot-dark" src="images/app-windows-dark.png" width="763" height="590" loading="lazy" alt="The App Windows page, with the shortcut and the option to include minimized windows.">
           </div>
         </article>
 
@@ -137,8 +138,44 @@
             </ul>
           </div>
           <div class="shot">
-            <img class="shot-light" src="images/system-meters-light.png" width="1086" height="736" loading="lazy" alt="The System Meters page, with a switch for each meter, where they show, the layout, the icons and how often they update.">
-            <img class="shot-dark" src="images/system-meters-dark.png" width="1086" height="736" loading="lazy" alt="The System Meters page, with a switch for each meter, where they show, the layout, the icons and how often they update.">
+            <img class="shot-light" src="images/system-meters-light.png" width="763" height="708" loading="lazy" alt="The System Meters page, with a switch for each meter, where they show, the layout, the icons and how often they update.">
+            <img class="shot-dark" src="images/system-meters-dark.png" width="763" height="708" loading="lazy" alt="The System Meters page, with a switch for each meter, where they show, the layout, the icons and how often they update.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="clipboard-actions-title">
+          <div class="feature-text">
+            <p class="eyebrow">Clipboard &amp; Text</p>
+            <h3 id="clipboard-actions-title">Clipboard Actions</h3>
+            <p>Press <kbd>Windows</kbd> + <kbd>Alt</kbd> + <kbd>V</kbd> to see actions for the text you copied, such as opening a copied link or looking up a parcel number on the carrier's website. Inspired by the actions of Klipper, the KDE Plasma clipboard tool, and the actions Windows 11 once suggested for copied phone numbers and dates.</p>
+            <ul class="points">
+              <li>The menu opens at the text cursor and starts with the copied text, so you see what the action gets.</li>
+              <li>Make your own rules: a pattern the copied text matches, and a web address to open with the text in it, or a program to run with it.</li>
+              <li><strong>Open in browser</strong> for a copied web link, with no rule needed.</li>
+              <li>Reads the clipboard only when you press the shortcut, leaves alone what password managers mark private, and never keeps or sends the text.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/clipboard-actions-light.png" width="763" height="624" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
+            <img class="shot-dark" src="images/clipboard-actions-dark.png" width="763" height="624" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
+          </div>
+        </article>
+
+        <article class="feature" aria-labelledby="network-profiles-title">
+          <div class="feature-text">
+            <p class="eyebrow">Network</p>
+            <h3 id="network-profiles-title">Network Profiles</h3>
+            <p>Save your proxy settings as profiles, such as Office and Home, and switch between them from the PC Companion icon's menu. Inspired by network locations in macOS and by NetworkManager and the proxy settings of KDE Plasma and GNOME.</p>
+            <ul class="points">
+              <li>A profile holds the settings of Windows' Proxy page: automatic detection, a setup script, and a proxy server with its exceptions.</li>
+              <li>The menu marks the profile Windows uses now, also after you change the settings in Windows Settings.</li>
+              <li>Browsers and other apps that follow Windows' proxy settings switch with it.</li>
+              <li>Needs no admin rights, and never changes the settings on its own.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/network-profiles-light.png" width="763" height="716" loading="lazy" alt="The Network Profiles page, with an Office profile that uses a proxy server and a Home profile, in use, that detects the settings automatically.">
+            <img class="shot-dark" src="images/network-profiles-dark.png" width="763" height="716" loading="lazy" alt="The Network Profiles page, with an Office profile that uses a proxy server and a Home profile, in use, that detects the settings automatically.">
           </div>
         </article>
 
@@ -149,13 +186,13 @@
             <p>The settings app is laid out like Windows Settings, follows your light or dark mode, and works with the keyboard and screen readers.</p>
             <ul class="points">
               <li><strong>Always run as administrator</strong> lets features work in front of apps that run as administrator, when PC Companion is installed for all users.</li>
-              <li><strong>Update check:</strong> once a day, PC Companion tells you when a newer version is out. You can turn it off.</li>
+              <li><strong>Update check:</strong> once a day, PC Companion tells you when a newer version is out. Check now, or turn it off.</li>
               <li>Choose the language and theme, start with Windows, and open the logs when you report a problem.</li>
             </ul>
           </div>
           <div class="shot">
-            <img class="shot-light" src="images/general-light.png" width="1086" height="736" loading="lazy" alt="The General page, with the language, the app theme, Start with Windows, Always run as administrator, the logs and the update check.">
-            <img class="shot-dark" src="images/general-dark.png" width="1086" height="736" loading="lazy" alt="The General page, with the language, the app theme, Start with Windows, Always run as administrator, the logs and the update check.">
+            <img class="shot-light" src="images/general-light.png" width="763" height="709" loading="lazy" alt="The General page, with the language, the app theme, Start with Windows, Always run as administrator, the logs and the update check.">
+            <img class="shot-dark" src="images/general-dark.png" width="763" height="709" loading="lazy" alt="The General page, with the language, the app theme, Start with Windows, Always run as administrator, the logs and the update check.">
           </div>
         </article>
       </div>
