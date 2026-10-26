@@ -27,7 +27,8 @@ public sealed record CatalogModule(string Id, string NameKey, IReadOnlyList<Cata
 /// <param name="PageType">The feature's page in the settings app.</param>
 /// <param name="FirstSettings">
 /// Makes the section a feature starts with when it's turned on and has none yet, such as settings
-/// read from Windows; null for its defaults.
+/// read from Windows; null for its defaults. It runs on the settings app's UI thread as the switch
+/// changes, so it does only quick work.
 /// </param>
 public sealed record CatalogFeature(FeatureInfo Info, FeatureSupport Support, Type PageType, Func<JsonElement>? FirstSettings = null);
 
