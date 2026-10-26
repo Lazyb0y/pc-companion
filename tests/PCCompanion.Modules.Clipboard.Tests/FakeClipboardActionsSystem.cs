@@ -13,11 +13,12 @@ namespace PCCompanion.Modules.Clipboard.Tests;
 /// Clipboard Actions' Windows parts, recorded instead of used: no shortcut is registered, the
 /// clipboard isn't read and no menu opens. It may be used from the feature's
 /// thread while a test waits for it. Its events are what happened, such as "register", "read",
-/// "ask" for the app's text cursor, "menu", "allow front" or "dispose shortcut".
+/// "ask" for the app's text cursor, "menu", "allow front", "type" or "dispose shortcut".
 /// </summary>
 internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardActionsSystem>, IClipboardActionsSystem
 {
     private readonly List<IReadOnlyList<PopupMenuItem>> _menus = [];
+    private (MessageWindow Window, Action Typed)? _typing;
 
     /// <summary>Whether Windows refuses the shortcut.</summary>
     public bool RefusesShortcut { get; set; }
@@ -120,6 +121,27 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
     public void AllowFront() => Record("allow front");
 
     public void GiveFrontBack(MessageWindow window, nint previous) => Record($"front back to {previous}");
+
+    public void WatchTyping(MessageWindow window, Action typed)
+    {
+        lock (Gate)
+        {
+            _typing = (window, typed);
+        }
+    }
+
+    /// <summary>A key pressed while the feature's window has the front, raised on its thread as Windows would.</summary>
+    public void Type()
+    {
+        (MessageWindow Window, Action Typed) typing;
+        lock (Gate)
+        {
+            typing = _typing ?? throw new InvalidOperationException("The feature's thread doesn't watch for keys yet.");
+        }
+
+        Record("type");
+        typing.Window.BeginInvoke(typing.Typed);
+    }
 
     public bool FileExists(string path) => true;
 

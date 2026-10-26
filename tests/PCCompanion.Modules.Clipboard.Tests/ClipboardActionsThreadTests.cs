@@ -89,6 +89,39 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         Assert.Equal(["register", "read", "menu at 10,20", "allow front", "front back to 7", "background"], _system.Events);
     }
 
+    // Such as a program without a window, which leaves the front with the feature's hidden window.
+    [Fact]
+    public void AKeyAfterAnActionThatTookNoFrontGivesTheFrontBack()
+    {
+        _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
+        _system.Choice = "Track the parcel";
+        var thread = Start(TrackParcels);
+        Press();
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("background")));
+
+        _system.Type();
+        _system.Type();
+        StopAndJoin(thread);
+
+        Assert.Equal(["register", "read", "menu at 10,20", "allow front", "background"], _system.Events.Take(5));
+        Assert.Single(_system.Events, happened => happened == "front back to 7");
+        Assert.Contains(_logger.Entries, entry => entry.Message.StartsWith("A key reached Clipboard Actions' window", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AKeyWithNoActionChosenGivesNothingBack()
+    {
+        _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
+        var thread = Start(TrackParcels);
+        Press();
+        Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
+
+        _system.Type();
+        StopAndJoin(thread);
+
+        Assert.Equal(["register", "read", "menu at 10,20", "type", "dispose shortcut"], _system.Events);
+    }
+
     [Fact]
     public void AnAppWhoseTextCursorRequestFailsGetsTheMenuAtThePointer()
     {
