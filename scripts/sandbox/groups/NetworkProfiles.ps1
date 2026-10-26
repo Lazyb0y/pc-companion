@@ -1,14 +1,16 @@
 ﻿# Network Profiles: turned on from Home, it starts with Original settings, made from Windows' proxy
 # settings. The page adds profiles, from scratch and from the current settings, and edits, moves and
-# deletes them in the profile editor, which refuses a bad proxy server, a script address that isn't
-# a web address and a name in use; Use switches Windows' settings, and In use follows a change made
-# elsewhere. The PC Companion icon's menu gets the Network profile submenu, with a radio mark on the
-# profile in use: choosing a profile switches Windows' settings, read back with InternetQueryOption,
-# other settings get a note, and Network Profiles settings opens the page, also in a settings app
-# that's open. Edge, already open, follows a switch, with two fake proxies on the loopback address.
-# Each Group Policy setting dims the profiles and leaves the settings as they are. Turned off, the
-# submenu is gone and the settings stay. The logs hold no profile names or proxy servers. Detailed
-# logging is on for the Debug entries. At the end, Windows' proxy settings are put back.
+# deletes them in the profile editor, which refuses a bad proxy server, which screen readers
+# announce, a script address that isn't a web address and a name in use, with keyboard focus staying
+# on the profile; Use switches Windows' settings, and In use follows a change made elsewhere, also
+# one saved in Windows' Proxy page. The PC Companion icon's menu gets the Network profile submenu,
+# with a radio mark on the profile in use: choosing a profile switches Windows' settings, read back
+# with InternetQueryOption, other settings get a note, and Network Profiles settings opens the page,
+# also in a settings app that's open. Edge, already open, follows a switch, with two fake proxies on
+# the loopback address. Each Group Policy setting dims the profiles and leaves the settings as they
+# are. Turned off, the submenu is gone and the settings stay. The logs hold no profile names or proxy
+# servers. Detailed logging is on for the Debug entries. At the end, Windows' proxy settings are put
+# back.
 Add-Type -TypeDefinition @'
 using System;
 using System.Collections.Generic;
