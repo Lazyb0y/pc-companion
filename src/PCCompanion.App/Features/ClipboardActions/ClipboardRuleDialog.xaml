@@ -67,10 +67,19 @@
                 Visibility="{x:Bind Editor.HasSampleResult, Mode=OneWay}" />
         </StackPanel>
 
-        <RadioButtons Header="{app:Localized Key=ClipboardActionsActionHeader}" SelectedIndex="{x:Bind Editor.ActionIndex, Mode=TwoWay}">
-            <RadioButton Content="{app:Localized Key=ClipboardActionsActionOpenAddress}" />
-            <RadioButton Content="{app:Localized Key=ClipboardActionsActionRunProgram}" />
-        </RadioButtons>
+        <StackPanel Spacing="4">
+            <RadioButtons Header="{app:Localized Key=ClipboardActionsActionHeader}" SelectedIndex="{x:Bind Editor.ActionIndex, Mode=TwoWay}">
+                <RadioButton Content="{app:Localized Key=ClipboardActionsActionOpenAddress}" />
+                <RadioButton Content="{app:Localized Key=ClipboardActionsActionRunProgram}" />
+            </RadioButtons>
+            <!-- A rule from a newer version has neither action chosen, and keeps its own until one is. -->
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ClipboardActionsUnknownAction}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.IsUnknownAction, Mode=OneWay}" />
+        </StackPanel>
 
         <StackPanel Spacing="4" Visibility="{x:Bind Editor.IsOpenAddress, Mode=OneWay}">
             <TextBox
