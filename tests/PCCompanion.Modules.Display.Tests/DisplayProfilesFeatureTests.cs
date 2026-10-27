@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Display.DisplayProfiles;
@@ -21,6 +23,7 @@ public sealed class DisplayProfilesFeatureTests : IDisposable
     private static readonly string Settings = $"{DisplayProfilesMenu.SettingsItem} {Strings.DisplayProfilesMenuSettings}";
     private static readonly string[] Names = ["Desk", "Small", "Laptop", "DELL", "SAMSUNG"];
 
+    private readonly string _pipeName = "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
     private readonly FakeDisplayProfilesSystem _system = new();
     private readonly FakeHostCommands _commands = new();
     private readonly RecordingLogger<DisplayProfilesFeature> _logger = new();
@@ -48,7 +51,7 @@ public sealed class DisplayProfilesFeatureTests : IDisposable
             Name = "Laptop",
             Displays = [_desk.Displays[0], _desk.Displays[1] with { Model = "BOE0A1E", Connection = Connected(3, "BOE0A1E").DevicePath, BuiltIn = true }],
         };
-        _feature = new DisplayProfilesFeature(_system, _commands, _logger);
+        _feature = new DisplayProfilesFeature(_system, _pipeName, _commands, _logger);
     }
 
     public void Dispose() => _feature.Dispose();
@@ -326,12 +329,96 @@ public sealed class DisplayProfilesFeatureTests : IDisposable
         Assert.DoesNotContain(_logger.Entries, entry => Names.Any(name => entry.Message.Contains(name, StringComparison.Ordinal)));
     }
 
+    [Fact]
+    public async Task UseOnThePageSwitchesThroughTheHostAndAsks()
+    {
+        StartWith(_desk, _small);
+
+        var answer = await AskThroughThePipe(2, _small);
+
+        Assert.Equal(DisplayProfilesAnswerStatus.Asking, answer?.Status);
+        Assert.True(Assert.Single(_system.Questions).IsOpen);
+        Assert.Equal(1680, _system.Displays.Current[1].Area.Width);
+        Assert.Contains((LogLevel.Debug, "Display profile 2 was chosen on the page."), _logger.Entries);
+    }
+
+    [Fact]
+    public async Task UseOnThePageSaysWhichDisplayDoesntOfferTheMode()
+    {
+        var odd = _desk with { Name = "Odd", Displays = [_desk.Displays[0], _desk.Displays[1] with { Width = 1234, Height = 567 }] };
+        StartWith(_desk, odd);
+
+        var answer = await AskThroughThePipe(2, odd);
+
+        Assert.Equal(DisplayProfilesAnswerStatus.Refused, answer?.Status);
+        Assert.Equal(1610, answer?.ErrorCode);
+        Assert.Equal([1], answer?.ModesNotOffered);
+    }
+
+    [Fact]
+    public async Task OnlyAProfileTheHostHasUnchangedIsApplied()
+    {
+        StartWith(_desk, _small);
+
+        var changed = await AskThroughThePipe(2, _small with { Name = "Smaller" }, runsInBackground: false);
+        var elsewhere = await AskThroughThePipe(1, _small, runsInBackground: false);
+
+        Assert.Equal(DisplayProfilesAnswerStatus.UnknownProfile, changed?.Status);
+        Assert.Equal(DisplayProfilesAnswerStatus.UnknownProfile, elsewhere?.Status);
+        Assert.Equal(_original, _system.Displays.Current);
+    }
+
+    [Fact]
+    public async Task ARequestThatIsntOneChangesNothing()
+    {
+        StartWith(_desk, _small);
+
+        var answer = await RequestPipe.AskAsync(_pipeName, "{\"number\":\"two\"}"u8.ToArray(), TimeSpan.FromSeconds(5), DisplayProfilesPipe.MaximumAnswerLength, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(answer);
+        Assert.Contains("UnknownProfile", Encoding.UTF8.GetString(answer), StringComparison.Ordinal);
+        Assert.Equal(_original, _system.Displays.Current);
+    }
+
+    [Fact]
+    public async Task InARemoteSessionThePageCantSwitch()
+    {
+        _system.IsRemoteSession = true;
+        StartWith(_desk, _small);
+
+        var answer = await AskThroughThePipe(2, _small, runsInBackground: false);
+
+        Assert.Equal(DisplayProfilesAnswerStatus.RemoteSession, answer?.Status);
+    }
+
+    [Fact]
+    public async Task WhileTheFeatureIsOffThePipeIsGone()
+    {
+        StartWith(_desk, _small);
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.Null(await DisplayProfilesPipe.AskAsync(_pipeName, new DisplayProfilesRequest { Number = 2, Profile = _small }, TimeSpan.FromMilliseconds(300), TestContext.Current.CancellationToken));
+    }
+
     private static JsonElement On(params DisplayProfile[] profiles) => new DisplayProfilesSettings { Enabled = true, Profiles = profiles }.Write();
 
     private void StartWith(params DisplayProfile[] profiles)
     {
         _feature.Apply(On(profiles));
         _system.RunBackground();
+    }
+
+    // Asks the host through its pipe, as the page's Use does, and lets the switch run.
+    private async Task<DisplayProfilesAnswer?> AskThroughThePipe(int number, DisplayProfile profile, bool runsInBackground = true)
+    {
+        var asking = DisplayProfilesPipe.AskAsync(_pipeName, new DisplayProfilesRequest { Number = number, Profile = profile }, TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+        if (runsInBackground)
+        {
+            Assert.True(_system.WaitForBackground());
+            _system.RunBackground();
+        }
+
+        return await asking;
     }
 
     // Chooses a profile as the menu shows it, and lets the switch run.
