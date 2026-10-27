@@ -40,6 +40,9 @@ public interface IFolderRulesSystem
     /// <summary>Copies a file without replacing one. Returns 0, or Windows' error code.</summary>
     int Copy(string source, string destination, CancellationToken cancel);
 
+    /// <summary>Starts the Recycle Bin's own thread, which moves files there.</summary>
+    IRecycleBin CreateRecycleBin();
+
     /// <summary>
     /// Watches the files directly in a folder until disposed. <paramref name="changed"/> gets the
     /// path of each file that's created, changed or renamed to, and <paramref name="failed"/> is
