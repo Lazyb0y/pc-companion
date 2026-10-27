@@ -4,13 +4,12 @@ using System.Linq;
 using PCCompanion.Modules.Display.DisplayProfiles;
 using PCCompanion.Platform.Windows;
 using Xunit;
+using static PCCompanion.Modules.Display.Tests.TestDisplays;
 
 namespace PCCompanion.Modules.Display.Tests;
 
 public sealed class ProfileRecognitionTests
 {
-    private static readonly DisplayRefreshRate Rate60 = new(60000, 1000);
-
     [Fact]
     public void ASerialNumberIsKeptOnlyAsAHash()
     {
@@ -258,21 +257,6 @@ public sealed class ProfileRecognitionTests
         side = Connected(2, "SAM7088", DisplayConnection.Hdmi, "SAMSUNG");
         return Current([main, side], [Path(main, 0, 0, 0, hdr: DisplayHdr.Off), Path(side, 1, 1920, 0, hdr: DisplayHdr.Off)]);
     }
-
-    private static CurrentSetup Current(IReadOnlyList<ConnectedDisplay> displays, IReadOnlyList<DisplayPath> paths, params (ConnectedDisplay Display, string Serial)[] serials) =>
-        new(new DisplaySetup(displays, paths), serials.ToDictionary(pair => pair.Display.DevicePath, pair => pair.Serial));
-
-    private static ConnectedDisplay Connected(uint target, string model = "DELA0A3", DisplayConnection connection = DisplayConnection.DisplayPort, string name = "DELL U2720Q") =>
-        new(
-            new DisplayTarget(1, target),
-            $@"\\?\DISPLAY#{(model.Length > 0 ? model : "Default_Monitor")}#5&1f2e3d4c&0&UID{target}#{{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}}",
-            model,
-            name,
-            connection,
-            [new DisplaySource(1, 0), new DisplaySource(1, 1), new DisplaySource(1, 2)]);
-
-    private static DisplayPath Path(ConnectedDisplay display, uint source, int x, int y, Size? area = null, DisplayOrientation orientation = DisplayOrientation.Landscape, DisplayHdr hdr = DisplayHdr.NotSupported) =>
-        new(new DisplaySource(1, source), display.Target, new Rectangle(new Point(x, y), area ?? new Size(1920, 1080)), Rate60, orientation, hdr);
 
     private static ProfileDisplay Wanted(string model, string serial, string connection) => new()
     {

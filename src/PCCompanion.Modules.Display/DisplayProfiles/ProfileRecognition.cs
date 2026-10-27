@@ -102,17 +102,26 @@ public static class ProfileRecognition
         ArgumentNullException.ThrowIfNull(current);
 
         var recognition = Recognize(profile, current);
-        if (!recognition.CanBeUsed)
-        {
-            return false;
-        }
+        return recognition.CanBeUsed
+            && profile.Displays.Count(display => display.On) == current.Setup.Paths.Count
+            && DisplaysNotAsInProfile(profile, current, recognition).Count == 0;
+    }
 
-        var on = profile.Displays
-            .Select((display, i) => (Wanted: display, Display: recognition.Displays[i]!))
-            .Where(pair => pair.Wanted.On)
-            .ToList();
-        return on.Count == current.Setup.Paths.Count
-            && on.All(pair => current.PathOf(pair.Display) is { } path && Matches(pair.Wanted, path));
+    /// <summary>
+    /// The displays that are on in a profile but aren't as the profile has them: not connected,
+    /// off, or in another place or mode. After a switch, these are the ones Windows applied in its
+    /// own way.
+    /// </summary>
+    /// <returns>Their places in the profile's list.</returns>
+    public static IReadOnlyList<int> DisplaysNotAsInProfile(DisplayProfile profile, CurrentSetup current, Recognition recognition)
+    {
+        ArgumentNullException.ThrowIfNull(profile);
+        ArgumentNullException.ThrowIfNull(current);
+        ArgumentNullException.ThrowIfNull(recognition);
+
+        return [.. Enumerable.Range(0, profile.Displays.Count).Where(i =>
+            profile.Displays[i].On
+            && !(recognition.Displays[i] is { } display && current.PathOf(display) is { } path && Matches(profile.Displays[i], path)))];
     }
 
     private static bool Matches(ProfileDisplay wanted, DisplayPath path) =>
