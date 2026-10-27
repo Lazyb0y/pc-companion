@@ -27,6 +27,32 @@ public static class OpenDialog
         ArgumentException.ThrowIfNullOrEmpty(filterName);
         ArgumentException.ThrowIfNullOrEmpty(filterPattern);
 
+        return Pick(owner, title, FILEOPENDIALOGOPTIONS.FOS_FILEMUSTEXIST, dialog =>
+        {
+            fixed (char* name = filterName)
+            fixed (char* pattern = filterPattern)
+            {
+                var fileType = new COMDLG_FILTERSPEC { pszName = name, pszSpec = pattern };
+                dialog.SetFileTypes(1, &fileType);
+            }
+        });
+    }
+
+    /// <summary>
+    /// Shows the dialog for one folder on the PC or the network and returns its full path, or
+    /// <see langword="null"/> when the user cancels. Call it on the thread of
+    /// <paramref name="owner"/>; it returns when the dialog closes.
+    /// </summary>
+    public static string? PickFolder(nint owner, string title)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(title);
+
+        return Pick(owner, title, FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS | FILEOPENDIALOGOPTIONS.FOS_PATHMUSTEXIST, _ => { });
+    }
+
+    // Only places with a file system path can be chosen, such as no library or phone.
+    private static unsafe string? Pick(nint owner, string title, FILEOPENDIALOGOPTIONS chosen, Action<IFileOpenDialog> configure)
+    {
         var dialog = (IFileOpenDialog)new FileOpenDialog();
         try
         {
@@ -35,16 +61,11 @@ public static class OpenDialog
                 dialog.SetTitle(text);
             }
 
-            fixed (char* name = filterName)
-            fixed (char* pattern = filterPattern)
-            {
-                var fileType = new COMDLG_FILTERSPEC { pszName = name, pszSpec = pattern };
-                dialog.SetFileTypes(1, &fileType);
-            }
+            configure(dialog);
 
             FILEOPENDIALOGOPTIONS options;
             dialog.GetOptions(&options);
-            dialog.SetOptions(options | FILEOPENDIALOGOPTIONS.FOS_FILEMUSTEXIST | FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM | FILEOPENDIALOGOPTIONS.FOS_NOCHANGEDIR);
+            dialog.SetOptions(options | chosen | FILEOPENDIALOGOPTIONS.FOS_FORCEFILESYSTEM | FILEOPENDIALOGOPTIONS.FOS_NOCHANGEDIR);
 
             try
             {

@@ -1308,4 +1308,264 @@
     <value>Use {0} caracteres como máximo.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>Archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>Reglas de carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>Mueva, copie, cambie el nombre u ordene los archivos a medida que llegan a una carpeta, como Descargas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>Carpetas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>Cuando un archivo llega a una de estas carpetas, se le aplica la primera regla de la carpeta que coincida con él. Los archivos que ya están allí no cambian.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>Agregar carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>Descargas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>Escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>Imágenes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>Examinar…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>Elija una carpeta para supervisar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>Aún no hay carpetas. Agregue una carpeta, como Descargas, y luego reglas para ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>Supervisar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>Quitar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>¿Quitar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>También se quitan sus reglas. Los archivos que contiene no cambian.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>No se encuentra esta carpeta. Sus reglas vuelven a funcionar cuando regrese.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>Los programas guardan aquí sus propios archivos. Mover uno puede hacer que un programa deje de funcionar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>Esta ruta tiene caracteres que Windows no permite en una ruta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>Use una ruta completa, como D:\Downloads o \\server\share\Scans.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>Las reglas no pueden cambiar archivos de la carpeta de Windows, que solo pueden cambiar los administradores.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>Las reglas no pueden cambiar archivos de Archivos de programa, que solo pueden cambiar los administradores.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>Las reglas no pueden cambiar archivos de la carpeta de datos de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>Esta carpeta no tiene ruta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>Las reglas no pueden cambiar archivos en carpetas ocultas del sistema, como las propias carpetas de la Papelera de reciclaje, que solo usa Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>Esta carpeta ya está en la lista.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>Reglas de carpeta solo supervisa las primeras {0} carpetas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>Reglas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>En orden: se aplica la primera regla que coincida con un archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>Aún no hay reglas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>Usar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>Subir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>Bajar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>Eliminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>¿Eliminar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>Mueve a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>Copia a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>Cambia el nombre a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>Mueve a la Papelera de reciclaje</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>No se usa. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>Reglas de carpeta solo usa las primeras {0} reglas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>No tiene nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>Su nombre tiene más de 60 caracteres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>Su nombre tiene un salto de línea u otro carácter de control.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>No tiene ninguna condición, así que se aplicaría a todos los archivos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>Un patrón de nombre está vacío o tiene caracteres que un nombre de archivo no puede tener.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>Una extensión está vacía, tiene un punto en medio o tiene caracteres que un nombre de archivo no puede tener.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>Un tamaño debe ser un número entero de 1 a 1.000.000.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>Ningún archivo es a la vez mayor y menor que estos tamaños.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>Los días deben estar entre 0 y 36.500 y, para «menos de», ser al menos 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>La fecha de ningún archivo está en este intervalo de días.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>Un patrón de sitio está vacío o no es el nombre de un sitio, como *.example.com.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>Es de una versión más reciente de PC Companion, con una acción que esta versión no conoce.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>No tiene destino.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>No se puede usar su destino. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>Mueve o copia archivos a su propia carpeta, lo que hace Cambiar nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>Una parte entre llaves no es {name}, {extension}, {year}, {month}, {day} ni {date}, o una llave no está cerrada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>No tiene nombre nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>Su nombre nuevo tiene una parte desconocida o un carácter que un nombre de archivo no puede tener, o es un nombre que Windows reserva para sí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>Es de una versión más reciente de PC Companion, con una opción para nombres en uso que esta versión no conoce.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>Mientras PC Companion se ejecuta como administrador tras un aviso de UAC, Reglas de carpeta está en pausa: nunca cambia archivos con derechos de administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>Lee los nombres, tamaños, fechas y atributos de los archivos de las carpetas que elija y, para Descargado de, el sitio de la marca de la Web de un archivo. Mueve, copia, cambia el nombre y mueve a la Papelera de reciclaje solo los archivos con los que coinciden sus reglas, y nunca los abre ni los ejecuta. El historial de lo que hicieron las reglas, con los nombres de archivo, se conserva en este equipo durante 30 días.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -1308,4 +1308,264 @@
     <value>Verwenden Sie höchstens {0} Zeichen.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>Dateien</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>Ordnerregeln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>Verschieben, kopieren, umbenennen oder sortieren Sie Dateien, sobald sie in einem Ordner wie „Downloads“ ankommen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>Ordner</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>Kommt eine Datei in einem dieser Ordner an, wendet die erste passende Regel des Ordners ihre Aktion an. Die Dateien, die schon dort sind, bleiben unverändert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>Ordner hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>Downloads</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>Desktop</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>Dokumente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>Bilder</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>Durchsuchen…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>Zu überwachenden Ordner auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>Noch keine Ordner. Fügen Sie einen Ordner wie „Downloads“ hinzu und dann Regeln dafür.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>{0} überwachen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>Weitere Optionen für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>Entfernen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>{0} entfernen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>Seine Regeln werden ebenfalls entfernt. Die Dateien darin bleiben unverändert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>Dieser Ordner wurde nicht gefunden. Seine Regeln gelten wieder, sobald er zurück ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>Programme speichern hier ihre eigenen Dateien. Wird eine davon verschoben, funktioniert ein Programm möglicherweise nicht mehr.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>Dieser Pfad enthält Zeichen, die Windows in Pfaden nicht zulässt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>Verwenden Sie einen vollständigen Pfad wie D:\Downloads oder \\server\share\Scans.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>Regeln können keine Dateien im Windows-Ordner ändern, den nur Administratoren ändern können.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>Regeln können keine Dateien unter „Programme“ ändern, die nur Administratoren ändern können.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>Regeln können keine Dateien im eigenen Datenordner von PC Companion ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>Für diesen Ordner ist kein Pfad angegeben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>Regeln können keine Dateien in ausgeblendeten Systemordnern ändern, etwa in den Ordnern des Papierkorbs selbst, die nur Windows verwendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>Dieser Ordner ist bereits in der Liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>Ordnerregeln überwacht nur die ersten {0} Ordner.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>Regeln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>Der Reihe nach: Die erste Regel, die zu einer Datei passt, wird angewendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>Noch keine Regeln.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>{0} verwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>Löschen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>{0} löschen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>Verschiebt nach {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>Kopiert nach {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>Benennt um in {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>Verschiebt in den Papierkorb</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>Nicht verwendet. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>Ordnerregeln verwendet nur die ersten {0} Regeln.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>Sie hat keinen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>Ihr Name ist länger als 60 Zeichen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>Ihr Name enthält einen Zeilenumbruch oder ein anderes Steuerzeichen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>Sie hat keine Bedingung und würde daher auf jede Datei angewendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>Ein Namensmuster ist leer oder enthält Zeichen, die ein Dateiname nicht haben kann.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>Eine Erweiterung ist leer, enthält einen Punkt oder Zeichen, die ein Dateiname nicht haben kann.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>Eine Größe muss eine ganze Zahl von 1 bis 1.000.000 sein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>Keine Datei ist zugleich größer und kleiner als diese Größen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>Die Tage müssen zwischen 0 und 36.500 liegen, bei „weniger als“ mindestens 1.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>Das Datum keiner Datei liegt in diesem Bereich.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>Ein Websitemuster ist leer oder kein Websitename wie *.example.com.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>Sie stammt aus einer neueren Version von PC Companion, mit einer Aktion, die diese Version nicht kennt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>Sie hat kein Ziel.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>Ihr Ziel kann nicht verwendet werden. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>Sie verschiebt oder kopiert Dateien in ihren eigenen Ordner; dafür gibt es „Umbenennen“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>Ein Teil in geschweiften Klammern ist nicht {name}, {extension}, {year}, {month}, {day} oder {date}, oder eine Klammer ist nicht geschlossen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>Sie hat keinen neuen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>Ihr neuer Name enthält einen unbekannten Teil oder ein Zeichen, das ein Dateiname nicht haben kann, oder ist ein Name, den Windows für sich reserviert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>Sie stammt aus einer neueren Version von PC Companion, mit einer Option für vergebene Namen, die diese Version nicht kennt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>Während PC Companion nach einer UAC-Abfrage als Administrator ausgeführt wird, ist Ordnerregeln angehalten: Es ändert nie Dateien mit Administratorrechten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>Liest die Namen, Größen, Daten und Attribute der Dateien in den von Ihnen gewählten Ordnern und für „Heruntergeladen von“ die Website im Web-Kennzeichen einer Datei. Verschiebt, kopiert, benennt um und verschiebt in den Papierkorb nur die Dateien, auf die Ihre Regeln passen, und öffnet oder startet sie nie. Der Verlauf dessen, was die Regeln getan haben, mit Dateinamen, bleibt 30 Tage auf diesem PC.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

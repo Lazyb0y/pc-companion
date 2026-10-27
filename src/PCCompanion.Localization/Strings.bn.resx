@@ -1308,4 +1308,264 @@
     <value>{0}টি বা তার কম অক্ষর ব্যবহার করুন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>ফোল্ডারের নিয়ম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>কোনো ফোল্ডারে, যেমন ডাউনলোডসমূহে, ফাইল আসার সাথে সাথে সেগুলো সরান, কপি করুন, নাম বদলান বা সাজান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>এই ফোল্ডারগুলোর কোনোটিতে কোনো ফাইল এলে, ফোল্ডারের নিয়মগুলোর মধ্যে প্রথম যেটি ফাইলটির সাথে মেলে সেটি তার ওপর কাজ করে। আগে থেকে থাকা ফাইলগুলো যেমন আছে তেমনই থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>ফোল্ডার যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>ডাউনলোডসমূহ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>ডেস্কটপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>নথিপত্র</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>নজর রাখার জন্য একটি ফোল্ডার বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>এখনো কোনো ফোল্ডার নেই। একটি ফোল্ডার, যেমন ডাউনলোডসমূহ, যোগ করুন, তারপর তার জন্য নিয়ম যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>{0}-এ নজর রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>{0}-এর জন্য আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>{0} সরিয়ে দেবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>এর নিয়মগুলোও সরানো হবে। এর ভেতরের ফাইলগুলো যেমন আছে তেমনই থাকবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>এই ফোল্ডারটি খুঁজে পাওয়া যাচ্ছে না। এটি ফিরে এলে এর নিয়মগুলো আবার চালু হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>প্রোগ্রামগুলো এখানে নিজেদের ফাইল রাখে। এগুলোর কোনোটি সরালে কোনো প্রোগ্রাম কাজ করা বন্ধ করে দিতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>এই পাথে এমন অক্ষর আছে যা Windows পাথে অনুমতি দেয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>পূর্ণ পাথ ব্যবহার করুন, যেমন D:\Downloads বা \\server\share\Scans।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>নিয়মগুলো Windows ফোল্ডারের ফাইল বদলাতে পারে না, যা শুধু প্রশাসকেরা বদলাতে পারেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>নিয়মগুলো Program Files-এর ফাইল বদলাতে পারে না, যা শুধু প্রশাসকেরা বদলাতে পারেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>নিয়মগুলো PC Companion-এর নিজের ডেটা ফোল্ডারের ফাইল বদলাতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>এই ফোল্ডারের কোনো পাথ নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>নিয়মগুলো লুকানো সিস্টেম ফোল্ডারের ফাইল পরিবর্তন করতে পারে না, যেমন রিসাইকেল বিনের নিজস্ব ফোল্ডার, যেগুলো শুধু Windows ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>এই ফোল্ডারটি আগে থেকেই তালিকায় আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>ফোল্ডারের নিয়ম শুধু প্রথম {0}টি ফোল্ডারে নজর রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>নিয়ম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>ক্রম অনুসারে: যে নিয়ম প্রথম কোনো ফাইলের সাথে মেলে, সেটি তার ওপর কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>এখনো কোনো নিয়ম নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>{0} ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>উপরে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>নিচে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>{0} মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>{0}-এ সরায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>{0}-এ কপি করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>নাম বদলে {0} করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>রিসাইকেল বিনে সরায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>ব্যবহার হচ্ছে না। {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>ফোল্ডারের নিয়ম শুধু প্রথম {0}টি নিয়ম ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>এর কোনো নাম নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>এর নাম ৬০ অক্ষরের চেয়ে লম্বা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>এর নামে লাইন ব্রেক বা অন্য কোনো কন্ট্রোল অক্ষর আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>এর কোনো শর্ত নেই, তাই এটি প্রতিটি ফাইলের ওপর কাজ করত।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>কোনো নামের প্যাটার্ন খালি, বা তাতে এমন অক্ষর আছে যা ফাইলের নামে থাকতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>কোনো এক্সটেনশন খালি, তার ভেতরে ডট আছে, বা তাতে এমন অক্ষর আছে যা ফাইলের নামে থাকতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>আকার ১ থেকে ১০,০০,০০০ পর্যন্ত একটি পূর্ণ সংখ্যা হতে হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>কোনো ফাইলই একসাথে এই আকারগুলোর চেয়ে বড় এবং ছোট হতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>দিনের সংখ্যা ০ থেকে ৩৬,৫০০ পর্যন্ত হতে হবে, আর «এর কম»-এর জন্য অন্তত ১।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>কোনো ফাইলের তারিখ দিনের এই সীমার মধ্যে পড়ে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>কোনো সাইটের প্যাটার্ন খালি, বা সেটি কোনো সাইটের নাম নয়, যেমন *.example.com।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>এটি PC Companion-এর নতুন সংস্করণের, এমন একটি কাজসহ যা এই সংস্করণ চেনে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>এর কোনো গন্তব্য নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>এর গন্তব্য ব্যবহার করা যাবে না। {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>এটি ফাইলগুলোকে তাদের নিজের ফোল্ডারেই সরায় বা কপি করে, যা নাম বদল করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>বন্ধনীর ভেতরের কোনো অংশ {name}, {extension}, {year}, {month}, {day} বা {date}-এর কোনোটি নয়, অথবা কোনো বন্ধনী বন্ধ হয়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>এর কোনো নতুন নাম নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>এর নতুন নামে অজানা কোনো অংশ বা এমন অক্ষর আছে যা ফাইলের নামে থাকতে পারে না, অথবা এটি এমন নাম যা Windows নিজের জন্য রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>এটি PC Companion-এর নতুন সংস্করণের, ব্যবহৃত নামের জন্য এমন একটি পছন্দসহ যা এই সংস্করণ চেনে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>UAC প্রম্পটের পরে PC Companion প্রশাসক হিসেবে চলার সময় ফোল্ডারের নিয়ম বিরতিতে থাকে: এটি কখনো প্রশাসকের অধিকার নিয়ে ফাইল বদলায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>আপনার বেছে নেওয়া ফোল্ডারগুলোর ফাইলের নাম, আকার, তারিখ ও অ্যাট্রিবিউট পড়ে, আর «যেখান থেকে ডাউনলোড হয়েছে»-এর জন্য ফাইলের Mark of the Web-এ থাকা সাইট পড়ে। শুধু আপনার নিয়মের সাথে মেলা ফাইলগুলো সরায়, কপি করে, নাম বদলায় ও রিসাইকেল বিনে সরায়, এবং কখনো সেগুলো খোলে বা চালায় না। নিয়মগুলো কী করেছে তার ইতিহাস, ফাইলের নামসহ, ৩০ দিন এই পিসিতে থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -19,7 +19,9 @@
 # file that was there before and moves it when chosen, and Undo puts it back, where it stays. The
 # pipe refuses a file outside the folder and a request it doesn't know, and clears the history. The
 # logs hold no file names or folders. Turned off, the folder isn't watched and the host serves no
-# pipe. Detailed logging is on for the Debug entries.
+# pipe. The page lists the folders and their rules, says why the hidden system folder can't be used,
+# and saves Add folder, the switches, moving and deleting a rule and removing a folder, with focus
+# staying near what changed. Detailed logging is on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -453,6 +455,70 @@ Test-Check 'turned off, the host serves no pipe' ($null -eq (Invoke-FolderRulesP
 $hostLog = Get-HostLog
 Test-Check 'the logs hold no file names or folders' (($hostLog -notmatch 'report') -and ($hostLog -notmatch 'photo') -and ($hostLog -notmatch 'FolderRulesTest') -and ($hostLog -notmatch 'note\.txt'))
 Test-Check 'the host logged the move by number' ($hostLog -match 'Folder Rules folder 1, rule 1: "?Moved"?\.')
+
+# The page lists the folders and their rules, with what each rule does and why a folder can't be
+# used. Add folder, the switches, moving and deleting a rule and removing a folder save at once,
+# and keyboard focus stays near what changed, though the list is built again.
+function Get-FolderRulesSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.folderRules }
+function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
+
+# A menu item of the settings app, by its name: a folder in the list can have the same name. The
+# condition's name isn't $condition, which in Wait-Until's script block would be Wait-Until's own.
+function Invoke-AppMenuItem([string] $Name) {
+    $menuItem = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::MenuItem)))
+    $script:item = $null
+    if (-not (Wait-Until { ($script:item = (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $menuItem)) -ne $null } 5)) { return $false }
+    $script:item.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Folder Rules' (Show-Page 'Folder Rules')
+Start-Sleep -Seconds 2
+$text = Get-WindowText
+Test-Check 'the page lists the folders and their rules' (
+    ($text -contains 'Inbox') -and ($text -contains 'Downloads') -and ($text -contains '\\localhost\FolderRulesShare') -and ($text -contains 'PDFs') -and
+    ($text -contains "Moves to $sorted\{extension}") -and ($text -contains "Copies to $pictures") -and ($text -contains 'Renames to {date} {name}') -and
+    ($text -contains 'Moves to the Recycle Bin') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'with UAC off, the page doesn''t say Folder Rules is paused' ($text -notcontains 'While PC Companion runs as administrator after a UAC prompt, Folder Rules is paused: it never changes files with administrator rights.')
+Test-Check 'the hidden system folder says it can''t be used' (Wait-Until { Find-AppText "Rules can't change files in hidden system folders, such as the Recycle Bin's own folders, which only Windows uses." } 5)
+Save-Screenshot '15a-folder-rules-page'
+
+$desktop = [Environment]::GetFolderPath('DesktopDirectory')
+Test-Check 'Add folder offers Downloads, which is in the list already' ((Invoke-AppElement 'Add folder') -and (Invoke-AppMenuItem 'Downloads') -and (Wait-Until { Find-AppText 'This folder is already in the list.' } 5))
+Test-Check 'and adds Desktop' ((Invoke-AppElement 'Add folder') -and (Invoke-AppMenuItem 'Desktop') -and (Wait-Until { (@((Get-FolderRulesSettings).folders) | Select-Object -Last 1).path -eq $desktop } 5)) ((Get-FolderRulesSettings).folders.path -join ', ')
+Test-Check 'Desktop shows, without rules' ((Wait-Until { Find-AppText 'Desktop' } 5) -and (Find-AppText 'No rules yet.'))
+Test-Check 'a folder''s switch turns it off' ((Set-Toggle 'Watch Desktop' $false) -and (Wait-Until { (@((Get-FolderRulesSettings).folders) | Select-Object -Last 1).enabled -eq $false } 5))
+Test-Check 'a rule''s switch turns it off' ((Set-Toggle 'Use PDFs' $false) -and (Wait-Until { @((Get-FolderRulesSettings).folders)[0].rules[0].enabled -eq $false } 5))
+[void] (Set-Toggle 'Use PDFs' $true)
+
+Test-Check 'More options opens the rule''s menu' (Invoke-AppElement 'More options for Pictures')
+Start-Sleep -Seconds 1
+Test-Check 'Move down moves the rule' (Invoke-AppMenuItem 'Move down')
+$order = { (@((Get-FolderRulesSettings).folders)[0].rules | ForEach-Object { $_.name }) -join ', ' }
+Test-Check 'the page saves the new order' (Wait-Until { (& $order) -eq 'PDFs, Notes, Pictures, Logs, To the card' } 5) (& $order)
+Test-Check 'focus stays on the rule that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for Pictures' } 3) (Get-FocusedName)
+
+[void] (Invoke-AppElement 'More options for Notes')
+Start-Sleep -Seconds 1
+Test-Check 'Delete asks first' ((Invoke-AppMenuItem 'Delete') -and (Wait-Until { Find-AppElement 'Delete Notes?' } 5))
+Start-Sleep -Seconds 1
+[void] (Invoke-AppElement 'Delete')
+Test-Check 'the page deletes the rule' (Wait-Until { (& $order) -eq 'PDFs, Pictures, Logs, To the card' } 5) (& $order)
+Test-Check 'focus goes to the rule''s folder' (Wait-Until { (Get-FocusedName) -eq 'More options for Inbox' } 3) (Get-FocusedName)
+
+[void] (Invoke-AppElement 'More options for Desktop')
+Start-Sleep -Seconds 1
+Test-Check 'Remove asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until { Find-AppElement 'Remove Desktop?' } 5))
+Start-Sleep -Seconds 1
+[void] (Invoke-AppElement 'Remove')
+Test-Check 'the page removes the folder' (Wait-Until { @((Get-FolderRulesSettings).folders).Count -eq 4 } 5) ((Get-FolderRulesSettings).folders.path -join ', ')
+Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-FocusedName) -eq 'More options for Windows only' } 3) (Get-FocusedName)
+Save-Screenshot '15b-folder-rules-page-changed'
 
 Stop-All
 Remove-SmbShare -Name FolderRulesShare -Force -ErrorAction SilentlyContinue

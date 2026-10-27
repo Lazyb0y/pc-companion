@@ -57,6 +57,17 @@ public static class Elevation
     }
 
     /// <summary>
+    /// Whether the process with ID <paramref name="processId"/> got admin rights through UAC, as
+    /// <see cref="IsUacElevated"/> says of this one, or <see langword="null"/> when that can't be
+    /// read. Processes of the same user can read it without admin rights.
+    /// </summary>
+    public static bool? IsProcessUacElevated(uint processId)
+    {
+        using var process = PInvoke.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
+        return process.IsInvalid ? null : ElevationTypeOf(process) is { } type ? type == TOKEN_ELEVATION_TYPE.TokenElevationTypeFull : null;
+    }
+
+    /// <summary>
     /// Whether the process with ID <paramref name="processId"/> runs at this process's integrity
     /// level: both without admin rights, or both as administrator. It's false for a process in an
     /// AppContainer, such as a Store app, and when the level can't be read.
@@ -94,22 +105,21 @@ public static class Elevation
         }
     }
 
-    private static unsafe TOKEN_ELEVATION_TYPE? ElevationType
-    {
-        get
-        {
-            if (!PInvoke.OpenProcessToken(PInvoke.GetCurrentProcess_SafeHandle(), TOKEN_ACCESS_MASK.TOKEN_QUERY, out var token))
-            {
-                return null;
-            }
+    private static TOKEN_ELEVATION_TYPE? ElevationType => ElevationTypeOf(PInvoke.GetCurrentProcess_SafeHandle());
 
-            using (token)
-            {
-                TOKEN_ELEVATION_TYPE type;
-                return PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenElevationType, &type, (uint)sizeof(TOKEN_ELEVATION_TYPE), out _)
-                    ? type
-                    : null;
-            }
+    private static unsafe TOKEN_ELEVATION_TYPE? ElevationTypeOf(SafeHandle process)
+    {
+        if (!PInvoke.OpenProcessToken(process, TOKEN_ACCESS_MASK.TOKEN_QUERY, out var token))
+        {
+            return null;
+        }
+
+        using (token)
+        {
+            TOKEN_ELEVATION_TYPE type;
+            return PInvoke.GetTokenInformation(token, TOKEN_INFORMATION_CLASS.TokenElevationType, &type, (uint)sizeof(TOKEN_ELEVATION_TYPE), out _)
+                ? type
+                : null;
         }
     }
 

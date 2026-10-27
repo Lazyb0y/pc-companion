@@ -12,6 +12,7 @@ using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.ClipboardActions;
+using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
@@ -172,6 +173,7 @@ public partial class App : Application
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()
+            .AddTransient<FolderRulesViewModel>()
             .BuildServiceProvider();
     }
 

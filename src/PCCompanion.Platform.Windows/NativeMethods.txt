@@ -259,6 +259,8 @@ SHCreateItemFromParsingName
 IShellItemImageFactory
 SIIGBF
 FOLDERID_AppsFolder
+FOLDERID_Downloads
+SHGetKnownFolderPath
 GetDIBits
 GetObject
 BITMAP

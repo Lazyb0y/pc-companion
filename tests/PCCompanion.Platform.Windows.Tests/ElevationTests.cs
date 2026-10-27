@@ -35,11 +35,18 @@ public sealed class ElevationTests
         Assert.Equal(Elevation.IsElevated, Elevation.IsProcessElevated((uint)Environment.ProcessId));
     }
 
+    [Fact]
+    public void WhetherAProcessWasElevatedThroughUacIsReadFromItsToken()
+    {
+        Assert.Equal(Elevation.IsUacElevated, Elevation.IsProcessUacElevated((uint)Environment.ProcessId));
+    }
+
     // Windows lets no program open the System Idle Process, whose ID is 0.
     [Fact]
     public void AProcessThatCantBeOpenedHasNoKnownElevation()
     {
         Assert.Null(Elevation.IsProcessElevated(0));
+        Assert.Null(Elevation.IsProcessUacElevated(0));
     }
 
     [Fact]

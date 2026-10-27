@@ -7,7 +7,7 @@ namespace PCCompanion.Modules.Files.FolderRules;
 /// <summary>
 /// The paths of folders as the settings give them, read without the disk.
 /// </summary>
-internal static class FolderPaths
+public static class FolderPaths
 {
     // What can't be in a path Folder Rules uses: wildcards, besides what Windows doesn't allow.
     private static readonly char[] InvalidCharacters = [.. Path.GetInvalidPathChars(), '*', '?'];
