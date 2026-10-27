@@ -179,7 +179,7 @@ public sealed class FolderRuleActionsTests
     [Fact]
     public void AFileInUseIsLeftWhereItIs()
     {
-        _system.Busy.Add(Invoice);
+        _system.SetBusy(Invoice, busy: true);
 
         var entry = Act(Rule("Move"))!;
 
@@ -190,7 +190,7 @@ public sealed class FolderRuleActionsTests
     [Fact]
     public void WindowsRefusalIsInTheHistoryWithItsCode()
     {
-        _system.Denied.Add(@"D:\Invoices");
+        _system.Deny(@"D:\Invoices");
 
         var entry = Act(Rule("Move"))!;
 
@@ -201,7 +201,7 @@ public sealed class FolderRuleActionsTests
     [Fact]
     public void ASubfolderWindowsWontCreateLeavesTheFile()
     {
-        _system.Denied.Add(@"D:\Invoices");
+        _system.Deny(@"D:\Invoices");
 
         var entry = Act(Rule("Copy", @"D:\Invoices\{year}"))!;
 

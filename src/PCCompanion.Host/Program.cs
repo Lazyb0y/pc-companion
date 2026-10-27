@@ -15,6 +15,7 @@ using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Logging;
 using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Desktop;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Windows;
@@ -98,6 +99,7 @@ internal static partial class Program
                 }
             })
             .AddSingleton(paths)
+            .AddSingleton(new DataFolder(paths.Root))
             .AddSingleton(TimeProvider.System)
             .AddSingleton<SettingsStore>()
             .AddSingleton<SettingsAppLauncher>()
@@ -113,6 +115,7 @@ internal static partial class Program
             .AddDesktopModule()
             .AddClipboardModule()
             .AddNetworkModule()
+            .AddFilesModule()
             .BuildServiceProvider();
 
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Program));
