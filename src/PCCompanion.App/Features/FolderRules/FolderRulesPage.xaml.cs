@@ -117,7 +117,7 @@ public sealed partial class FolderRulesPage : Page
         {
             // Focus goes to the new rule, at the end of its folder's list.
             ViewModel.AddRule(folder, editor.ToRule());
-            Focus(RuleEditId, FormattableString.Invariant($"{folder}:{ViewModel.Folders[folder].Rules.Count - 1}"));
+            FocusRule(RuleEditId, folder, ViewModel.Folders[folder].Rules.Count - 1);
         }
     }
 
@@ -134,7 +134,7 @@ public sealed partial class FolderRulesPage : Page
         if (await ShowAsync(new FolderRuleDialog(editor)) == ContentDialogResult.Primary)
         {
             ViewModel.ReplaceRule(folder, rule, editor.ToRule());
-            Focus(RuleEditId, FormattableString.Invariant($"{folder}:{rule}"));
+            FocusRule(RuleEditId, folder, rule);
         }
     }
 
@@ -156,7 +156,7 @@ public sealed partial class FolderRulesPage : Page
     {
         var (folder, rule) = RuleOf(sender);
         ViewModel.MoveRule(folder, rule, offset);
-        Focus(RuleMoreId, FormattableString.Invariant($"{folder}:{rule + offset}"));
+        FocusRule(RuleMoreId, folder, rule + offset);
     }
 
     private async void OnDeleteRuleClick(object sender, RoutedEventArgs e)
@@ -243,6 +243,41 @@ public sealed partial class FolderRulesPage : Page
             Control target = FindButton(FolderList, id, tag) is { } button ? button : AddFolderButton;
             target.Focus(FocusState.Programmatic);
         });
+
+    // A folder's rules are made as they come into view, by the list in its expander, so the rule's
+    // is made first, wherever the page is scrolled.
+    private void FocusRule(string id, int folder, int rule) =>
+        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+        {
+            FolderList.UpdateLayout();
+            var element = FolderList.ContainerFromIndex(folder) is DependencyObject container && Find<ItemsRepeater>(container) is { } rules
+                && rule >= 0 && rule < ViewModel.Folders[folder].Rules.Count
+                    ? rules.GetOrCreateElement(rule)
+                    : null;
+            element?.UpdateLayout();
+            Control target = element is not null && FindButton(element, id, FormattableString.Invariant($"{folder}:{rule}")) is { } button ? button : AddFolderButton;
+            target.Focus(FocusState.Programmatic);
+        });
+
+    private static T? Find<T>(DependencyObject parent)
+        where T : DependencyObject
+    {
+        for (var child = 0; child < VisualTreeHelper.GetChildrenCount(parent); child++)
+        {
+            var element = VisualTreeHelper.GetChild(parent, child);
+            if (element is T found)
+            {
+                return found;
+            }
+
+            if (Find<T>(element) is { } deeper)
+            {
+                return deeper;
+            }
+        }
+
+        return null;
+    }
 
     private static Button? FindButton(DependencyObject parent, string id, object tag)
     {
