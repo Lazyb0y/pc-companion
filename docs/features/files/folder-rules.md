@@ -37,10 +37,10 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 ## Conditions
 
 - **Name:** one or more patterns, separated by `;`, such as `invoice*;receipt*`, where `*` stands for any characters and `?` for one. The name matches when it matches any of them. The patterns match the whole name, extension included, and case is ignored.
-- **Type:** a list of extensions, such as `pdf; docx`. **Kind** presets fill it in: Documents, Pictures, Videos, Music, Archives and Installers. The user sees and can change every extension a preset adds, so nothing depends on what the installed apps registered.
-- **Size:** larger than, smaller than, or both, in KB, MB or GB.
-- **Date:** the date the file was created or last modified, more than or less than a number of days ago. Not the date it was last opened, which Windows doesn't keep up to date on most large drives.
-- **Downloaded from:** one or more site patterns, such as `*.example.com`, matched against the site in the file's Mark of the Web: the address it was downloaded from, or else the page it was downloaded on. Files without a mark, or whose mark names no site, such as downloads from a private window, for which Edge writes `about:internet`, don't match.
+- **Type:** a list of extensions, such as `pdf; docx`, compared with the part of the name after its last dot, ignoring case. **Kind** presets fill it in: Documents, Pictures, Videos, Music, Archives and Installers. The user sees and can change every extension a preset adds, so nothing depends on what the installed apps registered.
+- **Size:** larger than, smaller than, or both, in KB, MB or GB, where 1 KB is 1,024 bytes, as File Explorer counts.
+- **Date:** the date the file was created or last modified, more than or less than a number of days ago, or both, where a day is 24 hours. Not the date it was last opened, which Windows doesn't keep up to date on most large drives.
+- **Downloaded from:** one or more site patterns, such as `*.example.com`, with `*` and `?` as in names, matched against the name of the site in the file's Mark of the Web, ignoring case: the address it was downloaded from, or else the page it was downloaded on. Files without a mark, or whose mark names no site, such as downloads from a private window, for which Edge writes `about:internet`, don't match.
 
 ## Actions
 

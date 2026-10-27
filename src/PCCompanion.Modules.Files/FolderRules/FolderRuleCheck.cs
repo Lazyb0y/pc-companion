@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace PCCompanion.Modules.Files.FolderRules;
@@ -51,6 +52,27 @@ public enum RuleProblem
     /// <summary>No condition is on, so the rule would act on every file.</summary>
     NoCondition,
 
+    /// <summary>A name pattern is empty or holds characters a file name can't have, besides <c>*</c> and <c>?</c>.</summary>
+    InvalidNamePattern,
+
+    /// <summary>An extension is empty, holds a dot inside it, or holds characters a file name can't have.</summary>
+    InvalidExtension,
+
+    /// <summary>The Size condition has no size, or one that isn't from 1 to <see cref="FolderRuleCheck.MaximumSizeAmount"/>.</summary>
+    InvalidSize,
+
+    /// <summary>The smaller-than size isn't larger than the larger-than size, so no file matches.</summary>
+    EmptySizeRange,
+
+    /// <summary>The Date condition has no number of days, or one outside 0 to <see cref="FolderRuleCheck.MaximumDays"/>.</summary>
+    InvalidDate,
+
+    /// <summary>The less-than days aren't more than the more-than days, so no file matches.</summary>
+    EmptyDateRange,
+
+    /// <summary>A site pattern is empty or holds characters a site's name can't have, besides <c>*</c> and <c>?</c>.</summary>
+    InvalidSitePattern,
+
     UnknownAction,
     NoDestination,
 
@@ -80,6 +102,19 @@ public static class FolderRuleCheck
 {
     /// <summary>The longest name, which the history shows.</summary>
     public const int MaximumNameLength = 60;
+
+    /// <summary>The largest number in a size, in any unit.</summary>
+    public const long MaximumSizeAmount = 1_000_000;
+
+    /// <summary>The most days in the Date condition, about 100 years.</summary>
+    public const int MaximumDays = 36_500;
+
+    // The longest a file name, and so a name pattern, can be, and the longest a site's name can be.
+    private const int MaximumFileNameLength = 255;
+    private const int MaximumSiteLength = 253;
+
+    // What a name pattern can't hold: what Windows doesn't allow in a file name, except wildcards.
+    private static readonly char[] InvalidPatternCharacters = [.. Path.GetInvalidFileNameChars().Except(['*', '?'])];
 
     /// <summary>
     /// The problem of each folder and rule in <paramref name="settings"/>, including those beyond the
@@ -182,6 +217,20 @@ public static class FolderRuleCheck
             return RuleProblem.NoCondition;
         }
 
+        var conditions = new[]
+        {
+            CheckNames(rule.Names),
+            CheckExtensions(rule.Extensions),
+            CheckSize(rule.Size),
+            CheckDate(rule.Date),
+            CheckSites(rule.DownloadedFrom),
+        };
+        var condition = conditions.FirstOrDefault(problem => problem != RuleProblem.None);
+        if (condition != RuleProblem.None)
+        {
+            return condition;
+        }
+
         return rule.KnownAction switch
         {
             null => RuleProblem.UnknownAction,
@@ -209,6 +258,89 @@ public static class FolderRuleCheck
 
         return trimmed.Any(char.IsControl) ? RuleProblem.InvalidName : RuleProblem.None;
     }
+
+    /// <summary>
+    /// Checks the Name condition's patterns, such as <c>invoice*</c>, which match the whole name,
+    /// extension included, with <c>*</c> for any characters and <c>?</c> for one.
+    /// </summary>
+    public static RuleProblem CheckNames(IReadOnlyList<string> patterns)
+    {
+        ArgumentNullException.ThrowIfNull(patterns);
+
+        return patterns.All(pattern => pattern.Trim() is { Length: > 0 and <= MaximumFileNameLength } trimmed && trimmed.IndexOfAny(InvalidPatternCharacters) < 0)
+            ? RuleProblem.None
+            : RuleProblem.InvalidNamePattern;
+    }
+
+    /// <summary>Checks the Type condition's extensions, such as <c>pdf</c>; a dot before one is left out.</summary>
+    public static RuleProblem CheckExtensions(IReadOnlyList<string> extensions)
+    {
+        ArgumentNullException.ThrowIfNull(extensions);
+
+        return extensions.All(extension => TrimExtension(extension) is { Length: > 0 and <= MaximumFileNameLength } trimmed
+                && trimmed.IndexOfAny(Path.GetInvalidFileNameChars()) < 0
+                && !trimmed.Contains('.', StringComparison.Ordinal))
+            ? RuleProblem.None
+            : RuleProblem.InvalidExtension;
+    }
+
+    public static RuleProblem CheckSize(SizeCondition? size)
+    {
+        if (size is null)
+        {
+            return RuleProblem.None;
+        }
+
+        if ((size.LargerThan is null && size.SmallerThan is null) || !IsSize(size.LargerThan) || !IsSize(size.SmallerThan))
+        {
+            return RuleProblem.InvalidSize;
+        }
+
+        return RuleMatcher.Bytes(size.LargerThan) is { } larger && RuleMatcher.Bytes(size.SmallerThan) is { } smaller && smaller <= larger + 1
+            ? RuleProblem.EmptySizeRange
+            : RuleProblem.None;
+    }
+
+    public static RuleProblem CheckDate(DateCondition? date)
+    {
+        if (date is null)
+        {
+            return RuleProblem.None;
+        }
+
+        if (!Enum.IsDefined(date.Which)
+            || (date.MoreThanDaysAgo is null && date.LessThanDaysAgo is null)
+            || date.MoreThanDaysAgo is < 0 or > MaximumDays
+            || date.LessThanDaysAgo is < 1 or > MaximumDays)
+        {
+            return RuleProblem.InvalidDate;
+        }
+
+        return date.MoreThanDaysAgo is { } more && date.LessThanDaysAgo is { } less && less <= more
+            ? RuleProblem.EmptyDateRange
+            : RuleProblem.None;
+    }
+
+    /// <summary>
+    /// Checks the Downloaded from condition's site patterns, such as <c>*.example.com</c>: a site's
+    /// name, with <c>*</c> for any characters and <c>?</c> for one.
+    /// </summary>
+    public static RuleProblem CheckSites(IReadOnlyList<string> sites)
+    {
+        ArgumentNullException.ThrowIfNull(sites);
+
+        return sites.All(site => site.Trim() is { Length: > 0 and <= MaximumSiteLength } trimmed
+                && trimmed.All(character => char.IsLetterOrDigit(character) || character is '-' or '_' or '.' or '*' or '?'))
+            ? RuleProblem.None
+            : RuleProblem.InvalidSitePattern;
+    }
+
+    /// <summary>An extension as the rules compare it: without spaces at its ends or a dot before it.</summary>
+    internal static string TrimExtension(string extension) => extension.Trim().TrimStart('.');
+
+    // A size of 1 to the largest amount, in a known unit.
+    private static bool IsSize(SizeLimit? size) =>
+        size is null || (size.Amount is >= 1 and <= MaximumSizeAmount && Enum.IsDefined(size.Unit));
 
     private static RuleProblem CheckMoveOrCopy(FolderRule rule, string folder, SpecialFolders places)
     {
