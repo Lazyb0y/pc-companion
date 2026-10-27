@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Platform.Windows;
@@ -11,11 +12,12 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Display.DisplayProfiles;
 
 /// <summary>
-/// Switches the displays between named profiles from the PC Companion icon's menu, and asks
-/// whether to keep a switch that could leave a display black. See
+/// Switches the displays between named profiles from the PC Companion icon's menu and the
+/// settings app's page, and asks whether to keep a switch that could leave a display black. See
 /// docs/features/display/display-profiles.md.
 /// </summary>
-public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system, IHostCommands commands, ILogger<DisplayProfilesFeature> logger)
+/// <param name="pipeName">The pipe through which the settings app asks for a switch; <see cref="DisplayProfilesPipe.Name"/>.</param>
+public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system, string pipeName, IHostCommands commands, ILogger<DisplayProfilesFeature> logger)
     : IFeature, IHostMenuItems
 {
     /// <summary>The time the question counts down from before the switch is reverted.</summary>
@@ -23,6 +25,9 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
 
     // How long stopping waits for a switch that waits for an answer to be reverted.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(10);
+
+    // How long the settings app's request waits for the switch, which takes well under a second.
+    private static readonly TimeSpan AnswerTimeout = TimeSpan.FromSeconds(10);
 
     private readonly Lock _readGate = new();
     private ReadState _read;
@@ -42,7 +47,7 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
     private bool _failed;
 
     public DisplayProfilesFeature(IHostCommands commands, ILogger<DisplayProfilesFeature> logger)
-        : this(new WindowsDisplayProfilesSystem(), commands, logger)
+        : this(new WindowsDisplayProfilesSystem(), DisplayProfilesPipe.Name, commands, logger)
     {
     }
 
@@ -143,7 +148,7 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         }
 
         LogChosen(logger, chosen.Number);
-        RunInBackground(session, () => Switch(session, chosen.Number, chosen.Profile));
+        RunInBackground(session, () => Switch(session, chosen.Number, chosen.Profile, answer: null));
     }
 
     public void Dispose() => Stop();
@@ -184,6 +189,20 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         session.Window = system.CreateWindow(
             () => Guard(session, RequestRead),
             () => Guard(session, () => CantAnswer(session)));
+        try
+        {
+            session.Pipe = RequestPipe.Serve(
+                pipeName,
+                DisplayProfilesPipe.MaximumRequestLength,
+                request => AnswerAsync(session, request),
+                exception => LogPipeFailed(logger, exception.HResult));
+        }
+        catch
+        {
+            session.Window.Dispose();
+            throw;
+        }
+
         _session = session;
         LogStarted(logger);
         RequestRead();
@@ -199,6 +218,7 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         }
 
         _session = null;
+        session.Pipe?.Dispose();
         CloseQuestion(session);
         var finished = system.RunInBackgroundAndWait(
             () =>
@@ -297,8 +317,50 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         }
     }
 
+    // On the thread pool: a request from the settings app, answered once the switch has run.
+    private async Task<byte[]> AnswerAsync(Session session, byte[] request)
+    {
+        if (DisplayProfilesPipe.ReadRequest(request) is not { } read)
+        {
+            return DisplayProfilesPipe.Write(new DisplayProfilesAnswer { Status = DisplayProfilesAnswerStatus.UnknownProfile });
+        }
+
+        var answer = new TaskCompletionSource<DisplayProfilesAnswer>(TaskCreationOptions.RunContinuationsAsynchronously);
+        session.Window!.Post(() => Guard(session, () => Requested(session, read, answer)));
+        try
+        {
+            return DisplayProfilesPipe.Write(await answer.Task.WaitAsync(AnswerTimeout).ConfigureAwait(false));
+        }
+        catch (TimeoutException)
+        {
+            // Turned off meanwhile, so nothing more runs for this session.
+            return DisplayProfilesPipe.Write(new DisplayProfilesAnswer { Status = DisplayProfilesAnswerStatus.Off });
+        }
+    }
+
+    // A switch asked for on the page: only to a profile the host has unchanged, as with the menu.
+    private void Requested(Session session, DisplayProfilesRequest request, TaskCompletionSource<DisplayProfilesAnswer> answer)
+    {
+        if (_profiles.FirstOrDefault(profile => profile.Number == request.Number && profile.Profile == request.Profile) is not { } chosen)
+        {
+            LogNoSuchProfile(logger, request.Number);
+            answer.TrySetResult(new DisplayProfilesAnswer { Status = DisplayProfilesAnswerStatus.UnknownProfile });
+            return;
+        }
+
+        if (_remote)
+        {
+            LogRemoteChoice(logger, chosen.Number);
+            answer.TrySetResult(new DisplayProfilesAnswer { Status = DisplayProfilesAnswerStatus.RemoteSession });
+            return;
+        }
+
+        LogChosenOnPage(logger, chosen.Number);
+        RunInBackground(session, () => Switch(session, chosen.Number, chosen.Profile, answer));
+    }
+
     // On the thread pool, after the reads and switches queued before it.
-    private void Switch(Session session, int number, DisplayProfile profile)
+    private void Switch(Session session, int number, DisplayProfile profile, TaskCompletionSource<DisplayProfilesAnswer>? answer)
     {
         SwitchResult result;
         try
@@ -308,10 +370,25 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         catch (Win32Exception exception)
         {
             var error = exception.NativeErrorCode;
+            answer?.TrySetResult(new DisplayProfilesAnswer { Status = DisplayProfilesAnswerStatus.Failed, ErrorCode = error });
             session.Window!.Post(() => Guard(session, () => LogCantRead(logger, error)));
             return;
         }
 
+        answer?.TrySetResult(new DisplayProfilesAnswer
+        {
+            Status = result.Outcome switch
+            {
+                SwitchOutcome.AlreadyInUse => DisplayProfilesAnswerStatus.AlreadyInUse,
+                SwitchOutcome.NotConnected => DisplayProfilesAnswerStatus.NotConnected,
+                SwitchOutcome.Refused => DisplayProfilesAnswerStatus.Refused,
+                SwitchOutcome.Kept => DisplayProfilesAnswerStatus.Kept,
+                _ => DisplayProfilesAnswerStatus.Asking,
+            },
+            ErrorCode = result.Error ?? 0,
+            ModesNotOffered = result.ModesNotOffered ?? [],
+            NotAsInProfile = result.NotAsInProfile ?? [],
+        });
         session.Window!.Post(() => Guard(session, () => Switched(session, number, result)));
     }
 
@@ -586,6 +663,12 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
     [LoggerMessage(Level = LogLevel.Debug, Message = "Display profile {Number} was chosen.")]
     private static partial void LogChosen(ILogger logger, int number);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Display profile {Number} was chosen on the page.")]
+    private static partial void LogChosenOnPage(ILogger logger, int number);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The settings app's pipe failed (HRESULT {HResult}).")]
+    private static partial void LogPipeFailed(ILogger logger, int hResult);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "Display profile {Number} was chosen, but there's no such profile any more.")]
     private static partial void LogNoSuchProfile(ILogger logger, int number);
 
@@ -644,6 +727,8 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         public DisplaySwitcher Switcher { get; } = switcher;
 
         public IDisplayWindow? Window { get; set; }
+
+        public RequestPipe? Pipe { get; set; }
 
         // The question that's open, on the host's UI thread; 0 when none is.
         public int Question { get; set; }

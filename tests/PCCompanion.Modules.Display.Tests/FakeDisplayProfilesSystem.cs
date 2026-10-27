@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using PCCompanion.Modules.Display.DisplayProfiles;
 using PCCompanion.Platform.Windows;
 
@@ -13,7 +15,7 @@ namespace PCCompanion.Modules.Display.Tests;
 /// </summary>
 internal sealed class FakeDisplayProfilesSystem : IDisplayProfilesSystem
 {
-    private readonly Queue<Action> _background = new();
+    private readonly ConcurrentQueue<Action> _background = new();
     private Action? _changed;
     private Action? _cantAnswer;
 
@@ -70,6 +72,9 @@ internal sealed class FakeDisplayProfilesSystem : IDisplayProfilesSystem
         Questions.Add(question);
         return question;
     }
+
+    /// <summary>Waits until work for the thread pool is queued, as from the pipe's thread; false after 10 seconds.</summary>
+    public bool WaitForBackground() => SpinWait.SpinUntil(() => !_background.IsEmpty, TimeSpan.FromSeconds(10));
 
     /// <summary>Runs the work waiting for the thread pool, and any it queues.</summary>
     public void RunBackground()
