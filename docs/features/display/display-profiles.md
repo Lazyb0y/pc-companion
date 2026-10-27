@@ -46,7 +46,7 @@ Making and changing profiles:
 
 ## Recognizing displays
 
-- For each connected display, Windows gives the maker and model from the display's EDID, the data every display reports about itself, its name, such as `DELL U2720Q`, its connection type, such as HDMI, DisplayPort or built-in, and its device path, which names the connection it's on (`DisplayConfigGetDeviceInfo` with `DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME`). That gives no serial number, so PC Companion reads the display's EDID too (`DisplayMonitor.GetDescriptor`, found by the same device path), for its serial number: the number and the serial number text, either of which a display may leave empty.
+- For each connected display, Windows gives the maker and model from the display's EDID, the data every display reports about itself, its name, such as `DELL U2720Q`, its connection type, such as HDMI, DisplayPort or built-in, and its device path, which names the connection it's on (`DisplayConfigGetDeviceInfo` with `DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME`). That gives no serial number, so PC Companion reads the display's EDID too (`DisplayMonitor.GetDescriptor`, found by the same device path), for its serial number: the number and the serial number text, either of which a display may leave empty. It reads each device path's EDID once while it runs; a display whose EDID Windows can't give, such as one that was just disconnected, has no serial number until the next read.
 - The device path changes when the same display is plugged into another port, dock or graphics adapter: Windows keeps a separate entry for each connection a display has been on. The graphics adapter's ID changes at every restart and when its driver restarts. So neither identifies a display, and a profile keeps neither as one.
 - A profile recognizes each of its displays, in this order:
   1. by its model and serial number, on any connection, when it has a serial number that no other connected display of that model has;
@@ -56,12 +56,12 @@ Making and changing profiles:
 - A display without an EDID, such as some virtual displays, has no model, and is recognized by its connection only.
 - When two identical displays without serial numbers are both on other connections than when the profile was made, PC Companion can't tell them apart, and takes them in the order of their connections. The page says so on the profile; when their places come out swapped, **Update from current setup** sets them right.
 - A profile can be used when every display that's on in it is connected and recognized. Otherwise it's dimmed in the menu, and the page says which display isn't connected. A profile is never applied in part: a setup made for three displays rarely suits two, and for those two, Windows already brings back the setup last kept with them.
-- The page names a display by its name from the EDID, and the laptop's own as **Built-in display**. Two displays with the same name also show their connection type and their place in the profile's picture.
+- The page names a display by its name from the EDID, the laptop's own as **Built-in display**, and one without a name as **Display** and its place in the profile. Two displays with the same name also show their place in the profile, which the profile's picture numbers.
 
 ## Switching
 
 - PC Companion switches the displays with `SetDisplayConfig`, the documented function that Windows Settings uses, which needs no admin rights:
-  - it reads the connected displays (`QueryDisplayConfig` with `QDC_ALL_PATHS`), recognizes the profile's displays among them, and builds the setup on the adapters and connections they're on now: a path for each display that's on, with its position, resolution and orientation, and its refresh rate, kept as the exact fraction Windows reported, such as 60000/1001, with the signal timing left for Windows to choose; displays at the same position share a source, as with Duplicate; and no path for the others, which turns them off;
+  - it reads the connected displays (`QueryDisplayConfig` with `QDC_ALL_PATHS`), recognizes the profile's displays among them, and builds the setup on the adapters and connections they're on now: a path for each display that's on, with its position, resolution and orientation, and its refresh rate, kept as the exact fraction Windows reported, such as 60000/1001, with the signal timing left for Windows to choose; a display that's on keeps its scan line ordering, which Windows needs with a refresh rate, and its scaling for resolutions that don't fill it, and one that's turned on gets progressive scanning and Windows' own scaling; displays at the same position share a source, as with Duplicate; and no path for the others, which turns them off;
   - Windows checks the setup first (`SDC_VALIDATE`), and when it refuses, nothing changes;
   - then Windows applies it (`SDC_APPLY` with `SDC_USE_SUPPLIED_DISPLAY_CONFIG`), without saving it yet; see [Keep or revert](#keep-or-revert);
   - HDR is set after that, display by display: with `DISPLAYCONFIG_DEVICE_INFO_SET_HDR_STATE` on Windows 11 version 24H2 and later, where turning on color management for displays without HDR is a separate setting, and with `DISPLAYCONFIG_DEVICE_INFO_SET_ADVANCED_COLOR_STATE` before. Whether a display supports HDR is read the same way: on version 24H2 and later, the older function also reports displays that support only color management.
@@ -77,7 +77,7 @@ Making and changing profiles:
 - The new setup isn't saved in Windows' memory of setups until the user keeps it. **Keep changes** applies it again with `SDC_SAVE_TO_DATABASE`, which saves it without changing the displays' mode again, so Windows uses it the next time these displays are connected, as after a change in Windows Settings. So if the PC restarts, or a display is reconnected, before an answer, Windows brings back the setup it had saved.
 - **Revert** applies the setup from before the switch, as Windows reported it then. When Windows refuses it, such as after a display was unplugged meanwhile, PC Companion returns to the last setup Windows saved for the displays connected now (`SDC_USE_DATABASE_CURRENT`), Windows' own way back from a setup that wasn't saved.
 - Anything that means the user can't answer reverts at once: the PC locking, sleeping or switching to another user, the feature turning off, and PC Companion exiting.
-- Choosing another profile while the question is open closes it and switches again; **Revert** then goes back to the last setup that was kept.
+- Choosing another profile while the question is open closes it and switches again; **Revert** then goes back to the last setup that was kept. Whether the new switch asks is decided against that setup too, so one that only moves displays from it is kept at once.
 - If PC Companion stops unexpectedly while the question is open, the new setup stays until the PC restarts or the displays are reconnected, when Windows brings back the setup it saved. Windows + P works meanwhile.
 
 ## When profiles can't be used
@@ -105,11 +105,11 @@ Making and changing profiles:
 
 - **Use** on the page asks the host to switch, through a named pipe that only the user's own account and the system can open, and that rejects remote clients, as Folder Rules' pipe does. The request gives the profile's number and its contents, and the host switches only if its list has that profile unchanged. So a switch from the page gets the same question, countdown and revert as one from the menu, whatever happens to the settings window.
 - The settings app lets the host bring the question to the front (`AllowSetForegroundWindow`) before it asks.
-- The page reads the current setup itself, for **Add from current setup**, **Update from current setup** and **In use**.
+- The page reads the current setup itself, for **Add from current setup**, **Update from current setup** and **In use**, again after each change while it shows, with a hidden window of its own; the host's is the one the settings app lets come to the front.
 
 ## Settings
 
-- **Feature page:** the on/off switch; **Profiles**, a list with **Add from current setup**, and for each profile a picture of its arrangement, a line for each display, such as "DELL U2720Q: 3840 x 2160, 59.94 Hz, main display" or "Built-in display: off", the problem when it can't be used now, **In use** or **Use**, and **More options** with **Rename**, **Update from current setup**, **Move up**, **Move down** and **Delete**; a note on what profiles don't change, such as the scale, color and brightness; **Windows display settings**, whose **Open** opens Windows' Display page (`ms-settings:display`); and a **Permissions & data** card.
+- **Feature page:** the on/off switch; **Profiles**, a list with **Add from current setup**, and for each profile a picture of its arrangement, as the displays stand, with each display numbered by its place in the profile and the main display in the accent color, a line for each display, such as "DELL U2720Q: 3840 x 2160, 59.94 Hz, main display" or "Built-in display: off", the problem when it can't be used now, **In use** or **Use**, and **More options** with **Rename**, **Update from current setup**, **Move up**, **Move down** and **Delete**; a note on what profiles don't change, such as the scale, color and brightness; **Windows display settings**, whose **Open** opens Windows' Display page (`ms-settings:display`); and a **Permissions & data** card.
 - **Add from current setup** and **Rename** open a dialog with the **Name** and the setup it holds. Problems show below the box, and **Save** is available only when the name has none. **Update from current setup** and **Delete** ask first.
 - The switch on Home changes only `enabled` and keeps the profiles. Turning the feature on for the first time adds Original setup.
 - A section that can't be read, for example after a hand edit, turns Display Profiles off with a warning in the log.
@@ -190,7 +190,7 @@ Making and changing profiles:
 }
 ```
 
-- `model` is the maker's code and the product code from the EDID, as in Windows' hardware IDs; `serial` is a hash of the serial number, empty when the display has none; `connection` is the device path when the profile was made; `hdr` is `null` for a display without HDR. A display that's `on: false` has only the fields that recognize and name it.
+- `model` is the maker's code and the product code from the EDID, as in Windows' hardware IDs; `serial` is a hash of the serial number, empty when the display has none; `width` and `height` are the display resolution in the display's landscape orientation, turned on the desktop by `orientation`; `connection` is the device path when the profile was made; `hdr` is `null` for a display without HDR. A display that's `on: false` has only the fields that recognize and name it.
 
 ## Not included
 
@@ -215,7 +215,7 @@ Making and changing profiles:
 - **Changes:** the PC's display setup, only when the user chooses a profile in the menu or selects **Use** on the page: which displays are on, the main display, the arrangement, and each display's resolution, refresh rate, orientation and HDR. Windows' memory of setups changes only when the user keeps a setup. The display setup is the PC's, not the user's alone, as with changes in Windows Settings, which every user can make without admin rights.
 - **Safety:** a setup a display can't show is undone after 15 seconds without an answer, and isn't saved in Windows until it's kept, so a restart or a reconnection brings back the last kept setup. Modes a display doesn't list aren't applied.
 - **Reads:** the connected displays' names, makers, models, EDIDs, connection types and device paths, and the current setup, when the displays change and when the feature starts.
-- **Serial numbers** identify a display, so PC Companion keeps only a hash of each in the settings, never shows it and never logs it. It keeps nothing else from the EDID.
+- **Serial numbers** identify a display, so PC Companion keeps only a hash of each in the settings, the first 16 hexadecimal digits of the SHA-256 of the number and the text, never shows it and never logs it. It keeps nothing else from the EDID.
 - **Settings:** the profiles are in `settings.json`. Any program running as the user can change that file, but it could also change the displays itself, with the same functions, so this crosses no boundary. Running as administrator changes nothing: setting the displays needs no admin rights.
 - **Untrusted values:** a hand-edited file can hold anything, so every value is checked before it's used: the lengths, the ranges, one main display at the top-left corner, no control characters, and Windows' own check of the setup.
 - **The pipe:** only the user's own account and the system can open it, it rejects remote clients, and a request can only choose a profile from the host's own settings.
@@ -228,7 +228,7 @@ Making and changing profiles:
 
 - Between changes nothing runs: no timer and no polling. The hidden window gets Windows' messages.
 - Opening the menu reads nothing. Reads and switches run on the thread pool; a display's EDID is read once for each device path and kept while the feature runs.
-- Reading the setup takes about 0.1 ms. Reading an EDID through `DisplayMonitor` took 80 ms the first time and 12 ms after; loading it added 12 system DLLs, about 2 MB of private memory and 6 MB to the working set, mostly shared system code. A switch that changed the resolution took 30 to 50 ms, and saving it on **Keep changes** 6 ms; the display itself can take a second or more to show a picture again.
+- Reading the setup takes about 0.1 ms. Reading an EDID through `DisplayMonitor` took 80 ms the first time and 12 ms after; loading it added 12 system DLLs, about 2 MB of private memory and 6 MB to the working set, mostly shared system code. A switch that changed the resolution took 30 to 140 ms, saving it on **Keep changes** 6 to 36 ms, and going back to the setup Windows saved 20 to 170 ms; the display itself can take a second or more to show a picture again.
 
 ## Accessibility and localization
 
