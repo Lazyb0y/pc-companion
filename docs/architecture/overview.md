@@ -68,6 +68,7 @@
 | `PCCompanion.Platform.Windows` | Windows API: a hidden message window, the message loop, a feature's own message loop thread, a coalescable timer, tray icons, shortcut menus, the Windows mode and high contrast, the session and display state, mouse input, displays, key and pointer state, global keyboard shortcuts, keyboard layouts, the window in front and its text cursor, top-level windows and their app IDs, window events, the taskbar and its layout, layered windows, shell actions, command-line arguments, the Open dialog, signals between processes, elevation, scheduled tasks, protected files, text and icons drawn from pixels, the processor, memory and network adapter readings, the clipboard's text, and program files |
 | `PCCompanion.Modules.Clipboard` | Clipboard & Text: [Clipboard Actions](../features/clipboard/clipboard-actions.md) |
 | `PCCompanion.Modules.Desktop` | Desktop: [System Meters](../features/desktop/system-meters.md) |
+| `PCCompanion.Modules.Files` | Files: [Folder Rules](../features/files/folder-rules.md) |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
 | `PCCompanion.Modules.Network` | Network: [Network Profiles](../features/network/network-profiles.md) |
 | `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md) |

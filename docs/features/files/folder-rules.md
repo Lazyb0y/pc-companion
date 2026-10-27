@@ -145,7 +145,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 - Problems show below their box, and **Save** is available only when the rule has none. **Delete** and **Remove** ask first.
 - When the feature is first turned on, there are no folders.
 - The switch on Home changes only `enabled` and keeps the other settings.
-- A section that can't be read, for example after a hand edit, turns Folder Rules off with a warning in the log.
+- A section that can't be read, for example after a hand edit, turns Folder Rules off with a warning in the log. A `null` in a list is left out. A rule with an `action` this version doesn't know, such as one from a newer version, or an `ifExists` it doesn't know where one is needed, keeps it when the settings are saved, and isn't used.
 
 ```json
 "features": {
@@ -174,6 +174,22 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
             "action": "Move",
             "destination": "C:\\Users\\Ana\\Downloads\\Installers",
             "ifExists": "Skip"
+          },
+          {
+            "name": "Large videos",
+            "enabled": true,
+            "extensions": ["mp4", "mkv"],
+            "size": { "largerThan": { "amount": 1, "unit": "GB" } },
+            "action": "Move",
+            "destination": "D:\\Videos\\{year}",
+            "ifExists": "AddNumber"
+          },
+          {
+            "name": "Old screenshots",
+            "enabled": false,
+            "names": ["Screenshot*"],
+            "date": { "which": "Created", "moreThanDaysAgo": 30 },
+            "action": "RecycleBin"
           }
         ]
       }
