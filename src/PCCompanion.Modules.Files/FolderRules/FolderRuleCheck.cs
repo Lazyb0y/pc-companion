@@ -32,6 +32,12 @@ public enum FolderProblem
     /// <summary>PC Companion's data folder or a folder in it, where a rule could move its settings.</summary>
     DataFolder,
 
+    /// <summary>
+    /// A destination's subfolder made from the file has a part in braces that isn't known or
+    /// closed, a character a folder name can't have, or is <c>.</c> or <c>..</c>.
+    /// </summary>
+    InvalidPart,
+
     /// <summary>A folder earlier in the list is the same folder.</summary>
     AlreadyWatched,
 
@@ -83,6 +89,12 @@ public enum RuleProblem
     DestinationIsOwnFolder,
 
     NoNewName,
+
+    /// <summary>
+    /// The new name has a part in braces that isn't known or closed, a character a file name can't
+    /// have, or, without parts, is a name Windows doesn't allow, such as <c>CON</c>.
+    /// </summary>
+    InvalidNewName,
 
     /// <summary>What to do when a name is taken isn't <c>AddNumber</c> or <c>Skip</c>.</summary>
     UnknownIfExists,
@@ -184,7 +196,13 @@ public static class FolderRuleCheck
         }
 
         var fixedPart = FolderPaths.FixedPart(destination);
-        return fixedPart.Length == 0 ? FolderProblem.NotFullPath : CheckFolder(fixedPart, places);
+        if (fixedPart.Length == 0)
+        {
+            return FolderProblem.NotFullPath;
+        }
+
+        var problem = CheckFolder(fixedPart, places);
+        return problem == FolderProblem.None && !FileNaming.IsDestinationPattern(destination) ? FolderProblem.InvalidPart : problem;
     }
 
     /// <summary>
@@ -236,6 +254,7 @@ public static class FolderRuleCheck
             null => RuleProblem.UnknownAction,
             FolderRuleAction.Move or FolderRuleAction.Copy => CheckMoveOrCopy(rule, folder, places),
             FolderRuleAction.Rename when rule.NewName.Trim().Length == 0 => RuleProblem.NoNewName,
+            FolderRuleAction.Rename when !FileNaming.IsNewNamePattern(rule.NewName) => RuleProblem.InvalidNewName,
             FolderRuleAction.Rename when rule.KnownIfExists is null => RuleProblem.UnknownIfExists,
             _ => RuleProblem.None,
         };
@@ -361,6 +380,12 @@ public static class FolderRuleCheck
             && string.Equals(destination, source, StringComparison.OrdinalIgnoreCase))
         {
             return RuleProblem.DestinationIsOwnFolder;
+        }
+
+        // A Move or Copy keeps the file's name when it has no new name.
+        if (rule.NewName.Trim().Length > 0 && !FileNaming.IsNewNamePattern(rule.NewName))
+        {
+            return RuleProblem.InvalidNewName;
         }
 
         return rule.KnownIfExists is null ? RuleProblem.UnknownIfExists : RuleProblem.None;

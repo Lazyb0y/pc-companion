@@ -49,10 +49,11 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 - **Move to the Recycle Bin.**
 - Parts in braces are replaced with the file's own values:
   - `{name}`, the name without the extension, and `{extension}`, the extension without the dot;
-  - `{year}`, `{month}`, `{day}`, and `{date}` as `yyyy-MM-dd`, from the date the file was last modified.
+  - `{year}`, `{month}`, `{day}`, and `{date}` as `yyyy-MM-dd`, from the date the file was last modified, in the user's time zone and the Gregorian calendar.
+  - Part names ignore case, and a part that isn't one of these, or a brace that isn't closed, keeps the rule from being used.
   - Numbers are written with ASCII digits in every language, so names sort the same way everywhere.
   - A part that's empty for a file, such as `{extension}` for a file without one, leaves its subfolder out of the destination.
-- **When a file with the same name is there:** **Add a number**, as File Explorer does, such as `report (2).pdf`, or **Skip**. A file is never replaced: the move or copy fails when a file of that name appears in the meantime, and the next number is tried.
+- **When a file with the same name is there:** **Add a number**, as File Explorer does, such as `report (2).pdf`, up to `(999)`, or **Skip**. A file is never replaced: the move or copy fails when a file of that name appears in the meantime, and the next number is tried.
 - A Copy or Move whose destination is the rule's own folder isn't allowed; Rename does that. A destination may be another watched folder, whose rules then handle the file when it arrives there.
 
 ## Waiting until a file has arrived

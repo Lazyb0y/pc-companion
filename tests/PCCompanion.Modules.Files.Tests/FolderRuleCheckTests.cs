@@ -82,6 +82,8 @@ public sealed class FolderRuleCheckTests
     [InlineData(@"Sorted\{extension}", FolderProblem.NotFullPath)]
     [InlineData(@"C:\Windows\{extension}", FolderProblem.WindowsFolder)]
     [InlineData(@"C:\Users\Ana\AppData\Local\PCCompanion\{year}", FolderProblem.DataFolder)]
+    [InlineData(@"D:\Invoices\{yaer}", FolderProblem.InvalidPart)]
+    [InlineData(@"D:\Invoices\{year}\..", FolderProblem.InvalidPart)]
     public void ADestinationIsCheckedByTheFolderItStartsWith(string destination, FolderProblem problem)
     {
         Assert.Equal(problem, FolderRuleCheck.CheckDestination(destination, Places));
@@ -256,6 +258,14 @@ public sealed class FolderRuleCheckTests
 
         Assert.Equal(RuleProblem.NoNewName, FolderRuleCheck.Check(rename, Downloads, Places));
         Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(rename with { NewName = "{date} {name}" }, Downloads, Places));
+    }
+
+    [Fact]
+    public void ANewNameMustBeAPatternThatCanMakeAName()
+    {
+        Assert.Equal(RuleProblem.InvalidNewName, FolderRuleCheck.Check(Rule with { Action = "Rename", NewName = "{dat} {name}" }, Downloads, Places));
+        Assert.Equal(RuleProblem.InvalidNewName, FolderRuleCheck.Check(Rule with { NewName = "NUL" }, Downloads, Places));
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(Rule with { NewName = " " }, Downloads, Places));
     }
 
     [Fact]
