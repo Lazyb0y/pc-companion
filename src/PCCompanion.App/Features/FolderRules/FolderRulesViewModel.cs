@@ -49,7 +49,9 @@ public sealed record FolderItem(
     string WatchName,
     string MoreName,
     string AddRuleName,
-    bool CanAddRule)
+    bool CanAddRule,
+    string RunNowName,
+    bool CanRunNow)
 {
     public bool HasProblem => Problem.Length > 0;
 
@@ -67,6 +69,7 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
     private static readonly CompositeFormat RuleSwitchFormat = CompositeFormat.Parse(Strings.FolderRulesRuleSwitchName);
     private static readonly CompositeFormat EditFormat = CompositeFormat.Parse(Strings.FolderRulesEditName);
     private static readonly CompositeFormat AddRuleFormat = CompositeFormat.Parse(Strings.FolderRulesAddRuleName);
+    private static readonly CompositeFormat RunNowFormat = CompositeFormat.Parse(Strings.FolderRulesRunNowName);
 
     private readonly AppSettings _appSettings;
 
@@ -98,6 +101,9 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
     public SpecialFolders Places { get; }
 
     public ObservableCollection<FolderItem> Folders { get; } = [];
+
+    /// <summary>What the rules did, which the host gives while Folder Rules is on.</summary>
+    public FolderRulesHistoryViewModel History { get; } = new();
 
     public bool HasNoFolders => Folders.Count == 0;
 
@@ -275,7 +281,9 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
             string.Format(CultureInfo.CurrentCulture, WatchFormat, name),
             string.Format(CultureInfo.CurrentCulture, MoreFormat, name),
             string.Format(CultureInfo.CurrentCulture, AddRuleFormat, name),
-            Settings.Folders.Sum(watched => watched.Rules.Count) < FolderRulesSettings.MaximumRules);
+            Settings.Folders.Sum(watched => watched.Rules.Count) < FolderRulesSettings.MaximumRules,
+            string.Format(CultureInfo.CurrentCulture, RunNowFormat, name),
+            review.Problem == FolderProblem.None && _found.GetValueOrDefault(folder.Path) == FolderState.Found);
     }
 
     // Each path is looked at once, off the UI thread.

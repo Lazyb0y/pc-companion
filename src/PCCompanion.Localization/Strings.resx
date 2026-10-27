@@ -1908,4 +1908,212 @@
     <value>The destination made from this file is in a folder that rules can't change.</value>
     <comment>Why a rule leaves a file where it is: the destination made from it is in a folder that rules can't change, such as the Windows folder.</comment>
   </data>
+  <data name="FolderRulesRunNow" xml:space="preserve">
+    <value>Run now</value>
+    <comment>Folder Rules page: button on a folder that lists the files there now that its rules would act on.</comment>
+  </data>
+  <data name="FolderRulesRunNowName" xml:space="preserve">
+    <value>Run now for {0}</value>
+    <comment>Folder Rules page: name of a folder's Run now button for screen readers. {0} is the folder's name.</comment>
+  </data>
+  <data name="FolderRulesRunNowTitle" xml:space="preserve">
+    <value>Run now: {0}</value>
+    <comment>Run now: title of the dialog. {0} is the folder's name.</comment>
+  </data>
+  <data name="FolderRulesRunNowDescription" xml:space="preserve">
+    <value>The files there now that the folder's rules would act on, and what each would do. Clear a file's box to leave it.</value>
+    <comment>Run now: below the title.</comment>
+  </data>
+  <data name="FolderRulesRun" xml:space="preserve">
+    <value>Run</value>
+    <comment>Run now: button that applies the rules to the checked files.</comment>
+  </data>
+  <data name="FolderRulesRunNowRule" xml:space="preserve">
+    <value>Rule: {0}</value>
+    <comment>Run now: below a file, the rule that would act on it. {0} is the rule's name.</comment>
+  </data>
+  <data name="FolderRulesRunNowLoading" xml:space="preserve">
+    <value>Asking PC Companion for the files…</value>
+    <comment>Run now: shown while the files are listed.</comment>
+  </data>
+  <data name="FolderRulesRunNowNotRunning" xml:space="preserve">
+    <value>Run now works while Folder Rules is on and PC Companion runs.</value>
+    <comment>Run now: shown when the background part of PC Companion doesn't answer, as while Folder Rules is off.</comment>
+  </data>
+  <data name="FolderRulesRunNowRefused" xml:space="preserve">
+    <value>PC Companion doesn't watch this folder now. Check its switch, and its problem if it has one.</value>
+    <comment>Run now: shown when the folder isn't watched now.</comment>
+  </data>
+  <data name="FolderRulesRunNowListFailed" xml:space="preserve">
+    <value>Windows couldn't list the folder's files (error {0}).</value>
+    <comment>Run now: shown when Windows couldn't list the folder. {0} is Windows' error code.</comment>
+  </data>
+  <data name="FolderRulesRunNowNone" xml:space="preserve">
+    <value>The folder's rules would act on none of the files there now.</value>
+    <comment>Run now: shown when the rules would act on none of the files there now.</comment>
+  </data>
+  <data name="FolderRulesRunNowStarted" xml:space="preserve">
+    <value>The rules are acting on the files you chose. Refresh shows what they did.</value>
+    <comment>Folder Rules page: note above the history after Run. Refresh is FolderRulesHistoryRefresh.</comment>
+  </data>
+  <data name="FolderRulesHistoryHeader" xml:space="preserve">
+    <value>History</value>
+    <comment>Folder Rules page: header of the history.</comment>
+  </data>
+  <data name="FolderRulesHistoryDescription" xml:space="preserve">
+    <value>What the rules did in the last 30 days, newest first.</value>
+    <comment>Folder Rules page: below FolderRulesHistoryHeader.</comment>
+  </data>
+  <data name="FolderRulesHistoryRefresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Folder Rules page: button that shows the history as it is now.</comment>
+  </data>
+  <data name="FolderRulesOpenRecycleBin" xml:space="preserve">
+    <value>Open Recycle Bin</value>
+    <comment>Folder Rules page: button that opens the Recycle Bin in File Explorer, where a file can be restored.</comment>
+  </data>
+  <data name="FolderRulesClearHistory" xml:space="preserve">
+    <value>Clear history</value>
+    <comment>Folder Rules page: button, and the button of the dialog that asks first, that empties the history.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryTitle" xml:space="preserve">
+    <value>Clear the history?</value>
+    <comment>Folder Rules page: title of the dialog that asks before the history is emptied.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryText" xml:space="preserve">
+    <value>PC Companion forgets what the rules did. A file they acted on that comes back may be acted on again.</value>
+    <comment>Folder Rules page: text of the dialog that asks before the history is emptied.</comment>
+  </data>
+  <data name="FolderRulesHistoryLoading" xml:space="preserve">
+    <value>Loading the history…</value>
+    <comment>Folder Rules page: shown while the history is read.</comment>
+  </data>
+  <data name="FolderRulesHistoryNotRunning" xml:space="preserve">
+    <value>The history shows while Folder Rules is on and PC Companion runs.</value>
+    <comment>Folder Rules page: shown when the background part of PC Companion doesn't answer, as while Folder Rules is off.</comment>
+  </data>
+  <data name="FolderRulesHistoryEmpty" xml:space="preserve">
+    <value>The rules haven't acted on any file yet.</value>
+    <comment>Folder Rules page: shown when the history is empty.</comment>
+  </data>
+  <data name="FolderRulesHistoryShowMore" xml:space="preserve">
+    <value>Show more</value>
+    <comment>Folder Rules page: button below the history that shows older entries.</comment>
+  </data>
+  <data name="FolderRulesHistoryWhen" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>Folder Rules page: below a file's name in the history. {0} is the date and time, {1} the rule's name.</comment>
+  </data>
+  <data name="FolderRulesUndo" xml:space="preserve">
+    <value>Undo</value>
+    <comment>Folder Rules page: button on a history entry that puts its file back.</comment>
+  </data>
+  <data name="FolderRulesUndoName" xml:space="preserve">
+    <value>Undo {0}</value>
+    <comment>Folder Rules page: name of a history entry's Undo button for screen readers. {0} is the file's name.</comment>
+  </data>
+  <data name="FolderRulesOutcomeMoved" xml:space="preserve">
+    <value>Moved to {0}</value>
+    <comment>History: what happened to a file. {0} is where it is now.</comment>
+  </data>
+  <data name="FolderRulesOutcomeCopied" xml:space="preserve">
+    <value>Copied to {0}</value>
+    <comment>History: what happened to a file. {0} is where its copy is.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRenamed" xml:space="preserve">
+    <value>Renamed to {0}</value>
+    <comment>History: what happened to a file. {0} is its new name.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRecycleBin" xml:space="preserve">
+    <value>Moved to the Recycle Bin</value>
+    <comment>History: what happened to a file.</comment>
+  </data>
+  <data name="FolderRulesOutcomeWaiting" xml:space="preserve">
+    <value>Waiting for an answer: Windows asks whether to delete it for good, since it's too big for the Recycle Bin.</value>
+    <comment>History: a file too big for the Recycle Bin while Windows asks whether to delete it for good.</comment>
+  </data>
+  <data name="FolderRulesOutcomeDeleted" xml:space="preserve">
+    <value>Deleted for good after Yes in Windows' question, since it was too big for the Recycle Bin.</value>
+    <comment>History: a file too big for the Recycle Bin, deleted after Yes in Windows' question.</comment>
+  </data>
+  <data name="FolderRulesOutcomeKept" xml:space="preserve">
+    <value>Kept, since it was too big for the Recycle Bin and Windows' question wasn't answered Yes.</value>
+    <comment>History: a file too big for the Recycle Bin, kept after No, Esc or closing Windows' question.</comment>
+  </data>
+  <data name="FolderRulesOutcomeSkipped" xml:space="preserve">
+    <value>Left where it is. {0}</value>
+    <comment>History: a file the rule left. {0} is one of the FolderRulesReason... reasons.</comment>
+  </data>
+  <data name="FolderRulesOutcomeUndone" xml:space="preserve">
+    <value>{0} Put back with Undo.</value>
+    <comment>History: an entry whose file Undo put back. {0} is what happened to it.</comment>
+  </data>
+  <data name="FolderRulesReasonNameTaken" xml:space="preserve">
+    <value>A file with the same name is there.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesReasonInUse" xml:space="preserve">
+    <value>Another program kept it open.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesReasonNoRecycleBin" xml:space="preserve">
+    <value>Its drive has no Recycle Bin, and PC Companion never deletes files for good on its own.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesReasonMarkWouldBeLost" xml:space="preserve">
+    <value>The destination's drive can't keep its Mark of the Web, with which Windows warns before a downloaded file opens.</value>
+    <comment>History: why a rule left a file where it is. Mark of the Web is Windows' name for what it notes on a downloaded file.</comment>
+  </data>
+  <data name="FolderRulesReasonBlocked" xml:space="preserve">
+    <value>Controlled folder access in Windows Security blocked the change. To allow it, add PCCompanion.Host.exe, in PC Companion's folder, under Allow an app through Controlled folder access.</value>
+    <comment>History: why a rule left a file where it is, and how to allow PC Companion. Use Windows Security's own names for Controlled folder access and Allow an app through Controlled folder access.</comment>
+  </data>
+  <data name="FolderRulesReasonFailed" xml:space="preserve">
+    <value>Windows refused (error {0}).</value>
+    <comment>History: why a rule left a file where it is. {0} is Windows' error code.</comment>
+  </data>
+  <data name="FolderRulesReasonDestinationNotFound" xml:space="preserve">
+    <value>The destination's folder doesn't exist.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesReasonChanged" xml:space="preserve">
+    <value>It changed or went away before the rule acted.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesReasonInterrupted" xml:space="preserve">
+    <value>Its drive was ejected during the move or copy. It's tried again when the drive is back.</value>
+    <comment>History: why a rule left a file where it is.</comment>
+  </data>
+  <data name="FolderRulesUndoChanged" xml:space="preserve">
+    <value>The file isn't where the rule put it, or it changed since, so nothing changed.</value>
+    <comment>Folder Rules page: note after Undo didn't put a file back.</comment>
+  </data>
+  <data name="FolderRulesUndoPlaceTaken" xml:space="preserve">
+    <value>A file with its old name is in its old place, so nothing changed.</value>
+    <comment>Folder Rules page: note after Undo didn't put a file back.</comment>
+  </data>
+  <data name="FolderRulesUndoInUse" xml:space="preserve">
+    <value>Another program has the file open, so nothing changed. Try again once it's closed.</value>
+    <comment>Folder Rules page: note after Undo didn't put a file back.</comment>
+  </data>
+  <data name="FolderRulesUndoBlocked" xml:space="preserve">
+    <value>Controlled folder access in Windows Security blocked putting the file back.</value>
+    <comment>Folder Rules page: note after Undo didn't put a file back. Use Windows Security's own name for Controlled folder access.</comment>
+  </data>
+  <data name="FolderRulesUndoNoRecycleBin" xml:space="preserve">
+    <value>The copy's drive has no Recycle Bin, so the copy stays.</value>
+    <comment>Folder Rules page: note after Undo of a copy on a drive without a Recycle Bin.</comment>
+  </data>
+  <data name="FolderRulesUndoKept" xml:space="preserve">
+    <value>The copy stays, since it's too big for the Recycle Bin and Windows' question wasn't answered Yes.</value>
+    <comment>Folder Rules page: note after Undo of a copy too big for the Recycle Bin, when Windows' question wasn't answered Yes.</comment>
+  </data>
+  <data name="FolderRulesUndoFailed" xml:space="preserve">
+    <value>Windows refused (error {0}), so nothing changed.</value>
+    <comment>Folder Rules page: note after Undo didn't put a file back. {0} is Windows' error code.</comment>
+  </data>
+  <data name="FolderRulesUndoRefused" xml:space="preserve">
+    <value>This entry can't be undone now.</value>
+    <comment>Folder Rules page: note after Undo of an entry that can't be undone now, such as one undone already.</comment>
+  </data>
 </root>

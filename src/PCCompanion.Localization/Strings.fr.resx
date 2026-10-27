@@ -1908,4 +1908,212 @@
     <value>La destination formée à partir de ce fichier se trouve dans un dossier que les règles ne peuvent pas modifier.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="FolderRulesRunNow" xml:space="preserve">
+    <value>Exécuter maintenant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowName" xml:space="preserve">
+    <value>Exécuter maintenant pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowTitle" xml:space="preserve">
+    <value>Exécuter maintenant : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowDescription" xml:space="preserve">
+    <value>Les fichiers présents que les règles du dossier traiteraient, et ce qu’elles feraient de chacun. Décochez la case d’un fichier pour le laisser.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRun" xml:space="preserve">
+    <value>Exécuter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRule" xml:space="preserve">
+    <value>Règle : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowLoading" xml:space="preserve">
+    <value>Demande des fichiers à PC Companion…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNotRunning" xml:space="preserve">
+    <value>Exécuter maintenant fonctionne quand Règles de dossier est activé et que PC Companion est en cours d’exécution.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRefused" xml:space="preserve">
+    <value>PC Companion ne surveille pas ce dossier pour l’instant. Vérifiez son bouton bascule, et son problème s’il en a un.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowListFailed" xml:space="preserve">
+    <value>Windows n’a pas pu lister les fichiers du dossier (erreur {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNone" xml:space="preserve">
+    <value>Les règles du dossier ne traiteraient aucun des fichiers présents.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowStarted" xml:space="preserve">
+    <value>Les règles traitent les fichiers choisis. Actualiser montre ce qu’elles ont fait.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryHeader" xml:space="preserve">
+    <value>Historique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryDescription" xml:space="preserve">
+    <value>Ce que les règles ont fait ces 30 derniers jours, du plus récent au plus ancien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryRefresh" xml:space="preserve">
+    <value>Actualiser</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOpenRecycleBin" xml:space="preserve">
+    <value>Ouvrir la Corbeille</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistory" xml:space="preserve">
+    <value>Effacer l’historique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryTitle" xml:space="preserve">
+    <value>Effacer l’historique ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryText" xml:space="preserve">
+    <value>PC Companion oublie ce que les règles ont fait. Un fichier qu’elles ont traité et qui revient peut être traité de nouveau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryLoading" xml:space="preserve">
+    <value>Chargement de l’historique…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryNotRunning" xml:space="preserve">
+    <value>L’historique s’affiche quand Règles de dossier est activé et que PC Companion est en cours d’exécution.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryEmpty" xml:space="preserve">
+    <value>Les règles n’ont encore traité aucun fichier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryShowMore" xml:space="preserve">
+    <value>Afficher plus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryWhen" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndo" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoName" xml:space="preserve">
+    <value>Annuler pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeMoved" xml:space="preserve">
+    <value>Déplacé vers {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeCopied" xml:space="preserve">
+    <value>Copié vers {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRenamed" xml:space="preserve">
+    <value>Renommé en {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRecycleBin" xml:space="preserve">
+    <value>Déplacé vers la Corbeille</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeWaiting" xml:space="preserve">
+    <value>En attente d’une réponse : Windows demande s’il faut le supprimer définitivement, car il est trop volumineux pour la Corbeille.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeDeleted" xml:space="preserve">
+    <value>Supprimé définitivement après Oui dans la question de Windows, car il était trop volumineux pour la Corbeille.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeKept" xml:space="preserve">
+    <value>Conservé, car il était trop volumineux pour la Corbeille et la question de Windows n’a pas reçu la réponse Oui.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeSkipped" xml:space="preserve">
+    <value>Laissé où il est. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeUndone" xml:space="preserve">
+    <value>{0} Remis en place avec Annuler.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNameTaken" xml:space="preserve">
+    <value>Un fichier du même nom s’y trouve.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInUse" xml:space="preserve">
+    <value>Un autre programme l’a gardé ouvert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNoRecycleBin" xml:space="preserve">
+    <value>Son lecteur n’a pas de Corbeille, et PC Companion ne supprime jamais de fichiers définitivement de lui-même.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonMarkWouldBeLost" xml:space="preserve">
+    <value>Le lecteur de destination ne peut pas conserver sa marque web, grâce à laquelle Windows avertit avant l’ouverture d’un fichier téléchargé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonBlocked" xml:space="preserve">
+    <value>L’accès contrôlé aux dossiers de Sécurité Windows a bloqué la modification. Pour l’autoriser, ajoutez PCCompanion.Host.exe, dans le dossier de PC Companion, sous Autoriser une application via l’accès contrôlé aux dossiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonFailed" xml:space="preserve">
+    <value>Windows a refusé (erreur {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonDestinationNotFound" xml:space="preserve">
+    <value>Le dossier de destination n’existe pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonChanged" xml:space="preserve">
+    <value>Il a changé ou disparu avant que la règle agisse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInterrupted" xml:space="preserve">
+    <value>Son lecteur a été éjecté pendant le déplacement ou la copie. Une nouvelle tentative a lieu quand le lecteur revient.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoChanged" xml:space="preserve">
+    <value>Le fichier n’est pas là où la règle l’a mis, ou il a changé depuis : rien n’a donc changé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoPlaceTaken" xml:space="preserve">
+    <value>Un fichier portant son ancien nom se trouve à son ancien emplacement : rien n’a donc changé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoInUse" xml:space="preserve">
+    <value>Un autre programme a ouvert le fichier : rien n’a donc changé. Réessayez une fois qu’il est fermé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoBlocked" xml:space="preserve">
+    <value>L’accès contrôlé aux dossiers de Sécurité Windows a empêché de remettre le fichier en place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoNoRecycleBin" xml:space="preserve">
+    <value>Le lecteur de la copie n’a pas de Corbeille : la copie reste donc.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoKept" xml:space="preserve">
+    <value>La copie reste, car elle est trop volumineuse pour la Corbeille et la question de Windows n’a pas reçu la réponse Oui.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoFailed" xml:space="preserve">
+    <value>Windows a refusé (erreur {0}) : rien n’a donc changé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoRefused" xml:space="preserve">
+    <value>Cette entrée ne peut pas être annulée pour l’instant.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

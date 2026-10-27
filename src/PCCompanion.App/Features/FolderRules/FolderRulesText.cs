@@ -1,4 +1,6 @@
+using System;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Files.FolderRules;
@@ -15,6 +17,13 @@ public static class FolderRulesText
     private static readonly CompositeFormat CopyFormat = CompositeFormat.Parse(Strings.FolderRulesSummaryCopy);
     private static readonly CompositeFormat RenameFormat = CompositeFormat.Parse(Strings.FolderRulesSummaryRename);
     private static readonly CompositeFormat ProblemFormat = CompositeFormat.Parse(Strings.FolderRulesSummaryProblem);
+    private static readonly CompositeFormat MovedFormat = CompositeFormat.Parse(Strings.FolderRulesOutcomeMoved);
+    private static readonly CompositeFormat CopiedFormat = CompositeFormat.Parse(Strings.FolderRulesOutcomeCopied);
+    private static readonly CompositeFormat RenamedFormat = CompositeFormat.Parse(Strings.FolderRulesOutcomeRenamed);
+    private static readonly CompositeFormat SkippedFormat = CompositeFormat.Parse(Strings.FolderRulesOutcomeSkipped);
+    private static readonly CompositeFormat UndoneFormat = CompositeFormat.Parse(Strings.FolderRulesOutcomeUndone);
+    private static readonly CompositeFormat ReasonFailedFormat = CompositeFormat.Parse(Strings.FolderRulesReasonFailed);
+    private static readonly CompositeFormat UndoFailedFormat = CompositeFormat.Parse(Strings.FolderRulesUndoFailed);
 
     /// <summary>What keeps a folder from being watched, or from being a destination, or an empty string.</summary>
     public static string Of(FolderProblem problem) => problem switch
@@ -65,6 +74,60 @@ public static class FolderRulesText
         NamingProblem.NameTooLong => Strings.FolderRulesNamingNameTooLong,
         NamingProblem.DestinationIsOwnFolder => Strings.FolderRulesNamingOwnFolder,
         NamingProblem.DestinationNotAllowed => Strings.FolderRulesNamingNotAllowed,
+        _ => string.Empty,
+    };
+
+    /// <summary>What happened to a history entry's file, and whether Undo put it back.</summary>
+    public static string Of(HistoryEntry entry)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+
+        var what = entry.Outcome switch
+        {
+            HistoryOutcome.Moved => string.Format(CultureInfo.CurrentCulture, MovedFormat, entry.NewPath),
+            HistoryOutcome.Copied => string.Format(CultureInfo.CurrentCulture, CopiedFormat, entry.NewPath),
+            HistoryOutcome.Renamed => string.Format(CultureInfo.CurrentCulture, RenamedFormat, Path.GetFileName(entry.NewPath)),
+            HistoryOutcome.MovedToRecycleBin => Strings.FolderRulesOutcomeRecycleBin,
+            HistoryOutcome.WaitingForAnswer => Strings.FolderRulesOutcomeWaiting,
+            HistoryOutcome.DeletedForGood => Strings.FolderRulesOutcomeDeleted,
+            HistoryOutcome.KeptByAnswer => Strings.FolderRulesOutcomeKept,
+            _ => string.Format(CultureInfo.CurrentCulture, SkippedFormat, Of(entry.Reason, entry)),
+        };
+
+        return entry.Undone is null ? what : string.Format(CultureInfo.CurrentCulture, UndoneFormat, what);
+    }
+
+    /// <summary>What Undo did, or why it didn't, or an empty string when it put the file back.</summary>
+    public static string OfUndo(FolderRulesAnswer answer)
+    {
+        ArgumentNullException.ThrowIfNull(answer);
+
+        return answer.Status switch
+        {
+            FolderRulesAnswerStatus.Done => string.Empty,
+            FolderRulesAnswerStatus.Changed => Strings.FolderRulesUndoChanged,
+            FolderRulesAnswerStatus.PlaceTaken => Strings.FolderRulesUndoPlaceTaken,
+            FolderRulesAnswerStatus.InUse => Strings.FolderRulesUndoInUse,
+            FolderRulesAnswerStatus.Blocked => Strings.FolderRulesUndoBlocked,
+            FolderRulesAnswerStatus.NoRecycleBin => Strings.FolderRulesUndoNoRecycleBin,
+            FolderRulesAnswerStatus.Kept => Strings.FolderRulesUndoKept,
+            FolderRulesAnswerStatus.Failed => string.Format(CultureInfo.CurrentCulture, UndoFailedFormat, answer.ErrorCode),
+            _ => Strings.FolderRulesUndoRefused,
+        };
+    }
+
+    private static string Of(SkipReason reason, HistoryEntry entry) => reason switch
+    {
+        SkipReason.NameTaken => Strings.FolderRulesReasonNameTaken,
+        SkipReason.InUse => Strings.FolderRulesReasonInUse,
+        SkipReason.NoRecycleBin => Strings.FolderRulesReasonNoRecycleBin,
+        SkipReason.MarkWouldBeLost => Strings.FolderRulesReasonMarkWouldBeLost,
+        SkipReason.Blocked => Strings.FolderRulesReasonBlocked,
+        SkipReason.Failed => string.Format(CultureInfo.CurrentCulture, ReasonFailedFormat, entry.ErrorCode),
+        SkipReason.DestinationNotFound => Strings.FolderRulesReasonDestinationNotFound,
+        SkipReason.Naming => Of(entry.Naming),
+        SkipReason.Changed => Strings.FolderRulesReasonChanged,
+        SkipReason.Interrupted => Strings.FolderRulesReasonInterrupted,
         _ => string.Empty,
     };
 

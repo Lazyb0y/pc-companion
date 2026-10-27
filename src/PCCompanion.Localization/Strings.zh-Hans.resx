@@ -1892,4 +1892,212 @@
     <value>根据此文件生成的目标位置位于规则无法更改的文件夹中。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="FolderRulesRunNow" xml:space="preserve">
+    <value>立即运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowName" xml:space="preserve">
+    <value>立即为 {0} 运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowTitle" xml:space="preserve">
+    <value>立即运行：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowDescription" xml:space="preserve">
+    <value>此文件夹的规则将处理的当前文件，以及对每个文件的操作。清除文件的复选框可将其保留不动。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRun" xml:space="preserve">
+    <value>运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRule" xml:space="preserve">
+    <value>规则：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowLoading" xml:space="preserve">
+    <value>正在向 PC Companion 请求文件…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNotRunning" xml:space="preserve">
+    <value>文件夹规则处于打开状态且 PC Companion 正在运行时，“立即运行”才可用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRefused" xml:space="preserve">
+    <value>PC Companion 当前未监视此文件夹。请检查它的开关，以及它可能存在的问题。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowListFailed" xml:space="preserve">
+    <value>Windows 无法列出该文件夹中的文件（错误 {0}）。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNone" xml:space="preserve">
+    <value>此文件夹的规则不会处理任何当前文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowStarted" xml:space="preserve">
+    <value>规则正在处理你选择的文件。“刷新”会显示它们所做的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryHeader" xml:space="preserve">
+    <value>历史记录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryDescription" xml:space="preserve">
+    <value>规则在过去 30 天内执行的操作，最新的在前。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryRefresh" xml:space="preserve">
+    <value>刷新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOpenRecycleBin" xml:space="preserve">
+    <value>打开回收站</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistory" xml:space="preserve">
+    <value>清除历史记录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryTitle" xml:space="preserve">
+    <value>要清除历史记录吗？</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryText" xml:space="preserve">
+    <value>PC Companion 会忘记规则执行过的操作。规则处理过的文件如果回来，可能会被再次处理。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryLoading" xml:space="preserve">
+    <value>正在加载历史记录…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryNotRunning" xml:space="preserve">
+    <value>文件夹规则处于打开状态且 PC Companion 正在运行时，才会显示历史记录。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryEmpty" xml:space="preserve">
+    <value>规则尚未处理任何文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryShowMore" xml:space="preserve">
+    <value>显示更多</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryWhen" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndo" xml:space="preserve">
+    <value>撤消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoName" xml:space="preserve">
+    <value>撤消 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeMoved" xml:space="preserve">
+    <value>已移到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeCopied" xml:space="preserve">
+    <value>已复制到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRenamed" xml:space="preserve">
+    <value>已重命名为 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRecycleBin" xml:space="preserve">
+    <value>已移到回收站</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeWaiting" xml:space="preserve">
+    <value>等待回答：由于文件太大，无法放入回收站，Windows 正在询问是否永久删除它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeDeleted" xml:space="preserve">
+    <value>由于文件太大，无法放入回收站，在 Windows 的询问中选择“是”后已被永久删除。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeKept" xml:space="preserve">
+    <value>已保留，因为文件太大，无法放入回收站，且未在 Windows 的询问中选择“是”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeSkipped" xml:space="preserve">
+    <value>保留在原处。{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeUndone" xml:space="preserve">
+    <value>{0} 已通过撤消放回。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNameTaken" xml:space="preserve">
+    <value>那里有一个同名文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInUse" xml:space="preserve">
+    <value>另一个程序一直打开着它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNoRecycleBin" xml:space="preserve">
+    <value>其所在驱动器没有回收站，而 PC Companion 从不自行永久删除文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonMarkWouldBeLost" xml:space="preserve">
+    <value>目标驱动器无法保留它的 Web 标记，而 Windows 会根据此标记在打开下载的文件前发出警告。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonBlocked" xml:space="preserve">
+    <value>Windows 安全中心的“受控制文件夹的访问”阻止了此更改。若要允许，请在“允许应用通过受控制文件夹访问”中添加 PC Companion 文件夹中的 PCCompanion.Host.exe。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonFailed" xml:space="preserve">
+    <value>Windows 拒绝了操作（错误 {0}）。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonDestinationNotFound" xml:space="preserve">
+    <value>目标文件夹不存在。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonChanged" xml:space="preserve">
+    <value>在规则执行之前，它已更改或不见了。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInterrupted" xml:space="preserve">
+    <value>移动或复制期间其驱动器被弹出。驱动器恢复后会再次尝试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoChanged" xml:space="preserve">
+    <value>该文件不在规则放置的位置，或此后已更改，因此未做任何更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoPlaceTaken" xml:space="preserve">
+    <value>原位置已有一个使用其原名称的文件，因此未做任何更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoInUse" xml:space="preserve">
+    <value>另一个程序打开了该文件，因此未做任何更改。请在它关闭后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoBlocked" xml:space="preserve">
+    <value>Windows 安全中心的“受控制文件夹的访问”阻止了将文件放回。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoNoRecycleBin" xml:space="preserve">
+    <value>副本所在的驱动器没有回收站，因此副本会保留。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoKept" xml:space="preserve">
+    <value>副本会保留，因为它太大，无法放入回收站，且未在 Windows 的询问中选择“是”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoFailed" xml:space="preserve">
+    <value>Windows 拒绝了操作（错误 {0}），因此未做任何更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoRefused" xml:space="preserve">
+    <value>现在无法撤消此条目。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

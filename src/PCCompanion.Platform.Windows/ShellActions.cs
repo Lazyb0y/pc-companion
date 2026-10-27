@@ -101,6 +101,21 @@ public static class ShellActions
     /// <summary>Opens the Proxy page of Windows Settings.</summary>
     public static bool OpenProxySettings() => OpenSettingsPage("ms-settings:network-proxy");
 
+    /// <summary>Opens the Recycle Bin in File Explorer, where its files can be restored.</summary>
+    public static bool OpenRecycleBin()
+    {
+        try
+        {
+            var explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+            using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { "shell:RecycleBinFolder" } });
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Turns the displays off until the pointer moves or a key is pressed.
     /// </summary>
