@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using PCCompanion.Modules.Files.FolderRules;
@@ -133,6 +134,18 @@ public sealed class FolderRuleActionsTests
 
         Assert.Equal(NamingProblem.DestinationIsOwnFolder, entry.Naming);
         Assert.Empty(_system.Transfers);
+    }
+
+    [Fact]
+    public void ADestinationInAHiddenSystemFolderIsntUsed()
+    {
+        _system.AddFile(@"D:\Invoices\$Recycle.Bin", attributes: FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System);
+
+        var entry = Act(Rule("Move", @"D:\Invoices\$Recycle.Bin\{year}"))!;
+
+        Assert.Equal(NamingProblem.DestinationNotAllowed, entry.Naming);
+        Assert.True(_system.Exists(Invoice));
+        Assert.False(_system.Exists(@"D:\Invoices\$Recycle.Bin\2026"));
     }
 
     [Fact]

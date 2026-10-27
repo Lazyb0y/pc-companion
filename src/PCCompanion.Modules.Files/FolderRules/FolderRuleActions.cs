@@ -214,7 +214,8 @@ public sealed class FolderRuleActions
     }
 
     // Checks that the folder the destination starts with, start, exists and that nothing on the way
-    // is a link, and creates the subfolders made from the file. Returns how to skip the file, or null.
+    // is a link or a hidden system folder, and creates the subfolders made from the file. Returns
+    // how to skip the file, or null.
     private Func<HistoryEntry, HistoryEntry>? PrepareDestination(string start, string destination)
     {
         var root = Path.GetPathRoot(start)!;
@@ -246,7 +247,7 @@ public sealed class FolderRuleActions
                     return entry => Refused(entry, error, path);
                 }
             }
-            else if (!details.IsFolder || details.IsLink)
+            else if (!details.IsFolder || details.IsLink || FolderRuleFilter.IsSystemFolder(details))
             {
                 return entry => Skipped(entry, SkipReason.Naming) with { Naming = NamingProblem.DestinationNotAllowed };
             }
