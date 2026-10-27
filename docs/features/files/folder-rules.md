@@ -58,7 +58,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 
 ## Waiting until a file has arrived
 
-- Windows' change events only say that a file changed: a file that a program keeps open while it writes gives one event when it's created and the next when it's closed, and a copy has its full size from the start. So PC Companion reads the file's size and last modified time itself, and handles the file once neither has changed for 2 seconds, a wait that starts again with each change, and once no other program has it open for writing: PC Companion opens it without letting others write to it, and when that fails, it tries again later, waiting longer each time.
+- Windows' change events only say that a file changed: a file that a program keeps open while it writes gives one event when it's created and the next when it's closed, and a copy has its full size from the start. So PC Companion reads the file's size and last modified time itself, and handles the file once neither has changed for 2 seconds, a wait that starts again with each change, and once no other program has it open for writing: PC Companion opens it without letting others write to it, and when that fails, it tries again later, waiting twice as long each time, up to 30 seconds.
 - Files that browsers and other programs are still writing are skipped, by their names: `.crdownload` (Chromium browsers), `.part` (Firefox), `.partial`, `.download`, `.opdownload` and `.tmp`, and Office's `~$` lock files. When the download is done, the browser renames the file to its final name, which is an arrival. Edge and Chrome add the Mark of the Web up to half a second after that rename, which counts as a change, so the file is handled with its mark. A download waiting for the user to choose where to save it, as in Chrome's incognito windows, sits in the folder whole under its temporary `.tmp` name, and stays there if the user cancels.
 - Empty files are skipped too. While Firefox downloads, it keeps an empty file under the final name and writes to a `.part` file with another name, which takes the empty file's place when it's done.
 
@@ -67,7 +67,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 - **Links:** symbolic links and junctions are skipped, and a watched folder or a destination can't be one, or be reached through one. A rule never acts on the file a link points to.
 - **Files only in the cloud:** files that a cloud storage app, such as OneDrive, keeps online only are skipped, so PC Companion never downloads them.
 - **Hidden and system files**, such as `desktop.ini`.
-- **Files in use:** a file that another program has open, so it can't be moved, is tried again later, and after a few minutes left where it is, with an entry in the history.
+- **Files in use:** a file that another program has open, so it can't be moved, is tried again later, and after 5 minutes left where it is, with an entry in the history. A later change to it brings it back.
 - **Folders that Windows protects:** with Controlled folder access on in Windows Security, Windows blocks apps it doesn't trust from changing files in Documents, Pictures, Music, Videos and Favorites, and in folders the user added. It trusts apps by how widely they're used and their reputation, not by a signature alone. A move it blocks stays undone, the history says Windows blocked it, and the page explains how to allow PC Companion.
 
 ## Which folders
