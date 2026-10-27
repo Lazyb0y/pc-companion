@@ -25,6 +25,7 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
     private readonly Dictionary<string, (Action<string> Changed, Action<bool> Failed)> _watches = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _busy = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _denied = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<string> _withoutStreams = [];
     private long _nextId = 1;
 
     public static DateTimeOffset Time { get; } = new(2026, 3, 5, 10, 0, 0, TimeSpan.Zero);
@@ -130,6 +131,23 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
         lock (Gate)
         {
             _denied.Add(folder);
+        }
+    }
+
+    /// <summary>Makes the drive with the root <paramref name="root"/> one that can't keep a file's Mark of the Web, such as exFAT.</summary>
+    public void LoseStreams(string root)
+    {
+        lock (Gate)
+        {
+            _withoutStreams.Add(root);
+        }
+    }
+
+    public bool KeepsStreams(string folder)
+    {
+        lock (Gate)
+        {
+            return !_withoutStreams.Exists(root => folder.StartsWith(root, StringComparison.OrdinalIgnoreCase));
         }
     }
 

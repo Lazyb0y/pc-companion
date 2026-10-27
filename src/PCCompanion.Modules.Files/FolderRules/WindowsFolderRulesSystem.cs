@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -41,6 +42,19 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             return null;
+        }
+    }
+
+    // A drive that can't be reached can't take the file either, which the move then reports.
+    public bool KeepsStreams(string folder)
+    {
+        try
+        {
+            return VolumeDetails.Read(folder).NamedStreams;
+        }
+        catch (Win32Exception)
+        {
+            return true;
         }
     }
 

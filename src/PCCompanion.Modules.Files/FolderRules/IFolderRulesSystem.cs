@@ -31,6 +31,12 @@ public interface IFolderRulesSystem
     /// <summary>The file's Mark of the Web, or <see langword="null"/> when it has none or it can't be read.</summary>
     MarkOfTheWeb? ReadMark(string path);
 
+    /// <summary>
+    /// Whether the drive a folder is on keeps a file's other streams, such as its Mark of the Web;
+    /// true when that can't be read.
+    /// </summary>
+    bool KeepsStreams(string folder);
+
     /// <summary>Creates a folder in a folder that exists. Returns 0, or Windows' error code.</summary>
     int CreateFolder(string path);
 

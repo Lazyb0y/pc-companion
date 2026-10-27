@@ -72,12 +72,16 @@ public sealed record FileDetails(
         FILE_ATTRIBUTE_TAG_INFO tag;
         Query(handle, FILE_INFO_BY_HANDLE_CLASS.FileBasicInfo, &basic, sizeof(FILE_BASIC_INFO));
         Query(handle, FILE_INFO_BY_HANDLE_CLASS.FileStandardInfo, &standard, sizeof(FILE_STANDARD_INFO));
-        Query(handle, FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo, &tag, sizeof(FILE_ATTRIBUTE_TAG_INFO));
+
+        // FAT and exFAT drives have no reparse points, and refuse to give a tag (error 87).
+        var reparseTag = PInvoke.GetFileInformationByHandleEx((HANDLE)handle.DangerousGetHandle(), FILE_INFO_BY_HANDLE_CLASS.FileAttributeTagInfo, &tag, (uint)sizeof(FILE_ATTRIBUTE_TAG_INFO))
+            ? tag.ReparseTag
+            : 0;
 
         return new FileDetails(
             Path.GetFileName(Path.TrimEndingDirectorySeparator(path)),
             (FileAttributes)basic.FileAttributes,
-            tag.ReparseTag,
+            reparseTag,
             standard.EndOfFile,
             Time(basic.CreationTime),
             Time(basic.LastWriteTime),
