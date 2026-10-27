@@ -4,6 +4,9 @@
     "net10.0-windows10.0.19041": {
       "pccompanion.core": {
         "type": "Project"
+      },
+      "pccompanion.platform.windows": {
+        "type": "Project"
       }
     }
   }
