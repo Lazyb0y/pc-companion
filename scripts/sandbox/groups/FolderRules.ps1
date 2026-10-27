@@ -432,6 +432,8 @@ Test-Check 'Run now moves the chosen PDF' (($answer.status -eq 'Done') -and (Wai
 Test-Check 'and only that file' ((Test-Path "$inbox\nuke.log") -and (Test-Path "$inbox\taken.png"))
 $answer = Invoke-FolderRulesPipe @{ kind = 'RunNow'; folder = $inbox; files = @(@{ name = '..\Sorted\pdf\report.pdf'; size = 1000; modified = $there.modified }) }
 Test-Check 'Run now refuses a file outside the folder' (($answer.status -eq 'Refused') -and (Test-Path "$sorted\pdf\report.pdf")) "$($answer.status)"
+$answer = Invoke-FolderRulesPipe @{ kind = 'RunNowList'; folder = $systemFolder }
+Test-Check 'Run now refuses the hidden system folder' ($answer.status -eq 'Refused') "$($answer.status)"
 
 # Undo puts the PDF back, where the rules leave it.
 $entry = Get-History | Where-Object { $_.name -eq 'there.pdf' } | Select-Object -First 1
