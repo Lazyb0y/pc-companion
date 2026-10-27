@@ -6,5 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PCCompanion.Core\PCCompanion.Core.csproj" />
+    <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>
 </Project>
