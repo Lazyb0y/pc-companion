@@ -412,6 +412,29 @@ public sealed class FolderRulesThreadTests : IDisposable
         Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\while-asleep.pdf")));
     }
 
+    [Theory]
+    [InlineData(@"D:\$Recycle.Bin")]
+    [InlineData(@"D:\$Recycle.Bin\S-1-5-21")]
+    public void AHiddenSystemFolderOrOneInItIsntWatched(string folder)
+    {
+        _system.AddFile(@"D:\$Recycle.Bin", attributes: FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System).AddFolder(@"D:\$Recycle.Bin\S-1-5-21");
+
+        _thread = new FolderRulesThread(MovePdfs(folder), _system, _store, Places, _time, _drives, _pipeName, _logger);
+
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules folder 1 can't be used: SystemFolder.")));
+        Assert.False(_system.IsWatching(folder));
+    }
+
+    [Fact]
+    public void AFolderThatIsOnlyHiddenIsWatched()
+    {
+        _system.AddFile(@"D:\AppData", attributes: FileAttributes.Directory | FileAttributes.Hidden);
+
+        Start(MovePdfs(@"D:\AppData"));
+
+        Assert.True(_system.IsWatching(@"D:\AppData"));
+    }
+
     [Fact]
     public void AFolderThatComesBackIsWatchedAgainWithAnInformation()
     {

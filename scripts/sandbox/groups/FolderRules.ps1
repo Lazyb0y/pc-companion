@@ -4,22 +4,22 @@
 # extension, a picture copied there is copied, and a note renamed into it gets the date in its name.
 # A file written slowly and held open, and a download named .crdownload until it's renamed, are
 # handled only once done; a name that's taken gets a number, or the file stays with a rule that
-# skips; a hidden file and an empty one stay. A log goes to the Recycle Bin, and with Don't move
-# files to the Recycle Bin on, it stays. With the Recycle Bin for C: set to 1 MB, a 50 MB log is too
-# big for it, so Windows asks, in its own window, while the history shows the file waiting: No, Esc
-# and closing the window keep the file, and Yes deletes it. A PDF with a Mark of the Web keeps it
-# when it moves; on an exFAT virtual disk, a file with a mark stays rather than lose it, and one
-# without moves there. A download in Edge, from a server on the loopback address under a test name,
-# arrives in Downloads, matches Downloaded from, and moves with its mark. A folder on a share on the
-# Sandbox itself is watched; once the share is removed and back, it's watched again within a
-# minute, and a file written while it was away moves. Networking is on for the share, with the
-# update check off. The files already there when the folder was added stay, and a file that arrives
-# while the host isn't running is handled when it starts. The history file says what happened, and
-# the pipe gives the settings app the same history; Run now lists the file that was there before and
-# moves it when chosen, and Undo puts it back, where it stays. The pipe refuses a file outside the
-# folder and a request it doesn't know, and clears the history. The logs hold no file names or
-# folders. Turned off, the folder isn't watched and the host serves no pipe. Detailed logging is on
-# for the Debug entries.
+# skips; a hidden file and an empty one stay, and a hidden system folder isn't watched. A log goes
+# to the Recycle Bin, and with Don't move files to the Recycle Bin on, it stays. With the Recycle
+# Bin for C: set to 1 MB, a 50 MB log is too big for it, so Windows asks, in its own window, while
+# the history shows the file waiting: No, Esc and closing the window keep the file, and Yes deletes
+# it. A PDF with a Mark of the Web keeps it when it moves; on an exFAT virtual disk, a file with a
+# mark stays rather than lose it, and one without moves there. A download in Edge, from a server on
+# the loopback address under a test name, arrives in Downloads, matches Downloaded from, and moves
+# with its mark. A folder on a share on the Sandbox itself is watched; once the share is removed and
+# back, it's watched again within a minute, and a file written while it was away moves. Networking
+# is on for the share, with the update check off. The files already there when the folder was added
+# stay, and a file that arrives while the host isn't running is handled when it starts. The history
+# file says what happened, and the pipe gives the settings app the same history; Run now lists the
+# file that was there before and moves it when chosen, and Undo puts it back, where it stays. The
+# pipe refuses a file outside the folder and a request it doesn't know, and clears the history. The
+# logs hold no file names or folders. Turned off, the folder isn't watched and the host serves no
+# pipe. Detailed logging is on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -31,6 +31,7 @@ $card = 'X:\Card'
 $shareFolder = Join-Path $root 'Shared'
 $share = '\\localhost\FolderRulesShare'
 $fromShare = Join-Path $sorted 'From the share'
+$systemFolder = Join-Path $root 'Windows only'
 $historyFile = Join-Path $dataFolder 'folder-rules.json'
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 
@@ -44,7 +45,7 @@ function Write-FolderRules([bool] $Enabled) {
     )
     $fromSite = @(@{ name = 'From the test site'; downloadedFrom = @('*.folder-rules.test'); action = 'Move'; destination = $downloaded })
     $scans = @(@{ name = 'Scans'; extensions = @('pdf'); action = 'Move'; destination = $fromShare })
-    $section = @{ enabled = $Enabled; folders = @(@{ path = $inbox; rules = $rules }, @{ path = $downloads; rules = $fromSite }, @{ path = $share; rules = $scans }) }
+    $section = @{ enabled = $Enabled; folders = @(@{ path = $inbox; rules = $rules }, @{ path = $downloads; rules = $fromSite }, @{ path = $share; rules = $scans }, @{ path = $systemFolder; rules = $scans }) }
     $settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; updates = @{ checkAutomatically = $false }; diagnostics = @{ detailedLoggingUntil = $detailedUntil }; features = @{ folderRules = $section } }
     Write-Settings ($settings | ConvertTo-Json -Depth 8)
 }
@@ -239,6 +240,10 @@ Remove-Item $root -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $inbox, $pictures, $downloaded, $downloads | Out-Null
 New-TestFile (Join-Path $inbox 'there.pdf')
 
+# A hidden system folder, as the Recycle Bin's own folders are, which only Windows uses.
+New-Item -ItemType Directory -Force -Path $systemFolder | Out-Null
+(Get-Item $systemFolder -Force).Attributes = 'Directory, Hidden, System'
+
 # An exFAT virtual disk, as X:, which can't keep a file's Mark of the Web.
 $diskOutput = Invoke-DiskPart @"
 create vdisk file="$root\card.vhdx" maximum=64 type=expandable
@@ -266,8 +271,9 @@ Set-ItemProperty $bitBucket -Name MaxCapacity -Value 1 -Type DWord
 
 Write-FolderRules $true
 Start-Process $hostExe
-Test-Check 'the host uses the folder and its rules' (Wait-Until { (Get-HostLog) -match 'Folder Rules applied: 3 folders and 7 rules can be used\.' } 15)
+Test-Check 'the host uses the folder and its rules' (Wait-Until { (Get-HostLog) -match 'Folder Rules applied: 4 folders and 8 rules can be used\.' } 15)
 Test-Check 'the host looks at the folder it never looked at before' (Wait-Until { (Get-HostLog) -match 'Folder Rules looked at folder 1: 0 of 1 files arrived since it last looked\.' } 10)
+Test-Check 'the host doesn''t watch the hidden system folder' (Wait-Until { (Get-HostLog) -match 'Folder Rules folder 4 can''t be used: "?SystemFolder"?\.' } 10)
 
 # Written there, a PDF moves into a subfolder made from its extension.
 New-TestFile (Join-Path $inbox 'report.pdf')
@@ -315,13 +321,15 @@ Test-Check 'a download still named .crdownload stays' (Test-Path "$inbox\big.pdf
 Rename-Item "$inbox\big.pdf.crdownload" 'big.pdf'
 Test-Check 'renamed to its name, it moves' (Wait-Until { Test-Path "$sorted\pdf\big.pdf" } 15)
 
-# A hidden file and an empty one stay.
+# A hidden file, an empty one and one in the hidden system folder stay.
 New-TestFile (Join-Path $inbox 'hidden.pdf')
+New-TestFile (Join-Path $systemFolder 'system.pdf')
 (Get-Item "$inbox\hidden.pdf").Attributes = 'Hidden'
 New-TestFile (Join-Path $inbox 'empty.pdf') 0
 Start-Sleep -Seconds 6
 Test-Check 'a hidden file stays' (Test-Path "$inbox\hidden.pdf" -PathType Leaf)
 Test-Check 'an empty file stays' (Test-Path "$inbox\empty.pdf")
+Test-Check 'a PDF in the hidden system folder stays' (Test-Path "$systemFolder\system.pdf")
 
 # A PDF with a Mark of the Web keeps it when it moves.
 New-TestFile (Join-Path $inbox 'marked.pdf')

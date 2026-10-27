@@ -492,6 +492,17 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         private void StartWatch(string path, Folder folder)
         {
             folder.Kind = _owner._system.KindOf(path);
+            if (IsInSystemFolder(path))
+            {
+                if (!folder.Failing)
+                {
+                    LogUnusableFolder(_owner._logger, folder.Number, FolderProblem.SystemFolder);
+                    folder.Failing = true;
+                }
+
+                return;
+            }
+
             IDisposable watch;
             try
             {
@@ -524,6 +535,29 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             }
 
             Look(path, folder);
+        }
+
+        // Whether the folder, or one it's in, is a hidden system folder, which only Windows uses. A
+        // folder that can't be read is tried, and its watch says why it can't be used.
+        private bool IsInSystemFolder(string path)
+        {
+            var root = Path.GetPathRoot(path)!;
+            for (var folder = path; folder.Length > root.Length; folder = Path.GetDirectoryName(folder)!)
+            {
+                try
+                {
+                    if (_owner._system.Read(folder) is { } details && FolderRuleFilter.IsSystemFolder(details))
+                    {
+                        return true;
+                    }
+                }
+                catch (Win32Exception)
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         // Looks at the whole folder for files that arrived since the rules last looked at it.

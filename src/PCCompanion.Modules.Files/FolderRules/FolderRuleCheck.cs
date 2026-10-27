@@ -33,6 +33,12 @@ public enum FolderProblem
     DataFolder,
 
     /// <summary>
+    /// A hidden system folder or a folder in one, such as the Recycle Bin's own folders, which only
+    /// Windows uses. Only the host and the page, which read the disk, find it.
+    /// </summary>
+    SystemFolder,
+
+    /// <summary>
     /// A destination's subfolder made from the file has a part in braces that isn't known or
     /// closed, a character a folder name can't have, or is <c>.</c> or <c>..</c>.
     /// </summary>
