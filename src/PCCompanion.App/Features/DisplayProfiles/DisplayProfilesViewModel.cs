@@ -22,10 +22,14 @@ namespace PCCompanion.App.Features.DisplayProfiles;
 /// <param name="IsInUse">Whether the setup in use is the profile's.</param>
 /// <param name="CanUse">Whether Use is available: the feature is on, and the profile is in the menu and can be used now.</param>
 /// <param name="CanUpdate">Whether Update from current setup is available: the current setup is known.</param>
+/// <param name="Picture">The profile's arrangement, for a profile in the menu; none for others.</param>
 public sealed record DisplayProfileItem(
     int Index,
     DisplayProfile Profile,
     string Name,
+    IReadOnlyList<PictureDisplay> Picture,
+    double PictureWidth,
+    double PictureHeight,
     string Summary,
     bool IsInUse,
     bool IsNotInUse,
@@ -302,6 +306,7 @@ public sealed partial class DisplayProfilesViewModel : FeatureViewModel<DisplayP
             var problem = DisplayProfileCheck.Check(profile, usableNames);
             var usable = problem == DisplayProfileProblem.None && index < DisplayProfilesSettings.MaximumProfiles;
             var lines = new List<string>();
+            (IReadOnlyList<PictureDisplay> Displays, double Width, double Height) picture = ([], 0, 0);
             var canBeUsed = false;
             var inUse = false;
             if (index >= DisplayProfilesSettings.MaximumProfiles)
@@ -315,6 +320,7 @@ public sealed partial class DisplayProfilesViewModel : FeatureViewModel<DisplayP
             else
             {
                 usableNames.Add(profile.Name);
+                picture = DisplayProfilesPicture.Draw(profile);
                 lines.AddRange(DisplayProfilesText.Lines(profile));
                 if (_current is { } current)
                 {
@@ -338,6 +344,9 @@ public sealed partial class DisplayProfilesViewModel : FeatureViewModel<DisplayP
                 index,
                 profile,
                 name,
+                picture.Displays,
+                picture.Width,
+                picture.Height,
                 string.Join(Environment.NewLine, lines),
                 inUse,
                 !inUse,
