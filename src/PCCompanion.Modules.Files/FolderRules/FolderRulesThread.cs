@@ -121,6 +121,9 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules folder {Folder}, rule {Rule} left a file where it is: {Reason}.")]
     private static partial void LogSkipped(ILogger logger, int folder, int rule, SkipReason reason);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules folder {Folder}, rule {Rule}: Windows asks whether to delete a file too big for the Recycle Bin.")]
+    private static partial void LogAsking(ILogger logger, int folder, int rule);
+
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused Folder Rules folder {Folder}, rule {Rule} (error {ErrorCode}).")]
     private static partial void LogRefused(ILogger logger, int folder, int rule, int errorCode);
 
@@ -152,7 +155,10 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         private readonly ArrivalWatch _arrivals;
         private readonly FolderRuleActions _actions;
         private readonly Dictionary<string, Folder> _folders = new(StringComparer.OrdinalIgnoreCase);
+        // The files the Recycle Bin's thread has, so that a change to one meanwhile doesn't send it again.
+        private readonly HashSet<string> _recycling = new(StringComparer.OrdinalIgnoreCase);
         private CoalescableTimer? _timer;
+        private IRecycleBin? _recycleBin;
         private bool _applied;
 
         public Running(FolderRulesThread owner, MessageWindow window)
@@ -212,6 +218,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
         public void Dispose()
         {
+            _recycleBin?.Dispose();
             _timer?.Dispose();
             foreach (var folder in _folders.Values)
             {
@@ -396,24 +403,60 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
                 return;
             }
 
-            var entry = arrival.Outcome == ArrivalOutcome.InUse
-                ? new HistoryEntry
-                {
-                    Time = now,
-                    Folder = path,
-                    Rule = rule.Rule.Name.Trim(),
-                    Name = file.Name,
-                    Outcome = HistoryOutcome.Skipped,
-                    Reason = SkipReason.InUse,
-                    File = new FileIdentity(file.FileId, file.Size, file.Modified),
-                }
-                : _actions.Act(path, rule, file, now, _owner._stopping.Token);
-            if (entry is null)
+            if (arrival.Outcome == ArrivalOutcome.InUse)
+            {
+                Record(folder, rule, Entry(path, rule, file, now) with { Outcome = HistoryOutcome.Skipped, Reason = SkipReason.InUse });
+            }
+            else if (rule.Rule.KnownAction == FolderRuleAction.RecycleBin)
+            {
+                Recycle(path, folder, rule, file, now);
+            }
+            else if (_actions.Act(path, rule, file, now, _owner._stopping.Token) is { } entry)
+            {
+                Record(folder, rule, entry);
+            }
+        }
+
+        // The Recycle Bin's thread sends the file, so that while Windows asks about one too big
+        // for the Recycle Bin, the other rules go on. The history shows the file waiting meanwhile.
+        private void Recycle(string folderPath, Folder folder, RuleMatcher rule, FileDetails file, DateTimeOffset now)
+        {
+            var path = Path.Join(folderPath, file.Name);
+            if (!_recycling.Add(path))
             {
                 return;
             }
 
-            _history.Add(entry);
+            var entry = Entry(folderPath, rule, file, now);
+            long? waiting = null;
+            _recycleBin ??= _owner._system.CreateRecycleBin();
+            _recycleBin.Recycle(
+                path,
+                () => _window.BeginInvoke(() => _owner.Guard(() =>
+                {
+                    waiting = _history.Add(entry with { Outcome = HistoryOutcome.WaitingForAnswer }).Id;
+                    LogAsking(_owner._logger, folder.Number, rule.Number);
+                    Save();
+                })),
+                result => _window.BeginInvoke(() => _owner.Guard(() =>
+                {
+                    _recycling.Remove(path);
+                    Record(folder, rule, Recycled(entry, result), waiting);
+                })));
+        }
+
+        // Adds the entry to the history, or puts it in place of the one that waited for Windows' answer.
+        private void Record(Folder folder, RuleMatcher rule, HistoryEntry entry, long? waiting = null)
+        {
+            if (waiting is { } id)
+            {
+                _history.Replace(entry with { Id = id });
+            }
+            else
+            {
+                _history.Add(entry);
+            }
+
             if (entry.Outcome == HistoryOutcome.Skipped)
             {
                 LogSkipped(_owner._logger, folder.Number, rule.Number, entry.Reason);
@@ -430,6 +473,27 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
             Save();
         }
+
+        private static HistoryEntry Entry(string folder, RuleMatcher rule, FileDetails file, DateTimeOffset now) => new()
+        {
+            Time = now,
+            Folder = folder,
+            Rule = rule.Rule.Name.Trim(),
+            Name = file.Name,
+            File = new FileIdentity(file.FileId, file.Size, file.Modified),
+        };
+
+        private static HistoryEntry Recycled(HistoryEntry entry, RecycleResult result) => result.Outcome switch
+        {
+            RecycleOutcome.Recycled => entry with { Outcome = HistoryOutcome.MovedToRecycleBin },
+            RecycleOutcome.DeletedForGood => entry with { Outcome = HistoryOutcome.DeletedForGood },
+            RecycleOutcome.Kept => entry with { Outcome = HistoryOutcome.KeptByAnswer },
+            RecycleOutcome.NoRecycleBin => entry with { Outcome = HistoryOutcome.Skipped, Reason = SkipReason.NoRecycleBin },
+
+            // A file that went away or was renamed before Windows reached it.
+            _ when (result.ErrorCode & 0xFFFF) is 2 or 3 => entry with { Outcome = HistoryOutcome.Skipped, Reason = SkipReason.Changed },
+            _ => entry with { Outcome = HistoryOutcome.Skipped, Reason = SkipReason.Failed, ErrorCode = result.ErrorCode },
+        };
 
         private FileDetails? ReadFile(string path)
         {

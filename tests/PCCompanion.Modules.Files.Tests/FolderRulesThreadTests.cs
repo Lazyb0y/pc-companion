@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Files.FolderRules;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 
@@ -216,6 +217,107 @@ public sealed class FolderRulesThreadTests : IDisposable
 
         Assert.True(Logged("Folder Rules folder 1, rule 1 left a file where it is: InUse."));
         Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+    }
+
+    private static FolderRulesSettings RecycleLogs() => new()
+    {
+        Enabled = true,
+        Folders =
+        [
+            new WatchedFolder
+            {
+                Path = Downloads,
+                Rules =
+                [
+                    new FolderRule { Name = "Logs", Extensions = ["log"], Action = "RecycleBin" },
+                    new FolderRule { Name = "PDFs", Extensions = ["pdf"], Destination = Sorted },
+                ],
+            },
+        ],
+    };
+
+    // The history the thread saved, read while it runs.
+    private FolderRulesHistory Saved()
+    {
+        for (var i = 0; i < 20; i++)
+        {
+            var history = _store.Load(out var readable);
+            if (readable)
+            {
+                return history;
+            }
+
+            _system.WaitUntil(_ => false, TimeSpan.FromMilliseconds(50));
+        }
+
+        throw new InvalidOperationException("The history couldn't be read.");
+    }
+
+    [Fact]
+    public void AFileARecycleBinRuleMatchesGoesToTheRecycleBin()
+    {
+        Start(RecycleLogs());
+
+        _system.Arrive(@"D:\Downloads\old.log");
+
+        Assert.True(AdvanceUntil(system => !system.Exists(@"D:\Downloads\old.log")));
+        Assert.Contains(@"recycle D:\Downloads\old.log", _system.Events);
+        var entry = Assert.Single(History().Entries);
+        Assert.Equal(HistoryOutcome.MovedToRecycleBin, entry.Outcome);
+        Assert.True(_system.RecycleBin!.IsDisposed);
+    }
+
+    [Fact]
+    public void WhileWindowsAsksTheHistoryShowsTheFileWaitingAndTheOtherRulesGoOn()
+    {
+        _system.Asking.Add(@"D:\Downloads\huge.log");
+        Start(RecycleLogs());
+
+        _system.Arrive(@"D:\Downloads\huge.log");
+        Assert.True(AdvanceUntil(_ => Logged("Folder Rules folder 1, rule 1: Windows asks whether to delete a file too big for the Recycle Bin.")));
+        _system.Arrive(@"D:\Downloads\report.pdf");
+
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        Assert.Contains(Saved().Entries, entry => entry.Name == "huge.log" && entry.Outcome == HistoryOutcome.WaitingForAnswer);
+
+        _system.RecycleBin!.Answer(@"D:\Downloads\huge.log", RecycleOutcome.Kept);
+
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules folder 1, rule 1: KeptByAnswer.")));
+        var entries = History().Entries;
+        Assert.Equal(2, entries.Count);
+        var kept = Assert.Single(entries, entry => entry.Name == "huge.log");
+        Assert.Equal(HistoryOutcome.KeptByAnswer, kept.Outcome);
+        Assert.Equal(1, kept.Id);
+        Assert.True(_system.Exists(@"D:\Downloads\huge.log"));
+    }
+
+    [Theory]
+    [InlineData(RecycleOutcome.NoRecycleBin, HistoryOutcome.Skipped, SkipReason.NoRecycleBin)]
+    [InlineData(RecycleOutcome.DeletedForGood, HistoryOutcome.DeletedForGood, SkipReason.None)]
+    public void TheHistorySaysWhatTheRecycleBinDid(RecycleOutcome outcome, HistoryOutcome recorded, SkipReason reason)
+    {
+        _system.RecycleAnswer = new RecycleResult(outcome);
+        Start(RecycleLogs());
+
+        _system.Arrive(@"D:\Downloads\old.log");
+
+        Assert.True(AdvanceUntil(system => system.Events.Contains(@"recycle D:\Downloads\old.log")));
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Folder Rules folder 1, rule 1", StringComparison.Ordinal))));
+        var entry = Assert.Single(History().Entries);
+        Assert.Equal(recorded, entry.Outcome);
+        Assert.Equal(reason, entry.Reason);
+    }
+
+    [Fact]
+    public void AWindowsErrorFromTheRecycleBinIsKeptWithItsCode()
+    {
+        _system.RecycleAnswer = new RecycleResult(RecycleOutcome.Failed, unchecked((int)0x80070005));
+        Start(RecycleLogs());
+
+        _system.Arrive(@"D:\Downloads\old.log");
+
+        Assert.True(AdvanceUntil(_ => Logged("Windows refused Folder Rules folder 1, rule 1 (error -2147024891).")));
+        Assert.Equal(SkipReason.Failed, Assert.Single(History().Entries).Reason);
     }
 
     [Fact]

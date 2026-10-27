@@ -65,6 +65,8 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
 
     public int Copy(string source, string destination, CancellationToken cancel) => FileTransfer.Copy(source, destination, cancel);
 
+    public IRecycleBin CreateRecycleBin() => new WindowsRecycleBin();
+
     public IDisposable Watch(string folder, Action<string> changed, Action<bool> failed)
     {
         var watcher = new FileSystemWatcher(folder)
@@ -88,5 +90,14 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
             watcher.Dispose();
             throw;
         }
+    }
+
+    private sealed class WindowsRecycleBin : IRecycleBin
+    {
+        private readonly RecycleBin _bin = new();
+
+        public void Recycle(string path, Action asking, Action<RecycleResult> done) => _bin.Recycle(path, asking, done);
+
+        public void Dispose() => _bin.Dispose();
     }
 }

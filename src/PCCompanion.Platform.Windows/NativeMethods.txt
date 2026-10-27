@@ -287,3 +287,14 @@ COPYPROGRESSROUTINE_PROGRESS
 SetThreadPriority
 GetCurrentThread
 THREAD_PRIORITY
+FileOperation
+IFileOperation
+IFileOperationProgressSink
+FILEOPERATION_FLAGS
+SetWindowsHookEx
+CallNextHookEx
+UnhookWindowsHookEx
+GetCurrentThreadId
+GetClassName
+HCBT_CREATEWND
+WM_DEVICECHANGE

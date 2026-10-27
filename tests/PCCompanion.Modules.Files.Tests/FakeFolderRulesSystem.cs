@@ -34,6 +34,15 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
 
     public bool IsUacElevated { get; set; }
 
+    /// <summary>The Recycle Bin the feature's thread started, once it moves a file there.</summary>
+    public FakeRecycleBin? RecycleBin { get; private set; }
+
+    /// <summary>What the Recycle Bin answers, unless a file is in <see cref="Asking"/>.</summary>
+    public RecycleResult RecycleAnswer { get; set; } = new(RecycleOutcome.Recycled);
+
+    /// <summary>The files Windows asks about, as for one too big for the Recycle Bin.</summary>
+    public HashSet<string> Asking { get; } = new(StringComparer.OrdinalIgnoreCase);
+
     /// <summary>The moves and copies asked for so far, as "move a -> b" or "copy a -> b".</summary>
     public IReadOnlyList<string> Transfers => [.. Events.Where(happened => happened.StartsWith("move ", StringComparison.Ordinal) || happened.StartsWith("copy ", StringComparison.Ordinal))];
 
@@ -141,6 +150,27 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
     }
 
     public void EnterBackgroundMode() => Record("background");
+
+    /// <summary>Records what happened, for the fakes that go with this one.</summary>
+    public void Note(string happened) => Record(happened);
+
+    /// <summary>Removes a file, as when it goes to the Recycle Bin.</summary>
+    public void Remove(string path)
+    {
+        lock (Gate)
+        {
+            _items.Remove(path);
+            Changed();
+        }
+    }
+
+    public IRecycleBin CreateRecycleBin()
+    {
+        var bin = new FakeRecycleBin(this) { Outcome = RecycleAnswer };
+        bin.Asking.UnionWith(Asking);
+        RecycleBin = bin;
+        return bin;
+    }
 
     public FileDetails? Read(string path)
     {
