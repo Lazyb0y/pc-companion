@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
@@ -22,10 +23,15 @@ public sealed partial class FolderRulesPage : Page
     private static readonly CompositeFormat RemoveTitleFormat = CompositeFormat.Parse(Strings.FolderRulesRemoveTitle);
     private static readonly CompositeFormat DeleteTitleFormat = CompositeFormat.Parse(Strings.FolderRulesDeleteTitle);
 
+    // How long the host gets to act on the first of the files Run now handed it, before the
+    // history is shown again.
+    private static readonly TimeSpan RunNowWait = TimeSpan.FromSeconds(3);
+
     public FolderRulesPage()
     {
         ViewModel = App.Current.Services.GetRequiredService<FolderRulesViewModel>();
         InitializeComponent();
+        Loaded += async (_, _) => await ViewModel.History.LoadAsync();
     }
 
     public FolderRulesViewModel ViewModel { get; }
@@ -177,14 +183,66 @@ public sealed partial class FolderRulesPage : Page
         }
     }
 
-    // The list is built again after a change, so focus goes to the button given in the new one, or
-    // to Add folder when it's gone.
-    private void Focus(string id, object tag)
+    private async void OnRunNowClick(object sender, RoutedEventArgs e)
     {
-        FolderList.UpdateLayout();
-        Control target = FindButton(FolderList, id, tag) is { } button ? button : AddFolderButton;
-        target.Focus(FocusState.Programmatic);
+        if (sender is not FrameworkElement { Tag: int index } || index >= ViewModel.Folders.Count)
+        {
+            return;
+        }
+
+        var list = new RunNowViewModel(ViewModel.PathOf(index), ViewModel.Folders[index].Name);
+        if (await ShowAsync(new RunNowDialog(list)) == ContentDialogResult.Primary)
+        {
+            await Task.Delay(RunNowWait);
+            await ViewModel.History.RanAsync();
+        }
     }
+
+    private async void OnRefreshHistoryClick(object sender, RoutedEventArgs e) => await ViewModel.History.LoadAsync();
+
+    private void OnOpenRecycleBinClick(object sender, RoutedEventArgs e) => FolderRulesHistoryViewModel.OpenRecycleBin();
+
+    private async void OnClearHistoryClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = Strings.FolderRulesClearHistoryTitle,
+            Content = Strings.FolderRulesClearHistoryText,
+            PrimaryButtonText = Strings.FolderRulesClearHistory,
+            CloseButtonText = Strings.FolderRulesCancel,
+            DefaultButton = ContentDialogButton.Close,
+            Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+        };
+
+        if (await ShowAsync(dialog) == ContentDialogResult.Primary)
+        {
+            await ViewModel.History.ClearAsync();
+        }
+    }
+
+    // Undo can wait for Windows' question about a copy too big for the Recycle Bin. The entry's
+    // Undo is gone once the history is shown again, so focus goes to Refresh.
+    private async void OnUndoClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: int index })
+        {
+            await ViewModel.History.UndoAsync(index);
+            RefreshHistoryButton.Focus(FocusState.Programmatic);
+        }
+    }
+
+    private void OnShowMoreClick(object sender, RoutedEventArgs e) => ViewModel.History.ShowMore();
+
+    // The list is built again after a change, so focus goes to the button given in the new one, or
+    // to Add folder when it's gone. It moves once the dialog or menu that made the change has put
+    // the focus back where it was, which is gone.
+    private void Focus(string id, object tag) =>
+        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+        {
+            FolderList.UpdateLayout();
+            Control target = FindButton(FolderList, id, tag) is { } button ? button : AddFolderButton;
+            target.Focus(FocusState.Programmatic);
+        });
 
     private static Button? FindButton(DependencyObject parent, string id, object tag)
     {

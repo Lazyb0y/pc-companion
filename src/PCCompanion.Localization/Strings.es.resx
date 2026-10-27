@@ -1908,4 +1908,212 @@
     <value>El destino creado a partir de este archivo está en una carpeta que las reglas no pueden cambiar.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="FolderRulesRunNow" xml:space="preserve">
+    <value>Ejecutar ahora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowName" xml:space="preserve">
+    <value>Ejecutar ahora para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowTitle" xml:space="preserve">
+    <value>Ejecutar ahora: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowDescription" xml:space="preserve">
+    <value>Los archivos que hay ahora sobre los que actuarían las reglas de la carpeta, y qué haría cada una. Desactive la casilla de un archivo para dejarlo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRun" xml:space="preserve">
+    <value>Ejecutar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRule" xml:space="preserve">
+    <value>Regla: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowLoading" xml:space="preserve">
+    <value>Pidiendo los archivos a PC Companion…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNotRunning" xml:space="preserve">
+    <value>Ejecutar ahora funciona mientras Reglas de carpeta esté activado y PC Companion se esté ejecutando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowRefused" xml:space="preserve">
+    <value>PC Companion no supervisa esta carpeta ahora. Compruebe su modificador y, si lo tiene, su problema.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowListFailed" xml:space="preserve">
+    <value>Windows no pudo enumerar los archivos de la carpeta (error {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowNone" xml:space="preserve">
+    <value>Las reglas de la carpeta no actuarían sobre ninguno de los archivos que hay ahora.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRunNowStarted" xml:space="preserve">
+    <value>Las reglas están actuando sobre los archivos elegidos. Actualizar muestra lo que hicieron.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryHeader" xml:space="preserve">
+    <value>Historial</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryDescription" xml:space="preserve">
+    <value>Lo que hicieron las reglas en los últimos 30 días, de lo más reciente a lo más antiguo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryRefresh" xml:space="preserve">
+    <value>Actualizar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOpenRecycleBin" xml:space="preserve">
+    <value>Abrir Papelera de reciclaje</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistory" xml:space="preserve">
+    <value>Borrar historial</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryTitle" xml:space="preserve">
+    <value>¿Borrar el historial?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesClearHistoryText" xml:space="preserve">
+    <value>PC Companion olvida lo que hicieron las reglas. Si vuelve un archivo sobre el que actuaron, pueden volver a actuar sobre él.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryLoading" xml:space="preserve">
+    <value>Cargando el historial…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryNotRunning" xml:space="preserve">
+    <value>El historial se muestra mientras Reglas de carpeta esté activado y PC Companion se esté ejecutando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryEmpty" xml:space="preserve">
+    <value>Las reglas aún no han actuado sobre ningún archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryShowMore" xml:space="preserve">
+    <value>Mostrar más</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesHistoryWhen" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndo" xml:space="preserve">
+    <value>Deshacer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoName" xml:space="preserve">
+    <value>Deshacer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeMoved" xml:space="preserve">
+    <value>Movido a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeCopied" xml:space="preserve">
+    <value>Copiado a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRenamed" xml:space="preserve">
+    <value>Cambiado de nombre a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeRecycleBin" xml:space="preserve">
+    <value>Movido a la Papelera de reciclaje</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeWaiting" xml:space="preserve">
+    <value>Esperando una respuesta: Windows pregunta si se elimina de forma permanente, porque es demasiado grande para la Papelera de reciclaje.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeDeleted" xml:space="preserve">
+    <value>Eliminado de forma permanente tras responder Sí en la pregunta de Windows, porque era demasiado grande para la Papelera de reciclaje.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeKept" xml:space="preserve">
+    <value>Conservado, porque era demasiado grande para la Papelera de reciclaje y no se respondió Sí en la pregunta de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeSkipped" xml:space="preserve">
+    <value>Se dejó donde estaba. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesOutcomeUndone" xml:space="preserve">
+    <value>{0} Devuelto con Deshacer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNameTaken" xml:space="preserve">
+    <value>Ya hay un archivo con el mismo nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInUse" xml:space="preserve">
+    <value>Otro programa lo mantuvo abierto.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonNoRecycleBin" xml:space="preserve">
+    <value>Su unidad no tiene Papelera de reciclaje, y PC Companion nunca elimina archivos de forma permanente por su cuenta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonMarkWouldBeLost" xml:space="preserve">
+    <value>La unidad de destino no puede conservar su marca de la Web, con la que Windows avisa antes de abrir un archivo descargado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonBlocked" xml:space="preserve">
+    <value>El acceso controlado a carpetas de Seguridad de Windows bloqueó el cambio. Para permitirlo, agregue PCCompanion.Host.exe, de la carpeta de PC Companion, en Permitir una aplicación a través del acceso controlado a carpetas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonFailed" xml:space="preserve">
+    <value>Windows lo rechazó (error {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonDestinationNotFound" xml:space="preserve">
+    <value>La carpeta de destino no existe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonChanged" xml:space="preserve">
+    <value>Cambió o desapareció antes de que actuara la regla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesReasonInterrupted" xml:space="preserve">
+    <value>Su unidad se expulsó durante el traslado o la copia. Se vuelve a intentar cuando la unidad regresa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoChanged" xml:space="preserve">
+    <value>El archivo no está donde lo puso la regla, o ha cambiado desde entonces, así que no se cambió nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoPlaceTaken" xml:space="preserve">
+    <value>Hay un archivo con su nombre anterior en su ubicación anterior, así que no se cambió nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoInUse" xml:space="preserve">
+    <value>Otro programa tiene el archivo abierto, así que no se cambió nada. Vuelva a intentarlo cuando se cierre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoBlocked" xml:space="preserve">
+    <value>El acceso controlado a carpetas de Seguridad de Windows impidió devolver el archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoNoRecycleBin" xml:space="preserve">
+    <value>La unidad de la copia no tiene Papelera de reciclaje, así que la copia se queda.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoKept" xml:space="preserve">
+    <value>La copia se queda, porque es demasiado grande para la Papelera de reciclaje y no se respondió Sí en la pregunta de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoFailed" xml:space="preserve">
+    <value>Windows lo rechazó (error {0}), así que no se cambió nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUndoRefused" xml:space="preserve">
+    <value>Esta entrada no se puede deshacer ahora.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

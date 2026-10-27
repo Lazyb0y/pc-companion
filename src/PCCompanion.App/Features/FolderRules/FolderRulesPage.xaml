@@ -91,6 +91,13 @@
                                 IsExpanded="True"
                                 ItemsSource="{x:Bind Rules}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button
+                                        AutomationProperties.AutomationId="RunNow"
+                                        AutomationProperties.Name="{x:Bind RunNowName}"
+                                        Click="OnRunNowClick"
+                                        Content="{app:Localized Key=FolderRulesRunNow}"
+                                        IsEnabled="{x:Bind CanRunNow}"
+                                        Tag="{x:Bind Index}" />
                                     <ToggleSwitch
                                         AutomationProperties.Name="{x:Bind WatchName}"
                                         IsOn="{x:Bind IsEnabled}"
@@ -234,6 +241,94 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
+                <Grid Margin="0,24,0,4" ColumnSpacing="16" RowSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="2">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=FolderRulesHistoryHeader}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{app:Localized Key=FolderRulesHistoryDescription}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button
+                            x:Name="RefreshHistoryButton"
+                            Click="OnRefreshHistoryClick"
+                            Content="{app:Localized Key=FolderRulesHistoryRefresh}" />
+                        <Button Click="OnOpenRecycleBinClick" Content="{app:Localized Key=FolderRulesOpenRecycleBin}" />
+                        <Button
+                            Click="OnClearHistoryClick"
+                            Content="{app:Localized Key=FolderRulesClearHistory}"
+                            IsEnabled="{x:Bind ViewModel.History.CanClear, Mode=OneWay}" />
+                    </StackPanel>
+                </Grid>
+
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.History.HasNote, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.History.Note, Mode=OneWay}"
+                    Severity="Informational" />
+
+                <TextBlock
+                    Margin="0,8"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind ViewModel.History.Status, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind ViewModel.History.HasStatus, Mode=OneWay}" />
+
+                <ItemsControl
+                    x:Name="HistoryList"
+                    IsTabStop="False"
+                    ItemsSource="{x:Bind ViewModel.History.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="local:HistoryItem">
+                            <toolkit:SettingsCard Description="{x:Bind When}" Header="{x:Bind Name}">
+                                <toolkit:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE7C3;" />
+                                </toolkit:SettingsCard.HeaderIcon>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        MaxWidth="360"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{x:Bind What}"
+                                        TextWrapping="Wrap" />
+                                    <Button
+                                        Grid.Column="1"
+                                        AutomationProperties.AutomationId="Undo"
+                                        AutomationProperties.Name="{x:Bind UndoName}"
+                                        Click="OnUndoClick"
+                                        Content="{app:Localized Key=FolderRulesUndo}"
+                                        Tag="{x:Bind Index}"
+                                        Visibility="{x:Bind CanUndo}" />
+                                </Grid>
+                            </toolkit:SettingsCard>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Button
+                    Margin="0,8,0,0"
+                    Click="OnShowMoreClick"
+                    Content="{app:Localized Key=FolderRulesHistoryShowMore}"
+                    Visibility="{x:Bind ViewModel.History.HasMore, Mode=OneWay}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=FolderRulesPermissions}" />
             </StackPanel>

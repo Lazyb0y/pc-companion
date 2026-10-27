@@ -23,8 +23,10 @@
 # and saves Add folder, the switches, moving and deleting a rule and removing a folder, with focus
 # staying near what changed. The rule editor lists the files there that the rule would act on as
 # it's edited, refuses an extension a file name can't have, and saves the rule; Edit opens it again,
-# and a template opens with its destination, whose folder Create folder makes. Detailed logging is
-# on for the Debug entries.
+# and a template opens with its destination, whose folder Create folder makes. With Folder Rules on,
+# Run now lists the files the rules would act on and acts on those left checked; the history shows
+# the move, Undo puts the file back, Open Recycle Bin opens it, and Clear history asks first.
+# Detailed logging is on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -489,6 +491,8 @@ Test-Check 'the page lists the folders and their rules' (
     ($text -contains 'Moves to the Recycle Bin') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 Test-Check 'with UAC off, the page doesn''t say Folder Rules is paused' ($text -notcontains 'While PC Companion runs as administrator after a UAC prompt, Folder Rules is paused: it never changes files with administrator rights.')
 Test-Check 'the hidden system folder says it can''t be used' (Wait-Until { Find-AppText "Rules can't change files in hidden system folders, such as the Recycle Bin's own folders, which only Windows uses." } 5)
+$runNow = Find-AppElement 'Run now for Windows only'
+Test-Check 'and its Run now is off' (($null -ne $runNow) -and -not $runNow.Current.IsEnabled)
 Save-Screenshot '15a-folder-rules-page'
 
 $desktop = [Environment]::GetFolderPath('DesktopDirectory')
@@ -551,6 +555,52 @@ Test-Check 'Create folder makes it' ((Invoke-AppElement 'Create folder') -and (W
 Save-Screenshot '15d-folder-rules-template'
 [void] (Invoke-AppElement 'Cancel')
 Start-Sleep -Seconds 1
+
+# With Folder Rules on, Run now lists the files the folder's rules would act on, each with its
+# box, and acts on those left checked; the history shows what the rules did, Undo puts a file
+# back, Open Recycle Bin opens it, and Clear history asks first.
+function Invoke-DialogButton([string] $Dialog, [string] $Name) {
+    $found = Find-AppDialog $Dialog
+    if (-not $found) { return $false }
+    $button = $found.FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)))
+    if (-not $button) { return $false }
+    $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+# A window on the desktop whose title starts with $Name, as File Explorer's Recycle Bin - File Explorer.
+function Find-TopWindow([string] $Name) {
+    @([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition)) |
+        Where-Object { $_.Current.Name -like "$Name*" } | Select-Object -First 1
+}
+
+Test-Check 'turn Folder Rules on from its page' ((Set-Toggle 'Folder Rules' $true) -and (Wait-Until { $null -ne (Invoke-FolderRulesPipe @{ kind = 'History' }) } 15))
+Test-Check 'the history has no entries yet' ((Invoke-AppElement 'Refresh') -and (Wait-Until { Find-AppText "The rules haven't acted on any file yet." } 5))
+
+Test-Check 'Run now lists the folder''s files' ((Invoke-AppElement 'Run now for Inbox') -and (Wait-Until { Find-AppElement 'there.pdf' } 15) -and (Find-AppElement 'after.pdf'))
+$boxType = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::CheckBox)
+$boxes = @((Get-AppWindow).FindAll([System.Windows.Automation.TreeScope]::Descendants, $boxType))
+foreach ($box in $boxes | Where-Object { $_.Current.Name -ne 'after.pdf' }) {
+    $toggle = $box.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+    if ($toggle.Current.ToggleState -eq [System.Windows.Automation.ToggleState]::On) { $toggle.Toggle() }
+}
+Test-Check 'each file has its box, checked' ($boxes.Count -ge 2) "$($boxes.Count) boxes: $(($boxes | ForEach-Object { $_.Current.Name }) -join ', ')"
+Save-Screenshot '15e-folder-rules-run-now'
+Test-Check 'Run acts on the file left checked' ((Invoke-DialogButton 'Run now: Inbox' 'Run') -and (Wait-Until { (Test-Path "$sorted\pdf\after.pdf") -and -not (Test-Path "$inbox\after.pdf") } 15))
+Test-Check 'and leaves the others' ((Test-Path "$inbox\there.pdf") -and (Test-Path "$inbox\nuke.log"))
+Test-Check 'the history shows the move' (Wait-Until { Find-AppText "Moved to $sorted\pdf\after.pdf" } 15)
+
+Test-Check 'Undo puts the file back' ((Invoke-AppElement 'Undo after.pdf') -and (Wait-Until { (Test-Path "$inbox\after.pdf") -and -not (Test-Path "$sorted\pdf\after.pdf") } 10))
+Test-Check 'and the history says so' (Wait-Until { Find-AppText "Moved to $sorted\pdf\after.pdf Put back with Undo." } 10)
+Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-FocusedName) -eq 'Refresh' } 3) (Get-FocusedName)
+Save-Screenshot '15f-folder-rules-history'
+
+Test-Check 'Open Recycle Bin opens it' ((Invoke-AppElement 'Open Recycle Bin') -and (Wait-Until { Find-TopWindow 'Recycle Bin' } 15))
+$recycleBin = Find-TopWindow 'Recycle Bin'
+if ($recycleBin) { $recycleBin.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() }
+
+Test-Check 'Clear history asks first' ((Invoke-AppElement 'Clear history') -and (Wait-Until { Find-AppDialog 'Clear the history?' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'and empties it' ((Invoke-DialogButton 'Clear the history?' 'Clear history') -and (Wait-Until { Find-AppText "The rules haven't acted on any file yet." } 10))
 
 Stop-All
 Remove-SmbShare -Name FolderRulesShare -Force -ErrorAction SilentlyContinue
