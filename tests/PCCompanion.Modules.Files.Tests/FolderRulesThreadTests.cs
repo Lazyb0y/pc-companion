@@ -426,6 +426,26 @@ public sealed class FolderRulesThreadTests : IDisposable
     }
 
     [Fact]
+    public async Task RunNowIsRefusedInAHiddenSystemFolder()
+    {
+        _system.AddFile(@"D:\$Recycle.Bin", attributes: FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System).AddFile(@"D:\$Recycle.Bin\report.pdf");
+        _thread = new FolderRulesThread(MovePdfs(@"D:\$Recycle.Bin"), _system, _store, Places, _time, _drives, _pipeName, _logger);
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules folder 1 can't be used: SystemFolder.")));
+
+        var list = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNowList, Folder = @"D:\$Recycle.Bin" });
+        var run = await AskAsync(new FolderRulesRequest
+        {
+            Kind = FolderRulesRequestKind.RunNow,
+            Folder = @"D:\$Recycle.Bin",
+            Files = [new ChosenFile { Name = "report.pdf", Size = 100, Modified = FakeFolderRulesSystem.Time }],
+        });
+
+        Assert.Equal(FolderRulesAnswerStatus.Refused, list?.Status);
+        Assert.Equal(FolderRulesAnswerStatus.Refused, run?.Status);
+        Assert.Empty(_system.Transfers);
+    }
+
+    [Fact]
     public void AFolderThatIsOnlyHiddenIsWatched()
     {
         _system.AddFile(@"D:\AppData", attributes: FileAttributes.Directory | FileAttributes.Hidden);

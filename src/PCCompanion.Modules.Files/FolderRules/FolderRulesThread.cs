@@ -250,7 +250,8 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     private sealed record Operation(CancellationTokenSource Cancel, string[] Roots);
 
     // A watched folder: its number in the settings, from 1, the rules that can be used, its watch,
-    // what kind of drive it's on, and whether it couldn't be watched when last tried.
+    // what kind of drive it's on, whether it couldn't be watched when last tried, and whether it's
+    // a hidden system folder, or in one, which is never watched.
     private sealed class Folder(int number, IReadOnlyList<RuleMatcher> rules)
     {
         public int Number { get; set; } = number;
@@ -262,6 +263,8 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         public DriveKind Kind { get; set; }
 
         public bool Failing { get; set; }
+
+        public bool IsSystemFolder { get; set; }
 
         public bool IsWatched => Watch is { IsDisposed: false };
     }
@@ -492,7 +495,8 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         private void StartWatch(string path, Folder folder)
         {
             folder.Kind = _owner._system.KindOf(path);
-            if (IsInSystemFolder(path))
+            folder.IsSystemFolder = IsInSystemFolder(path);
+            if (folder.IsSystemFolder)
             {
                 if (!folder.Failing)
                 {
@@ -1038,11 +1042,11 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
         private static FolderRulesAnswer Answered(FolderRulesAnswerStatus status) => new() { Status = status };
 
-        // A request names a watched folder by its path.
+        // A request names a watched folder by its path; a hidden system folder is never one.
         private bool TryFolder(string requested, out string path, [NotNullWhen(true)] out Folder? folder)
         {
             folder = null;
-            return FolderPaths.Normalize(requested, out path) == FolderProblem.None && _folders.TryGetValue(path, out folder);
+            return FolderPaths.Normalize(requested, out path) == FolderProblem.None && _folders.TryGetValue(path, out folder) && !folder.IsSystemFolder;
         }
 
         private void Save()
