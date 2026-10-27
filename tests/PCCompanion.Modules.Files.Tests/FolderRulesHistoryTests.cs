@@ -58,7 +58,18 @@ public sealed class FolderRulesHistoryTests
         history.Add(Moved(Now));
 
         Assert.True(history.WasHandled(Downloads, "anything.pdf", Report with { Size = 5 }));
-        Assert.False(history.WasHandled(Downloads, "report.pdf", Report with { FileId = "0123-ffff" }));
+        Assert.False(history.WasHandled(Downloads, "report.pdf", Report with { FileId = "0123-ffff", Modified = Now }));
+    }
+
+    [Fact]
+    public void AFileMovedBackBetweenDrivesIsKnownByItsNameSizeAndTime()
+    {
+        var history = new FolderRulesHistory();
+        history.Add(Moved(Now));
+
+        // Each move to another drive gives the file a new ID.
+        Assert.True(history.WasHandled(Downloads, "report.pdf", Report with { FileId = "0123-ffff" }));
+        Assert.False(history.WasHandled(Downloads, "report.pdf", Report with { FileId = "0123-ffff", Size = 1001 }));
     }
 
     [Fact]

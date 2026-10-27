@@ -102,7 +102,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 
 - The history lists what the rules did, newest first: the time, the rule, the file's name and what happened, such as moved to a folder, renamed, copied, moved to the Recycle Bin, or skipped, with why, such as a file with that name already there.
 - While Windows asks about a file too big for the Recycle Bin, the history shows the file as waiting for an answer in Windows' window, and afterwards what happened to it.
-- **Undo** puts a file back: a moved or renamed file goes back to its old place and name, and a copy goes to the Recycle Bin. The host first checks that the file is still where the rule put it, unchanged, and that its old place is free; otherwise the page says why and nothing changes. A file moved to the Recycle Bin is put back with the Recycle Bin's **Restore**, which **Open Recycle Bin** opens.
+- **Undo** puts a file back: a moved or renamed file goes back to its old place and name, and a copy goes to the Recycle Bin, where Windows asks first about one too big for it, as for a rule. The host first checks that the file is still where the rule put it, unchanged, and that its old place is free; otherwise the page says why and nothing changes. An entry is undone once. A file moved to the Recycle Bin is put back with the Recycle Bin's **Restore**, which **Open Recycle Bin** opens.
 - The history keeps the last 30 days, up to 1,000 entries, in `folder-rules.json` in the data folder, with when PC Companion last looked at each folder. Only the host writes it. **Clear history** empties it.
 - The history and Undo are available while Folder Rules is on.
 
@@ -120,7 +120,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 - **Network folders:** a timer on the feature's thread tries again every minute to watch a network folder that can't be watched, and looks at each watched network folder every 5 minutes. A folder that can't be watched logs a warning the first time, and an information when it's watched again.
 - **The feature's own thread** handles the files one at a time, in the order they arrived, so two rules never act on the same file at once. It runs at background priority, so the disk stays available to the programs in front.
 - **The Recycle Bin's thread**, an STA thread as `IFileOperation` needs, moves files to the Recycle Bin. While Windows asks about a file too big for it, that thread waits for the answer, and the other rules go on.
-- **The thread pool** serves the settings app's requests, through a named pipe, and passes Run now and Undo to the feature's thread; see [The settings app and the host](#the-settings-app-and-the-host).
+- **The thread pool** reads the settings app's requests from a named pipe and passes them to the feature's thread, which answers them and handles the files chosen in Run now one at a time, between the files that arrive; see [The settings app and the host](#the-settings-app-and-the-host).
 - **Stopping** removes the watches and ends the thread after the file it's handling.
 - **Failures:** the feature's thread and the watches' callbacks run inside the feature's error boundary. A failure there is logged and stops Folder Rules until the host restarts. A file that can't be moved isn't such a failure: it's an entry in the history.
 
@@ -135,7 +135,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 
 ## The settings app and the host
 
-- The page needs what only the host knows, the history, and asks the host to act, for Run now and Undo, so that only the host changes files and knows what it changed. The host serves both through a named pipe that only the user's own account and the system can open, as Hot Corners' recent results, and that rejects remote clients. Unlike that pipe, this one reads a request: the history, Run now for a folder with the files chosen, or Undo for a history entry.
+- The page needs what only the host knows, the history, and asks the host to act, for Run now and Undo, so that only the host changes files and knows what it changed. The host serves both through a named pipe that only the user's own account and the system can open, as Hot Corners' recent results, and that rejects remote clients. Unlike that pipe, this one reads a request: the history, Clear history, the files a folder's rules would act on now, Run now for a folder with the files chosen, or Undo for a history entry. Each program that connects gets its own answer, so an Undo that waits for Windows' question holds up no other request.
 - The host checks every request: the folder must be a watched folder in its settings, each file must be directly in it, and an entry to undo must be in its history, so a request can't make it touch other files. While the host runs as administrator, Folder Rules is paused and serves no pipe.
 - The host recognizes a file its rules already handled when it comes back, by its file ID, or, after a move between drives, by its name, size and last modified time, and leaves it.
 
@@ -233,7 +233,7 @@ Rules that act on files as they arrive in a folder, such as Downloads: move, cop
 - **The pipe:** only the user's own account and the system can open it, it rejects remote clients, and the host acts only on watched folders and the files directly in them.
 - **History:** file names and folders, which can be personal, kept on this PC for 30 days at most. **Clear history** empties it, and uninstalling removes it with the rest of the data folder. `PRIVACY.md` gets a line on Folder Rules.
 - **Network:** PC Companion connects to no service of its own. Watched folders and destinations on network locations, which the user chose, are read and changed through Windows' file sharing like any file there, and network folders are looked at every few minutes as well as after changes. It skips files kept online only, so it never has a cloud storage app download them.
-- **Logs:** Debug entries when the settings are applied, with how many folders and rules can be used, when a rule acts, by folder and rule number, and when the history is cleared. Warnings when a folder can't be watched, a rule can't be used, Windows refuses a move, or the pipe for the settings app fails, with the error code. Never file names, folder paths or rule names: the history has them for the user.
+- **Logs:** Debug entries when the settings are applied, with how many folders and rules can be used, when a rule acts, by folder and rule number, when the history is cleared, and for Run now and Undo. Warnings when a folder can't be watched, a rule can't be used, Windows refuses a move or an Undo, or the pipe for the settings app fails, with the error code. Never file names, folder paths or rule names: the history has them for the user.
 - **Rights:** runs without admin rights, and never touches files with them.
 - **Failures:** a file that can't be moved stays where it was, with an entry in the history.
 

@@ -68,7 +68,8 @@ public enum SkipReason
 
 /// <summary>
 /// Which file a history entry is about, so that the rules recognize it when it comes back: by its
-/// file ID on drives that keep one, or else by its name, size and last modified time.
+/// file ID on drives that keep one, or else, as after a move between drives, which gives it a new
+/// ID, by its name, size and last modified time.
 /// </summary>
 /// <param name="FileId">The volume's serial number and the file's ID, or <see langword="null"/> where the drive has none.</param>
 public sealed record FileIdentity(string? FileId, long Size, DateTimeOffset Modified)
@@ -79,9 +80,8 @@ public sealed record FileIdentity(string? FileId, long Size, DateTimeOffset Modi
         ArgumentNullException.ThrowIfNull(other);
         ArgumentNullException.ThrowIfNull(names);
 
-        return FileId is not null && other.FileId is not null
-            ? string.Equals(FileId, other.FileId, StringComparison.OrdinalIgnoreCase)
-            : Size == other.Size && Modified == other.Modified && names.Contains(name, StringComparer.OrdinalIgnoreCase);
+        return (FileId is not null && string.Equals(FileId, other.FileId, StringComparison.OrdinalIgnoreCase))
+            || (Size == other.Size && Modified == other.Modified && names.Contains(name, StringComparer.OrdinalIgnoreCase));
     }
 }
 
