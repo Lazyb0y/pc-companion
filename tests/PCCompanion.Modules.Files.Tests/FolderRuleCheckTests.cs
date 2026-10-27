@@ -121,9 +121,100 @@ public sealed class FolderRuleCheckTests
         var none = Rule with { Extensions = [] };
 
         Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { Names = ["scan*"] }, Downloads, Places));
-        Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { Size = new SizeCondition() }, Downloads, Places));
-        Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { Date = new DateCondition() }, Downloads, Places));
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { Size = new SizeCondition { LargerThan = new SizeLimit { Amount = 1 } } }, Downloads, Places));
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { Date = new DateCondition { MoreThanDaysAgo = 30 } }, Downloads, Places));
         Assert.Equal(RuleProblem.None, FolderRuleCheck.Check(none with { DownloadedFrom = ["*.example.com"] }, Downloads, Places));
+    }
+
+    [Theory]
+    [InlineData("invoice*", RuleProblem.None)]
+    [InlineData("Report ????.pdf", RuleProblem.None)]
+    [InlineData("", RuleProblem.InvalidNamePattern)]
+    [InlineData(" ", RuleProblem.InvalidNamePattern)]
+    [InlineData(@"scans\*", RuleProblem.InvalidNamePattern)]
+    [InlineData("a|b", RuleProblem.InvalidNamePattern)]
+    public void NamePatternsAreFileNamesWithWildcards(string pattern, RuleProblem problem)
+    {
+        Assert.Equal(problem, FolderRuleCheck.CheckNames(["*.pdf", pattern]));
+        Assert.Equal(problem, FolderRuleCheck.Check(Rule with { Names = [pattern] }, Downloads, Places));
+    }
+
+    [Theory]
+    [InlineData("pdf", RuleProblem.None)]
+    [InlineData(".pdf", RuleProblem.None)]
+    [InlineData("", RuleProblem.InvalidExtension)]
+    [InlineData(".", RuleProblem.InvalidExtension)]
+    [InlineData("tar.gz", RuleProblem.InvalidExtension)]
+    [InlineData("p*f", RuleProblem.InvalidExtension)]
+    public void ExtensionsHaveNoDotsOrWildcards(string extension, RuleProblem problem)
+    {
+        Assert.Equal(problem, FolderRuleCheck.CheckExtensions(["docx", extension]));
+    }
+
+    [Fact]
+    public void ASizeIsAWholeNumberInAKnownUnit()
+    {
+        static SizeCondition Larger(long amount, SizeUnit unit = SizeUnit.MB) => new() { LargerThan = new SizeLimit { Amount = amount, Unit = unit } };
+
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.CheckSize(Larger(1)));
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.CheckSize(Larger(FolderRuleCheck.MaximumSizeAmount, SizeUnit.GB)));
+        Assert.Equal(RuleProblem.InvalidSize, FolderRuleCheck.CheckSize(Larger(0)));
+        Assert.Equal(RuleProblem.InvalidSize, FolderRuleCheck.CheckSize(Larger(FolderRuleCheck.MaximumSizeAmount + 1)));
+        Assert.Equal(RuleProblem.InvalidSize, FolderRuleCheck.CheckSize(Larger(1, (SizeUnit)7)));
+        Assert.Equal(RuleProblem.InvalidSize, FolderRuleCheck.CheckSize(new SizeCondition()));
+    }
+
+    [Fact]
+    public void ASizeRangeMustHoldAFile()
+    {
+        var range = new SizeCondition { LargerThan = new SizeLimit { Amount = 1024, Unit = SizeUnit.KB }, SmallerThan = new SizeLimit { Amount = 1, Unit = SizeUnit.MB } };
+
+        Assert.Equal(RuleProblem.EmptySizeRange, FolderRuleCheck.CheckSize(range));
+        Assert.Equal(RuleProblem.None, FolderRuleCheck.CheckSize(range with { SmallerThan = new SizeLimit { Amount = 2, Unit = SizeUnit.MB } }));
+    }
+
+    [Theory]
+    [InlineData(30, null, RuleProblem.None)]
+    [InlineData(0, null, RuleProblem.None)]
+    [InlineData(null, 7, RuleProblem.None)]
+    [InlineData(7, 30, RuleProblem.None)]
+    [InlineData(null, null, RuleProblem.InvalidDate)]
+    [InlineData(-1, null, RuleProblem.InvalidDate)]
+    [InlineData(null, 0, RuleProblem.InvalidDate)]
+    [InlineData(36_501, null, RuleProblem.InvalidDate)]
+    [InlineData(30, 30, RuleProblem.EmptyDateRange)]
+    [InlineData(30, 7, RuleProblem.EmptyDateRange)]
+    public void DaysAreInRangeAndLeaveRoomForAFile(int? more, int? less, RuleProblem problem)
+    {
+        Assert.Equal(problem, FolderRuleCheck.CheckDate(new DateCondition { MoreThanDaysAgo = more, LessThanDaysAgo = less }));
+    }
+
+    [Fact]
+    public void ADateOfAnUnknownKindCantBeUsed()
+    {
+        Assert.Equal(RuleProblem.InvalidDate, FolderRuleCheck.CheckDate(new DateCondition { Which = (FileDate)5, MoreThanDaysAgo = 1 }));
+    }
+
+    [Theory]
+    [InlineData("*.example.com", RuleProblem.None)]
+    [InlineData("files-1.example.co.uk", RuleProblem.None)]
+    [InlineData("*.münchen.example", RuleProblem.None)]
+    [InlineData("", RuleProblem.InvalidSitePattern)]
+    [InlineData("https://example.com", RuleProblem.InvalidSitePattern)]
+    [InlineData("example.com/downloads", RuleProblem.InvalidSitePattern)]
+    [InlineData("example .com", RuleProblem.InvalidSitePattern)]
+    public void SitePatternsAreSiteNamesWithWildcards(string site, RuleProblem problem)
+    {
+        Assert.Equal(problem, FolderRuleCheck.CheckSites([site]));
+    }
+
+    [Fact]
+    public void AConditionsProblemKeepsTheRuleFromBeingUsed()
+    {
+        Assert.Equal(RuleProblem.InvalidExtension, FolderRuleCheck.Check(Rule with { Extensions = ["tar.gz"] }, Downloads, Places));
+        Assert.Equal(RuleProblem.InvalidSize, FolderRuleCheck.Check(Rule with { Size = new SizeCondition() }, Downloads, Places));
+        Assert.Equal(RuleProblem.InvalidDate, FolderRuleCheck.Check(Rule with { Date = new DateCondition() }, Downloads, Places));
+        Assert.Equal(RuleProblem.InvalidSitePattern, FolderRuleCheck.Check(Rule with { DownloadedFrom = ["https://example.com"] }, Downloads, Places));
     }
 
     [Fact]
