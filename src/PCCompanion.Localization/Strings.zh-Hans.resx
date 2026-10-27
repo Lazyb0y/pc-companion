@@ -2100,4 +2100,48 @@
     <value>现在无法撤消此条目。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>显示</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>显示配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>保存显示设置（例如办公桌和电视的设置），并从 PC Companion 图标的菜单中在它们之间切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>显示配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>正在使用其他显示设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>显示配置文件在远程会话中不可用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>显示配置文件设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>是否保留这些显示设置？</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>将在 {0} 秒后还原为以前的显示设置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>保留更改</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>还原</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

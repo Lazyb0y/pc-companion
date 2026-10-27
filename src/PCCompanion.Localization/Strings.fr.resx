@@ -2116,4 +2116,52 @@
     <value>Cette entrée ne peut pas être annulée pour l’instant.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>Affichage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>Profils d'affichage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>Enregistrez des configurations d'affichage, par exemple pour votre bureau et un téléviseur, et passez de l'une à l'autre depuis le menu de l'icône PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>Profil d'affichage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>Autre configuration d'affichage utilisée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>Les profils d'affichage ne sont pas disponibles dans une session à distance</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>Paramètres des profils d'affichage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>Conserver ces paramètres d'affichage ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_one" xml:space="preserve">
+    <value>Retour aux paramètres d'affichage précédents dans {0} seconde.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>Retour aux paramètres d'affichage précédents dans {0} secondes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>Conserver les modifications</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>Rétablir</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

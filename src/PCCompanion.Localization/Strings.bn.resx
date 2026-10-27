@@ -2116,4 +2116,52 @@
     <value>এই এন্ট্রিটি এখন পূর্বাবস্থায় ফেরানো যাবে না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>প্রদর্শন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>প্রদর্শন প্রোফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>প্রদর্শন সেটআপ সংরক্ষণ করুন, যেমন আপনার ডেস্ক ও একটি টিভির জন্য, এবং PC Companion আইকনের মেনু থেকে সেগুলির মধ্যে পরিবর্তন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>প্রদর্শন প্রোফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>অন্য প্রদর্শন সেটআপ ব্যবহৃত হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>দূরবর্তী সেশনে প্রদর্শন প্রোফাইল উপলভ্য নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>প্রদর্শন প্রোফাইল সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>এই প্রদর্শন সেটিংস রাখবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_one" xml:space="preserve">
+    <value>{0} সেকেন্ডের মধ্যে আগের প্রদর্শন সেটিংসে ফিরে যাওয়া হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>{0} সেকেন্ডের মধ্যে আগের প্রদর্শন সেটিংসে ফিরে যাওয়া হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>পরিবর্তনগুলি রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>ফিরিয়ে আনুন</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -2116,4 +2116,52 @@
     <value>This entry can't be undone now.</value>
     <comment>Folder Rules page: note after Undo of an entry that can't be undone now, such as one undone already.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>Display</value>
+    <comment>Navigation pane and Home: the group of features that change the displays' setup.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>Display Profiles</value>
+    <comment>Feature name: named display setups to switch between.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>Save display setups, such as for your desk and a TV, and switch between them from the PC Companion icon's menu.</value>
+    <comment>Feature description, on Home and the feature's page.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>Display profile</value>
+    <comment>PC Companion icon's menu: the submenu that lists the display profiles.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>Other display setup in use</value>
+    <comment>Display profile submenu: dimmed note when the displays' setup matches none of the profiles.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>Display profiles aren't available in a remote session</value>
+    <comment>Display profile submenu: dimmed note in Remote Desktop and other remote sessions, where Windows reports the session's own display.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>Display Profiles settings</value>
+    <comment>Display profile submenu: opens the feature's settings. Display Profiles is DisplayProfilesName.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>Keep these display settings?</value>
+    <comment>Dialog after switching to a display profile: the question. Use the wording of Windows' own question after a change in Settings &gt; System &gt; Display.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_one" xml:space="preserve">
+    <value>Reverting to previous display settings in {0} second.</value>
+    <comment>Dialog after switching to a display profile: below the question; {0} is the number of seconds left. Use the wording of Windows' own question.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>Reverting to previous display settings in {0} seconds.</value>
+    <comment>Dialog after switching to a display profile: below the question; {0} is the number of seconds left. Use the wording of Windows' own question.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>Keep changes</value>
+    <comment>Dialog button: keeps the new display settings. Use the wording of Windows' own question.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>Revert</value>
+    <comment>Dialog button: brings back the previous display settings. Use the wording of Windows' own question.</comment>
+  </data>
 </root>
