@@ -1568,4 +1568,344 @@
     <value>Lee los nombres, tamaños, fechas y atributos de los archivos de las carpetas que elija y, para Descargado de, el sitio de la marca de la Web de un archivo. Mueve, copia, cambia el nombre y mueve a la Papelera de reciclaje solo los archivos con los que coinciden sus reglas, y nunca los abre ni los ejecuta. El historial de lo que hicieron las reglas, con los nombres de archivo, se conserva en este equipo durante 30 días.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="FolderRulesAddRule" xml:space="preserve">
+    <value>Agregar regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddRuleName" xml:space="preserve">
+    <value>Agregar una regla a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateEmpty" xml:space="preserve">
+    <value>Regla vacía</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByType" xml:space="preserve">
+    <value>Ordenar por tipo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByMonth" xml:space="preserve">
+    <value>Ordenar por mes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallers" xml:space="preserve">
+    <value>Instaladores a una carpeta Instaladores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocuments" xml:space="preserve">
+    <value>Documentos a la carpeta Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallersName" xml:space="preserve">
+    <value>Instaladores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocumentsName" xml:space="preserve">
+    <value>Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEditName" xml:space="preserve">
+    <value>Editar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddTitle" xml:space="preserve">
+    <value>Agregar una regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEditTitle" xml:space="preserve">
+    <value>Editar la regla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNameHeader" xml:space="preserve">
+    <value>Nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamePlaceholder" xml:space="preserve">
+    <value>Por ejemplo, Facturas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNameNote" xml:space="preserve">
+    <value>El historial lo muestra con cada archivo sobre el que actúa la regla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionsHeader" xml:space="preserve">
+    <value>Condiciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionsNote" xml:space="preserve">
+    <value>Un archivo debe cumplir todas las condiciones activadas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamesSwitch" xml:space="preserve">
+    <value>Nombre de archivo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamesNote" xml:space="preserve">
+    <value>Patrones separados por ;, como invoice*;receipt*, donde * representa cualquier carácter y ? uno solo. No se distingue entre mayúsculas y minúsculas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTypeSwitch" xml:space="preserve">
+    <value>Tipo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTypeNote" xml:space="preserve">
+    <value>Extensiones separadas por ;, como pdf; docx.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddKind" xml:space="preserve">
+    <value>Agregar una clase</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindDocuments" xml:space="preserve">
+    <value>Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindPictures" xml:space="preserve">
+    <value>Imágenes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindVideos" xml:space="preserve">
+    <value>Vídeos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindMusic" xml:space="preserve">
+    <value>Música</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindArchives" xml:space="preserve">
+    <value>Archivos comprimidos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindInstallers" xml:space="preserve">
+    <value>Instaladores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSizeSwitch" xml:space="preserve">
+    <value>Tamaño</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesLargerThan" xml:space="preserve">
+    <value>Mayor que</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSmallerThan" xml:space="preserve">
+    <value>Menor que</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitKB" xml:space="preserve">
+    <value>KB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitMB" xml:space="preserve">
+    <value>MB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitGB" xml:space="preserve">
+    <value>GB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNumberName" xml:space="preserve">
+    <value>{0}: número</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitName" xml:space="preserve">
+    <value>{0}: unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSizeValue" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateSwitch" xml:space="preserve">
+    <value>Fecha</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateWhich" xml:space="preserve">
+    <value>Qué fecha</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateModified" xml:space="preserve">
+    <value>Última modificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateCreated" xml:space="preserve">
+    <value>Creación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreThanDays" xml:space="preserve">
+    <value>Hace más de estos días</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesLessThanDays" xml:space="preserve">
+    <value>Hace menos de estos días</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSitesSwitch" xml:space="preserve">
+    <value>Descargado de</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSitesNote" xml:space="preserve">
+    <value>Sitios separados por ;, como *.example.com, que se comparan con el sitio de la marca de la Web del archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionHeader" xml:space="preserve">
+    <value>Acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionMove" xml:space="preserve">
+    <value>Mover a una carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionCopy" xml:space="preserve">
+    <value>Copiar a una carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionRename" xml:space="preserve">
+    <value>Cambiar nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionRecycleBin" xml:space="preserve">
+    <value>Mover a la Papelera de reciclaje</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnknownActionNote" xml:space="preserve">
+    <value>La acción de esta regla es de una versión más reciente de PC Companion. La regla la conserva hasta que elija otra.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnknownIfExistsNote" xml:space="preserve">
+    <value>La opción de esta regla para un nombre en uso es de una versión más reciente de PC Companion. La regla la conserva hasta que elija otra.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRecycleBin" xml:space="preserve">
+    <value>La unidad de esta carpeta no tiene Papelera de reciclaje, así que la regla deja los archivos donde están.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationHeader" xml:space="preserve">
+    <value>Destino</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationNote" xml:space="preserve">
+    <value>Las carpetas creadas a partir del archivo, como {year}\{month}, se crean cuando hacen falta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationMissing" xml:space="preserve">
+    <value>Esta carpeta aún no existe. Mientras no exista, la regla deja los archivos donde están.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCreateFolder" xml:space="preserve">
+    <value>Crear carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCreateFolderFailed" xml:space="preserve">
+    <value>Windows no pudo crear la carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowse" xml:space="preserve">
+    <value>Examinar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationTitle" xml:space="preserve">
+    <value>Elegir el destino</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameHeader" xml:space="preserve">
+    <value>Nuevo nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameOptionalHeader" xml:space="preserve">
+    <value>Nuevo nombre (opcional)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameNote" xml:space="preserve">
+    <value>Sin la extensión, que el archivo conserva. {name}, {extension}, {year}, {month}, {day} y {date} se sustituyen por los del archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsHeader" xml:space="preserve">
+    <value>Cuando ya hay un archivo con el mismo nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsAddNumber" xml:space="preserve">
+    <value>Agregar un número</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsSkip" xml:space="preserve">
+    <value>Omitir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesHeader" xml:space="preserve">
+    <value>Archivos que hay ahora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesReading" xml:space="preserve">
+    <value>Leyendo la carpeta…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesCantRead" xml:space="preserve">
+    <value>No se puede leer la carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesNone" xml:space="preserve">
+    <value>La carpeta no tiene archivos sobre los que puedan actuar las reglas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesFixProblems" xml:space="preserve">
+    <value>Cuando la regla no tenga problemas, aquí se mostrarán los archivos sobre los que actuaría.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesMatchCount" xml:space="preserve">
+    <value>Archivos sobre los que actuaría la regla: {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionMatches" xml:space="preserve">
+    <value>{0} coincide: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionNoMatch" xml:space="preserve">
+    <value>{0} no coincide: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFileNotIncluded" xml:space="preserve">
+    <value>No incluido</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFileStays" xml:space="preserve">
+    <value>Se queda donde está. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoExtension" xml:space="preserve">
+    <value>sin extensión</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoSite" xml:space="preserve">
+    <value>sin sitio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingEmptyName" xml:space="preserve">
+    <value>El nuevo nombre quedaría vacío para este archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingInvalidName" xml:space="preserve">
+    <value>El nuevo nombre, o una carpeta creada a partir del archivo, es uno que Windows no admite.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingNameTooLong" xml:space="preserve">
+    <value>El nuevo nombre, o una carpeta creada a partir del archivo, tiene más de 255 caracteres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingOwnFolder" xml:space="preserve">
+    <value>El destino creado a partir de este archivo es la propia carpeta de la regla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingNotAllowed" xml:space="preserve">
+    <value>El destino creado a partir de este archivo está en una carpeta que las reglas no pueden cambiar.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

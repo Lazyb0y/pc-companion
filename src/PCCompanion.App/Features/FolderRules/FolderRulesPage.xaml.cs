@@ -17,6 +17,7 @@ public sealed partial class FolderRulesPage : Page
 {
     private const string FolderMoreId = "FolderMore";
     private const string RuleMoreId = "RuleMore";
+    private const string RuleEditId = "RuleEdit";
 
     private static readonly CompositeFormat RemoveTitleFormat = CompositeFormat.Parse(Strings.FolderRulesRemoveTitle);
     private static readonly CompositeFormat DeleteTitleFormat = CompositeFormat.Parse(Strings.FolderRulesDeleteTitle);
@@ -92,6 +93,42 @@ public sealed partial class FolderRulesPage : Page
             // Focus goes to the next folder, or the one before the last.
             ViewModel.RemoveFolder(index);
             Focus(FolderMoreId, Math.Min(index, ViewModel.Folders.Count - 1));
+        }
+    }
+
+    // The menu item's automation ID names the template, and its tag the folder.
+    private async void OnAddRuleClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuFlyoutItem { Tag: int folder } item || folder >= ViewModel.Folders.Count
+            || !Enum.TryParse<RuleTemplate>(AutomationProperties.GetAutomationId(item), out var template))
+        {
+            return;
+        }
+
+        var path = ViewModel.PathOf(folder);
+        var editor = new FolderRuleEditor(FolderRuleTemplates.Create(template, path), isNew: true, path, ViewModel.Places);
+        if (await ShowAsync(new FolderRuleDialog(editor)) == ContentDialogResult.Primary)
+        {
+            // Focus goes to the new rule, at the end of its folder's list.
+            ViewModel.AddRule(folder, editor.ToRule());
+            Focus(RuleEditId, FormattableString.Invariant($"{folder}:{ViewModel.Folders[folder].Rules.Count - 1}"));
+        }
+    }
+
+    private async void OnEditRuleClick(object sender, RoutedEventArgs e)
+    {
+        var (folder, rule) = RuleOf(sender);
+        if (folder < 0 || folder >= ViewModel.Folders.Count || rule >= ViewModel.Folders[folder].Rules.Count)
+        {
+            return;
+        }
+
+        var path = ViewModel.PathOf(folder);
+        var editor = new FolderRuleEditor(ViewModel.RuleAt(folder, rule), isNew: false, path, ViewModel.Places);
+        if (await ShowAsync(new FolderRuleDialog(editor)) == ContentDialogResult.Primary)
+        {
+            ViewModel.ReplaceRule(folder, rule, editor.ToRule());
+            Focus(RuleEditId, FormattableString.Invariant($"{folder}:{rule}"));
         }
     }
 

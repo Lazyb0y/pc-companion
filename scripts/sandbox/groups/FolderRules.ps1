@@ -21,7 +21,10 @@
 # logs hold no file names or folders. Turned off, the folder isn't watched and the host serves no
 # pipe. The page lists the folders and their rules, says why the hidden system folder can't be used,
 # and saves Add folder, the switches, moving and deleting a rule and removing a folder, with focus
-# staying near what changed. Detailed logging is on for the Debug entries.
+# staying near what changed. The rule editor lists the files there that the rule would act on as
+# it's edited, refuses an extension a file name can't have, and saves the rule; Edit opens it again,
+# and a template opens with its destination, whose folder Create folder makes. Detailed logging is
+# on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -519,6 +522,35 @@ Start-Sleep -Seconds 1
 Test-Check 'the page removes the folder' (Wait-Until { @((Get-FolderRulesSettings).folders).Count -eq 4 } 5) ((Get-FolderRulesSettings).folders.path -join ', ')
 Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-FocusedName) -eq 'More options for Windows only' } 3) (Get-FocusedName)
 Save-Screenshot '15b-folder-rules-page-changed'
+
+# The rule editor lists the files there that the rule would act on as it's edited, shows problems
+# below their boxes, and saves the rule; Edit opens it again, and a template opens with its
+# destination, whose folder Create folder makes.
+Test-Check 'Add rule opens the rule editor' ((Invoke-AppElement 'Add a rule to Inbox') -and (Invoke-AppMenuItem 'Empty rule') -and (Wait-Until { Find-AppElement 'Add a rule' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'an empty rule can''t be saved' (-not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Name' 'Test PDFs')
+[void] (Set-Toggle 'Type' $true)
+[void] (Set-AppBox 'Type' 'p/df')
+Test-Check 'an extension a file name can''t have is refused' ((Wait-Until { Find-AppText 'An extension is empty, has a dot inside it, or has characters a file name can''t have.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Type' 'pdf')
+[void] (Set-AppBox 'Destination' $sorted)
+Test-Check 'the editor lists the PDF there and where it would go' (Wait-Until { Find-AppText "Moves to $sorted\there.pdf" } 5)
+Test-Check 'and how many files the rule would act on' (@(Get-WindowText | Where-Object { $_ -like 'Files the rule would act on: * of *' }).Count -gt 0) ((Get-WindowText | Where-Object { $_ -like 'Files the rule*' }) -join ' | ')
+Save-Screenshot '15c-folder-rules-editor'
+Test-Check 'Save the rule' ((Test-AppEnabled 'Save') -and (Invoke-AppElement 'Save'))
+$last = { @(@((Get-FolderRulesSettings).folders)[0].rules) | Select-Object -Last 1 }
+Test-Check 'the page saves the new rule' (Wait-Until { $rule = & $last; ($rule.name -eq 'Test PDFs') -and ((@($rule.extensions) -join ',') -eq 'pdf') -and ($rule.destination -eq $sorted) -and ($rule.action -eq 'Move') } 5) ((& $last) | ConvertTo-Json -Compress -Depth 4)
+Test-Check 'focus goes to the new rule' (Wait-Until { (Get-FocusedName) -eq 'Edit Test PDFs' } 3) (Get-FocusedName)
+Test-Check 'Edit opens the rule' ((Invoke-AppElement 'Edit Test PDFs') -and (Wait-Until { Find-AppElement 'Edit the rule' } 5) -and ((Get-AppBox 'Name') -eq 'Test PDFs')) (Get-AppBox 'Name')
+[void] (Invoke-AppElement 'Cancel')
+Start-Sleep -Seconds 1
+Test-Check 'a template opens with its destination' ((Invoke-AppElement 'Add a rule to Inbox') -and (Invoke-AppMenuItem 'Installers to an Installers folder') -and (Wait-Until { (Get-AppBox 'Destination') -eq "$inbox\Installers" } 5)) (Get-AppBox 'Destination')
+Test-Check 'and says its folder doesn''t exist yet' (Wait-Until { Find-AppText 'This folder doesn''t exist yet. Until it does, the rule leaves the files where they are.' } 5)
+Test-Check 'Create folder makes it' ((Invoke-AppElement 'Create folder') -and (Wait-Until { Test-Path "$inbox\Installers" -PathType Container } 5))
+Save-Screenshot '15d-folder-rules-template'
+[void] (Invoke-AppElement 'Cancel')
+Start-Sleep -Seconds 1
 
 Stop-All
 Remove-SmbShare -Name FolderRulesShare -Force -ErrorAction SilentlyContinue

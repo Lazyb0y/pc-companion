@@ -1568,4 +1568,344 @@
     <value>আপনার বেছে নেওয়া ফোল্ডারগুলোর ফাইলের নাম, আকার, তারিখ ও অ্যাট্রিবিউট পড়ে, আর «যেখান থেকে ডাউনলোড হয়েছে»-এর জন্য ফাইলের Mark of the Web-এ থাকা সাইট পড়ে। শুধু আপনার নিয়মের সাথে মেলা ফাইলগুলো সরায়, কপি করে, নাম বদলায় ও রিসাইকেল বিনে সরায়, এবং কখনো সেগুলো খোলে বা চালায় না। নিয়মগুলো কী করেছে তার ইতিহাস, ফাইলের নামসহ, ৩০ দিন এই পিসিতে থাকে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="FolderRulesAddRule" xml:space="preserve">
+    <value>নিয়ম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddRuleName" xml:space="preserve">
+    <value>{0}-এ একটি নিয়ম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateEmpty" xml:space="preserve">
+    <value>খালি নিয়ম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByType" xml:space="preserve">
+    <value>ধরন অনুযায়ী সাজান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByMonth" xml:space="preserve">
+    <value>মাস অনুযায়ী সাজান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallers" xml:space="preserve">
+    <value>ইনস্টলারগুলো একটি ইনস্টলার ফোল্ডারে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocuments" xml:space="preserve">
+    <value>ডকুমেন্টগুলো ডকুমেন্টস ফোল্ডারে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallersName" xml:space="preserve">
+    <value>ইনস্টলার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocumentsName" xml:space="preserve">
+    <value>ডকুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEditName" xml:space="preserve">
+    <value>{0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddTitle" xml:space="preserve">
+    <value>একটি নিয়ম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesEditTitle" xml:space="preserve">
+    <value>নিয়মটি সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNameHeader" xml:space="preserve">
+    <value>নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamePlaceholder" xml:space="preserve">
+    <value>যেমন ইনভয়েস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNameNote" xml:space="preserve">
+    <value>নিয়মটি যে ফাইলে কাজ করে, ইতিহাসে প্রতিটির সাথে এটি দেখানো হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionsHeader" xml:space="preserve">
+    <value>শর্তাবলি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionsNote" xml:space="preserve">
+    <value>চালু থাকা প্রতিটি শর্তের সাথে ফাইলটিকে মিলতে হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamesSwitch" xml:space="preserve">
+    <value>ফাইলের নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamesNote" xml:space="preserve">
+    <value>; দিয়ে আলাদা করা প্যাটার্ন, যেমন invoice*;receipt*, যেখানে * যেকোনো অক্ষর এবং ? একটি অক্ষর বোঝায়। বড় ও ছোট হাতের অক্ষরের পার্থক্য ধরা হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTypeSwitch" xml:space="preserve">
+    <value>ধরন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesTypeNote" xml:space="preserve">
+    <value>; দিয়ে আলাদা করা এক্সটেনশন, যেমন pdf; docx।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddKind" xml:space="preserve">
+    <value>একটি ধরন যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindDocuments" xml:space="preserve">
+    <value>ডকুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindPictures" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindVideos" xml:space="preserve">
+    <value>ভিডিও</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindMusic" xml:space="preserve">
+    <value>সংগীত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindArchives" xml:space="preserve">
+    <value>আর্কাইভ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesKindInstallers" xml:space="preserve">
+    <value>ইনস্টলার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSizeSwitch" xml:space="preserve">
+    <value>আকার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesLargerThan" xml:space="preserve">
+    <value>এর চেয়ে বড়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSmallerThan" xml:space="preserve">
+    <value>এর চেয়ে ছোট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitKB" xml:space="preserve">
+    <value>KB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitMB" xml:space="preserve">
+    <value>MB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitGB" xml:space="preserve">
+    <value>GB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNumberName" xml:space="preserve">
+    <value>{0}: সংখ্যা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnitName" xml:space="preserve">
+    <value>{0}: একক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSizeValue" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateSwitch" xml:space="preserve">
+    <value>তারিখ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateWhich" xml:space="preserve">
+    <value>কোন তারিখ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateModified" xml:space="preserve">
+    <value>শেষ পরিবর্তন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDateCreated" xml:space="preserve">
+    <value>তৈরি করার তারিখ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreThanDays" xml:space="preserve">
+    <value>এতদিনের বেশি আগে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesLessThanDays" xml:space="preserve">
+    <value>এতদিনের কম আগে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSitesSwitch" xml:space="preserve">
+    <value>যেখান থেকে ডাউনলোড করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSitesNote" xml:space="preserve">
+    <value>; দিয়ে আলাদা করা সাইট, যেমন *.example.com, যা ফাইলের Mark of the Web-এ থাকা সাইটের সাথে মেলানো হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionHeader" xml:space="preserve">
+    <value>কাজ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionMove" xml:space="preserve">
+    <value>একটি ফোল্ডারে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionCopy" xml:space="preserve">
+    <value>একটি ফোল্ডারে কপি করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionRename" xml:space="preserve">
+    <value>নাম পরিবর্তন করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesActionRecycleBin" xml:space="preserve">
+    <value>রিসাইকেল বিনে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnknownActionNote" xml:space="preserve">
+    <value>এই নিয়মের কাজটি PC Companion-এর নতুন সংস্করণের। আপনি অন্যটি বেছে না নেওয়া পর্যন্ত নিয়মটি এটি রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesUnknownIfExistsNote" xml:space="preserve">
+    <value>নাম ব্যবহৃত থাকলে এই নিয়মের বিকল্পটি PC Companion-এর নতুন সংস্করণের। আপনি অন্যটি বেছে না নেওয়া পর্যন্ত নিয়মটি এটি রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRecycleBin" xml:space="preserve">
+    <value>এই ফোল্ডারের ড্রাইভে কোনো রিসাইকেল বিন নেই, তাই নিয়মটি ফাইলগুলো যেখানে আছে সেখানেই রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationHeader" xml:space="preserve">
+    <value>গন্তব্য</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationNote" xml:space="preserve">
+    <value>ফাইল থেকে তৈরি ফোল্ডার, যেমন {year}\{month}, প্রয়োজনমতো তৈরি করা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationMissing" xml:space="preserve">
+    <value>এই ফোল্ডারটি এখনো নেই। এটি না থাকা পর্যন্ত নিয়মটি ফাইলগুলো যেখানে আছে সেখানেই রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCreateFolder" xml:space="preserve">
+    <value>ফোল্ডার তৈরি করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCreateFolderFailed" xml:space="preserve">
+    <value>Windows ফোল্ডারটি তৈরি করতে পারেনি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDestinationTitle" xml:space="preserve">
+    <value>গন্তব্য বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameHeader" xml:space="preserve">
+    <value>নতুন নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameOptionalHeader" xml:space="preserve">
+    <value>নতুন নাম (ঐচ্ছিক)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNewNameNote" xml:space="preserve">
+    <value>এক্সটেনশন ছাড়া, যা ফাইলটি রেখে দেয়। {name}, {extension}, {year}, {month}, {day} ও {date} ফাইলের নিজস্ব মান দিয়ে বদলানো হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsHeader" xml:space="preserve">
+    <value>একই নামের ফাইল থাকলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsAddNumber" xml:space="preserve">
+    <value>একটি সংখ্যা যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesIfExistsSkip" xml:space="preserve">
+    <value>এড়িয়ে যান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesHeader" xml:space="preserve">
+    <value>এখন থাকা ফাইলগুলো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesReading" xml:space="preserve">
+    <value>ফোল্ডারটি পড়া হচ্ছে…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesCantRead" xml:space="preserve">
+    <value>ফোল্ডারটি পড়া যাচ্ছে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesNone" xml:space="preserve">
+    <value>ফোল্ডারটিতে এমন কোনো ফাইল নেই যাতে নিয়মগুলো কাজ করতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesFixProblems" xml:space="preserve">
+    <value>নিয়মটিতে কোনো সমস্যা না থাকলে, এটি কোন ফাইলগুলোতে কাজ করবে তা এখানে দেখানো হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFilesMatchCount" xml:space="preserve">
+    <value>নিয়মটি যে ফাইলগুলোতে কাজ করবে: {1}টির মধ্যে {0}টি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionMatches" xml:space="preserve">
+    <value>{0} মেলে: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesConditionNoMatch" xml:space="preserve">
+    <value>{0} মেলে না: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFileNotIncluded" xml:space="preserve">
+    <value>অন্তর্ভুক্ত নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFileStays" xml:space="preserve">
+    <value>যেখানে আছে সেখানেই থাকে। {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoExtension" xml:space="preserve">
+    <value>কোনো এক্সটেনশন নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoSite" xml:space="preserve">
+    <value>কোনো সাইট নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingEmptyName" xml:space="preserve">
+    <value>এই ফাইলের জন্য নতুন নামটি খালি হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingInvalidName" xml:space="preserve">
+    <value>নতুন নামটি, বা ফাইল থেকে তৈরি একটি ফোল্ডার, এমন নাম যা Windows অনুমতি দেয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingNameTooLong" xml:space="preserve">
+    <value>নতুন নামটি, বা ফাইল থেকে তৈরি একটি ফোল্ডার, ২৫৫ অক্ষরের চেয়ে দীর্ঘ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingOwnFolder" xml:space="preserve">
+    <value>এই ফাইল থেকে তৈরি গন্তব্যটি নিয়মের নিজের ফোল্ডার।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNamingNotAllowed" xml:space="preserve">
+    <value>এই ফাইল থেকে তৈরি গন্তব্যটি এমন একটি ফোল্ডারে যা নিয়মগুলো পরিবর্তন করতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

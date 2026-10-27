@@ -25,6 +25,7 @@ public sealed record RuleItem(
     string Summary,
     bool IsEnabled,
     string SwitchName,
+    string EditName,
     string MoreName,
     bool CanMoveUp,
     bool CanMoveDown)
@@ -46,7 +47,9 @@ public sealed record FolderItem(
     InfoBarSeverity ProblemSeverity,
     IReadOnlyList<RuleItem> Rules,
     string WatchName,
-    string MoreName)
+    string MoreName,
+    string AddRuleName,
+    bool CanAddRule)
 {
     public bool HasProblem => Problem.Length > 0;
 
@@ -62,6 +65,8 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
     private static readonly CompositeFormat WatchFormat = CompositeFormat.Parse(Strings.FolderRulesWatchName);
     private static readonly CompositeFormat MoreFormat = CompositeFormat.Parse(Strings.FolderRulesMoreName);
     private static readonly CompositeFormat RuleSwitchFormat = CompositeFormat.Parse(Strings.FolderRulesRuleSwitchName);
+    private static readonly CompositeFormat EditFormat = CompositeFormat.Parse(Strings.FolderRulesEditName);
+    private static readonly CompositeFormat AddRuleFormat = CompositeFormat.Parse(Strings.FolderRulesAddRuleName);
 
     private readonly AppSettings _appSettings;
 
@@ -156,6 +161,17 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
     public void SetRuleEnabled(int folder, int index, bool enabled) =>
         ChangeRules(folder, rules => [.. rules.Select((rule, at) => at == index ? rule with { Enabled = enabled } : rule)], rebuild: false);
 
+    /// <summary>The folder's path, as the settings have it, for the rule editor.</summary>
+    public string PathOf(int folder) => Settings.Folders[folder].Path;
+
+    /// <summary>The rule as saved, which a switch may have changed since the list was built.</summary>
+    public FolderRule RuleAt(int folder, int index) => Settings.Folders[folder].Rules[index];
+
+    public void AddRule(int folder, FolderRule rule) => ChangeRules(folder, rules => [.. rules, rule]);
+
+    public void ReplaceRule(int folder, int index, FolderRule rule) =>
+        ChangeRules(folder, rules => [.. rules.Select((existing, at) => at == index ? rule : existing)]);
+
     public void DeleteRule(int folder, int index) => ChangeRules(folder, rules => [.. rules.Where((_, at) => at != index)]);
 
     /// <summary>Moves a rule one place up, with an offset of -1, or down, with 1.</summary>
@@ -242,6 +258,7 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
                 FolderRulesText.Summary(rule, FolderRulesText.Of(review.Rules[at], rule, Places)),
                 rule.Enabled,
                 string.Format(CultureInfo.CurrentCulture, RuleSwitchFormat, ruleName),
+                string.Format(CultureInfo.CurrentCulture, EditFormat, ruleName),
                 string.Format(CultureInfo.CurrentCulture, MoreFormat, ruleName),
                 at > 0,
                 at < folder.Rules.Count - 1);
@@ -256,7 +273,9 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
             severity,
             rules,
             string.Format(CultureInfo.CurrentCulture, WatchFormat, name),
-            string.Format(CultureInfo.CurrentCulture, MoreFormat, name));
+            string.Format(CultureInfo.CurrentCulture, MoreFormat, name),
+            string.Format(CultureInfo.CurrentCulture, AddRuleFormat, name),
+            Settings.Folders.Sum(watched => watched.Rules.Count) < FolderRulesSettings.MaximumRules);
     }
 
     // Each path is looked at once, off the UI thread.
