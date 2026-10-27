@@ -3,15 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Win32.SafeHandles;
-using Windows.Win32;
-using Windows.Win32.Security;
-using Windows.Win32.Storage.FileSystem;
-using Windows.Win32.System.Pipes;
 
 namespace PCCompanion.Platform.Windows;
 
@@ -23,8 +16,6 @@ namespace PCCompanion.Platform.Windows;
 /// </summary>
 public sealed class SnapshotPipe : IDisposable
 {
-    private const int BufferSize = 64 * 1024;
-
     private readonly string _name;
     private readonly Func<byte[]> _snapshot;
     private readonly Action<Exception> _failed;
@@ -64,7 +55,7 @@ public sealed class SnapshotPipe : IDisposable
         ArgumentNullException.ThrowIfNull(snapshot);
         ArgumentNullException.ThrowIfNull(failed);
 
-        return new SnapshotPipe(name, snapshot, failed, Create(name));
+        return new SnapshotPipe(name, snapshot, failed, NamedPipes.CreateOutbound(name));
     }
 
     /// <summary>
@@ -136,7 +127,7 @@ public sealed class SnapshotPipe : IDisposable
 
                 // Closing the pipe, rather than disconnecting it, leaves what's written for the
                 // program to read. A pipe of the same name waits for the next program.
-                var next = Create(_name);
+                var next = NamedPipes.CreateOutbound(_name);
                 if (Interlocked.CompareExchange(ref _pipe, next, pipe) == pipe)
                 {
                     await pipe.DisposeAsync().ConfigureAwait(false);
@@ -153,49 +144,6 @@ public sealed class SnapshotPipe : IDisposable
         catch (Exception exception)
         {
             _failed(exception);
-        }
-    }
-
-    // Outbound only, so the pipe takes no input. Only the user's account and the system may open
-    // it, whatever rights this process has: an elevated process's default owner is the
-    // Administrators group, which a program without admin rights can't use.
-    private static unsafe NamedPipeServerStream Create(string name)
-    {
-        string user;
-        using (var identity = WindowsIdentity.GetCurrent())
-        {
-            user = identity.User!.Value;
-        }
-
-        var descriptor = new RawSecurityDescriptor($"D:P(A;;GA;;;{user})(A;;GA;;;SY)");
-        var binary = new byte[descriptor.BinaryLength];
-        descriptor.GetBinaryForm(binary, 0);
-
-        fixed (byte* securityDescriptor = binary)
-        {
-            var attributes = new SECURITY_ATTRIBUTES
-            {
-                nLength = (uint)sizeof(SECURITY_ATTRIBUTES),
-                lpSecurityDescriptor = securityDescriptor,
-            };
-
-            using var handle = PInvoke.CreateNamedPipe(
-                @"\\.\pipe\" + name,
-                FILE_FLAGS_AND_ATTRIBUTES.PIPE_ACCESS_OUTBOUND | FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_OVERLAPPED,
-                NAMED_PIPE_MODE.PIPE_TYPE_BYTE | NAMED_PIPE_MODE.PIPE_READMODE_BYTE | NAMED_PIPE_MODE.PIPE_WAIT | NAMED_PIPE_MODE.PIPE_REJECT_REMOTE_CLIENTS,
-                PInvoke.PIPE_UNLIMITED_INSTANCES,
-                BufferSize,
-                0,
-                0,
-                attributes);
-            if (handle.IsInvalid)
-            {
-                throw new Win32Exception();
-            }
-
-            var pipe = new SafePipeHandle(handle.DangerousGetHandle(), ownsHandle: true);
-            handle.SetHandleAsInvalid();
-            return new NamedPipeServerStream(PipeDirection.Out, isAsync: true, isConnected: false, pipe);
         }
     }
 }
