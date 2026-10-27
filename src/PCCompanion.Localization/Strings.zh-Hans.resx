@@ -2144,4 +2144,276 @@
     <value>还原</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesOriginalSetup" xml:space="preserve">
+    <value>原始设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesHeader" xml:space="preserve">
+    <value>配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesDescription" xml:space="preserve">
+    <value>在 Windows 显示设置中排列显示器，然后将该设置添加为配置文件。在 PC Companion 图标的菜单中选择配置文件，或选择“使用”，即可切换到该配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesAddCurrent" xml:space="preserve">
+    <value>从当前设置添加</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNoProfiles" xml:space="preserve">
+    <value>还没有配置文件。在 Windows 显示设置中排列显示器，然后选择“从当前设置添加”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInUse" xml:space="preserve">
+    <value>正在使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUse" xml:space="preserve">
+    <value>使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseName" xml:space="preserve">
+    <value>使用 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRename" xml:space="preserve">
+    <value>重命名</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdate" xml:space="preserve">
+    <value>从当前设置更新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoveUp" xml:space="preserve">
+    <value>上移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoveDown" xml:space="preserve">
+    <value>下移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateTitle" xml:space="preserve">
+    <value>从当前设置更新 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateContent" xml:space="preserve">
+    <value>配置文件的显示器、排列和模式将替换为当前使用的设置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateButton" xml:space="preserve">
+    <value>更新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesAddTitle" xml:space="preserve">
+    <value>添加配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRenameTitle" xml:space="preserve">
+    <value>重命名配置文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameHeader" xml:space="preserve">
+    <value>名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNamePlaceholder" xml:space="preserve">
+    <value>办公桌</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSetupHeader" xml:space="preserve">
+    <value>显示设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameMissing" xml:space="preserve">
+    <value>输入名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameTooLong" xml:space="preserve">
+    <value>最多使用 {0} 个字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameInvalid" xml:space="preserve">
+    <value>名称只能有一行。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameInUse" xml:space="preserve">
+    <value>另一个配置文件已使用此名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSummaryProblem" xml:space="preserve">
+    <value>不在菜单中: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemTooManyDisplays" xml:space="preserve">
+    <value>它有超过 {0} 个显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemInvalidDisplay" xml:space="preserve">
+    <value>某个显示器的详细信息无效。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSameDisplayTwice" xml:space="preserve">
+    <value>它包含两次同一个显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoDisplayOn" xml:space="preserve">
+    <value>没有打开任何显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOutOfRange" xml:space="preserve">
+    <value>某个分辨率、位置或刷新率超出范围。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoMainDisplay" xml:space="preserve">
+    <value>没有显示器是主显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSeveralMainDisplays" xml:space="preserve">
+    <value>多个显示器是主显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemMainNotAtOrigin" xml:space="preserve">
+    <value>主显示器不在桌面的左上角。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOverlap" xml:space="preserve">
+    <value>显示器相互重叠。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemGap" xml:space="preserve">
+    <value>显示器之间有间隙。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesTooMany" xml:space="preserve">
+    <value>不在菜单中: 仅使用前 20 个配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesResolution" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRefreshRate" xml:space="preserve">
+    <value>{0} Hz</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesOff" xml:space="preserve">
+    <value>关闭</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPortrait" xml:space="preserve">
+    <value>纵向</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesLandscapeFlipped" xml:space="preserve">
+    <value>横向(翻转)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPortraitFlipped" xml:space="preserve">
+    <value>纵向(翻转)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesHdr" xml:space="preserve">
+    <value>HDR</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMainDisplay" xml:space="preserve">
+    <value>主显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesBuiltInDisplay" xml:space="preserve">
+    <value>内置显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUnnamedDisplay" xml:space="preserve">
+    <value>显示器 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSameName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNotConnected" xml:space="preserve">
+    <value>现在无法使用: {0} 未连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInConnectionOrder" xml:space="preserve">
+    <value>无法区分相同的显示器，因此按其连接顺序使用。如果它们的位置互换，请选择“从当前设置更新”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseRefused" xml:space="preserve">
+    <value>Windows 拒绝了 {0} (错误 {1})，因此未做任何更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseModesNotOffered" xml:space="preserve">
+    <value>Windows 拒绝了 {0}，因此未做任何更改: {1} 不支持配置文件的分辨率和刷新率。请使用该显示器提供的模式更新配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotConnected" xml:space="preserve">
+    <value>现在无法使用 {0}: 其中打开的一个显示器未连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotAsInProfile" xml:space="preserve">
+    <value>Windows 在 {1} 上以自己的方式应用了 {0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseCantRead" xml:space="preserve">
+    <value>Windows 拒绝读取显示器 (错误 {0})，因此未做任何更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotRead" xml:space="preserve">
+    <value>PC Companion 尚未读取此配置文件的最新更改，因此未做任何更改。请稍后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNoAnswer" xml:space="preserve">
+    <value>PC Companion 未响应，因此未做任何更改。请确保已打开“显示配置文件”，然后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRemoteInfo" xml:space="preserve">
+    <value>显示配置文件在远程会话中不可用: Windows 报告的是会话自己的显示器，而不是电脑的显示器，并拒绝更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInfo" xml:space="preserve">
+    <value>配置文件不会更改每个显示器的缩放、颜色、亮度、夜间模式或壁纸: Windows 会为每个显示器保留这些设置。在可能导致显示器黑屏的切换之后，系统会询问你是否保留，如果 15 秒内没有回答，将恢复以前的设置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Windows 显示设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>排列显示器并设置其分辨率、刷新率、方向和 HDR。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>打开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPermissions" xml:space="preserve">
+    <value>仅在你选择配置文件时更改显示设置，并在保留可能导致显示器黑屏的更改之前询问。读取已连接显示器的名称、型号、连接和序列号；序列号仅以哈希形式保存。不建立网络连接，也不记录配置文件名称、显示器名称或序列号。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

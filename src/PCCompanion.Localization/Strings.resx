@@ -2164,4 +2164,276 @@
     <value>Revert</value>
     <comment>Dialog button: brings back the previous display settings. Use the wording of Windows' own question.</comment>
   </data>
+  <data name="DisplayProfilesOriginalSetup" xml:space="preserve">
+    <value>Original setup</value>
+    <comment>Name of the profile made from the current display setup when Display Profiles is first turned on.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesHeader" xml:space="preserve">
+    <value>Profiles</value>
+    <comment>Display Profiles page: header of the profile list.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesDescription" xml:space="preserve">
+    <value>Arrange your displays in Windows display settings, then add the setup as a profile. Choose a profile in the PC Companion icon's menu, or select Use, to switch to it.</value>
+    <comment>Display Profiles page: below DisplayProfilesProfilesHeader. Use is DisplayProfilesUse.</comment>
+  </data>
+  <data name="DisplayProfilesAddCurrent" xml:space="preserve">
+    <value>Add from current setup</value>
+    <comment>Display Profiles page: button that adds a profile with the display setup in use now.</comment>
+  </data>
+  <data name="DisplayProfilesNoProfiles" xml:space="preserve">
+    <value>No profiles yet. Arrange your displays in Windows display settings, then select Add from current setup.</value>
+    <comment>Display Profiles page: shown when the list is empty. Add from current setup is DisplayProfilesAddCurrent.</comment>
+  </data>
+  <data name="DisplayProfilesInUse" xml:space="preserve">
+    <value>In use</value>
+    <comment>Display Profiles page: shown on the profile whose setup is in use now.</comment>
+  </data>
+  <data name="DisplayProfilesUse" xml:space="preserve">
+    <value>Use</value>
+    <comment>Display Profiles page: button that switches the displays to the profile.</comment>
+  </data>
+  <data name="DisplayProfilesUseName" xml:space="preserve">
+    <value>Use {0}</value>
+    <comment>Display Profiles page: name of the Use button for screen readers. {0} is the profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Display Profiles page: name of the More button for screen readers. {0} is the profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesRename" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Display Profiles page: menu item.</comment>
+  </data>
+  <data name="DisplayProfilesUpdate" xml:space="preserve">
+    <value>Update from current setup</value>
+    <comment>Display Profiles page: menu item that replaces the profile's setup with the one in use now.</comment>
+  </data>
+  <data name="DisplayProfilesMoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Display Profiles page: menu item.</comment>
+  </data>
+  <data name="DisplayProfilesMoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Display Profiles page: menu item.</comment>
+  </data>
+  <data name="DisplayProfilesDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Display Profiles page: menu item and dialog button.</comment>
+  </data>
+  <data name="DisplayProfilesCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Display Profiles page and name dialog: dialog button.</comment>
+  </data>
+  <data name="DisplayProfilesSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Name dialog: button.</comment>
+  </data>
+  <data name="DisplayProfilesDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>Display Profiles page: title of the dialog that asks before deleting. {0} is the profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateTitle" xml:space="preserve">
+    <value>Update {0} from the current setup?</value>
+    <comment>Display Profiles page: title of the dialog that asks before Update from current setup. {0} is the profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateContent" xml:space="preserve">
+    <value>The profile's displays, arrangement and modes are replaced with the ones in use now.</value>
+    <comment>Display Profiles page: text of the dialog that asks before Update from current setup.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateButton" xml:space="preserve">
+    <value>Update</value>
+    <comment>Display Profiles page: dialog button that replaces the profile's setup.</comment>
+  </data>
+  <data name="DisplayProfilesAddTitle" xml:space="preserve">
+    <value>Add a profile</value>
+    <comment>Name dialog: title for a new profile made from the current setup.</comment>
+  </data>
+  <data name="DisplayProfilesRenameTitle" xml:space="preserve">
+    <value>Rename profile</value>
+    <comment>Name dialog: title when renaming a profile.</comment>
+  </data>
+  <data name="DisplayProfilesNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Name dialog: box header.</comment>
+  </data>
+  <data name="DisplayProfilesNamePlaceholder" xml:space="preserve">
+    <value>Desk</value>
+    <comment>Name dialog: example in the empty Name box.</comment>
+  </data>
+  <data name="DisplayProfilesSetupHeader" xml:space="preserve">
+    <value>Display setup</value>
+    <comment>Name dialog: header of the lines that describe the profile's displays.</comment>
+  </data>
+  <data name="DisplayProfilesNameMissing" xml:space="preserve">
+    <value>Enter a name.</value>
+    <comment>Name dialog and Display Profiles page: problem with a profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesNameTooLong" xml:space="preserve">
+    <value>Use {0} characters or fewer.</value>
+    <comment>Name dialog and Display Profiles page: problem with a name that's too long. {0} is the most characters.</comment>
+  </data>
+  <data name="DisplayProfilesNameInvalid" xml:space="preserve">
+    <value>Use a name on one line.</value>
+    <comment>Name dialog and Display Profiles page: problem with a name that has a line break or another control character.</comment>
+  </data>
+  <data name="DisplayProfilesNameInUse" xml:space="preserve">
+    <value>Another profile has this name.</value>
+    <comment>Name dialog and Display Profiles page: problem with a profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesSummaryProblem" xml:space="preserve">
+    <value>Not in the menu: {0}</value>
+    <comment>Display Profiles page: summary of a profile that can't be used, such as one edited by hand. {0} says what's wrong.</comment>
+  </data>
+  <data name="DisplayProfilesProblemTooManyDisplays" xml:space="preserve">
+    <value>it has more than {0} displays.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem. {0} is the most displays.</comment>
+  </data>
+  <data name="DisplayProfilesProblemInvalidDisplay" xml:space="preserve">
+    <value>a display's details aren't valid.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSameDisplayTwice" xml:space="preserve">
+    <value>it has the same display twice.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoDisplayOn" xml:space="preserve">
+    <value>no display is on.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOutOfRange" xml:space="preserve">
+    <value>a resolution, position or refresh rate is out of range.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoMainDisplay" xml:space="preserve">
+    <value>no display is the main display.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSeveralMainDisplays" xml:space="preserve">
+    <value>more than one display is the main display.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemMainNotAtOrigin" xml:space="preserve">
+    <value>the main display isn't at the top-left corner of the desktop.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOverlap" xml:space="preserve">
+    <value>displays overlap.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesProblemGap" xml:space="preserve">
+    <value>displays leave a gap between them.</value>
+    <comment>Display Profiles page: after DisplayProfilesSummaryProblem.</comment>
+  </data>
+  <data name="DisplayProfilesTooMany" xml:space="preserve">
+    <value>Not in the menu: only the first 20 profiles are used.</value>
+    <comment>Display Profiles page: summary of profiles after the 20th.</comment>
+  </data>
+  <data name="DisplayProfilesLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Display Profiles page and name dialog: a line for one display of a profile. {0} is the display's name; {1} is its resolution, refresh rate and more, or DisplayProfilesOff.</comment>
+  </data>
+  <data name="DisplayProfilesResolution" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Display Profiles page: a display resolution, as Windows display settings shows it. {0} is the width, {1} the height, in pixels.</comment>
+  </data>
+  <data name="DisplayProfilesRefreshRate" xml:space="preserve">
+    <value>{0} Hz</value>
+    <comment>Display Profiles page: a refresh rate, such as 59.94 Hz. {0} is the number of hertz.</comment>
+  </data>
+  <data name="DisplayProfilesOff" xml:space="preserve">
+    <value>off</value>
+    <comment>Display Profiles page: after a display's name, for a display the profile turns off.</comment>
+  </data>
+  <data name="DisplayProfilesPortrait" xml:space="preserve">
+    <value>Portrait</value>
+    <comment>Display Profiles page: display orientation, as Windows display settings names it.</comment>
+  </data>
+  <data name="DisplayProfilesLandscapeFlipped" xml:space="preserve">
+    <value>Landscape (flipped)</value>
+    <comment>Display Profiles page: display orientation, as Windows display settings names it.</comment>
+  </data>
+  <data name="DisplayProfilesPortraitFlipped" xml:space="preserve">
+    <value>Portrait (flipped)</value>
+    <comment>Display Profiles page: display orientation, as Windows display settings names it.</comment>
+  </data>
+  <data name="DisplayProfilesHdr" xml:space="preserve">
+    <value>HDR</value>
+    <comment>Display Profiles page: shown for a display the profile turns HDR on for.</comment>
+  </data>
+  <data name="DisplayProfilesMainDisplay" xml:space="preserve">
+    <value>main display</value>
+    <comment>Display Profiles page: shown for the profile's main display.</comment>
+  </data>
+  <data name="DisplayProfilesBuiltInDisplay" xml:space="preserve">
+    <value>Built-in display</value>
+    <comment>Display Profiles page: name of a laptop's or tablet's own screen.</comment>
+  </data>
+  <data name="DisplayProfilesUnnamedDisplay" xml:space="preserve">
+    <value>Display {0}</value>
+    <comment>Display Profiles page: name of a display that reports none. {0} is its place in the profile.</comment>
+  </data>
+  <data name="DisplayProfilesSameName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Display Profiles page: name of a display when another display of the profile has the same name. {0} is the name; {1} is its place in the profile.</comment>
+  </data>
+  <data name="DisplayProfilesNotConnected" xml:space="preserve">
+    <value>Can't be used now: {0} isn't connected.</value>
+    <comment>Display Profiles page: on a profile whose display isn't connected. {0} is the display's name, or several, separated as the region separates lists.</comment>
+  </data>
+  <data name="DisplayProfilesInConnectionOrder" xml:space="preserve">
+    <value>Identical displays can't be told apart, so they're taken in the order of their connections. If they come out swapped, select Update from current setup.</value>
+    <comment>Display Profiles page: on a profile with identical displays that are on other connections than when the profile was made. Update from current setup is DisplayProfilesUpdate.</comment>
+  </data>
+  <data name="DisplayProfilesUseRefused" xml:space="preserve">
+    <value>Windows refused {0} (error {1}), so nothing changed.</value>
+    <comment>Display Profiles page: error after Use. {0} is the profile's name; {1} is Windows' error code.</comment>
+  </data>
+  <data name="DisplayProfilesUseModesNotOffered" xml:space="preserve">
+    <value>Windows refused {0}, so nothing changed: {1} doesn't offer the profile's resolution and refresh rate. Update the profile with a mode the display lists.</value>
+    <comment>Display Profiles page: error after Use. {0} is the profile's name; {1} is a display's name, or several.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotConnected" xml:space="preserve">
+    <value>{0} can't be used now: a display that's on in it isn't connected.</value>
+    <comment>Display Profiles page: error after Use. {0} is the profile's name.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotAsInProfile" xml:space="preserve">
+    <value>Windows applied {0} in its own way on {1}.</value>
+    <comment>Display Profiles page: warning after Use. {0} is the profile's name; {1} is a display's name, or several.</comment>
+  </data>
+  <data name="DisplayProfilesUseCantRead" xml:space="preserve">
+    <value>Windows refused to read the displays (error {0}), so nothing changed.</value>
+    <comment>Display Profiles page: error after Use. {0} is Windows' error code.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotRead" xml:space="preserve">
+    <value>PC Companion hasn't read this profile's latest changes yet, so nothing changed. Try again in a moment.</value>
+    <comment>Display Profiles page: error after Use of a profile changed so recently that the background part of PC Companion hasn't read the change.</comment>
+  </data>
+  <data name="DisplayProfilesUseNoAnswer" xml:space="preserve">
+    <value>PC Companion didn't answer, so nothing changed. Make sure Display Profiles is on, then try again.</value>
+    <comment>Display Profiles page: error after Use when the background part of PC Companion doesn't answer.</comment>
+  </data>
+  <data name="DisplayProfilesRemoteInfo" xml:space="preserve">
+    <value>Display profiles aren't available in a remote session: Windows reports the session's own display, not the PC's, and refuses changes.</value>
+    <comment>Display Profiles page: warning in Remote Desktop and other remote sessions.</comment>
+  </data>
+  <data name="DisplayProfilesInfo" xml:space="preserve">
+    <value>Profiles don't change each display's scale, color, brightness or night light, or the wallpaper: Windows keeps those for each display. After a switch that could leave a display black, you're asked whether to keep it, and the previous setup comes back after 15 seconds without an answer.</value>
+    <comment>Display Profiles page: note.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Windows display settings</value>
+    <comment>Display Profiles page: card header.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>Arrange your displays and set their resolution, refresh rate, orientation and HDR.</value>
+    <comment>Display Profiles page: below DisplayProfilesWindowsSettingsHeader.</comment>
+  </data>
+  <data name="DisplayProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>Open</value>
+    <comment>Display Profiles page: button that opens the Display page of Windows Settings.</comment>
+  </data>
+  <data name="DisplayProfilesPermissions" xml:space="preserve">
+    <value>Changes the display setup only when you choose a profile, and asks before keeping a change that could leave a display black. Reads the connected displays' names, models, connections and serial numbers; serial numbers are kept only as a hash. Makes no network connections, and doesn't log profile names, display names or serial numbers.</value>
+    <comment>Display Profiles page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

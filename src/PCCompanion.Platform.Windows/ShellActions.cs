@@ -101,6 +101,9 @@ public static class ShellActions
     /// <summary>Opens the Proxy page of Windows Settings.</summary>
     public static bool OpenProxySettings() => OpenSettingsPage("ms-settings:network-proxy");
 
+    /// <summary>Opens the Display page of Windows Settings.</summary>
+    public static bool OpenDisplaySettings() => OpenSettingsPage("ms-settings:display");
+
     /// <summary>Opens the Recycle Bin in File Explorer, where its files can be restored.</summary>
     public static bool OpenRecycleBin()
     {
