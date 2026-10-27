@@ -1310,197 +1310,602 @@
   </data>
   <data name="ModuleFilesName" xml:space="preserve">
     <value>Files</value>
+    <comment>Module name: the group of features that organize the user's files, in the navigation pane and on Home.</comment>
   </data>
   <data name="FolderRulesName" xml:space="preserve">
     <value>Folder Rules</value>
+    <comment>Feature name: rules that act on files as they arrive in a folder.</comment>
   </data>
   <data name="FolderRulesDescription" xml:space="preserve">
     <value>Move, copy, rename or sort files as they arrive in a folder, such as Downloads.</value>
+    <comment>Feature description, on Home and the feature's page.</comment>
   </data>
   <data name="FolderRulesFoldersHeader" xml:space="preserve">
     <value>Folders</value>
+    <comment>Folder Rules page: header of the list of watched folders.</comment>
   </data>
   <data name="FolderRulesFoldersDescription" xml:space="preserve">
     <value>When a file arrives in one of these folders, the first of the folder's rules that matches it acts on it. The files already there stay as they are.</value>
+    <comment>Folder Rules page: below FolderRulesFoldersHeader.</comment>
   </data>
   <data name="FolderRulesAddFolder" xml:space="preserve">
     <value>Add folder</value>
+    <comment>Folder Rules page: button that opens a menu of folders to add.</comment>
   </data>
   <data name="FolderRulesAddDownloads" xml:space="preserve">
     <value>Downloads</value>
+    <comment>Folder Rules page, Add folder menu: the user's Downloads folder, as File Explorer names it.</comment>
   </data>
   <data name="FolderRulesAddDesktop" xml:space="preserve">
     <value>Desktop</value>
+    <comment>Folder Rules page, Add folder menu: the user's Desktop folder, as File Explorer names it.</comment>
   </data>
   <data name="FolderRulesAddDocuments" xml:space="preserve">
     <value>Documents</value>
+    <comment>Folder Rules page, Add folder menu: the user's Documents folder, as File Explorer names it.</comment>
   </data>
   <data name="FolderRulesAddPictures" xml:space="preserve">
     <value>Pictures</value>
+    <comment>Folder Rules page, Add folder menu: the user's Pictures folder, as File Explorer names it.</comment>
   </data>
   <data name="FolderRulesAddBrowse" xml:space="preserve">
     <value>Browse…</value>
+    <comment>Folder Rules page, Add folder menu: opens the Open dialog to choose any folder.</comment>
   </data>
   <data name="FolderRulesBrowseTitle" xml:space="preserve">
     <value>Choose a folder to watch</value>
+    <comment>Title of the Open dialog that chooses a folder to watch.</comment>
   </data>
   <data name="FolderRulesNoFolders" xml:space="preserve">
     <value>No folders yet. Add a folder, such as Downloads, and then rules for it.</value>
+    <comment>Folder Rules page: shown when the list of folders is empty.</comment>
   </data>
   <data name="FolderRulesWatchName" xml:space="preserve">
     <value>Watch {0}</value>
+    <comment>Folder Rules page: name of a folder's switch for screen readers. {0} is the folder's name.</comment>
   </data>
   <data name="FolderRulesMoreName" xml:space="preserve">
     <value>More options for {0}</value>
+    <comment>Folder Rules page: name of the More button of a folder or a rule for screen readers. {0} is the folder's or the rule's name.</comment>
   </data>
   <data name="FolderRulesRemove" xml:space="preserve">
     <value>Remove</value>
+    <comment>Folder Rules page: menu item and dialog button that removes a folder from the list.</comment>
   </data>
   <data name="FolderRulesRemoveTitle" xml:space="preserve">
     <value>Remove {0}?</value>
+    <comment>Folder Rules page: title of the dialog that asks before a folder is removed. {0} is the folder's name.</comment>
   </data>
   <data name="FolderRulesRemoveText" xml:space="preserve">
     <value>Its rules are removed too. The files in it stay as they are.</value>
+    <comment>Folder Rules page: text of the dialog that asks before a folder is removed.</comment>
   </data>
   <data name="FolderRulesCancel" xml:space="preserve">
     <value>Cancel</value>
+    <comment>Folder Rules page: dialog button that closes the dialog without a change.</comment>
   </data>
   <data name="FolderRulesFolderNotFound" xml:space="preserve">
     <value>This folder can't be found. Its rules start again when it's back.</value>
+    <comment>Folder Rules page: warning on a folder that doesn't exist now, such as one on a drive that was removed.</comment>
   </data>
   <data name="FolderRulesProgramDataWarning" xml:space="preserve">
     <value>Programs keep their own files here. Moving one can stop a program from working.</value>
+    <comment>Folder Rules page: warning on a folder in AppData or ProgramData.</comment>
   </data>
   <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
     <value>This path has characters Windows doesn't allow in one.</value>
+    <comment>Folder Rules page: why a folder or a destination can't be used.</comment>
   </data>
   <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
     <value>Use a full path, such as D:\Downloads or \\server\share\Scans.</value>
+    <comment>Folder Rules page: why a folder or a destination can't be used. Keep the example paths as they are.</comment>
   </data>
   <data name="FolderRulesFolderWindows" xml:space="preserve">
     <value>Rules can't change files in the Windows folder, which only administrators can change.</value>
+    <comment>Folder Rules page: why a folder or a destination can't be used.</comment>
   </data>
   <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
     <value>Rules can't change files in Program Files, which only administrators can change.</value>
+    <comment>Folder Rules page: why a folder or a destination can't be used. Program Files is the folder's name in every language.</comment>
   </data>
   <data name="FolderRulesFolderDataFolder" xml:space="preserve">
     <value>Rules can't change files in PC Companion's own data folder.</value>
+    <comment>Folder Rules page: why a folder or a destination can't be used.</comment>
   </data>
   <data name="FolderRulesFolderNoPath" xml:space="preserve">
     <value>This folder has no path.</value>
+    <comment>Folder Rules page: why a folder in a settings file edited by hand can't be used.</comment>
   </data>
   <data name="FolderRulesFolderSystem" xml:space="preserve">
     <value>Rules can't change files in hidden system folders, such as the Recycle Bin's own folders, which only Windows uses.</value>
+    <comment>Folder Rules page: why a hidden system folder, such as the Recycle Bin's own folder $Recycle.Bin, can't be used.</comment>
   </data>
   <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
     <value>This folder is already in the list.</value>
+    <comment>Folder Rules page: why a folder isn't added, or isn't watched twice.</comment>
   </data>
   <data name="FolderRulesFolderTooMany" xml:space="preserve">
     <value>Folder Rules watches only the first {0} folders.</value>
+    <comment>Folder Rules page: why a folder isn't added, or isn't watched. {0} is the most folders, 10.</comment>
   </data>
   <data name="FolderRulesRulesHeader" xml:space="preserve">
     <value>Rules</value>
+    <comment>Folder Rules page: header of a folder's list of rules.</comment>
   </data>
   <data name="FolderRulesRulesDescription" xml:space="preserve">
     <value>In order: the first rule that matches a file acts on it.</value>
+    <comment>Folder Rules page: below FolderRulesRulesHeader.</comment>
   </data>
   <data name="FolderRulesNoRules" xml:space="preserve">
     <value>No rules yet.</value>
+    <comment>Folder Rules page: shown when a folder has no rules.</comment>
   </data>
   <data name="FolderRulesRuleSwitchName" xml:space="preserve">
     <value>Use {0}</value>
+    <comment>Folder Rules page: name of a rule's switch for screen readers. {0} is the rule's name.</comment>
   </data>
   <data name="FolderRulesMoveUp" xml:space="preserve">
     <value>Move up</value>
+    <comment>Folder Rules page: menu item that moves a rule one place up in its folder's list.</comment>
   </data>
   <data name="FolderRulesMoveDown" xml:space="preserve">
     <value>Move down</value>
+    <comment>Folder Rules page: menu item that moves a rule one place down in its folder's list.</comment>
   </data>
   <data name="FolderRulesDelete" xml:space="preserve">
     <value>Delete</value>
+    <comment>Folder Rules page: menu item and dialog button that deletes a rule.</comment>
   </data>
   <data name="FolderRulesDeleteTitle" xml:space="preserve">
     <value>Delete {0}?</value>
+    <comment>Folder Rules page: title of the dialog that asks before a rule is deleted. {0} is the rule's name.</comment>
   </data>
   <data name="FolderRulesSummaryMove" xml:space="preserve">
     <value>Moves to {0}</value>
+    <comment>Folder Rules page: what a rule does, below its name. {0} is a folder's path.</comment>
   </data>
   <data name="FolderRulesSummaryCopy" xml:space="preserve">
     <value>Copies to {0}</value>
+    <comment>Folder Rules page: what a rule does, below its name. {0} is a folder's path.</comment>
   </data>
   <data name="FolderRulesSummaryRename" xml:space="preserve">
     <value>Renames to {0}</value>
+    <comment>Folder Rules page: what a rule does, below its name. {0} is the new name's pattern, such as {date} {name}.</comment>
   </data>
   <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
     <value>Moves to the Recycle Bin</value>
+    <comment>Folder Rules page: what a rule does, below its name.</comment>
   </data>
   <data name="FolderRulesSummaryProblem" xml:space="preserve">
     <value>Not used. {0}</value>
+    <comment>Folder Rules page: below a rule's name when it can't be used. {0} is one of the FolderRulesRule... problems.</comment>
   </data>
   <data name="FolderRulesRuleTooMany" xml:space="preserve">
     <value>Folder Rules uses only the first {0} rules.</value>
+    <comment>Folder Rules page: why a rule isn't used. {0} is the most rules in all folders, 50.</comment>
   </data>
   <data name="FolderRulesRuleNoName" xml:space="preserve">
     <value>It has no name.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
     <value>Its name is longer than 60 characters.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleInvalidName" xml:space="preserve">
     <value>Its name has a line break or another control character.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleNoCondition" xml:space="preserve">
     <value>It has no condition, so it would act on every file.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
     <value>A name pattern is empty or has characters a file name can't have.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used. A name pattern is one of the file name patterns, such as invoice*.</comment>
   </data>
   <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
     <value>An extension is empty, has a dot inside it, or has characters a file name can't have.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
     <value>A size must be a whole number from 1 to 1,000,000.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
     <value>No file is both larger and smaller than these sizes.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used, when its smallest size is larger than its largest.</comment>
   </data>
   <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
     <value>The days must be from 0 to 36,500, and for less than, at least 1.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used. Less than is the Date condition's less than a number of days ago.</comment>
   </data>
   <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
     <value>No file's date is in this range of days.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used, when its range of days holds no day.</comment>
   </data>
   <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
     <value>A site pattern is empty or isn't a site's name, such as *.example.com.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used. Keep *.example.com as it is.</comment>
   </data>
   <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
     <value>It's from a newer version of PC Companion, with an action this version doesn't know.</value>
+    <comment>Folder Rules page: why a rule from a newer version isn't used.</comment>
   </data>
   <data name="FolderRulesRuleNoDestination" xml:space="preserve">
     <value>It has no destination.</value>
+    <comment>Folder Rules page and rule editor: why a rule that moves or copies files can't be used.</comment>
   </data>
   <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
     <value>Its destination can't be used. {0}</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used. {0} is one of the FolderRulesFolder... reasons.</comment>
   </data>
   <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
     <value>It moves or copies files to their own folder, which Rename does.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used. Rename is the action that gives a file a new name in its folder.</comment>
   </data>
   <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
     <value>A part in braces isn't one of {name}, {extension}, {year}, {month}, {day} and {date}, or a brace isn't closed.</value>
+    <comment>Folder Rules page and rule editor: why a destination or a new name can't be used. Keep the parts in braces as they are.</comment>
   </data>
   <data name="FolderRulesRuleNoNewName" xml:space="preserve">
     <value>It has no new name.</value>
+    <comment>Folder Rules page and rule editor: why a rule that renames files can't be used.</comment>
   </data>
   <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
     <value>Its new name has a part that isn't known or a character a file name can't have, or is a name Windows keeps for itself.</value>
+    <comment>Folder Rules page and rule editor: why a rule can't be used.</comment>
   </data>
   <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
     <value>It's from a newer version of PC Companion, with a choice for taken names this version doesn't know.</value>
+    <comment>Folder Rules page: why a rule from a newer version isn't used.</comment>
   </data>
   <data name="FolderRulesAdministratorInfo" xml:space="preserve">
     <value>While PC Companion runs as administrator after a UAC prompt, Folder Rules is paused: it never changes files with administrator rights.</value>
+    <comment>Folder Rules page: warning while PC Companion runs as administrator after a UAC prompt.</comment>
   </data>
   <data name="FolderRulesPermissions" xml:space="preserve">
     <value>Reads the names, sizes, dates and attributes of the files in the folders you choose, and for Downloaded from, the site in a file's Mark of the Web. Moves, copies, renames and moves to the Recycle Bin only the files your rules match, and never opens or runs them. The history of what the rules did, with file names, stays on this PC for 30 days.</value>
+    <comment>Folder Rules page: what the feature reads and changes. Downloaded from is the condition on the site a file was downloaded from; Mark of the Web is Windows' name for the zone a downloaded file comes from.</comment>
+  </data>
+  <data name="FolderRulesAddRule" xml:space="preserve">
+    <value>Add rule</value>
+    <comment>Folder Rules page: button on a folder's list of rules that opens a menu of rules to start from.</comment>
+  </data>
+  <data name="FolderRulesAddRuleName" xml:space="preserve">
+    <value>Add a rule to {0}</value>
+    <comment>Folder Rules page: name of the Add rule button for screen readers. {0} is the folder's name.</comment>
+  </data>
+  <data name="FolderRulesTemplateEmpty" xml:space="preserve">
+    <value>Empty rule</value>
+    <comment>Folder Rules page, Add rule menu: starts a rule with nothing filled in.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByType" xml:space="preserve">
+    <value>Sort by type</value>
+    <comment>Folder Rules page, Add rule menu, and the name of the rule it starts: moves every file into a subfolder named after its extension.</comment>
+  </data>
+  <data name="FolderRulesTemplateSortByMonth" xml:space="preserve">
+    <value>Sort by month</value>
+    <comment>Folder Rules page, Add rule menu, and the name of the rule it starts: moves every file into subfolders for the year and the month it was last modified.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallers" xml:space="preserve">
+    <value>Installers to an Installers folder</value>
+    <comment>Folder Rules page, Add rule menu: moves installers into a subfolder named as FolderRulesTemplateInstallersName.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocuments" xml:space="preserve">
+    <value>Documents to the Documents folder</value>
+    <comment>Folder Rules page, Add rule menu: moves documents into the user's Documents folder.</comment>
+  </data>
+  <data name="FolderRulesTemplateInstallersName" xml:space="preserve">
+    <value>Installers</value>
+    <comment>Name of the rule that Installers to an Installers folder starts, and of that folder.</comment>
+  </data>
+  <data name="FolderRulesTemplateDocumentsName" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Name of the rule that Documents to the Documents folder starts.</comment>
+  </data>
+  <data name="FolderRulesEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Folder Rules page: button that opens a rule in the rule editor.</comment>
+  </data>
+  <data name="FolderRulesEditName" xml:space="preserve">
+    <value>Edit {0}</value>
+    <comment>Folder Rules page: name of a rule's Edit button for screen readers. {0} is the rule's name.</comment>
+  </data>
+  <data name="FolderRulesAddTitle" xml:space="preserve">
+    <value>Add a rule</value>
+    <comment>Rule editor: title for a new rule.</comment>
+  </data>
+  <data name="FolderRulesEditTitle" xml:space="preserve">
+    <value>Edit the rule</value>
+    <comment>Rule editor: title for a rule that's in the list.</comment>
+  </data>
+  <data name="FolderRulesSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Rule editor: button that saves the rule.</comment>
+  </data>
+  <data name="FolderRulesNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Rule editor: header of the rule's name box.</comment>
+  </data>
+  <data name="FolderRulesNamePlaceholder" xml:space="preserve">
+    <value>Such as Invoices</value>
+    <comment>Rule editor: example in the empty name box.</comment>
+  </data>
+  <data name="FolderRulesNameNote" xml:space="preserve">
+    <value>The history shows it with each file the rule acts on.</value>
+    <comment>Rule editor: below the name box.</comment>
+  </data>
+  <data name="FolderRulesConditionsHeader" xml:space="preserve">
+    <value>Conditions</value>
+    <comment>Rule editor: header above the conditions.</comment>
+  </data>
+  <data name="FolderRulesConditionsNote" xml:space="preserve">
+    <value>A file must match every condition that's on.</value>
+    <comment>Rule editor: below FolderRulesConditionsHeader.</comment>
+  </data>
+  <data name="FolderRulesNamesSwitch" xml:space="preserve">
+    <value>File name</value>
+    <comment>Rule editor: switch and box of the condition on the file's name; also {0} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesNamesNote" xml:space="preserve">
+    <value>Patterns separated by ;, such as invoice*;receipt*, where * stands for any characters and ? for one. Case is ignored.</value>
+    <comment>Rule editor: below the File name box. Keep invoice*;receipt*, *, ? and ; as they are.</comment>
+  </data>
+  <data name="FolderRulesTypeSwitch" xml:space="preserve">
+    <value>Type</value>
+    <comment>Rule editor: switch and box of the condition on the file's extension; also {0} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesTypeNote" xml:space="preserve">
+    <value>Extensions separated by ;, such as pdf; docx.</value>
+    <comment>Rule editor: below the Type box. Keep pdf; docx as it is.</comment>
+  </data>
+  <data name="FolderRulesAddKind" xml:space="preserve">
+    <value>Add a kind</value>
+    <comment>Rule editor: button that opens a menu of kinds of files, whose extensions it adds to the Type box.</comment>
+  </data>
+  <data name="FolderRulesKindDocuments" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Rule editor, Add a kind menu: documents, such as .pdf and .docx files.</comment>
+  </data>
+  <data name="FolderRulesKindPictures" xml:space="preserve">
+    <value>Pictures</value>
+    <comment>Rule editor, Add a kind menu: pictures, such as .jpg and .png files.</comment>
+  </data>
+  <data name="FolderRulesKindVideos" xml:space="preserve">
+    <value>Videos</value>
+    <comment>Rule editor, Add a kind menu: videos, such as .mp4 files.</comment>
+  </data>
+  <data name="FolderRulesKindMusic" xml:space="preserve">
+    <value>Music</value>
+    <comment>Rule editor, Add a kind menu: music, such as .mp3 files.</comment>
+  </data>
+  <data name="FolderRulesKindArchives" xml:space="preserve">
+    <value>Archives</value>
+    <comment>Rule editor, Add a kind menu: archives, such as .zip files.</comment>
+  </data>
+  <data name="FolderRulesKindInstallers" xml:space="preserve">
+    <value>Installers</value>
+    <comment>Rule editor, Add a kind menu: installers, such as .exe and .msi files.</comment>
+  </data>
+  <data name="FolderRulesSizeSwitch" xml:space="preserve">
+    <value>Size</value>
+    <comment>Rule editor: switch of the condition on the file's size; also {0} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesLargerThan" xml:space="preserve">
+    <value>Larger than</value>
+    <comment>Rule editor: check box before a size, such as 10 MB.</comment>
+  </data>
+  <data name="FolderRulesSmallerThan" xml:space="preserve">
+    <value>Smaller than</value>
+    <comment>Rule editor: check box before a size, such as 10 MB.</comment>
+  </data>
+  <data name="FolderRulesUnitKB" xml:space="preserve">
+    <value>KB</value>
+    <comment>Unit of size: kilobytes of 1,024 bytes, as File Explorer writes it.</comment>
+  </data>
+  <data name="FolderRulesUnitMB" xml:space="preserve">
+    <value>MB</value>
+    <comment>Unit of size: megabytes, as File Explorer writes it.</comment>
+  </data>
+  <data name="FolderRulesUnitGB" xml:space="preserve">
+    <value>GB</value>
+    <comment>Unit of size: gigabytes, as File Explorer writes it.</comment>
+  </data>
+  <data name="FolderRulesNumberName" xml:space="preserve">
+    <value>{0}: number</value>
+    <comment>Rule editor: name of a number box for screen readers. {0} is the check box before it, such as Larger than.</comment>
+  </data>
+  <data name="FolderRulesUnitName" xml:space="preserve">
+    <value>{0}: unit</value>
+    <comment>Rule editor: name of a size's list of units for screen readers. {0} is the check box before it, such as Larger than.</comment>
+  </data>
+  <data name="FolderRulesSizeValue" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>Rule editor's list of files: a file's size. {0} is the number, {1} the unit, such as KB.</comment>
+  </data>
+  <data name="FolderRulesDateSwitch" xml:space="preserve">
+    <value>Date</value>
+    <comment>Rule editor: switch of the condition on a date of the file; also {0} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesDateWhich" xml:space="preserve">
+    <value>Which date</value>
+    <comment>Rule editor: header of the list with FolderRulesDateModified and FolderRulesDateCreated.</comment>
+  </data>
+  <data name="FolderRulesDateModified" xml:space="preserve">
+    <value>Last modified</value>
+    <comment>Rule editor: the date the file was last changed, File Explorer's Date modified.</comment>
+  </data>
+  <data name="FolderRulesDateCreated" xml:space="preserve">
+    <value>Created</value>
+    <comment>Rule editor: the date the file was created.</comment>
+  </data>
+  <data name="FolderRulesMoreThanDays" xml:space="preserve">
+    <value>More than this many days ago</value>
+    <comment>Rule editor: check box before a number of days.</comment>
+  </data>
+  <data name="FolderRulesLessThanDays" xml:space="preserve">
+    <value>Less than this many days ago</value>
+    <comment>Rule editor: check box before a number of days.</comment>
+  </data>
+  <data name="FolderRulesSitesSwitch" xml:space="preserve">
+    <value>Downloaded from</value>
+    <comment>Rule editor: switch and box of the condition on the site a file was downloaded from; also {0} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesSitesNote" xml:space="preserve">
+    <value>Sites separated by ;, such as *.example.com, matched against the site in the file's Mark of the Web.</value>
+    <comment>Rule editor: below the Downloaded from box. Keep *.example.com and ; as they are. Mark of the Web is Windows' name for what it notes on a downloaded file.</comment>
+  </data>
+  <data name="FolderRulesActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Rule editor: header of the list of actions.</comment>
+  </data>
+  <data name="FolderRulesActionMove" xml:space="preserve">
+    <value>Move to a folder</value>
+    <comment>Rule editor: action.</comment>
+  </data>
+  <data name="FolderRulesActionCopy" xml:space="preserve">
+    <value>Copy to a folder</value>
+    <comment>Rule editor: action.</comment>
+  </data>
+  <data name="FolderRulesActionRename" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Rule editor: action that gives the file a new name in its folder.</comment>
+  </data>
+  <data name="FolderRulesActionRecycleBin" xml:space="preserve">
+    <value>Move to the Recycle Bin</value>
+    <comment>Rule editor: action.</comment>
+  </data>
+  <data name="FolderRulesUnknownActionNote" xml:space="preserve">
+    <value>This rule's action is from a newer version of PC Companion. The rule keeps it until you choose another.</value>
+    <comment>Rule editor: shown when the rule's action is one this version doesn't know, and none is chosen.</comment>
+  </data>
+  <data name="FolderRulesUnknownIfExistsNote" xml:space="preserve">
+    <value>This rule's choice for a taken name is from a newer version of PC Companion. The rule keeps it until you choose another.</value>
+    <comment>Rule editor: shown when the rule's choice for a taken name is one this version doesn't know, and none is chosen.</comment>
+  </data>
+  <data name="FolderRulesNoRecycleBin" xml:space="preserve">
+    <value>This folder's drive has no Recycle Bin, so the rule leaves the files where they are.</value>
+    <comment>Rule editor: shown with Move to the Recycle Bin for a folder on a network location or a removable drive.</comment>
+  </data>
+  <data name="FolderRulesDestinationHeader" xml:space="preserve">
+    <value>Destination</value>
+    <comment>Rule editor: header of the box with the folder a rule moves or copies files to.</comment>
+  </data>
+  <data name="FolderRulesDestinationNote" xml:space="preserve">
+    <value>Folders made from the file, such as {year}\{month}, are created as needed.</value>
+    <comment>Rule editor: below the Destination box. Keep {year}\{month} as it is.</comment>
+  </data>
+  <data name="FolderRulesDestinationMissing" xml:space="preserve">
+    <value>This folder doesn't exist yet. Until it does, the rule leaves the files where they are.</value>
+    <comment>Rule editor: warning below the Destination box when its folder doesn't exist.</comment>
+  </data>
+  <data name="FolderRulesCreateFolder" xml:space="preserve">
+    <value>Create folder</value>
+    <comment>Rule editor: button that creates the destination's folder.</comment>
+  </data>
+  <data name="FolderRulesCreateFolderFailed" xml:space="preserve">
+    <value>Windows couldn't create the folder.</value>
+    <comment>Rule editor: error after Create folder.</comment>
+  </data>
+  <data name="FolderRulesBrowse" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Rule editor: button that opens the Open dialog to choose the destination.</comment>
+  </data>
+  <data name="FolderRulesDestinationTitle" xml:space="preserve">
+    <value>Choose the destination</value>
+    <comment>Title of the Open dialog that chooses a rule's destination.</comment>
+  </data>
+  <data name="FolderRulesNewNameHeader" xml:space="preserve">
+    <value>New name</value>
+    <comment>Rule editor: header of the new name box, for Rename.</comment>
+  </data>
+  <data name="FolderRulesNewNameOptionalHeader" xml:space="preserve">
+    <value>New name (optional)</value>
+    <comment>Rule editor: header of the new name box, for Move and Copy, where it can be left empty.</comment>
+  </data>
+  <data name="FolderRulesNewNameNote" xml:space="preserve">
+    <value>Without the extension, which the file keeps. {name}, {extension}, {year}, {month}, {day} and {date} are replaced with the file's own.</value>
+    <comment>Rule editor: below the new name box. Keep the parts in braces as they are.</comment>
+  </data>
+  <data name="FolderRulesIfExistsHeader" xml:space="preserve">
+    <value>When a file with the same name is there</value>
+    <comment>Rule editor: header of the choice for a name that's taken.</comment>
+  </data>
+  <data name="FolderRulesIfExistsAddNumber" xml:space="preserve">
+    <value>Add a number</value>
+    <comment>Rule editor: adds a number to the name, as File Explorer does, such as report (2).pdf.</comment>
+  </data>
+  <data name="FolderRulesIfExistsSkip" xml:space="preserve">
+    <value>Skip</value>
+    <comment>Rule editor: leaves the file where it is.</comment>
+  </data>
+  <data name="FolderRulesFilesHeader" xml:space="preserve">
+    <value>Files there now</value>
+    <comment>Rule editor: header of the list of the files in the folder now.</comment>
+  </data>
+  <data name="FolderRulesFilesReading" xml:space="preserve">
+    <value>Reading the folder…</value>
+    <comment>Rule editor: shown while the folder's files are read.</comment>
+  </data>
+  <data name="FolderRulesFilesCantRead" xml:space="preserve">
+    <value>The folder can't be read.</value>
+    <comment>Rule editor: shown when the folder's files can't be read.</comment>
+  </data>
+  <data name="FolderRulesFilesNone" xml:space="preserve">
+    <value>The folder has no files that rules can act on.</value>
+    <comment>Rule editor: shown when the folder has no files that rules act on, such as only hidden or empty files.</comment>
+  </data>
+  <data name="FolderRulesFilesFixProblems" xml:space="preserve">
+    <value>Once the rule has no problems, this shows which files it would act on.</value>
+    <comment>Rule editor: shown instead of the list while the rule has a problem.</comment>
+  </data>
+  <data name="FolderRulesFilesMatchCount" xml:space="preserve">
+    <value>Files the rule would act on: {0} of {1}</value>
+    <comment>Rule editor: above the list of files. {0} is how many files the rule would act on, {1} how many files there are.</comment>
+  </data>
+  <data name="FolderRulesConditionMatches" xml:space="preserve">
+    <value>{0} matches: {1}</value>
+    <comment>Rule editor's list of files: a condition the file matches. {0} is the condition's name, such as Size, {1} the file's own value, such as 2.5 MB.</comment>
+  </data>
+  <data name="FolderRulesConditionNoMatch" xml:space="preserve">
+    <value>{0} doesn't match: {1}</value>
+    <comment>Rule editor's list of files: a condition the file doesn't match. {0} is the condition's name, such as Size, {1} the file's own value, such as 2.5 MB.</comment>
+  </data>
+  <data name="FolderRulesFileNotIncluded" xml:space="preserve">
+    <value>Not included</value>
+    <comment>Rule editor's list of files: on a file the rule wouldn't act on.</comment>
+  </data>
+  <data name="FolderRulesFileStays" xml:space="preserve">
+    <value>Stays where it is. {0}</value>
+    <comment>Rule editor's list of files: on a file the rule matches but can't name or move. {0} is one of the FolderRulesNaming... reasons.</comment>
+  </data>
+  <data name="FolderRulesNoExtension" xml:space="preserve">
+    <value>no extension</value>
+    <comment>Rule editor's list of files: the extension of a file that has none; {1} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesNoSite" xml:space="preserve">
+    <value>no site</value>
+    <comment>Rule editor's list of files: the site of a file whose Mark of the Web names none; {1} in FolderRulesConditionMatches.</comment>
+  </data>
+  <data name="FolderRulesNamingEmptyName" xml:space="preserve">
+    <value>The new name would be empty for this file.</value>
+    <comment>Why a rule leaves a file where it is: its new name, such as {extension} for a file without one, is empty.</comment>
+  </data>
+  <data name="FolderRulesNamingInvalidName" xml:space="preserve">
+    <value>The new name, or a folder made from the file, is one Windows doesn't allow.</value>
+    <comment>Why a rule leaves a file where it is.</comment>
+  </data>
+  <data name="FolderRulesNamingNameTooLong" xml:space="preserve">
+    <value>The new name, or a folder made from the file, is longer than 255 characters.</value>
+    <comment>Why a rule leaves a file where it is.</comment>
+  </data>
+  <data name="FolderRulesNamingOwnFolder" xml:space="preserve">
+    <value>The destination made from this file is the rule's own folder.</value>
+    <comment>Why a rule leaves a file where it is: the destination made from it, such as one with {extension} for a file without one, is the rule's own folder.</comment>
+  </data>
+  <data name="FolderRulesNamingNotAllowed" xml:space="preserve">
+    <value>The destination made from this file is in a folder that rules can't change.</value>
+    <comment>Why a rule leaves a file where it is: the destination made from it is in a folder that rules can't change, such as the Windows folder.</comment>
   </data>
 </root>

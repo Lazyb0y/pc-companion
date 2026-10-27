@@ -57,6 +57,17 @@ public static class FolderRulesText
         _ => string.Empty,
     };
 
+    /// <summary>Why a rule can't name a file, or make its destination from it, or an empty string.</summary>
+    public static string Of(NamingProblem problem) => problem switch
+    {
+        NamingProblem.EmptyName => Strings.FolderRulesNamingEmptyName,
+        NamingProblem.InvalidName => Strings.FolderRulesNamingInvalidName,
+        NamingProblem.NameTooLong => Strings.FolderRulesNamingNameTooLong,
+        NamingProblem.DestinationIsOwnFolder => Strings.FolderRulesNamingOwnFolder,
+        NamingProblem.DestinationNotAllowed => Strings.FolderRulesNamingNotAllowed,
+        _ => string.Empty,
+    };
+
     /// <summary>What a rule does, or why it isn't used.</summary>
     public static string Summary(FolderRule rule, string problem)
     {
