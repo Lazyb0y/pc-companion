@@ -513,8 +513,202 @@ public sealed class FolderRulesThreadTests : IDisposable
         Assert.Null(await FolderRulesPipe.AskAsync(_pipeName, new FolderRulesRequest(), TimeSpan.FromMilliseconds(300), TestContext.Current.CancellationToken));
     }
 
-    private Task<FolderRulesAnswer?> AskAsync(FolderRulesRequestKind kind) =>
-        FolderRulesPipe.AskAsync(_pipeName, new FolderRulesRequest { Kind = kind }, TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+    [Fact]
+    public async Task RunNowListsTheFilesTheRulesWouldActOn()
+    {
+        _system.AddFile(@"D:\Downloads\report.pdf", size: 500).AddFile(@"D:\Downloads\notes.txt").AddFile(@"D:\Downloads\empty.pdf", size: 0);
+        Start(MovePdfs());
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNowList, Folder = Downloads });
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        var file = Assert.Single(answer!.Files);
+        Assert.Equal("report.pdf", file.Name);
+        Assert.Equal(500, file.Size);
+        Assert.Equal("PDFs", file.Rule);
+        Assert.Equal(FolderRuleAction.Move, file.Action);
+        Assert.Equal(Sorted, file.Destination);
+        Assert.Equal("report.pdf", file.NewName);
+        Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+    }
+
+    [Fact]
+    public async Task RunNowLeavesOutTheFilesTheRulesAlreadyActedOn()
+    {
+        var settings = MovePdfs();
+        settings.Folders[0].Rules[0].Action = "Copy";
+        Start(settings);
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNowList, Folder = Downloads });
+
+        Assert.Empty(answer!.Files);
+    }
+
+    [Fact]
+    public async Task RunNowActsOnTheChosenFiles()
+    {
+        _system.AddFile(@"D:\Downloads\report.pdf").AddFile(@"D:\Downloads\left.pdf");
+        Start(MovePdfs());
+        var listed = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNowList, Folder = Downloads }))!.Files;
+        var chosen = listed.Where(file => file.Name == "report.pdf").Select(file => new ChosenFile { Name = file.Name, Size = file.Size, Modified = file.Modified }).ToArray();
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNow, Folder = Downloads, Files = chosen });
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        Assert.True(_system.WaitUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        Assert.True(_system.Exists(@"D:\Downloads\left.pdf"));
+        Assert.True(Logged("Folder Rules runs the rules of folder 1 on 1 files chosen in Run now."));
+    }
+
+    [Fact]
+    public async Task AChosenFileThatChangedSinceItWasListedStays()
+    {
+        _system.AddFile(@"D:\Downloads\report.pdf", size: 500);
+        Start(MovePdfs());
+
+        var answer = await AskAsync(new FolderRulesRequest
+        {
+            Kind = FolderRulesRequestKind.RunNow,
+            Folder = Downloads,
+            Files = [new ChosenFile { Name = "report.pdf", Size = 400, Modified = FakeFolderRulesSystem.Time }],
+        });
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules folder 1 left a file chosen in Run now, which changed since it was listed.")));
+        Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+    }
+
+    [Theory]
+    [InlineData(@"D:\Elsewhere", "report.pdf")]
+    [InlineData(Downloads, @"..\Sorted\report.pdf")]
+    [InlineData(Downloads, "report.pdf:secret")]
+    [InlineData(Downloads, "..")]
+    [InlineData(Downloads, "")]
+    public async Task RunNowIsRefusedOutsideTheWatchedFolder(string folder, string name)
+    {
+        _system.AddFolder(@"D:\Elsewhere").AddFile(@"D:\Elsewhere\report.pdf").AddFile(@"D:\Sorted\report.pdf");
+        Start(MovePdfs());
+
+        var answer = await AskAsync(new FolderRulesRequest
+        {
+            Kind = FolderRulesRequestKind.RunNow,
+            Folder = folder,
+            Files = [new ChosenFile { Name = name, Size = 100, Modified = FakeFolderRulesSystem.Time }],
+        });
+
+        Assert.Equal(FolderRulesAnswerStatus.Refused, answer?.Status);
+        Assert.Empty(_system.Transfers);
+    }
+
+    [Fact]
+    public async Task UndoPutsAMovedFileBackWhereItStays()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time });
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+        Assert.False(_system.Exists(@"D:\Sorted\report.pdf"));
+        _system.Report(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(_ => Logged("Folder Rules folder 1 already handled a file that came back, so it's left as it is.")));
+        Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+        Assert.NotNull(Assert.Single(History().Entries).Undone);
+    }
+
+    [Fact]
+    public async Task UndoSendsACopyToTheRecycleBin()
+    {
+        var settings = MovePdfs();
+        settings.Folders[0].Rules[0].Action = "Copy";
+        Start(settings);
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time });
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        Assert.Contains(@"recycle D:\Sorted\report.pdf", _system.Events);
+        Assert.False(_system.Exists(@"D:\Sorted\report.pdf"));
+        Assert.True(_system.Exists(@"D:\Downloads\report.pdf"));
+    }
+
+    [Fact]
+    public async Task UndoOfACopyWaitsForWindowsQuestion()
+    {
+        var settings = MovePdfs();
+        settings.Folders[0].Rules[0].Action = "Copy";
+        _system.Asking.Add(@"D:\Sorted\report.pdf");
+        Start(settings);
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+
+        var undo = FolderRulesPipe.AskAsync(_pipeName, new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time }, TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken);
+        Assert.True(_system.WaitUntil(system => system.Events.Contains(@"recycle D:\Sorted\report.pdf")));
+        Assert.Equal(FolderRulesAnswerStatus.Done, (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))?.Status);
+        _system.RecycleBin!.Answer(@"D:\Sorted\report.pdf", RecycleOutcome.Kept);
+
+        Assert.Equal(FolderRulesAnswerStatus.Kept, (await undo)?.Status);
+        Assert.True(_system.Exists(@"D:\Sorted\report.pdf"));
+        Assert.Null(Assert.Single(History().Entries).Undone);
+    }
+
+    [Fact]
+    public async Task UndoLeavesAFileThatChanged()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+        _system.Remove(@"D:\Sorted\report.pdf");
+        _system.AddFile(@"D:\Sorted\report.pdf", size: 999);
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time });
+
+        Assert.Equal(FolderRulesAnswerStatus.Changed, answer?.Status);
+        Assert.False(_system.Exists(@"D:\Downloads\report.pdf"));
+    }
+
+    [Fact]
+    public async Task UndoDoesntReplaceAFileInTheOldPlace()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+        _system.AddFile(@"D:\Downloads\report.pdf", size: 7);
+
+        var answer = await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time });
+
+        Assert.Equal(FolderRulesAnswerStatus.PlaceTaken, answer?.Status);
+        Assert.Equal(7, _system.Read(@"D:\Downloads\report.pdf")!.Size);
+        Assert.True(_system.Exists(@"D:\Sorted\report.pdf"));
+    }
+
+    [Fact]
+    public async Task UndoIsRefusedForAnEntryThatIsntInTheHistory()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+        var entry = (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.History }))!.Entries[0];
+
+        Assert.Equal(FolderRulesAnswerStatus.Refused, (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id + 1, Time = entry.Time }))?.Status);
+        Assert.Equal(FolderRulesAnswerStatus.Refused, (await AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.Undo, Entry = entry.Id, Time = entry.Time.AddSeconds(1) }))?.Status);
+        Assert.True(_system.Exists(@"D:\Sorted\report.pdf"));
+    }
+
+    private Task<FolderRulesAnswer?> AskAsync(FolderRulesRequestKind kind) => AskAsync(new FolderRulesRequest { Kind = kind });
+
+    private Task<FolderRulesAnswer?> AskAsync(FolderRulesRequest request) =>
+        FolderRulesPipe.AskAsync(_pipeName, request, TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
 
     // What the host's UI thread is told about the folders on removable drives.
     private sealed class RecordingDrives : IDriveTracker

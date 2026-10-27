@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,6 +24,9 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
     // How often the files that wait to finish arriving are checked.
     private static readonly TimeSpan CheckInterval = TimeSpan.FromMilliseconds(250);
+
+    // The characters a file's name can't have, among them those that lead to another folder or stream.
+    private static readonly char[] InvalidNameCharacters = Path.GetInvalidFileNameChars();
 
     // How often a network folder that can't be watched is tried again, and every how many of those
     // a network folder that's watched is looked at again, since some servers report no changes.
@@ -221,6 +225,24 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules' history was cleared.")]
     private static partial void LogHistoryCleared(ILogger logger);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules listed {Count} files for Run now in folder {Folder}.")]
+    private static partial void LogListed(ILogger logger, int count, int folder);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules runs the rules of folder {Folder} on {Count} files chosen in Run now.")]
+    private static partial void LogRunNow(ILogger logger, int folder, int count);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules folder {Folder} left a file chosen in Run now, which changed since it was listed.")]
+    private static partial void LogChosenChanged(ILogger logger, int folder);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules' Undo: {Status}.")]
+    private static partial void LogUndo(ILogger logger, FolderRulesAnswerStatus status);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused Folder Rules' Undo (error {ErrorCode}).")]
+    private static partial void LogUndoRefused(ILogger logger, int errorCode);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Windows asks whether to delete a copy too big for the Recycle Bin, for Folder Rules' Undo.")]
+    private static partial void LogUndoAsking(ILogger logger);
+
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules' history can't be saved (error {ErrorCode}).")]
     private static partial void LogHistoryNotSaved(ILogger logger, int errorCode);
 
@@ -259,6 +281,9 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
         // The files whose move or copy stopped as Windows ejected a drive, tried again when it's back.
         private readonly HashSet<string> _retry = new(StringComparer.OrdinalIgnoreCase);
+
+        // The files chosen in Run now, with their size and last modified time as listed, handled one at a time.
+        private readonly Queue<(string Path, FileState State)> _chosen = new();
         private readonly CoalescableTimer _networkTimer;
         private readonly RequestPipe? _pipe;
         private CoalescableTimer? _timer;
@@ -610,7 +635,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             {
                 Recycle(path, folder, rule, file, now);
             }
-            else if (Act(path, rule, file, now) is { } entry)
+            else if (Transfer([path, FolderPaths.FixedPart(rule.Rule.Destination)], cancel => _actions.Act(path, rule, file, now, cancel)) is { } entry)
             {
                 // A move or copy that stopped as Windows ejected a drive is tried again when it's back.
                 if (entry.Reason == SkipReason.Interrupted)
@@ -622,19 +647,20 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             }
         }
 
-        // The move or copy can be stopped from the host's UI thread, as Windows asks to eject a
-        // drive it reads or writes.
-        private HistoryEntry? Act(string path, RuleMatcher rule, FileDetails file, DateTimeOffset now)
+        // A move or copy between the paths given can be stopped from the host's UI thread, as
+        // Windows asks to eject a drive it reads or writes.
+        private T Transfer<T>(string[] paths, Func<CancellationToken, T> transfer)
         {
             using var cancel = CancellationTokenSource.CreateLinkedTokenSource(_owner._stopping.Token);
-            var roots = new[] { Path.GetPathRoot(path), Path.GetPathRoot(FolderPaths.FixedPart(rule.Rule.Destination)) }
+            var roots = paths
+                .Select(Path.GetPathRoot)
                 .Where(root => !string.IsNullOrEmpty(root))
                 .Select(root => root!)
                 .ToArray();
             _owner._operation = new Operation(cancel, roots);
             try
             {
-                return _actions.Act(path, rule, file, now, cancel.Token);
+                return transfer(cancel.Token);
             }
             finally
             {
@@ -752,7 +778,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         // it ended or failed, is refused.
         private Task<byte[]> AnswerAsync(byte[] request)
         {
-            var refused = FolderRulesPipe.Write(new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Refused });
+            var refused = FolderRulesPipe.Write(Answered(FolderRulesAnswerStatus.Refused));
             if (FolderRulesPipe.ReadRequest(request) is not { } read)
             {
                 return Task.FromResult(refused);
@@ -761,8 +787,17 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             var answered = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
             var posted = _window.BeginInvoke(() =>
             {
-                _owner.Guard(() => answered.TrySetResult(FolderRulesPipe.Write(Answer(read))));
-                answered.TrySetResult(refused);
+                var taken = false;
+                _owner.Guard(() =>
+                {
+                    Answer(read, answer => answered.TrySetResult(FolderRulesPipe.Write(answer)));
+                    taken = true;
+                });
+
+                if (!taken)
+                {
+                    answered.TrySetResult(refused);
+                }
             });
 
             if (!posted)
@@ -773,20 +808,207 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             return answered.Task;
         }
 
-        private FolderRulesAnswer Answer(FolderRulesRequest request)
+        // Replies on this thread, at once or, for Undo of a copy, once the Recycle Bin is done with it.
+        private void Answer(FolderRulesRequest request, Action<FolderRulesAnswer> reply)
         {
             switch (request.Kind)
             {
                 case FolderRulesRequestKind.History:
-                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done, Entries = _history.Entries };
+                    reply(new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done, Entries = _history.Entries });
+                    break;
                 case FolderRulesRequestKind.ClearHistory:
                     _history.Clear();
                     LogHistoryCleared(_owner._logger);
                     Save();
-                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done };
+                    reply(Answered(FolderRulesAnswerStatus.Done));
+                    break;
+                case FolderRulesRequestKind.Undo:
+                    Undo(request, reply);
+                    break;
+                case FolderRulesRequestKind.RunNowList:
+                    reply(RunNowList(request));
+                    break;
+                case FolderRulesRequestKind.RunNow:
+                    reply(RunNow(request));
+                    break;
                 default:
-                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Refused };
+                    reply(Answered(FolderRulesAnswerStatus.Refused));
+                    break;
             }
+        }
+
+        // The files directly in a watched folder that its rules would act on now, as they would
+        // when the files arrive: without those they leave alone, those they already acted on, and
+        // empty ones.
+        private FolderRulesAnswer RunNowList(FolderRulesRequest request)
+        {
+            if (!TryFolder(request.Folder, out var path, out var folder))
+            {
+                return Answered(FolderRulesAnswerStatus.Refused);
+            }
+
+            IReadOnlyList<FileDetails> files;
+            try
+            {
+                files = _owner._system.List(path);
+            }
+            catch (Win32Exception exception)
+            {
+                return Answered(FolderRulesAnswerStatus.Failed) with { ErrorCode = exception.NativeErrorCode };
+            }
+
+            var now = Now;
+            var listed = new List<RunNowFile>();
+            foreach (var file in files)
+            {
+                var filePath = Path.Join(path, file.Name);
+                if (FolderRuleFilter.IsLeftAlone(file) || file.Size == 0 || _recycling.Contains(filePath)
+                    || _history.WasHandled(path, file.Name, new FileIdentity(file.FileId, file.Size, file.Modified)))
+                {
+                    continue;
+                }
+
+                var facts = new FileFacts(file.Name, file.Size, file.Created, file.Modified);
+                if (RuleMatcher.FirstMatch(folder.Rules, facts, now, () => _owner._system.ReadMark(filePath)) is { } rule
+                    && _actions.Plan(path, rule, file) is { } plan)
+                {
+                    listed.Add(plan);
+                }
+            }
+
+            LogListed(_owner._logger, listed.Count, folder.Number);
+            return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done, Files = listed };
+        }
+
+        // The files chosen are handled one at a time, between the thread's other work, as when
+        // they arrive.
+        private FolderRulesAnswer RunNow(FolderRulesRequest request)
+        {
+            if (!TryFolder(request.Folder, out var path, out var folder) || request.Files.Count == 0 || !request.Files.All(file => IsPlainName(file.Name)))
+            {
+                return Answered(FolderRulesAnswerStatus.Refused);
+            }
+
+            var idle = _chosen.Count == 0;
+            foreach (var file in request.Files)
+            {
+                _chosen.Enqueue((Path.Join(path, file.Name), new FileState(file.Size, file.Modified)));
+            }
+
+            LogRunNow(_owner._logger, folder.Number, request.Files.Count);
+            if (idle)
+            {
+                _window.BeginInvoke(() => _owner.Guard(HandleChosen));
+            }
+
+            return Answered(FolderRulesAnswerStatus.Done);
+        }
+
+        // A file that went away or changed since Run now listed it stays.
+        private void HandleChosen()
+        {
+            if (_owner.IsStopping || !_chosen.TryDequeue(out var chosen))
+            {
+                return;
+            }
+
+            if (ReadFile(chosen.Path) is { } file)
+            {
+                if (new FileState(file.Size, file.Modified) == chosen.State)
+                {
+                    Handle(new Arrival(chosen.Path, ArrivalOutcome.Arrived));
+                }
+                else if (_folders.TryGetValue(Path.GetDirectoryName(chosen.Path)!, out var folder))
+                {
+                    LogChosenChanged(_owner._logger, folder.Number);
+                }
+            }
+
+            if (_chosen.Count > 0)
+            {
+                _window.BeginInvoke(() => _owner.Guard(HandleChosen));
+            }
+        }
+
+        // Undo of a move or rename moves the file back; of a copy, sends the copy to the Recycle Bin.
+        private void Undo(FolderRulesRequest request, Action<FolderRulesAnswer> reply)
+        {
+            if (_history.Find(request.Entry) is not { } entry || entry.Time != request.Time)
+            {
+                reply(Answered(FolderRulesAnswerStatus.Refused));
+                return;
+            }
+
+            var answer = _actions.CheckUndo(entry);
+            if (answer.Status != FolderRulesAnswerStatus.Done)
+            {
+                Undone(entry, answer, reply);
+            }
+            else if (entry.Outcome == HistoryOutcome.Copied)
+            {
+                RecycleCopy(entry, reply);
+            }
+            else
+            {
+                Undone(entry, Transfer([entry.NewPath, entry.Folder], cancel => _actions.PutBack(entry, cancel)), reply);
+            }
+        }
+
+        // The Recycle Bin's thread sends the copy, and Windows asks first about one too big for it.
+        private void RecycleCopy(HistoryEntry entry, Action<FolderRulesAnswer> reply)
+        {
+            if (!_recycling.Add(entry.NewPath))
+            {
+                reply(Answered(FolderRulesAnswerStatus.Refused));
+                return;
+            }
+
+            _recycleBin ??= _owner._system.CreateRecycleBin();
+            _recycleBin.Recycle(
+                entry.NewPath,
+                () => _window.BeginInvoke(() => _owner.Guard(() => LogUndoAsking(_owner._logger))),
+                result => _window.BeginInvoke(() => _owner.Guard(() =>
+                {
+                    _recycling.Remove(entry.NewPath);
+                    Undone(entry, UndoneCopy(result), reply);
+                })));
+        }
+
+        private void Undone(HistoryEntry entry, FolderRulesAnswer answer, Action<FolderRulesAnswer> reply)
+        {
+            if (answer.Status == FolderRulesAnswerStatus.Done && _history.Find(entry.Id) is { } current && current.Time == entry.Time)
+            {
+                _history.Replace(current with { Undone = Now });
+                Save();
+            }
+
+            LogUndo(_owner._logger, answer.Status);
+            if (answer.Status == FolderRulesAnswerStatus.Failed)
+            {
+                LogUndoRefused(_owner._logger, answer.ErrorCode);
+            }
+
+            reply(answer);
+        }
+
+        private static FolderRulesAnswer UndoneCopy(RecycleResult result) => result.Outcome switch
+        {
+            RecycleOutcome.Recycled or RecycleOutcome.DeletedForGood => Answered(FolderRulesAnswerStatus.Done),
+            RecycleOutcome.Kept => Answered(FolderRulesAnswerStatus.Kept),
+            RecycleOutcome.NoRecycleBin => Answered(FolderRulesAnswerStatus.NoRecycleBin),
+
+            // A copy that went away or was renamed before Windows reached it.
+            _ when (result.ErrorCode & 0xFFFF) is 2 or 3 => Answered(FolderRulesAnswerStatus.Changed),
+            _ => Answered(FolderRulesAnswerStatus.Failed) with { ErrorCode = result.ErrorCode },
+        };
+
+        private static FolderRulesAnswer Answered(FolderRulesAnswerStatus status) => new() { Status = status };
+
+        // A request names a watched folder by its path.
+        private bool TryFolder(string requested, out string path, [NotNullWhen(true)] out Folder? folder)
+        {
+            folder = null;
+            return FolderPaths.Normalize(requested, out path) == FolderProblem.None && _folders.TryGetValue(path, out folder);
         }
 
         private void Save()
@@ -802,6 +1024,11 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         }
 
         private static int ErrorCode(Exception exception) => exception is Win32Exception win32 ? win32.NativeErrorCode : exception.HResult;
+
+        // A name of a file directly in the folder, which can't lead anywhere else, such as to a
+        // parent folder or to another of the file's streams.
+        private static bool IsPlainName(string name) =>
+            name.Length > 0 && name.IndexOfAny(InvalidNameCharacters) < 0 && !name.EndsWith('.') && !name.EndsWith(' ');
     }
 
     // Reads files for the arrival watch: a file the rules leave alone, such as a link or a file kept

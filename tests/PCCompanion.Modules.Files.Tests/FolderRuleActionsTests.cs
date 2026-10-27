@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using PCCompanion.Modules.Files.FolderRules;
 using Xunit;
@@ -28,6 +29,9 @@ public sealed class FolderRuleActionsTests
 
     private HistoryEntry? Act(FolderRule rule, string path = Invoice) =>
         _actions.Act(Downloads, RuleMatcher.Create(rule, 1), _system.Read(path)!, FakeFolderRulesSystem.Time.AddHours(1), CancellationToken.None);
+
+    private RunNowFile? Plan(FolderRule rule, string path = Invoice) =>
+        _actions.Plan(Downloads, RuleMatcher.Create(rule, 1), _system.Read(path)!);
 
     [Fact]
     public void AMovePutsTheFileInItsDestination()
@@ -268,5 +272,167 @@ public sealed class FolderRuleActionsTests
         var entry = _actions.Act(Downloads, RuleMatcher.Create(Rule("Move"), 1), file, FakeFolderRulesSystem.Time, CancellationToken.None)!;
 
         Assert.Equal(SkipReason.Changed, entry.Reason);
+    }
+
+    [Fact]
+    public void APlanSaysWhatARuleWouldDoWithoutDoingIt()
+    {
+        var plan = Plan(Rule("Move", @"D:\Invoices\{year}", newName: "{date} {name}"));
+
+        Assert.Equal(
+            new RunNowFile
+            {
+                Name = "Invoice.pdf",
+                Size = 100,
+                Modified = FakeFolderRulesSystem.Time,
+                Rule = "Invoices",
+                Action = FolderRuleAction.Move,
+                Destination = @"D:\Invoices\2026",
+                NewName = "2026-03-05 Invoice.pdf",
+            },
+            plan);
+        Assert.Empty(_system.Transfers);
+        Assert.False(_system.Exists(@"D:\Invoices\2026"));
+    }
+
+    [Fact]
+    public void APlanSaysWhyTheRuleCantNameTheFile()
+    {
+        _system.AddFile(@"D:\Downloads\README");
+
+        var plan = Plan(Rule("Rename", newName: "{name} {extension}"), @"D:\Downloads\README")!;
+
+        Assert.Equal(NamingProblem.InvalidName, plan.Naming);
+        Assert.Empty(plan.NewName);
+    }
+
+    [Fact]
+    public void ARenameToTheNameTheFileHasIsntPlanned()
+    {
+        Assert.Null(Plan(Rule("Rename", newName: "{name}")));
+    }
+
+    [Fact]
+    public void APlanForTheRecycleBinHasNoDestination()
+    {
+        var plan = Plan(Rule("RecycleBin"))!;
+
+        Assert.Equal(FolderRuleAction.RecycleBin, plan.Action);
+        Assert.Empty(plan.Destination);
+        Assert.Empty(plan.NewName);
+    }
+
+    [Fact]
+    public void UndoMovesAFileBackToItsOldPlaceAndName()
+    {
+        var entry = Act(Rule("Move", newName: "Paid {name}"))!;
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, _actions.CheckUndo(entry).Status);
+        Assert.Equal(FolderRulesAnswerStatus.Done, _actions.PutBack(entry, CancellationToken.None).Status);
+        Assert.True(_system.Exists(Invoice));
+        Assert.False(_system.Exists(@"D:\Invoices\Paid Invoice.pdf"));
+    }
+
+    [Fact]
+    public void UndoOfARenameThatChangedOnlyTheCaseFindsTheOldPlaceFree()
+    {
+        var entry = Act(Rule("Rename", newName: "INVOICE", ifExists: "Skip"))!;
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, _actions.CheckUndo(entry).Status);
+        Assert.Equal(FolderRulesAnswerStatus.Done, _actions.PutBack(entry, CancellationToken.None).Status);
+        Assert.Equal("Invoice.pdf", _system.List(Downloads).Single(file => !file.IsFolder).Name);
+    }
+
+    [Fact]
+    public void UndoOfACopyFindsTheCopyByItsNameSizeAndTime()
+    {
+        var entry = Act(Rule("Copy"))!;
+
+        Assert.NotEqual(_system.Read(Invoice)!.FileId, _system.Read(@"D:\Invoices\Invoice.pdf")!.FileId);
+        Assert.Equal(FolderRulesAnswerStatus.Done, _actions.CheckUndo(entry).Status);
+    }
+
+    [Fact]
+    public void UndoLeavesAFileThatChanged()
+    {
+        var entry = Act(Rule("Move"))!;
+        _system.Remove(@"D:\Invoices\Invoice.pdf");
+        _system.AddFile(@"D:\Invoices\Invoice.pdf", size: 5);
+
+        Assert.Equal(FolderRulesAnswerStatus.Changed, _actions.CheckUndo(entry).Status);
+    }
+
+    [Fact]
+    public void UndoLeavesAFileThatWentAway()
+    {
+        var entry = Act(Rule("Move"))!;
+        _system.Remove(@"D:\Invoices\Invoice.pdf");
+
+        Assert.Equal(FolderRulesAnswerStatus.Changed, _actions.CheckUndo(entry).Status);
+    }
+
+    [Fact]
+    public void UndoDoesntReplaceAFileInTheOldPlace()
+    {
+        var entry = Act(Rule("Move"))!;
+        _system.AddFile(Invoice, size: 5);
+
+        Assert.Equal(FolderRulesAnswerStatus.PlaceTaken, _actions.CheckUndo(entry).Status);
+        Assert.Equal(FolderRulesAnswerStatus.PlaceTaken, _actions.PutBack(entry, CancellationToken.None).Status);
+        Assert.Equal(5, _system.Read(Invoice)!.Size);
+    }
+
+    [Theory]
+    [InlineData(HistoryOutcome.Skipped)]
+    [InlineData(HistoryOutcome.MovedToRecycleBin)]
+    [InlineData(HistoryOutcome.DeletedForGood)]
+    public void OnlyMovesCopiesAndRenamesCanBeUndone(HistoryOutcome outcome)
+    {
+        var entry = Act(Rule("Move"))! with { Outcome = outcome };
+
+        Assert.Equal(FolderRulesAnswerStatus.Refused, _actions.CheckUndo(entry).Status);
+    }
+
+    [Fact]
+    public void AnEntryIsUndoneOnce()
+    {
+        var entry = Act(Rule("Move"))! with { Undone = FakeFolderRulesSystem.Time };
+
+        Assert.Equal(FolderRulesAnswerStatus.Refused, _actions.CheckUndo(entry).Status);
+    }
+
+    [Fact]
+    public void AMoveBackInUseIsReported()
+    {
+        var entry = Act(Rule("Move"))!;
+        _system.SetBusy(@"D:\Invoices\Invoice.pdf", busy: true);
+
+        Assert.Equal(FolderRulesAnswerStatus.InUse, _actions.PutBack(entry, CancellationToken.None).Status);
+    }
+
+    [Fact]
+    public void AMoveBackThatWindowsRefusesInAFolderItProtectsIsABlock()
+    {
+        const string Documents = @"C:\Users\Ana\Documents";
+        _system.AddFile(@"C:\Users\Ana\Documents\Invoice.pdf");
+        var entry = _actions.Act(Documents, RuleMatcher.Create(Rule("Move"), 1), _system.Read(@"C:\Users\Ana\Documents\Invoice.pdf")!, FakeFolderRulesSystem.Time, CancellationToken.None)!;
+        _system.Deny(Documents);
+
+        var answer = _actions.PutBack(entry, CancellationToken.None);
+
+        Assert.Equal(FolderRulesAnswerStatus.Blocked, answer.Status);
+        Assert.Equal(5, answer.ErrorCode);
+    }
+
+    [Fact]
+    public void AMoveBackThatWindowsRefusesHasItsCode()
+    {
+        var entry = Act(Rule("Move"))!;
+        _system.Deny(Downloads);
+
+        var answer = _actions.PutBack(entry, CancellationToken.None);
+
+        Assert.Equal(FolderRulesAnswerStatus.Failed, answer.Status);
+        Assert.Equal(5, answer.ErrorCode);
     }
 }

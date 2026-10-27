@@ -15,9 +15,11 @@
 # minute, and a file written while it was away moves. Networking is on for the share, with the
 # update check off. The files already there when the folder was added stay, and a file that arrives
 # while the host isn't running is handled when it starts. The history file says what happened, and
-# the pipe gives the settings app the same history, refuses a request it doesn't know, and clears
-# the history. The logs hold no file names or folders. Turned off, the folder isn't watched and the
-# host serves no pipe. Detailed logging is on for the Debug entries.
+# the pipe gives the settings app the same history; Run now lists the file that was there before and
+# moves it when chosen, and Undo puts it back, where it stays. The pipe refuses a file outside the
+# folder and a request it doesn't know, and clears the history. The logs hold no file names or
+# folders. Turned off, the folder isn't watched and the host serves no pipe. Detailed logging is on
+# for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -51,13 +53,13 @@ function Get-History { if (Test-Path $historyFile) { @((Get-Content $historyFile
 
 # Asks the host through Folder Rules' pipe, as the settings app does, and returns its answer, or
 # $null when the host doesn't serve the pipe.
-function Invoke-FolderRulesPipe([string] $Kind) {
+function Invoke-FolderRulesPipe([hashtable] $Request) {
     $pipe = New-Object IO.Pipes.NamedPipeClientStream('.', "PCCompanion.FolderRules.$((Get-Process -Id $PID).SessionId)", [IO.Pipes.PipeDirection]::InOut)
     try {
         $pipe.Connect(3000)
         $pipe.ReadMode = [IO.Pipes.PipeTransmissionMode]::Message
-        $request = [Text.Encoding]::UTF8.GetBytes("{`"kind`":`"$Kind`"}")
-        $pipe.Write($request, 0, $request.Length)
+        $bytes = [Text.Encoding]::UTF8.GetBytes(($Request | ConvertTo-Json -Depth 4 -Compress))
+        $pipe.Write($bytes, 0, $bytes.Length)
         $answer = New-Object IO.MemoryStream
         $buffer = [byte[]]::new(65536)
         do {
@@ -398,12 +400,38 @@ Test-Check 'the history has the move, the copy, the rename and the skip' (
     (@($history | Where-Object { $_.name -eq 'offline.pdf' -and $_.outcome -eq 'Moved' }).Count -eq 1)) $outcomes
 Test-Check 'the picture that was copied isn''t copied again' (@($history | Where-Object { $_.name -eq 'photo.png' }).Count -eq 1) $outcomes
 
-# The settings app gets the history through the pipe, and Clear history empties it.
-$answer = Invoke-FolderRulesPipe 'History'
+# The settings app gets the history through the pipe.
+$answer = Invoke-FolderRulesPipe @{ kind = 'History' }
 Test-Check 'the pipe gives the history' (($answer.status -eq 'Done') -and (@($answer.entries).Count -eq $history.Count) -and ($answer.entries[0].id -eq $history[0].id)) "$($answer.status), $(@($answer.entries).Count) of $($history.Count) entries"
-$answer = Invoke-FolderRulesPipe 'Format'
+
+# Run now lists the files there that the rules would act on: the PDF that was there before, and
+# not the picture they copied, the logs Windows' answers kept, or the empty and hidden files.
+$answer = Invoke-FolderRulesPipe @{ kind = 'RunNowList'; folder = $inbox }
+$listed = @($answer.files)
+$names = ($listed | ForEach-Object { $_.name }) -join ', '
+$there = $listed | Where-Object { $_.name -eq 'there.pdf' }
+Test-Check 'Run now lists the PDF that was there, to move into the pdf subfolder' (($answer.status -eq 'Done') -and ($there.action -eq 'Move') -and ($there.destination -eq "$sorted\pdf")) $names
+Test-Check 'and not the files the rules acted on, or the empty and hidden ones' (-not ($listed | Where-Object { $_.name -in 'photo.png', 'big-no.log', 'empty.pdf', 'hidden.pdf' })) $names
+$answer = Invoke-FolderRulesPipe @{ kind = 'RunNow'; folder = $inbox; files = @(@{ name = 'there.pdf'; size = $there.size; modified = $there.modified }) }
+Test-Check 'Run now moves the chosen PDF' (($answer.status -eq 'Done') -and (Wait-Until { (Test-Path "$sorted\pdf\there.pdf") -and -not (Test-Path "$inbox\there.pdf") } 15)) "$($answer.status)"
+Test-Check 'and only that file' ((Test-Path "$inbox\nuke.log") -and (Test-Path "$inbox\taken.png"))
+$answer = Invoke-FolderRulesPipe @{ kind = 'RunNow'; folder = $inbox; files = @(@{ name = '..\Sorted\pdf\report.pdf'; size = 1000; modified = $there.modified }) }
+Test-Check 'Run now refuses a file outside the folder' (($answer.status -eq 'Refused') -and (Test-Path "$sorted\pdf\report.pdf")) "$($answer.status)"
+
+# Undo puts the PDF back, where the rules leave it.
+$entry = Get-History | Where-Object { $_.name -eq 'there.pdf' } | Select-Object -First 1
+$answer = Invoke-FolderRulesPipe @{ kind = 'Undo'; entry = $entry.id; time = $entry.time }
+Test-Check 'Undo puts the PDF back' (($answer.status -eq 'Done') -and (Test-Path "$inbox\there.pdf") -and -not (Test-Path "$sorted\pdf\there.pdf")) "$($answer.status)"
+Start-Sleep -Seconds 5
+Test-Check 'and it stays' ((Test-Path "$inbox\there.pdf") -and ((Get-HostLog) -match 'Folder Rules folder 1 already handled a file that came back'))
+Test-Check 'the history says it was undone' ($null -ne (Get-History | Where-Object { $_.id -eq $entry.id }).undone)
+$answer = Invoke-FolderRulesPipe @{ kind = 'Undo'; entry = $entry.id; time = $entry.time }
+Test-Check 'it isn''t undone twice' ($answer.status -eq 'Refused') "$($answer.status)"
+
+# The pipe refuses a request it doesn't know, and Clear history empties the history.
+$answer = Invoke-FolderRulesPipe @{ kind = 'Format' }
 Test-Check 'the pipe refuses a request it doesn''t know' ($answer.status -eq 'Refused') "$($answer.status)"
-$answer = Invoke-FolderRulesPipe 'ClearHistory'
+$answer = Invoke-FolderRulesPipe @{ kind = 'ClearHistory' }
 Test-Check 'Clear history through the pipe empties the history file' (($answer.status -eq 'Done') -and (Wait-Until { (Get-History).Count -eq 0 } 5)) "$($answer.status)"
 
 # Turned off, the folder isn't watched.
@@ -412,7 +440,7 @@ Test-Check 'turned off, Folder Rules'' thread ends' (Wait-Until { (Get-HostLog) 
 New-TestFile (Join-Path $inbox 'after.pdf')
 Start-Sleep -Seconds 6
 Test-Check 'turned off, a file that arrives stays' (Test-Path "$inbox\after.pdf")
-Test-Check 'turned off, the host serves no pipe' ($null -eq (Invoke-FolderRulesPipe 'History'))
+Test-Check 'turned off, the host serves no pipe' ($null -eq (Invoke-FolderRulesPipe @{ kind = 'History' }))
 
 $hostLog = Get-HostLog
 Test-Check 'the logs hold no file names or folders' (($hostLog -notmatch 'report') -and ($hostLog -notmatch 'photo') -and ($hostLog -notmatch 'FolderRulesTest') -and ($hostLog -notmatch 'note\.txt'))
