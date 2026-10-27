@@ -19,14 +19,15 @@
 # file that was there before and moves it when chosen, and Undo puts it back, where it stays. The
 # pipe refuses a file outside the folder and a request it doesn't know, and clears the history. The
 # logs hold no file names or folders. Turned off, the folder isn't watched and the host serves no
-# pipe. The page lists the folders and their rules, says why the hidden system folder can't be used,
-# and saves Add folder, the switches, moving and deleting a rule and removing a folder, with focus
-# staying near what changed. The rule editor lists the files there that the rule would act on as
-# it's edited, refuses an extension a file name can't have, and saves the rule; Edit opens it again,
-# and a template opens with its destination, whose folder Create folder makes. With Folder Rules on,
-# Run now lists the files the rules would act on and acts on those left checked; the history shows
-# the move, Undo puts the file back, Open Recycle Bin opens it, and Clear history asks first.
-# Detailed logging is on for the Debug entries.
+# pipe. The page lists the folders and their rules, says why the hidden system folder and the
+# Windows folder can't be used and warns about a folder in AppData, and saves Add folder, the
+# switches, moving and deleting a rule and removing a folder, with focus staying near what changed.
+# The rule editor lists the files there that the rule would act on as it's edited, refuses an
+# extension a file name can't have, and saves the rule; Edit opens it again, and a template opens
+# with its destination, whose folder Create folder makes. With Folder Rules on, Run now lists the
+# files the rules would act on and acts on those left checked; the history shows the move, Undo puts
+# the file back, Open Recycle Bin opens it, and Clear history asks first. Detailed logging is on for
+# the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -481,6 +482,13 @@ function Invoke-AppMenuItem([string] $Name) {
     return $true
 }
 
+# As a hand edit could, the settings add the Windows folder, which rules can't use, and a folder
+# in AppData, where programs keep their own files.
+$appDataFolder = Join-Path $env:LOCALAPPDATA 'FolderRulesAppData'
+New-Item -ItemType Directory -Force -Path $appDataFolder | Out-Null
+$edited = Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json
+$edited.features.folderRules.folders = @($edited.features.folderRules.folders) + @([pscustomobject] @{ path = $env:windir; rules = @() }, [pscustomobject] @{ path = $appDataFolder; rules = @() })
+Write-Settings ($edited | ConvertTo-Json -Depth 8)
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
@@ -493,6 +501,8 @@ Test-Check 'the page lists the folders and their rules' (
     ($text -contains 'Moves to the Recycle Bin') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 Test-Check 'with UAC off, the page doesn''t say Folder Rules is paused' ($text -notcontains 'While PC Companion runs as administrator after a UAC prompt, Folder Rules is paused: it never changes files with administrator rights.')
 Test-Check 'the hidden system folder says it can''t be used' (Wait-Until { Find-AppText "Rules can't change files in hidden system folders, such as the Recycle Bin's own folders, which only Windows uses." } 5)
+Test-Check 'the Windows folder says rules can''t use it' ($null -ne (Find-AppText "Rules can't change files in the Windows folder, which only administrators can change."))
+Test-Check 'the folder in AppData gets its warning' ($null -ne (Find-AppText 'Programs keep their own files here. Moving one can stop a program from working.'))
 $runNow = Find-AppElement 'Run now for Windows only'
 Test-Check 'and its Run now is off' (($null -ne $runNow) -and -not $runNow.Current.IsEnabled)
 Save-Screenshot '15a-folder-rules-page'
@@ -525,8 +535,8 @@ Start-Sleep -Seconds 1
 Test-Check 'Remove asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until { Find-AppElement 'Remove Desktop?' } 5))
 Start-Sleep -Seconds 1
 [void] (Invoke-AppElement 'Remove')
-Test-Check 'the page removes the folder' (Wait-Until { @((Get-FolderRulesSettings).folders).Count -eq 4 } 5) ((Get-FolderRulesSettings).folders.path -join ', ')
-Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-FocusedName) -eq 'More options for Windows only' } 3) (Get-FocusedName)
+Test-Check 'the page removes the folder' (Wait-Until { @((Get-FolderRulesSettings).folders).Count -eq 6 } 5) ((Get-FolderRulesSettings).folders.path -join ', ')
+Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-FocusedName) -eq 'More options for FolderRulesAppData' } 3) (Get-FocusedName)
 Save-Screenshot '15b-folder-rules-page-changed'
 
 # The rule editor lists the files there that the rule would act on as it's edited, shows problems
@@ -610,4 +620,5 @@ Remove-SmbShare -Name FolderRulesShare -Force -ErrorAction SilentlyContinue
 select vdisk file="$root\card.vhdx"
 detach vdisk
 "@)
+Remove-Item $appDataFolder -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item $root -Recurse -Force -ErrorAction SilentlyContinue
