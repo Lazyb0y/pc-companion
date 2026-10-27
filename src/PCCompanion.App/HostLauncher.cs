@@ -68,6 +68,20 @@ public sealed partial class HostLauncher(ILogger<HostLauncher> logger)
     public static bool RunsAsAdministrator(GeneralSettings general) =>
         HostProcess.RunsAsAdministrator(general, IsHostElevated());
 
+    /// <summary>
+    /// Whether the host runs as administrator after a UAC prompt, while the features that never
+    /// use admin rights, such as Folder Rules, pause. With UAC off, an administrator's programs all
+    /// have admin rights, and nothing pauses. While no host runs, it's whether Always run as
+    /// administrator would start it so.
+    /// </summary>
+    public static bool RunsUacElevated(GeneralSettings general)
+    {
+        ArgumentNullException.ThrowIfNull(general);
+
+        return (MessageWindow.FindOwnerProcess(HostProcess.WindowClassName) is { } processId ? Elevation.IsProcessUacElevated(processId) : null)
+            ?? (general.AlwaysRunAsAdministrator && Elevation.IsUacLimited);
+    }
+
     private static bool IsRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
 
     // Read from the process that owns the host's window; null when no host runs or it can't be read.

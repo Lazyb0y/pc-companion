@@ -1,0 +1,179 @@
+using System;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using PCCompanion.Localization;
+using PCCompanion.Platform.Windows;
+using WinRT.Interop;
+
+namespace PCCompanion.App.Features.FolderRules;
+
+public sealed partial class FolderRulesPage : Page
+{
+    private const string FolderMoreId = "FolderMore";
+    private const string RuleMoreId = "RuleMore";
+
+    private static readonly CompositeFormat RemoveTitleFormat = CompositeFormat.Parse(Strings.FolderRulesRemoveTitle);
+    private static readonly CompositeFormat DeleteTitleFormat = CompositeFormat.Parse(Strings.FolderRulesDeleteTitle);
+
+    public FolderRulesPage()
+    {
+        ViewModel = App.Current.Services.GetRequiredService<FolderRulesViewModel>();
+        InitializeComponent();
+    }
+
+    public FolderRulesViewModel ViewModel { get; }
+
+    // A rule's switch and menu items carry "folder:rule".
+    private static (int Folder, int Rule) RuleOf(object sender) =>
+        sender is FrameworkElement { Tag: string tag } && tag.Split(':') is [var folder, var rule]
+        && int.TryParse(folder, NumberStyles.None, CultureInfo.InvariantCulture, out var folderIndex)
+        && int.TryParse(rule, NumberStyles.None, CultureInfo.InvariantCulture, out var ruleIndex)
+            ? (folderIndex, ruleIndex)
+            : (-1, -1);
+
+    private void OnAddKnownFolderClick(object sender, RoutedEventArgs e)
+    {
+        var path = (sender as FrameworkElement)?.Tag switch
+        {
+            "Downloads" => KnownFolders.Downloads,
+            "Desktop" => Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+            "Documents" => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "Pictures" => Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+            _ => null,
+        };
+
+        if (!string.IsNullOrEmpty(path))
+        {
+            ViewModel.AddFolder(path);
+        }
+    }
+
+    private void OnBrowseClick(object sender, RoutedEventArgs e)
+    {
+        if (App.Current.MainWindow is { } window && OpenDialog.PickFolder(WindowNative.GetWindowHandle(window), Strings.FolderRulesBrowseTitle) is { } path)
+        {
+            ViewModel.AddFolder(path);
+        }
+    }
+
+    private void OnFolderToggled(object sender, RoutedEventArgs e)
+    {
+        if (sender is ToggleSwitch { Tag: int index } toggle)
+        {
+            ViewModel.SetFolderEnabled(index, toggle.IsOn);
+        }
+    }
+
+    private async void OnRemoveFolderClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: int index } || index >= ViewModel.Folders.Count)
+        {
+            return;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = string.Format(CultureInfo.CurrentCulture, RemoveTitleFormat, ViewModel.Folders[index].Name),
+            Content = Strings.FolderRulesRemoveText,
+            PrimaryButtonText = Strings.FolderRulesRemove,
+            CloseButtonText = Strings.FolderRulesCancel,
+            DefaultButton = ContentDialogButton.Close,
+            Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+        };
+
+        if (await ShowAsync(dialog) == ContentDialogResult.Primary)
+        {
+            // Focus goes to the next folder, or the one before the last.
+            ViewModel.RemoveFolder(index);
+            Focus(FolderMoreId, Math.Min(index, ViewModel.Folders.Count - 1));
+        }
+    }
+
+    private void OnRuleToggled(object sender, RoutedEventArgs e)
+    {
+        var (folder, rule) = RuleOf(sender);
+        if (folder >= 0 && sender is ToggleSwitch toggle)
+        {
+            ViewModel.SetRuleEnabled(folder, rule, toggle.IsOn);
+        }
+    }
+
+    private void OnMoveUpClick(object sender, RoutedEventArgs e) => Move(sender, -1);
+
+    private void OnMoveDownClick(object sender, RoutedEventArgs e) => Move(sender, 1);
+
+    // Focus stays on the rule that moves.
+    private void Move(object sender, int offset)
+    {
+        var (folder, rule) = RuleOf(sender);
+        ViewModel.MoveRule(folder, rule, offset);
+        Focus(RuleMoreId, FormattableString.Invariant($"{folder}:{rule + offset}"));
+    }
+
+    private async void OnDeleteRuleClick(object sender, RoutedEventArgs e)
+    {
+        var (folder, rule) = RuleOf(sender);
+        if (folder < 0 || folder >= ViewModel.Folders.Count || rule >= ViewModel.Folders[folder].Rules.Count)
+        {
+            return;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, ViewModel.Folders[folder].Rules[rule].Name),
+            PrimaryButtonText = Strings.FolderRulesDelete,
+            CloseButtonText = Strings.FolderRulesCancel,
+            DefaultButton = ContentDialogButton.Close,
+            Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+        };
+
+        if (await ShowAsync(dialog) == ContentDialogResult.Primary)
+        {
+            ViewModel.DeleteRule(folder, rule);
+            Focus(FolderMoreId, folder);
+        }
+    }
+
+    // The list is built again after a change, so focus goes to the button given in the new one, or
+    // to Add folder when it's gone.
+    private void Focus(string id, object tag)
+    {
+        FolderList.UpdateLayout();
+        Control target = FindButton(FolderList, id, tag) is { } button ? button : AddFolderButton;
+        target.Focus(FocusState.Programmatic);
+    }
+
+    private static Button? FindButton(DependencyObject parent, string id, object tag)
+    {
+        for (var child = 0; child < VisualTreeHelper.GetChildrenCount(parent); child++)
+        {
+            var element = VisualTreeHelper.GetChild(parent, child);
+            if (element is Button button && AutomationProperties.GetAutomationId(button) == id && Equals(button.Tag, tag))
+            {
+                return button;
+            }
+
+            if (FindButton(element, id, tag) is { } found)
+            {
+                return found;
+            }
+        }
+
+        return null;
+    }
+
+    // A dialog shows in the page's window and follows its language's direction.
+    private Task<ContentDialogResult> ShowAsync(ContentDialog dialog)
+    {
+        dialog.XamlRoot = XamlRoot;
+        dialog.FlowDirection = FlowDirection;
+        dialog.RequestedTheme = ActualTheme;
+        return dialog.ShowAsync().AsTask();
+    }
+}

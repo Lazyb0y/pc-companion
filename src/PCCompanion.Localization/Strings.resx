@@ -1308,4 +1308,199 @@
     <value>Use {0} characters or fewer.</value>
     <comment>Profile editor and Network Profiles page: problem with a text that's too long. {0} is a number.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>Folder Rules</value>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>Move, copy, rename or sort files as they arrive in a folder, such as Downloads.</value>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>When a file arrives in one of these folders, the first of the folder's rules that matches it acts on it. The files already there stay as they are.</value>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>Add folder</value>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>Downloads</value>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>Pictures</value>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>Browse…</value>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>Choose a folder to watch</value>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>No folders yet. Add a folder, such as Downloads, and then rules for it.</value>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>Watch {0}</value>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>Remove {0}?</value>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>Its rules are removed too. The files in it stay as they are.</value>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>This folder can't be found. Its rules start again when it's back.</value>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>Programs keep their own files here. Moving one can stop a program from working.</value>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>This path has characters Windows doesn't allow in one.</value>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>Use a full path, such as D:\Downloads or \\server\share\Scans.</value>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>Rules can't change files in the Windows folder, which only administrators can change.</value>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>Rules can't change files in Program Files, which only administrators can change.</value>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>Rules can't change files in PC Companion's own data folder.</value>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>This folder has no path.</value>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>Rules can't change files in hidden system folders, such as the Recycle Bin's own folders, which only Windows uses.</value>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>This folder is already in the list.</value>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>Folder Rules watches only the first {0} folders.</value>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>In order: the first rule that matches a file acts on it.</value>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>No rules yet.</value>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>Use {0}</value>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>Moves to {0}</value>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>Copies to {0}</value>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>Renames to {0}</value>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>Moves to the Recycle Bin</value>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>Not used. {0}</value>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>Folder Rules uses only the first {0} rules.</value>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>It has no name.</value>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>Its name is longer than 60 characters.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>Its name has a line break or another control character.</value>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>It has no condition, so it would act on every file.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>A name pattern is empty or has characters a file name can't have.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>An extension is empty, has a dot inside it, or has characters a file name can't have.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>A size must be a whole number from 1 to 1,000,000.</value>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>No file is both larger and smaller than these sizes.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>The days must be from 0 to 36,500, and for less than, at least 1.</value>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>No file's date is in this range of days.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>A site pattern is empty or isn't a site's name, such as *.example.com.</value>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>It's from a newer version of PC Companion, with an action this version doesn't know.</value>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>It has no destination.</value>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>Its destination can't be used. {0}</value>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>It moves or copies files to their own folder, which Rename does.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>A part in braces isn't one of {name}, {extension}, {year}, {month}, {day} and {date}, or a brace isn't closed.</value>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>It has no new name.</value>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>Its new name has a part that isn't known or a character a file name can't have, or is a name Windows keeps for itself.</value>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>It's from a newer version of PC Companion, with a choice for taken names this version doesn't know.</value>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>While PC Companion runs as administrator after a UAC prompt, Folder Rules is paused: it never changes files with administrator rights.</value>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>Reads the names, sizes, dates and attributes of the files in the folders you choose, and for Downloaded from, the site in a file's Mark of the Web. Moves, copies, renames and moves to the Recycle Bin only the files your rules match, and never opens or runs them. The history of what the rules did, with file names, stays on this PC for 30 days.</value>
+  </data>
 </root>

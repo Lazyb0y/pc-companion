@@ -1292,4 +1292,264 @@
     <value>最多使用 {0} 个字符。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>文件夹规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>在文件到达某个文件夹（例如“下载”）时移动、复制、重命名或整理它们。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>当文件到达其中一个文件夹时，该文件夹中第一个与之匹配的规则会对其执行操作。已在其中的文件保持不变。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>添加文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>下载</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>文档</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>浏览…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>选择要监视的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>还没有文件夹。请添加一个文件夹（例如“下载”），然后为其添加规则。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>监视 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>其规则也会被删除。其中的文件保持不变。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>找不到此文件夹。文件夹恢复后，其规则会重新开始工作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>程序会在此处保存自己的文件。移动其中某个文件可能导致程序无法正常工作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>此路径包含 Windows 不允许在路径中使用的字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>请使用完整路径，例如 D:\Downloads 或 \\server\share\Scans。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>规则无法更改 Windows 文件夹中的文件，只有管理员才能更改该文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>规则无法更改 Program Files 中的文件，只有管理员才能更改这些文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>规则无法更改 PC Companion 自身数据文件夹中的文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>此文件夹没有路径。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>规则无法更改隐藏系统文件夹中的文件，例如回收站自身的文件夹，这些文件夹仅供 Windows 使用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>此文件夹已在列表中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>文件夹规则只监视前 {0} 个文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>按顺序：第一个与文件匹配的规则会对其执行操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>还没有规则。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>使用 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>上移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>下移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>移动到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>复制到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>重命名为 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>移动到回收站</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>未使用。{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>文件夹规则只使用前 {0} 条规则。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>它没有名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>其名称超过 60 个字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>其名称包含换行符或其他控制字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>它没有任何条件，因此会对每个文件执行操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>某个名称模式为空，或包含文件名不能包含的字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>某个扩展名为空、中间含有句点，或包含文件名不能包含的字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>大小必须是 1 到 1,000,000 之间的整数。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>没有文件能同时大于并小于这些大小。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>天数必须介于 0 到 36,500 之间，“少于”至少为 1。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>没有任何文件的日期在此天数范围内。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>某个网站模式为空，或不是网站名称，例如 *.example.com。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>它来自更新版本的 PC Companion，包含此版本不认识的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>它没有目标位置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>无法使用其目标位置。{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>它会将文件移动或复制到其自身所在的文件夹，这是“重命名”的作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>大括号中的某个部分不是 {name}、{extension}、{year}、{month}、{day} 或 {date}，或者某个大括号没有闭合。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>它没有新名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>其新名称包含未知的部分或文件名不能包含的字符，或者是 Windows 保留给自身的名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>它来自更新版本的 PC Companion，包含此版本不认识的“名称已被使用”选项。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>在 PC Companion 经过 UAC 提示以管理员身份运行时，文件夹规则会暂停：它从不以管理员权限更改文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>读取你所选文件夹中文件的名称、大小、日期和属性；对于“下载来源”，读取文件 Web 标记中的网站。仅移动、复制、重命名与你的规则匹配的文件或将其移动到回收站，从不打开或运行它们。规则操作的历史记录（含文件名）会在此电脑上保留 30 天。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

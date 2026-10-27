@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.ClipboardActions;
+using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
@@ -12,6 +13,8 @@ using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Desktop.SystemMeters;
+using PCCompanion.Modules.Files;
+using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Modules.Network;
@@ -58,6 +61,10 @@ public static class FeatureCatalog
         new(NetworkModule.Id, "ModuleNetworkName",
         [
             new(NetworkProfilesFeature.Definition, NetworkProfilesFeature.CurrentSupport, typeof(NetworkProfilesPage), NetworkProfilesFirstSettings.Create),
+        ]),
+        new(FilesModule.Id, "ModuleFilesName",
+        [
+            new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage)),
         ]),
     ];
 

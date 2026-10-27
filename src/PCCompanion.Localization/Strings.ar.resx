@@ -1372,4 +1372,264 @@
     <value>استخدم {0} حرفاً أو أقل.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleFilesName" xml:space="preserve">
+    <value>الملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesName" xml:space="preserve">
+    <value>قواعد المجلدات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDescription" xml:space="preserve">
+    <value>انقل الملفات أو انسخها أو أعد تسميتها أو رتّبها عند وصولها إلى مجلد، مثل التنزيلات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersHeader" xml:space="preserve">
+    <value>المجلدات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFoldersDescription" xml:space="preserve">
+    <value>عندما يصل ملف إلى أحد هذه المجلدات، تُطبَّق عليه أول قاعدة من قواعد المجلد تطابقه. تبقى الملفات الموجودة فيه كما هي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddFolder" xml:space="preserve">
+    <value>إضافة مجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDownloads" xml:space="preserve">
+    <value>التنزيلات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDesktop" xml:space="preserve">
+    <value>سطح المكتب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddDocuments" xml:space="preserve">
+    <value>المستندات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddPictures" xml:space="preserve">
+    <value>الصور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAddBrowse" xml:space="preserve">
+    <value>استعراض…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesBrowseTitle" xml:space="preserve">
+    <value>اختر مجلدًا لمراقبته</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoFolders" xml:space="preserve">
+    <value>لا توجد مجلدات بعد. أضف مجلدًا، مثل التنزيلات، ثم أضف قواعد له.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesWatchName" xml:space="preserve">
+    <value>مراقبة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoreName" xml:space="preserve">
+    <value>مزيد من الخيارات لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemove" xml:space="preserve">
+    <value>إزالة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveTitle" xml:space="preserve">
+    <value>هل تريد إزالة {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRemoveText" xml:space="preserve">
+    <value>تُزال قواعده أيضًا. تبقى الملفات الموجودة فيه كما هي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesCancel" xml:space="preserve">
+    <value>إلغاء الأمر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFound" xml:space="preserve">
+    <value>يتعذر العثور على هذا المجلد. تعمل قواعده مجددًا عند عودته.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesProgramDataWarning" xml:space="preserve">
+    <value>تحتفظ البرامج بملفاتها هنا. قد يؤدي نقل أحدها إلى توقف برنامج عن العمل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderInvalidPath" xml:space="preserve">
+    <value>يحتوي هذا المسار على أحرف لا يسمح بها Windows في المسارات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNotFullPath" xml:space="preserve">
+    <value>استخدم مسارًا كاملاً، مثل D:\Downloads أو \\server\share\Scans.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderWindows" xml:space="preserve">
+    <value>لا يمكن للقواعد تغيير الملفات في مجلد Windows، الذي لا يمكن تغييره إلا للمسؤولين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderProgramFiles" xml:space="preserve">
+    <value>لا يمكن للقواعد تغيير الملفات في Program Files، الذي لا يمكن تغييره إلا للمسؤولين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderDataFolder" xml:space="preserve">
+    <value>لا يمكن للقواعد تغيير الملفات في مجلد بيانات PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderNoPath" xml:space="preserve">
+    <value>لا يحتوي هذا المجلد على مسار.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderSystem" xml:space="preserve">
+    <value>لا يمكن للقواعد تغيير الملفات في مجلدات النظام المخفية، مثل مجلدات سلة المحذوفات نفسها، التي لا يستخدمها سوى Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderAlreadyWatched" xml:space="preserve">
+    <value>هذا المجلد موجود بالفعل في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesFolderTooMany" xml:space="preserve">
+    <value>لا تراقب قواعد المجلدات إلا أول {0} مجلدات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesHeader" xml:space="preserve">
+    <value>القواعد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRulesDescription" xml:space="preserve">
+    <value>بالترتيب: تُطبَّق على الملف أول قاعدة تطابقه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesNoRules" xml:space="preserve">
+    <value>لا توجد قواعد بعد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleSwitchName" xml:space="preserve">
+    <value>استخدام {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveUp" xml:space="preserve">
+    <value>نقل لأعلى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesMoveDown" xml:space="preserve">
+    <value>نقل لأسفل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDelete" xml:space="preserve">
+    <value>حذف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesDeleteTitle" xml:space="preserve">
+    <value>هل تريد حذف {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryMove" xml:space="preserve">
+    <value>ينقل إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryCopy" xml:space="preserve">
+    <value>ينسخ إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRename" xml:space="preserve">
+    <value>يعيد التسمية إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryRecycleBin" xml:space="preserve">
+    <value>ينقل إلى سلة المحذوفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesSummaryProblem" xml:space="preserve">
+    <value>غير مستخدمة. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleTooMany" xml:space="preserve">
+    <value>لا تستخدم قواعد المجلدات إلا أول {0} قاعدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoName" xml:space="preserve">
+    <value>ليس لها اسم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNameTooLong" xml:space="preserve">
+    <value>اسمها أطول من 60 حرفًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidName" xml:space="preserve">
+    <value>يحتوي اسمها على فاصل أسطر أو حرف تحكم آخر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoCondition" xml:space="preserve">
+    <value>ليس لها شرط، لذا ستُطبَّق على كل ملف.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNamePattern" xml:space="preserve">
+    <value>نمط اسم فارغ أو يحتوي على أحرف لا يمكن أن يحتويها اسم ملف.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidExtension" xml:space="preserve">
+    <value>امتداد فارغ أو يحتوي على نقطة في داخله أو على أحرف لا يمكن أن يحتويها اسم ملف.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSize" xml:space="preserve">
+    <value>يجب أن يكون الحجم عددًا صحيحًا من 1 إلى 1,000,000.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptySizeRange" xml:space="preserve">
+    <value>لا يوجد ملف أكبر وأصغر من هذين الحجمين معًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidDate" xml:space="preserve">
+    <value>يجب أن تكون الأيام من 0 إلى 36,500، وفي «أقل من» 1 على الأقل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleEmptyDateRange" xml:space="preserve">
+    <value>لا يقع تاريخ أي ملف ضمن نطاق الأيام هذا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidSitePattern" xml:space="preserve">
+    <value>نمط موقع فارغ أو ليس اسم موقع، مثل *.example.com.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownAction" xml:space="preserve">
+    <value>إنها من إصدار أحدث من PC Companion، بإجراء لا يعرفه هذا الإصدار.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoDestination" xml:space="preserve">
+    <value>ليس لها وجهة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationNotAllowed" xml:space="preserve">
+    <value>لا يمكن استخدام وجهتها. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleDestinationIsOwnFolder" xml:space="preserve">
+    <value>إنها تنقل الملفات أو تنسخها إلى مجلدها نفسه، وهذا ما تفعله إعادة التسمية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidPart" xml:space="preserve">
+    <value>جزء بين قوسين ليس من {name} و{extension} و{year} و{month} و{day} و{date}، أو قوس غير مغلق.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleNoNewName" xml:space="preserve">
+    <value>ليس لها اسم جديد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleInvalidNewName" xml:space="preserve">
+    <value>يحتوي اسمها الجديد على جزء غير معروف أو حرف لا يمكن أن يحتويه اسم ملف، أو هو اسم يحتفظ به Windows لنفسه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesRuleUnknownIfExists" xml:space="preserve">
+    <value>إنها من إصدار أحدث من PC Companion، بخيار للأسماء المستخدمة لا يعرفه هذا الإصدار.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesAdministratorInfo" xml:space="preserve">
+    <value>أثناء تشغيل PC Companion كمسؤول بعد مطالبة التحكم في حساب المستخدم، تتوقف قواعد المجلدات مؤقتًا: فهي لا تغيّر الملفات أبدًا بحقوق المسؤول.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="FolderRulesPermissions" xml:space="preserve">
+    <value>يقرأ أسماء الملفات وأحجامها وتواريخها وسماتها في المجلدات التي تختارها، وفي «تم التنزيل من» الموقع المذكور في علامة الويب للملف. ينقل وينسخ ويعيد تسمية الملفات التي تطابقها قواعدك فقط وينقلها إلى سلة المحذوفات، ولا يفتحها أو يشغّلها أبدًا. يبقى سجل ما فعلته القواعد، مع أسماء الملفات، على هذا الكمبيوتر لمدة 30 يومًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
