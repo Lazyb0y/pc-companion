@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 using System.Threading;
 using PCCompanion.Platform.Windows;
 
@@ -11,9 +10,6 @@ namespace PCCompanion.Modules.Files.FolderRules;
 /// <summary>Folder Rules' access to Windows' file system.</summary>
 internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
 {
-    // The largest Mark of the Web that's read; a mark holds a few lines.
-    private const int MaximumMarkLength = 64 * 1024;
-
     // The watch's buffer, the largest Windows allows for a network folder.
     private const int WatchBufferSize = 64 * 1024;
 
@@ -27,23 +23,7 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
 
     public bool CanOpenAlone(string path) => FileDetails.CanOpenAlone(path);
 
-    public MarkOfTheWeb? ReadMark(string path)
-    {
-        try
-        {
-            using var stream = new FileStream(path + ":" + MarkOfTheWeb.StreamName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            var buffer = new byte[MaximumMarkLength];
-            var length = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
-
-            // Programs write the mark in UTF-8 or ANSI, which agree for an address, or in UTF-16 after a mark of its own.
-            using var reader = new StreamReader(new MemoryStream(buffer, 0, length), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            return MarkOfTheWeb.Parse(reader.ReadToEnd());
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
-    }
+    public MarkOfTheWeb? ReadMark(string path) => MarkOfTheWeb.Read(path);
 
     // A drive that can't be reached can't take the file either, which the move then reports.
     public bool KeepsStreams(string folder)

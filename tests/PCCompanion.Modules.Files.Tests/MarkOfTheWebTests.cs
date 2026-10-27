@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using PCCompanion.Modules.Files.FolderRules;
+using PCCompanion.Testing;
 using Xunit;
 
 namespace PCCompanion.Modules.Files.Tests;
@@ -51,5 +53,21 @@ public sealed class MarkOfTheWebTests
     {
         Assert.Null(MarkOfTheWeb.Parse("[ZoneTransfer]\r\nZoneId=-1\r\n").ZoneId);
         Assert.Null(MarkOfTheWeb.Parse("[ZoneTransfer]\r\nZoneId=three\r\n").ZoneId);
+    }
+
+    // On files of its own in a folder of its own.
+    [Fact]
+    public void AFilesMarkIsReadFromItsStream()
+    {
+        using var folder = new TemporaryFolder();
+        var marked = Path.Join(folder.FullPath, "marked.pdf");
+        var plain = Path.Join(folder.FullPath, "plain.pdf");
+        File.WriteAllText(marked, "pdf");
+        File.WriteAllText(plain, "pdf");
+        File.WriteAllText(marked + ":" + MarkOfTheWeb.StreamName, "[ZoneTransfer]\r\nZoneId=3\r\nHostUrl=https://downloads.example.com/file\r\n");
+
+        Assert.Equal("downloads.example.com", MarkOfTheWeb.Read(marked)?.Source?.Host);
+        Assert.Null(MarkOfTheWeb.Read(plain));
+        Assert.Null(MarkOfTheWeb.Read(Path.Join(folder.FullPath, "missing.pdf")));
     }
 }
