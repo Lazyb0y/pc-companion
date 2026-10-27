@@ -10,7 +10,10 @@ public sealed class FolderRuleActionsTests
     private const string Downloads = @"D:\Downloads";
     private const string Invoice = @"D:\Downloads\Invoice.pdf";
 
-    private static readonly SpecialFolders Places = new(@"C:\Windows", [@"C:\Program Files"], @"C:\Users\Ana\AppData\Local\PCCompanion", [@"C:\Users\Ana\AppData"]);
+    private static readonly SpecialFolders Places = new(@"C:\Windows", [@"C:\Program Files"], @"C:\Users\Ana\AppData\Local\PCCompanion", [@"C:\Users\Ana\AppData"])
+    {
+        Protected = [@"C:\Users\Ana\Documents", @"C:\Users\Ana\Pictures"],
+    };
 
     private readonly FakeFolderRulesSystem _system = new FakeFolderRulesSystem().AddFile(Invoice).AddFolder(@"D:\Invoices");
     private readonly FolderRuleActions _actions;
@@ -208,6 +211,52 @@ public sealed class FolderRuleActionsTests
         Assert.Equal(SkipReason.Failed, entry.Reason);
         Assert.Equal(5, entry.ErrorCode);
         Assert.False(_system.Exists(@"D:\Invoices\2026"));
+    }
+
+    [Fact]
+    public void AFileWithAMarkIsntMovedToADriveThatCantKeepIt()
+    {
+        _system.AddFile(@"D:\Downloads\setup.pdf", mark: "[ZoneTransfer]\r\nZoneId=3\r\nHostUrl=https://example.com/setup.pdf\r\n");
+        _system.AddFolder(@"E:\Card");
+        _system.LoseStreams(@"E:\");
+
+        var entry = Act(Rule("Move", @"E:\Card\{year}"), @"D:\Downloads\setup.pdf")!;
+
+        Assert.Equal(SkipReason.MarkWouldBeLost, entry.Reason);
+        Assert.True(_system.Exists(@"D:\Downloads\setup.pdf"));
+        Assert.False(_system.Exists(@"E:\Card\2026"));
+        Assert.Empty(_system.Transfers);
+    }
+
+    [Fact]
+    public void AFileWithoutAMarkMovesToADriveThatCantKeepOne()
+    {
+        _system.AddFolder(@"E:\Card");
+        _system.LoseStreams(@"E:\");
+
+        Assert.Equal(HistoryOutcome.Copied, Act(Rule("Copy", @"E:\Card"))!.Outcome);
+    }
+
+    [Fact]
+    public void ARefusalInAFolderWindowsProtectsIsABlock()
+    {
+        _system.AddFolder(@"C:\Users\Ana\Documents\Invoices");
+        _system.Deny(@"C:\Users\Ana\Documents\Invoices");
+
+        var entry = Act(Rule("Move", @"C:\Users\Ana\Documents\Invoices"))!;
+
+        Assert.Equal(SkipReason.Blocked, entry.Reason);
+        Assert.Equal(5, entry.ErrorCode);
+        Assert.True(_system.Exists(Invoice));
+    }
+
+    [Fact]
+    public void TheCurrentUsersProtectedFoldersAreKnown()
+    {
+        var places = SpecialFolders.ForCurrentUser(@"C:\Data");
+
+        Assert.Contains(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), places.Protected);
+        Assert.Contains(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), places.Protected);
     }
 
     [Fact]

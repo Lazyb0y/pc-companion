@@ -17,6 +17,7 @@ public sealed class FolderRuleActions
     // Windows' error codes that the history tells apart.
     private const int FileNotFound = 2;
     private const int PathNotFound = 3;
+    private const int AccessDenied = 5;
     private const int SharingViolation = 32;
     private const int LockViolation = 33;
 
@@ -89,7 +90,15 @@ public sealed class FolderRuleActions
             name = newName.Value;
         }
 
-        var prepared = PrepareDestination(rule.Destination, destination.Value);
+        // Windows drops a file's Mark of the Web without an error on a drive that can't keep it,
+        // so a file with a mark stays rather than lose it.
+        FolderPaths.Normalize(FolderPaths.FixedPart(rule.Destination), out var start);
+        if (!_system.KeepsStreams(start) && _system.ReadMark(source) is not null)
+        {
+            return Skipped(entry, SkipReason.MarkWouldBeLost);
+        }
+
+        var prepared = PrepareDestination(start, destination.Value);
         if (prepared is not null)
         {
             return prepared(entry);
@@ -114,7 +123,7 @@ public sealed class FolderRuleActions
 
     // Tries each name the rule allows until one is free. A name that appears at the last moment
     // makes the move fail rather than replace it, and the next number is tried.
-    private static HistoryEntry Place(
+    private HistoryEntry Place(
         HistoryEntry entry, string source, string destination, string name, NameConflict ifExists, HistoryOutcome outcome, Func<string, string, int> transfer)
     {
         foreach (var candidate in FileNaming.Candidates(name, ifExists))
@@ -128,18 +137,17 @@ public sealed class FolderRuleActions
                 case FileTransfer.FileExists or FileTransfer.AlreadyExists:
                     continue;
                 default:
-                    return Refused(entry, error);
+                    return Refused(entry, error, source, destination);
             }
         }
 
         return Skipped(entry, SkipReason.NameTaken);
     }
 
-    // Checks that the folder the destination starts with exists and that nothing on the way is a
-    // link, and creates the subfolders made from the file. Returns how to skip the file, or null.
-    private Func<HistoryEntry, HistoryEntry>? PrepareDestination(string pattern, string destination)
+    // Checks that the folder the destination starts with, start, exists and that nothing on the way
+    // is a link, and creates the subfolders made from the file. Returns how to skip the file, or null.
+    private Func<HistoryEntry, HistoryEntry>? PrepareDestination(string start, string destination)
     {
-        FolderPaths.Normalize(FolderPaths.FixedPart(pattern), out var start);
         var root = Path.GetPathRoot(start)!;
         var path = root;
         foreach (var part in destination[root.Length..].Split('\\', StringSplitOptions.RemoveEmptyEntries))
@@ -152,7 +160,7 @@ public sealed class FolderRuleActions
             }
             catch (Win32Exception exception)
             {
-                return entry => Refused(entry, exception.NativeErrorCode);
+                return entry => Refused(entry, exception.NativeErrorCode, path);
             }
 
             var inFixedPart = path.Length <= start.Length;
@@ -166,7 +174,7 @@ public sealed class FolderRuleActions
                 var error = _system.CreateFolder(path);
                 if (error != 0)
                 {
-                    return entry => Refused(entry, error);
+                    return entry => Refused(entry, error, path);
                 }
             }
             else if (!details.IsFolder || details.IsLink)
@@ -178,11 +186,16 @@ public sealed class FolderRuleActions
         return null;
     }
 
-    private static HistoryEntry Refused(HistoryEntry entry, int error) => error switch
+    // Controlled folder access refuses apps Windows doesn't trust in the folders it protects, with
+    // no error of its own, and its setting can't be read without admin rights, so a refusal there
+    // counts as one of its blocks.
+    private HistoryEntry Refused(HistoryEntry entry, int error, params string[] paths) => error switch
     {
         SharingViolation or LockViolation => Skipped(entry, SkipReason.InUse),
         FileNotFound => Skipped(entry, SkipReason.Changed),
         PathNotFound => Skipped(entry, SkipReason.DestinationNotFound),
+        AccessDenied when paths.Any(path => _places.Protected.Any(folder => FolderPaths.IsInside(path, folder))) =>
+            Skipped(entry, SkipReason.Blocked) with { ErrorCode = error },
         _ => Skipped(entry, SkipReason.Failed) with { ErrorCode = error },
     };
 

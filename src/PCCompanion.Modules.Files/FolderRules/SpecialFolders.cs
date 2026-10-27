@@ -15,6 +15,12 @@ namespace PCCompanion.Modules.Files.FolderRules;
 /// <param name="ProgramData">The <c>AppData</c> and <c>ProgramData</c> folders, which get a warning.</param>
 public sealed record SpecialFolders(string Windows, IReadOnlyList<string> ProgramFiles, string DataFolder, IReadOnlyList<string> ProgramData)
 {
+    /// <summary>
+    /// The folders that Controlled folder access protects by default: Documents, Pictures, Music,
+    /// Videos and Favorites.
+    /// </summary>
+    public IReadOnlyList<string> Protected { get; init; } = [];
+
     /// <summary>The current user's folders, with <paramref name="dataFolder"/> as PC Companion's data folder.</summary>
     public static SpecialFolders ForCurrentUser(string dataFolder)
     {
@@ -29,7 +35,15 @@ public sealed record SpecialFolders(string Windows, IReadOnlyList<string> Progra
                 Path.GetDirectoryName(localAppData),
                 localAppData,
                 Folder(Environment.SpecialFolder.ApplicationData),
-                Folder(Environment.SpecialFolder.CommonApplicationData)));
+                Folder(Environment.SpecialFolder.CommonApplicationData)))
+        {
+            Protected = Present(
+                Folder(Environment.SpecialFolder.MyDocuments),
+                Folder(Environment.SpecialFolder.MyPictures),
+                Folder(Environment.SpecialFolder.MyMusic),
+                Folder(Environment.SpecialFolder.MyVideos),
+                Folder(Environment.SpecialFolder.Favorites)),
+        };
     }
 
     private static string Folder(Environment.SpecialFolder folder) =>
