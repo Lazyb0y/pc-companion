@@ -15,10 +15,42 @@ internal static class NamedPipes
 {
     private const int BufferSize = 64 * 1024;
 
-    // Outbound only, so the pipe takes no input. Only the user's account and the system may open
-    // it, whatever rights this process has: an elevated process's default owner is the
-    // Administrators group, which a program without admin rights can't use.
-    public static unsafe NamedPipeServerStream CreateOutbound(string name)
+    /// <summary>A pipe that takes no input, for <see cref="SnapshotPipe"/>.</summary>
+    public static NamedPipeServerStream CreateOutbound(string name) =>
+        Create(
+            name,
+            PipeDirection.Out,
+            FILE_FLAGS_AND_ATTRIBUTES.PIPE_ACCESS_OUTBOUND,
+            NAMED_PIPE_MODE.PIPE_TYPE_BYTE | NAMED_PIPE_MODE.PIPE_READMODE_BYTE,
+            0);
+
+    /// <summary>A pipe in both directions that passes whole messages, for <see cref="RequestPipe"/>.</summary>
+    public static NamedPipeServerStream CreateDuplex(string name)
+    {
+        var pipe = Create(
+            name,
+            PipeDirection.InOut,
+            FILE_FLAGS_AND_ATTRIBUTES.PIPE_ACCESS_DUPLEX,
+            NAMED_PIPE_MODE.PIPE_TYPE_MESSAGE | NAMED_PIPE_MODE.PIPE_READMODE_MESSAGE,
+            BufferSize);
+
+        // A stream made from a handle reads bytes until told otherwise.
+        try
+        {
+            pipe.ReadMode = PipeTransmissionMode.Message;
+            return pipe;
+        }
+        catch
+        {
+            pipe.Dispose();
+            throw;
+        }
+    }
+
+    // Only the user's account and the system may open the pipe, whatever rights this process has:
+    // an elevated process's default owner is the Administrators group, which a program without
+    // admin rights can't use.
+    private static unsafe NamedPipeServerStream Create(string name, PipeDirection direction, FILE_FLAGS_AND_ATTRIBUTES access, NAMED_PIPE_MODE mode, uint inBufferSize)
     {
         string user;
         using (var identity = WindowsIdentity.GetCurrent())
@@ -40,11 +72,11 @@ internal static class NamedPipes
 
             using var handle = PInvoke.CreateNamedPipe(
                 @"\\.\pipe\" + name,
-                FILE_FLAGS_AND_ATTRIBUTES.PIPE_ACCESS_OUTBOUND | FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_OVERLAPPED,
-                NAMED_PIPE_MODE.PIPE_TYPE_BYTE | NAMED_PIPE_MODE.PIPE_READMODE_BYTE | NAMED_PIPE_MODE.PIPE_WAIT | NAMED_PIPE_MODE.PIPE_REJECT_REMOTE_CLIENTS,
+                access | FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_OVERLAPPED,
+                mode | NAMED_PIPE_MODE.PIPE_WAIT | NAMED_PIPE_MODE.PIPE_REJECT_REMOTE_CLIENTS,
                 PInvoke.PIPE_UNLIMITED_INSTANCES,
                 BufferSize,
-                0,
+                inBufferSize,
                 0,
                 attributes);
             if (handle.IsInvalid)
@@ -54,7 +86,7 @@ internal static class NamedPipes
 
             var pipe = new SafePipeHandle(handle.DangerousGetHandle(), ownsHandle: true);
             handle.SetHandleAsInvalid();
-            return new NamedPipeServerStream(PipeDirection.Out, isAsync: true, isConnected: false, pipe);
+            return new NamedPipeServerStream(direction, isAsync: true, isConnected: false, pipe);
         }
     }
 }

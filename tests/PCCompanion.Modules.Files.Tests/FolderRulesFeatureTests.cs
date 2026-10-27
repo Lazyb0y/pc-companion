@@ -30,7 +30,7 @@ public sealed class FolderRulesFeatureTests : IDisposable
 
     public FolderRulesFeatureTests()
     {
-        _feature = new FolderRulesFeature(_system, new DataFolder(_data.FullPath), new ManualTimeProvider(), _logger);
+        _feature = new FolderRulesFeature(_system, new DataFolder(_data.FullPath), "PCCompanion.Tests." + Guid.NewGuid().ToString("N"), new ManualTimeProvider(), _logger);
     }
 
     public void Dispose()

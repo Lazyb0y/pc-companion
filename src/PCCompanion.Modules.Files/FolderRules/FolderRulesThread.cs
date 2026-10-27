@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 
@@ -33,6 +34,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     private readonly SpecialFolders _places;
     private readonly TimeProvider _time;
     private readonly IDriveTracker _drives;
+    private readonly string _pipeName;
     private readonly ILogger _logger;
 
     // Cancelled as the thread stops, which stops a copy that's running. Nothing waits on it, so
@@ -48,6 +50,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
     /// <summary>Starts the thread, which watches the folders in <paramref name="settings"/>.</summary>
     /// <param name="drives">Told about the folders on removable drives, which the host's UI thread lets go of when Windows asks to eject them.</param>
+    /// <param name="pipeName">The pipe through which the settings app asks for the history, Run now and Undo; <see cref="FolderRulesPipe.Name"/>.</param>
     /// <param name="previous">A thread that was asked to stop, which this one waits for first, so that they don't share the history.</param>
     public FolderRulesThread(
         FolderRulesSettings settings,
@@ -56,6 +59,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         SpecialFolders places,
         TimeProvider time,
         IDriveTracker drives,
+        string pipeName,
         ILogger logger,
         FolderRulesThread? previous = null)
         : base("Folder Rules", WindowClassName, settings, previous)
@@ -65,6 +69,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         ArgumentNullException.ThrowIfNull(places);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(drives);
+        ArgumentException.ThrowIfNullOrEmpty(pipeName);
         ArgumentNullException.ThrowIfNull(logger);
 
         _system = system;
@@ -72,6 +77,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         _places = places;
         _time = time;
         _drives = drives;
+        _pipeName = pipeName;
         _logger = logger;
         var stopping = new CancellationTokenSource();
         _stopping = stopping;
@@ -206,6 +212,15 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules' history can't be read, so it starts empty and the file is replaced.")]
     private static partial void LogHistoryUnreadable(ILogger logger);
 
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules can't serve the settings app's pipe (error {ErrorCode}), so the page can't show the history.")]
+    private static partial void LogPipeNotServed(ILogger logger, int errorCode);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules' pipe for the settings app stopped (error {ErrorCode}).")]
+    private static partial void LogPipeFailed(ILogger logger, int errorCode);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Folder Rules' history was cleared.")]
+    private static partial void LogHistoryCleared(ILogger logger);
+
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules' history can't be saved (error {ErrorCode}).")]
     private static partial void LogHistoryNotSaved(ILogger logger, int errorCode);
 
@@ -245,6 +260,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         // The files whose move or copy stopped as Windows ejected a drive, tried again when it's back.
         private readonly HashSet<string> _retry = new(StringComparer.OrdinalIgnoreCase);
         private readonly CoalescableTimer _networkTimer;
+        private readonly RequestPipe? _pipe;
         private CoalescableTimer? _timer;
         private IRecycleBin? _recycleBin;
         private bool _applied;
@@ -264,6 +280,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             _actions = new FolderRuleActions(owner._system, owner._places, owner._time.LocalTimeZone);
             _networkTimer = new CoalescableTimer(window, NetworkInterval, NetworkInterval / 10);
             _networkTimer.Elapsed += (_, _) => owner.Guard(CheckNetworkFolders);
+            _pipe = Serve();
         }
 
         private DateTimeOffset Now => _owner._time.GetUtcNow();
@@ -309,6 +326,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
         public void Dispose()
         {
+            _pipe?.Dispose();
             _recycleBin?.Dispose();
             _timer?.Dispose();
             _networkTimer.Dispose();
@@ -711,6 +729,63 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             catch (Win32Exception)
             {
                 return null;
+            }
+        }
+
+        // The settings app's requests come through the pipe on the thread pool and are answered on
+        // this thread, which has the history. While the host runs as administrator there's no
+        // thread, and no pipe.
+        private RequestPipe? Serve()
+        {
+            try
+            {
+                return RequestPipe.Serve(_owner._pipeName, FolderRulesPipe.MaximumRequestLength, AnswerAsync, exception => LogPipeFailed(_owner._logger, exception.HResult));
+            }
+            catch (Win32Exception exception)
+            {
+                LogPipeNotServed(_owner._logger, exception.NativeErrorCode);
+                return null;
+            }
+        }
+
+        // On the thread pool. A request that can't be read, or that the thread can't take because
+        // it ended or failed, is refused.
+        private Task<byte[]> AnswerAsync(byte[] request)
+        {
+            var refused = FolderRulesPipe.Write(new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Refused });
+            if (FolderRulesPipe.ReadRequest(request) is not { } read)
+            {
+                return Task.FromResult(refused);
+            }
+
+            var answered = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var posted = _window.BeginInvoke(() =>
+            {
+                _owner.Guard(() => answered.TrySetResult(FolderRulesPipe.Write(Answer(read))));
+                answered.TrySetResult(refused);
+            });
+
+            if (!posted)
+            {
+                answered.TrySetResult(refused);
+            }
+
+            return answered.Task;
+        }
+
+        private FolderRulesAnswer Answer(FolderRulesRequest request)
+        {
+            switch (request.Kind)
+            {
+                case FolderRulesRequestKind.History:
+                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done, Entries = _history.Entries };
+                case FolderRulesRequestKind.ClearHistory:
+                    _history.Clear();
+                    LogHistoryCleared(_owner._logger);
+                    Save();
+                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Done };
+                default:
+                    return new FolderRulesAnswer { Status = FolderRulesAnswerStatus.Refused };
             }
         }
 

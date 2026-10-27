@@ -13,10 +13,11 @@
 # arrives in Downloads, matches Downloaded from, and moves with its mark. A folder on a share on the
 # Sandbox itself is watched; once the share is removed and back, it's watched again within a
 # minute, and a file written while it was away moves. Networking is on for the share, with the
-# update check off. The files already there
-# when the folder was added stay, and a file that arrives while the host isn't running is handled
-# when it starts. The history file says what happened, and the logs hold no file names or folders.
-# Turned off, the folder isn't watched. Detailed logging is on for the Debug entries.
+# update check off. The files already there when the folder was added stay, and a file that arrives
+# while the host isn't running is handled when it starts. The history file says what happened, and
+# the pipe gives the settings app the same history, refuses a request it doesn't know, and clears
+# the history. The logs hold no file names or folders. Turned off, the folder isn't watched and the
+# host serves no pipe. Detailed logging is on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'FolderRulesTest'
 $inbox = Join-Path $root 'Inbox'
@@ -47,6 +48,30 @@ function Write-FolderRules([bool] $Enabled) {
 }
 
 function Get-History { if (Test-Path $historyFile) { @((Get-Content $historyFile -Raw | ConvertFrom-Json).entries) } else { @() } }
+
+# Asks the host through Folder Rules' pipe, as the settings app does, and returns its answer, or
+# $null when the host doesn't serve the pipe.
+function Invoke-FolderRulesPipe([string] $Kind) {
+    $pipe = New-Object IO.Pipes.NamedPipeClientStream('.', "PCCompanion.FolderRules.$((Get-Process -Id $PID).SessionId)", [IO.Pipes.PipeDirection]::InOut)
+    try {
+        $pipe.Connect(3000)
+        $pipe.ReadMode = [IO.Pipes.PipeTransmissionMode]::Message
+        $request = [Text.Encoding]::UTF8.GetBytes("{`"kind`":`"$Kind`"}")
+        $pipe.Write($request, 0, $request.Length)
+        $answer = New-Object IO.MemoryStream
+        $buffer = [byte[]]::new(65536)
+        do {
+            $read = $pipe.Read($buffer, 0, $buffer.Length)
+            if ($read -eq 0) { return $null }
+            $answer.Write($buffer, 0, $read)
+        } while (-not $pipe.IsMessageComplete)
+        [Text.Encoding]::UTF8.GetString($answer.ToArray()) | ConvertFrom-Json
+    } catch {
+        $null
+    } finally {
+        $pipe.Dispose()
+    }
+}
 
 function New-TestFile([string] $Path, [int] $Size = 1000) { [IO.File]::WriteAllBytes($Path, [byte[]]::new($Size)) }
 
@@ -373,12 +398,21 @@ Test-Check 'the history has the move, the copy, the rename and the skip' (
     (@($history | Where-Object { $_.name -eq 'offline.pdf' -and $_.outcome -eq 'Moved' }).Count -eq 1)) $outcomes
 Test-Check 'the picture that was copied isn''t copied again' (@($history | Where-Object { $_.name -eq 'photo.png' }).Count -eq 1) $outcomes
 
+# The settings app gets the history through the pipe, and Clear history empties it.
+$answer = Invoke-FolderRulesPipe 'History'
+Test-Check 'the pipe gives the history' (($answer.status -eq 'Done') -and (@($answer.entries).Count -eq $history.Count) -and ($answer.entries[0].id -eq $history[0].id)) "$($answer.status), $(@($answer.entries).Count) of $($history.Count) entries"
+$answer = Invoke-FolderRulesPipe 'Format'
+Test-Check 'the pipe refuses a request it doesn''t know' ($answer.status -eq 'Refused') "$($answer.status)"
+$answer = Invoke-FolderRulesPipe 'ClearHistory'
+Test-Check 'Clear history through the pipe empties the history file' (($answer.status -eq 'Done') -and (Wait-Until { (Get-History).Count -eq 0 } 5)) "$($answer.status)"
+
 # Turned off, the folder isn't watched.
 Write-FolderRules $false
 Test-Check 'turned off, Folder Rules'' thread ends' (Wait-Until { (Get-HostLog) -match "Folder Rules' thread ended\." } 10)
 New-TestFile (Join-Path $inbox 'after.pdf')
 Start-Sleep -Seconds 6
 Test-Check 'turned off, a file that arrives stays' (Test-Path "$inbox\after.pdf")
+Test-Check 'turned off, the host serves no pipe' ($null -eq (Invoke-FolderRulesPipe 'History'))
 
 $hostLog = Get-HostLog
 Test-Check 'the logs hold no file names or folders' (($hostLog -notmatch 'report') -and ($hostLog -notmatch 'photo') -and ($hostLog -notmatch 'FolderRulesTest') -and ($hostLog -notmatch 'note\.txt'))
