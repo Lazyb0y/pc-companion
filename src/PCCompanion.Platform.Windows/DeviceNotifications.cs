@@ -11,19 +11,23 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Windows' messages about drives and power, through a <see cref="MessageWindow"/>: the request to
-/// eject the drive of a folder that's watched, drives that arrive, and waking from sleep. A handle
-/// open on a removable drive keeps Windows from ejecting it, so each folder's handle closes as soon
-/// as Windows asks. Create, use and dispose it on the window's thread.
+/// Windows' messages about drives, displays and power, through a <see cref="MessageWindow"/>: the
+/// request to eject the drive of a folder that's watched, drives that arrive, displays that arrive
+/// or leave, going to sleep and waking from it. A handle open on a removable drive keeps Windows
+/// from ejecting it, so each folder's handle closes as soon as Windows asks. Create, use and
+/// dispose it on the window's thread.
 /// </summary>
 public sealed class DeviceNotifications : IDisposable
 {
     private const uint DeviceArrival = 0x8000;
     private const uint DeviceQueryRemove = 0x8001;
+    private const uint DeviceRemoveComplete = 0x8004;
+    private const uint Suspend = 0x4;
     private const uint ResumeAutomatic = 0x12;
 
     private readonly MessageWindow _window;
     private readonly List<Folder> _folders = [];
+    private readonly List<DisplayWatch> _displayWatches = [];
     private bool _disposed;
 
     public DeviceNotifications(MessageWindow window)
@@ -36,6 +40,9 @@ public sealed class DeviceNotifications : IDisposable
 
     /// <summary>A drive arrived, so folders that couldn't be watched may be back.</summary>
     public event EventHandler? DriveArrived;
+
+    /// <summary>The PC is going to sleep or hibernate.</summary>
+    public event EventHandler? Suspending;
 
     /// <summary>The PC woke from sleep.</summary>
     public event EventHandler? Resumed;
@@ -85,6 +92,32 @@ public sealed class DeviceNotifications : IDisposable
         return watched;
     }
 
+    /// <summary>
+    /// Has Windows tell <paramref name="changed"/> when a display is connected or disconnected,
+    /// also one that Windows doesn't turn on. Dispose the registration to stop.
+    /// </summary>
+    /// <exception cref="Win32Exception">Windows refused.</exception>
+    public unsafe IDisposable WatchDisplays(Action changed)
+    {
+        ArgumentNullException.ThrowIfNull(changed);
+
+        var filter = new DEV_BROADCAST_DEVICEINTERFACE_W
+        {
+            dbcc_size = (uint)sizeof(DEV_BROADCAST_DEVICEINTERFACE_W),
+            dbcc_devicetype = (uint)DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_DEVICEINTERFACE,
+            dbcc_classguid = PInvoke.GUID_DEVINTERFACE_MONITOR,
+        };
+        var registration = PInvoke.RegisterDeviceNotification((HANDLE)_window.Handle, &filter, REGISTER_NOTIFICATION_FLAGS.DEVICE_NOTIFY_WINDOW_HANDLE);
+        if (registration.IsNull)
+        {
+            throw new Win32Exception(Marshal.GetLastPInvokeError());
+        }
+
+        var watch = new DisplayWatch(this, registration, changed);
+        _displayWatches.Add(watch);
+        return watch;
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -98,13 +131,26 @@ public sealed class DeviceNotifications : IDisposable
         {
             folder.Dispose();
         }
+
+        foreach (var watch in _displayWatches.ToArray())
+        {
+            watch.Dispose();
+        }
     }
 
     private unsafe void OnMessageReceived(object? sender, WindowMessageEventArgs e)
     {
-        if (e.Message == PInvoke.WM_POWERBROADCAST && e.WParam == ResumeAutomatic)
+        if (e.Message == PInvoke.WM_POWERBROADCAST)
         {
-            Resumed?.Invoke(this, EventArgs.Empty);
+            if (e.WParam == Suspend)
+            {
+                Suspending?.Invoke(this, EventArgs.Empty);
+            }
+            else if (e.WParam == ResumeAutomatic)
+            {
+                Resumed?.Invoke(this, EventArgs.Empty);
+            }
+
             return;
         }
 
@@ -118,6 +164,15 @@ public sealed class DeviceNotifications : IDisposable
         {
             case DeviceArrival when header->dbch_devicetype == DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_VOLUME:
                 DriveArrived?.Invoke(this, EventArgs.Empty);
+                break;
+            case DeviceArrival or DeviceRemoveComplete
+                when header->dbch_devicetype == DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_DEVICEINTERFACE
+                    && ((DEV_BROADCAST_DEVICEINTERFACE_W*)e.LParam)->dbcc_classguid == PInvoke.GUID_DEVINTERFACE_MONITOR:
+                foreach (var watch in _displayWatches.ToArray())
+                {
+                    watch.Changed();
+                }
+
                 break;
             case DeviceQueryRemove when header->dbch_devicetype == DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_HANDLE:
                 // Closing the handle at once is what lets Windows eject the drive. Once it's
@@ -152,6 +207,25 @@ public sealed class DeviceNotifications : IDisposable
             PInvoke.UnregisterDeviceNotification(Registration);
             handle.Dispose();
             owner._folders.Remove(this);
+        }
+    }
+
+    private sealed class DisplayWatch(DeviceNotifications owner, HDEVNOTIFY registration, Action changed) : IDisposable
+    {
+        private bool _disposed;
+
+        public Action Changed { get; } = changed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            PInvoke.UnregisterDeviceNotification(registration);
+            owner._displayWatches.Remove(this);
         }
     }
 }
