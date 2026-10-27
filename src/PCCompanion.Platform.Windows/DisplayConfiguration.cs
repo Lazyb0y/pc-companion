@@ -123,8 +123,9 @@ public sealed record DisplaySetup(IReadOnlyList<ConnectedDisplay> Displays, IRea
 public readonly record struct DisplayMode(int Width, int Height, int RefreshRate);
 
 /// <summary>
-/// The displays and the display setup, as Windows Settings reads them (<c>QueryDisplayConfig</c>).
-/// Reading needs no admin rights and takes about 0.1 ms.
+/// The displays and the display setup, as Windows Settings reads and changes them
+/// (<c>QueryDisplayConfig</c> and <c>SetDisplayConfig</c>). Neither needs admin rights. Reading
+/// takes about 0.1 ms.
 /// </summary>
 public static class DisplayConfiguration
 {
@@ -197,6 +198,167 @@ public static class DisplayConfiguration
         }
 
         return [.. modes];
+    }
+
+    /// <summary>
+    /// Asks Windows whether it would apply a setup, without applying it (<c>SDC_VALIDATE</c>). It
+    /// refuses a resolution or refresh rate that a display doesn't offer.
+    /// </summary>
+    /// <param name="paths">
+    /// A path for each display to turn on, as <see cref="Apply"/> takes them.
+    /// </param>
+    /// <exception cref="ArgumentException">There's no path, a path's source can't be shown on its display, or paths that share a source have different areas.</exception>
+    /// <exception cref="Win32Exception">Windows refused the setup, or to read the displays.</exception>
+    public static void Check(IReadOnlyList<DisplayPath> paths) =>
+        Set(paths, SET_DISPLAY_CONFIG_FLAGS.SDC_VALIDATE | SET_DISPLAY_CONFIG_FLAGS.SDC_USE_SUPPLIED_DISPLAY_CONFIG);
+
+    /// <summary>
+    /// Applies a setup without saving it in Windows' memory of setups, so a restart or a
+    /// reconnection brings back the setup Windows saved. Windows applies the setup as it is, or
+    /// refuses it, and leaves the signal timing to the driver. It waits while the displays change
+    /// mode, and Windows sends <c>WM_DISPLAYCHANGE</c> meanwhile.
+    /// </summary>
+    /// <param name="paths">
+    /// A path for each display to turn on: its source, its display, its area on the desktop, its
+    /// refresh rate and orientation. Connected displays without a path are turned off. Paths that
+    /// share a source show the same picture, and need the same area. HDR is left as it is; see
+    /// <see cref="SetHdr"/>. A display that's on keeps its scan line ordering, interlaced or
+    /// progressive, and its scaling for resolutions that don't fill it; one that's turned on gets
+    /// progressive and Windows' own scaling.
+    /// </param>
+    /// <exception cref="ArgumentException">There's no path, a path's source can't be shown on its display, or paths that share a source have different areas.</exception>
+    /// <exception cref="Win32Exception">Windows refused the setup, or to read the displays; nothing changed.</exception>
+    public static void Apply(IReadOnlyList<DisplayPath> paths) =>
+        Set(paths, SET_DISPLAY_CONFIG_FLAGS.SDC_APPLY | SET_DISPLAY_CONFIG_FLAGS.SDC_USE_SUPPLIED_DISPLAY_CONFIG);
+
+    /// <summary>
+    /// Saves the setup in use in Windows' memory of setups, as Windows Settings does when a change
+    /// is kept, so Windows brings it back the next time these displays are connected. The displays
+    /// don't change mode again, and no <c>WM_DISPLAYCHANGE</c> comes.
+    /// </summary>
+    /// <exception cref="Win32Exception">Windows refused.</exception>
+    public static unsafe void SaveCurrent()
+    {
+        var (paths, modes) = Query(QUERY_DISPLAY_CONFIG_FLAGS.QDC_ONLY_ACTIVE_PATHS);
+        ThrowIfFailed(PInvoke.SetDisplayConfig(
+            paths,
+            modes,
+            SET_DISPLAY_CONFIG_FLAGS.SDC_APPLY | SET_DISPLAY_CONFIG_FLAGS.SDC_USE_SUPPLIED_DISPLAY_CONFIG | SET_DISPLAY_CONFIG_FLAGS.SDC_SAVE_TO_DATABASE));
+    }
+
+    /// <summary>
+    /// Brings back the setup Windows saved last for the displays connected now
+    /// (<c>SDC_USE_DATABASE_CURRENT</c>): Windows' own way back from a setup that wasn't saved.
+    /// </summary>
+    /// <exception cref="Win32Exception">Windows refused.</exception>
+    public static void ApplySaved() =>
+        ThrowIfFailed(PInvoke.SetDisplayConfig([], [], SET_DISPLAY_CONFIG_FLAGS.SDC_APPLY | SET_DISPLAY_CONFIG_FLAGS.SDC_USE_DATABASE_CURRENT));
+
+    /// <summary>
+    /// Turns HDR on or off on a display that's on and supports it, as Windows Settings' Use HDR does.
+    /// From Windows 11 version 24H2, this leaves color management for displays without HDR as it is.
+    /// </summary>
+    /// <exception cref="Win32Exception">Windows refused.</exception>
+    public static unsafe void SetHdr(DisplayTarget target, bool on)
+    {
+        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 26100))
+        {
+            var state = new DISPLAYCONFIG_SET_HDR_STATE();
+            state.header.type = DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_SET_HDR_STATE;
+            state.header.size = (uint)sizeof(DISPLAYCONFIG_SET_HDR_STATE);
+            state.header.adapterId = Luid(target.Adapter);
+            state.header.id = target.Id;
+            state.enableHdr = on;
+            ThrowIfFailed(PInvoke.DisplayConfigSetDeviceInfo(&state.header));
+            return;
+        }
+
+        var older = new DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE();
+        older.header.type = DISPLAYCONFIG_DEVICE_INFO_TYPE.DISPLAYCONFIG_DEVICE_INFO_SET_ADVANCED_COLOR_STATE;
+        older.header.size = (uint)sizeof(DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE);
+        older.header.adapterId = Luid(target.Adapter);
+        older.header.id = target.Id;
+        older.enableAdvancedColor = on;
+        ThrowIfFailed(PInvoke.DisplayConfigSetDeviceInfo(&older.header));
+    }
+
+    // Builds the setup on the paths Windows offers now, which hold what a path needs besides its
+    // source, display and mode, and never lets Windows change it (SDC_ALLOW_CHANGES): with that,
+    // Windows accepts any mode and quietly applies another.
+    private static void Set(IReadOnlyList<DisplayPath> paths, SET_DISPLAY_CONFIG_FLAGS flags)
+    {
+        ArgumentNullException.ThrowIfNull(paths);
+        if (paths.Count == 0)
+        {
+            throw new ArgumentException("At least one display must be on.", nameof(paths));
+        }
+
+        var (all, _) = Query(QUERY_DISPLAY_CONFIG_FLAGS.QDC_ALL_PATHS);
+        var inUse = all
+            .Where(path => (path.flags & PInvoke.DISPLAYCONFIG_PATH_ACTIVE) != 0)
+            .ToDictionary(TargetOf, path => (path.targetInfo.scanLineOrdering, path.targetInfo.scaling));
+
+        var setup = new DISPLAYCONFIG_PATH_INFO[paths.Count];
+        var modes = new List<DISPLAYCONFIG_MODE_INFO>();
+        var sources = new Dictionary<DisplaySource, (uint Index, Rectangle Area)>();
+        for (var i = 0; i < paths.Count; i++)
+        {
+            var path = paths[i];
+            var offered = Array.FindIndex(all, candidate => SourceOf(candidate) == path.Source && TargetOf(candidate) == path.Target);
+            if (offered < 0)
+            {
+                throw new ArgumentException($"Source {path.Source.Id} can't be shown on display {path.Target.Id}.", nameof(paths));
+            }
+
+            if (sources.TryGetValue(path.Source, out var source))
+            {
+                if (source.Area != path.Area)
+                {
+                    throw new ArgumentException($"Displays that share source {path.Source.Id} have different areas.", nameof(paths));
+                }
+            }
+            else
+            {
+                source = ((uint)modes.Count, path.Area);
+                sources.Add(path.Source, source);
+                modes.Add(SourceMode(path));
+            }
+
+            var built = all[offered];
+            built.flags = PInvoke.DISPLAYCONFIG_PATH_ACTIVE;
+            built.sourceInfo.Anonymous.modeInfoIdx = source.Index;
+
+            // No target mode: the driver chooses the signal timing for the refresh rate.
+            built.targetInfo.Anonymous.modeInfoIdx = PInvoke.DISPLAYCONFIG_PATH_MODE_IDX_INVALID;
+            built.targetInfo.rotation = Rotation(path.Orientation);
+            built.targetInfo.refreshRate = new DISPLAYCONFIG_RATIONAL { Numerator = path.RefreshRate.Numerator, Denominator = path.RefreshRate.Denominator };
+
+            // Windows refuses a refresh rate without its scan line ordering.
+            (built.targetInfo.scanLineOrdering, built.targetInfo.scaling) = inUse.TryGetValue(path.Target, out var kept)
+                ? kept
+                : (DISPLAYCONFIG_SCANLINE_ORDERING.DISPLAYCONFIG_SCANLINE_ORDERING_PROGRESSIVE, DISPLAYCONFIG_SCALING.DISPLAYCONFIG_SCALING_PREFERRED);
+            setup[i] = built;
+        }
+
+        ThrowIfFailed(PInvoke.SetDisplayConfig(setup, [.. modes], flags));
+    }
+
+    private static DISPLAYCONFIG_MODE_INFO SourceMode(DisplayPath path)
+    {
+        var mode = new DISPLAYCONFIG_MODE_INFO
+        {
+            infoType = DISPLAYCONFIG_MODE_INFO_TYPE.DISPLAYCONFIG_MODE_INFO_TYPE_SOURCE,
+            id = path.Source.Id,
+            adapterId = Luid(path.Source.Adapter),
+        };
+        mode.Anonymous.sourceMode = new DISPLAYCONFIG_SOURCE_MODE
+        {
+            width = (uint)path.Area.Width,
+            height = (uint)path.Area.Height,
+            pixelFormat = DISPLAYCONFIG_PIXELFORMAT.DISPLAYCONFIG_PIXELFORMAT_32BPP,
+            position = new POINTL { x = path.Area.X, y = path.Area.Y },
+        };
+        return mode;
     }
 
     private static unsafe (DISPLAYCONFIG_PATH_INFO[] Paths, DISPLAYCONFIG_MODE_INFO[] Modes) Query(QUERY_DISPLAY_CONFIG_FLAGS flags)
@@ -344,6 +506,14 @@ public static class DisplayConfiguration
         DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_ROTATE180 => DisplayOrientation.LandscapeFlipped,
         DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_ROTATE270 => DisplayOrientation.PortraitFlipped,
         _ => DisplayOrientation.Landscape,
+    };
+
+    private static DISPLAYCONFIG_ROTATION Rotation(DisplayOrientation orientation) => orientation switch
+    {
+        DisplayOrientation.Portrait => DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_ROTATE90,
+        DisplayOrientation.LandscapeFlipped => DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_ROTATE180,
+        DisplayOrientation.PortraitFlipped => DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_ROTATE270,
+        _ => DISPLAYCONFIG_ROTATION.DISPLAYCONFIG_ROTATION_IDENTITY,
     };
 
     private static void ThrowIfFailed(int result)

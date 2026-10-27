@@ -1,5 +1,6 @@
 using System;
 using System.Buffers.Binary;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -78,6 +79,68 @@ public sealed class DisplayConfigurationTests
 
             Assert.True(serialNumber is null || serialNumber.Value.Text.All(c => c is >= ' ' and <= '~'));
         }
+    }
+
+    [Fact]
+    public void WindowsWouldApplyTheSetupInUse()
+    {
+        var paths = DisplayConfiguration.Read().Paths;
+
+        if (DisplayConfiguration.IsRemoteSession)
+        {
+            // Windows refuses every change in a remote session, even to the setup in use.
+            Assert.Equal(87, Assert.Throws<Win32Exception>(() => DisplayConfiguration.Check(paths)).NativeErrorCode);
+        }
+        else
+        {
+            DisplayConfiguration.Check(paths);
+        }
+    }
+
+    [Fact]
+    public void WindowsRefusesAResolutionTheDisplayDoesntOffer()
+    {
+        var paths = DisplayConfiguration.Read().Paths;
+        var main = paths.First(path => path.Area.Location == Point.Empty);
+        Assert.DoesNotContain(DisplayConfiguration.ListModes(main.Source), mode => mode.Width == 1234 && mode.Height == 567);
+
+        Assert.Throws<Win32Exception>(() => DisplayConfiguration.Check(
+            [.. paths.Select(path => path.Source == main.Source ? path with { Area = new Rectangle(0, 0, 1234, 567) } : path)]));
+    }
+
+    [Fact]
+    public void WindowsRefusesARefreshRateTheDisplayDoesntOffer()
+    {
+        var paths = DisplayConfiguration.Read().Paths;
+        var main = paths.First(path => path.Area.Location == Point.Empty);
+        Assert.DoesNotContain(DisplayConfiguration.ListModes(main.Source), mode => mode.RefreshRate == 7);
+
+        Assert.Throws<Win32Exception>(() => DisplayConfiguration.Check(
+            [.. paths.Select(path => path.Source == main.Source ? path with { RefreshRate = new DisplayRefreshRate(7, 1) } : path)]));
+    }
+
+    [Fact]
+    public void ASetupWithNoDisplayOnIsRefusedBeforeWindowsIsAsked()
+    {
+        Assert.Throws<ArgumentException>(() => DisplayConfiguration.Check([]));
+    }
+
+    [Fact]
+    public void ASourceTheDisplayCantShowIsRefusedBeforeWindowsIsAsked()
+    {
+        var paths = DisplayConfiguration.Read().Paths;
+
+        Assert.Throws<ArgumentException>(() => DisplayConfiguration.Check(
+            [.. paths.Select((path, i) => i == 0 ? path with { Source = path.Source with { Id = 999 } } : path)]));
+    }
+
+    [Fact]
+    public void DisplaysThatShareASourceNeedTheSameArea()
+    {
+        var path = DisplayConfiguration.Read().Paths[0];
+
+        Assert.Throws<ArgumentException>(() => DisplayConfiguration.Check(
+            [path, path with { Area = path.Area with { Width = path.Area.Width / 2 } }]));
     }
 
     [Theory]
