@@ -61,7 +61,7 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
         RunningAgain,
     }
 
-    public static FeatureInfo Definition { get; } = new("displayProfiles", DisplayModule.Id, "DisplayProfilesName", "DisplayProfilesDescription", "");
+    public static FeatureInfo Definition { get; } = new("displayProfiles", DisplayModule.Id, "DisplayProfilesName", "DisplayProfilesDescription", "");
 
     /// <summary>
     /// Whether this PC can run Display Profiles, for the settings app, which doesn't create the feature.

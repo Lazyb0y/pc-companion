@@ -47,6 +47,7 @@
     <ProjectReference Include="..\PCCompanion.Logging\PCCompanion.Logging.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Clipboard\PCCompanion.Modules.Clipboard.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Desktop\PCCompanion.Modules.Desktop.csproj" />
+    <ProjectReference Include="..\PCCompanion.Modules.Display\PCCompanion.Modules.Display.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Files\PCCompanion.Modules.Files.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Input\PCCompanion.Modules.Input.csproj" />
     <ProjectReference Include="..\PCCompanion.Modules.Network\PCCompanion.Modules.Network.csproj" />

@@ -2164,4 +2164,276 @@
     <value>Rétablir</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesOriginalSetup" xml:space="preserve">
+    <value>Configuration d'origine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesHeader" xml:space="preserve">
+    <value>Profils</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProfilesDescription" xml:space="preserve">
+    <value>Organisez vos écrans dans les paramètres d'affichage de Windows, puis ajoutez la configuration comme profil. Choisissez un profil dans le menu de l'icône PC Companion, ou sélectionnez Utiliser, pour y basculer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesAddCurrent" xml:space="preserve">
+    <value>Ajouter à partir de la configuration actuelle</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNoProfiles" xml:space="preserve">
+    <value>Aucun profil pour l'instant. Organisez vos écrans dans les paramètres d'affichage de Windows, puis sélectionnez Ajouter à partir de la configuration actuelle.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInUse" xml:space="preserve">
+    <value>Utilisé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUse" xml:space="preserve">
+    <value>Utiliser</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseName" xml:space="preserve">
+    <value>Utiliser {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoreName" xml:space="preserve">
+    <value>Plus d'options pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRename" xml:space="preserve">
+    <value>Renommer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdate" xml:space="preserve">
+    <value>Mettre à jour à partir de la configuration actuelle</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoveUp" xml:space="preserve">
+    <value>Monter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMoveDown" xml:space="preserve">
+    <value>Descendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDelete" xml:space="preserve">
+    <value>Supprimer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSave" xml:space="preserve">
+    <value>Enregistrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDeleteTitle" xml:space="preserve">
+    <value>Supprimer {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateTitle" xml:space="preserve">
+    <value>Mettre à jour {0} à partir de la configuration actuelle ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateContent" xml:space="preserve">
+    <value>Les écrans, la disposition et les modes du profil sont remplacés par ceux utilisés maintenant.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUpdateButton" xml:space="preserve">
+    <value>Mettre à jour</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesAddTitle" xml:space="preserve">
+    <value>Ajouter un profil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRenameTitle" xml:space="preserve">
+    <value>Renommer le profil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameHeader" xml:space="preserve">
+    <value>Nom</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNamePlaceholder" xml:space="preserve">
+    <value>Bureau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSetupHeader" xml:space="preserve">
+    <value>Configuration d'affichage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameMissing" xml:space="preserve">
+    <value>Entrez un nom.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameTooLong" xml:space="preserve">
+    <value>Utilisez {0} caractères au maximum.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameInvalid" xml:space="preserve">
+    <value>Utilisez un nom sur une seule ligne.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNameInUse" xml:space="preserve">
+    <value>Un autre profil porte ce nom.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSummaryProblem" xml:space="preserve">
+    <value>Absent du menu : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemTooManyDisplays" xml:space="preserve">
+    <value>il compte plus de {0} écrans.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemInvalidDisplay" xml:space="preserve">
+    <value>les détails d'un écran ne sont pas valides.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSameDisplayTwice" xml:space="preserve">
+    <value>il contient deux fois le même écran.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoDisplayOn" xml:space="preserve">
+    <value>aucun écran n'est allumé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOutOfRange" xml:space="preserve">
+    <value>une résolution, une position ou une fréquence d'actualisation est hors limites.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemNoMainDisplay" xml:space="preserve">
+    <value>aucun écran n'est l'écran principal.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemSeveralMainDisplays" xml:space="preserve">
+    <value>plusieurs écrans sont l'écran principal.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemMainNotAtOrigin" xml:space="preserve">
+    <value>l'écran principal n'est pas dans l'angle supérieur gauche du bureau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemOverlap" xml:space="preserve">
+    <value>des écrans se chevauchent.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesProblemGap" xml:space="preserve">
+    <value>les écrans laissent un espace entre eux.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesTooMany" xml:space="preserve">
+    <value>Absent du menu : seuls les 20 premiers profils sont utilisés.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesLine" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesResolution" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRefreshRate" xml:space="preserve">
+    <value>{0} Hz</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesOff" xml:space="preserve">
+    <value>éteint</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPortrait" xml:space="preserve">
+    <value>Portrait</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesLandscapeFlipped" xml:space="preserve">
+    <value>Paysage (retourné)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPortraitFlipped" xml:space="preserve">
+    <value>Portrait (retourné)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesHdr" xml:space="preserve">
+    <value>HDR</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMainDisplay" xml:space="preserve">
+    <value>écran principal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesBuiltInDisplay" xml:space="preserve">
+    <value>Écran intégré</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUnnamedDisplay" xml:space="preserve">
+    <value>Écran {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesSameName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesNotConnected" xml:space="preserve">
+    <value>Ne peut pas être utilisé maintenant : {0} n'est pas connecté.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInConnectionOrder" xml:space="preserve">
+    <value>Des écrans identiques ne peuvent pas être distingués : ils sont pris dans l'ordre de leurs connexions. S'ils sont inversés, sélectionnez Mettre à jour à partir de la configuration actuelle.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseRefused" xml:space="preserve">
+    <value>Windows a refusé {0} (erreur {1}) : rien n'a changé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseModesNotOffered" xml:space="preserve">
+    <value>Windows a refusé {0} : rien n'a changé. {1} ne propose pas la résolution et la fréquence d'actualisation du profil. Mettez à jour le profil avec un mode que l'écran propose.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotConnected" xml:space="preserve">
+    <value>{0} ne peut pas être utilisé maintenant : un écran allumé dans ce profil n'est pas connecté.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotAsInProfile" xml:space="preserve">
+    <value>Windows a appliqué {0} à sa façon sur {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseCantRead" xml:space="preserve">
+    <value>Windows a refusé de lire les écrans (erreur {0}) : rien n'a changé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNotRead" xml:space="preserve">
+    <value>PC Companion n'a pas encore lu les dernières modifications de ce profil : rien n'a changé. Réessayez dans un instant.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesUseNoAnswer" xml:space="preserve">
+    <value>PC Companion n'a pas répondu : rien n'a changé. Vérifiez que Profils d'affichage est activé, puis réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesRemoteInfo" xml:space="preserve">
+    <value>Les profils d'affichage ne sont pas disponibles dans une session à distance : Windows signale l'écran de la session, et non celui du PC, et refuse les modifications.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesInfo" xml:space="preserve">
+    <value>Les profils ne modifient pas l'échelle, la couleur, la luminosité ou l'éclairage nocturne de chaque écran, ni l'arrière-plan : Windows les conserve pour chaque écran. Après un changement qui pourrait laisser un écran noir, il vous est demandé de le conserver, et la configuration précédente revient après 15 secondes sans réponse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsHeader" xml:space="preserve">
+    <value>Paramètres d'affichage de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesWindowsSettingsDescription" xml:space="preserve">
+    <value>Organisez vos écrans et définissez leur résolution, leur fréquence d'actualisation, leur orientation et le HDR.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesOpenWindowsSettings" xml:space="preserve">
+    <value>Ouvrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesPermissions" xml:space="preserve">
+    <value>Modifie la configuration d'affichage uniquement lorsque vous choisissez un profil, et demande avant de conserver un changement qui pourrait laisser un écran noir. Lit les noms, modèles, connexions et numéros de série des écrans connectés ; les numéros de série ne sont conservés que sous forme de hachage. N'établit aucune connexion réseau et n'enregistre pas les noms de profils, les noms d'écrans ni les numéros de série.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

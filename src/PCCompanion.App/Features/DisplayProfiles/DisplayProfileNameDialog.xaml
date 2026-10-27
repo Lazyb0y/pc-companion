@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.DisplayProfiles.DisplayProfileNameDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
+    CloseButtonText="{app:Localized Key=DisplayProfilesCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=DisplayProfilesSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <StackPanel MinWidth="420" Spacing="16">
+        <StackPanel Spacing="4">
+            <TextBox
+                x:Name="NameBox"
+                AutomationProperties.HelpText="{x:Bind Editor.NameProblem, Mode=OneWay}"
+                Header="{app:Localized Key=DisplayProfilesNameHeader}"
+                PlaceholderText="{app:Localized Key=DisplayProfilesNamePlaceholder}"
+                Text="{x:Bind Editor.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.NameProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasNameProblem, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=DisplayProfilesSetupHeader}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IsTextSelectionEnabled="True"
+                Text="{x:Bind Editor.Setup}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>

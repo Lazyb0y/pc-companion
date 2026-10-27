@@ -10,9 +10,14 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Display.DisplayProfiles;
 
 /// <summary>Display Profiles' access to Windows, for the feature and its page in the settings app.</summary>
-public sealed class WindowsDisplayProfilesSystem : IDisplayProfilesSystem
+/// <param name="windowClassName">
+/// The class name of the hidden window that <see cref="CreateWindow"/> creates: the host's is
+/// <see cref="HostWindowClassName"/>, which the settings app finds the host by.
+/// </param>
+public sealed class WindowsDisplayProfilesSystem(string windowClassName = WindowsDisplayProfilesSystem.HostWindowClassName) : IDisplayProfilesSystem
 {
-    private const string WindowClassName = "PCCompanion.DisplayProfiles";
+    /// <summary>The class name of the host's hidden window for Display Profiles.</summary>
+    public const string HostWindowClassName = "PCCompanion.DisplayProfiles";
 
     // One task at a time, in the order they're queued, on the thread pool.
     private readonly TaskScheduler _background = new ConcurrentExclusiveSchedulerPair().ExclusiveScheduler;
@@ -47,7 +52,7 @@ public sealed class WindowsDisplayProfilesSystem : IDisplayProfilesSystem
 
     public IReadOnlyList<DisplayMode> ListModes(DisplaySource source) => DisplayConfiguration.ListModes(source);
 
-    public IDisplayWindow CreateWindow(Action changed, Action cantAnswer) => new DisplayWindow(changed, cantAnswer);
+    public IDisplayWindow CreateWindow(Action changed, Action cantAnswer) => new DisplayWindow(windowClassName, changed, cantAnswer);
 
     public void RunInBackground(Action action) =>
         _ = Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.DenyChildAttach, _background);
@@ -114,9 +119,9 @@ public sealed class WindowsDisplayProfilesSystem : IDisplayProfilesSystem
         private readonly IDisposable? _displays;
         private readonly SessionMonitor? _session;
 
-        public DisplayWindow(Action changed, Action cantAnswer)
+        public DisplayWindow(string className, Action changed, Action cantAnswer)
         {
-            _window = new MessageWindow(WindowClassName);
+            _window = new MessageWindow(className);
             try
             {
                 _window.MessageReceived += (_, e) =>
