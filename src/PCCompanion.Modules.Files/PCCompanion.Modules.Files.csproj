@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PCCompanion.Core\PCCompanion.Core.csproj" />
     <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>

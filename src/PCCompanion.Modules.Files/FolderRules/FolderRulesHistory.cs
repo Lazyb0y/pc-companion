@@ -197,6 +197,9 @@ public sealed class FolderRulesHistory
     /// <summary>When the rules last looked at a folder, or <see langword="null"/> when never.</summary>
     public DateTimeOffset? LastLookedAt(string folder) => _lastLooked.TryGetValue(folder, out var time) ? time : null;
 
+    /// <summary>Forgets when the rules last looked at a folder, which is no longer watched.</summary>
+    public void ForgetFolder(string folder) => _lastLooked.Remove(folder);
+
     public void SetLastLooked(string folder, DateTimeOffset time)
     {
         ArgumentNullException.ThrowIfNull(folder);
