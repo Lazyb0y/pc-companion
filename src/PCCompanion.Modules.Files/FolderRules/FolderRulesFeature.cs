@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -20,6 +22,7 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
     private readonly SpecialFolders _places = SpecialFolders.ForCurrentUser(dataFolder.Path);
     private FolderRulesThread? _thread;
     private FolderRulesThread? _stopped;
+    private Drives? _drives;
     private bool _failed;
     private bool _paused;
 
@@ -89,7 +92,9 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
 
         if (_thread is null)
         {
-            _thread = new FolderRulesThread(read, system, _store, _places, time, logger, _stopped);
+            _drives = new Drives(system.WatchDevices());
+            _thread = new FolderRulesThread(read, system, _store, _places, time, _drives, logger, _stopped);
+            _drives.Follow(_thread);
             _stopped = null;
         }
         else
@@ -128,6 +133,71 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
         _thread.CancelWork();
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
+        _drives?.Dispose();
+        _drives = null;
+    }
+
+    // The host's UI thread's part: Windows' messages about drives and power, and the folders on
+    // removable drives, whose watches it ends at once when Windows asks to eject the drive, while
+    // the feature's thread may be busy with a file.
+    private sealed class Drives(IDeviceWatch devices) : IDriveTracker, IDisposable
+    {
+        private readonly Dictionary<string, IDisposable> _folders = new(StringComparer.OrdinalIgnoreCase);
+        private FolderRulesThread? _thread;
+
+        /// <summary>Tells <paramref name="thread"/> about drives that arrive, ejected drives and waking from sleep.</summary>
+        public void Follow(FolderRulesThread thread)
+        {
+            _thread = thread;
+            devices.DriveArrived += (_, _) => thread.LookAgain(everyFolder: false);
+            devices.Resumed += (_, _) => thread.LookAgain(everyFolder: true);
+        }
+
+        // On the feature's thread.
+        public void Watching(string folder, IDisposable watch) => devices.BeginInvoke(() => Register(folder, watch));
+
+        // On the feature's thread.
+        public void Stopped(string folder) => devices.BeginInvoke(() => Unregister(folder));
+
+        public void Dispose()
+        {
+            foreach (var registration in _folders.Values)
+            {
+                registration.Dispose();
+            }
+
+            _folders.Clear();
+            devices.Dispose();
+        }
+
+        private void Register(string folder, IDisposable watch)
+        {
+            Unregister(folder);
+            try
+            {
+                _folders[folder] = devices.WatchFolder(folder, () => Ejecting(folder, watch));
+            }
+            catch (Win32Exception)
+            {
+                // The drive went meanwhile, which ends the folder's watch too.
+            }
+        }
+
+        private void Unregister(string folder)
+        {
+            if (_folders.Remove(folder, out var registration))
+            {
+                registration.Dispose();
+            }
+        }
+
+        private void Ejecting(string folder, IDisposable watch)
+        {
+            watch.Dispose();
+            _folders.Remove(folder);
+            _thread?.CancelWorkOn(Path.GetPathRoot(folder)!);
+            _thread?.DriveLeaving(folder);
+        }
     }
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The Folder Rules settings can't be read, so Folder Rules is off.")]

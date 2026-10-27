@@ -298,3 +298,7 @@ GetCurrentThreadId
 GetClassName
 HCBT_CREATEWND
 WM_DEVICECHANGE
+RegisterDeviceNotification
+UnregisterDeviceNotification
+DEV_BROADCAST_HANDLE
+DEV_BROADCAST_HDR
