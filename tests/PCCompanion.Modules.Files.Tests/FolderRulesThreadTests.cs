@@ -2,6 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Platform.Windows;
@@ -29,6 +31,9 @@ public sealed class FolderRulesThreadTests : IDisposable
     private readonly RecordingLogger<FolderRulesThread> _logger = new();
     private readonly TemporaryFolder _data = new();
     private readonly RecordingDrives _drives = new();
+
+    // A pipe of its own name, which no other program uses.
+    private readonly string _pipeName = "PCCompanion.Tests." + Guid.NewGuid().ToString("N");
     private readonly HistoryStore _store;
     private FolderRulesThread? _thread;
 
@@ -56,7 +61,7 @@ public sealed class FolderRulesThreadTests : IDisposable
 
     private void Start(FolderRulesSettings settings)
     {
-        _thread = new FolderRulesThread(settings, _system, _store, Places, _time, _drives, _logger);
+        _thread = new FolderRulesThread(settings, _system, _store, Places, _time, _drives, _pipeName, _logger);
         Assert.True(_system.WaitUntil(system => settings.Folders.All(folder => system.IsWatching(folder.Path))));
     }
 
@@ -337,7 +342,7 @@ public sealed class FolderRulesThreadTests : IDisposable
     [Fact]
     public void AFolderThatCantBeWatchedIsReported()
     {
-        _thread = new FolderRulesThread(MovePdfs(@"D:\Missing"), _system, _store, Places, _time, _drives, _logger);
+        _thread = new FolderRulesThread(MovePdfs(@"D:\Missing"), _system, _store, Places, _time, _drives, _pipeName, _logger);
 
         Assert.True(_system.WaitUntil(_ => Logged("Folder Rules can't watch folder 1 (error -2147024809).")));
     }
@@ -410,7 +415,7 @@ public sealed class FolderRulesThreadTests : IDisposable
     [Fact]
     public void AFolderThatComesBackIsWatchedAgainWithAnInformation()
     {
-        _thread = new FolderRulesThread(MovePdfs(@"D:\Later"), _system, _store, Places, _time, _drives, _logger);
+        _thread = new FolderRulesThread(MovePdfs(@"D:\Later"), _system, _store, Places, _time, _drives, _pipeName, _logger);
         Assert.True(_system.WaitUntil(_ => Logged("Folder Rules can't watch folder 1 (error -2147024809).")));
 
         _system.AddFolder(@"D:\Later");
@@ -453,6 +458,63 @@ public sealed class FolderRulesThreadTests : IDisposable
 
         Assert.True(_system.WaitUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
     }
+
+    [Fact]
+    public async Task TheSettingsAppGetsTheHistoryThroughThePipe()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+
+        var answer = await AskAsync(FolderRulesRequestKind.History);
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, answer?.Status);
+        var entry = Assert.Single(answer!.Entries);
+        Assert.Equal(HistoryOutcome.Moved, entry.Outcome);
+        Assert.Equal(@"D:\Sorted\report.pdf", entry.NewPath);
+    }
+
+    [Fact]
+    public async Task ClearHistoryEmptiesTheSavedHistory()
+    {
+        Start(MovePdfs());
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+
+        Assert.Equal(FolderRulesAnswerStatus.Done, (await AskAsync(FolderRulesRequestKind.ClearHistory))?.Status);
+
+        Assert.Empty((await AskAsync(FolderRulesRequestKind.History))!.Entries);
+        Assert.Empty(_store.Load(out _).Entries);
+        Assert.True(Logged("Folder Rules' history was cleared."));
+    }
+
+    [Fact]
+    public async Task ARequestThatIsntOneIsRefused()
+    {
+        Start(MovePdfs());
+
+        var answer = await RequestPipe.AskAsync(_pipeName, "{\"kind\":\"Format\"}"u8.ToArray(), TimeSpan.FromSeconds(5), FolderRulesPipe.MaximumAnswerLength, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(answer);
+        using var json = JsonDocument.Parse(answer);
+        Assert.Equal("Refused", json.RootElement.GetProperty("status").GetString());
+    }
+
+    [Fact]
+    public async Task OnceTheThreadEndsThePipeIsGone()
+    {
+        Start(MovePdfs());
+        Assert.NotNull(await AskAsync(FolderRulesRequestKind.History));
+
+        _thread!.Stop();
+        Assert.True(_thread.Join(TimeSpan.FromSeconds(10)));
+        _thread = null;
+
+        Assert.Null(await FolderRulesPipe.AskAsync(_pipeName, new FolderRulesRequest(), TimeSpan.FromMilliseconds(300), TestContext.Current.CancellationToken));
+    }
+
+    private Task<FolderRulesAnswer?> AskAsync(FolderRulesRequestKind kind) =>
+        FolderRulesPipe.AskAsync(_pipeName, new FolderRulesRequest { Kind = kind }, TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
 
     // What the host's UI thread is told about the folders on removable drives.
     private sealed class RecordingDrives : IDriveTracker

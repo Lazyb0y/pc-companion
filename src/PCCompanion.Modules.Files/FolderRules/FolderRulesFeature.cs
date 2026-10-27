@@ -13,7 +13,7 @@ namespace PCCompanion.Modules.Files.FolderRules;
 /// Moves, copies, renames and sorts files as they arrive in the folders the user chose. See
 /// docs/features/files/folder-rules.md.
 /// </summary>
-public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFolder dataFolder, TimeProvider time, ILogger<FolderRulesFeature> logger) : IFeature
+public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFolder dataFolder, string pipeName, TimeProvider time, ILogger<FolderRulesFeature> logger) : IFeature
 {
     // How long the host waits as it exits for the thread to finish the file it's handling.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
@@ -27,7 +27,7 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
     private bool _paused;
 
     public FolderRulesFeature(DataFolder dataFolder, TimeProvider time, ILogger<FolderRulesFeature> logger)
-        : this(new WindowsFolderRulesSystem(), dataFolder, time, logger)
+        : this(new WindowsFolderRulesSystem(), dataFolder, FolderRulesPipe.Name, time, logger)
     {
     }
 
@@ -93,7 +93,7 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
         if (_thread is null)
         {
             _drives = new Drives(system.WatchDevices());
-            _thread = new FolderRulesThread(read, system, _store, _places, time, _drives, logger, _stopped);
+            _thread = new FolderRulesThread(read, system, _store, _places, time, _drives, pipeName, logger, _stopped);
             _drives.Follow(_thread);
             _stopped = null;
         }
