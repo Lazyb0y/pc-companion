@@ -2180,4 +2180,68 @@
     <value>لا يمكن التراجع عن هذا الإدخال الآن.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>ملفات تعريف العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>احفظ إعدادات العرض، مثل إعدادات مكتبك والتلفاز، وبدّل بينها من قائمة أيقونة PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>ملف تعريف العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>إعداد عرض آخر قيد الاستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>ملفات تعريف العرض غير متوفرة في جلسة بعيدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>إعدادات ملفات تعريف العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>هل تريد الاحتفاظ بإعدادات العرض هذه؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_zero" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال {0} ثانية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_one" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال ثانية واحدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_two" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال ثانيتين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_few" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال {0} ثوانٍ.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_many" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال {0} ثانية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>ستتم العودة إلى إعدادات العرض السابقة خلال {0} ثانية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>الاحتفاظ بالتغييرات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>إرجاع</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

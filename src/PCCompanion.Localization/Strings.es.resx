@@ -2116,4 +2116,52 @@
     <value>Esta entrada no se puede deshacer ahora.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ModuleDisplayName" xml:space="preserve">
+    <value>Pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesName" xml:space="preserve">
+    <value>Perfiles de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesDescription" xml:space="preserve">
+    <value>Guarde configuraciones de pantalla, como las de su escritorio y un televisor, y cambie entre ellas desde el menú del icono de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenu" xml:space="preserve">
+    <value>Perfil de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuOther" xml:space="preserve">
+    <value>Se usa otra configuración de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuRemote" xml:space="preserve">
+    <value>Los perfiles de pantalla no están disponibles en una sesión remota</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesMenuSettings" xml:space="preserve">
+    <value>Configuración de Perfiles de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestion" xml:space="preserve">
+    <value>¿Desea mantener esta configuración de pantalla?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_one" xml:space="preserve">
+    <value>Se volverá a la configuración de pantalla anterior en {0} segundo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionSecondsLeft_other" xml:space="preserve">
+    <value>Se volverá a la configuración de pantalla anterior en {0} segundos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionKeep" xml:space="preserve">
+    <value>Mantener cambios</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DisplayProfilesQuestionRevert" xml:space="preserve">
+    <value>Revertir</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

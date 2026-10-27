@@ -36,7 +36,8 @@ public static class DisplayEdid
     /// </remarks>
     public static async Task<DisplaySerialNumber?> ReadSerialNumberAsync(string devicePath)
     {
-        var monitor = await DisplayMonitor.FromInterfaceIdAsync(devicePath);
+        // Not back on the caller's scheduler, which may be waiting for this, one task at a time.
+        var monitor = await DisplayMonitor.FromInterfaceIdAsync(devicePath).AsTask().ConfigureAwait(false);
         return monitor is null ? null : SerialNumberOf(monitor.GetDescriptor(DisplayMonitorDescriptorKind.Edid));
     }
 
