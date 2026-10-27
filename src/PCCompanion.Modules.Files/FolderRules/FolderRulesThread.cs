@@ -23,34 +23,55 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     // How often the files that wait to finish arriving are checked.
     private static readonly TimeSpan CheckInterval = TimeSpan.FromMilliseconds(250);
 
+    // How often a network folder that can't be watched is tried again, and every how many of those
+    // a network folder that's watched is looked at again, since some servers report no changes.
+    private static readonly TimeSpan NetworkInterval = TimeSpan.FromMinutes(1);
+    private const int NetworkLookEvery = 5;
+
     private readonly IFolderRulesSystem _system;
     private readonly HistoryStore _store;
     private readonly SpecialFolders _places;
     private readonly TimeProvider _time;
+    private readonly IDriveTracker _drives;
     private readonly ILogger _logger;
 
     // Cancelled as the thread stops, which stops a copy that's running. Nothing waits on it, so
     // it holds nothing to dispose.
     private readonly CancellationTokenSource _stopping;
 
+    // The move or copy that's running, which the request to eject its drive stops, and the roots
+    // of the drives it reads and writes. Set on the thread, read on the host's UI thread.
+    private volatile Operation? _operation;
+
+    private volatile MessageWindow? _window;
     private Running? _running;
 
     /// <summary>Starts the thread, which watches the folders in <paramref name="settings"/>.</summary>
+    /// <param name="drives">Told about the folders on removable drives, which the host's UI thread lets go of when Windows asks to eject them.</param>
     /// <param name="previous">A thread that was asked to stop, which this one waits for first, so that they don't share the history.</param>
     public FolderRulesThread(
-        FolderRulesSettings settings, IFolderRulesSystem system, HistoryStore store, SpecialFolders places, TimeProvider time, ILogger logger, FolderRulesThread? previous = null)
+        FolderRulesSettings settings,
+        IFolderRulesSystem system,
+        HistoryStore store,
+        SpecialFolders places,
+        TimeProvider time,
+        IDriveTracker drives,
+        ILogger logger,
+        FolderRulesThread? previous = null)
         : base("Folder Rules", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(system);
         ArgumentNullException.ThrowIfNull(store);
         ArgumentNullException.ThrowIfNull(places);
         ArgumentNullException.ThrowIfNull(time);
+        ArgumentNullException.ThrowIfNull(drives);
         ArgumentNullException.ThrowIfNull(logger);
 
         _system = system;
         _store = store;
         _places = places;
         _time = time;
+        _drives = drives;
         _logger = logger;
         var stopping = new CancellationTokenSource();
         _stopping = stopping;
@@ -63,13 +84,59 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     /// </summary>
     public void CancelWork() => _stopping.Cancel();
 
+    /// <summary>
+    /// Stops a move or copy that's running to or from the drive with the root <paramref name="root"/>,
+    /// from the host's UI thread, as Windows asks to eject the drive. The file stays where it was
+    /// and is tried again when the drive is back.
+    /// </summary>
+    public void CancelWorkOn(string root)
+    {
+        ArgumentNullException.ThrowIfNull(root);
+
+        if (_operation is { } operation && operation.Roots.Contains(root, StringComparer.OrdinalIgnoreCase))
+        {
+            try
+            {
+                operation.Cancel.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // The move or copy ended meanwhile.
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tells the thread, from the host's UI thread, that the drive a folder is on is being ejected,
+    /// so the folder's watch, which that thread already ended, isn't started again until the drive is back.
+    /// </summary>
+    public void DriveLeaving(string folder) => Post(running => running.DriveLeaving(folder));
+
+    /// <summary>
+    /// Tells the thread, from the host's UI thread, to watch again the folders that can't be
+    /// watched, such as when a drive arrives, and with <paramref name="everyFolder"/>, as when the
+    /// PC wakes from sleep, to look at every folder for files that arrived meanwhile.
+    /// </summary>
+    public void LookAgain(bool everyFolder) => Post(running => running.LookAgain(everyFolder));
+
     protected override IDisposable? Open(MessageWindow window)
     {
         _system.EnterBackgroundMode();
         var running = new Running(this, window);
         _running = running;
+        _window = window;
         return running;
     }
+
+    // Runs on the thread, inside its error boundary; nothing runs before it opened or after it stopped.
+    private void Post(Action<Running> action) =>
+        _window?.BeginInvoke(() => Guard(() =>
+        {
+            if (_running is { } running)
+            {
+                action(running);
+            }
+        }));
 
     protected override void Apply(FolderRulesSettings settings) => _running!.Apply(settings);
 
@@ -106,6 +173,12 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules can't watch folder {Folder} (error {ErrorCode}).")]
     private static partial void LogNotWatched(ILogger logger, int folder, int errorCode);
 
+    [LoggerMessage(Level = LogLevel.Information, Message = "Folder Rules watches folder {Folder} again.")]
+    private static partial void LogWatchedAgain(ILogger logger, int folder);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Windows asks to eject the drive of Folder Rules folder {Folder}, so its watch ended until the drive is back.")]
+    private static partial void LogDriveLeaving(ILogger logger, int folder);
+
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules can't list folder {Folder} (error {ErrorCode}).")]
     private static partial void LogNotListed(ILogger logger, int folder, int errorCode);
 
@@ -136,14 +209,24 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
     [LoggerMessage(Level = LogLevel.Warning, Message = "Folder Rules' history can't be saved (error {ErrorCode}).")]
     private static partial void LogHistoryNotSaved(ILogger logger, int errorCode);
 
-    // A watched folder: its number in the settings, from 1, the rules that can be used, and its watch.
+    // A move or copy that's running, which ejecting a drive it reads or writes stops.
+    private sealed record Operation(CancellationTokenSource Cancel, string[] Roots);
+
+    // A watched folder: its number in the settings, from 1, the rules that can be used, its watch,
+    // what kind of drive it's on, and whether it couldn't be watched when last tried.
     private sealed class Folder(int number, IReadOnlyList<RuleMatcher> rules)
     {
         public int Number { get; set; } = number;
 
         public IReadOnlyList<RuleMatcher> Rules { get; set; } = rules;
 
-        public IDisposable? Watch { get; set; }
+        public SharedWatch? Watch { get; set; }
+
+        public DriveKind Kind { get; set; }
+
+        public bool Failing { get; set; }
+
+        public bool IsWatched => Watch is { IsDisposed: false };
     }
 
     // What runs on the thread: the watches, the files that wait to finish arriving, the history.
@@ -155,11 +238,17 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         private readonly ArrivalWatch _arrivals;
         private readonly FolderRuleActions _actions;
         private readonly Dictionary<string, Folder> _folders = new(StringComparer.OrdinalIgnoreCase);
+
         // The files the Recycle Bin's thread has, so that a change to one meanwhile doesn't send it again.
         private readonly HashSet<string> _recycling = new(StringComparer.OrdinalIgnoreCase);
+
+        // The files whose move or copy stopped as Windows ejected a drive, tried again when it's back.
+        private readonly HashSet<string> _retry = new(StringComparer.OrdinalIgnoreCase);
+        private readonly CoalescableTimer _networkTimer;
         private CoalescableTimer? _timer;
         private IRecycleBin? _recycleBin;
         private bool _applied;
+        private int _networkTicks;
 
         public Running(FolderRulesThread owner, MessageWindow window)
         {
@@ -173,6 +262,8 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
             _arrivals = new ArrivalWatch(new Probe(owner._system));
             _actions = new FolderRuleActions(owner._system, owner._places, owner._time.LocalTimeZone);
+            _networkTimer = new CoalescableTimer(window, NetworkInterval, NetworkInterval / 10);
+            _networkTimer.Elapsed += (_, _) => owner.Guard(CheckNetworkFolders);
         }
 
         private DateTimeOffset Now => _owner._time.GetUtcNow();
@@ -185,7 +276,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             // already there are left alone.
             foreach (var (path, folder) in _folders.Where(pair => !wanted.ContainsKey(pair.Key)).ToArray())
             {
-                folder.Watch?.Dispose();
+                StopWatch(path, folder);
                 _arrivals.ForgetFolder(path);
                 _folders.Remove(path);
                 _history.ForgetFolder(path);
@@ -220,9 +311,78 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
         {
             _recycleBin?.Dispose();
             _timer?.Dispose();
-            foreach (var folder in _folders.Values)
+            _networkTimer.Dispose();
+            foreach (var (path, folder) in _folders)
             {
-                folder.Watch?.Dispose();
+                StopWatch(path, folder);
+            }
+        }
+
+        // Windows asks to eject the drive of a folder, whose watch the host's UI thread already ended.
+        public void DriveLeaving(string path)
+        {
+            if (_folders.TryGetValue(path, out var folder))
+            {
+                LogDriveLeaving(_owner._logger, folder.Number);
+                StopWatch(path, folder);
+                _arrivals.ForgetFolder(path);
+            }
+        }
+
+        // Watches again the folders that can't be watched, which looks at each for the files that
+        // arrived meanwhile, and the files whose move or copy stopped as a drive went. With
+        // everyFolder, looks at the folders that are watched too, as after sleep.
+        public void LookAgain(bool everyFolder)
+        {
+            foreach (var (path, folder) in _folders)
+            {
+                if (!folder.IsWatched)
+                {
+                    StartWatch(path, folder);
+                }
+                else if (everyFolder)
+                {
+                    Look(path, folder);
+                }
+            }
+
+            foreach (var file in _retry.ToArray())
+            {
+                _retry.Remove(file);
+                Notice(file);
+            }
+        }
+
+        // A network folder that can't be watched is tried again every minute, and one that's
+        // watched is looked at every few minutes, since some servers report no changes.
+        private void CheckNetworkFolders()
+        {
+            _networkTicks++;
+            foreach (var (path, folder) in _folders.Where(pair => pair.Value.Kind == DriveKind.Network))
+            {
+                if (!folder.IsWatched)
+                {
+                    StartWatch(path, folder);
+                }
+                else if (_networkTicks % NetworkLookEvery == 0)
+                {
+                    Look(path, folder);
+                }
+            }
+        }
+
+        private void StopWatch(string path, Folder folder)
+        {
+            if (folder.Watch is null)
+            {
+                return;
+            }
+
+            folder.Watch.Dispose();
+            folder.Watch = null;
+            if (folder.Kind == DriveKind.Removable)
+            {
+                _owner._drives.Stopped(path);
             }
         }
 
@@ -283,19 +443,41 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             return usable;
         }
 
+        // A folder on a removable drive is told to the host's UI thread, which ends its watch at
+        // once when Windows asks to eject the drive. A folder that can't be watched logs a warning
+        // the first time, not at each try.
         private void StartWatch(string path, Folder folder)
         {
+            folder.Kind = _owner._system.KindOf(path);
+            IDisposable watch;
             try
             {
-                folder.Watch = _owner._system.Watch(
+                watch = _owner._system.Watch(
                     path,
                     file => _window.BeginInvoke(() => _owner.Guard(() => Changed(path, file))),
                     lostChanges => _window.BeginInvoke(() => _owner.Guard(() => WatchFailed(path, lostChanges))));
             }
             catch (Exception exception) when (exception is IOException or ArgumentException or UnauthorizedAccessException or Win32Exception)
             {
-                LogNotWatched(_owner._logger, folder.Number, ErrorCode(exception));
+                if (!folder.Failing)
+                {
+                    LogNotWatched(_owner._logger, folder.Number, ErrorCode(exception));
+                    folder.Failing = true;
+                }
+
                 return;
+            }
+
+            if (folder.Failing)
+            {
+                LogWatchedAgain(_owner._logger, folder.Number);
+                folder.Failing = false;
+            }
+
+            folder.Watch = new SharedWatch(watch);
+            if (folder.Kind == DriveKind.Removable)
+            {
+                _owner._drives.Watching(path, folder.Watch);
             }
 
             Look(path, folder);
@@ -349,8 +531,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             }
 
             LogWatchFailed(_owner._logger, folder.Number, lostChanges);
-            folder.Watch?.Dispose();
-            folder.Watch = null;
+            StopWatch(path, folder);
             StartWatch(path, folder);
         }
 
@@ -411,9 +592,35 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
             {
                 Recycle(path, folder, rule, file, now);
             }
-            else if (_actions.Act(path, rule, file, now, _owner._stopping.Token) is { } entry)
+            else if (Act(path, rule, file, now) is { } entry)
             {
+                // A move or copy that stopped as Windows ejected a drive is tried again when it's back.
+                if (entry.Reason == SkipReason.Interrupted)
+                {
+                    _retry.Add(arrival.Path);
+                }
+
                 Record(folder, rule, entry);
+            }
+        }
+
+        // The move or copy can be stopped from the host's UI thread, as Windows asks to eject a
+        // drive it reads or writes.
+        private HistoryEntry? Act(string path, RuleMatcher rule, FileDetails file, DateTimeOffset now)
+        {
+            using var cancel = CancellationTokenSource.CreateLinkedTokenSource(_owner._stopping.Token);
+            var roots = new[] { Path.GetPathRoot(path), Path.GetPathRoot(FolderPaths.FixedPart(rule.Rule.Destination)) }
+                .Where(root => !string.IsNullOrEmpty(root))
+                .Select(root => root!)
+                .ToArray();
+            _owner._operation = new Operation(cancel, roots);
+            try
+            {
+                return _actions.Act(path, rule, file, now, cancel.Token);
+            }
+            finally
+            {
+                _owner._operation = null;
             }
         }
 

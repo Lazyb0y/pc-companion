@@ -58,6 +58,12 @@ public enum SkipReason
 
     /// <summary>The file changed or went away before the rule acted.</summary>
     Changed,
+
+    /// <summary>
+    /// The move or copy stopped before it was done, as when Windows ejected its drive; the file
+    /// stays and is tried again when the drive is back.
+    /// </summary>
+    Interrupted,
 }
 
 /// <summary>

@@ -26,7 +26,9 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
     private readonly HashSet<string> _busy = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _denied = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<string> _withoutStreams = [];
+    private readonly Dictionary<string, DriveKind> _kinds = new(StringComparer.OrdinalIgnoreCase);
     private long _nextId = 1;
+    private volatile bool _holdTransfers;
 
     public static DateTimeOffset Time { get; } = new(2026, 3, 5, 10, 0, 0, TimeSpan.Zero);
 
@@ -34,6 +36,19 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
     public bool FileIds { get; set; } = true;
 
     public bool IsUacElevated { get; set; }
+
+    /// <summary>
+    /// Whether moves and copies wait, after they're recorded, until this is turned off or they're
+    /// cancelled, as a large copy takes a while.
+    /// </summary>
+    public bool HoldTransfers
+    {
+        get => _holdTransfers;
+        set => _holdTransfers = value;
+    }
+
+    /// <summary>Windows' messages about drives and power, once the feature started them.</summary>
+    public FakeDeviceWatch? Devices { get; private set; }
 
     /// <summary>The Recycle Bin the feature's thread started, once it moves a file there.</summary>
     public FakeRecycleBin? RecycleBin { get; private set; }
@@ -182,6 +197,33 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
         }
     }
 
+    /// <summary>Makes the drive with the root <paramref name="root"/> one of the kind given, such as removable.</summary>
+    public FakeFolderRulesSystem SetKind(string root, DriveKind kind)
+    {
+        lock (Gate)
+        {
+            _kinds[root] = kind;
+        }
+
+        return this;
+    }
+
+    public DriveKind KindOf(string folder)
+    {
+        lock (Gate)
+        {
+            return _kinds.TryGetValue(Path.GetPathRoot(folder)!, out var kind) ? kind : DriveKind.Fixed;
+        }
+    }
+
+    public IDeviceWatch WatchDevices()
+    {
+        var devices = new FakeDeviceWatch(this);
+        Devices = devices;
+        Note("watch devices");
+        return devices;
+    }
+
     public IRecycleBin CreateRecycleBin()
     {
         var bin = new FakeRecycleBin(this) { Outcome = RecycleAnswer };
@@ -250,9 +292,14 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
 
     public int Move(string source, string destination, CancellationToken cancel)
     {
+        Record($"move {source} -> {destination}");
+        if (Hold(cancel))
+        {
+            return FileTransfer.Cancelled;
+        }
+
         lock (Gate)
         {
-            Record($"move {source} -> {destination}");
             var error = Check(source, destination);
             if (error != 0 && !(error == FileTransfer.AlreadyExists && string.Equals(source, destination, StringComparison.OrdinalIgnoreCase)))
             {
@@ -269,9 +316,14 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
 
     public int Copy(string source, string destination, CancellationToken cancel)
     {
+        Record($"copy {source} -> {destination}");
+        if (Hold(cancel))
+        {
+            return FileTransfer.Cancelled;
+        }
+
         lock (Gate)
         {
-            Record($"copy {source} -> {destination}");
             var error = Check(source, destination);
             if (error == FileTransfer.AlreadyExists)
             {
@@ -302,6 +354,17 @@ internal sealed class FakeFolderRulesSystem : RecordingFake<FakeFolderRulesSyste
             Record($"watch {folder}");
             return new Unwatch(this, folder);
         }
+    }
+
+    // Waits while transfers are held; true when the transfer was cancelled meanwhile.
+    private bool Hold(CancellationToken cancel)
+    {
+        while (_holdTransfers && !cancel.IsCancellationRequested)
+        {
+            Thread.Sleep(10);
+        }
+
+        return cancel.IsCancellationRequested;
     }
 
     private int Check(string source, string destination)

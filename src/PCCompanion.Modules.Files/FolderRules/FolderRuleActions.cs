@@ -18,6 +18,8 @@ public sealed class FolderRuleActions
     private const int FileNotFound = 2;
     private const int PathNotFound = 3;
     private const int AccessDenied = 5;
+    private const int NotReady = 21;
+    private const int DeviceNotConnected = 1167;
     private const int SharingViolation = 32;
     private const int LockViolation = 33;
 
@@ -192,6 +194,7 @@ public sealed class FolderRuleActions
     private HistoryEntry Refused(HistoryEntry entry, int error, params string[] paths) => error switch
     {
         SharingViolation or LockViolation => Skipped(entry, SkipReason.InUse),
+        FileTransfer.Cancelled or NotReady or DeviceNotConnected => Skipped(entry, SkipReason.Interrupted),
         FileNotFound => Skipped(entry, SkipReason.Changed),
         PathNotFound => Skipped(entry, SkipReason.DestinationNotFound),
         AccessDenied when paths.Any(path => _places.Protected.Any(folder => FolderPaths.IsInside(path, folder))) =>

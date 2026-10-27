@@ -49,6 +49,15 @@ public interface IFolderRulesSystem
     /// <summary>Starts the Recycle Bin's own thread, which moves files there.</summary>
     IRecycleBin CreateRecycleBin();
 
+    /// <summary>What kind of drive a folder is on, from its path alone, which works while it can't be reached.</summary>
+    DriveKind KindOf(string folder);
+
+    /// <summary>
+    /// Starts Windows' messages about drives and power. Call it, use what it returns and dispose
+    /// it on the host's UI thread.
+    /// </summary>
+    IDeviceWatch WatchDevices();
+
     /// <summary>
     /// Watches the files directly in a folder until disposed. <paramref name="changed"/> gets the
     /// path of each file that's created, changed or renamed to, and <paramref name="failed"/> is

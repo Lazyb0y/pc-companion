@@ -81,6 +81,10 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
 
     public IRecycleBin CreateRecycleBin() => new WindowsRecycleBin();
 
+    public DriveKind KindOf(string folder) => VolumeDetails.KindOf(folder);
+
+    public IDeviceWatch WatchDevices() => new WindowsDeviceWatch();
+
     public IDisposable Watch(string folder, Action<string> changed, Action<bool> failed)
     {
         var watcher = new FileSystemWatcher(folder)
@@ -113,5 +117,35 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
         public void Recycle(string path, Action asking, Action<RecycleResult> done) => _bin.Recycle(path, asking, done);
 
         public void Dispose() => _bin.Dispose();
+    }
+
+    // On the host's UI thread, with a hidden window of its own for Windows' messages.
+    private sealed class WindowsDeviceWatch : IDeviceWatch
+    {
+        private const string WindowClassName = "PCCompanion.FolderRules.Devices";
+
+        private readonly MessageWindow _window = new(WindowClassName);
+        private readonly DeviceNotifications _notifications;
+
+        public WindowsDeviceWatch()
+        {
+            _notifications = new DeviceNotifications(_window);
+            _notifications.DriveArrived += (_, e) => DriveArrived?.Invoke(this, e);
+            _notifications.Resumed += (_, e) => Resumed?.Invoke(this, e);
+        }
+
+        public event EventHandler? DriveArrived;
+
+        public event EventHandler? Resumed;
+
+        public bool BeginInvoke(Action action) => _window.BeginInvoke(action);
+
+        public IDisposable WatchFolder(string folder, Action ejecting) => _notifications.WatchFolder(folder, ejecting);
+
+        public void Dispose()
+        {
+            _notifications.Dispose();
+            _window.Dispose();
+        }
     }
 }

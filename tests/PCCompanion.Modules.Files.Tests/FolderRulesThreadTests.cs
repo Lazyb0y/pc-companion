@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,7 @@ public sealed class FolderRulesThreadTests : IDisposable
     private readonly ManualTimeProvider _time = new() { Now = FakeFolderRulesSystem.Time.AddDays(1) };
     private readonly RecordingLogger<FolderRulesThread> _logger = new();
     private readonly TemporaryFolder _data = new();
+    private readonly RecordingDrives _drives = new();
     private readonly HistoryStore _store;
     private FolderRulesThread? _thread;
 
@@ -54,7 +56,7 @@ public sealed class FolderRulesThreadTests : IDisposable
 
     private void Start(FolderRulesSettings settings)
     {
-        _thread = new FolderRulesThread(settings, _system, _store, Places, _time, _logger);
+        _thread = new FolderRulesThread(settings, _system, _store, Places, _time, _drives, _logger);
         Assert.True(_system.WaitUntil(system => settings.Folders.All(folder => system.IsWatching(folder.Path))));
     }
 
@@ -335,7 +337,7 @@ public sealed class FolderRulesThreadTests : IDisposable
     [Fact]
     public void AFolderThatCantBeWatchedIsReported()
     {
-        _thread = new FolderRulesThread(MovePdfs(@"D:\Missing"), _system, _store, Places, _time, _logger);
+        _thread = new FolderRulesThread(MovePdfs(@"D:\Missing"), _system, _store, Places, _time, _drives, _logger);
 
         Assert.True(_system.WaitUntil(_ => Logged("Folder Rules can't watch folder 1 (error -2147024809).")));
     }
@@ -361,5 +363,104 @@ public sealed class FolderRulesThreadTests : IDisposable
         Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("report", StringComparison.OrdinalIgnoreCase) || entry.Message.Contains(@"D:\", StringComparison.OrdinalIgnoreCase));
         Assert.DoesNotContain(_logger.Entries, entry => entry.Level >= LogLevel.Warning);
+    }
+
+    [Fact]
+    public void AFolderOnARemovableDriveIsToldToTheHostsUIThread()
+    {
+        _system.AddFolder(@"E:\Card").SetKind(@"E:\", DriveKind.Removable);
+
+        Start(MovePdfs(@"E:\Card"));
+
+        Assert.True(_system.WaitUntil(_ => _drives.Watched.ContainsKey(@"E:\Card")));
+        Assert.False(_drives.Watched.ContainsKey(Downloads));
+    }
+
+    [Fact]
+    public void AFolderWhoseDriveIsEjectedIsWatchedAgainWhenTheDriveIsBack()
+    {
+        _system.AddFolder(@"E:\Card").SetKind(@"E:\", DriveKind.Removable);
+        Start(MovePdfs(@"E:\Card"));
+        Assert.True(_system.WaitUntil(_ => _drives.Watched.ContainsKey(@"E:\Card")));
+
+        // As the host's UI thread does when Windows asks to eject the drive.
+        _drives.Watched[@"E:\Card"].Dispose();
+        _thread!.DriveLeaving(@"E:\Card");
+        Assert.True(_system.WaitUntil(system => !system.IsWatching(@"E:\Card")));
+        Assert.True(_system.WaitUntil(_ => Logged("Windows asks to eject the drive of Folder Rules folder 1, so its watch ended until the drive is back.")));
+
+        _system.AddFile(@"E:\Card\scan.pdf", created: _time.Now.AddMinutes(1));
+        _thread.LookAgain(everyFolder: false);
+
+        Assert.True(_system.WaitUntil(system => system.IsWatching(@"E:\Card")));
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\scan.pdf")));
+    }
+
+    [Fact]
+    public void AfterSleepEveryFolderIsLookedAt()
+    {
+        Start(MovePdfs());
+        _system.AddFile(@"D:\Downloads\while-asleep.pdf", created: _time.Now.AddMinutes(1));
+
+        _thread!.LookAgain(everyFolder: true);
+
+        Assert.True(AdvanceUntil(system => system.Exists(@"D:\Sorted\while-asleep.pdf")));
+    }
+
+    [Fact]
+    public void AFolderThatComesBackIsWatchedAgainWithAnInformation()
+    {
+        _thread = new FolderRulesThread(MovePdfs(@"D:\Later"), _system, _store, Places, _time, _drives, _logger);
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules can't watch folder 1 (error -2147024809).")));
+
+        _system.AddFolder(@"D:\Later");
+        _thread!.LookAgain(everyFolder: false);
+
+        Assert.True(_system.WaitUntil(system => system.IsWatching(@"D:\Later")));
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules watches folder 1 again.")));
+    }
+
+    [Fact]
+    public void AMoveStoppedAsItsDriveIsEjectedIsTriedAgainWhenTheDriveIsBack()
+    {
+        _system.AddFolder(@"E:\Sorted").SetKind(@"E:\", DriveKind.Removable);
+        var settings = MovePdfs();
+        settings.Folders[0].Rules[0].Destination = @"E:\Sorted";
+        _system.HoldTransfers = true;
+        Start(settings);
+
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Transfers.Count == 1));
+        _thread!.CancelWorkOn(@"E:\");
+
+        Assert.True(_system.WaitUntil(_ => Logged("Folder Rules folder 1, rule 1 left a file where it is: Interrupted.")));
+        _system.HoldTransfers = false;
+        _thread.LookAgain(everyFolder: false);
+
+        Assert.True(AdvanceUntil(system => system.Exists(@"E:\Sorted\report.pdf")));
+    }
+
+    [Fact]
+    public void AMoveOnAnotherDriveGoesOnWhenADriveIsEjected()
+    {
+        _system.HoldTransfers = true;
+        Start(MovePdfs());
+
+        _system.Arrive(@"D:\Downloads\report.pdf");
+        Assert.True(AdvanceUntil(system => system.Transfers.Count == 1));
+        _thread!.CancelWorkOn(@"E:\");
+        _system.HoldTransfers = false;
+
+        Assert.True(_system.WaitUntil(system => system.Exists(@"D:\Sorted\report.pdf")));
+    }
+
+    // What the host's UI thread is told about the folders on removable drives.
+    private sealed class RecordingDrives : IDriveTracker
+    {
+        public ConcurrentDictionary<string, IDisposable> Watched { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public void Watching(string folder, IDisposable watch) => Watched[folder] = watch;
+
+        public void Stopped(string folder) => Watched.TryRemove(folder, out _);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
 using PCCompanion.Modules.Files.FolderRules;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -93,6 +94,37 @@ public sealed class FolderRulesFeatureTests : IDisposable
 
         Assert.False(_feature.IsRunning);
         Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Information);
+    }
+
+    [Fact]
+    public void EjectingARemovableDriveEndsItsFolderWatchAtOnceAndADriveArrivingStartsItAgain()
+    {
+        _system.AddFolder(@"E:\Card").SetKind(@"E:\", DriveKind.Removable);
+        _feature.Apply(Section("""
+            {
+              "enabled": true,
+              "folders": [ { "path": "E:\\Card", "rules": [ { "name": "PDFs", "extensions": ["pdf"], "destination": "D:\\Sorted" } ] } ]
+            }
+            """));
+        Assert.True(_system.WaitUntil(system => system.Devices?.IsWatching(@"E:\Card") == true));
+
+        // On the host's UI thread, while the feature's thread may be busy.
+        _system.Devices!.Eject(@"E:\Card");
+
+        Assert.False(_system.IsWatching(@"E:\Card"));
+        _system.Devices.Arrive();
+        Assert.True(_system.WaitUntil(system => system.IsWatching(@"E:\Card")));
+    }
+
+    [Fact]
+    public void TurningItOffStopsWatchingTheDevices()
+    {
+        _feature.Apply(Section(On));
+        Assert.True(_system.WaitUntil(system => system.Devices is not null));
+
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.True(_system.Devices!.IsDisposed);
     }
 
     [Fact]

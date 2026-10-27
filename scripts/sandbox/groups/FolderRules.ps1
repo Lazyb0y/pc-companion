@@ -1,3 +1,4 @@
+# Networking: on
 # Folder Rules: with rules in the settings file, the host watches a folder made for the test and
 # acts on the files that arrive there: a PDF written there moves into a subfolder named after its
 # extension, a picture copied there is copied, and a note renamed into it gets the date in its name.
@@ -9,7 +10,10 @@
 # and closing the window keep the file, and Yes deletes it. A PDF with a Mark of the Web keeps it
 # when it moves; on an exFAT virtual disk, a file with a mark stays rather than lose it, and one
 # without moves there. A download in Edge, from a server on the loopback address under a test name,
-# arrives in Downloads, matches Downloaded from, and moves with its mark. The files already there
+# arrives in Downloads, matches Downloaded from, and moves with its mark. A folder on a share on the
+# Sandbox itself is watched; once the share is removed and back, it's watched again within a
+# minute, and a file written while it was away moves. Networking is on for the share, with the
+# update check off. The files already there
 # when the folder was added stay, and a file that arrives while the host isn't running is handled
 # when it starts. The history file says what happened, and the logs hold no file names or folders.
 # Turned off, the folder isn't watched. Detailed logging is on for the Debug entries.
@@ -21,6 +25,9 @@ $pictures = Join-Path $sorted 'Pictures'
 $downloaded = Join-Path $sorted 'Downloaded'
 $downloads = Join-Path $env:USERPROFILE 'Downloads'
 $card = 'X:\Card'
+$shareFolder = Join-Path $root 'Shared'
+$share = '\\localhost\FolderRulesShare'
+$fromShare = Join-Path $sorted 'From the share'
 $historyFile = Join-Path $dataFolder 'folder-rules.json'
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 
@@ -33,8 +40,9 @@ function Write-FolderRules([bool] $Enabled) {
         @{ name = 'To the card'; names = @('card-*'); action = 'Move'; destination = $card }
     )
     $fromSite = @(@{ name = 'From the test site'; downloadedFrom = @('*.folder-rules.test'); action = 'Move'; destination = $downloaded })
-    $section = @{ enabled = $Enabled; folders = @(@{ path = $inbox; rules = $rules }, @{ path = $downloads; rules = $fromSite }) }
-    $settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; diagnostics = @{ detailedLoggingUntil = $detailedUntil }; features = @{ folderRules = $section } }
+    $scans = @(@{ name = 'Scans'; extensions = @('pdf'); action = 'Move'; destination = $fromShare })
+    $section = @{ enabled = $Enabled; folders = @(@{ path = $inbox; rules = $rules }, @{ path = $downloads; rules = $fromSite }, @{ path = $share; rules = $scans }) }
+    $settings = @{ schemaVersion = 1; general = @{ theme = 'Light' }; updates = @{ checkAutomatically = $false }; diagnostics = @{ detailedLoggingUntil = $detailedUntil }; features = @{ folderRules = $section } }
     Write-Settings ($settings | ConvertTo-Json -Depth 8)
 }
 
@@ -216,6 +224,11 @@ assign letter=X
 Test-Check 'an exFAT virtual disk is there' (Wait-Until { Test-Path 'X:\' } 10) ($diskOutput -replace "`r?`n", ' | ')
 New-Item -ItemType Directory -Force -Path $card | Out-Null
 
+# A share on the Sandbox itself, for a folder on a network location.
+New-Item -ItemType Directory -Force -Path $shareFolder, $fromShare | Out-Null
+New-SmbShare -Name FolderRulesShare -Path $shareFolder -FullAccess Everyone | Out-Null
+Test-Check 'a share on the Sandbox is there' (Wait-Until { Test-Path $share } 10)
+
 # The Recycle Bin for C: holds 1 MB, so that a 50 MB log is too big for it. A process reads the
 # Recycle Bin's settings once, so they're set before the host starts.
 $volume = Get-CimInstance Win32_Volume | Where-Object { $_.DriveLetter -eq 'C:' }
@@ -226,7 +239,7 @@ Set-ItemProperty $bitBucket -Name MaxCapacity -Value 1 -Type DWord
 
 Write-FolderRules $true
 Start-Process $hostExe
-Test-Check 'the host uses the folder and its rules' (Wait-Until { (Get-HostLog) -match 'Folder Rules applied: 2 folders and 6 rules can be used\.' } 15)
+Test-Check 'the host uses the folder and its rules' (Wait-Until { (Get-HostLog) -match 'Folder Rules applied: 3 folders and 7 rules can be used\.' } 15)
 Test-Check 'the host looks at the folder it never looked at before' (Wait-Until { (Get-HostLog) -match 'Folder Rules looked at folder 1: 0 of 1 files arrived since it last looked\.' } 10)
 
 # Written there, a PDF moves into a subfolder made from its extension.
@@ -312,6 +325,17 @@ Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAc
 $server.Dispose()
 Set-Content -Path $hosts -Value $hostsBefore -NoNewline -Encoding ascii
 
+# A PDF written to the share moves. Removed, the share's watch stops; once it's back, the folder is
+# watched again within a minute, and a PDF written while it was away moves.
+New-TestFile (Join-Path $share 'scan.pdf')
+Test-Check 'a PDF written to a shared folder moves' (Wait-Until { Test-Path "$fromShare\scan.pdf" } 15)
+Remove-SmbShare -Name FolderRulesShare -Force
+Test-Check 'with the share removed, its watch stops' (Wait-Until { (Get-HostLog) -match "Folder Rules' watch of folder 3 stopped" } 20)
+New-TestFile (Join-Path $shareFolder 'while-away.pdf')
+New-SmbShare -Name FolderRulesShare -Path $shareFolder -FullAccess Everyone | Out-Null
+Test-Check 'the share is watched again within a minute' (Wait-Until { (Get-HostLog) -match 'Folder Rules watches folder 3 again\.' } 90)
+Test-Check 'and the PDF written while it was away moves' (Wait-Until { Test-Path "$fromShare\while-away.pdf" } 15)
+
 # A log goes to the Recycle Bin.
 New-TestFile (Join-Path $inbox 'small.log')
 Test-Check 'a log written there goes to the Recycle Bin' (Wait-Until { (Get-RecycleBinNames) -contains 'small.log' } 15) ((Get-RecycleBinNames) -join ', ')
@@ -361,6 +385,7 @@ Test-Check 'the logs hold no file names or folders' (($hostLog -notmatch 'report
 Test-Check 'the host logged the move by number' ($hostLog -match 'Folder Rules folder 1, rule 1: "?Moved"?\.')
 
 Stop-All
+Remove-SmbShare -Name FolderRulesShare -Force -ErrorAction SilentlyContinue
 [void] (Invoke-DiskPart @"
 select vdisk file="$root\card.vhdx"
 detach vdisk

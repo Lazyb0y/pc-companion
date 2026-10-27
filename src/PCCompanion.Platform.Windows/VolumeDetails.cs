@@ -61,11 +61,17 @@ public sealed record VolumeDetails(DriveKind Kind, string FileSystem, bool Named
             throw new Win32Exception(Marshal.GetLastPInvokeError());
         }
 
-        return new VolumeDetails(ReadKind(folder), name[..name.IndexOf('\0')].ToString(), (flags & NamedStreamsFlag) != 0);
+        return new VolumeDetails(KindOf(folder), name[..name.IndexOf('\0')].ToString(), (flags & NamedStreamsFlag) != 0);
     }
 
-    private static DriveKind ReadKind(string folder)
+    /// <summary>
+    /// What kind of drive a folder's path is on, read from its drive letter or its server name,
+    /// without reaching the folder, so it also works while a network folder can't be reached.
+    /// </summary>
+    public static DriveKind KindOf(string folder)
     {
+        ArgumentException.ThrowIfNullOrEmpty(folder);
+
         if (folder.StartsWith(@"\\", StringComparison.Ordinal))
         {
             return DriveKind.Network;
