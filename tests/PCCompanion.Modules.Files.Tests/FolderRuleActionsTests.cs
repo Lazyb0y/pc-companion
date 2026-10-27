@@ -32,7 +32,7 @@ public sealed class FolderRuleActionsTests
         _actions.Act(Downloads, RuleMatcher.Create(rule, 1), _system.Read(path)!, FakeFolderRulesSystem.Time.AddHours(1), CancellationToken.None);
 
     private RunNowFile? Plan(FolderRule rule, string path = Invoice) =>
-        _actions.Plan(Downloads, RuleMatcher.Create(rule, 1), _system.Read(path)!);
+        FolderRuleActions.Plan(Downloads, RuleMatcher.Create(rule, 1), _system.Read(path)!, Places, TimeZoneInfo.Utc);
 
     [Fact]
     public void AMovePutsTheFileInItsDestination()

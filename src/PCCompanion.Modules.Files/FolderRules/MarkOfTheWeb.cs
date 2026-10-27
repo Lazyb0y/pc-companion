@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.IO;
+using System.Text;
 using PCCompanion.Core;
 
 namespace PCCompanion.Modules.Files.FolderRules;
@@ -19,12 +21,39 @@ public sealed record MarkOfTheWeb(int? ZoneId, Uri? HostUrl, Uri? ReferrerUrl)
 
     private const string Section = "[ZoneTransfer]";
 
+    // The largest mark that's read; a mark holds a few lines.
+    private const int MaximumLength = 64 * 1024;
+
     /// <summary>
     /// The web address the file came from: <see cref="HostUrl"/>, or else <see cref="ReferrerUrl"/>,
     /// or <see langword="null"/> when neither is an <c>http</c> or <c>https</c> address, such as
     /// for a download from a private window, for which Edge writes <c>about:internet</c>.
     /// </summary>
     public Uri? Source => HostProcess.IsWebAddress(HostUrl) ? HostUrl : HostProcess.IsWebAddress(ReferrerUrl) ? ReferrerUrl : null;
+
+    /// <summary>
+    /// The mark of the file at <paramref name="path"/>, or <see langword="null"/> when it has none
+    /// or it can't be read. It may wait for the disk.
+    /// </summary>
+    public static MarkOfTheWeb? Read(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+
+        try
+        {
+            using var stream = new FileStream(path + ":" + StreamName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            var buffer = new byte[MaximumLength];
+            var length = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
+
+            // Programs write the mark in UTF-8 or ANSI, which agree for an address, or in UTF-16 after a mark of its own.
+            using var reader = new StreamReader(new MemoryStream(buffer, 0, length), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            return Parse(reader.ReadToEnd());
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// Reads a mark as Windows does: the values in its <c>[ZoneTransfer]</c> section, the first of

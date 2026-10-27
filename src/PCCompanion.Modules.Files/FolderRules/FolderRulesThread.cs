@@ -904,7 +904,7 @@ public sealed partial class FolderRulesThread : MessageLoopThread<FolderRulesSet
 
                 var facts = new FileFacts(file.Name, file.Size, file.Created, file.Modified);
                 if (RuleMatcher.FirstMatch(folder.Rules, facts, now, () => _owner._system.ReadMark(filePath)) is { } rule
-                    && _actions.Plan(path, rule, file) is { } plan)
+                    && FolderRuleActions.Plan(path, rule, file, _owner._places, _owner._time.LocalTimeZone) is { } plan)
                 {
                     listed.Add(plan);
                 }

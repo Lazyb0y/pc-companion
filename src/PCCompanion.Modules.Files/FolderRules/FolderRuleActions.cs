@@ -47,7 +47,7 @@ public sealed class FolderRuleActions
     /// </summary>
     public HistoryEntry? Act(string folder, RuleMatcher rule, FileDetails file, DateTimeOffset now, CancellationToken cancel)
     {
-        if (Plan(folder, rule, file) is not { Action: not FolderRuleAction.RecycleBin } plan)
+        if (Plan(folder, rule, file, _places, _zone) is not { Action: not FolderRuleAction.RecycleBin } plan)
         {
             return null;
         }
@@ -77,15 +77,18 @@ public sealed class FolderRuleActions
 
     /// <summary>
     /// What <paramref name="rule"/> would do with <paramref name="file"/>, which is directly in
-    /// <paramref name="folder"/>, as Run now lists it, without doing anything, or
+    /// <paramref name="folder"/>, as Run now and the rule editor list it, without the disk, or
     /// <see langword="null"/> when there would be nothing to do, such as a rename to the name the
     /// file has.
     /// </summary>
-    public RunNowFile? Plan(string folder, RuleMatcher rule, FileDetails file)
+    /// <param name="zone">The user's time zone, for the dates in new names and destinations.</param>
+    public static RunNowFile? Plan(string folder, RuleMatcher rule, FileDetails file, SpecialFolders places, TimeZoneInfo zone)
     {
         ArgumentNullException.ThrowIfNull(folder);
         ArgumentNullException.ThrowIfNull(rule);
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(places);
+        ArgumentNullException.ThrowIfNull(zone);
 
         if (rule.Rule.KnownAction is not { } action)
         {
@@ -97,16 +100,16 @@ public sealed class FolderRuleActions
         switch (action)
         {
             case FolderRuleAction.Move or FolderRuleAction.Copy:
-                var destination = FileNaming.Destination(rule.Rule.Destination, facts, _zone, folder, _places);
+                var destination = FileNaming.Destination(rule.Rule.Destination, facts, zone, folder, places);
                 if (destination.Problem != NamingProblem.None)
                 {
                     return plan with { Naming = destination.Problem };
                 }
 
-                var name = rule.Rule.NewName.Trim().Length > 0 ? FileNaming.NewName(rule.Rule.NewName, facts, _zone) : new Naming(file.Name, NamingProblem.None);
+                var name = rule.Rule.NewName.Trim().Length > 0 ? FileNaming.NewName(rule.Rule.NewName, facts, zone) : new Naming(file.Name, NamingProblem.None);
                 return plan with { Destination = destination.Value, NewName = name.Value, Naming = name.Problem };
             case FolderRuleAction.Rename:
-                var newName = FileNaming.NewName(rule.Rule.NewName, facts, _zone);
+                var newName = FileNaming.NewName(rule.Rule.NewName, facts, zone);
                 return string.Equals(newName.Value, file.Name, StringComparison.Ordinal) ? null : plan with { NewName = newName.Value, Naming = newName.Problem };
             default:
                 return plan;
