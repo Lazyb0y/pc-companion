@@ -75,10 +75,72 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="local:DisplayProfileItem">
-                            <toolkit:SettingsCard Description="{x:Bind Summary}" Header="{x:Bind Name}">
+                            <toolkit:SettingsCard Header="{x:Bind Name}">
                                 <toolkit:SettingsCard.HeaderIcon>
                                     <FontIcon Glyph="&#xE7F4;" />
                                 </toolkit:SettingsCard.HeaderIcon>
+                                <toolkit:SettingsCard.Description>
+                                    <StackPanel Spacing="8">
+                                        <!-- The displays as they stand, also from right to left; the lines below say the same to screen readers. -->
+                                        <ItemsControl
+                                            Width="{x:Bind PictureWidth}"
+                                            Height="{x:Bind PictureHeight}"
+                                            Margin="0,4,0,0"
+                                            HorizontalAlignment="Left"
+                                            AutomationProperties.AccessibilityView="Raw"
+                                            FlowDirection="LeftToRight"
+                                            IsTabStop="False"
+                                            ItemsSource="{x:Bind Picture}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Grid />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="local:PictureDisplay">
+                                                    <Grid
+                                                        Width="{x:Bind Width}"
+                                                        Height="{x:Bind Height}"
+                                                        Margin="{x:Bind Margin}"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Top">
+                                                        <Border
+                                                            Background="{ThemeResource ControlFillColorSecondaryBrush}"
+                                                            BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="2"
+                                                            Visibility="{x:Bind IsNotMain}">
+                                                            <TextBlock
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{x:Bind FontSize}"
+                                                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                                Text="{x:Bind Label}" />
+                                                        </Border>
+                                                        <Border
+                                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                                            BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="2"
+                                                            Visibility="{x:Bind IsMain}">
+                                                            <TextBlock
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{x:Bind FontSize}"
+                                                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                                                Text="{x:Bind Label}" />
+                                                        </Border>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Summary}"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </toolkit:SettingsCard.Description>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock
                                         VerticalAlignment="Center"
