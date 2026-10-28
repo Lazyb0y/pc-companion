@@ -178,7 +178,7 @@ $window = Start-TestWindow 'FullScreen'
 $found = Find-TestWindow 'FullScreen'
 $area = New-Object Win32+RECT
 $covers = ($found -ne [IntPtr]::Zero) -and [Win32]::GetWindowRect($found, [ref] $area) -and ($area.Left -le 0) -and ($area.Top -le 0) -and ($area.Right -ge $screen.Width) -and ($area.Bottom -ge $screen.Height)
-Test-Check 'the full-screen test window covers the display' $covers "window $found at $($area.Left), $($area.Top), $($area.Right), $($area.Bottom); display $($screen.Width) x $($screen.Height)"
+Test-Check 'the full-screen test window covers the display' $covers "window $found at $($area.Left), $($area.Top), $($area.Right), $($area.Bottom); display $($screen.Width) x $($screen.Height); script $(Test-Path $testWindowScript); process $($window.Id), exited $($window.HasExited)$(if ($window.HasExited) { " with $($window.ExitCode)" })"
 Write-LockKeysSettings $true 'BottomCenter'
 Test-Check 'a full-screen app skips the notice, and the host logs why' (Wait-Until { (Get-HostLog) -match '"?CapsLock"? changed, now on: (true|false); no notice, since an app was full screen\.' } 10)
 Test-Check 'no notice shows over the full-screen window' (-not (Test-NoticeShown))
