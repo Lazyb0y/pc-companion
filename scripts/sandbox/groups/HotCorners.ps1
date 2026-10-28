@@ -124,39 +124,6 @@ public static class PointerClip {
     public static bool Release() { return ClipCursor(IntPtr.Zero); }
 }
 '@
-$testWindowScript = Join-Path $env:TEMP 'PCCompanion-test-window.ps1'
-Set-Content -Path $testWindowScript -Encoding utf8 -Value @'
-param([string] $Title, [string] $Kind)
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -Namespace TestWindow -Name Native -MemberDefinition @"
-[DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
-[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
-"@
-[void] [TestWindow.Native]::SetProcessDPIAware()
-$form = New-Object System.Windows.Forms.Form
-$form.Text = $Title
-$form.FormBorderStyle = 'None'
-$form.StartPosition = 'Manual'
-$form.BackColor = [System.Drawing.Color]::Black
-$form.TopMost = $true
-if ($Kind -eq 'FullScreen') {
-    $form.Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-} else {
-    $form.Bounds = New-Object System.Drawing.Rectangle(0, 0, 300, 300)
-    $form.Add_Shown({ [System.Windows.Forms.Cursor]::Hide() })
-}
-# Started hidden, the process would hide the first window it shows; this uses that up.
-[void] [TestWindow.Native]::ShowWindow($form.Handle, 0)
-[System.Windows.Forms.Application]::Run($form)
-'@
-# PowerShell would pass $null to FindWindow as an empty class name, which no window has.
-function Find-TestWindow([string] $Kind) { [Win32]::FindWindow([NullString]::Value, "PCCompanionTestWindow-$Kind") }
-function Start-TestWindow([string] $Kind) {
-    $process = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $testWindowScript, '-Title', "PCCompanionTestWindow-$Kind", '-Kind', $Kind -WindowStyle Hidden -PassThru
-    [void] (Wait-Until { (Find-TestWindow $Kind) -ne [IntPtr]::Zero } 30)
-    Start-Sleep -Seconds 1
-    return $process
-}
 function Get-SkippedPattern([string] $Reason) { "The `"?TopLeft`"? corner didn't run `"?ShowDesktop`"?: `"?$Reason`"?\." }
 
 Write-HotCornersSettings $true 'None'

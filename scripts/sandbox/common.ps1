@@ -766,6 +766,43 @@ function Test-OtherScopeStops([string] $Name, [string[]] $Scope, [string] $Log, 
     Test-Check "$Name leaves the installed one alone" (($after.Count -eq 1) -and ($after[0] -eq $before[0])) "before: $($before -join ', '); after: $($after -join ', ')"
 }
 
+# Another app's window, in a process of its own: FullScreen is a borderless window covering the
+# main display, as a game or a video is; HidesPointer is a window in the top-left corner that hides
+# the pointer.
+$testWindowScript = Join-Path $env:TEMP 'PCCompanion-test-window.ps1'
+Set-Content -Path $testWindowScript -Encoding utf8 -Value @'
+param([string] $Title, [string] $Kind)
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -Namespace TestWindow -Name Native -MemberDefinition @"
+[DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+"@
+[void] [TestWindow.Native]::SetProcessDPIAware()
+$form = New-Object System.Windows.Forms.Form
+$form.Text = $Title
+$form.FormBorderStyle = 'None'
+$form.StartPosition = 'Manual'
+$form.BackColor = [System.Drawing.Color]::Black
+$form.TopMost = $true
+if ($Kind -eq 'FullScreen') {
+    $form.Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+} else {
+    $form.Bounds = New-Object System.Drawing.Rectangle(0, 0, 300, 300)
+    $form.Add_Shown({ [System.Windows.Forms.Cursor]::Hide() })
+}
+# Started hidden, the process would hide the first window it shows; this uses that up.
+[void] [TestWindow.Native]::ShowWindow($form.Handle, 0)
+[System.Windows.Forms.Application]::Run($form)
+'@
+# PowerShell would pass $null to FindWindow as an empty class name, which no window has.
+function Find-TestWindow([string] $Kind) { [Win32]::FindWindow([NullString]::Value, "PCCompanionTestWindow-$Kind") }
+function Start-TestWindow([string] $Kind) {
+    $process = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $testWindowScript, '-Title', "PCCompanionTestWindow-$Kind", '-Kind', $Kind -WindowStyle Hidden -PassThru
+    [void] (Wait-Until { (Find-TestWindow $Kind) -ne [IntPtr]::Zero } 30)
+    Start-Sleep -Seconds 1
+    return $process
+}
+
 $msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
 $upgradeMsi = 'C:\Test\upgrade\PCCompanion-upgrade.msi'
 $sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'
