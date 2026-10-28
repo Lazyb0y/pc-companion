@@ -1,6 +1,7 @@
 AllowSetForegroundWindow
 AppendMenu
 ChangeWindowMessageFilterEx
+CloseDesktop
 CloseHandle
 COMDLG_FILTERSPEC
 CommandLineToArgv
@@ -256,6 +257,8 @@ GetClipCursor
 GetCursorInfo
 MonitorFromWindow
 GetMonitorInfo
+GetUserObjectInformation
+OpenInputDesktop
 SHCreateItemInKnownFolder
 SHCreateItemFromParsingName
 IShellItemImageFactory

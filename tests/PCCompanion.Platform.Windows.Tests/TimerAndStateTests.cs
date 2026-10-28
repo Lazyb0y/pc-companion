@@ -90,6 +90,15 @@ public sealed class TimerAndStateTests
 
         Assert.InRange(WindowsTheme.TextColor(), 0u, 0xFFFFFFu);
         Assert.InRange(WindowsTheme.WindowColor(), 0u, 0xFFFFFFu);
+        _ = WindowsTheme.AreAnimationsOn();
+        Assert.InRange(WindowsTheme.TextScale(), 1.0, 2.25);
+    }
+
+    // The tests run on the user's own desktop.
+    [Fact]
+    public void TheInputDesktopIsTheUsersOwn()
+    {
+        Assert.True(InputDesktop.IsUsersOwn());
     }
 
     // .NET reads Caps Lock and Num Lock with the same function.

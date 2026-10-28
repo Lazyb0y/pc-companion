@@ -1,5 +1,6 @@
 using System.Drawing;
 using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Platform.Windows;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;
@@ -8,9 +9,9 @@ public sealed class NoticePlacementTests
 {
     // A 1920 x 1080 main display with the taskbar at the bottom, and a 2560 x 1440 display at 150%
     // on its left, with its taskbar at the top.
-    private static readonly NoticeDisplay Main = new(new Rectangle(0, 0, 1920, 1080), new Rectangle(0, 0, 1920, 1032), 96);
-    private static readonly NoticeDisplay Left = new(new Rectangle(-2560, 0, 2560, 1440), new Rectangle(-2560, 72, 2560, 1368), 144);
-    private static readonly NoticeDisplay[] Displays = [Left, Main];
+    private static readonly DisplayDetails Main = new(new Rectangle(0, 0, 1920, 1080), new Rectangle(0, 0, 1920, 1032), 96);
+    private static readonly DisplayDetails Left = new(new Rectangle(-2560, 0, 2560, 1440), new Rectangle(-2560, 72, 2560, 1368), 144);
+    private static readonly DisplayDetails[] Displays = [Left, Main];
     private static readonly Size Notice = new(138, 40);
 
     [Fact]
