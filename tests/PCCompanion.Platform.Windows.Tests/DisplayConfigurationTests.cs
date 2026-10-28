@@ -117,10 +117,9 @@ public sealed class DisplayConfigurationTests
         var modes = DisplayConfiguration.ListModes(main.Source);
         Assert.DoesNotContain(modes, mode => mode.RefreshRate == 7);
 
-        // Without an EDID, Windows doesn't know which refresh rates a display can show, and may accept any,
-        // as a virtual machine's display does.
+        // Hyper-V's display, the build machines', is on no real connection: it lists one refresh rate and accepts any.
         var mainDisplays = setup.Displays.Where(display => paths.Any(path => path.Source == main.Source && path.Target == display.Target));
-        Assert.SkipWhen(mainDisplays.Any(display => display.Model.Length == 0), "The main display has no EDID.");
+        Assert.SkipWhen(mainDisplays.Any(display => display.Connection == DisplayConnection.Other), "The main display's connection is of no known kind, as with Hyper-V's display.");
 
         var refused = Record.Exception(() => DisplayConfiguration.Check(
             [.. paths.Select(path => path.Source == main.Source ? path with { RefreshRate = new DisplayRefreshRate(7, 1) } : path)]));
