@@ -70,7 +70,7 @@
 | `PCCompanion.Modules.Desktop` | Desktop: [System Meters](../features/desktop/system-meters.md) |
 | `PCCompanion.Modules.Display` | Display: [Display Profiles](../features/display/display-profiles.md) |
 | `PCCompanion.Modules.Files` | Files: [Folder Rules](../features/files/folder-rules.md) |
-| `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md) |
+| `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md), [Lock Keys](../features/input/lock-keys.md) |
 | `PCCompanion.Modules.Network` | Network: [Network Profiles](../features/network/network-profiles.md) |
 | `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md) |
 | `PCCompanion.Host` | The background host |
