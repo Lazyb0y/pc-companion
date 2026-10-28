@@ -604,6 +604,106 @@
     <value>Caps Lock</value>
     <comment>Lock Keys: the small badge that stays on screen while Caps Lock is on, next to a closed lock icon. Use the language&apos;s usual name of the key.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>Keys</value>
+    <comment>Lock Keys page: header of the group of keys that show a notice.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>Choose which keys show a notice when they turn on or off.</value>
+    <comment>Lock Keys page: description of the group of keys.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>Caps Lock</value>
+    <comment>Lock Keys page: switch for Caps Lock. Use the language&apos;s usual name of the key.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>Num Lock</value>
+    <comment>Lock Keys page: switch for Num Lock. Use the language&apos;s usual name of the key.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>Scroll Lock</value>
+    <comment>Lock Keys page: switch for Scroll Lock. Use the language&apos;s usual name of the key.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>Many KVM switches change computers on two quick presses of it, which would show two notices.</value>
+    <comment>Lock Keys page: why Scroll Lock is off at first. A KVM switch shares one keyboard, display and mouse between several computers.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>Show when a key turns off</value>
+    <comment>Lock Keys page: switch for showing a notice when a key turns off too.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>Otherwise, only keys turning on show a notice.</value>
+    <comment>Lock Keys page: description of Show when a key turns off.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>No key is chosen, so no notices show.</value>
+    <comment>Lock Keys page: note shown while none of the three keys is chosen.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>Position</value>
+    <comment>Lock Keys page: list of where the notice shows.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>Where the notice shows on the display you&apos;re typing on.</value>
+    <comment>Lock Keys page: description of Position.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>Bottom center</value>
+    <comment>Lock Keys page: Position choice, as in Windows&apos; own setting for on-screen indicators.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>Top center</value>
+    <comment>Lock Keys page: Position choice, as in Windows&apos; own setting for on-screen indicators.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>Top left</value>
+    <comment>Lock Keys page: Position choice, as in Windows&apos; own setting for on-screen indicators. Left is the physical left in every language.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>Show for</value>
+    <comment>Lock Keys page: slider for how long the notice shows.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>How long the notice shows before it fades out.</value>
+    <comment>Lock Keys page: description of Show for.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Lock Keys page: the duration in seconds, such as 2 or 1.5, shown before the slider. {0} is the number.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>Don&apos;t show while an app is full screen</value>
+    <comment>Lock Keys page: switch that keeps notices away from full-screen apps.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>For example, a game, a video or a presentation.</value>
+    <comment>Lock Keys page: description of Don&apos;t show while an app is full screen.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>Keep showing while Caps Lock is on</value>
+    <comment>Lock Keys page: switch for the badge that stays while Caps Lock is on.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>A small badge stays on screen until Caps Lock turns off.</value>
+    <comment>Lock Keys page: description of Keep showing while Caps Lock is on.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>Sounds and screen readers</value>
+    <comment>Lock Keys page: card about Windows&apos; own sounds and Narrator for lock keys.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>Windows can also play a sound when a lock key turns on or off, with Toggle keys, and Narrator says the change.</value>
+    <comment>Lock Keys page: description of Sounds and screen readers. Toggle keys and Narrator are Windows&apos; names; use Windows&apos; terms in the language.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>Open</value>
+    <comment>Lock Keys page: button that opens Windows&apos; keyboard accessibility settings.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>Reads whether Caps Lock, Num Lock and Scroll Lock are on, about 10 times a second, only while Lock Keys is on, but never the keys you type. When a notice shows, also reads which display the window in front is on, and where windows are on that display, but not their titles or contents. Changes nothing, and stores and sends nothing.</value>
+    <comment>Lock Keys page: text of the Permissions &amp; data card.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>App Windows</value>
     <comment>Feature name: switching between the windows of the app in front.</comment>

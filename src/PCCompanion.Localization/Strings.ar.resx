@@ -652,6 +652,106 @@
     <value>Caps Lock</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>المفاتيح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>اختر المفاتيح التي تعرض إشعاراً عند تشغيلها أو إيقاف تشغيلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>Caps Lock</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>Num Lock</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>Scroll Lock</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>تنتقل كثير من محوّلات KVM بين أجهزة الكمبيوتر عند ضغطه مرتين بسرعة، مما يعرض إشعارين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>العرض عند إيقاف تشغيل مفتاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>وإلا، فلن يعرض إشعاراً إلا عند تشغيل المفاتيح.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>لم يتم اختيار أي مفتاح، لذا لن تظهر أي إشعارات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>الموضع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>مكان ظهور الإشعار على الشاشة التي تكتب عليها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>أسفل الوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>أعلى الوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>أعلى اليسار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>مدة العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>المدة التي يظهر فيها الإشعار قبل أن يختفي تدريجياً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} ث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>عدم العرض أثناء تشغيل تطبيق بملء الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>على سبيل المثال، لعبة أو فيديو أو عرض تقديمي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>الاستمرار في العرض أثناء تشغيل Caps Lock</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>تبقى شارة صغيرة على الشاشة حتى يتم إيقاف تشغيل Caps Lock.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>الأصوات وبرامج قراءة الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>يمكن لـ Windows أيضاً تشغيل صوت عند تشغيل مفتاح قفل أو إيقاف تشغيله باستخدام مفاتيح التبديل، ويعلن الراوي عن التغيير.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>فتح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>يقرأ ما إذا كانت مفاتيح Caps Lock وNum Lock وScroll Lock قيد التشغيل، نحو 10 مرات في الثانية، فقط أثناء تشغيل مفاتيح القفل، لكنه لا يقرأ أبداً المفاتيح التي تكتبها. وعند ظهور إشعار، يقرأ أيضاً الشاشة التي توجد عليها النافذة الموجودة في المقدمة، ومواضع النوافذ على تلك الشاشة، دون عناوينها أو محتواها. لا يغيّر أي شيء، ولا يخزّن أي شيء ولا يرسله.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>نوافذ التطبيق</value>
     <comment>Needs native review.</comment>

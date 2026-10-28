@@ -604,6 +604,106 @@
     <value>Bloq Mayús</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>Teclas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>Elige qué teclas muestran un aviso cuando se activan o se desactivan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>Bloq Mayús</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>Bloq Num</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>Bloq Despl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>Muchos conmutadores KVM cambian de equipo al presionarla dos veces rápido, lo que mostraría dos avisos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>Mostrar cuando una tecla se desactiva</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>De lo contrario, solo las teclas que se activan muestran un aviso.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>No hay ninguna tecla elegida, así que no se muestran avisos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>Posición</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>Dónde aparece el aviso en la pantalla en la que escribes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>Abajo en el centro</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>Arriba en el centro</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>Arriba a la izquierda</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>Mostrar durante</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>Cuánto tiempo se muestra el aviso antes de desvanecerse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>No mostrar mientras una aplicación está en pantalla completa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>Por ejemplo, un juego, un video o una presentación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>Seguir mostrando mientras Bloq Mayús está activado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>Una pequeña insignia permanece en la pantalla hasta que se desactiva Bloq Mayús.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>Sonidos y lectores de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>Windows también puede reproducir un sonido cuando una tecla de bloqueo se activa o se desactiva, con Teclas de alternancia, y Narrador anuncia el cambio.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>Abrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>Lee si Bloq Mayús, Bloq Num y Bloq Despl están activados, unas 10 veces por segundo, solo mientras Teclas de bloqueo está activado, pero nunca las teclas que escribes. Cuando se muestra un aviso, también lee en qué pantalla está la ventana en primer plano y dónde están las ventanas en esa pantalla, pero no sus títulos ni su contenido. No cambia nada, y no guarda ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>Ventanas de la aplicación</value>
     <comment>Needs native review.</comment>

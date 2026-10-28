@@ -604,6 +604,106 @@
     <value>ক্যাপস লক</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>কোন কীগুলো চালু বা বন্ধ হলে বিজ্ঞপ্তি দেখাবে, তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>ক্যাপস লক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>নাম লক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>স্ক্রল লক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>অনেক KVM সুইচ এটি দ্রুত দুবার চাপলে কম্পিউটার বদলায়, ফলে দুটি বিজ্ঞপ্তি দেখাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>কোনো কী বন্ধ হলেও দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>নইলে কেবল কী চালু হলেই বিজ্ঞপ্তি দেখাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>কোনো কী বেছে নেওয়া হয়নি, তাই কোনো বিজ্ঞপ্তি দেখাবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>অবস্থান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>আপনি যে ডিসপ্লেতে টাইপ করছেন, তাতে বিজ্ঞপ্তিটি কোথায় দেখাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>নিচে মাঝখানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>উপরে মাঝখানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>উপরে বাঁদিকে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>কতক্ষণ দেখাবে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>বিজ্ঞপ্তিটি মিলিয়ে যাওয়ার আগে কতক্ষণ দেখাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} সে.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>কোনো অ্যাপ পূর্ণ স্ক্রিনে থাকলে দেখাবেন না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>যেমন, কোনো গেম, ভিডিও বা উপস্থাপনা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>ক্যাপস লক চালু থাকা পর্যন্ত দেখাতে থাকুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>ক্যাপস লক বন্ধ না হওয়া পর্যন্ত স্ক্রিনে একটি ছোট ব্যাজ থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>শব্দ ও স্ক্রিন রিডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>টগল কী দিয়ে কোনো লক কী চালু বা বন্ধ হলে Windows একটি শব্দও বাজাতে পারে, আর ন্যারেটর পরিবর্তনটি বলে দেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>লক কী চালু থাকলেই কেবল সেকেন্ডে প্রায় ১০ বার ক্যাপস লক, নাম লক ও স্ক্রল লক চালু আছে কিনা তা পড়ে, তবে আপনার টাইপ করা কী কখনো পড়ে না। বিজ্ঞপ্তি দেখালে, সামনের উইন্ডোটি কোন ডিসপ্লেতে আছে এবং সেই ডিসপ্লেতে উইন্ডোগুলো কোথায় আছে, তাও পড়ে, তবে সেগুলোর শিরোনাম বা বিষয়বস্তু পড়ে না। কিছুই বদলায় না, এবং কিছুই সংরক্ষণ বা পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>অ্যাপ উইন্ডো</value>
     <comment>Needs native review.</comment>

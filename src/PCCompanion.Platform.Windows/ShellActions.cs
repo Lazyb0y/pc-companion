@@ -104,6 +104,9 @@ public static class ShellActions
     /// <summary>Opens the Display page of Windows Settings.</summary>
     public static bool OpenDisplaySettings() => OpenSettingsPage("ms-settings:display");
 
+    /// <summary>Opens the Keyboard page of Windows Settings' accessibility settings, where Toggle Keys is.</summary>
+    public static bool OpenKeyboardAccessibilitySettings() => OpenSettingsPage("ms-settings:easeofaccess-keyboard");
+
     /// <summary>Opens the Recycle Bin in File Explorer, where its files can be restored.</summary>
     public static bool OpenRecycleBin()
     {
