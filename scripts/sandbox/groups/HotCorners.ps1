@@ -274,7 +274,6 @@ while ($scroller -and -not [bool] $scroller.GetCurrentPropertyValue([System.Wind
 if ($scroller) { $scroller.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern).SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100); Start-Sleep -Seconds 1 }
 Save-Screenshot '10e-hot-corners-recent-results'
 [void] (Close-SettingsApp)
-Remove-Item $testWindowScript -ErrorAction SilentlyContinue
 
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
