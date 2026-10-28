@@ -568,6 +568,42 @@
     <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Quand le pointeur atteint un coin, vérifie aussi si une application a limité ou masqué le pointeur, et lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu, et, quand des applications sont dans la liste, quelle application est au premier plan. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysName" xml:space="preserve">
+    <value>Touches de verrouillage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDescription" xml:space="preserve">
+    <value>Affichez un bref avis à l’écran quand Verr. Maj, Verr. Num ou Arrêt défil est activé ou désactivé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOn" xml:space="preserve">
+    <value>Verr. Maj activé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOff" xml:space="preserve">
+    <value>Verr. Maj désactivé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOn" xml:space="preserve">
+    <value>Verr. Num activé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOff" xml:space="preserve">
+    <value>Verr. Num désactivé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOn" xml:space="preserve">
+    <value>Arrêt défil activé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOff" xml:space="preserve">
+    <value>Arrêt défil désactivé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadge" xml:space="preserve">
+    <value>Verr. Maj</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>Fenêtres de l’application</value>
     <comment>Needs native review.</comment>

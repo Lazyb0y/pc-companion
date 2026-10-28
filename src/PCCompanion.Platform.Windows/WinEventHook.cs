@@ -18,6 +18,12 @@ public sealed class WinEventHook : IDisposable
     /// <summary>A window came to the front (<c>EVENT_SYSTEM_FOREGROUND</c>).</summary>
     public const uint ForegroundEvent = 0x0003;
 
+    /// <summary>
+    /// Another desktop started getting input, such as the secure desktop of a UAC prompt, or the
+    /// user's own again (<c>EVENT_SYSTEM_DESKTOPSWITCH</c>).
+    /// </summary>
+    public const uint DesktopSwitchEvent = 0x0020;
+
     /// <summary>An object was shown (<c>EVENT_OBJECT_SHOW</c>).</summary>
     public const uint ObjectShowEvent = 0x8002;
 

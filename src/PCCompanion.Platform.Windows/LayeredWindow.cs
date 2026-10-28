@@ -251,6 +251,19 @@ public sealed class LayeredWindow : IDisposable
     }
 
     /// <summary>
+    /// Brings the shown window in front of the other windows that stay on top, such as an app's
+    /// that the user keeps on top, without taking the focus. Returns whether it did.
+    /// </summary>
+    public bool BringToFront() => IsShown && PInvoke.SetWindowPos(
+        _handle,
+        HWND.HWND_TOPMOST,
+        0,
+        0,
+        0,
+        0,
+        SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER);
+
+    /// <summary>
     /// Brings the window back in front of <paramref name="other"/> when <paramref name="other"/>
     /// came in front of it, as the taskbar does when it's clicked. Returns whether it did.
     /// </summary>
