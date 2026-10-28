@@ -52,6 +52,30 @@ public sealed class DisplaysTests
         Assert.InRange(Displays.MainDisplayDpi(), 96u, 960u);
     }
 
+    [Fact]
+    public void EachDisplaysDetailsHaveItsAreaAWorkAreaInItAndADpi()
+    {
+        var details = Displays.GetDetails();
+
+        Assert.Equal(Displays.GetAreas(), details.Select(display => display.Bounds));
+        Assert.All(details, display =>
+        {
+            Assert.True(display.Bounds.Contains(display.WorkArea), $"{display.WorkArea} in {display.Bounds}");
+            Assert.False(display.WorkArea.IsEmpty);
+            Assert.InRange(display.Dpi, 96u, 960u);
+        });
+        Assert.Equal(Displays.MainDisplayDpi(), details.Single(display => display.Bounds.Location == Point.Empty).Dpi);
+    }
+
+    [Theory]
+    [InlineData(96u, 1.0)]
+    [InlineData(144u, 1.5)]
+    [InlineData(192u, 2.0)]
+    public void AScaleIsTheDpiOver96(uint dpi, double scale)
+    {
+        Assert.Equal(scale, new DisplayDetails(Rectangle.Empty, Rectangle.Empty, dpi).Scale);
+    }
+
     [Theory]
     [InlineData(96u, 16)]
     [InlineData(120u, 20)]

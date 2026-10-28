@@ -2,18 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.LockKeys;
-
-/// <summary>A display as the notice uses it, in physical pixels.</summary>
-/// <param name="Bounds">The whole display.</param>
-/// <param name="WorkArea">The display without the taskbar and other docked bars.</param>
-/// <param name="Dpi">The display's DPI: 96 at 100% scale.</param>
-public sealed record NoticeDisplay(Rectangle Bounds, Rectangle WorkArea, uint Dpi)
-{
-    /// <summary>How many physical pixels an effective pixel is on this display.</summary>
-    public double Scale => Dpi / 96.0;
-}
 
 /// <summary>
 /// Where the notice and the badge show. See "Where the notice shows" in docs/features/input/lock-keys.md.
@@ -30,7 +21,7 @@ public static class NoticePlacement
     /// </summary>
     /// <param name="frontWindowDisplay">The bounds of the window in front's display, if any.</param>
     /// <param name="pointerPosition">The pointer position, if it can be read.</param>
-    public static NoticeDisplay? ChooseDisplay(IReadOnlyList<NoticeDisplay> displays, Rectangle? frontWindowDisplay, Point? pointerPosition)
+    public static DisplayDetails? ChooseDisplay(IReadOnlyList<DisplayDetails> displays, Rectangle? frontWindowDisplay, Point? pointerPosition)
     {
         ArgumentNullException.ThrowIfNull(displays);
 
@@ -46,7 +37,7 @@ public static class NoticePlacement
     /// <paramref name="away"/> pixels further from the edge it's at, so that a notice can show next
     /// to the badge without covering it.
     /// </summary>
-    public static Rectangle Place(NoticeDisplay display, Size size, NoticePosition position, int away = 0)
+    public static Rectangle Place(DisplayDetails display, Size size, NoticePosition position, int away = 0)
     {
         ArgumentNullException.ThrowIfNull(display);
 
