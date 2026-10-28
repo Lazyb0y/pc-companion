@@ -29,9 +29,9 @@ foreach ($theme in @{ Name = 'Dark'; Saved = 'Dark' }, @{ Name = 'Light'; Saved 
 }
 
 # Page layout at window widths from narrow (the pane folds away) to the full screen, on Home,
-# Hot Corners, App Windows, System Meters, Clipboard Actions, Network Profiles, Folder Rules, Display Profiles and General: a centered column, as Windows Settings
+# Hot Corners, Lock Keys, App Windows, System Meters, Clipboard Actions, Network Profiles, Folder Rules, Display Profiles and General: a centered column, as Windows Settings
 # lays out its pages. At the full screen's width, the feature pages' headers too.
-$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners'; Header = $true }, @{ Name = 'App Windows'; Title = 'App Windows'; Header = $true }, @{ Name = 'System Meters'; Title = 'System Meters'; Header = $true }, @{ Name = 'Clipboard Actions'; Title = 'Clipboard Actions'; Header = $true }, @{ Name = 'Network Profiles'; Title = 'Network Profiles'; Header = $true }, @{ Name = 'Folder Rules'; Title = 'Folder Rules'; Header = $true }, @{ Name = 'Display Profiles'; Title = 'Display Profiles'; Header = $true }, @{ Name = 'General'; Title = 'General' })
+$pages = @(@{ Name = 'Home'; Title = 'Home' }, @{ Name = 'Hot Corners'; Title = 'Hot Corners'; Header = $true }, @{ Name = 'Lock Keys'; Title = 'Lock Keys'; Header = $true }, @{ Name = 'App Windows'; Title = 'App Windows'; Header = $true }, @{ Name = 'System Meters'; Title = 'System Meters'; Header = $true }, @{ Name = 'Clipboard Actions'; Title = 'Clipboard Actions'; Header = $true }, @{ Name = 'Network Profiles'; Title = 'Network Profiles'; Header = $true }, @{ Name = 'Folder Rules'; Title = 'Folder Rules'; Header = $true }, @{ Name = 'Display Profiles'; Title = 'Display Profiles'; Header = $true }, @{ Name = 'General'; Title = 'General' })
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 $letterHeights = @{}
 foreach ($width in 600, 1000, 1300, $screen.Width) {
