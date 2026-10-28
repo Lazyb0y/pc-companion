@@ -114,15 +114,22 @@ public sealed class DisplayConfigurationTests
         var setup = DisplayConfiguration.Read();
         var paths = setup.Paths;
         var main = paths.First(path => path.Area.Location == Point.Empty);
-        Assert.DoesNotContain(DisplayConfiguration.ListModes(main.Source), mode => mode.RefreshRate == 7);
+        var modes = DisplayConfiguration.ListModes(main.Source);
+        Assert.DoesNotContain(modes, mode => mode.RefreshRate == 7);
 
         // Without an EDID, Windows doesn't know which refresh rates a display can show, and may accept any,
         // as a virtual machine's display does.
         var mainDisplays = setup.Displays.Where(display => paths.Any(path => path.Source == main.Source && path.Target == display.Target));
         Assert.SkipWhen(mainDisplays.Any(display => display.Model.Length == 0), "The main display has no EDID.");
 
-        Assert.Throws<Win32Exception>(() => DisplayConfiguration.Check(
+        var refused = Record.Exception(() => DisplayConfiguration.Check(
             [.. paths.Select(path => path.Source == main.Source ? path with { RefreshRate = new DisplayRefreshRate(7, 1) } : path)]));
+
+        // Names the display when Windows accepts it, since that depends on the display and its driver.
+        var displays = string.Join("; ", mainDisplays.Select(display => $"{display.Model} '{display.Name}' on {display.Connection}"));
+        var rates = string.Join(", ", modes.Select(mode => mode.RefreshRate).Distinct().Order());
+        Assert.True(refused is Win32Exception,
+            $"{refused?.GetType().Name ?? "No exception"} for 7 Hz on {displays}, at {main.Area.Size} and {main.RefreshRate.Numerator}/{main.RefreshRate.Denominator} Hz, with {modes.Count} modes listed at {rates} Hz");
     }
 
     [Fact]
