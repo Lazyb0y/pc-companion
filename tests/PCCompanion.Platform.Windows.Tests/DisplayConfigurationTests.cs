@@ -111,9 +111,15 @@ public sealed class DisplayConfigurationTests
     [Fact]
     public void WindowsRefusesARefreshRateTheDisplayDoesntOffer()
     {
-        var paths = DisplayConfiguration.Read().Paths;
+        var setup = DisplayConfiguration.Read();
+        var paths = setup.Paths;
         var main = paths.First(path => path.Area.Location == Point.Empty);
         Assert.DoesNotContain(DisplayConfiguration.ListModes(main.Source), mode => mode.RefreshRate == 7);
+
+        // Without an EDID, Windows doesn't know which refresh rates a display can show, and may accept any,
+        // as a virtual machine's display does.
+        var mainDisplays = setup.Displays.Where(display => paths.Any(path => path.Source == main.Source && path.Target == display.Target));
+        Assert.SkipWhen(mainDisplays.Any(display => display.Model.Length == 0), "The main display has no EDID.");
 
         Assert.Throws<Win32Exception>(() => DisplayConfiguration.Check(
             [.. paths.Select(path => path.Source == main.Source ? path with { RefreshRate = new DisplayRefreshRate(7, 1) } : path)]));
