@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Input.LockKeys;
 
 namespace PCCompanion.Modules.Input;
 
@@ -17,6 +18,7 @@ public static class InputModule
     public static IServiceCollection AddInputModule(this IServiceCollection services)
     {
         services.AddSingleton<IFeature, HotCornersFeature>();
+        services.AddSingleton<IFeature, LockKeysFeature>();
         return services;
     }
 }

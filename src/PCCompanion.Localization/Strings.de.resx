@@ -568,6 +568,42 @@
     <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Erreicht der Zeiger eine Ecke, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte, und solange Apps aufgeführt sind, welche App im Vordergrund ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysName" xml:space="preserve">
+    <value>Sperrtasten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDescription" xml:space="preserve">
+    <value>Zeigen Sie einen kurzen Hinweis auf dem Bildschirm an, wenn die Feststelltaste, die NUM-Taste oder die Rollen-Taste ein- oder ausgeschaltet wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOn" xml:space="preserve">
+    <value>Feststelltaste ein</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOff" xml:space="preserve">
+    <value>Feststelltaste aus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOn" xml:space="preserve">
+    <value>NUM-Taste ein</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOff" xml:space="preserve">
+    <value>NUM-Taste aus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOn" xml:space="preserve">
+    <value>Rollen-Taste ein</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOff" xml:space="preserve">
+    <value>Rollen-Taste aus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadge" xml:space="preserve">
+    <value>Feststelltaste</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>App-Fenster</value>
     <comment>Needs native review.</comment>

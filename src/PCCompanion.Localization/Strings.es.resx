@@ -568,6 +568,42 @@
     <value>Lee la posición del puntero, y si se mantiene presionado un botón del mouse o la tecla elegida, solo mientras Esquinas activas está activado. Cuando el puntero llega a una esquina, también lee si una aplicación limitó u ocultó el puntero, y dónde están las ventanas en esa pantalla, pero no sus títulos ni su contenido, y mientras haya aplicaciones en la lista, qué aplicación está en primer plano. Solo envía los métodos abreviados de Windows de las acciones elegidas y solo inicia los programas que elijas. No guarda ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysName" xml:space="preserve">
+    <value>Teclas de bloqueo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDescription" xml:space="preserve">
+    <value>Muestra un aviso breve en la pantalla cuando Bloq Mayús, Bloq Num o Bloq Despl se activa o se desactiva.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOn" xml:space="preserve">
+    <value>Bloq Mayús activado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockOff" xml:space="preserve">
+    <value>Bloq Mayús desactivado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOn" xml:space="preserve">
+    <value>Bloq Num activado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockOff" xml:space="preserve">
+    <value>Bloq Num desactivado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOn" xml:space="preserve">
+    <value>Bloq Despl activado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockOff" xml:space="preserve">
+    <value>Bloq Despl desactivado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadge" xml:space="preserve">
+    <value>Bloq Mayús</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>Ventanas de la aplicación</value>
     <comment>Needs native review.</comment>

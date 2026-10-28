@@ -568,6 +568,42 @@
     <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents, and while apps are listed, which app is in front. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
     <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="LockKeysName" xml:space="preserve">
+    <value>Lock Keys</value>
+    <comment>Feature name: navigation pane, Home and the Lock Keys page.</comment>
+  </data>
+  <data name="LockKeysDescription" xml:space="preserve">
+    <value>Show a short notice on screen when Caps Lock, Num Lock or Scroll Lock turns on or off.</value>
+    <comment>Lock Keys: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="LockKeysCapsLockOn" xml:space="preserve">
+    <value>Caps Lock on</value>
+    <comment>Lock Keys: the notice shown when Caps Lock turns on. Use the language&apos;s usual name of the key.</comment>
+  </data>
+  <data name="LockKeysCapsLockOff" xml:space="preserve">
+    <value>Caps Lock off</value>
+    <comment>Lock Keys: the notice shown when Caps Lock turns off.</comment>
+  </data>
+  <data name="LockKeysNumLockOn" xml:space="preserve">
+    <value>Num Lock on</value>
+    <comment>Lock Keys: the notice shown when Num Lock turns on.</comment>
+  </data>
+  <data name="LockKeysNumLockOff" xml:space="preserve">
+    <value>Num Lock off</value>
+    <comment>Lock Keys: the notice shown when Num Lock turns off.</comment>
+  </data>
+  <data name="LockKeysScrollLockOn" xml:space="preserve">
+    <value>Scroll Lock on</value>
+    <comment>Lock Keys: the notice shown when Scroll Lock turns on.</comment>
+  </data>
+  <data name="LockKeysScrollLockOff" xml:space="preserve">
+    <value>Scroll Lock off</value>
+    <comment>Lock Keys: the notice shown when Scroll Lock turns off.</comment>
+  </data>
+  <data name="LockKeysBadge" xml:space="preserve">
+    <value>Caps Lock</value>
+    <comment>Lock Keys: the small badge that stays on screen while Caps Lock is on, next to a closed lock icon. Use the language&apos;s usual name of the key.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>App Windows</value>
     <comment>Feature name: switching between the windows of the app in front.</comment>
