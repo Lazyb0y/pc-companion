@@ -1,5 +1,5 @@
-using System;
 using System.Drawing;
+using PCCompanion.Modules.Input.FullScreen;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
@@ -7,7 +7,7 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// <summary>
 /// What <see cref="CornerDetector"/> reads from Windows, so tests can supply it instead.
 /// </summary>
-public interface IHotCornerEnvironment
+public interface IHotCornerEnvironment : IFullScreenEnvironment
 {
     /// <summary>
     /// The pointer position in physical pixels, or <see langword="null"/> when it can't be read,
@@ -25,24 +25,10 @@ public interface IHotCornerEnvironment
 
     PointerVisibility PointerVisibility { get; }
 
-    FullScreenMode FullScreenMode { get; }
-
-    /// <summary>
-    /// The area of the display the window in front is on, or <see langword="null"/> when no
-    /// window is in front.
-    /// </summary>
-    Rectangle? FrontWindowDisplay { get; }
-
     /// <summary>
     /// The app of the window in front, or <see langword="null"/> when no window is in front.
     /// </summary>
     AppOfWindow? AppInFront { get; }
 
     bool IsKeyHeld(HotCornerKey key);
-
-    /// <summary>
-    /// Reads the visible top-level windows front to back until <paramref name="decide"/> returns a
-    /// value, and returns that value; <see langword="null"/> when no window decided.
-    /// </summary>
-    bool? FindWindowFrontToBack(Func<WindowPlace, bool?> decide);
 }
