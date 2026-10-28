@@ -13,8 +13,9 @@ namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// A window the app draws pixel by pixel, with transparency, that stays on top of other windows
-/// and never takes the focus, such as a strip on the taskbar. It isn't on the taskbar or in
-/// Alt + Tab. Create, use and dispose it on one thread, which must run a <see cref="MessageLoop"/>.
+/// and never takes the focus, such as a strip on the taskbar or a notice. It isn't on the taskbar
+/// or in Alt + Tab. Create, use and dispose it on one thread, which must run a
+/// <see cref="MessageLoop"/>.
 /// </summary>
 public sealed class LayeredWindow : IDisposable
 {
@@ -30,8 +31,12 @@ public sealed class LayeredWindow : IDisposable
 
     /// <param name="className">A window class name that is unique to the app, so other processes can find the window.</param>
     /// <param name="title">The window's name, which screen readers read.</param>
+    /// <param name="clickThrough">
+    /// Whether all of the window lets clicks and the pointer through to what's below it, as a
+    /// notice does; it then raises no pointer events. Otherwise only fully transparent pixels do.
+    /// </param>
     /// <exception cref="Win32Exception">Windows refused the window.</exception>
-    public unsafe LayeredWindow(string className, string title)
+    public unsafe LayeredWindow(string className, string title, bool clickThrough = false)
     {
         ArgumentException.ThrowIfNullOrEmpty(className);
         ArgumentNullException.ThrowIfNull(title);
@@ -57,8 +62,14 @@ public sealed class LayeredWindow : IDisposable
             }
         }
 
+        var style = WINDOW_EX_STYLE.WS_EX_LAYERED | WINDOW_EX_STYLE.WS_EX_TOPMOST | WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE;
+        if (clickThrough)
+        {
+            style |= WINDOW_EX_STYLE.WS_EX_TRANSPARENT;
+        }
+
         _handle = PInvoke.CreateWindowEx(
-            WINDOW_EX_STYLE.WS_EX_LAYERED | WINDOW_EX_STYLE.WS_EX_TOPMOST | WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE,
+            style,
             className,
             title,
             WINDOW_STYLE.WS_POPUP,
@@ -98,9 +109,15 @@ public sealed class LayeredWindow : IDisposable
     public bool IsPointerOver { get; private set; }
 
     /// <summary>
+    /// How opaque the window shows its pixels, from 0 for invisible to 255 for as drawn, which
+    /// <see cref="Show"/> and <see cref="SetOpacity"/> use. 255 at first.
+    /// </summary>
+    public byte Opacity { get; private set; } = byte.MaxValue;
+
+    /// <summary>
     /// Shows premultiplied 32-bit pixels (alpha, red, green and blue, from the high byte down),
-    /// row by row from the top, at <paramref name="bounds"/> in physical pixels. Fully transparent
-    /// pixels let clicks through.
+    /// row by row from the top, at <paramref name="bounds"/> in physical pixels, with
+    /// <see cref="Opacity"/>. Fully transparent pixels let clicks through.
     /// </summary>
     /// <exception cref="Win32Exception">Windows couldn't draw the window.</exception>
     public unsafe void Show(ReadOnlySpan<uint> pixels, Rectangle bounds)
@@ -123,13 +140,7 @@ public sealed class LayeredWindow : IDisposable
                 var position = new Point(bounds.X, bounds.Y);
                 var size = new SIZE(bounds.Width, bounds.Height);
                 var origin = Point.Empty;
-                var blend = new BLENDFUNCTION
-                {
-                    BlendOp = (byte)PInvoke.AC_SRC_OVER,
-                    SourceConstantAlpha = 255,
-                    AlphaFormat = (byte)PInvoke.AC_SRC_ALPHA,
-                };
-
+                var blend = Blend(Opacity);
                 if (!PInvoke.UpdateLayeredWindow(_handle, screen, &position, &size, memory, &origin, new COLORREF(0), &blend, UPDATE_LAYERED_WINDOW_FLAGS.ULW_ALPHA))
                 {
                     throw new Win32Exception();
@@ -150,6 +161,29 @@ public sealed class LayeredWindow : IDisposable
         {
             PInvoke.ShowWindow(_handle, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
             IsShown = true;
+        }
+    }
+
+    /// <summary>
+    /// Changes how opaque the window is without drawing it again, as for a step of a fade. While
+    /// the window is hidden, the next <see cref="Show"/> uses it.
+    /// </summary>
+    /// <exception cref="Win32Exception">Windows couldn't change it.</exception>
+    public unsafe void SetOpacity(byte opacity)
+    {
+        ObjectDisposedException.ThrowIf(_handle.IsNull, this);
+
+        Opacity = opacity;
+        if (!IsShown)
+        {
+            return;
+        }
+
+        // Without a source, Windows keeps the pixels, position and size it has.
+        var blend = Blend(opacity);
+        if (!PInvoke.UpdateLayeredWindow(_handle, HDC.Null, null, null, HDC.Null, null, new COLORREF(0), &blend, UPDATE_LAYERED_WINDOW_FLAGS.ULW_ALPHA))
+        {
+            throw new Win32Exception();
         }
     }
 
@@ -255,6 +289,14 @@ public sealed class LayeredWindow : IDisposable
         IsShown = false;
         PInvoke.UnregisterClass(_className, PInvoke.GetModuleHandle((string?)null));
     }
+
+    // Premultiplied pixels, shown with the window's opacity.
+    private static BLENDFUNCTION Blend(byte opacity) => new()
+    {
+        BlendOp = (byte)PInvoke.AC_SRC_OVER,
+        SourceConstantAlpha = opacity,
+        AlphaFormat = (byte)PInvoke.AC_SRC_ALPHA,
+    };
 
     private unsafe HWND CreateToolTip()
     {

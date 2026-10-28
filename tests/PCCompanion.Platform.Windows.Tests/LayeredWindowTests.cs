@@ -50,6 +50,49 @@ public sealed class LayeredWindowTests
     }
 
     [Fact]
+    public void OnlyAClickThroughWindowLetsClicksThroughAllOfIt()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+        using var notice = new LayeredWindow(UniqueClassName(), "Notice", clickThrough: true);
+
+        const long Transparent = 0x20; // WS_EX_TRANSPARENT
+        Assert.Equal(0L, (long)GetWindowLongPtr(window.Handle, -20) & Transparent);
+        Assert.Equal(Transparent, (long)GetWindowLongPtr(notice.Handle, -20) & Transparent);
+        Assert.True(TopLevelWindows.IsTopmost(notice.Handle));
+    }
+
+    [Fact]
+    public void OpacityChangesWhileShownAndIsKeptWhileHidden()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+        Assert.Equal(255, window.Opacity);
+
+        window.SetOpacity(0);
+        window.Show(new uint[8], OffScreen);
+        Assert.Equal(0, window.Opacity);
+
+        foreach (var step in new byte[] { 64, 128, 255 })
+        {
+            window.SetOpacity(step);
+            Assert.Equal(step, window.Opacity);
+        }
+
+        window.Hide();
+        window.SetOpacity(32);
+        window.Show(new uint[8], OffScreen);
+        Assert.Equal(32, window.Opacity);
+    }
+
+    [Fact]
+    public void ADisposedWindowsOpacityCantChange()
+    {
+        var window = new LayeredWindow(UniqueClassName(), "Test");
+        window.Dispose();
+
+        Assert.Throws<ObjectDisposedException>(() => window.SetOpacity(128));
+    }
+
+    [Fact]
     public void TheTitleIsTheWindowsName()
     {
         using var window = new LayeredWindow(UniqueClassName(), "First");

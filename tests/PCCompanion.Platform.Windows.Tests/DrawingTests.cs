@@ -26,6 +26,25 @@ public sealed class DrawingTests
     }
 
     [Fact]
+    public void RightToLeftTextKeepsItsWidthAndPutsALeftToRightPartInItsPlace()
+    {
+        const string Text = "تم تشغيل Caps Lock";
+
+        var leftToRight = TextMask.Render(Text, "Segoe UI", 400, 14);
+        var rightToLeft = TextMask.Render(Text, "Segoe UI", 400, 14, rightToLeft: true);
+
+        Assert.Equal(leftToRight.Width, rightToLeft.Width);
+        Assert.Contains(rightToLeft.Coverage, value => value == 255);
+        Assert.False(leftToRight.Coverage.SequenceEqual(rightToLeft.Coverage));
+    }
+
+    [Fact]
+    public void LeftToRightTextLooksTheSameInEitherDirection()
+    {
+        Assert.Equal(TextMask.Render("Caps Lock", "Segoe UI", 400, 14).Coverage, TextMask.Render("Caps Lock", "Segoe UI", 400, 14, rightToLeft: true).Coverage);
+    }
+
+    [Fact]
     public void EmptyTextDrawsNothing()
     {
         var mask = TextMask.Render(string.Empty, "Segoe UI", 400, 12);

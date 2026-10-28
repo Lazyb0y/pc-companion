@@ -26,6 +26,7 @@ DWMWINDOWATTRIBUTE
 EnumDisplayMonitors
 EnumWindows
 EVENT_SYSTEM_FOREGROUND
+ExtTextOut
 FileOpenDialog
 FILEOPENDIALOGOPTIONS
 FindWindow
@@ -42,6 +43,7 @@ GetGUIThreadInfo
 GetIfTable2
 GetKeyboardLayout
 GetKeyboardLayoutList
+GetKeyState
 GetLastActivePopup
 GetMessage
 GetModuleHandle

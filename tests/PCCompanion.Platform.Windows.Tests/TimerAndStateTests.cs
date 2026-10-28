@@ -6,8 +6,8 @@ using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
-// Each test uses its own hidden window and posts messages to that window only; the display and
-// the theme are only read.
+// Each test uses its own hidden window and posts messages to that window only; the display, the
+// theme and the lock keys are only read.
 public sealed class TimerAndStateTests
 {
     private const uint PowerBroadcast = 0x0218; // WM_POWERBROADCAST
@@ -89,6 +89,17 @@ public sealed class TimerAndStateTests
         _ = WindowsTheme.IsHighContrast();
 
         Assert.InRange(WindowsTheme.TextColor(), 0u, 0xFFFFFFu);
+        Assert.InRange(WindowsTheme.WindowColor(), 0u, 0xFFFFFFu);
+    }
+
+    // .NET reads Caps Lock and Num Lock with the same function.
+    [Fact]
+    public void TheLockKeysAreRead()
+    {
+        Assert.Equal(Console.CapsLock, InputState.IsLockKeyOn(LockKey.CapsLock));
+        Assert.Equal(Console.NumberLock, InputState.IsLockKeyOn(LockKey.NumLock));
+        _ = InputState.IsLockKeyOn(LockKey.ScrollLock);
+        Assert.Throws<ArgumentOutOfRangeException>(() => InputState.IsLockKeyOn((LockKey)3));
     }
 
     // Sends what Windows sends: a POWERBROADCAST_SETTING with the setting's GUID, the data's length and the data.

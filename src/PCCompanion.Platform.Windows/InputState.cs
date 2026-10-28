@@ -7,7 +7,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// The pointer position and which buttons and keys are held now.
+/// The pointer position, which buttons and keys are held now, and which lock keys are on.
 /// </summary>
 public static class InputState
 {
@@ -54,6 +54,22 @@ public static class InputState
         _ => throw new ArgumentOutOfRangeException(nameof(key), key, null),
     };
 
+    /// <summary>
+    /// Whether a lock key is on. Microsoft documents this as the calling thread's copy of the
+    /// keyboard state, which follows the keyboard messages the thread reads. Windows also brings
+    /// the copy up to date while the thread has no keyboard input waiting, so a thread that never
+    /// has the keyboard focus, such as the host's UI thread, reads the current state, also while
+    /// an app running as administrator is in front. See "Detecting a change" in
+    /// docs/features/input/lock-keys.md.
+    /// </summary>
+    public static bool IsLockKeyOn(LockKey key) => (PInvoke.GetKeyState((int)(key switch
+    {
+        LockKey.CapsLock => VIRTUAL_KEY.VK_CAPITAL,
+        LockKey.NumLock => VIRTUAL_KEY.VK_NUMLOCK,
+        LockKey.ScrollLock => VIRTUAL_KEY.VK_SCROLL,
+        _ => throw new ArgumentOutOfRangeException(nameof(key), key, null),
+    })) & 1) != 0;
+
     internal static bool IsDown(VIRTUAL_KEY key) => (PInvoke.GetAsyncKeyState((int)key) & 0x8000) != 0;
 }
 
@@ -78,4 +94,11 @@ public enum ModifierKey
     Alt,
     Shift,
     Windows,
+}
+
+public enum LockKey
+{
+    CapsLock,
+    NumLock,
+    ScrollLock,
 }

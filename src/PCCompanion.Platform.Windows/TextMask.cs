@@ -19,8 +19,12 @@ public sealed record TextMask(int Width, int Height, byte[] Coverage)
     /// Draws <paramref name="text"/> in a font, such as Segoe UI or Segoe Fluent Icons, with a
     /// weight from 100 to 900 (400 is regular and 600 semibold) and a height in pixels.
     /// </summary>
+    /// <param name="rightToLeft">
+    /// Whether the text reads right to left, as in Arabic, so that parts in left-to-right scripts,
+    /// such as a key's name, take their place in it.
+    /// </param>
     /// <exception cref="Win32Exception">GDI couldn't draw it.</exception>
-    public static unsafe TextMask Render(string text, string fontFace, int weight, int pixelHeight)
+    public static unsafe TextMask Render(string text, string fontFace, int weight, int pixelHeight, bool rightToLeft = false)
     {
         ArgumentNullException.ThrowIfNull(text);
         ArgumentException.ThrowIfNullOrEmpty(fontFace);
@@ -62,7 +66,11 @@ public sealed record TextMask(int Width, int Height, byte[] Coverage)
             var oldBitmap = PInvoke.SelectObject(dc, (HGDIOBJ)bitmap.DangerousGetHandle());
             PInvoke.SetTextColor(dc, new COLORREF(0x00FFFFFF));
             PInvoke.SetBkMode(dc, BACKGROUND_MODE.TRANSPARENT);
-            PInvoke.TextOut(dc, 1, 0, text, text.Length);
+            fixed (char* characters = text)
+            {
+                PInvoke.ExtTextOut(dc, 1, 0, rightToLeft ? ETO_OPTIONS.ETO_RTLREADING : 0, (RECT*)null, characters, (uint)text.Length, null);
+            }
+
             PInvoke.GdiFlush();
 
             // White text on black: each pixel's brightness is its coverage.
