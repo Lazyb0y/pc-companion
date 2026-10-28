@@ -29,10 +29,18 @@ public static class WindowsTheme
     /// <summary>
     /// The theme's text color, as 0xRRGGBB, which the taskbar's own icons use in high contrast.
     /// </summary>
-    public static uint TextColor()
+    public static uint TextColor() => SystemColor(SYS_COLOR_INDEX.COLOR_WINDOWTEXT);
+
+    /// <summary>
+    /// The theme's window background color, as 0xRRGGBB, which <see cref="TextColor"/> is drawn
+    /// on in high contrast.
+    /// </summary>
+    public static uint WindowColor() => SystemColor(SYS_COLOR_INDEX.COLOR_WINDOW);
+
+    private static uint SystemColor(SYS_COLOR_INDEX index)
     {
         // A COLORREF is 0x00BBGGRR.
-        var color = PInvoke.GetSysColor(SYS_COLOR_INDEX.COLOR_WINDOWTEXT);
+        var color = PInvoke.GetSysColor(index);
         return ((color & 0xFF) << 16) | (color & 0xFF00) | ((color >> 16) & 0xFF);
     }
 }
