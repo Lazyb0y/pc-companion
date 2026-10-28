@@ -604,6 +604,106 @@
     <value>Verr. Maj</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>Touches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>Choisissez les touches qui affichent un avis quand elles sont activées ou désactivées.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>Verr. Maj</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>Verr. Num</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>Arrêt défil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>De nombreux commutateurs KVM changent d’ordinateur quand on l’appuie deux fois rapidement, ce qui afficherait deux avis.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>Afficher quand une touche est désactivée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>Sinon, seules les touches activées affichent un avis.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>Aucune touche n’est choisie, donc aucun avis ne s’affiche.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>Position</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>L’emplacement de l’avis sur l’écran où vous tapez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>En bas au centre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>En haut au centre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>En haut à gauche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>Afficher pendant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>La durée d’affichage de l’avis avant qu’il ne disparaisse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>Ne pas afficher quand une application est en plein écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>Par exemple, un jeu, une vidéo ou une présentation.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>Continuer d’afficher tant que Verr. Maj est activé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>Un petit badge reste à l’écran jusqu’à ce que Verr. Maj soit désactivé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>Sons et lecteurs d’écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>Windows peut aussi émettre un son quand une touche de verrouillage est activée ou désactivée, avec les touches bascules, et le Narrateur annonce le changement.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>Ouvrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>Vérifie environ 10 fois par seconde si Verr. Maj, Verr. Num et Arrêt défil sont activés, uniquement quand Touches de verrouillage est activé, mais jamais les touches que vous tapez. Quand un avis s’affiche, lit aussi sur quel écran se trouve la fenêtre au premier plan et l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu. Ne change rien, et n’enregistre et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>Fenêtres de l’application</value>
     <comment>Needs native review.</comment>

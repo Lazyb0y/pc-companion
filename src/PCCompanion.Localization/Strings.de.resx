@@ -604,6 +604,106 @@
     <value>Feststelltaste</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LockKeysKeysHeader" xml:space="preserve">
+    <value>Tasten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysKeysDescription" xml:space="preserve">
+    <value>Wählen Sie, für welche Tasten beim Ein- oder Ausschalten ein Hinweis angezeigt wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysCapsLockHeader" xml:space="preserve">
+    <value>Feststelltaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNumLockHeader" xml:space="preserve">
+    <value>NUM-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockHeader" xml:space="preserve">
+    <value>Rollen-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysScrollLockDescription" xml:space="preserve">
+    <value>Viele KVM-Switches wechseln den Computer, wenn sie zweimal schnell gedrückt wird, was zwei Hinweise anzeigen würde.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffHeader" xml:space="preserve">
+    <value>Beim Ausschalten einer Taste anzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysShowWhenOffDescription" xml:space="preserve">
+    <value>Andernfalls wird nur beim Einschalten von Tasten ein Hinweis angezeigt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysNoKeyInfo" xml:space="preserve">
+    <value>Es ist keine Taste ausgewählt, daher werden keine Hinweise angezeigt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionHeader" xml:space="preserve">
+    <value>Position</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionDescription" xml:space="preserve">
+    <value>Wo der Hinweis auf dem Bildschirm angezeigt wird, auf dem Sie gerade schreiben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionBottomCenter" xml:space="preserve">
+    <value>Unten zentriert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopCenter" xml:space="preserve">
+    <value>Oben zentriert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPositionTopLeft" xml:space="preserve">
+    <value>Oben links</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationHeader" xml:space="preserve">
+    <value>Anzeigedauer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationDescription" xml:space="preserve">
+    <value>Wie lange der Hinweis angezeigt wird, bevor er ausgeblendet wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysDurationValue" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenHeader" xml:space="preserve">
+    <value>Nicht anzeigen, solange eine App im Vollbildmodus ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysFullScreenDescription" xml:space="preserve">
+    <value>Zum Beispiel ein Spiel, ein Video oder eine Präsentation.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeHeader" xml:space="preserve">
+    <value>Anzeigen, solange die Feststelltaste eingeschaltet ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysBadgeDescription" xml:space="preserve">
+    <value>Ein kleines Abzeichen bleibt auf dem Bildschirm, bis die Feststelltaste ausgeschaltet wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsHeader" xml:space="preserve">
+    <value>Töne und Sprachausgaben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysSoundsDescription" xml:space="preserve">
+    <value>Windows kann mit der Statusanzeige auch einen Ton abspielen, wenn eine Sperrtaste ein- oder ausgeschaltet wird, und die Sprachausgabe sagt die Änderung an.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysOpenKeyboardSettings" xml:space="preserve">
+    <value>Öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LockKeysPermissions" xml:space="preserve">
+    <value>Liest etwa zehnmal pro Sekunde, ob die Feststelltaste, die NUM-Taste und die Rollen-Taste eingeschaltet sind, nur solange Sperrtasten eingeschaltet ist, aber nie die Tasten, die Sie eingeben. Wird ein Hinweis angezeigt, wird außerdem gelesen, auf welchem Bildschirm sich das Fenster im Vordergrund befindet und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte. Ändert nichts und speichert und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
   <data name="AppWindowsName" xml:space="preserve">
     <value>App-Fenster</value>
     <comment>Needs native review.</comment>

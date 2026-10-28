@@ -15,6 +15,7 @@ using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.ViewModels;
@@ -170,6 +171,7 @@ public partial class App : Application
             .AddTransient<GeneralViewModel>()
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()
+            .AddTransient<LockKeysViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()

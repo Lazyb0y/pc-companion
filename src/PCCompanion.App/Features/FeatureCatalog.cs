@@ -7,6 +7,7 @@ using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.Core.Features;
@@ -20,6 +21,7 @@ using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Input.LockKeys;
 using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
@@ -48,6 +50,7 @@ public static class FeatureCatalog
         new(InputModule.Id, "ModuleInputName",
         [
             new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage)),
+            new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage)),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [
