@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
@@ -185,7 +187,29 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
             StartChecking();
         }
 
+        WarmUp();
         LogStarted(logger);
+    }
+
+    // The first drawing loads the fonts and the text shaping, which took 50 ms in Windows Sandbox,
+    // so it's done once on the thread pool, in the user's language, before any notice shows.
+    private void WarmUp()
+    {
+        var style = StyleFor(new DisplayDetails(Rectangle.Empty, Rectangle.Empty, 96), badge: false);
+        NoticeLine[] notice = [new(Strings.LockKeysCapsLockOn, true)];
+        NoticeLine[] badge = [new(Strings.LockKeysBadge, true)];
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                NoticePainter.Paint(notice, style);
+                NoticePainter.Paint(badge, style with { Badge = true });
+            }
+            catch (Win32Exception exception)
+            {
+                LogWarmUpFailed(logger, exception);
+            }
+        });
     }
 
     private void Stop()
@@ -493,6 +517,9 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Lock Keys read the lock keys again without a notice: {Reason} ended.")]
     private static partial void LogReadAgain(ILogger logger, Away reason);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Lock Keys couldn't draw its notice ahead of time; the first notice draws it.")]
+    private static partial void LogWarmUpFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The Lock Keys settings can't be read, so Lock Keys is off.")]
     private static partial void LogUnreadableSettings(ILogger logger, Exception exception);
