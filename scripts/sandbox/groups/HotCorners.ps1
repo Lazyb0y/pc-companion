@@ -163,14 +163,6 @@ function Get-ExcludedApps {
     if ($null -eq $apps) { return @() }
     return @($apps)
 }
-function Find-AppListItem([string] $Name) {
-    $window = Get-AppWindow
-    if (-not $window) { return $null }
-    $condition = New-Object System.Windows.Automation.AndCondition(
-        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
-        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
-    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
-}
 function Find-InElement($Element, [string] $AutomationId, $ControlType) {
     $condition = New-Object System.Windows.Automation.AndCondition(
         (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $AutomationId)),
