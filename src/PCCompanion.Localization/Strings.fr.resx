@@ -916,7 +916,7 @@
     <value>Windows peut placer les nouvelles icônes dans le menu des icônes masquées (^) de la barre des tâches. Pour garder un indicateur visible, faites glisser son icône dans la barre des tâches ou activez-la dans les paramètres de la barre des tâches.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>Ouvrir les paramètres de la barre des tâches</value>
     <comment>Needs native review.</comment>
   </data>

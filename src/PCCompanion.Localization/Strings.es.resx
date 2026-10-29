@@ -916,7 +916,7 @@
     <value>Windows puede poner los iconos nuevos en el menú de iconos ocultos (^) de la barra de tareas. Para tener un medidor siempre a la vista, arrastra su icono a la barra de tareas o actívalo en la configuración de la barra de tareas.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>Abrir la configuración de la barra de tareas</value>
     <comment>Needs native review.</comment>
   </data>

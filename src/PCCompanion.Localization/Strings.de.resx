@@ -916,7 +916,7 @@
     <value>Windows legt neue Symbole möglicherweise im Menü mit ausgeblendeten Symbolen (^) der Taskleiste ab. Damit eine Anzeige sichtbar bleibt, ziehen Sie ihr Symbol auf die Taskleiste oder aktivieren Sie es in den Taskleisteneinstellungen.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>Taskleisteneinstellungen öffnen</value>
     <comment>Needs native review.</comment>
   </data>

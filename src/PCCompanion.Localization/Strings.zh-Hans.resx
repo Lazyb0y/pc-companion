@@ -900,7 +900,7 @@
     <value>Windows 可能会将新图标放在任务栏的隐藏图标菜单 (^) 中。若要让某项指标始终可见，请将其图标拖到任务栏上，或在任务栏设置中将其打开。</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>打开任务栏设置</value>
     <comment>Needs native review.</comment>
   </data>
