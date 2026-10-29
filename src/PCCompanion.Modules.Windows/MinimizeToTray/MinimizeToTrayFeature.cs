@@ -55,7 +55,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
-    public static FeatureInfo Definition { get; } = new("minimizeToTray", WindowsModule.Id, "MinimizeToTrayName", "MinimizeToTrayDescription", "");
+    public static FeatureInfo Definition { get; } = new("minimizeToTray", WindowsModule.Id, "MinimizeToTrayName", "MinimizeToTrayDescription", "");
 
     /// <summary>
     /// Whether this PC can run Minimize to Tray, for the settings app, which doesn't create the feature.
