@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Platform.Windows;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;

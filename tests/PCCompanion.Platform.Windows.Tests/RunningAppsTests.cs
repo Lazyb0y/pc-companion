@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using PCCompanion.Modules.Input.HotCorners;
-using PCCompanion.Platform.Windows;
 using Xunit;
 
-namespace PCCompanion.Modules.Input.Tests;
+namespace PCCompanion.Platform.Windows.Tests;
 
 // Made-up windows and app identities; no window or process is read.
 public sealed class RunningAppsTests

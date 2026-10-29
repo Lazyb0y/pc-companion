@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Localization;
-using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
 

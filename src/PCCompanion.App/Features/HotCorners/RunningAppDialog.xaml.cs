@@ -6,7 +6,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using PCCompanion.Core;
-using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.HotCorners;
