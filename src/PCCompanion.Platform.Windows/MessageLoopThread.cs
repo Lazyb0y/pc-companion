@@ -102,6 +102,24 @@ public abstract class MessageLoopThread<TSettings>
         window?.BeginInvoke(() => Guard(ApplyLatest));
     }
 
+    /// <summary>
+    /// Runs <paramref name="action"/> on the thread, inside its error boundary, without waiting for
+    /// it, as for a choice from the host's menu. Nothing runs when the thread has no window yet or
+    /// any more.
+    /// </summary>
+    protected void Post(Action action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        MessageWindow? window;
+        lock (_gate)
+        {
+            window = _stopping ? null : _window;
+        }
+
+        window?.BeginInvoke(() => Guard(action));
+    }
+
     /// <summary>Asks the thread to let go of what it created and end, without waiting for it.</summary>
     public void Stop()
     {

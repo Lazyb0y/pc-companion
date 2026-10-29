@@ -40,6 +40,21 @@ public sealed class MessageLoopThreadTests
     }
 
     [Fact]
+    public void PostRunsAnActionOnTheThreadUntilItsAskedToStop()
+    {
+        var thread = Start("first", "red");
+        Assert.True(_recorder.WaitUntil(recorder => recorder.Events.Contains("first started")));
+
+        thread.Say("hello");
+        Assert.True(_recorder.WaitUntil(recorder => recorder.Events.Contains("first hello")));
+        thread.Stop();
+        thread.Say("too late");
+        Assert.True(thread.Join(TimeSpan.FromSeconds(10)));
+
+        Assert.DoesNotContain("first too late", _recorder.Events);
+    }
+
+    [Fact]
     public void ANewThreadWaitsForTheOneBefore()
     {
         // Two windows of one class can't exist at once, so the second would fail without waiting.
@@ -146,6 +161,9 @@ public sealed class MessageLoopThreadTests
 
             Add($"apply {settings}");
         }
+
+        /// <summary>Records <paramref name="what"/> on the thread.</summary>
+        public void Say(string what) => Post(() => Add(what));
 
         protected override void OnStopping() => Add("stopping");
 
