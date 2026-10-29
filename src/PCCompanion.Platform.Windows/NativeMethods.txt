@@ -337,3 +337,9 @@ GetWindowText
 GetWindowTextLength
 IsWindowEnabled
 MessageBeep
+DrawIconEx
+GetClassLongPtr
+SendMessageCallback
+WM_GETICON
+ICON_BIG
+ICON_SMALL2
