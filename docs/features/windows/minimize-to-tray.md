@@ -41,7 +41,7 @@ Send any app's window to an icon in the notification area instead of the taskbar
 - **Store apps in Windows' shared app frame** (`ApplicationFrameWindow`, in `ApplicationFrameHost.exe`), such as Settings: Windows keeps their taskbar button and Alt + Tab entry, and shows the window again within seconds. Store apps that run as desktop apps, such as most new apps, have ordinary windows and can go to the tray.
 - **A window with a dialog open,** such as a Save dialog, recognized by the main window being disabled (`IsWindowEnabled`): some apps cancel a dialog when its window is minimized, as the spike showed for Windows Forms apps, and an app can't be told apart in advance.
 - **Windows that aren't on the taskbar,** such as the desktop, or no window in front.
-- When the shortcut can't send the window in front, or Shift + Minimize can't send the window, Windows' warning sound plays (`MessageBeep` with `MB_ICONEXCLAMATION`). With Shift + Minimize, the window still minimizes to the taskbar, as without Shift. A listed app's window that can't go stays minimized on the taskbar, with no sound, since the user only minimized it.
+- When the shortcut can't send the window in front, or Shift + Minimize can't send the window, Windows' warning sound plays (`MessageBeep` with `MB_ICONEXCLAMATION`). With Shift + Minimize, the window still minimizes to the taskbar, as without Shift. The one exception is an app running as administrator while PC Companion doesn't: see [Apps running as administrator](#apps-running-as-administrator). A listed app's window that can't go stays minimized on the taskbar, with no sound, since the user only minimized it.
 - The feature page lists what can't go to the tray and why. Its note about apps running as administrator follows the host's rights, read from its process when the page opens, as App Windows' note does.
 - Each case is logged at Debug level with its reason, never with the app.
 
@@ -104,6 +104,7 @@ Send any app's window to an icon in the notification area instead of the taskbar
 - Windows 11 and Windows 10 put new notification icons in the hidden icons menu (^), and give apps no documented way to show their own; PC Companion doesn't try.
 - The feature page says how to keep an app's icon in sight, as System Meters' page does: drag it from the hidden icons menu onto the taskbar, or turn it on in the taskbar settings, with **Open taskbar settings** (`ms-settings:taskbar`).
 - The PC Companion icon's menu lists every window in the tray, for when the icons are in the hidden icons menu.
+- Windows 11 left the hidden icons menu open after an icon in it brought a window back to the front, in the Sandbox checks; it closes when the user clicks elsewhere or presses Esc. Windows offers apps no documented way to close it.
 
 ## Bringing a window back
 
@@ -138,7 +139,8 @@ Send any app's window to an icon in the notification area instead of the taskbar
 ## Apps running as administrator
 
 - Windows keeps the windows of apps running as administrator away from programs that don't run as administrator. The spike, with a copy of the spike labeled to run without admin rights, confirmed that Windows refuses to hide, move or mark such a window (error 5), still reports its minimize, and lets its title be read.
-- So without admin rights, the shortcut and Shift + Minimize play the warning sound for such a window, and a listed app's window stays minimized on the taskbar.
+- So without admin rights, the shortcut plays the warning sound for such a window, and a listed app's window stays minimized on the taskbar.
+- Windows also hides the keys from a program without admin rights while an app running as administrator is in front, so PC Companion doesn't see Shift held: Shift + Minimize on such a window minimizes it to the taskbar as usual, without the sound. The Sandbox checks showed both, with the host labeled Medium integrity: the shortcut reached it and was refused, and Shift + Minimize didn't.
 - With Always run as administrator, or UAC off, every window goes to the tray. Running as administrator, the host's window accepts the taskbar's messages, as the PC Companion icon's window does (`TrayIcon`).
 - In the spike, a minimize posted by the program without admin rights (`WM_SYSCOMMAND` with `SC_MINIMIZE`) did minimize the window of the one with them, with UAC off. Minimize to Tray doesn't rely on it; it's checked by hand with UAC on.
 
@@ -272,6 +274,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - Shift + Minimize with a real mouse, and Windows + D, Windows + M and Windows + Down with a real keyboard;
   - desktop apps in Store packages, such as Notepad and Windows Terminal, a browser with two profiles and an installed web app, and Office;
   - moving an app's icon onto the taskbar, then sending the app again after a restart and after an update;
+  - selecting an icon in the hidden icons menu: the window comes to the front, and whether the menu stays open;
   - Narrator reading the icons, their menus and the focus after a send;
   - several displays with different scales, high contrast, and a right-to-left language;
   - Windows 10, including its taskbar settings for notification icons.
