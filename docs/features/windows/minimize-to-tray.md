@@ -255,7 +255,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - the next start: marked hidden windows come back, unmarked and visible ones are left alone, with the feature on and off;
   - the settings: defaults, the spec's example, an unknown shortcut, listed apps that don't match, and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/MinimizeToTray.ps1`), with test windows the checks start:
-  - the Home switch turns the feature on with its defaults, and the page saves the shortcut, Shift + Minimize and the app list, with Running app, Program file and Remove;
+  - the Home switch turns the feature on with its defaults, and the page saves the shortcut, Shift + Minimize and the app list, with Running app and Remove; Program file is the same list as Hot Corners', whose checks cover it;
   - Windows + Shift + Z, sent by `SendInput`, sends the test window and its palette to the tray: hidden, off the taskbar, and the app's icon found by its name in the hidden icons menu; selecting the icon brings it back where it was and maximized when it was, in front;
   - Shift + Minimize sends a window, also Edge's, whose title bar Edge draws itself; Minimize without Shift doesn't;
   - a listed app's window goes to the tray when minimized, and Windows + D and Windows + M send nothing;
