@@ -1,6 +1,7 @@
-﻿# Minimize to Tray: the shortcut, Shift + Minimize and a listed app send a test program's window to
-# the tray, where its app has one icon, named after the app and never after a window; selecting the
-# icon or choosing from its menu brings windows back. A window leaves the tray when its app shows it,
+﻿# Minimize to Tray: the Home switch turns it on and its page saves its settings and list of apps.
+# The shortcut, Shift + Minimize and a listed app send a test program's window to the tray, where
+# its app has one icon, named after the app and never after a window; selecting the icon or
+# choosing from its menu brings windows back. A window leaves the tray when its app shows it,
 # closes it or ends; a program that stopped responding doesn't hold the host; Show desktop sends no
 # listed app's window; Settings and a window with a dialog open stay; File Explorer windows go; the
 # icons come back after Explorer restarts; windows come back on the taskbar when the host exits, and
@@ -209,6 +210,51 @@ function Get-MenuItemNames {
     (@($script:menu.FindAll([System.Windows.Automation.TreeScope]::Descendants, $itemCondition)) | ForEach-Object { $_.Current.Name }) -join ', '
 }
 function Test-Logged([string] $Pattern, [int] $Seconds = 5) { Wait-Until { (Get-HostLog) -match $Pattern } $Seconds }
+
+# Turned on from Home, which saves only that it's on, the page shows the defaults and saves each
+# setting: the shortcut, Shift + Minimize, which was on if turning it off saves it, and the list of
+# apps, where Running app adds the test program and Remove takes it out. Program file is the same
+# list as Hot Corners', whose checks cover it.
+function Get-TraySettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.minimizeToTray }
+Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
+Start-Sleep -Seconds 2
+$trayProcess = Start-TrayApp
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'turn on Minimize to Tray on Home' (Set-Toggle 'Minimize to Tray' $true)
+Start-Sleep -Seconds 2
+$saved = Get-TraySettings
+Test-Check 'the Home switch saves Minimize to Tray as on' ($saved.enabled -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'select Minimize to Tray' (Select-NavigationItem 'Minimize to Tray')
+Start-Sleep -Seconds 2
+Save-Screenshot '13r-minimize-to-tray-english'
+$text = Get-WindowText
+Test-Check 'Minimize to Tray shows its settings' (($text -contains 'Shortcut') -and ($text -contains 'Shift + Minimize') -and ($text -contains 'Apps that go to the tray when minimized') -and ($text -contains 'Open taskbar settings') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'no app is listed yet' ($text -contains 'No apps are listed.') ($text -join ' | ')
+Test-Check 'it says which windows can''t go to the tray' (@($text | Where-Object { $_ -like "Some windows can't go to the tray*" }).Count -eq 1) ($text -join ' | ')
+$selected = Get-ListSelection 'Shortcut'
+Test-Check 'the shortcut is Windows logo key + Shift + Z' ($selected -eq 'Windows logo key + Shift + Z') "selected: $selected"
+Test-Check 'choose no shortcut' (Select-ListItem 'Shortcut' 'None')
+Start-Sleep -Seconds 1
+$saved = Get-TraySettings
+Test-Check 'the page saves the shortcut' ($saved.shortcut -eq 'None') "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'turn off Shift + Minimize' (Set-Toggle 'Shift + Minimize' $false)
+Start-Sleep -Seconds 1
+$saved = Get-TraySettings
+Test-Check 'the page saves Shift + Minimize' ($saved.shiftMinimize -eq $false) "saved: $($saved | ConvertTo-Json -Compress)"
+Test-Check 'Add an app offers Running app' ((Invoke-AppElement 'Add an app') -and (Wait-Until { Find-AppElement 'Running app…' } 5))
+[void] (Invoke-AppElement 'Running app…')
+$appItem = $null
+Test-Check 'Running app lists the test program' (Wait-Until { ($script:appItem = Find-AppListItem 'tray-app') -ne $null } 15)
+if ($appItem) { $appItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
+[void] (Invoke-AppElement 'Add')
+Test-Check 'Running app adds it to the apps that go to the tray' (Wait-Until { $apps = @((Get-TraySettings).minimizedApps); ($apps.Count -eq 1) -and ($apps[0].program -eq $trayExe) -and ($apps[0].name -eq 'tray-app') } 5) "saved: $(Get-TraySettings | ConvertTo-Json -Compress)"
+Save-Screenshot '13s-minimize-to-tray-apps'
+Test-Check 'Remove takes it out' ((Invoke-AppElement 'Remove tray-app') -and (Wait-Until { @((Get-TraySettings).minimizedApps).Count -eq 0 } 5)) "saved: $(Get-TraySettings | ConvertTo-Json -Compress)"
+[void] (Close-SettingsApp)
+Stop-Process -Id $trayProcess.Id -Force -ErrorAction SilentlyContinue
+[void] (Wait-Until { (Find-TrayWindow 1) -eq [IntPtr]::Zero } 10)
 
 Write-TraySettings '{ "enabled": true }'
 Start-Host
