@@ -48,6 +48,7 @@ $startStates = [ordered] @{
     HotCorners = 'Installed'
     LockKeys = 'Installed'
     AppWindows = 'Installed'
+    MinimizeToTray = 'Installed'
     SystemMeters = 'Installed'
     ClipboardActions = 'Installed'
     NetworkProfiles = 'Installed'
