@@ -528,7 +528,14 @@ public sealed partial class TrayController : IDisposable
             var shown = _system.IsVisible(window);
             if (shown)
             {
-                _system.Activate(window);
+                if (_system.Activate(window))
+                {
+                    LogInFront(_logger, checks);
+                }
+                else
+                {
+                    LogNotInFront(_logger);
+                }
             }
 
             if (shown || checks >= ShownChecks || !_system.Exists(window))
@@ -585,6 +592,12 @@ public sealed partial class TrayController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Minimize to Tray didn't send a window to the tray: {Way}, {Reason}.")]
     private static partial void LogNotSent(ILogger logger, SendWay way, SendOutcome reason);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "A window brought back is in front, after {Checks} checks.")]
+    private static partial void LogInFront(ILogger logger, int checks);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't bring a window brought back from the tray to the front.")]
+    private static partial void LogNotInFront(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "A window left the tray: {Reason}; {Count} windows are in the tray.")]
     private static partial void LogLeft(ILogger logger, LeaveReason reason, int count);
