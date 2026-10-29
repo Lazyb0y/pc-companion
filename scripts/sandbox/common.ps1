@@ -486,6 +486,17 @@ function Find-AppDialog([string] $Name) {
     return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
 }
 
+# An item named $Name in a list of the settings app or one of its dialogs, such as the Running app
+# dialog's.
+function Find-AppListItem([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
+    return $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+}
+
 # A tooltip or text of the settings app whose name is exactly $Name.
 # Invokes, selects or expands an element of the settings app by its name, within 5 seconds.
 function Invoke-AppElement([string] $Name) {
