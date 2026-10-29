@@ -1,10 +1,7 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using PCCompanion.App.Controls;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
@@ -75,51 +72,11 @@ public sealed partial class HotCornersPage : Page
         Grid.SetColumn(corner, column);
     }
 
-    private async void OnAddRunningAppClick(object sender, RoutedEventArgs e)
-    {
-        var dialog = new RunningAppDialog(ViewModel.Lists)
-        {
-            XamlRoot = XamlRoot,
-            FlowDirection = FlowDirection,
-            RequestedTheme = ActualTheme,
-        };
-
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Chosen is { } app)
-        {
-            ViewModel.AddExcludedApp(app);
-        }
-    }
-
-    // Only the full path of an .exe file can be the app in front. Whether it exists, and its name,
-    // are read off the UI thread.
-    private async void OnAddProgramFileClick(object sender, RoutedEventArgs e)
-    {
-        if (App.Current.MainWindow is not { } window
-            || OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.HotCornersProgramDialogTitle, Strings.HotCornersProgramFilter, "*.exe") is not { } program)
-        {
-            return;
-        }
-
-        var name = await Task.Run(() => ProgramFile.Check(program, File.Exists) == ProgramProblem.None ? AppDisplay.NameOfProgram(program) : null).ConfigureAwait(true);
-        if (name is not null)
-        {
-            ViewModel.AddExcludedApp(new ListedApp { Name = name, Program = program });
-        }
-    }
-
-    private void OnRemoveAppClick(object sender, RoutedEventArgs e)
-    {
-        if (sender is FrameworkElement { Tag: int index })
-        {
-            ViewModel.RemoveExcludedApp(index);
-        }
-    }
-
     private void OnBrowseClick(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { DataContext: CornerViewModel corner } && App.Current.MainWindow is { } window)
         {
-            var program = OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.HotCornersProgramDialogTitle, Strings.HotCornersProgramFilter, "*.exe");
+            var program = OpenDialog.PickFile(WindowNative.GetWindowHandle(window), Strings.ProgramDialogTitle, Strings.ProgramDialogFilter, "*.exe");
             if (program is not null)
             {
                 corner.Program = program;

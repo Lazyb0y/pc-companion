@@ -364,11 +364,11 @@
     <value>{0} প্রোগ্রাম: ব্রাউজ করুন</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+  <data name="ProgramDialogTitle" xml:space="preserve">
     <value>একটি প্রোগ্রাম বেছে নিন</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramFilter" xml:space="preserve">
+  <data name="ProgramDialogFilter" xml:space="preserve">
     <value>প্রোগ্রাম</value>
     <comment>Needs native review.</comment>
   </data>
@@ -420,27 +420,27 @@
     <value>যেমন, রিমোট ডেস্কটপ, একটি ভার্চুয়াল মেশিন বা আঁকার অ্যাপ। এগুলোর কোনোটি সামনে থাকলে কোনো ডিসপ্লেতেই কোনো কোণ চালু হয় না।</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddApp" xml:space="preserve">
+  <data name="AppListAdd" xml:space="preserve">
     <value>একটি অ্যাপ যোগ করুন</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddRunningApp" xml:space="preserve">
+  <data name="AppListAddRunningApp" xml:space="preserve">
     <value>চলমান অ্যাপ…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddProgramFile" xml:space="preserve">
+  <data name="AppListAddProgramFile" xml:space="preserve">
     <value>প্রোগ্রাম ফাইল…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+  <data name="AppListEmpty" xml:space="preserve">
     <value>তালিকায় কোনো অ্যাপ নেই।</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveApp" xml:space="preserve">
+  <data name="AppListRemove" xml:space="preserve">
     <value>সরান</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveAppName" xml:space="preserve">
+  <data name="AppListRemoveName" xml:space="preserve">
     <value>{0} সরান</value>
     <comment>Needs native review.</comment>
   </data>

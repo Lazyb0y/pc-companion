@@ -364,11 +364,11 @@
     <value>{0} program: Browse</value>
     <comment>Hot Corners page: screen reader name of a corner's Browse button. {0} is a corner, such as HotCornersTopLeft.</comment>
   </data>
-  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+  <data name="ProgramDialogTitle" xml:space="preserve">
     <value>Choose a program</value>
-    <comment>Title of the Open dialog for a corner's program.</comment>
+    <comment>Title of the Open dialog for a program file, such as a corner's program or an app to list.</comment>
   </data>
-  <data name="HotCornersProgramFilter" xml:space="preserve">
+  <data name="ProgramDialogFilter" xml:space="preserve">
     <value>Programs</value>
     <comment>Open dialog: the name of the .exe file type.</comment>
   </data>
@@ -420,29 +420,29 @@
     <value>For example, remote desktop, a virtual machine or a drawing app. While one of them is in front, no corner triggers on any display.</value>
     <comment>Hot Corners page: below HotCornersExcludedAppsHeader.</comment>
   </data>
-  <data name="HotCornersAddApp" xml:space="preserve">
+  <data name="AppListAdd" xml:space="preserve">
     <value>Add an app</value>
-    <comment>Hot Corners page: button that opens a menu of ways to add an app to the list.</comment>
+    <comment>List of apps on a page: button that opens a menu of ways to add an app to the list.</comment>
   </data>
-  <data name="HotCornersAddRunningApp" xml:space="preserve">
+  <data name="AppListAddRunningApp" xml:space="preserve">
     <value>Running app…</value>
-    <comment>Hot Corners page: item of the HotCornersAddApp menu that opens a dialog of the apps with a window open.</comment>
+    <comment>List of apps on a page: item of the AppListAdd menu that opens a dialog of the apps with a window open.</comment>
   </data>
-  <data name="HotCornersAddProgramFile" xml:space="preserve">
+  <data name="AppListAddProgramFile" xml:space="preserve">
     <value>Program file…</value>
-    <comment>Hot Corners page: item of the HotCornersAddApp menu that opens the Open dialog for a program.</comment>
+    <comment>List of apps on a page: item of the AppListAdd menu that opens the Open dialog for a program.</comment>
   </data>
-  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+  <data name="AppListEmpty" xml:space="preserve">
     <value>No apps are listed.</value>
-    <comment>Hot Corners page: shown instead of the list of apps while it's empty.</comment>
+    <comment>List of apps on a page: shown instead of the list of apps while it's empty.</comment>
   </data>
-  <data name="HotCornersRemoveApp" xml:space="preserve">
+  <data name="AppListRemove" xml:space="preserve">
     <value>Remove</value>
-    <comment>Hot Corners page: button that removes an app from the list.</comment>
+    <comment>List of apps on a page: button that removes an app from the list.</comment>
   </data>
-  <data name="HotCornersRemoveAppName" xml:space="preserve">
+  <data name="AppListRemoveName" xml:space="preserve">
     <value>Remove {0}</value>
-    <comment>Hot Corners page: screen reader name of HotCornersRemoveApp. {0} is the app's name, such as Photos.</comment>
+    <comment>List of apps on a page: screen reader name of AppListRemove. {0} is the app's name, such as Photos.</comment>
   </data>
   <data name="RunningAppTitle" xml:space="preserve">
     <value>Choose a running app</value>

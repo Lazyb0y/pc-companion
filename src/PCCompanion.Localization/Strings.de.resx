@@ -364,11 +364,11 @@
     <value>Programm durchsuchen: {0}</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+  <data name="ProgramDialogTitle" xml:space="preserve">
     <value>Programm auswählen</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramFilter" xml:space="preserve">
+  <data name="ProgramDialogFilter" xml:space="preserve">
     <value>Programme</value>
     <comment>Needs native review.</comment>
   </data>
@@ -420,27 +420,27 @@
     <value>Zum Beispiel Remotedesktop, ein virtueller Computer oder eine Zeichen-App. Solange eine davon im Vordergrund ist, löst keine Ecke auf einem Bildschirm aus.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddApp" xml:space="preserve">
+  <data name="AppListAdd" xml:space="preserve">
     <value>App hinzufügen</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddRunningApp" xml:space="preserve">
+  <data name="AppListAddRunningApp" xml:space="preserve">
     <value>Ausgeführte App…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddProgramFile" xml:space="preserve">
+  <data name="AppListAddProgramFile" xml:space="preserve">
     <value>Programmdatei…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+  <data name="AppListEmpty" xml:space="preserve">
     <value>Es sind keine Apps aufgeführt.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveApp" xml:space="preserve">
+  <data name="AppListRemove" xml:space="preserve">
     <value>Entfernen</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveAppName" xml:space="preserve">
+  <data name="AppListRemoveName" xml:space="preserve">
     <value>{0} entfernen</value>
     <comment>Needs native review.</comment>
   </data>

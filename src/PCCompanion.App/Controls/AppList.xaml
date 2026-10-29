@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="PCCompanion.App.Controls.AppList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:local="using:PCCompanion.App.Controls"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <!-- Spaced as on the page itself: see PageColumnStyle in App.xaml. -->
+    <StackPanel Spacing="4">
+        <Grid Margin="0,24,0,4" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Spacing="2">
+                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{x:Bind Header, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Description, Mode=OneWay}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+            <Button
+                Grid.Column="1"
+                VerticalAlignment="Bottom"
+                AutomationProperties.Name="{app:Localized Key=AppListAdd}"
+                Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="14" Glyph="&#xE710;" />
+                    <TextBlock Text="{app:Localized Key=AppListAdd}" />
+                </StackPanel>
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuFlyoutItem Click="OnAddRunningAppClick" Text="{app:Localized Key=AppListAddRunningApp}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE71D;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Click="OnAddProgramFileClick" Text="{app:Localized Key=AppListAddProgramFile}">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8E5;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <TextBlock
+            Margin="0,8"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            Text="{app:Localized Key=AppListEmpty}"
+            TextWrapping="Wrap"
+            Visibility="{x:Bind Apps.IsEmpty, Mode=OneWay}" />
+
+        <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Apps.Items, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="4" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="local:ListedAppItem">
+                    <toolkit:SettingsCard
+                        Header="{x:Bind Name}"
+                        HeaderIcon="{x:Bind Icon, Mode=OneWay}"
+                        ToolTipService.ToolTip="{x:Bind Program}">
+                        <Button
+                            AutomationProperties.Name="{x:Bind RemoveName}"
+                            Click="OnRemoveAppClick"
+                            Content="{app:Localized Key=AppListRemove}"
+                            Tag="{x:Bind Index}" />
+                    </toolkit:SettingsCard>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
