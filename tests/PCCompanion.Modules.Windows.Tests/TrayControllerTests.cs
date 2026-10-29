@@ -131,12 +131,13 @@ public sealed class TrayControllerTests : IDisposable
     }
 
     [Fact]
-    public void AWindowRestoredWhileItsAppsNameIsReadStaysOut()
+    public void AMinimizingWindowRestoredWhileItsAppsNameIsReadStaysOut()
     {
         _system.ReadsLooksAtOnce = false;
         var window = _system.Add(1);
-        _system.ForegroundWindow = 1;
-        _tray.SendFront();
+        window.Minimized = true;
+        _system.IsShiftHeld = true;
+        _tray.OnMinimizeStart(1);
 
         window.Minimized = false;
         _system.FinishReadingLooks();
@@ -144,6 +145,35 @@ public sealed class TrayControllerTests : IDisposable
         Assert.True(window.Visible);
         Assert.False(window.Marked);
         Assert.Empty(_icons.Icons);
+    }
+
+    [Fact]
+    public void AWindowThatClosesWhileItsAppsNameIsReadStaysOut()
+    {
+        _system.ReadsLooksAtOnce = false;
+        _system.Add(1);
+        _system.ForegroundWindow = 1;
+        _tray.SendFront();
+
+        _system.Windows.Remove(1);
+        _system.FinishReadingLooks();
+
+        Assert.Empty(_icons.Icons);
+        Assert.Empty(_tray.Windows);
+    }
+
+    [Fact]
+    public void TheShortcutsWindowGoesAlsoWhenItsProgramHasntHandledTheMinimizeYet()
+    {
+        _system.ReadsLooksAtOnce = false;
+        _system.Windows[1] = new FakeWindow { Handle = 1, ProcessId = 10, Program = @"C:\Apps\App.exe", Unresponsive = true };
+        _system.ForegroundWindow = 1;
+        _tray.SendFront();
+
+        _system.FinishReadingLooks();
+
+        Assert.False(_system.Windows[1].Visible);
+        Assert.Single(_icons.Icons);
     }
 
     [Fact]

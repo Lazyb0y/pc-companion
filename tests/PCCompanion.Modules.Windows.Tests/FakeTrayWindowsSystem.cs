@@ -101,7 +101,7 @@ internal sealed class FakeTrayWindowsSystem : ITrayWindowsSystem
 
     public IReadOnlyList<nint> FindMarked() => [.. Windows.Values.Where(window => window.Marked).Select(window => window.Handle)];
 
-    public bool Minimize(nint window) => Change(window, "minimize", listed => listed.Minimized = true);
+    public bool Minimize(nint window) => Change(window, "minimize", listed => listed.Minimized = !listed.Unresponsive);
 
     public bool Hide(nint window) => Change(window, "hide", listed => listed.Visible = false, listed => listed.RefusesHide);
 
@@ -206,6 +206,9 @@ internal sealed class FakeWindow
 
     /// <summary>Windows marks it but refuses to hide it.</summary>
     public bool RefusesHide { get; init; }
+
+    /// <summary>Its program doesn't handle a minimize yet, as one that stopped responding doesn't.</summary>
+    public bool Unresponsive { get; init; }
 
     /// <summary>It shows only a while after it's restored, as a program that's slow to respond does.</summary>
     public bool ShowsLate { get; init; }
