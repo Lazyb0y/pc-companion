@@ -414,8 +414,10 @@ public sealed partial class TrayController : IDisposable
 
     private SendOutcome Commit(nint window, SendWay way, string key, TrayLooks looks, bool afterWaiting)
     {
-        // While its app's name was read, the user can have closed the window or shown it again.
-        if (!_system.Exists(window) || (afterWaiting && !_system.IsMinimized(window)))
+        // While its app's name was read, the window can have closed, and one that was minimizing,
+        // the user can have shown again. The shortcut's window may not be minimized yet: its
+        // program may not have handled the minimize, as one that stopped responding hasn't.
+        if (!_system.Exists(window) || (afterWaiting && way != SendWay.Shortcut && !_system.IsMinimized(window)))
         {
             _system.Unmark(window);
             LogNotSent(_logger, way, SendOutcome.NoWindow);
