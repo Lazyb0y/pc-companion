@@ -24,6 +24,12 @@ public sealed class WinEventHook : IDisposable
     /// </summary>
     public const uint DesktopSwitchEvent = 0x0020;
 
+    /// <summary>A window started to minimize (<c>EVENT_SYSTEM_MINIMIZESTART</c>).</summary>
+    public const uint MinimizeStartEvent = 0x0016;
+
+    /// <summary>An object was destroyed, also when its process ended (<c>EVENT_OBJECT_DESTROY</c>).</summary>
+    public const uint ObjectDestroyEvent = 0x8001;
+
     /// <summary>An object was shown (<c>EVENT_OBJECT_SHOW</c>).</summary>
     public const uint ObjectShowEvent = 0x8002;
 
@@ -32,6 +38,9 @@ public sealed class WinEventHook : IDisposable
 
     /// <summary>A window's children changed their order, as when windows come in front of others (<c>EVENT_OBJECT_REORDER</c>).</summary>
     public const uint ObjectReorderEvent = 0x8004;
+
+    /// <summary>An object's name changed, as a window's title does (<c>EVENT_OBJECT_NAMECHANGE</c>).</summary>
+    public const uint ObjectNameChangeEvent = 0x800C;
 
     // Kept in a field so the delegate lives as long as the hook.
     private readonly WINEVENTPROC _callback;
