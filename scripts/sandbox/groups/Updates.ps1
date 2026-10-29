@@ -25,8 +25,12 @@ Add-Content -Path $hostsFile -Value "`r`n127.0.0.1 api.github.com" -Encoding asc
 Clear-DnsClientCache -ErrorAction SilentlyContinue
 $server = Start-Process powershell.exe -PassThru -WindowStyle Hidden -ArgumentList @(
     '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $PSScriptRoot '..\fake-github.ps1'), '-RequestLog', $requestLog, '-Answer', $answer, '-Status', $status)
-$serverUp = Wait-Until { Get-NetTCPConnection -LocalPort 443 -State Listen -ErrorAction SilentlyContinue } 15
-Test-Check 'the stand-in for GitHub listens on port 443' ([bool] $serverUp)
+# The stand-in is up once it answers a request: Windows doesn't list HTTP.sys's socket on port 443
+# as listening. It logs that request too, which is cleared, so the checks below read only the host's.
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+$serverUp = Wait-Until { try { [void] (Invoke-WebRequest 'https://api.github.com/' -UseBasicParsing -TimeoutSec 2); $true } catch { $false } } 15
+Clear-Content -Path $requestLog -ErrorAction SilentlyContinue
+Test-Check 'the stand-in for GitHub answers on port 443' ([bool] $serverUp)
 
 function Get-Requests { @(Get-Content $requestLog -Encoding utf8 -ErrorAction SilentlyContinue | Where-Object { $_ } | ForEach-Object { $_ | ConvertFrom-Json }) }
 # Counted apart: PowerShell returns one request as itself, without a Count.
