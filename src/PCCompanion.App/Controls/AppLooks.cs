@@ -7,10 +7,10 @@ using PCCompanion.Platform.Windows;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
-namespace PCCompanion.App.Features.HotCorners;
+namespace PCCompanion.App.Controls;
 
 /// <summary>
-/// The names and icons of the apps on the Hot Corners page. The shell can take a while to read
+/// The names and icons of the apps on the pages' lists of apps. The shell can take a while to read
 /// them, so <see cref="ReadName"/> and <see cref="ReadIcon"/> run off the UI thread, and
 /// <see cref="ToImageAsync"/> on it.
 /// </summary>

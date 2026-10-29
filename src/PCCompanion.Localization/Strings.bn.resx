@@ -444,27 +444,27 @@
     <value>{0} সরান</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+  <data name="RunningAppTitle" xml:space="preserve">
     <value>একটি চলমান অ্যাপ বেছে নিন</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppList" xml:space="preserve">
+  <data name="RunningAppList" xml:space="preserve">
     <value>চলমান অ্যাপ</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+  <data name="RunningAppLoading" xml:space="preserve">
     <value>চলমান অ্যাপগুলো খোঁজা হচ্ছে</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppNone" xml:space="preserve">
+  <data name="RunningAppNone" xml:space="preserve">
     <value>অন্য কোনো অ্যাপের উইন্ডো খোলা নেই।</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+  <data name="RunningAppAdd" xml:space="preserve">
     <value>যোগ করুন</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+  <data name="RunningAppCancel" xml:space="preserve">
     <value>বাতিল করুন</value>
     <comment>Needs native review.</comment>
   </data>

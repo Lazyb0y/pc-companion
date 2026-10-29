@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentDialog
-    x:Class="PCCompanion.App.Features.HotCorners.RunningAppDialog"
+    x:Class="PCCompanion.App.Controls.RunningAppDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:app="using:PCCompanion.App"
-    xmlns:local="using:PCCompanion.App.Features.HotCorners"
-    CloseButtonText="{app:Localized Key=HotCornersRunningAppCancel}"
+    xmlns:local="using:PCCompanion.App.Controls"
+    CloseButtonText="{app:Localized Key=RunningAppCancel}"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="False"
-    PrimaryButtonText="{app:Localized Key=HotCornersRunningAppAdd}"
+    PrimaryButtonText="{app:Localized Key=RunningAppAdd}"
     Style="{ThemeResource DefaultContentDialogStyle}"
-    Title="{app:Localized Key=HotCornersRunningAppTitle}">
+    Title="{app:Localized Key=RunningAppTitle}">
 
     <Grid MinWidth="360" MinHeight="120">
         <ProgressRing
             x:Name="LoadingRing"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            AutomationProperties.Name="{app:Localized Key=HotCornersRunningAppLoading}"
+            AutomationProperties.Name="{app:Localized Key=RunningAppLoading}"
             IsActive="True" />
         <TextBlock
             x:Name="NoApps"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-            Text="{app:Localized Key=HotCornersRunningAppNone}"
+            Text="{app:Localized Key=RunningAppNone}"
             TextWrapping="Wrap"
             Visibility="Collapsed" />
         <ListView
             x:Name="Apps"
             MaxHeight="360"
-            AutomationProperties.Name="{app:Localized Key=HotCornersRunningAppList}"
+            AutomationProperties.Name="{app:Localized Key=RunningAppList}"
             ItemsSource="{x:Bind Items}"
             SelectionChanged="OnSelectionChanged"
             SelectionMode="Single"

@@ -444,27 +444,27 @@
     <value>Quitar {0}</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+  <data name="RunningAppTitle" xml:space="preserve">
     <value>Elegir una aplicación en ejecución</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppList" xml:space="preserve">
+  <data name="RunningAppList" xml:space="preserve">
     <value>Aplicaciones en ejecución</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+  <data name="RunningAppLoading" xml:space="preserve">
     <value>Buscando las aplicaciones en ejecución</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppNone" xml:space="preserve">
+  <data name="RunningAppNone" xml:space="preserve">
     <value>Ninguna otra aplicación tiene una ventana abierta.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+  <data name="RunningAppAdd" xml:space="preserve">
     <value>Agregar</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+  <data name="RunningAppCancel" xml:space="preserve">
     <value>Cancelar</value>
     <comment>Needs native review.</comment>
   </data>
