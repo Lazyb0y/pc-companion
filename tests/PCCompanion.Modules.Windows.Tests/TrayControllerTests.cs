@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using PCCompanion.Modules.Windows.MinimizeToTray;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 
@@ -586,5 +587,5 @@ public sealed class TrayControllerTests : IDisposable
     }
 
     private void ListApp(string program) =>
-        _tray.Apply(new MinimizeToTraySettings { Enabled = true, MinimizedApps = [new MinimizedApp { Name = "App", Program = program }] });
+        _tray.Apply(new MinimizeToTraySettings { Enabled = true, MinimizedApps = [new ListedApp { Name = "App", Program = program }] });
 }
