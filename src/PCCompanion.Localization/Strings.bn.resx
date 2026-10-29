@@ -2572,4 +2572,36 @@
     <value>শুধুমাত্র আপনি একটি প্রোফাইল বেছে নিলে প্রদর্শন সেটআপ পরিবর্তন করে, এবং কোনো প্রদর্শন কালো করে দিতে পারে এমন পরিবর্তন রাখার আগে জিজ্ঞাসা করে। সংযুক্ত প্রদর্শনগুলির নাম, মডেল, সংযোগ ও সিরিয়াল নম্বর পড়ে; সিরিয়াল নম্বর শুধু হ্যাশ হিসেবে রাখা হয়। কোনো নেটওয়ার্ক সংযোগ করে না, এবং প্রোফাইলের নাম, প্রদর্শনের নাম বা সিরিয়াল নম্বর লগ করে না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকায় ছোট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>যেকোনো উইন্ডোকে টাস্কবারের বদলে বিজ্ঞপ্তি এলাকার একটি আইকনে পাঠান এবং সেখান থেকে ফিরিয়ে আনুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>{0}টি উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0}টি উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>সবগুলো পুনরুদ্ধার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকায় ছোট করার সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকার উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -2572,4 +2572,36 @@
     <value>Changes the display setup only when you choose a profile, and asks before keeping a change that could leave a display black. Reads the connected displays' names, models, connections and serial numbers; serial numbers are kept only as a hash. Makes no network connections, and doesn't log profile names, display names or serial numbers.</value>
     <comment>Display Profiles page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>Minimize to Tray</value>
+    <comment>Feature name: navigation pane, Home and the Minimize to Tray page.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>Send any window to an icon in the notification area instead of the taskbar, and bring it back from there.</value>
+    <comment>Minimize to Tray: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>{0} window</value>
+    <comment>Plural form "one". Tooltip of an app's notification icon, on the line above the titles of its windows in the tray. {0} is the number of windows.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} windows</value>
+    <comment>Plural form "other". Tooltip of an app's notification icon, on the line above the titles of its windows in the tray. {0} is the number of windows.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>Bring all back</value>
+    <comment>Menu item in an app's notification icon menu and in the Windows in the tray submenu: shows every window listed there again.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>Minimize to Tray settings</value>
+    <comment>An app's notification icon menu: opens the feature's settings. Minimize to Tray is MinimizeToTrayName.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>Windows in the tray</value>
+    <comment>PC Companion icon's menu: the submenu that lists the windows in the tray.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Windows in the tray submenu: a window. {0} is its app's name and {1} its title.</comment>
+  </data>
 </root>
