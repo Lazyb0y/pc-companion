@@ -51,11 +51,11 @@ public static class MetersChecks {
 '@
 
 # What Windows remembers of each of the host's meter icons: its ID, the tooltip it was added with,
-# and whether it's on the taskbar.
+# and whether it's on the taskbar. Minimize to Tray's app icons, from ID 256 on, are left out.
 function Get-MeterIconSettings {
     @(Get-ChildItem 'HKCU:\Control Panel\NotifyIconSettings' -ErrorAction SilentlyContinue | ForEach-Object {
         $values = Get-ItemProperty $_.PSPath
-        if ($values.ExecutablePath -like '*\PCCompanion.Host.exe' -and $values.UID -ge 2) {
+        if ($values.ExecutablePath -like '*\PCCompanion.Host.exe' -and $values.UID -ge 2 -and $values.UID -lt 0x100) {
             [pscustomobject] @{ Key = $_.PSPath; Id = [int] $values.UID; Name = $values.InitialTooltip; Promoted = $values.IsPromoted }
         }
     } | Sort-Object Id)
