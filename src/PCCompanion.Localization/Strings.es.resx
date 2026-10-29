@@ -2604,4 +2604,52 @@
     <value>{0}: {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>Método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>Envía la ventana en primer plano al área de notificación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Mayús + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Mayús + Minimizar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>Mantén presionada Mayús mientras seleccionas el botón Minimizar de una ventana para enviarla al área de notificación. Sin Mayús, Minimizar funciona como siempre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>Aplicaciones que van al área de notificación al minimizarlas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>Sus ventanas van al área de notificación cada vez que se minimizan, pero no con Mostrar escritorio ni con otros métodos abreviados que minimizan todas las ventanas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows puede poner los iconos nuevos en el menú de iconos ocultos (^) de la barra de tareas. Para tener el icono de una aplicación siempre a la vista, arrástralo a la barra de tareas o actívalo en la configuración de la barra de tareas. El menú del icono de PC Companion también muestra todas las ventanas del área de notificación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. PC Companion se ejecuta como administrador, así que las ventanas de aplicaciones que se ejecutan como administrador también van al área de notificación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>Cuando una ventana va al área de notificación, lee su título, su icono y la aplicación a la que pertenece y, mientras está allí, su título cuando cambia; los títulos solo se guardan en memoria. Con Mayús + Minimizar activado o con aplicaciones en la lista, lee si Mayús y la tecla del logotipo de Windows están presionadas cuando una ventana empieza a minimizarse. Oculta y muestra ventanas de otras aplicaciones, y las marca para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. Windows guarda el icono de cada aplicación con el nombre de la aplicación, nunca con el título de una ventana. No establece conexiones de red y no envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

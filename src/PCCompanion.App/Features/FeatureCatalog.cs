@@ -8,6 +8,7 @@ using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.LockKeys;
+using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.Core.Features;
@@ -26,6 +27,7 @@ using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
+using PCCompanion.Modules.Windows.MinimizeToTray;
 
 namespace PCCompanion.App.Features;
 
@@ -55,6 +57,7 @@ public static class FeatureCatalog
         new(WindowsModule.Id, "ModuleWindowsName",
         [
             new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
+            new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage)),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [

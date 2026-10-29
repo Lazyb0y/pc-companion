@@ -2604,4 +2604,52 @@
     <value>{0}: {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>Sendet das Fenster im Vordergrund in den Infobereich.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Windows-Logo-Taste + Umschalt + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Umschalt + Minimieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>Halten Sie Umschalt gedrückt, während Sie die Schaltfläche „Minimieren“ eines Fensters auswählen, um es in den Infobereich zu senden. Ohne Umschalt funktioniert „Minimieren“ wie immer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>Apps, die beim Minimieren in den Infobereich gehen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>Ihre Fenster gehen bei jedem Minimieren in den Infobereich, aber nicht durch „Desktop anzeigen“ oder andere Tastenkombinationen, die alle Fenster minimieren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows legt neue Symbole möglicherweise im Menü mit ausgeblendeten Symbolen (^) der Taskleiste ab. Damit das Symbol einer App sichtbar bleibt, ziehen Sie es auf die Taskleiste oder aktivieren Sie es in den Taskleisteneinstellungen. Das Menü des PC Companion-Symbols listet außerdem alle Fenster im Infobereich auf.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. PC Companion wird als Administrator ausgeführt, daher gehen auch Fenster von Apps, die als Administrator ausgeführt werden, in den Infobereich.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>Liest beim Senden eines Fensters in den Infobereich seinen Titel, sein Symbol und die zugehörige App und, solange es dort ist, seinen Titel, wenn er sich ändert; Titel bleiben nur im Arbeitsspeicher. Ist „Umschalt + Minimieren“ aktiviert oder sind Apps aufgeführt, liest es, ob Umschalt und die Windows-Logo-Taste gedrückt sind, wenn ein Fenster minimiert wird. Blendet Fenster anderer Apps aus und ein und markiert sie, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Windows speichert das Symbol jeder App mit dem Namen der App, nie mit einem Fenstertitel. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

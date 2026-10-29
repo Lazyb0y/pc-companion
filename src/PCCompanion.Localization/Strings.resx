@@ -2604,4 +2604,52 @@
     <value>{0}: {1}</value>
     <comment>Windows in the tray submenu: a window. {0} is its app's name and {1} its title.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>Shortcut</value>
+    <comment>Minimize to Tray page: setting name, and the screen reader name of its list.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>Sends the window in front to the tray.</value>
+    <comment>Minimize to Tray page: below MinimizeToTrayShortcutHeader.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Windows logo key + Shift + Z</value>
+    <comment>Minimize to Tray page: a shortcut in the list. Use the language's names for the Windows logo key and Shift, as in the other shortcuts.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Minimize to Tray page: the item of the shortcut list that turns the shortcut off.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Shift + Minimize</value>
+    <comment>Minimize to Tray page: setting name. Minimize is the name of the button in a window's title bar. On by default.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>Hold Shift while you select a window's Minimize button to send it to the tray. Without Shift, Minimize works as always.</value>
+    <comment>Minimize to Tray page: below MinimizeToTrayShiftMinimizeHeader.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>Apps that go to the tray when minimized</value>
+    <comment>Minimize to Tray page: header of the list of apps whose windows go to the tray whenever they're minimized.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>Their windows go to the tray whenever they're minimized, but not by Show desktop or other shortcuts that minimize every window.</value>
+    <comment>Minimize to Tray page: below MinimizeToTrayAppsHeader. Show desktop is the Windows command, also Windows logo key + D.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows may put new icons in the hidden icons menu (^) of the taskbar. To keep an app's icon in sight, drag it onto the taskbar, or turn it on in the taskbar settings. The PC Companion icon's menu also lists every window in the tray.</value>
+    <comment>Minimize to Tray page: note with the OpenTaskbarSettings button. Use Windows' names for the hidden icons menu and the taskbar settings.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>Some windows can't go to the tray: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual.</value>
+    <comment>Minimize to Tray page: the windows that can't go to the tray, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>Some windows can't go to the tray: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. PC Companion runs as administrator, so windows of apps running as administrator go to the tray too.</value>
+    <comment>Minimize to Tray page: shown instead of MinimizeToTrayCantGoInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>When a window goes to the tray, reads its title, its icon and which app it belongs to, and while it's there, its title when it changes; titles stay in memory only. With Shift + Minimize on or apps listed, reads whether Shift and the Windows logo key are held when a window starts to minimize. Hides and shows other apps' windows, and marks them so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Windows keeps each app's icon with the app's name, never a window title. Makes no network connections and sends nothing.</value>
+    <comment>Minimize to Tray page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

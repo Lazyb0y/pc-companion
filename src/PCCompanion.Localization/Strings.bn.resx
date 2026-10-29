@@ -2604,4 +2604,52 @@
     <value>{0}: {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>সামনের উইন্ডোটি বিজ্ঞপ্তি এলাকায় পাঠায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Windows লোগো কী + Shift + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Shift + ছোট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>কোনো উইন্ডোর ছোট করুন বোতাম নির্বাচন করার সময় Shift চেপে ধরে রাখুন, তাহলে উইন্ডোটি বিজ্ঞপ্তি এলাকায় যাবে। Shift ছাড়া ছোট করুন আগের মতোই কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>ছোট করলে যে অ্যাপগুলো বিজ্ঞপ্তি এলাকায় যায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>এদের উইন্ডো যখনই ছোট করা হয় তখনই বিজ্ঞপ্তি এলাকায় যায়, তবে ডেস্কটপ দেখান বা সব উইন্ডো ছোট করে এমন অন্য শর্টকাট দিয়ে নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows নতুন আইকনগুলো টাস্কবারের লুকানো আইকনের মেনুতে (^) রাখতে পারে। কোনো অ্যাপের আইকন সবসময় দেখতে, সেটি টাস্কবারে টেনে আনুন, অথবা টাস্কবার সেটিংসে এটি চালু করুন। PC Companion আইকনের মেনুতেও বিজ্ঞপ্তি এলাকার সব উইন্ডোর তালিকা থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>কিছু উইন্ডো বিজ্ঞপ্তি এলাকায় যেতে পারে না: অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডো, সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। শর্টকাট কোনো উইন্ডো পাঠাতে না পারলে Windows-এর সতর্কতা শব্দ বাজে। তখন Shift + ছোট করুন উইন্ডোটিকে স্বাভাবিকভাবে ছোট করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>কিছু উইন্ডো বিজ্ঞপ্তি এলাকায় যেতে পারে না: সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। শর্টকাট কোনো উইন্ডো পাঠাতে না পারলে Windows-এর সতর্কতা শব্দ বাজে। তখন Shift + ছোট করুন উইন্ডোটিকে স্বাভাবিকভাবে ছোট করে। PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোও বিজ্ঞপ্তি এলাকায় যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>কোনো উইন্ডো বিজ্ঞপ্তি এলাকায় গেলে এর শিরোনাম, আইকন এবং এটি কোন অ্যাপের তা পড়ে, এবং সেখানে থাকার সময় শিরোনাম বদলালে তা পড়ে; শিরোনাম শুধু মেমরিতে থাকে। Shift + ছোট করুন চালু থাকলে বা অ্যাপ তালিকাভুক্ত থাকলে, কোনো উইন্ডো ছোট হতে শুরু করলে Shift ও Windows লোগো কী চাপা আছে কিনা তা পড়ে। অন্য অ্যাপের উইন্ডো লুকায়, দেখায় এবং চিহ্নিত করে, যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। Windows প্রতিটি অ্যাপের আইকন অ্যাপের নাম দিয়ে রাখে, কখনো উইন্ডোর শিরোনাম দিয়ে নয়। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
