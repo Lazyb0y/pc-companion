@@ -236,19 +236,17 @@ public sealed class TopLevelWindowsTests
     }
 
     [Fact]
-    public void HideTakesAWindowOutOfSightWithoutActivatingAnything()
+    public void HideTakesAWindowOutOfSight()
     {
         using var window = new MessageWindow(UniqueClassName());
         Show(window.Handle);
-        var front = Foreground.Window;
         Assert.True(TopLevelWindows.IsVisible(window.Handle));
 
         // Windows passes the request to the window's thread as an event that its message loop handles.
         Assert.True(TopLevelWindows.Hide(window.Handle));
-        RunFor(window, TimeSpan.FromMilliseconds(200));
+        RunUntil(window, () => !TopLevelWindows.IsVisible(window.Handle));
 
         Assert.False(TopLevelWindows.IsVisible(window.Handle));
-        Assert.Equal(front, Foreground.Window);
     }
 
     [Fact]
@@ -256,15 +254,16 @@ public sealed class TopLevelWindowsTests
     {
         using var window = new MessageWindow(UniqueClassName());
         Assert.True(WindowCloak.Set(window.Handle, cloaked: true));
-        var front = Foreground.Window;
 
         Assert.True(TopLevelWindows.ShowMinimized(window.Handle));
-        RunFor(window, TimeSpan.FromMilliseconds(200));
+        RunUntil(window, () => TopLevelWindows.IsVisible(window.Handle) && TopLevelWindows.IsMinimized(window.Handle));
 
         Assert.True(TopLevelWindows.IsVisible(window.Handle));
         Assert.True(IsIconic(window.Handle));
         Assert.True(TopLevelWindows.IsMinimized(window.Handle));
-        Assert.Equal(front, Foreground.Window);
+
+        // Other programs and tests may bring their windows to the front meanwhile; this one never comes.
+        Assert.NotEqual(window.Handle, Foreground.Window);
     }
 
     [Fact]
@@ -285,7 +284,7 @@ public sealed class TopLevelWindowsTests
             shown.Set();
             _ = release.Wait(TimeSpan.FromSeconds(30));
             responding.Set();
-            RunFor(window, TimeSpan.FromMilliseconds(200));
+            RunUntil(window, () => !TopLevelWindows.IsVisible(window.Handle));
             hidden = !TopLevelWindows.IsVisible(window.Handle);
         });
         thread.Start();

@@ -25,4 +25,17 @@ internal static class TestWindows
         using var end = new Timer(_ => window.BeginInvoke(MessageLoop.Quit), null, time, Timeout.InfiniteTimeSpan);
         MessageLoop.Run();
     }
+
+    /// <summary>
+    /// Runs this thread's message loop until <paramref name="condition"/> holds, for up to 30
+    /// seconds, as threads can be slow to get their turn while many tests run at once.
+    /// </summary>
+    public static void RunUntil(MessageWindow window, Func<bool> condition)
+    {
+        var deadline = Environment.TickCount64 + 30_000;
+        while (!condition() && Environment.TickCount64 < deadline)
+        {
+            RunFor(window, TimeSpan.FromMilliseconds(50));
+        }
+    }
 }
