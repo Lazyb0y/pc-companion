@@ -2552,4 +2552,32 @@
     <value>仅在你选择配置文件时更改显示设置，并在保留可能导致显示器黑屏的更改之前询问。读取已连接显示器的名称、型号、连接和序列号；序列号仅以哈希形式保存。不建立网络连接，也不记录配置文件名称、显示器名称或序列号。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>最小化到通知区域</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>将任意窗口发送到通知区域中的图标而不是任务栏，并从那里还原。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} 个窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>全部还原</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>“最小化到通知区域”设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>通知区域中的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

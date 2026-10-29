@@ -2652,4 +2652,52 @@
     <value>يغيّر إعداد العرض فقط عند اختيارك ملف تعريف، ويسأل قبل الاحتفاظ بتغيير قد يترك شاشة سوداء. يقرأ أسماء الشاشات المتصلة وطرازاتها واتصالاتها وأرقامها التسلسلية؛ ولا يحتفظ بالأرقام التسلسلية إلا كتجزئة. لا ينشئ اتصالات شبكة، ولا يسجّل أسماء ملفات التعريف أو أسماء الشاشات أو الأرقام التسلسلية.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>التصغير إلى منطقة الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>أرسل أي نافذة إلى أيقونة في منطقة الإعلامات بدلاً من شريط المهام، واستعدها من هناك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_zero" xml:space="preserve">
+    <value>{0} نافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>نافذة واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_two" xml:space="preserve">
+    <value>نافذتان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_few" xml:space="preserve">
+    <value>{0} نوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_many" xml:space="preserve">
+    <value>{0} نافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} نافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>استعادة الكل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>إعدادات التصغير إلى منطقة الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>النوافذ في منطقة الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

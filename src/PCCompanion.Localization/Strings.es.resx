@@ -2572,4 +2572,36 @@
     <value>Cambia la configuración de pantalla solo cuando elige un perfil, y pregunta antes de mantener un cambio que podría dejar una pantalla en negro. Lee los nombres, modelos, conexiones y números de serie de las pantallas conectadas; los números de serie solo se guardan como un hash. No realiza conexiones de red ni registra nombres de perfiles, nombres de pantallas ni números de serie.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>Minimizar en el área de notificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>Envía cualquier ventana a un icono del área de notificación en lugar de a la barra de tareas y recupérala desde allí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>{0} ventana</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>Restaurar todas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>Configuración de Minimizar en el área de notificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>Ventanas en el área de notificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

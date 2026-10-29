@@ -2572,4 +2572,36 @@
     <value>Ändert die Anzeigekonfiguration nur, wenn Sie ein Profil auswählen, und fragt nach, bevor eine Änderung beibehalten wird, die einen Bildschirm schwarz lassen könnte. Liest Namen, Modelle, Anschlüsse und Seriennummern der verbundenen Bildschirme; Seriennummern werden nur als Hash gespeichert. Stellt keine Netzwerkverbindungen her und protokolliert keine Profilnamen, Bildschirmnamen oder Seriennummern.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>In den Infobereich minimieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>Ein beliebiges Fenster statt auf die Taskleiste an ein Symbol im Infobereich senden und von dort zurückholen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>{0} Fenster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} Fenster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>Alle wiederherstellen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>Einstellungen für „In den Infobereich minimieren“</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>Fenster im Infobereich</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

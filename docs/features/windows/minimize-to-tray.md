@@ -73,16 +73,16 @@ Send any app's window to an icon in the notification area instead of the taskbar
 - Show desktop (Windows + D), Windows + M, Windows + Home and shaking a window, where it's turned on, minimize many windows at once. Sending them all to the tray would take every window off the taskbar, and Show desktop pressed again couldn't bring them back.
 - So a minimize doesn't send a listed app's window while the Windows key is held, or when another window starts to minimize within 100 ms of it: the spike measured Windows + D, Windows + M and Windows + Home starting every window's minimize within 31 ms, with the Windows key still held when the events came.
 - The window then minimizes to the taskbar as usual. Windows + Down, which also holds the Windows key, doesn't send a listed app's window either; the shortcut does.
-- To tell the two apart, the decision waits 100 ms after the first window starts to minimize, which the minimize animation covers.
+- To tell the two apart, the decision waits 100 ms after the window starts to minimize, which the minimize animation covers, and the window goes only when it's still minimized then.
 
 ## Tray icons
 
 ### One icon per app
 
 - Each app with windows in the tray gets one icon, as the taskbar gives each app one button. It goes when the app's last window leaves the tray.
-- **ID:** derived from the app's identity, the app ID or the program's path, so Windows, which remembers by program path and ID where the user put each icon, keeps an icon the user moved onto the taskbar there every time that app goes to the tray, also after a restart and an update. The IDs never clash with the PC Companion icon's (1) or System Meters' (2 to 4); when two apps would get the same ID, the second gets the next free one, for that session.
+- **ID:** derived from the app's identity, the app ID or the program's path, so Windows, which remembers by program path and ID where the user put each icon, keeps an icon the user moved onto the taskbar there every time that app goes to the tray, also after a restart and an update. IDs have 16 bits, as Windows reports an icon's ID to its window in 16 bits, and start at 256, clear of the PC Companion icon's (1) and System Meters' (2 to 4); when two apps would get the same ID, which is rare, the second gets the next free one, for that session.
 - An app without an app ID or program path gets an ID for the session only.
-- **The app's name,** for the icon's name and menus: the name Windows shows for its app ID in Start (the Apps folder), otherwise its program file's description, otherwise the program's file name.
+- **The app's name,** for the icon's name and menus: the name Windows shows for its app ID in Start (the Apps folder), otherwise its program file's description, otherwise the program's file name. It's read once per app, on the thread pool. Until it's read, the app's first window waits on the taskbar, minimized, since its icon is added with the name; when the user restores or closes the window meanwhile, it stays out of the tray.
 
 ### Picture
 

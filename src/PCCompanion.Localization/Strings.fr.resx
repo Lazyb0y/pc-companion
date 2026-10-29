@@ -2572,4 +2572,36 @@
     <value>Modifie la configuration d'affichage uniquement lorsque vous choisissez un profil, et demande avant de conserver un changement qui pourrait laisser un écran noir. Lit les noms, modèles, connexions et numéros de série des écrans connectés ; les numéros de série ne sont conservés que sous forme de hachage. N'établit aucune connexion réseau et n'enregistre pas les noms de profils, les noms d'écrans ni les numéros de série.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayName" xml:space="preserve">
+    <value>Réduire dans la zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayDescription" xml:space="preserve">
+    <value>Envoyez n’importe quelle fenêtre vers une icône de la zone de notification au lieu de la barre des tâches, et rétablissez-la depuis cette icône.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_one" xml:space="preserve">
+    <value>{0} fenêtre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayWindowCount_other" xml:space="preserve">
+    <value>{0} fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayBringAllBack" xml:space="preserve">
+    <value>Tout restaurer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayMenuSettings" xml:space="preserve">
+    <value>Paramètres de Réduire dans la zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenu" xml:space="preserve">
+    <value>Fenêtres dans la zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHostMenuItem" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
