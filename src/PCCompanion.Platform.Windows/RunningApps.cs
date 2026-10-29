@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.HotCorners;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// An app with a window open, and the program file of its first window, which gives an app
@@ -12,8 +11,7 @@ namespace PCCompanion.Modules.Input.HotCorners;
 public sealed record RunningApp(ListedApp App, string? Program);
 
 /// <summary>
-/// The apps that have a window open, for the page's Running app dialog. See "Apps that turn
-/// corners off" in docs/features/input/hot-corners.md.
+/// The apps that have a window open, for the Running app dialog of the pages with a list of apps.
 /// </summary>
 public static class RunningApps
 {
