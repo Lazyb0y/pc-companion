@@ -103,7 +103,7 @@ public sealed partial class HotCornersPage : Page
         var name = await Task.Run(() => ProgramFile.Check(program, File.Exists) == ProgramProblem.None ? AppDisplay.NameOfProgram(program) : null).ConfigureAwait(true);
         if (name is not null)
         {
-            ViewModel.AddExcludedApp(new ExcludedApp { Name = name, Program = program });
+            ViewModel.AddExcludedApp(new ListedApp { Name = name, Program = program });
         }
     }
 

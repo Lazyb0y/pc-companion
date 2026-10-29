@@ -27,7 +27,7 @@ internal static class AppLooks
     /// The app's name in the Windows Apps folder for an app ID, otherwise the description of
     /// <paramref name="program"/> or the app's own program, otherwise the app ID.
     /// </summary>
-    public static string ReadName(ExcludedApp app, string? program)
+    public static string ReadName(ListedApp app, string? program)
     {
         if (app.AppId is { } appId)
         {
@@ -41,7 +41,7 @@ internal static class AppLooks
     /// The app's icon in the Windows Apps folder for an app ID, otherwise the icon of
     /// <paramref name="program"/> or the app's own program.
     /// </summary>
-    public static AppIcon? ReadIcon(ExcludedApp app, string? program) =>
+    public static AppIcon? ReadIcon(ListedApp app, string? program) =>
         (app.AppId is { } appId ? AppDisplay.IconOfAppId(appId, IconSize) : null)
         ?? ((program ?? app.Program) is { } path ? AppDisplay.IconOfProgram(path, IconSize) : null);
 

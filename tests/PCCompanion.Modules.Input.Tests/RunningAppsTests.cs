@@ -26,10 +26,10 @@ public sealed class RunningAppsTests
 
         Assert.Equal(
             [
-                new ExcludedApp { AppId = "Chrome.Profile.1" },
-                new ExcludedApp { Program = @"C:\Apps\Chrome\chrome.exe" },
-                new ExcludedApp { AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" },
-                new ExcludedApp { Program = @"C:\Windows\System32\mstsc.exe" },
+                new ListedApp { AppId = "Chrome.Profile.1" },
+                new ListedApp { Program = @"C:\Apps\Chrome\chrome.exe" },
+                new ListedApp { AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" },
+                new ListedApp { Program = @"C:\Windows\System32\mstsc.exe" },
             ],
             apps.Select(running => running.App));
 
@@ -86,7 +86,7 @@ public sealed class RunningAppsTests
 
         var apps = RunningApps.Of([Window(1, 50), Window(2, 30)], _reader, [Settings]);
 
-        Assert.Equal([new ExcludedApp { Program = @"C:\Windows\System32\mstsc.exe" }], apps.Select(running => running.App));
+        Assert.Equal([new ListedApp { Program = @"C:\Windows\System32\mstsc.exe" }], apps.Select(running => running.App));
     }
 
     private static TopLevelWindow Window(nint handle, uint processId) =>

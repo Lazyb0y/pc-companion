@@ -9,7 +9,7 @@ namespace PCCompanion.Modules.Input.HotCorners;
 /// An app with a window open, and the program file of its first window, which gives an app
 /// without a name in the Windows Apps folder its name and icon.
 /// </summary>
-public sealed record RunningApp(ExcludedApp App, string? Program);
+public sealed record RunningApp(ListedApp App, string? Program);
 
 /// <summary>
 /// The apps that have a window open, for the page's Running app dialog. See "Apps that turn
@@ -40,8 +40,8 @@ public static class RunningApps
                 continue;
             }
 
-            var listed = app.AppId is { } appId ? new ExcludedApp { AppId = appId }
-                : app.Program is { } program ? new ExcludedApp { Program = program }
+            var listed = app.AppId is { } appId ? new ListedApp { AppId = appId }
+                : app.Program is { } program ? new ListedApp { Program = program }
                 : null;
             if (listed is not null && !apps.Any(running => running.App.IsSameAppAs(listed)))
             {

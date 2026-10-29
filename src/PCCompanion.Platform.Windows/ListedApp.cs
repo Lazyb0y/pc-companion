@@ -1,14 +1,13 @@
 using System;
 using System.Text.Json.Serialization;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.HotCorners;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// An app in front of which corners don't trigger. It has an app ID or a program, not both. See
-/// "Apps that turn corners off" in docs/features/input/hot-corners.md.
+/// An app on a feature's list of apps, as the taskbar groups apps (<see cref="AppOfWindow"/>). It
+/// has an app ID or a program, not both.
 /// </summary>
-public sealed record ExcludedApp
+public sealed record ListedApp
 {
     /// <summary>The name the page shows, as it was when the app was added.</summary>
     public string Name { get; set; } = string.Empty;
@@ -24,8 +23,8 @@ public sealed record ExcludedApp
     public bool IsValid => string.IsNullOrWhiteSpace(AppId) != string.IsNullOrWhiteSpace(Program);
 
     /// <summary>
-    /// Whether this is the app of the window in front: its app ID is the one the window sets or its
-    /// package's, or its program is the window's program, whatever their case.
+    /// Whether this is a window's app: its app ID is the one the window sets or its package's, or
+    /// its program is the window's program, whatever their case.
     /// </summary>
     public bool Matches(AppOfWindow app)
     {
@@ -35,7 +34,7 @@ public sealed record ExcludedApp
     }
 
     /// <summary>Whether <paramref name="other"/> has the same app ID or program, whatever its case.</summary>
-    public bool IsSameAppAs(ExcludedApp other)
+    public bool IsSameAppAs(ListedApp other)
     {
         ArgumentNullException.ThrowIfNull(other);
 
@@ -44,8 +43,10 @@ public sealed record ExcludedApp
             : Program is not null && string.Equals(Program, other.Program, StringComparison.OrdinalIgnoreCase);
     }
 
-    // A hand-edited file can hold a blank app ID or program, which counts as none.
-    internal ExcludedApp Checked() => this with
+    /// <summary>
+    /// The app with a blank app ID or program counted as none, as a hand-edited file can hold.
+    /// </summary>
+    public ListedApp Checked() => this with
     {
         AppId = string.IsNullOrWhiteSpace(AppId) ? null : AppId,
         Program = string.IsNullOrWhiteSpace(Program) ? null : Program,
