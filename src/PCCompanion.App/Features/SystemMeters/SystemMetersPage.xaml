@@ -73,7 +73,7 @@
 
                 <controls:Note
                     ButtonCommand="{x:Bind ViewModel.OpenTaskbarSettingsCommand}"
-                    ButtonContent="{app:Localized Key=SystemMetersOpenTaskbarSettings}"
+                    ButtonContent="{app:Localized Key=OpenTaskbarSettings}"
                     IsOpen="{x:Bind ViewModel.InNotificationArea, Mode=OneWay}"
                     Message="{app:Localized Key=SystemMetersHiddenIconsInfo}" />
 

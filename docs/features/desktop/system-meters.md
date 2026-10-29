@@ -253,7 +253,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 | `SystemMetersIntervalSeconds_one`, `_other` | {0} second, {0} seconds | Page: the list's items, with the plural forms of each language |
 | `SystemMetersTaskManagerInfo` | Selecting the meters opens Task Manager on its default start page. To open it on Performance, choose Performance in Task Manager's settings. | Page: note |
 | `SystemMetersHiddenIconsInfo` | Windows may put new icons in the hidden icons menu (^) of the taskbar. To keep a meter in sight, drag its icon onto the taskbar, or turn it on in the taskbar settings. | Page: note, with Notification area |
-| `SystemMetersOpenTaskbarSettings` | Open taskbar settings | Page: button in the note |
+| `OpenTaskbarSettings` | Open taskbar settings | Page: button in the note |
 | `SystemMetersPermissions` | Reads how busy the processor is, how much memory is in use and how much data the network adapters receive and send, for the whole PC; never what each app uses. On the taskbar, reads only where its buttons are, never their names. Makes no network connections, and stores and sends nothing. | Below `FeaturePermissionsHeader` |
 | `SystemMetersCpuToolTip` | CPU: {0} | Tooltip line; {0} is a percentage, such as 42% |
 | `SystemMetersMemoryToolTip` | Memory: {0} | Tooltip line; {0} is a percentage |

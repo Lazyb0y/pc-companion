@@ -916,7 +916,7 @@
     <value>Windows নতুন আইকনগুলো টাস্কবারের লুকানো আইকনের মেনুতে (^) রাখতে পারে। কোনো মিটার সবসময় দেখতে, তার আইকন টাস্কবারে টেনে আনুন, অথবা টাস্কবার সেটিংসে এটি চালু করুন।</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>টাস্কবার সেটিংস খুলুন</value>
     <comment>Needs native review.</comment>
   </data>

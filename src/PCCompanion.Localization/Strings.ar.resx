@@ -980,7 +980,7 @@
     <value>قد يضع Windows الأيقونات الجديدة في قائمة الأيقونات المخفية (^) على شريط المهام. لإبقاء أحد المقاييس ظاهرًا، اسحب أيقونته إلى شريط المهام، أو شغّلها في إعدادات شريط المهام.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>فتح إعدادات شريط المهام</value>
     <comment>Needs native review.</comment>
   </data>

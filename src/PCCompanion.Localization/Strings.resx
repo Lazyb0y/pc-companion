@@ -916,9 +916,9 @@
     <value>Windows may put new icons in the hidden icons menu (^) of the taskbar. To keep a meter in sight, drag its icon onto the taskbar, or turn it on in the taskbar settings.</value>
     <comment>System Meters page: note shown with Notification area. Use Windows' names for the hidden icons menu and the taskbar settings.</comment>
   </data>
-  <data name="SystemMetersOpenTaskbarSettings" xml:space="preserve">
+  <data name="OpenTaskbarSettings" xml:space="preserve">
     <value>Open taskbar settings</value>
-    <comment>System Meters page: button in the note about hidden icons; it opens the taskbar page of Windows Settings.</comment>
+    <comment>Button in a page's note about hidden icons; it opens the taskbar page of Windows Settings.</comment>
   </data>
   <data name="SystemMetersPermissions" xml:space="preserve">
     <value>Reads how busy the processor is, how much memory is in use and how much data the network adapters receive and send, for the whole PC; never what each app uses. On the taskbar, reads only where its buttons are, never their names. Makes no network connections, and stores and sends nothing.</value>
