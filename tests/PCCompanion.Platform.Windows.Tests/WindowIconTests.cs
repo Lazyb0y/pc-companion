@@ -23,7 +23,7 @@ public sealed class WindowIconTests
             nint? answer = null;
 
             Assert.True(WindowIcon.Request(other.Handle, large: false, given => answer = given));
-            RunFor(pump, TimeSpan.FromMilliseconds(300));
+            RunUntil(pump, () => answer is not null);
 
             Assert.Equal(icon, answer);
         }
@@ -48,7 +48,7 @@ public sealed class WindowIconTests
             Assert.Null(answer);
 
             other.Release();
-            RunFor(pump, TimeSpan.FromMilliseconds(300));
+            RunUntil(pump, () => answer is not null);
 
             Assert.Equal(icon, answer);
         }
@@ -135,6 +135,17 @@ public sealed class WindowIconTests
         DestroyIcon(icon);
 
         Assert.Null(WindowIcon.Pixels(icon, 16));
+    }
+
+    // Runs this thread's message loop until the condition holds, for up to 30 seconds, as threads can
+    // be slow to get their turn while many tests run at once.
+    private static void RunUntil(MessageWindow pump, Func<bool> condition)
+    {
+        var deadline = Environment.TickCount64 + 30_000;
+        while (!condition() && Environment.TickCount64 < deadline)
+        {
+            RunFor(pump, TimeSpan.FromMilliseconds(50));
+        }
     }
 
     // A 16-pixel icon without an alpha channel: its left half is masked out, its right half red.
