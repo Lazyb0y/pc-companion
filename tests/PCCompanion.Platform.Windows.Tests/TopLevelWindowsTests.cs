@@ -263,6 +263,7 @@ public sealed class TopLevelWindowsTests
 
         Assert.True(TopLevelWindows.IsVisible(window.Handle));
         Assert.True(IsIconic(window.Handle));
+        Assert.True(TopLevelWindows.IsMinimized(window.Handle));
         Assert.Equal(front, Foreground.Window);
     }
 
