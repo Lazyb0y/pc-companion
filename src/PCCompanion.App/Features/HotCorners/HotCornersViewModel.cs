@@ -103,10 +103,10 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
     public bool HasNoExcludedApps => ExcludedApps.Count == 0;
 
     /// <summary>Whether the list has <paramref name="app"/> already.</summary>
-    public bool Lists(ExcludedApp app) => Settings.Lists(app);
+    public bool Lists(ListedApp app) => Settings.Lists(app);
 
     /// <summary>Adds <paramref name="app"/> to the list, unless it's there already.</summary>
-    public void AddExcludedApp(ExcludedApp app) => SaveExcludedApps(Settings.WithExcludedApp(app));
+    public void AddExcludedApp(ListedApp app) => SaveExcludedApps(Settings.WithExcludedApp(app));
 
     public void RemoveExcludedApp(int index)
     {
@@ -421,7 +421,7 @@ public sealed partial class ExcludedAppItem : ObservableObject
 
     private IconElement _icon = AppLooks.ToIconElement(null);
 
-    public ExcludedAppItem(int index, ExcludedApp app)
+    public ExcludedAppItem(int index, ListedApp app)
     {
         ArgumentNullException.ThrowIfNull(app);
 
@@ -434,7 +434,7 @@ public sealed partial class ExcludedAppItem : ObservableObject
     /// <summary>The app's place in the list, from 0.</summary>
     public int Index { get; }
 
-    public ExcludedApp App { get; }
+    public ListedApp App { get; }
 
     public string Name { get; }
 

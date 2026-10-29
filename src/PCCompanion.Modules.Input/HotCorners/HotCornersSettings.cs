@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using PCCompanion.Core.Features;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
 
@@ -37,7 +38,7 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
     public bool IgnoreFullScreenApps { get; set; } = true;
 
     /// <summary>The apps in front of which corners don't trigger.</summary>
-    public IReadOnlyList<ExcludedApp> ExcludedApps { get; set; } = [];
+    public IReadOnlyList<ListedApp> ExcludedApps { get; set; } = [];
 
     /// <summary>
     /// Reads the feature's section, or returns the defaults when there is none. Values a
@@ -69,13 +70,13 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
     public HotCornersSettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 
     /// <summary>Whether the list has <paramref name="app"/> already.</summary>
-    public bool Lists(ExcludedApp app) => ExcludedApps.Any(listed => listed.IsSameAppAs(app));
+    public bool Lists(ListedApp app) => ExcludedApps.Any(listed => listed.IsSameAppAs(app));
 
     /// <summary>
     /// The settings with <paramref name="app"/> at the end of the list, unless it's listed already
     /// or has neither or both of an app ID and a program.
     /// </summary>
-    public HotCornersSettings WithExcludedApp(ExcludedApp app)
+    public HotCornersSettings WithExcludedApp(ListedApp app)
     {
         ArgumentNullException.ThrowIfNull(app);
 

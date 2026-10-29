@@ -12,9 +12,9 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.App.Features.HotCorners;
 
 /// <summary>An app in the Running app dialog.</summary>
-public sealed class RunningAppItem(ExcludedApp app, ImageSource? image)
+public sealed class RunningAppItem(ListedApp app, ImageSource? image)
 {
-    public ExcludedApp App { get; } = app;
+    public ListedApp App { get; } = app;
 
     /// <summary>The app's icon, or <see langword="null"/> for the plain app icon.</summary>
     public ImageSource? Image { get; } = image;
@@ -46,7 +46,7 @@ public sealed partial class RunningAppDialog : ContentDialog
     public ObservableCollection<RunningAppItem> Items { get; } = [];
 
     /// <summary>The chosen app, with its name, or <see langword="null"/>.</summary>
-    public ExcludedApp? Chosen => (Apps.SelectedItem as RunningAppItem)?.App;
+    public ListedApp? Chosen => (Apps.SelectedItem as RunningAppItem)?.App;
 
     private async Task LoadAsync()
     {

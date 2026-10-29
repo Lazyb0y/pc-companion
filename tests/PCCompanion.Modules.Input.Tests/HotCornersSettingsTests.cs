@@ -9,8 +9,8 @@ namespace PCCompanion.Modules.Input.Tests;
 
 public sealed class HotCornersSettingsTests
 {
-    private static readonly ExcludedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
-    private static readonly ExcludedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
+    private static readonly ListedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
+    private static readonly ListedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
 
     [Fact]
     public void WithoutASectionTheFeatureIsOffAndTheTopLeftCornerShowsTaskView()
@@ -184,16 +184,16 @@ public sealed class HotCornersSettingsTests
             .WithExcludedApp(RemoteDesktop with { Name = "Again", Program = @"c:\windows\system32\MSTSC.exe" })
             .WithExcludedApp(Photos)
             .WithExcludedApp(Photos with { AppId = Photos.AppId!.ToUpperInvariant() })
-            .WithExcludedApp(new ExcludedApp { Name = "Nothing" });
+            .WithExcludedApp(new ListedApp { Name = "Nothing" });
 
         Assert.Equal([RemoteDesktop, Photos], settings.ExcludedApps);
-        Assert.True(settings.Lists(new ExcludedApp { Program = @"C:\Windows\System32\MSTSC.EXE" }));
+        Assert.True(settings.Lists(new ListedApp { Program = @"C:\Windows\System32\MSTSC.EXE" }));
     }
 
     [Fact]
     public void RemovingAnAppKeepsTheOthersInOrder()
     {
-        var notepad = new ExcludedApp { Name = "Notepad", Program = @"C:\Windows\System32\notepad.exe" };
+        var notepad = new ListedApp { Name = "Notepad", Program = @"C:\Windows\System32\notepad.exe" };
         var settings = new HotCornersSettings { ExcludedApps = [RemoteDesktop, Photos, notepad] };
 
         Assert.Equal([RemoteDesktop, notepad], settings.WithoutExcludedApp(1).ExcludedApps);

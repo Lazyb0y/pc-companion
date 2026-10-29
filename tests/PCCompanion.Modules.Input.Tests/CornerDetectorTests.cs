@@ -20,8 +20,8 @@ public sealed class CornerDetectorTests
     // The desktop covers every display and belongs to the shell.
     private static readonly WindowPlace Desktop = Window(Rectangle.FromLTRB(0, 0, 3840, 1080), isShell: true);
 
-    private static readonly ExcludedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
-    private static readonly ExcludedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
+    private static readonly ListedApp RemoteDesktop = new() { Name = "Remote Desktop Connection", Program = @"C:\Windows\System32\mstsc.exe" };
+    private static readonly ListedApp Photos = new() { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" };
 
     private readonly FakeHotCornerEnvironment _environment = new() { PointerPosition = Middle };
     private readonly ManualTimeProvider _clock = new();
