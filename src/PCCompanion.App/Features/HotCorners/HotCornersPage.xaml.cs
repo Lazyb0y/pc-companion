@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PCCompanion.App.Controls;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
@@ -76,7 +77,7 @@ public sealed partial class HotCornersPage : Page
 
     private async void OnAddRunningAppClick(object sender, RoutedEventArgs e)
     {
-        var dialog = new RunningAppDialog(ViewModel)
+        var dialog = new RunningAppDialog(ViewModel.Lists)
         {
             XamlRoot = XamlRoot,
             FlowDirection = FlowDirection,

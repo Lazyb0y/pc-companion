@@ -476,27 +476,27 @@
     <value>إزالة {0}</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppTitle" xml:space="preserve">
+  <data name="RunningAppTitle" xml:space="preserve">
     <value>اختيار تطبيق قيد التشغيل</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppList" xml:space="preserve">
+  <data name="RunningAppList" xml:space="preserve">
     <value>التطبيقات قيد التشغيل</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppLoading" xml:space="preserve">
+  <data name="RunningAppLoading" xml:space="preserve">
     <value>جارٍ البحث عن التطبيقات قيد التشغيل</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppNone" xml:space="preserve">
+  <data name="RunningAppNone" xml:space="preserve">
     <value>لا يوجد تطبيق آخر له نافذة مفتوحة.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppAdd" xml:space="preserve">
+  <data name="RunningAppAdd" xml:space="preserve">
     <value>إضافة</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRunningAppCancel" xml:space="preserve">
+  <data name="RunningAppCancel" xml:space="preserve">
     <value>إلغاء</value>
     <comment>Needs native review.</comment>
   </data>

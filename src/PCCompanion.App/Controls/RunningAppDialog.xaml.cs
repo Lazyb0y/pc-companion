@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.App.Features.HotCorners;
+namespace PCCompanion.App.Controls;
 
 /// <summary>An app in the Running app dialog.</summary>
 public sealed class RunningAppItem(ListedApp app, ImageSource? image)
@@ -28,16 +28,16 @@ public sealed class RunningAppItem(ListedApp app, ImageSource? image)
 
 /// <summary>
 /// Lists the apps with a window open, without PC Companion and the apps already listed, so one
-/// can be added to the apps that turn corners off. The windows, names and icons are read off the
-/// UI thread.
+/// can be added to a page's list of apps. The windows, names and icons are read off the UI thread.
 /// </summary>
 public sealed partial class RunningAppDialog : ContentDialog
 {
-    private readonly HotCornersViewModel _page;
+    private readonly Func<ListedApp, bool> _isListed;
 
-    public RunningAppDialog(HotCornersViewModel page)
+    /// <param name="isListed">Whether the page's list has an app already.</param>
+    public RunningAppDialog(Func<ListedApp, bool> isListed)
     {
-        _page = page;
+        _isListed = isListed;
         InitializeComponent();
         Opened += async (_, _) => await LoadAsync().ConfigureAwait(true);
     }
@@ -51,7 +51,7 @@ public sealed partial class RunningAppDialog : ContentDialog
     {
         string[] leftOut = [Environment.ProcessPath ?? string.Empty, HostProcess.ExecutablePath];
         var running = await Task.Run(() => RunningApps.Of(TopLevelWindows.List(), new WindowsAppIdentityReader(), leftOut)).ConfigureAwait(true);
-        var unlisted = running.Where(app => !_page.Lists(app.App)).ToList();
+        var unlisted = running.Where(app => !_isListed(app.App)).ToList();
         var looks = await Task.Run(() => unlisted
             .Select(app => (App: app.App with { Name = AppLooks.ReadName(app.App, app.Program) }, Icon: AppLooks.ReadIcon(app.App, app.Program)))
             .OrderBy(app => app.App.Name, StringComparer.CurrentCultureIgnoreCase)

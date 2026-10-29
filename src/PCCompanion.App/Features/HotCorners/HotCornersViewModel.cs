@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
+using PCCompanion.App.Controls;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.HotCorners;
