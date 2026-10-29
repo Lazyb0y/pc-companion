@@ -2700,4 +2700,52 @@
     <value>{0}: {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>الاختصار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>يرسل النافذة الموجودة في المقدمة إلى منطقة الإعلامات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>مفتاح شعار Windows + Shift + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Shift + تصغير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>اضغط باستمرار على Shift أثناء تحديد زر «تصغير» في نافذة لإرسالها إلى منطقة الإعلامات. بدون Shift، يعمل «تصغير» كالمعتاد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>التطبيقات التي تنتقل إلى منطقة الإعلامات عند تصغيرها</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>تنتقل نوافذها إلى منطقة الإعلامات كلما تم تصغيرها، ولكن ليس عند استخدام «إظهار سطح المكتب» أو الاختصارات الأخرى التي تصغّر كل النوافذ.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>قد يضع Windows الأيقونات الجديدة في قائمة الأيقونات المخفية (^) على شريط المهام. لإبقاء أيقونة أحد التطبيقات ظاهرة، اسحبها إلى شريط المهام، أو شغّلها في إعدادات شريط المهام. تعرض قائمة أيقونة PC Companion أيضًا كل النوافذ الموجودة في منطقة الإعلامات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ الانتقال إلى منطقة الإعلامات: نوافذ التطبيقات التي تعمل كمسؤول، ونوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». عندما لا يستطيع الاختصار إرسال نافذة، يُصدر Windows صوت التحذير. وعندها يصغّر Shift + تصغير النافذة كالمعتاد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ الانتقال إلى منطقة الإعلامات: نوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». عندما لا يستطيع الاختصار إرسال نافذة، يُصدر Windows صوت التحذير. وعندها يصغّر Shift + تصغير النافذة كالمعتاد. يعمل PC Companion كمسؤول، لذا تنتقل نوافذ التطبيقات التي تعمل كمسؤول إلى منطقة الإعلامات أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>عند انتقال نافذة إلى منطقة الإعلامات، يقرأ عنوانها وأيقونتها والتطبيق الذي تنتمي إليه، وأثناء وجودها هناك يقرأ عنوانها عندما يتغير؛ تبقى العناوين في الذاكرة فقط. عند تشغيل Shift + تصغير أو إدراج تطبيقات، يقرأ ما إذا كان Shift ومفتاح شعار Windows مضغوطين عندما تبدأ نافذة بالتصغير. يُخفي نوافذ التطبيقات الأخرى ويُظهرها ويضع عليها علامة حتى تعود بعد أي عطل، دون خطّاف للوحة المفاتيح أو الماوس ودون تشغيل أي تعليمات برمجية في التطبيقات الأخرى. يحفظ Windows أيقونة كل تطبيق باسم التطبيق، وليس بعنوان أي نافذة أبدًا. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

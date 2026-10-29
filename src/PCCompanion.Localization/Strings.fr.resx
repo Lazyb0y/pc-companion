@@ -2604,4 +2604,52 @@
     <value>{0} : {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>Raccourci</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>Envoie la fenêtre au premier plan dans la zone de notification.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Touche du logo Windows + Maj + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Maj + Réduire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>Maintenez Maj enfoncée en sélectionnant le bouton Réduire d’une fenêtre pour l’envoyer dans la zone de notification. Sans Maj, Réduire fonctionne comme d’habitude.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>Applications qui vont dans la zone de notification quand elles sont réduites</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>Leurs fenêtres vont dans la zone de notification chaque fois qu’elles sont réduites, mais pas avec Afficher le bureau ni avec les autres raccourcis qui réduisent toutes les fenêtres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows peut placer les nouvelles icônes dans le menu des icônes masquées (^) de la barre des tâches. Pour garder l’icône d’une application visible, faites-la glisser dans la barre des tâches ou activez-la dans les paramètres de la barre des tâches. Le menu de l’icône PC Companion liste aussi toutes les fenêtres de la zone de notification.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. PC Companion est exécuté en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur vont aussi dans la zone de notification.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>Quand une fenêtre va dans la zone de notification, lit son titre, son icône et l’application à laquelle elle appartient, puis, tant qu’elle y est, son titre quand il change ; les titres restent uniquement en mémoire. Avec Maj + Réduire activé ou des applications listées, lit si Maj et la touche du logo Windows sont enfoncées quand une fenêtre commence à se réduire. Masque, affiche et marque les fenêtres d’autres applications, pour qu’elles reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. Windows conserve l’icône de chaque application avec le nom de l’application, jamais avec le titre d’une fenêtre. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

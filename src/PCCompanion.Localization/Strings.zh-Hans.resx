@@ -2580,4 +2580,52 @@
     <value>{0}：{1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MinimizeToTrayShortcutHeader" xml:space="preserve">
+    <value>快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutDescription" xml:space="preserve">
+    <value>将前台窗口发送到通知区域。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutWindowsShiftZ" xml:space="preserve">
+    <value>Windows 徽标键 + Shift + Z</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShortcutNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeHeader" xml:space="preserve">
+    <value>Shift + 最小化</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayShiftMinimizeDescription" xml:space="preserve">
+    <value>按住 Shift 并选择窗口的“最小化”按钮，即可将其发送到通知区域。不按 Shift 时，“最小化”照常工作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsHeader" xml:space="preserve">
+    <value>最小化时进入通知区域的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayAppsDescription" xml:space="preserve">
+    <value>这些应用的窗口每次最小化时都会进入通知区域，但通过“显示桌面”或其他最小化所有窗口的快捷键最小化时除外。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayHiddenIconsInfo" xml:space="preserve">
+    <value>Windows 可能会将新图标放在任务栏的隐藏图标菜单 (^) 中。若要让某个应用的图标始终可见，请将其拖到任务栏上，或在任务栏设置中将其打开。PC Companion 图标的菜单也会列出通知区域中的所有窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
+    <value>有些窗口无法进入通知区域：以管理员身份运行的应用的窗口、Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
+    <value>有些窗口无法进入通知区域：Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也能进入通知区域。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayPermissions" xml:space="preserve">
+    <value>窗口进入通知区域时，读取其标题、图标及所属应用；窗口在通知区域期间，在标题更改时读取其标题；标题仅保存在内存中。启用“Shift + 最小化”或列出了应用时，在窗口开始最小化时读取是否按住了 Shift 和 Windows 徽标键。隐藏、显示并标记其他应用的窗口，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。Windows 以应用名称保存每个应用的图标，从不使用窗口标题。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
