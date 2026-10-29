@@ -89,6 +89,75 @@ public static class TopLevelWindows
     }
 
     /// <summary>
+    /// Minimizes another program's <paramref name="window"/>, as its Minimize button does, and
+    /// Windows activates the next window. Returns false when Windows refused, for example for an
+    /// app running as administrator while this process doesn't. It doesn't wait: Windows passes it
+    /// on to the window's program, which carries it out when it handles its messages.
+    /// </summary>
+    public static bool Minimize(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_MINIMIZE);
+
+    /// <summary>
+    /// Hides another program's <paramref name="window"/>, taking it off the taskbar and out of
+    /// Alt + Tab. Returns false when Windows refused. It doesn't wait, as <see cref="Minimize"/>
+    /// doesn't.
+    /// </summary>
+    public static bool Hide(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_HIDE);
+
+    /// <summary>
+    /// Shows another program's hidden <paramref name="window"/> again, minimized on the taskbar,
+    /// without activating it. Returns false when Windows refused. It doesn't wait.
+    /// </summary>
+    public static bool ShowMinimized(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE);
+
+    /// <summary>
+    /// Shows another program's <paramref name="window"/>, hidden or minimized, as it was before it
+    /// was minimized, maximized again if it was, and activates it. Returns false when Windows
+    /// refused. It doesn't wait; bring the window's dialog to the front with <see cref="Activate"/>
+    /// once the window shows.
+    /// </summary>
+    public static bool Restore(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_RESTORE);
+
+    /// <summary>Whether <paramref name="window"/> is shown: hidden windows aren't, minimized ones are.</summary>
+    public static bool IsVisible(nint window) => PInvoke.IsWindowVisible(new HWND(window));
+
+    /// <summary>Whether <paramref name="window"/> still exists.</summary>
+    public static bool Exists(nint window) => PInvoke.IsWindow(new HWND(window));
+
+    /// <summary>
+    /// Whether <paramref name="window"/> takes input. A window with a dialog open is disabled until
+    /// the dialog closes.
+    /// </summary>
+    public static bool IsEnabled(nint window) => PInvoke.IsWindowEnabled(new HWND(window));
+
+    /// <summary>
+    /// The title of another program's <paramref name="window"/>, or an empty string. Windows reads
+    /// its own copy of another program's title without sending the window a message, so a program
+    /// that stopped responding can't hold it. For this process's windows, it sends one.
+    /// </summary>
+    public static string Title(nint window)
+    {
+        var handle = new HWND(window);
+        var length = PInvoke.GetWindowTextLength(handle);
+        if (length <= 0)
+        {
+            return string.Empty;
+        }
+
+        Span<char> text = length < 512 ? stackalloc char[length + 1] : new char[length + 1];
+        var copied = PInvoke.GetWindowText(handle, text);
+        return copied > 0 ? new string(text[..copied]) : string.Empty;
+    }
+
+    /// <summary>The name of <paramref name="window"/>'s window class, or an empty string when it has closed.</summary>
+    public static string ClassName(nint window)
+    {
+        // Class names have at most 256 characters.
+        Span<char> name = stackalloc char[257];
+        var copied = PInvoke.GetClassName(new HWND(window), name);
+        return copied > 0 ? new string(name[..copied]) : string.Empty;
+    }
+
+    /// <summary>
     /// Puts <paramref name="window"/> behind all other windows, as Alt + Esc does, without moving,
     /// resizing or activating it. An always-on-top window loses always-on-top. Returns false when
     /// Windows refused. For another thread's window, it doesn't wait: Windows passes the request on
