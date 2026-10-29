@@ -364,11 +364,11 @@
     <value>Parcourir le programme : {0}</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramDialogTitle" xml:space="preserve">
+  <data name="ProgramDialogTitle" xml:space="preserve">
     <value>Choisir un programme</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersProgramFilter" xml:space="preserve">
+  <data name="ProgramDialogFilter" xml:space="preserve">
     <value>Programmes</value>
     <comment>Needs native review.</comment>
   </data>
@@ -420,27 +420,27 @@
     <value>Par exemple, Bureau à distance, une machine virtuelle ou une application de dessin. Quand l’une d’elles est au premier plan, aucun coin ne se déclenche, sur aucun écran.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddApp" xml:space="preserve">
+  <data name="AppListAdd" xml:space="preserve">
     <value>Ajouter une application</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddRunningApp" xml:space="preserve">
+  <data name="AppListAddRunningApp" xml:space="preserve">
     <value>Application en cours d’exécution…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersAddProgramFile" xml:space="preserve">
+  <data name="AppListAddProgramFile" xml:space="preserve">
     <value>Fichier de programme…</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersNoExcludedApps" xml:space="preserve">
+  <data name="AppListEmpty" xml:space="preserve">
     <value>Aucune application n’est dans la liste.</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveApp" xml:space="preserve">
+  <data name="AppListRemove" xml:space="preserve">
     <value>Supprimer</value>
     <comment>Needs native review.</comment>
   </data>
-  <data name="HotCornersRemoveAppName" xml:space="preserve">
+  <data name="AppListRemoveName" xml:space="preserve">
     <value>Supprimer {0}</value>
     <comment>Needs native review.</comment>
   </data>
