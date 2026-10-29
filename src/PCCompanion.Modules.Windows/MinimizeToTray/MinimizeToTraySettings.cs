@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using PCCompanion.Core.Features;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.MinimizeToTray;
 
@@ -23,7 +24,7 @@ public sealed record MinimizeToTraySettings : IFeatureSettings<MinimizeToTraySet
     public bool ShiftMinimize { get; set; } = true;
 
     /// <summary>The apps whose windows go to the tray whenever they're minimized.</summary>
-    public IReadOnlyList<MinimizedApp> MinimizedApps { get; set; } = [];
+    public IReadOnlyList<ListedApp> MinimizedApps { get; set; } = [];
 
     /// <summary>
     /// Reads the feature's section, or returns the defaults when there is none. A blank app ID or
@@ -48,13 +49,13 @@ public sealed record MinimizeToTraySettings : IFeatureSettings<MinimizeToTraySet
     public MinimizeToTraySettings WithEnabled(bool enabled) => this with { Enabled = enabled };
 
     /// <summary>Whether the list has <paramref name="app"/> already.</summary>
-    public bool Lists(MinimizedApp app) => MinimizedApps.Any(listed => listed.IsSameAppAs(app));
+    public bool Lists(ListedApp app) => MinimizedApps.Any(listed => listed.IsSameAppAs(app));
 
     /// <summary>
     /// The settings with <paramref name="app"/> at the end of the list, unless it's listed already
     /// or has neither or both of an app ID and a program.
     /// </summary>
-    public MinimizeToTraySettings WithMinimizedApp(MinimizedApp app)
+    public MinimizeToTraySettings WithMinimizedApp(ListedApp app)
     {
         ArgumentNullException.ThrowIfNull(app);
 

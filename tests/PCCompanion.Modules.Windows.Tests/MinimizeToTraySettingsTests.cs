@@ -1,5 +1,6 @@
 using System.Text.Json;
 using PCCompanion.Modules.Windows.MinimizeToTray;
+using PCCompanion.Platform.Windows;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
 
@@ -36,8 +37,8 @@ public sealed class MinimizeToTraySettingsTests
                 Enabled = true,
                 MinimizedApps =
                 [
-                    new MinimizedApp { Name = "Outlook", Program = @"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE" },
-                    new MinimizedApp { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" },
+                    new ListedApp { Name = "Outlook", Program = @"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE" },
+                    new ListedApp { Name = "Photos", AppId = "Microsoft.Windows.Photos_8wekyb3d8bbwe!App" },
                 ],
             },
             settings);
@@ -57,7 +58,7 @@ public sealed class MinimizeToTraySettingsTests
             Enabled = true,
             Shortcut = MinimizeToTrayShortcut.None,
             ShiftMinimize = false,
-            MinimizedApps = [new MinimizedApp { Name = "App", Program = @"C:\Apps\App.exe" }],
+            MinimizedApps = [new ListedApp { Name = "App", Program = @"C:\Apps\App.exe" }],
         };
 
         Assert.Equal(settings, MinimizeToTraySettings.Read(settings.Write()));
@@ -78,7 +79,7 @@ public sealed class MinimizeToTraySettingsTests
             }
             """));
 
-        Assert.Equal([new MinimizedApp { Name = "Kept", AppId = "B" }], settings.MinimizedApps);
+        Assert.Equal([new ListedApp { Name = "Kept", AppId = "B" }], settings.MinimizedApps);
     }
 
     [Fact]
@@ -96,11 +97,11 @@ public sealed class MinimizeToTraySettingsTests
     [Fact]
     public void AnAppIsListedOnce()
     {
-        var app = new MinimizedApp { Name = "App", Program = @"C:\Apps\App.exe" };
+        var app = new ListedApp { Name = "App", Program = @"C:\Apps\App.exe" };
         var settings = new MinimizeToTraySettings().WithMinimizedApp(app);
 
         Assert.Same(settings, settings.WithMinimizedApp(app with { Program = @"c:\apps\app.exe" }));
-        Assert.Same(settings, settings.WithMinimizedApp(new MinimizedApp { Name = "Neither" }));
+        Assert.Same(settings, settings.WithMinimizedApp(new ListedApp { Name = "Neither" }));
         Assert.Empty(settings.WithoutMinimizedApp(0).MinimizedApps);
     }
 
