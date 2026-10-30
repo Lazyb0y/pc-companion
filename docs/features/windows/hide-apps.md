@@ -81,12 +81,14 @@ Put away every window of the app in front, or of every other app, with one short
 
 ### Show all
 
-- **Show all hidden windows,** in the PC Companion icon's menu above Settings and Exit while the list has windows, brings back every window that Hide app and Hide others minimized, behind the window in front. The host asks the feature for it each time the menu opens (`IHostMenuItems`), and the feature answers from what it already knows.
+- **Show all hidden windows,** in the PC Companion icon's menu above Settings and Exit while the list has windows, brings back every window that Hide app and Hide others minimized. With the menu open, no app's window is in front, so the windows come back in their order behind the windows on screen, and where Windows restores them when there's none. The top window on screen gets the front back, as before the menu opened, and the windows come back once it has it, or after half a second: otherwise Windows could give the front to a window coming back, even one on another virtual desktop, and switch to that desktop, as the Sandbox checks showed. Even so, the Sandbox checks saw Windows switch to the other virtual desktop some of the time, when windows Hide Apps minimized there came back from the menu; see [Not included](#not-included). The host asks the feature for it each time the menu opens (`IHostMenuItems`), and the feature answers from what it already knows.
 
 ### How
 
 - **In place:** each window is restored without taking the front (`ShowWindowAsync` with `SW_SHOWNOACTIVATE`). Windows restores it at its place and size, maximized or snapped as it was, and leaves its place in the order of windows and its virtual desktop. Activating it instead would switch to its virtual desktop, as the spike showed.
-- **In order:** then, one at a time in the order they had when they were minimized, each window is put right behind the one before (`SetWindowPos` with `SWP_ASYNCWINDOWPOS` and `SWP_NOACTIVATE`), the first right behind the app in front's last window, or right behind the window that came back. Each app moves its window when it handles its messages, so PC Companion waits for each move, up to 300 ms, before the next: the spike showed that a window moved behind one that wasn't in place yet lands in the wrong place, and that every way of moving them all at once came back out of order. A move is done when the next visible window after the one before is the window; hidden windows, such as each app's input method windows, sit in between. It's checked each time Windows reports that the order of windows changed (`EVENT_OBJECT_REORDER`, as System Meters watches the taskbar), and by a timer in case no report comes.
+- **Settled:** once they're all back, or after a second, PC Companion waits 400 ms more: restoring still moves some windows after they show, such as maximized and File Explorer ones, and a window moved meanwhile ended in the wrong place in the Sandbox checks. A window that moves itself as it comes back, as Character Map did in the spike, is put in order with the others.
+- **In order:** then, one at a time in the order they had when they were minimized, each window is put right behind the one before (`SetWindowPos` with `SWP_ASYNCWINDOWPOS` and `SWP_NOACTIVATE`), the first right behind the app in front's last window, or right behind the window that came back. Each app moves its window when it handles its messages, so PC Companion waits for each move, up to 300 ms, before the next: the spike showed that a window moved behind one that wasn't in place yet lands in the wrong place, and that every way of moving them all at once came back out of order. A move is done when the window is the first window Alt + Tab shows behind the one before: owned windows, such as palettes, sit in front of their owner, and Windows' own helper windows, such as a Store app's core window and File Explorer's hidden-from-view ones, can sit anywhere. It's checked each time Windows reports that the order of windows changed (`EVENT_OBJECT_REORDER`, as System Meters watches the taskbar), and by a timer in case no report comes.
+- In the Sandbox checks, bringing back five windows took about 440 ms, 400 ms of it the wait for them to settle.
 - A window of an app that stopped responding (`IsHungAppWindow`) isn't waited for: it comes back when its app responds, behind the others.
 - Only windows still minimized and still in the list come back. Windows the user minimized themselves were never in it.
 
@@ -107,7 +109,7 @@ Put away every window of the app in front, or of every other app, with one short
 ## With Minimize to Tray
 
 - Windows in Minimize to Tray's tray are hidden, so Hide Apps never minimizes them, and Show all doesn't bring them back.
-- Minimize to Tray sends a listed app's window to the tray when it's minimized. It leaves alone the windows Hide Apps minimizes, so they stay on the taskbar and come back with Hide others or Show all: the two features share a list, within the module, of the windows Hide Apps is minimizing.
+- Minimize to Tray sends a listed app's window to the tray when it's minimized, and a window minimized with Shift held. It leaves alone the windows Hide Apps minimizes, so they stay on the taskbar and come back with Hide others or Show all: the two features share a list, within the module, of the windows in Hide Apps' list, to which Hide Apps adds each window before it minimizes it, and Minimize to Tray logs why it left the window.
 - With Minimize to Tray off, nothing changes.
 
 ## Never losing a window
@@ -139,7 +141,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 - **Virtual desktops:** windows on another desktop were cloaked and left out. A window restored with `SW_SHOWNOACTIVATE` came back on its own desktop; restoring and activating it switched desktops.
 - **An app that stopped responding:** `ShowWindowAsync` returned in 0.01 ms, and the window minimized once the app responded. Once, Windows showed a stand-in window of class `Ghost`, in Desktop Window Manager's process, that looked like a taskbar window.
 - **Windows' own shortcuts:** Windows + Home worked with the title bar shake setting off, on and absent. It minimized the app in front's second window and the always-on-top window, and brought the others back in their order behind the windows that stayed. Windows + Shift + M after Windows + M, and Windows + D twice, also brought them back in order.
-- **Not checked yet:** whether Windows reports each move of another program's window with `EVENT_OBJECT_REORDER`, which the spike didn't watch; the Sandbox checks measure it. By hand: UAC on, the foreground lock, several displays, Windows 10, Narrator and a real keyboard.
+- **Not checked yet:** whether each move was seen through `EVENT_OBJECT_REORDER` or the timer; the Sandbox checks saw five windows put in order about 40 ms after they settled. By hand: UAC on, the foreground lock, several displays, Windows 10, Narrator and a real keyboard.
 
 ## Settings
 
@@ -171,6 +173,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 - **A Hot Corners action:** Hot Corners is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
 - **Hiding apps automatically after a time without use, muting hidden apps, or hiding their notification icons,** as some tools do.
 - **Windows on other virtual desktops,** which aren't in sight.
+- **Staying on the virtual desktop that's showing when Show all brings back windows from another one:** in the Sandbox checks, about 35 ms after Show all was chosen from the PC Companion icon's menu, Windows sometimes gave the front to a window minimized on another virtual desktop, before Hide Apps brought it back, and switched to that desktop. Hide Apps gives the front to a window on the desktop that's showing first, which helped some of the time; the cause is still to be found.
 
 ## Compatibility
 
@@ -182,7 +185,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 
 - **Reads:** at a press, for the visible top-level windows: their styles, owners, whether they're enabled, minimized and cloaked, their display and class name, and for those the taskbar shows, their app's identity. While windows are in the list, Windows reports each window starting to come back from minimized, and the closing of windows of the processes in the list; while they're being brought back, it reports changes in the order of windows, and PC Companion reads that order. It reads no window titles or contents and receives no keys or clicks: no keyboard or mouse hook.
 - **Changes:** other apps' windows: minimizes them, brings them back, orders them and gives the front back. It asks apps running as administrator to minimize and come back when it can't do it itself. It runs no code in other apps, sends them no input and writes no file.
-- **Logs:** Debug entries for each press and bringing back: the shortcut or menu item, how many windows went or came back, how many stayed and why, and how long it took. Never titles, app IDs, names or paths, which can name documents, profiles or users. Warnings when Windows refuses a shortcut, when a shortcut is unknown or the settings section can't be read, and an error when a failure stops the feature.
+- **Logs:** Debug entries for each press and bringing back: the shortcut or menu item, how many windows went or came back, how many stayed and why, how long it took, and how long putting the windows in order took, with how many were skipped or didn't move in time. Never titles, app IDs, names or paths, which can name documents, profiles or users. Warnings when Windows refuses a shortcut, when a shortcut is unknown or the settings section can't be read, and when Windows doesn't give the front back, and an error when a failure stops the feature.
 - **Settings:** the two shortcut choices and two switches, so a changed settings file can only change which shortcuts minimize windows.
 - **Network:** none. `PRIVACY.md` gets a line on Hide Apps.
 - **Rights:** runs with the host's rights: without admin rights unless Always run as administrator is on or UAC is off. Running as administrator, it also minimizes the windows of apps running as administrator, which the user can minimize anyway. Turning the feature off removes the shortcuts and hooks and leaves every window as it is.
@@ -214,17 +217,19 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - the settings: defaults, the spec's example, an unknown shortcut and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/HideApps.ps1`), with test windows the checks start:
   - the Home switch turns the feature on with its defaults, and the page saves both shortcuts and both switches;
-  - Hide app, sent by `SendInput`, minimizes both windows of a test app and its palette, keeps their taskbar buttons and brings the window behind them to the front; also for File Explorer windows;
-  - Hide others keeps both of the app in front's windows and the focus, minimizes Settings and Edge, leaves an always-on-top window, a window without a Minimize button and a window with a dialog open, and the host logs why;
-  - pressing Hide others again brings the windows back in their order, at their place and size, maximized and snapped as they were, and the focus stays; a window opened between the presses doesn't change which come back;
-  - a click on a minimized window's taskbar button brings back its app's other windows behind it;
-  - with a second virtual desktop, its windows are left alone, and windows come back on their own desktop;
+  - Hide app, sent by `SendInput`, minimizes both windows of a test app and its palette, keeps their taskbar buttons and brings another window to the front;
+  - when the test app restores one of its windows, the other comes back right behind it;
+  - Hide others keeps both of the app in front's windows and the focus, minimizes other test apps' windows, Settings and File Explorer's, leaves an always-on-top window and a window without a Minimize button, and the host logs why;
+  - pressing Hide others again brings the windows back in their order, behind the app in front, maximized as they were, and the focus stays; the host logs how long putting them in order took; a window opened between the presses doesn't change which come back;
+  - a window with a dialog open stays, and the host logs why;
+  - with a second virtual desktop, Hide others there leaves the first desktop's windows alone, and Show all brings them back; whether Windows switched to the first desktop is reported, not checked: see [Not included](#not-included);
   - a test window that stops responding doesn't hold the host, as the host's log shows, and comes back once it responds;
   - with the host's file labeled Medium integrity, as the spike did, a test window running as administrator is asked to minimize and come back, and the front goes back to the window that had it;
   - a window of an app listed in Minimize to Tray stays on the taskbar when Hide others minimizes it;
   - ending the host with `Stop-Process` leaves the windows minimized on the taskbar;
-  - the **Show all hidden windows** item in the Windows mode's colors, light and dark, and in Arabic, with screenshots;
-  - no handler on the host's UI thread takes longer than 50 ms.
+  - the **Show all hidden windows** item in the PC Companion icon's menu, with a screenshot, brings back the windows;
+  - no feature holds the host's UI thread, as every group checks.
+- The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
 - **What the Sandbox can't check:** UAC on, the foreground lock, several displays, Windows 10 and Narrator.
 - **By hand:**
   - an app running as administrator with UAC on, with and without Always run as administrator, including whether the front goes back;
@@ -232,5 +237,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - both shortcuts on a real keyboard, also with an app that uses Windows + Ctrl + H;
   - Hide others only on the display in front, with several displays at different scales;
   - desktop apps in Store packages, such as Notepad and Windows Terminal, a browser with two profiles and an installed web app, Office, and a full-screen game;
-  - Narrator after each shortcut, high contrast and a right-to-left language;
+  - Narrator after each shortcut, high contrast, a right-to-left language, and the menu item in the Windows mode's colors;
+  - a click on a minimized window's taskbar button bringing back its app's other windows;
+  - Show all from the PC Companion icon's menu with windows minimized on another virtual desktop, and whether Windows switches to it;
   - Windows 10.
