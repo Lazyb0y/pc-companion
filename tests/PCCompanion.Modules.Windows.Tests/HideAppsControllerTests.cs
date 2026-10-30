@@ -208,8 +208,9 @@ public sealed class HideAppsControllerTests : IDisposable
         _system.Calls.Clear();
 
         Assert.Equal(new PressResult(PressOutcome.BroughtBack, 3), _hide.HideOthers());
+        Settle();
 
-        Assert.Equal(["restore 2", "restore 4", "restore 5", "watch order True", "behind 2 3", "behind 4 2", "behind 5 4", "watch order False"], _system.Calls.FindAll(call => !call.StartsWith("unwatch", StringComparison.Ordinal) && !call.StartsWith("watch restores", StringComparison.Ordinal)));
+        Assert.Equal(["watch order True", "restore 2", "restore 4", "restore 5", "behind 2 3", "watch order False"], _system.Calls.FindAll(call => !call.StartsWith("unwatch", StringComparison.Ordinal) && !call.StartsWith("watch restores", StringComparison.Ordinal)));
         Assert.Equal([1, 3, 2, 4, 5], _system.Handles);
         Assert.Equal(0, _hide.Count);
         Assert.Empty(_system.Watched);
@@ -236,6 +237,7 @@ public sealed class HideAppsControllerTests : IDisposable
         Assert.Equal(2, _hide.Count);
 
         Assert.Equal(new PressResult(PressOutcome.BroughtBack, 2), _hide.HideOthers());
+        Settle();
         Assert.Equal([2, 1, 3], _system.Handles);
         Assert.False(_system[1].Minimized || _system[3].Minimized);
     }
@@ -252,6 +254,7 @@ public sealed class HideAppsControllerTests : IDisposable
         _ = _hide.HideOthers();
 
         Assert.Equal(new PressResult(PressOutcome.BroughtBack, 2), _hide.ShowAll());
+        Settle();
 
         Assert.Equal([1, 3, 2], _system.Handles);
         Assert.False(_system[2].Minimized || _system[3].Minimized);
@@ -259,20 +262,49 @@ public sealed class HideAppsControllerTests : IDisposable
     }
 
     [Fact]
-    public void ShowAllWithoutAnAppInFrontBringsTheWindowsBackWhereTheyAre()
+    public void ShowAllWithoutAnAppInFrontBringsTheWindowsBackBehindTheWindowsOnScreen()
     {
         A(1);
         B(2);
         C(3);
+        A(5);
         _system.ForegroundWindow = 1;
         _ = _hide.HideOthers();
         _system.ForegroundWindow = 0;
         _system.Calls.Clear();
 
         Assert.Equal(new PressResult(PressOutcome.BroughtBack, 2), _hide.ShowAll());
+        Settle();
 
-        Assert.Contains("behind 3 2", _system.Calls);
-        Assert.DoesNotContain("behind 2 1", _system.Calls);
+        Assert.Equal([1, 5, 2, 3], _system.Handles);
+        Assert.Contains("behind 2 5", _system.Calls);
+
+        // The top window on screen gets the front back, as before the PC Companion icon's menu opened.
+        Assert.Equal("activate 1", _system.Calls[0]);
+        Assert.Equal(1, _system.ForegroundWindow);
+    }
+
+    [Fact]
+    public void ShowAllWithNoWindowOnScreenBringsTheWindowsBackWhereTheyAre()
+    {
+        A(1);
+        B(2);
+        C(3);
+
+        // Each app in turn, until no window is on screen; the last one hidden comes back first.
+        _system.ForegroundWindow = 1;
+        _ = _hide.HideApp();
+        _ = _hide.HideApp();
+        _ = _hide.HideApp();
+        Assert.Equal(0, _system.ForegroundWindow);
+        _system.Calls.Clear();
+
+        Assert.Equal(new PressResult(PressOutcome.BroughtBack, 3), _hide.ShowAll());
+        Settle();
+
+        Assert.Equal(["behind 2 3", "behind 1 2"], _system.Calls.FindAll(call => call.StartsWith("behind", System.StringComparison.Ordinal)));
+        Assert.All([1, 2, 3], window => Assert.False(_system[window].Minimized));
+        Assert.DoesNotContain(_system.Calls, call => call.StartsWith("activate", System.StringComparison.Ordinal));
     }
 
     [Fact]
@@ -296,6 +328,7 @@ public sealed class HideAppsControllerTests : IDisposable
         _system[3].Minimized = false;
         _system.ForegroundWindow = 3;
         _hide.OnRestored(3);
+        Settle();
 
         Assert.False(_system[2].Minimized);
         Assert.Contains("behind 2 3", _system.Calls);
@@ -393,6 +426,9 @@ public sealed class HideAppsControllerTests : IDisposable
 
         Assert.False(_minimized.Contains(2));
     }
+
+    // Past the time the restored windows are given to settle before they're put in order.
+    private void Settle() => _clock.Advance(OrderedRestore.SettleTime + OrderedRestore.CheckInterval);
 
     private FakeHideWindow A(nint handle) => _system.Add(handle, 10, AppA);
 

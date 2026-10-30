@@ -29,6 +29,7 @@ public interface IHideAppsSystem : IAppIdentityReader
 
     bool HasMinimizeButton(nint window);
 
+    /// <summary>The window's class name, which tells Windows' stand-ins apart and goes in the log; never a title.</summary>
     string ClassName(nint window);
 
     /// <summary>The area of the display the window is mostly on, or <see langword="null"/>.</summary>
@@ -57,6 +58,12 @@ public interface IHideAppsSystem : IAppIdentityReader
 
     /// <summary>The first visible window behind the window, or 0.</summary>
     nint NextVisibleBehind(nint window);
+
+    /// <summary>
+    /// Whether Alt + Tab shows the window: shown, not cloaked, and not a tool window or owned,
+    /// unless it asks to be on the taskbar.
+    /// </summary>
+    bool IsAppWindow(nint window);
 
     /// <summary>Brings a window, or its open dialog, to the front.</summary>
     bool Activate(nint window);

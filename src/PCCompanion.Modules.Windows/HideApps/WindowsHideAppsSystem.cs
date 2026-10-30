@@ -74,6 +74,9 @@ public sealed class WindowsHideAppsSystem : IHideAppsSystem, IDisposable
 
     public nint NextVisibleBehind(nint window) => TopLevelWindows.NextVisibleBehind(window);
 
+    public bool IsAppWindow(nint window) =>
+        TopLevelWindows.IsVisible(window) && !TopLevelWindows.IsCloaked(window) && TopLevelWindows.MayHaveTaskbarButton(window);
+
     public bool Activate(nint window) => TopLevelWindows.Activate(window);
 
     public void PlayWarning() => WarningSound.Play();
