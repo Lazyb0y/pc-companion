@@ -105,7 +105,7 @@ public sealed class OrderedRestoreTests : IDisposable
         _system.Add(1);
         _system.Add(2).Closed = true;
         _system.Add(3).NotResponding = true;
-        _system.Add(4).RefusesMoves = true;
+        _system.Add(4).RunsAsAdministrator = true;
         _system.Add(5);
 
         _restore.Start([2, 3, 4, 5], behind: 1);
