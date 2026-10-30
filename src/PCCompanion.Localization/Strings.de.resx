@@ -2652,4 +2652,16 @@
     <value>Liest beim Senden eines Fensters in den Infobereich seinen Titel, sein Symbol und die zugehörige App und, solange es dort ist, seinen Titel, wenn er sich ändert; Titel bleiben nur im Arbeitsspeicher. Ist „Umschalt + Minimieren“ aktiviert oder sind Apps aufgeführt, liest es, ob Umschalt und die Windows-Logo-Taste gedrückt sind, wenn ein Fenster minimiert wird. Blendet Fenster anderer Apps aus und ein und markiert sie, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Windows speichert das Symbol jeder App mit dem Namen der App, nie mit einem Fenstertitel. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>Apps ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>Alle Fenster der App im Vordergrund oder aller anderen Apps mit einer Tastenkombination minimieren und so wiederherstellen, wie sie waren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>Alle ausgeblendeten Fenster anzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

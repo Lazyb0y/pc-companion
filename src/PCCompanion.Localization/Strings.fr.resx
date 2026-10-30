@@ -2652,4 +2652,16 @@
     <value>Quand une fenêtre va dans la zone de notification, lit son titre, son icône et l’application à laquelle elle appartient, puis, tant qu’elle y est, son titre quand il change ; les titres restent uniquement en mémoire. Avec Maj + Réduire activé ou des applications listées, lit si Maj et la touche du logo Windows sont enfoncées quand une fenêtre commence à se réduire. Masque, affiche et marque les fenêtres d’autres applications, pour qu’elles reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. Windows conserve l’icône de chaque application avec le nom de l’application, jamais avec le titre d’une fenêtre. N’établit aucune connexion réseau et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>Masquer les applications</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>Réduisez toutes les fenêtres de l’application au premier plan, ou de toutes les autres applications, avec un raccourci, et restaurez-les telles qu’elles étaient.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>Afficher toutes les fenêtres masquées</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

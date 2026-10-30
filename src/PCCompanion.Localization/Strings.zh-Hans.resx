@@ -2628,4 +2628,16 @@
     <value>窗口进入通知区域时，读取其标题、图标及所属应用；窗口在通知区域期间，在标题更改时读取其标题；标题仅保存在内存中。启用“Shift + 最小化”或列出了应用时，在窗口开始最小化时读取是否按住了 Shift 和 Windows 徽标键。隐藏、显示并标记其他应用的窗口，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。Windows 以应用名称保存每个应用的图标，从不使用窗口标题。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>隐藏应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>使用一个快捷键最小化前台应用或其他所有应用的所有窗口，并按原样还原。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>显示所有隐藏的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
