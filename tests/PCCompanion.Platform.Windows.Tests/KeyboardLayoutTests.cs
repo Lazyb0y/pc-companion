@@ -1,8 +1,10 @@
 using Xunit;
+using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
 namespace PCCompanion.Platform.Windows.Tests;
 
-// Reads the user's layouts without loading or switching any.
+// Reads the user's layouts without loading or switching any. Requests go only to a hidden window of
+// the test's own, which handles them itself, so its thread's layout doesn't change either.
 public sealed class KeyboardLayoutTests
 {
     [Fact]
@@ -40,5 +42,56 @@ public sealed class KeyboardLayoutTests
     public void ThisThreadHasOneOfTheUsersLayouts()
     {
         Assert.Contains(KeyboardLayout.OfCurrentThread(), KeyboardLayout.Installed());
+    }
+
+    [Fact]
+    public void TheWindowInFrontTypesInItsFocusThreadsLayout()
+    {
+        if (KeyboardLayout.FocusInFront() is { } focus)
+        {
+            Assert.NotEqual(0, focus.Window);
+            Assert.NotEqual(0u, focus.ProcessId);
+            Assert.Equal(KeyboardLayout.OfThread(focus.Thread), KeyboardLayout.OfForegroundWindow());
+        }
+    }
+
+    [Fact]
+    public void NoThreadHasNoLayout()
+    {
+        Assert.Null(KeyboardLayout.OfThread(0));
+    }
+
+    [Fact]
+    public void ASwitchRequestReachesTheWindowWithTheLayout()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var layout = KeyboardLayout.OfCurrentThread();
+        nint received = 0;
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message == 0x0050) // WM_INPUTLANGCHANGEREQUEST
+            {
+                received = e.LParam;
+                e.Handled = true;
+            }
+        };
+
+        Assert.Equal(LayoutRequest.Posted, KeyboardLayout.RequestSwitch(window.Handle, layout));
+        RunPostedMessages();
+
+        Assert.Equal(layout, received);
+        Assert.Equal(layout, KeyboardLayout.OfCurrentThread());
+    }
+
+    [Fact]
+    public void ASwitchRequestToAClosedWindowFails()
+    {
+        nint closed;
+        using (var window = new MessageWindow(UniqueClassName()))
+        {
+            closed = window.Handle;
+        }
+
+        Assert.Equal(LayoutRequest.Failed, KeyboardLayout.RequestSwitch(closed, KeyboardLayout.OfCurrentThread()));
     }
 }
