@@ -14,11 +14,12 @@ public sealed class HideAppsControllerTests : IDisposable
 
     private readonly FakeHideAppsSystem _system = new();
     private readonly ManualTimeProvider _clock = new();
+    private readonly HideAppsMinimized _minimized = new();
     private readonly HideAppsController _hide;
 
     public HideAppsControllerTests()
     {
-        _hide = new HideAppsController(_system, _clock, action => action(), new RecordingLogger<HideAppsController>());
+        _hide = new HideAppsController(_system, _clock, action => action(), new RecordingLogger<HideAppsController>(), _minimized);
         _hide.Apply(new HideAppsSettings { Enabled = true });
     }
 
@@ -369,6 +370,28 @@ public sealed class HideAppsControllerTests : IDisposable
         Assert.Equal(1, _hide.Count);
         Assert.Equal([30u], _system.Watched);
         Assert.Contains("unwatch 20", _system.Calls);
+    }
+
+    [Fact]
+    public void TheWindowsInTheListAreSharedWithMinimizeToTray()
+    {
+        A(1);
+        B(2);
+        var refused = C(3);
+        refused.RunsAsAdministrator = true;
+        refused.RefusesRequests = true;
+        _system.ForegroundWindow = 1;
+
+        _ = _hide.HideOthers();
+
+        Assert.True(_minimized.Contains(2));
+        Assert.False(_minimized.Contains(3));
+        Assert.False(_minimized.Contains(1));
+
+        _system[2].Minimized = false;
+        _hide.OnRestored(2);
+
+        Assert.False(_minimized.Contains(2));
     }
 
     private FakeHideWindow A(nint handle) => _system.Add(handle, 10, AppA);

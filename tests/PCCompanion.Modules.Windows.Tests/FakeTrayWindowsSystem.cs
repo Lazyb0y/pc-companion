@@ -66,6 +66,11 @@ internal sealed class FakeTrayWindowsSystem : ITrayWindowsSystem
 
     public bool IsEnabled(nint window) => Windows.TryGetValue(window, out var listed) && listed.Enabled;
 
+    /// <summary>The windows Hide Apps minimized.</summary>
+    public HashSet<nint> MinimizedByHideApps { get; } = [];
+
+    public bool IsMinimizedByHideApps(nint window) => MinimizedByHideApps.Contains(window);
+
     public string ClassName(nint window) => Windows.TryGetValue(window, out var listed) ? listed.ClassName : string.Empty;
 
     public string Title(nint window) => Windows.TryGetValue(window, out var listed) ? listed.Title : string.Empty;

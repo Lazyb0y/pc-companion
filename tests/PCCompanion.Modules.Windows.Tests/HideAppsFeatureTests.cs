@@ -18,7 +18,7 @@ public sealed class HideAppsFeatureTests : IDisposable
 
     public HideAppsFeatureTests()
     {
-        _feature = new HideAppsFeature(TimeProvider.System, _logger);
+        _feature = new HideAppsFeature(TimeProvider.System, _logger, new HideAppsMinimized());
     }
 
     public void Dispose() => _feature.Dispose();

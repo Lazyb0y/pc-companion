@@ -27,17 +27,20 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
 
     private readonly MessageWindow? _window;
     private readonly Action<Action> _guard;
+    private readonly HideAppsMinimized? _hideApps;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, (WinEventHook Shows, WinEventHook Titles)> _watched = [];
 
     /// <param name="window">The feature thread's window, where reports arrive.</param>
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
-    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard)
+    /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
+    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard, HideAppsMinimized? hideApps = null)
     {
         ArgumentNullException.ThrowIfNull(guard);
 
         _window = window;
         _guard = guard;
+        _hideApps = hideApps;
     }
 
     public event EventHandler<nint>? WindowShown;
@@ -69,6 +72,8 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     public bool IsMinimized(nint window) => TopLevelWindows.IsMinimized(window);
 
     public bool IsEnabled(nint window) => TopLevelWindows.IsEnabled(window);
+
+    public bool IsMinimizedByHideApps(nint window) => _hideApps?.Contains(window) ?? false;
 
     public string ClassName(nint window) => TopLevelWindows.ClassName(window);
 

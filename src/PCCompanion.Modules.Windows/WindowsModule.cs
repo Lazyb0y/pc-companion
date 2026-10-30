@@ -18,6 +18,7 @@ public static class WindowsModule
     /// </summary>
     public static IServiceCollection AddWindowsModule(this IServiceCollection services)
     {
+        services.AddSingleton<HideAppsMinimized>();
         services.AddSingleton<IFeature, AppWindowsFeature>();
         services.AddSingleton<IFeature, MinimizeToTrayFeature>();
         services.AddSingleton<IFeature, HideAppsFeature>();

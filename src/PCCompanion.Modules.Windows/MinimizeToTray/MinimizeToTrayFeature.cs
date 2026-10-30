@@ -26,6 +26,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     private readonly TimeProvider _time;
     private readonly ILogger<MinimizeToTrayFeature> _logger;
     private readonly Func<ITrayWindowsSystem> _recoverySystem;
+    private readonly HideAppsMinimized _hideApps;
     private MinimizeToTrayThread? _thread;
     private MinimizeToTrayThread? _stopped;
     private IReadOnlyList<TrayWindowInfo> _menuWindows = [];
@@ -33,22 +34,26 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     private bool _recovered;
     private bool _askedToEndFirst;
 
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger)
-        : this(commands, time, logger, () => new WindowsTrayWindowsSystem(null, action => action()))
+    /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps)
+        : this(commands, time, logger, hideApps, () => new WindowsTrayWindowsSystem(null, action => action()))
     {
     }
 
+    /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, Func<ITrayWindowsSystem> recoverySystem)
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, Func<ITrayWindowsSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(hideApps);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
         _commands = commands;
         _time = time;
         _logger = logger;
+        _hideApps = hideApps;
         _recoverySystem = recoverySystem;
 
         // A crash ends the host without stopping the feature, so the windows go back on the taskbar first.
@@ -125,7 +130,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
 
         if (_thread is null)
         {
-            _thread = new MinimizeToTrayThread(read, _commands, _time, _logger, _stopped);
+            _thread = new MinimizeToTrayThread(read, _commands, _time, _logger, _hideApps, _stopped);
             _stopped = null;
         }
         else

@@ -33,6 +33,9 @@ public interface ITrayWindowsSystem : IAppIdentityReader
     /// <summary>Whether the window takes input; a window with a dialog open doesn't.</summary>
     bool IsEnabled(nint window);
 
+    /// <summary>Whether Hide Apps minimized the window and brings it back itself, so it stays on the taskbar.</summary>
+    bool IsMinimizedByHideApps(nint window);
+
     string ClassName(nint window);
 
     string Title(nint window);
@@ -144,6 +147,9 @@ public enum SendOutcome
 
     /// <summary>The window started to minimize while the Windows key was held.</summary>
     WindowsKeyHeld,
+
+    /// <summary>Hide Apps minimized the window, and brings it back itself.</summary>
+    MinimizedByHideApps,
 }
 
 /// <summary>Why a window left the tray.</summary>

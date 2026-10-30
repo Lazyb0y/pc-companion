@@ -121,6 +121,13 @@ public sealed partial class TrayController : IDisposable
             return;
         }
 
+        // Hide Apps brings back the windows it minimized, so they stay on the taskbar.
+        if (_system.IsMinimizedByHideApps(window))
+        {
+            LogNotSent(_logger, _settings.ShiftMinimize && _system.IsShiftHeld ? SendWay.ShiftMinimize : SendWay.ListedApp, SendOutcome.MinimizedByHideApps);
+            return;
+        }
+
         var windowsKeyHeld = _system.IsWindowsKeyHeld;
         if (_settings.ShiftMinimize && _system.IsShiftHeld && !windowsKeyHeld)
         {
@@ -389,6 +396,12 @@ public sealed partial class TrayController : IDisposable
         if (together)
         {
             LogNotSent(_logger, SendWay.ListedApp, SendOutcome.MinimizedWithOthers);
+            return;
+        }
+
+        if (_system.IsMinimizedByHideApps(window))
+        {
+            LogNotSent(_logger, SendWay.ListedApp, SendOutcome.MinimizedByHideApps);
             return;
         }
 

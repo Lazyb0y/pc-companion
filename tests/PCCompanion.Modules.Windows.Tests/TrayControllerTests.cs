@@ -586,6 +586,37 @@ public sealed class TrayControllerTests : IDisposable
         Assert.Equal(SendOutcome.Sent, _tray.SendFront());
     }
 
+    [Fact]
+    public void AListedAppsWindowThatHideAppsMinimizedStaysOnTheTaskbar()
+    {
+        ListApp(@"C:\Apps\App.exe");
+        var window = _system.Add(1);
+        window.Minimized = true;
+        _system.MinimizedByHideApps.Add(1);
+
+        _tray.OnMinimizeStart(1);
+        _clock.Advance(TimeSpan.FromMilliseconds(100));
+
+        Assert.True(window.Visible);
+        Assert.Empty(_icons.Icons);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
+    public void ShiftAndMinimizeLeaveAWindowThatHideAppsMinimizedOnTheTaskbar()
+    {
+        var window = _system.Add(1);
+        window.Minimized = true;
+        _system.IsShiftHeld = true;
+        _system.MinimizedByHideApps.Add(1);
+
+        _tray.OnMinimizeStart(1);
+
+        Assert.True(window.Visible);
+        Assert.Empty(_icons.Icons);
+        Assert.Equal(0, _system.Warnings);
+    }
+
     private void ListApp(string program) =>
         _tray.Apply(new MinimizeToTraySettings { Enabled = true, MinimizedApps = [new ListedApp { Name = "App", Program = program }] });
 }

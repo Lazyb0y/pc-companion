@@ -27,6 +27,7 @@ public sealed partial class HideAppsController : IDisposable
     private readonly Action<Action> _post;
     private readonly ILogger _logger;
     private readonly OrderedRestore _restore;
+    private readonly HideAppsMinimized _minimized;
 
     // Front to back, as they were when minimized; a later press's windows come first.
     private readonly List<PutAway> _list = [];
@@ -40,17 +41,20 @@ public sealed partial class HideAppsController : IDisposable
     /// <param name="post">
     /// Runs an action later on the feature's thread, inside its error boundary, as timers need.
     /// </param>
-    public HideAppsController(IHideAppsSystem system, TimeProvider time, Action<Action> post, ILogger logger)
+    /// <param name="minimized">The list's windows, kept for Minimize to Tray, which leaves them on the taskbar.</param>
+    public HideAppsController(IHideAppsSystem system, TimeProvider time, Action<Action> post, ILogger logger, HideAppsMinimized minimized)
     {
         ArgumentNullException.ThrowIfNull(system);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(post);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(minimized);
 
         _system = system;
         _time = time;
         _post = post;
         _logger = logger;
+        _minimized = minimized;
         _restore = new OrderedRestore(system, time, post, logger);
     }
 
@@ -258,6 +262,8 @@ public sealed partial class HideAppsController : IDisposable
     // Minimizes a window, or asks its app to when Windows refuses, as for an app running as administrator.
     private PutAway? Put(TopLevelWindow window, AppOfWindow app, HideAction way, bool inFront, List<StayReason> stays)
     {
+        // Before Windows reports the minimize, so Minimize to Tray leaves the window on the taskbar.
+        _minimized.Add(window.Handle);
         if (inFront ? _system.Minimize(window.Handle) : _system.MinimizeWithoutActivating(window.Handle))
         {
             return new PutAway(window.Handle, window.ProcessId, app, way, Asked: false);
@@ -346,6 +352,7 @@ public sealed partial class HideAppsController : IDisposable
             _system.WatchRestores(_watchesRestores);
         }
 
+        _minimized.Set(_list.Select(put => put.Window));
         Volatile.Write(ref _count, _list.Count);
     }
 
