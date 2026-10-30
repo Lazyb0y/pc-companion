@@ -2664,4 +2664,60 @@
     <value>Mostrar todas las ventanas ocultas</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>Ocultar aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>Minimiza todas las ventanas de la aplicación en primer plano, como todas las ventanas del Explorador de archivos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Ctrl + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>Ocultar otras</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>Minimiza todas las ventanas de todas las demás aplicaciones. Vuelve a presionarlo para restaurarlas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Ctrl + Mayús + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>Ocultar otras solo en la pantalla en primer plano</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>Deja como están las ventanas de otras pantallas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>Restaurar las demás ventanas de una aplicación con ella</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>Cuando una ventana minimizada vuelve, desde su botón de la barra de tareas, Alt + Tab o su aplicación, las demás ventanas de su aplicación que Ocultar aplicaciones minimizó vuelven detrás de ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>Algunas ventanas se quedan: las ventanas siempre visibles, que Ocultar otras deja como están, las ventanas sin botón Minimizar, las ventanas con un cuadro de diálogo abierto, como Guardar, y las ventanas de otros escritorios virtuales. El sonido de advertencia de Windows se reproduce cuando se queda una ventana que debería irse. A las aplicaciones que se ejecutan como administrador se les pide que se minimicen, y una aplicación puede negarse. Mostrar todas las ventanas ocultas, en el menú del icono de PC Companion, restaura todas las ventanas que Ocultar aplicaciones minimizó.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>Algunas ventanas se quedan: las ventanas siempre visibles, que Ocultar otras deja como están, las ventanas sin botón Minimizar, las ventanas con un cuadro de diálogo abierto, como Guardar, y las ventanas de otros escritorios virtuales. El sonido de advertencia de Windows se reproduce cuando se queda una ventana que debería irse. PC Companion se ejecuta como administrador, así que las ventanas de las aplicaciones que se ejecutan como administrador se minimizan como cualquier otra. Mostrar todas las ventanas ocultas, en el menú del icono de PC Companion, restaura todas las ventanas que Ocultar aplicaciones minimizó.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>Al presionar un método abreviado, lee qué ventanas están abiertas, sus estilos, en qué pantalla están y a qué aplicación pertenecen, nunca sus títulos ni su contenido. Minimiza, restaura y ordena las ventanas de otras aplicaciones, y pide a las aplicaciones que se ejecutan como administrador que se minimicen y vuelvan; no usa ningún enlace de teclado ni de mouse ni ejecuta código en otras aplicaciones. Guarda la lista de ventanas que minimizó solo en memoria. No establece conexiones de red ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

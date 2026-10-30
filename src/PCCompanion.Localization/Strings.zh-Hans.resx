@@ -2640,4 +2640,60 @@
     <value>显示所有隐藏的窗口</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>隐藏应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>最小化前台应用的所有窗口，例如所有文件资源管理器窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Windows 徽标键 + Ctrl + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>隐藏其他应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>最小化其他所有应用的所有窗口。再按一次可还原它们。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Windows 徽标键 + Ctrl + Shift + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>仅在前台显示器上隐藏其他应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>不更改其他显示器上的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>同时还原应用的其他窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>当最小化的窗口从其任务栏按钮、Alt + Tab 或其应用还原时，“隐藏应用”最小化的该应用的其他窗口会在其后面还原。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>某些窗口会保留：始终置顶的窗口（“隐藏其他应用”不会更改）、没有“最小化”按钮的窗口、打开了对话框（例如“保存”）的窗口，以及其他虚拟桌面上的窗口。当应该最小化的窗口保留时，会播放 Windows 警告声音。以管理员身份运行的应用会被请求最小化，应用可以拒绝。PC Companion 图标菜单中的“显示所有隐藏的窗口”会还原“隐藏应用”最小化的所有窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>某些窗口会保留：始终置顶的窗口（“隐藏其他应用”不会更改）、没有“最小化”按钮的窗口、打开了对话框（例如“保存”）的窗口，以及其他虚拟桌面上的窗口。当应该最小化的窗口保留时，会播放 Windows 警告声音。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口会像其他窗口一样最小化。PC Companion 图标菜单中的“显示所有隐藏的窗口”会还原“隐藏应用”最小化的所有窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>按下快捷键时，读取打开了哪些窗口、它们的样式、所在的显示器和所属的应用，从不读取其标题或内容。最小化、还原和排列其他应用的窗口，并请求以管理员身份运行的应用最小化和还原；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。仅在内存中保存已最小化窗口的列表。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

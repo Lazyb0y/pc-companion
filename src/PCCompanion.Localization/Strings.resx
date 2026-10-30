@@ -2664,4 +2664,60 @@
     <value>Show all hidden windows</value>
     <comment>PC Companion icon's menu, while Hide Apps has minimized windows: brings back every window that Hide app and Hide others minimized.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>Hide app</value>
+    <comment>Hide Apps page: setting name, and the screen reader name of its list.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>Minimizes every window of the app in front, such as every File Explorer window.</value>
+    <comment>Hide Apps page: below HideAppsHideAppHeader. File Explorer is the Windows app.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Windows logo key + Ctrl + H</value>
+    <comment>Hide Apps page: a shortcut in the Hide app list. Use the language's names for the Windows logo key and Ctrl, as in the other shortcuts.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>Hide others</value>
+    <comment>Hide Apps page: setting name, and the screen reader name of its list.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>Minimizes every window of every other app. Press it again to bring them back.</value>
+    <comment>Hide Apps page: below HideAppsHideOthersHeader.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Windows logo key + Ctrl + Shift + H</value>
+    <comment>Hide Apps page: a shortcut in the Hide others list. Use the language's names for the Windows logo key, Ctrl and Shift, as in the other shortcuts.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Hide Apps page: the item of both shortcut lists that turns the shortcut off.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>Hide others only on the display in front</value>
+    <comment>Hide Apps page: switch name.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>Leaves windows on other displays alone.</value>
+    <comment>Hide Apps page: below HideAppsFrontDisplayOnlyHeader.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>Bring back an app's other windows with it</value>
+    <comment>Hide Apps page: switch name.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>When a minimized window comes back, from its taskbar button, Alt + Tab or its app, the other windows of its app that Hide Apps minimized come back behind it.</value>
+    <comment>Hide Apps page: below HideAppsWholeAppHeader.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>Some windows stay: always-on-top windows, which Hide others leaves alone, windows without a Minimize button, windows with a dialog open, such as Save, and windows on other virtual desktops. Windows' warning sound plays when a window that should go stays. Apps running as administrator are asked to minimize, and an app can decline. Show all hidden windows, in the PC Companion icon's menu, brings back every window Hide Apps minimized.</value>
+    <comment>Hide Apps page: the windows that stay, shown while PC Companion runs without admin rights. Save is a Save dialog, and Show all hidden windows is HideAppsShowAll.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>Some windows stay: always-on-top windows, which Hide others leaves alone, windows without a Minimize button, windows with a dialog open, such as Save, and windows on other virtual desktops. Windows' warning sound plays when a window that should go stays. PC Companion runs as administrator, so windows of apps running as administrator are minimized like any other. Show all hidden windows, in the PC Companion icon's menu, brings back every window Hide Apps minimized.</value>
+    <comment>Hide Apps page: shown instead of HideAppsStayInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>When a shortcut is pressed, reads which windows are open, their styles, which display they're on and which app they belong to, never their titles or contents. Minimizes, brings back and orders other apps' windows, and asks apps running as administrator to minimize and come back; uses no keyboard or mouse hook and runs no code in other apps. Keeps the list of windows it minimized in memory only. Makes no network connections and sends nothing.</value>
+    <comment>Hide Apps page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

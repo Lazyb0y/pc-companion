@@ -2657,11 +2657,67 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HideAppsDescription" xml:space="preserve">
-    <value>একটি শর্টকাটে সামনের অ্যাপের বা অন্য সব অ্যাপের সব উইন্ডো মিনিমাইজ করুন, এবং যেমন ছিল তেমন ফিরিয়ে আনুন।</value>
+    <value>একটি শর্টকাটে সামনের অ্যাপের বা অন্য সব অ্যাপের সব উইন্ডো ছোট করুন, এবং যেমন ছিল তেমন ফিরিয়ে আনুন।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HideAppsShowAll" xml:space="preserve">
     <value>সব লুকানো উইন্ডো দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>অ্যাপ লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>সামনের অ্যাপের সব উইন্ডো ছোট করে, যেমন সব ফাইল এক্সপ্লোরার উইন্ডো।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Windows লোগো কী + Ctrl + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>অন্যগুলো লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>অন্য সব অ্যাপের সব উইন্ডো ছোট করে। ফিরিয়ে আনতে আবার চাপুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Windows লোগো কী + Ctrl + Shift + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>শুধু সামনের ডিসপ্লেতে অন্যগুলো লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>অন্য ডিসপ্লের উইন্ডোগুলো যেমন আছে তেমন রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>একটি অ্যাপের অন্য উইন্ডোগুলোও সাথে ফিরিয়ে আনুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>ছোট করা কোনো উইন্ডো যখন তার টাস্কবার বোতাম, Alt + Tab বা তার অ্যাপ থেকে ফিরে আসে, তখন অ্যাপ লুকান যে উইন্ডোগুলো ছোট করেছিল, তার অ্যাপের সেই অন্য উইন্ডোগুলো তার পেছনে ফিরে আসে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>কিছু উইন্ডো থেকে যায়: সবসময় সামনে থাকা উইন্ডো, যেগুলো অন্যগুলো লুকান স্পর্শ করে না, ছোট করুন বোতাম ছাড়া উইন্ডো, সংরক্ষণ করুনের মতো ডায়ালগ খোলা থাকা উইন্ডো, এবং অন্য ভার্চুয়াল ডেস্কটপের উইন্ডো। যে উইন্ডো সরে যাওয়ার কথা তা থেকে গেলে Windows-এর সতর্কতা শব্দ বাজে। প্রশাসক হিসেবে চলা অ্যাপগুলোকে ছোট হতে বলা হয়, এবং কোনো অ্যাপ রাজি নাও হতে পারে। PC Companion আইকনের মেনুর সব লুকানো উইন্ডো দেখান, অ্যাপ লুকান যে সব উইন্ডো ছোট করেছিল সেগুলো ফিরিয়ে আনে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>কিছু উইন্ডো থেকে যায়: সবসময় সামনে থাকা উইন্ডো, যেগুলো অন্যগুলো লুকান স্পর্শ করে না, ছোট করুন বোতাম ছাড়া উইন্ডো, সংরক্ষণ করুনের মতো ডায়ালগ খোলা থাকা উইন্ডো, এবং অন্য ভার্চুয়াল ডেস্কটপের উইন্ডো। যে উইন্ডো সরে যাওয়ার কথা তা থেকে গেলে Windows-এর সতর্কতা শব্দ বাজে। PC Companion প্রশাসক হিসেবে চলছে, তাই প্রশাসক হিসেবে চলা অ্যাপের উইন্ডোগুলোও অন্য যেকোনোটির মতো ছোট হয়। PC Companion আইকনের মেনুর সব লুকানো উইন্ডো দেখান, অ্যাপ লুকান যে সব উইন্ডো ছোট করেছিল সেগুলো ফিরিয়ে আনে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>শর্টকাট চাপলে, কোন উইন্ডো খোলা আছে, সেগুলোর ধরন, কোন ডিসপ্লেতে আছে এবং কোন অ্যাপের, তা পড়ে, কখনো সেগুলোর শিরোনাম বা বিষয়বস্তু নয়। অন্য অ্যাপের উইন্ডো ছোট করে, ফিরিয়ে আনে ও সাজায়, এবং প্রশাসক হিসেবে চলা অ্যাপগুলোকে ছোট হতে ও ফিরে আসতে বলে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। ছোট করা উইন্ডোর তালিকা শুধু মেমরিতে রাখে। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

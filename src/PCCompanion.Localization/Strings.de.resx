@@ -2664,4 +2664,60 @@
     <value>Alle ausgeblendeten Fenster anzeigen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>App ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>Minimiert alle Fenster der App im Vordergrund, z. B. alle Explorer-Fenster.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Windows-Logo-Taste + Strg + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>Andere ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>Minimiert alle Fenster aller anderen Apps. Erneut drücken, um sie wiederherzustellen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Windows-Logo-Taste + Strg + Umschalt + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>Andere nur auf dem Bildschirm im Vordergrund ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>Lässt Fenster auf anderen Bildschirmen unverändert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>Die anderen Fenster einer App mit wiederherstellen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>Wenn ein minimiertes Fenster über seine Taskleistenschaltfläche, Alt + Tab oder seine App zurückkehrt, kehren die anderen Fenster seiner App, die „Apps ausblenden“ minimiert hat, dahinter zurück.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>Einige Fenster bleiben: Fenster, die immer im Vordergrund sind und die „Andere ausblenden“ nicht ändert, Fenster ohne Schaltfläche „Minimieren“, Fenster mit einem geöffneten Dialogfeld wie „Speichern“ und Fenster auf anderen virtuellen Desktops. Der Warnton von Windows erklingt, wenn ein Fenster bleibt, das minimiert werden sollte. Apps, die als Administrator ausgeführt werden, werden gebeten, sich zu minimieren, und eine App kann ablehnen. „Alle ausgeblendeten Fenster anzeigen“ im Menü des PC Companion-Symbols stellt alle Fenster wieder her, die „Apps ausblenden“ minimiert hat.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>Einige Fenster bleiben: Fenster, die immer im Vordergrund sind und die „Andere ausblenden“ nicht ändert, Fenster ohne Schaltfläche „Minimieren“, Fenster mit einem geöffneten Dialogfeld wie „Speichern“ und Fenster auf anderen virtuellen Desktops. Der Warnton von Windows erklingt, wenn ein Fenster bleibt, das minimiert werden sollte. PC Companion wird als Administrator ausgeführt, daher werden Fenster von Apps, die als Administrator ausgeführt werden, wie alle anderen minimiert. „Alle ausgeblendeten Fenster anzeigen“ im Menü des PC Companion-Symbols stellt alle Fenster wieder her, die „Apps ausblenden“ minimiert hat.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>Liest beim Drücken einer Tastenkombination, welche Fenster geöffnet sind, ihre Stile, auf welchem Bildschirm sie sind und zu welcher App sie gehören, nie ihre Titel oder Inhalte. Minimiert Fenster anderer Apps, stellt sie wieder her und ordnet sie, und bittet Apps, die als Administrator ausgeführt werden, sich zu minimieren und zurückzukehren; verwendet keinen Tastatur- oder Maus-Hook und führt keinen Code in anderen Apps aus. Behält die Liste der minimierten Fenster nur im Arbeitsspeicher. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
