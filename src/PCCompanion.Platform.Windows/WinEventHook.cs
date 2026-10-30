@@ -27,6 +27,9 @@ public sealed class WinEventHook : IDisposable
     /// <summary>A window started to minimize (<c>EVENT_SYSTEM_MINIMIZESTART</c>).</summary>
     public const uint MinimizeStartEvent = 0x0016;
 
+    /// <summary>A window started to come back from minimized (<c>EVENT_SYSTEM_MINIMIZEEND</c>).</summary>
+    public const uint MinimizeEndEvent = 0x0017;
+
     /// <summary>An object was destroyed, also when its process ended (<c>EVENT_OBJECT_DESTROY</c>).</summary>
     public const uint ObjectDestroyEvent = 0x8001;
 

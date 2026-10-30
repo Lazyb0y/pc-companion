@@ -104,10 +104,80 @@ public static class TopLevelWindows
     public static bool Hide(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_HIDE);
 
     /// <summary>
-    /// Shows another program's hidden <paramref name="window"/> again, minimized on the taskbar,
-    /// without activating it. Returns false when Windows refused. It doesn't wait.
+    /// Shows another program's <paramref name="window"/> minimized on the taskbar without
+    /// activating it: a hidden window comes back minimized, and a shown one minimizes while the
+    /// window in front stays in front. Returns false when Windows refused. It doesn't wait.
     /// </summary>
     public static bool ShowMinimized(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE);
+
+    /// <summary>
+    /// Restores another program's minimized <paramref name="window"/> as it was before it was
+    /// minimized, maximized again if it was, without activating it. Windows leaves its place in
+    /// the order of windows and its virtual desktop, which activating it would switch to. Returns
+    /// false when Windows refused, for example for an app running as administrator while this
+    /// process doesn't. It doesn't wait.
+    /// </summary>
+    public static bool RestoreWithoutActivating(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
+
+    /// <summary>
+    /// Asks another program's <paramref name="window"/> to minimize, as its window menu does, by
+    /// posting it <c>WM_SYSCOMMAND</c> with <c>SC_MINIMIZE</c>. Windows passes the request on even
+    /// to an app running as administrator while this process doesn't, and the app may ignore it.
+    /// Returns false when the request couldn't be posted.
+    /// </summary>
+    public static bool AskToMinimize(nint window) => PostSystemCommand(window, PInvoke.SC_MINIMIZE);
+
+    /// <summary>
+    /// Asks another program's minimized <paramref name="window"/> to come back, as
+    /// <see cref="AskToMinimize"/> asks it to go. The window takes the front as it comes back.
+    /// </summary>
+    public static bool AskToRestore(nint window) => PostSystemCommand(window, PInvoke.SC_RESTORE);
+
+    /// <summary>
+    /// Puts another program's <paramref name="window"/> right behind <paramref name="inFront"/>,
+    /// without moving, resizing or activating it. Returns false when Windows refused. It doesn't
+    /// wait: Windows passes the request on to the window's thread, so check with
+    /// <see cref="NextVisibleBehind"/> that it moved; Windows can report success and leave a
+    /// window where it was, as <see cref="SendToBack"/> notes.
+    /// </summary>
+    public static bool PutBehind(nint window, nint inFront) =>
+        PInvoke.SetWindowPos(
+            new HWND(window),
+            new HWND(inFront),
+            0,
+            0,
+            0,
+            0,
+            SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
+
+    /// <summary>
+    /// The first visible window behind <paramref name="window"/>, skipping hidden ones such as each
+    /// app's input method windows, or 0 when there's none among the 500 windows behind it.
+    /// </summary>
+    public static nint NextVisibleBehind(nint window)
+    {
+        var current = new HWND(window);
+        for (var step = 0; step < MaximumWindowsInFront; step++)
+        {
+            current = PInvoke.GetWindow(current, GET_WINDOW_CMD.GW_HWNDNEXT);
+            if (current.IsNull || PInvoke.IsWindowVisible(current))
+            {
+                return current;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>Whether <paramref name="window"/> has a Minimize button (<c>WS_MINIMIZEBOX</c>), as Windows + M requires.</summary>
+    public static bool HasMinimizeButton(nint window) =>
+        (((WINDOW_STYLE)(uint)PInvoke.GetWindowLongPtr(new HWND(window), WINDOW_LONG_PTR_INDEX.GWL_STYLE)) & WINDOW_STYLE.WS_MINIMIZEBOX) != 0;
+
+    /// <summary>
+    /// Whether <paramref name="window"/>'s program stopped responding: it hasn't handled its
+    /// messages for 5 seconds (<c>IsHungAppWindow</c>).
+    /// </summary>
+    public static bool IsNotResponding(nint window) => PInvoke.IsHungAppWindow(new HWND(window));
 
     /// <summary>
     /// Shows another program's <paramref name="window"/>, hidden or minimized, as it was before it
@@ -226,6 +296,8 @@ public static class TopLevelWindows
         return (style & WINDOW_EX_STYLE.WS_EX_APPWINDOW) != 0
             || ((style & WINDOW_EX_STYLE.WS_EX_TOOLWINDOW) == 0 && PInvoke.GetWindow(handle, GET_WINDOW_CMD.GW_OWNER).IsNull);
     }
+
+    private static bool PostSystemCommand(nint window, uint command) => PInvoke.PostMessage(new HWND(window), PInvoke.WM_SYSCOMMAND, command, 0);
 
     private static WINDOW_EX_STYLE ExtendedStyle(HWND window) =>
         (WINDOW_EX_STYLE)(uint)PInvoke.GetWindowLongPtr(window, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
