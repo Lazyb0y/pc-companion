@@ -2748,4 +2748,16 @@
     <value>عند انتقال نافذة إلى منطقة الإعلامات، يقرأ عنوانها وأيقونتها والتطبيق الذي تنتمي إليه، وأثناء وجودها هناك يقرأ عنوانها عندما يتغير؛ تبقى العناوين في الذاكرة فقط. عند تشغيل Shift + تصغير أو إدراج تطبيقات، يقرأ ما إذا كان Shift ومفتاح شعار Windows مضغوطين عندما تبدأ نافذة بالتصغير. يُخفي نوافذ التطبيقات الأخرى ويُظهرها ويضع عليها علامة حتى تعود بعد أي عطل، دون خطّاف للوحة المفاتيح أو الماوس ودون تشغيل أي تعليمات برمجية في التطبيقات الأخرى. يحفظ Windows أيقونة كل تطبيق باسم التطبيق، وليس بعنوان أي نافذة أبدًا. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>إخفاء التطبيقات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>صغّر كل نوافذ التطبيق في المقدمة، أو نوافذ كل التطبيقات الأخرى، باختصار واحد، واستعدها كما كانت.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>إظهار كل النوافذ المخفية</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

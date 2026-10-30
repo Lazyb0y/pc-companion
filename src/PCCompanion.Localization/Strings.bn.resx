@@ -2652,4 +2652,16 @@
     <value>কোনো উইন্ডো বিজ্ঞপ্তি এলাকায় গেলে এর শিরোনাম, আইকন এবং এটি কোন অ্যাপের তা পড়ে, এবং সেখানে থাকার সময় শিরোনাম বদলালে তা পড়ে; শিরোনাম শুধু মেমরিতে থাকে। Shift + ছোট করুন চালু থাকলে বা অ্যাপ তালিকাভুক্ত থাকলে, কোনো উইন্ডো ছোট হতে শুরু করলে Shift ও Windows লোগো কী চাপা আছে কিনা তা পড়ে। অন্য অ্যাপের উইন্ডো লুকায়, দেখায় এবং চিহ্নিত করে, যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। Windows প্রতিটি অ্যাপের আইকন অ্যাপের নাম দিয়ে রাখে, কখনো উইন্ডোর শিরোনাম দিয়ে নয়। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>অ্যাপ লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>একটি শর্টকাটে সামনের অ্যাপের বা অন্য সব অ্যাপের সব উইন্ডো মিনিমাইজ করুন, এবং যেমন ছিল তেমন ফিরিয়ে আনুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>সব লুকানো উইন্ডো দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -2652,4 +2652,16 @@
     <value>Cuando una ventana va al área de notificación, lee su título, su icono y la aplicación a la que pertenece y, mientras está allí, su título cuando cambia; los títulos solo se guardan en memoria. Con Mayús + Minimizar activado o con aplicaciones en la lista, lee si Mayús y la tecla del logotipo de Windows están presionadas cuando una ventana empieza a minimizarse. Oculta y muestra ventanas de otras aplicaciones, y las marca para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. Windows guarda el icono de cada aplicación con el nombre de la aplicación, nunca con el título de una ventana. No establece conexiones de red y no envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>Ocultar aplicaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>Minimiza todas las ventanas de la aplicación en primer plano, o de todas las demás aplicaciones, con un método abreviado, y restáuralas tal como estaban.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>Mostrar todas las ventanas ocultas</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

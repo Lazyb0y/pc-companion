@@ -2652,4 +2652,16 @@
     <value>When a window goes to the tray, reads its title, its icon and which app it belongs to, and while it's there, its title when it changes; titles stay in memory only. With Shift + Minimize on or apps listed, reads whether Shift and the Windows logo key are held when a window starts to minimize. Hides and shows other apps' windows, and marks them so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Windows keeps each app's icon with the app's name, never a window title. Makes no network connections and sends nothing.</value>
     <comment>Minimize to Tray page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="HideAppsName" xml:space="preserve">
+    <value>Hide Apps</value>
+    <comment>Feature name: navigation pane, Home and the Hide Apps page.</comment>
+  </data>
+  <data name="HideAppsDescription" xml:space="preserve">
+    <value>Minimize every window of the app in front, or of every other app, with one shortcut, and bring them back as they were.</value>
+    <comment>Hide Apps: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="HideAppsShowAll" xml:space="preserve">
+    <value>Show all hidden windows</value>
+    <comment>PC Companion icon's menu, while Hide Apps has minimized windows: brings back every window that Hide app and Hide others minimized.</comment>
+  </data>
 </root>
