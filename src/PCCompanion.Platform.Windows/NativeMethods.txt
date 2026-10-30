@@ -361,3 +361,10 @@ GetLocaleInfoEx
 LOCALE_SLOCALIZEDDISPLAYNAME
 LOCALE_NAME_MAX_LENGTH
 SHLoadIndirectString
+WM_INPUTLANGCHANGEREQUEST
+CreateToolhelp32Snapshot
+Process32FirstW
+Process32NextW
+Thread32First
+Thread32Next
+EnumThreadWindows
