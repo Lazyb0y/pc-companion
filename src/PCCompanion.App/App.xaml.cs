@@ -11,6 +11,7 @@ using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using PCCompanion.App.Features;
 using PCCompanion.App.Features.AppWindows;
+using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
@@ -175,6 +176,7 @@ public partial class App : Application
             .AddTransient<LockKeysViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<MinimizeToTrayViewModel>()
+            .AddTransient<HideAppsViewModel>()
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()

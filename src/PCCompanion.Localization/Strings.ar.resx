@@ -2760,4 +2760,60 @@
     <value>إظهار كل النوافذ المخفية</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>إخفاء التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>يصغّر كل نوافذ التطبيق في المقدمة، مثل كل نوافذ مستكشف الملفات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>مفتاح شعار Windows + Ctrl + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>إخفاء التطبيقات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>يصغّر كل نوافذ كل التطبيقات الأخرى. اضغط عليه مرة أخرى لاستعادتها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>مفتاح شعار Windows + Ctrl + Shift + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>إخفاء التطبيقات الأخرى على الشاشة في المقدمة فقط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>يترك النوافذ على الشاشات الأخرى كما هي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>استعادة نوافذ التطبيق الأخرى معها</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>عندما تعود نافذة مصغّرة، من زرها على شريط المهام أو Alt + Tab أو تطبيقها، تعود خلفها نوافذ تطبيقها الأخرى التي صغّرها «إخفاء التطبيقات».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>تبقى بعض النوافذ: النوافذ التي تظهر دائماً في المقدمة، والتي يتركها «إخفاء التطبيقات الأخرى»، والنوافذ التي لا تحتوي على زر «تصغير»، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ»، والنوافذ على أسطح المكتب الافتراضية الأخرى. يُشغَّل صوت التحذير في Windows عندما تبقى نافذة كان يجب أن تُصغَّر. يُطلب من التطبيقات التي تعمل كمسؤول أن تُصغَّر، ويمكن للتطبيق أن يرفض. يستعيد «إظهار كل النوافذ المخفية»، في قائمة أيقونة PC Companion، كل النوافذ التي صغّرها «إخفاء التطبيقات».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>تبقى بعض النوافذ: النوافذ التي تظهر دائماً في المقدمة، والتي يتركها «إخفاء التطبيقات الأخرى»، والنوافذ التي لا تحتوي على زر «تصغير»، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ»، والنوافذ على أسطح المكتب الافتراضية الأخرى. يُشغَّل صوت التحذير في Windows عندما تبقى نافذة كان يجب أن تُصغَّر. يعمل PC Companion كمسؤول، لذا تُصغَّر نوافذ التطبيقات التي تعمل كمسؤول مثل أي نافذة أخرى. يستعيد «إظهار كل النوافذ المخفية»، في قائمة أيقونة PC Companion، كل النوافذ التي صغّرها «إخفاء التطبيقات».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>عند الضغط على اختصار، يقرأ النوافذ المفتوحة وأنماطها والشاشة التي هي عليها والتطبيق الذي تنتمي إليه، دون عناوينها أو محتوياتها أبداً. يصغّر نوافذ التطبيقات الأخرى ويستعيدها ويرتبها، ويطلب من التطبيقات التي تعمل كمسؤول أن تُصغَّر وتعود؛ لا يستخدم أي خطاف للوحة المفاتيح أو الماوس ولا يشغّل أي تعليمات برمجية في التطبيقات الأخرى. يحتفظ بقائمة النوافذ التي صغّرها في الذاكرة فقط. لا يُجري أي اتصالات بالشبكة ولا يرسل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -2664,4 +2664,60 @@
     <value>Afficher toutes les fenêtres masquées</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="HideAppsHideAppHeader" xml:space="preserve">
+    <value>Masquer l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppDescription" xml:space="preserve">
+    <value>Réduit toutes les fenêtres de l’application au premier plan, comme toutes les fenêtres de l’Explorateur de fichiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideAppWindowsControlH" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersHeader" xml:space="preserve">
+    <value>Masquer les autres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersDescription" xml:space="preserve">
+    <value>Réduit toutes les fenêtres de toutes les autres applications. Appuyez de nouveau pour les restaurer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsHideOthersWindowsControlShiftH" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + Maj + H</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsShortcutNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyHeader" xml:space="preserve">
+    <value>Masquer les autres uniquement sur l’écran au premier plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsFrontDisplayOnlyDescription" xml:space="preserve">
+    <value>Laisse les fenêtres des autres écrans telles quelles.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppHeader" xml:space="preserve">
+    <value>Restaurer les autres fenêtres d’une application avec elle</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsWholeAppDescription" xml:space="preserve">
+    <value>Quand une fenêtre réduite revient, depuis son bouton de la barre des tâches, Alt + Tab ou son application, les autres fenêtres de son application réduites par Masquer les applications reviennent derrière elle.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfo" xml:space="preserve">
+    <value>Certaines fenêtres restent : les fenêtres toujours au premier plan, que Masquer les autres laisse telles quelles, les fenêtres sans bouton Réduire, les fenêtres avec une boîte de dialogue ouverte, comme Enregistrer, et les fenêtres sur d’autres bureaux virtuels. Le son d’avertissement de Windows retentit quand une fenêtre qui devait partir reste. Les applications exécutées en tant qu’administrateur sont invitées à se réduire, et une application peut refuser. Afficher toutes les fenêtres masquées, dans le menu de l’icône PC Companion, restaure toutes les fenêtres réduites par Masquer les applications.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsStayInfoOn" xml:space="preserve">
+    <value>Certaines fenêtres restent : les fenêtres toujours au premier plan, que Masquer les autres laisse telles quelles, les fenêtres sans bouton Réduire, les fenêtres avec une boîte de dialogue ouverte, comme Enregistrer, et les fenêtres sur d’autres bureaux virtuels. Le son d’avertissement de Windows retentit quand une fenêtre qui devait partir reste. PC Companion s’exécute en tant qu’administrateur, donc les fenêtres des applications exécutées en tant qu’administrateur sont réduites comme les autres. Afficher toutes les fenêtres masquées, dans le menu de l’icône PC Companion, restaure toutes les fenêtres réduites par Masquer les applications.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HideAppsPermissions" xml:space="preserve">
+    <value>Quand un raccourci est utilisé, lit quelles fenêtres sont ouvertes, leurs styles, sur quel écran elles se trouvent et à quelle application elles appartiennent, jamais leurs titres ni leur contenu. Réduit, restaure et ordonne les fenêtres des autres applications, et demande aux applications exécutées en tant qu’administrateur de se réduire et de revenir ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans les autres applications. Garde la liste des fenêtres réduites en mémoire uniquement. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

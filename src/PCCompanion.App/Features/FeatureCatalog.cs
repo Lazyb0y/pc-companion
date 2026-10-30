@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using PCCompanion.App.Features.AppWindows;
+using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
@@ -27,6 +28,7 @@ using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
+using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 
 namespace PCCompanion.App.Features;
@@ -58,6 +60,7 @@ public static class FeatureCatalog
         [
             new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
             new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage)),
+            new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage)),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [
