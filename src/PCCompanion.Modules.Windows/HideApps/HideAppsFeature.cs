@@ -20,17 +20,21 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
     private readonly TimeProvider _time;
     private readonly ILogger<HideAppsFeature> _logger;
+    private readonly HideAppsMinimized _minimized;
     private HideAppsThread? _thread;
     private HideAppsThread? _stopped;
     private bool _failed;
 
-    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger)
+    /// <param name="minimized">The windows Hide Apps minimized, shared with Minimize to Tray.</param>
+    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(minimized);
 
         _time = time;
         _logger = logger;
+        _minimized = minimized;
     }
 
     public static FeatureInfo Definition { get; } = new("hideApps", WindowsModule.Id, "HideAppsName", "HideAppsDescription", "");
@@ -80,7 +84,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
         if (_thread is null)
         {
-            _thread = new HideAppsThread(read, _time, _logger, _stopped);
+            _thread = new HideAppsThread(read, _time, _logger, _minimized, _stopped);
             _stopped = null;
         }
         else

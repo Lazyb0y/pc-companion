@@ -21,7 +21,7 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
 
     public MinimizeToTrayFeatureTests()
     {
-        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, () =>
+        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, new HideAppsMinimized(), () =>
         {
             _recoveries++;
             return _left;

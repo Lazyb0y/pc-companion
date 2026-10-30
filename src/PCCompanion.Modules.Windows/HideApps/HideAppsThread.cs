@@ -20,18 +20,21 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly HideAppsMinimized _minimized;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Hider? _hider;
 
-    public HideAppsThread(HideAppsSettings settings, TimeProvider time, ILogger logger, HideAppsThread? previous = null)
+    public HideAppsThread(HideAppsSettings settings, TimeProvider time, ILogger logger, HideAppsMinimized minimized, HideAppsThread? previous = null)
         : base("Hide Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(minimized);
 
         _time = time;
         _logger = logger;
+        _minimized = minimized;
         Start();
     }
 
@@ -90,7 +93,7 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
             _owner = owner;
             _window = window;
             _system = new WindowsHideAppsSystem(owner.Guard);
-            Controller = new HideAppsController(_system, owner._time, action => window.BeginInvoke(() => owner.Guard(action)), owner._logger);
+            Controller = new HideAppsController(_system, owner._time, action => window.BeginInvoke(() => owner.Guard(action)), owner._logger, owner._minimized);
 
             _system.WindowRestored += (_, restored) => Controller.OnRestored(restored);
             _system.WindowDestroyed += (_, destroyed) => Controller.OnDestroyed(destroyed);
