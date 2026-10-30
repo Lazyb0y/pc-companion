@@ -72,7 +72,7 @@
 | `PCCompanion.Modules.Files` | Files: [Folder Rules](../features/files/folder-rules.md) |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md), [Lock Keys](../features/input/lock-keys.md) |
 | `PCCompanion.Modules.Network` | Network: [Network Profiles](../features/network/network-profiles.md) |
-| `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md), [Minimize to Tray](../features/windows/minimize-to-tray.md) |
+| `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md), [Minimize to Tray](../features/windows/minimize-to-tray.md), [Hide Apps](../features/windows/hide-apps.md) |
 | `PCCompanion.Host` | The background host |
 | `PCCompanion.Elevated` | The elevated helper: creates and deletes the scheduled tasks of [Always run as administrator](../features/general/run-as-administrator.md), and logs to the user's protected logs folder |
 | `PCCompanion.App` | The settings app |
