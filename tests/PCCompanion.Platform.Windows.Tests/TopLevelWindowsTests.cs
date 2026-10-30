@@ -313,6 +313,17 @@ public sealed class TopLevelWindowsTests
     }
 
     [Fact]
+    public void ACloakedWindowIsCloaked()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.False(TopLevelWindows.IsCloaked(window.Handle));
+
+        Show(window.Handle);
+
+        Assert.True(TopLevelWindows.IsCloaked(window.Handle));
+    }
+
+    [Fact]
     public void ShowMinimizedMinimizesAShownWindowWithoutActivatingIt()
     {
         using var window = new MessageWindow(UniqueClassName());

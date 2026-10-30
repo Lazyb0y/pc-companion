@@ -190,6 +190,12 @@ public static class TopLevelWindows
     /// <summary>Whether <paramref name="window"/> is shown: hidden windows aren't, minimized ones are.</summary>
     public static bool IsVisible(nint window) => PInvoke.IsWindowVisible(new HWND(window));
 
+    /// <summary>
+    /// Whether Windows keeps <paramref name="window"/> out of sight while it's shown (cloaked), as
+    /// for windows on other virtual desktops and Windows' own helper windows.
+    /// </summary>
+    public static bool IsCloaked(nint window) => IsCloaked(new HWND(window));
+
     /// <summary>Whether <paramref name="window"/> is minimized, shown or hidden.</summary>
     public static bool IsMinimized(nint window) => PInvoke.IsIconic(new HWND(window));
 
