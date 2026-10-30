@@ -347,3 +347,17 @@ SetProcessShutdownParameters
 IsHungAppWindow
 SC_MINIMIZE
 SC_RESTORE
+CoCreateInstance
+CLSID_TF_InputProcessorProfiles
+ITfInputProcessorProfileMgr
+IEnumTfInputProcessorProfiles
+TF_IPP_FLAG_ENABLED
+TF_PROFILETYPE_KEYBOARDLAYOUT
+ActivateKeyboardLayout
+GetKeyboardLayoutName
+KL_NAMELENGTH
+LCIDToLocaleName
+GetLocaleInfoEx
+LOCALE_SLOCALIZEDDISPLAYNAME
+LOCALE_NAME_MAX_LENGTH
+SHLoadIndirectString
