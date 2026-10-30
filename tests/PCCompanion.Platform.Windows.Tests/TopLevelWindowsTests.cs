@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,6 +15,12 @@ public sealed class TopLevelWindowsTests
 {
     private const int ShowWithoutActivating = 4; // SW_SHOWNOACTIVATE
     private const uint MoveWithoutActivating = 0x0014; // SWP_NOZORDER | SWP_NOACTIVATE
+    private const uint ReorderWithoutActivating = 0x0013; // SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE
+    private const uint SystemCommandMessage = 0x0112; // WM_SYSCOMMAND
+    private const nuint MinimizeCommand = 0xF020; // SC_MINIMIZE
+    private const nuint RestoreCommand = 0xF120; // SC_RESTORE
+    private const int StyleIndex = -16; // GWL_STYLE
+    private const nint MinimizeBoxStyle = 0x00020000; // WS_MINIMIZEBOX
 
     [Fact]
     public void ListsAVisibleWindowWithWhatItIsLike()
@@ -305,6 +312,176 @@ public sealed class TopLevelWindowsTests
         Assert.True(hidden);
     }
 
+    [Fact]
+    public void ShowMinimizedMinimizesAShownWindowWithoutActivatingIt()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+
+        Assert.True(TopLevelWindows.ShowMinimized(window.Handle));
+        RunUntil(window, () => TopLevelWindows.IsMinimized(window.Handle));
+
+        Assert.True(TopLevelWindows.IsMinimized(window.Handle));
+        Assert.True(TopLevelWindows.IsVisible(window.Handle));
+        Assert.NotEqual(window.Handle, Foreground.Window);
+    }
+
+    [Fact]
+    public void RestoreWithoutActivatingBringsBackAMinimizedWindowWithoutActivatingIt()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+        Assert.True(TopLevelWindows.ShowMinimized(window.Handle));
+        RunUntil(window, () => TopLevelWindows.IsMinimized(window.Handle));
+
+        Assert.True(TopLevelWindows.RestoreWithoutActivating(window.Handle));
+        RunUntil(window, () => !TopLevelWindows.IsMinimized(window.Handle));
+
+        Assert.False(TopLevelWindows.IsMinimized(window.Handle));
+        Assert.True(TopLevelWindows.IsVisible(window.Handle));
+        Assert.NotEqual(window.Handle, Foreground.Window);
+    }
+
+    [Fact]
+    public void AskingToMinimizeAndRestorePostsTheWindowSystemCommands()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var commands = new List<nuint>();
+
+        // Handled here, so Windows doesn't minimize or restore, and activate, the window.
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message == SystemCommandMessage)
+            {
+                // Windows uses the four low bits itself.
+                commands.Add(e.WParam & 0xFFF0);
+                e.Handled = true;
+            }
+        };
+
+        Assert.True(TopLevelWindows.AskToMinimize(window.Handle));
+        Assert.True(TopLevelWindows.AskToRestore(window.Handle));
+        RunPostedMessages();
+
+        Assert.Equal([MinimizeCommand, RestoreCommand], commands);
+    }
+
+    [Fact]
+    public void PutBehindPutsAWindowRightBehindAnother()
+    {
+        using var front = new MessageWindow(UniqueClassName());
+        using var moved = new MessageWindow(UniqueClassName());
+        Show(front.Handle);
+        Show(moved.Handle);
+
+        Assert.True(TopLevelWindows.PutBehind(moved.Handle, front.Handle));
+        RunUntil(moved, () => TopLevelWindows.NextVisibleBehind(front.Handle) == moved.Handle);
+
+        Assert.Equal(moved.Handle, TopLevelWindows.NextVisibleBehind(front.Handle));
+        Assert.True(TopLevelWindows.IsInFrontOf(front.Handle, moved.Handle));
+    }
+
+    [Fact]
+    public void PutBehindDoesNotWaitForTheWindowsThread()
+    {
+        // The window's thread handles no messages until it's released or 30 seconds pass, like a
+        // program that stopped responding.
+        using var front = new MessageWindow(UniqueClassName());
+        Show(front.Handle);
+        using var shown = new ManualResetEventSlim();
+        using var release = new ManualResetEventSlim();
+        using var responding = new ManualResetEventSlim();
+        nint handle = 0;
+        var thread = new Thread(() =>
+        {
+            using var window = new MessageWindow(UniqueClassName());
+            Show(window.Handle);
+            handle = window.Handle;
+            shown.Set();
+            _ = release.Wait(TimeSpan.FromSeconds(30));
+            responding.Set();
+        });
+        thread.Start();
+
+        try
+        {
+            Assert.True(shown.Wait(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+
+            Assert.True(TopLevelWindows.PutBehind(handle, front.Handle));
+            Assert.False(responding.IsSet);
+        }
+        finally
+        {
+            release.Set();
+            Assert.True(thread.Join(TimeSpan.FromSeconds(30)));
+        }
+    }
+
+    [Fact]
+    public void NextVisibleBehindSkipsHiddenWindows()
+    {
+        using var front = new MessageWindow(UniqueClassName());
+        using var hidden = new MessageWindow(UniqueClassName());
+        using var back = new MessageWindow(UniqueClassName());
+        Show(front.Handle);
+        Show(back.Handle);
+        Assert.True(SetWindowPos(hidden.Handle, front.Handle, 0, 0, 0, 0, ReorderWithoutActivating));
+        Assert.True(SetWindowPos(back.Handle, hidden.Handle, 0, 0, 0, 0, ReorderWithoutActivating));
+
+        Assert.Equal(back.Handle, TopLevelWindows.NextVisibleBehind(front.Handle));
+    }
+
+    [Fact]
+    public void AWindowHasAMinimizeButtonOnlyWithItsStyle()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.False(TopLevelWindows.HasMinimizeButton(window.Handle));
+
+        _ = SetWindowLongPtr(window.Handle, StyleIndex, GetWindowLongPtr(window.Handle, StyleIndex) | MinimizeBoxStyle);
+
+        Assert.True(TopLevelWindows.HasMinimizeButton(window.Handle));
+    }
+
+    [Fact]
+    public void AWindowWhoseThreadHandlesNoMessagesForFiveSecondsIsNotResponding()
+    {
+        using var own = new MessageWindow(UniqueClassName());
+        Assert.False(TopLevelWindows.IsNotResponding(own.Handle));
+
+        // The thread handles its messages once, so Windows counts it as started, then stops
+        // until it's released or 30 seconds pass.
+        using var shown = new ManualResetEventSlim();
+        using var release = new ManualResetEventSlim();
+        nint handle = 0;
+        var thread = new Thread(() =>
+        {
+            using var window = new MessageWindow(UniqueClassName());
+            Show(window.Handle);
+            RunPostedMessages();
+            handle = window.Handle;
+            shown.Set();
+            _ = release.Wait(TimeSpan.FromSeconds(30));
+        });
+        thread.Start();
+
+        try
+        {
+            Assert.True(shown.Wait(TimeSpan.FromSeconds(30), TestContext.Current.CancellationToken));
+            var deadline = Environment.TickCount64 + 30_000;
+            while (!TopLevelWindows.IsNotResponding(handle) && Environment.TickCount64 < deadline)
+            {
+                Thread.Sleep(100);
+            }
+
+            Assert.True(TopLevelWindows.IsNotResponding(handle));
+        }
+        finally
+        {
+            release.Set();
+            Assert.True(thread.Join(TimeSpan.FromSeconds(30)));
+        }
+    }
+
     // Cloaked first, so it never appears.
     private static void Show(nint window)
     {
@@ -326,4 +503,10 @@ public sealed class TopLevelWindowsTests
 
     [DllImport("user32.dll")]
     private static extern bool SetWindowPos(nint window, nint insertAfter, int x, int y, int width, int height, uint flags);
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
+    private static extern nint GetWindowLongPtr(nint window, int index);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+    private static extern nint SetWindowLongPtr(nint window, int index, nint value);
 }

@@ -344,3 +344,6 @@ WM_GETICON
 ICON_BIG
 ICON_SMALL2
 SetProcessShutdownParameters
+IsHungAppWindow
+SC_MINIMIZE
+SC_RESTORE
