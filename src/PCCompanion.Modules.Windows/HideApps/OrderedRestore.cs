@@ -22,6 +22,9 @@ public sealed partial class OrderedRestore : IDisposable
     /// <summary>How often a move is checked when Windows reports no change in the order.</summary>
     public static readonly TimeSpan CheckInterval = TimeSpan.FromMilliseconds(15);
 
+    // How many of a window's owned windows, such as palettes, can sit between it and the window before.
+    private const int MaximumOwnedWindows = 50;
+
     private readonly IHideAppsSystem _system;
     private readonly TimeProvider _time;
     private readonly Action<Action> _post;
@@ -88,7 +91,7 @@ public sealed partial class OrderedRestore : IDisposable
             return;
         }
 
-        if (_system.NextVisibleBehind(run.Previous) == run.Moving)
+        if (IsRightBehind(run.Previous, run.Moving))
         {
             run.Previous = run.Moving;
         }
@@ -152,7 +155,7 @@ public sealed partial class OrderedRestore : IDisposable
                 continue;
             }
 
-            if (_system.NextVisibleBehind(run.Previous) == window)
+            if (IsRightBehind(run.Previous, window))
             {
                 run.Previous = window;
                 continue;
@@ -163,6 +166,19 @@ public sealed partial class OrderedRestore : IDisposable
             _timer ??= _time.CreateTimer(_ => _post(CheckMove), null, CheckInterval, CheckInterval);
             return;
         }
+    }
+
+    // Whether the window is right behind the one before. Windows keeps a window's owned windows,
+    // such as palettes, in front of it, so they can sit between the two.
+    private bool IsRightBehind(nint previous, nint window)
+    {
+        var next = _system.NextVisibleBehind(previous);
+        for (var step = 0; step < MaximumOwnedWindows && next != 0 && next != window && _system.RootOwner(next) == window; step++)
+        {
+            next = _system.NextVisibleBehind(next);
+        }
+
+        return next == window;
     }
 
     private sealed class Run(Queue<nint> left, nint previous, long started)

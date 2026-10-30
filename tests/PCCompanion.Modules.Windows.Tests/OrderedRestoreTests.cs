@@ -100,6 +100,21 @@ public sealed class OrderedRestoreTests : IDisposable
     }
 
     [Fact]
+    public void AWindowsOwnedWindowsInFrontOfItDontHoldUpTheNextMove()
+    {
+        _system.Add(1);
+        _system.Add(9);
+        _system.Add(3);
+        _system.Order.Add(new FakeHideWindow { Handle = 20, Owner = 2 });
+        _system.Add(2);
+
+        _restore.Start([2, 3], behind: 1);
+
+        Assert.Equal([1, 20, 2, 3, 9], _system.Handles);
+        Assert.False(_restore.IsRunning);
+    }
+
+    [Fact]
     public void WindowsThatClosedStoppedRespondingOrCantBeMovedAreSkipped()
     {
         _system.Add(1);

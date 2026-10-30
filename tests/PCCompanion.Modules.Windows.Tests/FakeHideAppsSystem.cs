@@ -222,11 +222,12 @@ internal sealed class FakeHideAppsSystem : IHideAppsSystem
         return true;
     }
 
+    // A window's owned windows move with it, and stay in front of it.
     private void Move(nint window, nint inFront)
     {
-        var moved = this[window];
-        Order.Remove(moved);
-        Order.Insert(Order.FindIndex(listed => listed.Handle == inFront) + 1, moved);
+        var moved = Order.Where(listed => listed.Handle == window || RootOwner(listed.Handle) == window).ToList();
+        Order.RemoveAll(moved.Contains);
+        Order.InsertRange(Order.FindIndex(listed => listed.Handle == inFront) + 1, moved.OrderBy(listed => listed.Handle == window));
     }
 }
 
