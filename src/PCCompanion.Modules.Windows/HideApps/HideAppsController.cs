@@ -22,6 +22,10 @@ public sealed partial class HideAppsController : IDisposable
     private static readonly TimeSpan BackCheck = TimeSpan.FromMilliseconds(50);
     private const int BackChecks = 20;
 
+    // How often, and how many times, the front is checked before windows come back from the menu.
+    private static readonly TimeSpan FrontCheck = TimeSpan.FromMilliseconds(15);
+    private const int FrontChecks = 33;
+
     private readonly IHideAppsSystem _system;
     private readonly TimeProvider _time;
     private readonly Action<Action> _post;
@@ -150,7 +154,10 @@ public sealed partial class HideAppsController : IDisposable
         return Finish(HideAction.HideOthers, added.Count > 0 ? PressOutcome.Hid : PressOutcome.NothingToDo, added.Count, stays, started);
     }
 
-    /// <summary>Brings back every window that Hide Apps minimized, behind the app in front.</summary>
+    /// <summary>
+    /// Brings back every window that Hide Apps minimized, behind the app in front, or with no app
+    /// in front, as from the PC Companion icon's menu, behind the windows on screen.
+    /// </summary>
     public PressResult ShowAll()
     {
         var started = _time.GetTimestamp();
@@ -160,11 +167,30 @@ public sealed partial class HideAppsController : IDisposable
         }
 
         var all = _list.ToList();
-        var front = FrontApp();
-        var behind = front is var (windows, apps, root, app)
-            ? windows.LastOrDefault(window => IsCandidate(window) && apps.Of(window).IsSameAppAs(app))?.Handle ?? root
-            : 0;
-        BringBack(all, behind, giveFrontTo: front is not null ? _system.ForegroundWindow : 0);
+        if (FrontApp() is var (windows, apps, root, app))
+        {
+            var behind = windows.LastOrDefault(window => IsCandidate(window) && apps.Of(window).IsSameAppAs(app))?.Handle ?? root;
+            BringBack(all, behind, giveFrontTo: _system.ForegroundWindow);
+        }
+        else
+        {
+            // With the PC Companion icon's menu, no app's window is in front, and Windows gave the
+            // front to a window coming back in the Sandbox checks, even one on another virtual
+            // desktop, which switched to it. So the top window on screen gets the front back, as
+            // before the menu, and the windows come back once it has it.
+            var onScreen = _system.ListWindows().Where(IsCandidate).ToList();
+            var behind = onScreen.LastOrDefault()?.Handle ?? 0;
+            if ((onScreen.FirstOrDefault(window => !window.IsTopmost) ?? onScreen.FirstOrDefault()) is { } top)
+            {
+                var given = _system.Activate(top.Handle);
+                LogFrontGiven(_logger, given);
+                WhenInFront(top.Handle, () => BringBack(all, behind, giveFrontTo: 0));
+            }
+            else
+            {
+                BringBack(all, behind, giveFrontTo: 0);
+            }
+        }
         return Finish(HideAction.ShowAll, PressOutcome.BroughtBack, all.Count, [], started);
     }
 
@@ -330,6 +356,35 @@ public sealed partial class HideAppsController : IDisposable
         _timers.Add(timer);
     }
 
+    // Runs the action once the window, or its dialog, is in front, or after a moment without.
+    private void WhenInFront(nint window, Action action)
+    {
+        if (_system.RootOwner(_system.ForegroundWindow) == window)
+        {
+            action();
+            return;
+        }
+
+        var checks = 0;
+        ITimer? timer = null;
+        timer = _time.CreateTimer(_ => _post(() =>
+        {
+            if (timer is null || !_timers.Contains(timer))
+            {
+                return;
+            }
+
+            checks++;
+            if (_system.RootOwner(_system.ForegroundWindow) == window || checks >= FrontChecks)
+            {
+                _timers.Remove(timer);
+                timer.Dispose();
+                action();
+            }
+        }), null, FrontCheck, FrontCheck);
+        _timers.Add(timer);
+    }
+
     // Keeps the watched processes, the restore hook and the menu's count in step with the list.
     private void Changed()
     {
@@ -381,6 +436,9 @@ public sealed partial class HideAppsController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Hide Apps brought back {Count} more windows of an app whose window came back.")]
     private static partial void LogWholeApp(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Hide Apps gave the front to the top window on screen before bringing windows back: {Given}.")]
+    private static partial void LogFrontGiven(ILogger logger, bool given);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't give the front back after windows of an app running as administrator came back.")]
     private static partial void LogFrontNotBack(ILogger logger);

@@ -105,7 +105,15 @@ internal sealed class FakeHideAppsSystem : IHideAppsSystem
 
     public bool MinimizeWithoutActivating(nint window) => Change(window, "minimize quietly", listed => listed.Minimized = true);
 
-    public bool RestoreWithoutActivating(nint window) => Change(window, "restore", listed => listed.Minimized = false);
+    public bool RestoreWithoutActivating(nint window) => Change(window, "restore", listed =>
+    {
+        listed.Minimized = false;
+        if (listed.MovesToTopOnRestore)
+        {
+            Order.Remove(listed);
+            Order.Insert(0, listed);
+        }
+    });
 
     public bool AskToMinimize(nint window) => Ask(window, "ask minimize", listed => listed.Minimized = true);
 
@@ -146,6 +154,8 @@ internal sealed class FakeHideAppsSystem : IHideAppsSystem
         var at = Order.FindIndex(listed => listed.Handle == window);
         return at < 0 ? 0 : Order.Skip(at + 1).FirstOrDefault(listed => listed.Visible)?.Handle ?? 0;
     }
+
+    public bool IsAppWindow(nint window) => Find(window) is { Visible: true, Closed: false, Cloaked: false, ToolWindow: false, Desktop: false, Owner: 0 };
 
     public bool Activate(nint window)
     {
@@ -278,4 +288,7 @@ internal sealed class FakeHideWindow
 
     /// <summary>Windows accepts the move, but the window stays where it is.</summary>
     public bool NeverMoves { get; set; }
+
+    /// <summary>Its app puts it in front of the others as it comes back, as dialog-based apps can.</summary>
+    public bool MovesToTopOnRestore { get; set; }
 }
