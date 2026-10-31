@@ -141,6 +141,37 @@ public sealed class LanguageSwitcherTests : IDisposable
     }
 
     [Fact]
+    public void TheSwitcherSaysWhenWhatsRememberedChanged()
+    {
+        var changes = 0;
+        _switcher.RememberedChanged += (_, _) => changes++;
+        Start(WindowA, new InputLanguagePerAppSettings());
+
+        Front(WindowB);
+        _switcher.OnSecond();
+        _switcher.OnSecond();
+
+        Assert.Equal(2, changes);
+    }
+
+    [Fact]
+    public void RememberSwitchesNothingUntilTheFileIsRead()
+    {
+        _switcher.Remembered.WaitForLoad();
+        _switcher.Remembered.Remember(App(AppB, 20), FakeInputLanguageSystem.German.Id);
+        Start(WindowA, new InputLanguagePerAppSettings());
+
+        Front(WindowB);
+
+        Assert.Empty(_system.Requests);
+
+        _switcher.Remembered.Load([new RememberedLanguage { Program = AppC, InputMethod = "0407:00000407" }]);
+        Front(WindowC);
+
+        Assert.Equal([(WindowC, German)], _system.Requests);
+    }
+
+    [Fact]
     public void AppsWithARuleArentRemembered()
     {
         Start(WindowA, Rules((AppB, FakeInputLanguageSystem.German)));

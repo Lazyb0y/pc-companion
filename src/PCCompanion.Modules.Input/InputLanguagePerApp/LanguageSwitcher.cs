@@ -60,6 +60,9 @@ public sealed partial class LanguageSwitcher : IDisposable
     /// <summary>The input method each app had last, for Remember each app's language.</summary>
     public RememberedLanguages Remembered { get; } = new();
 
+    /// <summary>Raised when an app's remembered input method, or the order of the apps, changed.</summary>
+    public event EventHandler? RememberedChanged;
+
     /// <summary>
     /// Applies the settings. A rule applies the next time its app comes to the front. Any other
     /// behavior than Remember for other apps forgets every remembered input method.
@@ -298,9 +301,9 @@ public sealed partial class LanguageSwitcher : IDisposable
         }
 
         front.InputMethod = read;
-        if (_settings.OtherApps == OtherApps.Remember && !HasRule(front.App))
+        if (_settings.OtherApps == OtherApps.Remember && !HasRule(front.App) && Remembered.Remember(front.App, read))
         {
-            Remembered.Remember(front.App, read);
+            RememberedChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
