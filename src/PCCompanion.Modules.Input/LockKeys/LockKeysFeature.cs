@@ -197,8 +197,8 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
     private void WarmUp()
     {
         var style = StyleFor(new DisplayDetails(Rectangle.Empty, Rectangle.Empty, 96), badge: false);
-        NoticeLine[] notice = [new(Strings.LockKeysCapsLockOn, true)];
-        NoticeLine[] badge = [new(Strings.LockKeysBadge, true)];
+        NoticeLine[] notice = [new(Strings.LockKeysCapsLockOn, NoticeIcons.Lock)];
+        NoticeLine[] badge = [new(Strings.LockKeysBadge, NoticeIcons.Lock)];
         _ = Task.Run(() =>
         {
             try
@@ -365,7 +365,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
         // Caps Lock turning on shows the notice in place of the badge, which follows it.
         _noticeShowsCapsLockOn = changes.Any(change => change is { Key: LockKey.CapsLock, IsOn: true });
         UpdateBadge();
-        var lines = changes.Select(change => new NoticeLine(TextOf(change), change.IsOn)).ToArray();
+        var lines = changes.Select(change => new NoticeLine(TextOf(change), change.IsOn ? NoticeIcons.Lock : NoticeIcons.Unlock)).ToArray();
         var image = NoticePainter.Paint(lines, StyleFor(display, badge: false));
         var away = _badge is { IsShown: true } && display.Bounds.Contains(_badgeBounds) ? _badgeBounds.Height + (int)Math.Round(BadgeGap * display.Scale) : 0;
         var bounds = NoticePlacement.Place(display, new Size(image.Width, image.Height), _settings.Position, away);
@@ -434,7 +434,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
         var look = new BadgeLook(display, _settings.Position, style);
         if (look != _badgeLook || !_badge.IsShown)
         {
-            var image = NoticePainter.Paint([new NoticeLine(Strings.LockKeysBadge, true)], style);
+            var image = NoticePainter.Paint([new NoticeLine(Strings.LockKeysBadge, NoticeIcons.Lock)], style);
             _badgeBounds = NoticePlacement.Place(display, new Size(image.Width, image.Height), _settings.Position);
             _badge.Show(image.Pixels, _badgeBounds);
             _badgeLook = look;
