@@ -2720,4 +2720,104 @@
     <value>Liest beim Drücken einer Tastenkombination, welche Fenster geöffnet sind, ihre Stile, auf welchem Bildschirm sie sind und zu welcher App sie gehören, nie ihre Titel oder Inhalte. Minimiert Fenster anderer Apps, stellt sie wieder her und ordnet sie, und bittet Apps, die als Administrator ausgeführt werden, sich zu minimieren und zurückzukehren; verwendet keinen Tastatur- oder Maus-Hook und führt keinen Code in anderen Apps aus. Behält die Liste der minimierten Fenster nur im Arbeitsspeicher. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>Eingabesprache pro App</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>Wechselt die Tastatursprache automatisch für die App im Vordergrund.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>Sie haben nur eine Tastatur oder Sprache. Fügen Sie unter „Sprache und Region“ eine weitere hinzu, um Apps eine eigene zu geben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>„Sprache und Region“ öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>Apps mit einer Sprache</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>Jedes Mal, wenn eine dieser Apps in den Vordergrund kommt, wechselt sie zu der für sie gewählten Sprache.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>Sprache für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>Nicht in Ihren Sprachen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>Andere Apps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>Was Apps ohne eigene Sprache erhalten, wenn sie in den Vordergrund kommen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>Sprache jeder App merken</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>Aktuelle Sprache beibehalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>Eine Sprache verwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>Sprache für andere Apps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>Jede App ohne eigene Sprache wechselt zu dieser.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>Hinweis anzeigen, wenn sich die Sprache ändert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>Zeigt die neue Sprache 2 Sekunden lang unten auf dem Bildschirm an, wenn PC Companion sie gewechselt hat.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>Eigene Einstellung von Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>„Für jedes App-Fenster eine andere Eingabemethode verwenden“ ist aktiviert: Mit „Aktuelle Sprache beibehalten“ behält jedes Fenster seine eigene Sprache. Die Einstellung befindet sich unter „Eingabe“ in den „Erweiterten Tastatureinstellungen“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>„Für jedes App-Fenster eine andere Eingabemethode verwenden“ ist deaktiviert: Mit „Aktuelle Sprache beibehalten“ folgt Ihnen die aktuelle Sprache in jede App. Die Einstellung befindet sich unter „Eingabe“ in den „Erweiterten Tastatureinstellungen“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>Öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>Apps, die als Administrator ausgeführt werden, behalten die Sprache, die Windows ihnen gibt, da PC Companion ohne Administratorrechte ausgeführt wird. Mit „Immer als Administrator ausführen“ unter „Allgemein“ wechseln sie wie jede andere App.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher wechseln Apps, die als Administrator ausgeführt werden, wie jede andere App.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>Liest, wenn eine App in den Vordergrund kommt, und einmal pro Sekunde, solange die Sprache einer App gemerkt wird, welches Fenster im Vordergrund ist, zu welcher App es gehört und mit welcher Sprache darin geschrieben wird, nie Fenstertitel, Inhalte oder die Tasten, die Sie drücken. Bittet die App im Vordergrund, ihre Sprache zu wechseln, wie Windows es beim Wechseln tut, und nur zu einer Sprache in Ihrer Liste; verwendet keinen Tastaturhook und führt keinen Code in anderen Apps aus. Speichert die zuletzt verwendete Sprache jeder App, für bis zu 500 Apps, in einer Datei auf diesem PC, die gelöscht wird, wenn die Funktion deaktiviert ist oder andere Apps nicht gemerkt werden. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

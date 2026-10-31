@@ -107,6 +107,16 @@ public static class ShellActions
     /// <summary>Opens the Keyboard page of Windows Settings' accessibility settings, where Toggle Keys is.</summary>
     public static bool OpenKeyboardAccessibilitySettings() => OpenSettingsPage("ms-settings:easeofaccess-keyboard");
 
+    /// <summary>Opens the Language &amp; region page of Windows Settings, where the user adds languages and keyboards.</summary>
+    public static bool OpenLanguageSettings() => OpenSettingsPage("ms-settings:regionlanguage");
+
+    /// <summary>
+    /// Opens the Typing page of Windows Settings, whose Advanced keyboard settings has Let me use a
+    /// different input method for each app window: on Windows 11 build 26100, the address of
+    /// Advanced keyboard settings opened Language &amp; region instead.
+    /// </summary>
+    public static bool OpenTypingSettings() => OpenSettingsPage("ms-settings:typing");
+
     /// <summary>Opens the Recycle Bin in File Explorer, where its files can be restored.</summary>
     public static bool OpenRecycleBin()
     {

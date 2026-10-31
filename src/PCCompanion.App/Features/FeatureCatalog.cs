@@ -8,6 +8,7 @@ using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.InputLanguagePerApp;
 using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
@@ -23,6 +24,7 @@ using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Input.InputLanguagePerApp;
 using PCCompanion.Modules.Input.LockKeys;
 using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Network.NetworkProfiles;
@@ -55,6 +57,7 @@ public static class FeatureCatalog
         [
             new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage)),
             new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage)),
+            new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage)),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [

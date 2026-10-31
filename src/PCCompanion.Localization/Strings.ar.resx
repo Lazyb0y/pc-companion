@@ -2816,4 +2816,104 @@
     <value>عند الضغط على اختصار، يقرأ النوافذ المفتوحة وأنماطها والشاشة التي هي عليها والتطبيق الذي تنتمي إليه، دون عناوينها أو محتوياتها أبداً. يصغّر نوافذ التطبيقات الأخرى ويستعيدها ويرتبها، ويطلب من التطبيقات التي تعمل كمسؤول أن تُصغَّر وتعود؛ لا يستخدم أي خطاف للوحة المفاتيح أو الماوس ولا يشغّل أي تعليمات برمجية في التطبيقات الأخرى. يحتفظ بقائمة النوافذ التي صغّرها في الذاكرة فقط. لا يُجري أي اتصالات بالشبكة ولا يرسل شيئاً.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>لغة الإدخال لكل تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>يبدّل لغة لوحة المفاتيح تلقائياً للتطبيق الموجود في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>لديك لوحة مفاتيح أو لغة واحدة فقط. أضف أخرى في «اللغة والمنطقة» لتمنح التطبيقات لغاتها الخاصة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>فتح «اللغة والمنطقة»</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>التطبيقات ذات اللغة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>في كل مرة يأتي فيها أحد هذه التطبيقات إلى المقدمة، يتم التبديل إلى اللغة المختارة له.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>لغة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>ليست ضمن لغاتك</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>التطبيقات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>ما تحصل عليه التطبيقات التي ليست لها لغة خاصة بها عندما تأتي إلى المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>تذكّر لغة كل تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>الإبقاء على اللغة المستخدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>استخدام لغة واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>لغة التطبيقات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>يتم تبديل كل تطبيق ليست له لغة خاصة به إلى هذه اللغة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>إظهار إشعار عند تغيّر اللغة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>يُظهر اللغة الجديدة أسفل الشاشة لمدة ثانيتين عندما يبدّلها PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>إعداد Windows الخاص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>الخيار «السماح لي باستخدام أسلوب إدخال مختلف لكل نافذة تطبيق» قيد التشغيل: مع «الإبقاء على اللغة المستخدمة» تحتفظ كل نافذة بلغتها الخاصة. يوجد في «الكتابة» ضمن «إعدادات لوحة المفاتيح المتقدمة».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>الخيار «السماح لي باستخدام أسلوب إدخال مختلف لكل نافذة تطبيق» متوقف عن التشغيل: مع «الإبقاء على اللغة المستخدمة» تتبعك اللغة المستخدمة إلى كل تطبيق. يوجد في «الكتابة» ضمن «إعدادات لوحة المفاتيح المتقدمة».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>فتح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>تحتفظ التطبيقات التي تعمل كمسؤول باللغة التي يمنحها لها Windows، لأن PC Companion يعمل دون صلاحيات المسؤول. مع «التشغيل دائماً كمسؤول» في «عام»، يتم تبديلها مثل أي تطبيق آخر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا يتم تبديل التطبيقات التي تعمل كمسؤول مثل أي تطبيق آخر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>عندما يأتي تطبيق إلى المقدمة، ومرة كل ثانية طالما يتم تذكّر لغة تطبيق، يقرأ النافذة الموجودة في المقدمة والتطبيق الذي تنتمي إليه واللغة التي يُكتب بها فيها، ولا يقرأ أبداً عناوين النوافذ أو محتواها أو المفاتيح التي تضغطها. يطلب من التطبيق الموجود في المقدمة تبديل لغته، كما يفعل Windows عندما تبدّلها بنفسك، وإلى لغة من قائمتك فقط، دون خطّاف للوحة المفاتيح ودون تشغيل أي تعليمات برمجية في التطبيقات الأخرى. يحفظ آخر لغة لكل تطبيق، لما يصل إلى 500 تطبيق، في ملف على هذا الكمبيوتر، ويُحذف الملف عند إيقاف الميزة أو عند عدم تذكّر التطبيقات الأخرى. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

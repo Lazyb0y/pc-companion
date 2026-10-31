@@ -2720,4 +2720,104 @@
     <value>শর্টকাট চাপলে, কোন উইন্ডো খোলা আছে, সেগুলোর ধরন, কোন ডিসপ্লেতে আছে এবং কোন অ্যাপের, তা পড়ে, কখনো সেগুলোর শিরোনাম বা বিষয়বস্তু নয়। অন্য অ্যাপের উইন্ডো ছোট করে, ফিরিয়ে আনে ও সাজায়, এবং প্রশাসক হিসেবে চলা অ্যাপগুলোকে ছোট হতে ও ফিরে আসতে বলে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। ছোট করা উইন্ডোর তালিকা শুধু মেমরিতে রাখে। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>অ্যাপ অনুযায়ী ইনপুট ভাষা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>সামনে থাকা অ্যাপের জন্য কীবোর্ডের ভাষা স্বয়ংক্রিয়ভাবে বদলায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>আপনার কেবল একটি কীবোর্ড বা ভাষা আছে। অ্যাপগুলোকে নিজস্ব ভাষা দিতে «ভাষা এবং অঞ্চল»-এ আরেকটি যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>«ভাষা এবং অঞ্চল» খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>ভাষাসহ অ্যাপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>এই অ্যাপগুলোর কোনোটি প্রতিবার সামনে এলে সেটির জন্য বেছে নেওয়া ভাষায় বদলে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>{0}-এর ভাষা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>আপনার ভাষাগুলোর মধ্যে নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>অন্যান্য অ্যাপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>নিজস্ব ভাষা নেই এমন অ্যাপ সামনে এলে কী পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>প্রতিটি অ্যাপের ভাষা মনে রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>ব্যবহৃত ভাষাই রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>একটি ভাষা ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>অন্যান্য অ্যাপের ভাষা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>নিজস্ব ভাষা নেই এমন প্রতিটি অ্যাপ এই ভাষায় বদলে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>ভাষা বদলালে একটি বিজ্ঞপ্তি দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>PC Companion ভাষা বদলালে স্ক্রিনের নিচে নতুন ভাষাটি ২ সেকেন্ড দেখায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>Windows-এর নিজস্ব সেটিং</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>«প্রতিটি অ্যাপ উইন্ডোর জন্য আমাকে আলাদা ইনপুট পদ্ধতি ব্যবহার করতে দিন» চালু আছে: «ব্যবহৃত ভাষাই রাখুন» বেছে নিলে প্রতিটি উইন্ডো নিজের ভাষা রাখে। এটি «টাইপিং»-এ, «উন্নত কীবোর্ড সেটিংস»-এর মধ্যে আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>«প্রতিটি অ্যাপ উইন্ডোর জন্য আমাকে আলাদা ইনপুট পদ্ধতি ব্যবহার করতে দিন» বন্ধ আছে: «ব্যবহৃত ভাষাই রাখুন» বেছে নিলে ব্যবহৃত ভাষাটি আপনার সঙ্গে প্রতিটি অ্যাপে যায়। এটি «টাইপিং»-এ, «উন্নত কীবোর্ড সেটিংস»-এর মধ্যে আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>প্রশাসক হিসেবে চলা অ্যাপগুলো Windows যে ভাষা দেয় সেটিই রাখে, কারণ PC Companion প্রশাসকের অধিকার ছাড়া চলে। «সাধারণ»-এ «সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান» চালু থাকলে সেগুলো অন্য যেকোনো অ্যাপের মতো বদলায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion প্রশাসক হিসেবে চলছে, তাই প্রশাসক হিসেবে চলা অ্যাপগুলো অন্য যেকোনো অ্যাপের মতো বদলায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>কোনো অ্যাপ সামনে এলে, এবং কোনো অ্যাপের ভাষা মনে রাখার সময় প্রতি সেকেন্ডে একবার, সামনে কোন উইন্ডো আছে, সেটি কোন অ্যাপের এবং সেটিতে কোন ভাষায় লেখা হয় তা পড়ে, কখনো উইন্ডোর শিরোনাম, বিষয়বস্তু বা আপনার চাপা কী পড়ে না। সামনের অ্যাপকে তার ভাষা বদলাতে বলে, যেমন আপনি বদলালে Windows করে, এবং শুধু আপনার তালিকার কোনো ভাষায়; কোনো কীবোর্ড হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। প্রতিটি অ্যাপের শেষ ভাষা, সর্বোচ্চ ৫০০টি অ্যাপের জন্য, এই পিসির একটি ফাইলে রাখে, যা বৈশিষ্ট্যটি বন্ধ থাকলে বা অন্যান্য অ্যাপ মনে রাখা না হলে মুছে ফেলা হয়। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

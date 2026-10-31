@@ -16,6 +16,7 @@ using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
+using PCCompanion.App.Features.InputLanguagePerApp;
 using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
@@ -174,6 +175,7 @@ public partial class App : Application
             .AddTransient<HomeViewModel>()
             .AddTransient<HotCornersViewModel>()
             .AddTransient<LockKeysViewModel>()
+            .AddTransient<InputLanguagePerAppViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<MinimizeToTrayViewModel>()
             .AddTransient<HideAppsViewModel>()
