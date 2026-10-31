@@ -81,7 +81,7 @@ public static class LanguageApp {
     }
 }
 '@
-$processes = @()
+$script:processes = @()
 function Start-LanguageApp([string] $Name, [string] $Place) {
     $exe = Join-Path $languageFolder "$Name.exe"
     Copy-Item $languageExe $exe -Force
@@ -254,9 +254,9 @@ Test-Check 'choose Remember each app''s language again' (Select-ListItem 'Other 
 
 Test-Check 'Add an app offers Running app' ((Invoke-AppElement 'Add an app') -and (Wait-Until { Find-AppElement 'Running app…' } 5))
 [void] (Invoke-AppElement 'Running app…')
-$appItem = $null
+$script:appItem = $null
 Test-Check 'Running app lists a test program' (Wait-Until { ($script:appItem = Find-AppListItem 'lang-a') -ne $null } 15)
-if ($appItem) { $appItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
+if ($script:appItem) { $script:appItem.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
 [void] (Invoke-AppElement 'Add')
 $langA = Join-Path $languageFolder 'lang-a.exe'
 $langB = Join-Path $languageFolder 'lang-b.exe'
@@ -433,6 +433,6 @@ Start-Sleep -Seconds 1
 Test-Check 'turned off, nothing switches' ((Get-Asked) -eq $all)
 Test-Check 'switching left the user''s language list as it was' ((Get-Languages) -eq $languagesSet) "before: $languagesSet; after: $(Get-Languages)"
 
-foreach ($process in $processes) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+foreach ($process in $script:processes) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
 Remove-Item $languageFolder -Recurse -Force -ErrorAction SilentlyContinue
 Set-WinUserLanguageList $languagesAtStart -Force
