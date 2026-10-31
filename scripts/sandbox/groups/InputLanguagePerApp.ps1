@@ -414,7 +414,7 @@ Stop-Host
 & icacls.exe $hostExe /setintegritylevel medium | Out-Null
 Start-Host
 Switch-ToFromB $a
-Test-Check 'an app running as administrator refuses a host without admin rights, which logs it' ((Test-Logged 'Windows refused a switch from "?Rule"?, as for an app running as administrator\.' 5) -and ([LanguageChecks]::Layout($a) -eq $englishLayout)) "layout $([LanguageChecks]::Layout($a))"
+Test-Check 'an app running as administrator refuses a host without admin rights, which logs it' ((Test-Logged 'Windows refused a switch from "?Rule"?, as for an app running as administrator\.' 5) -and (Wait-Until { [LanguageChecks]::Layout($a) -eq $englishLayout } 5)) "layout $([LanguageChecks]::Layout($a))"
 Stop-Host
 & icacls.exe $hostExe /setintegritylevel high | Out-Null
 Start-Host
