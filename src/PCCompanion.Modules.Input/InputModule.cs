@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Input.HotCorners;
+using PCCompanion.Modules.Input.InputLanguagePerApp;
 using PCCompanion.Modules.Input.LockKeys;
 using PCCompanion.Modules.Input.Notice;
 
@@ -21,6 +22,7 @@ public static class InputModule
         services.AddSingleton<SharedNotice>();
         services.AddSingleton<IFeature, HotCornersFeature>();
         services.AddSingleton<IFeature, LockKeysFeature>();
+        services.AddSingleton<IFeature, InputLanguagePerAppFeature>();
         return services;
     }
 }
