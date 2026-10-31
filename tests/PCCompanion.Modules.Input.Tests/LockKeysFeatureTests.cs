@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -10,17 +11,23 @@ namespace PCCompanion.Modules.Input.Tests;
 
 // Starting the feature creates its own hidden windows and only reads the lock keys. No test
 // changes how the notice shows while the feature runs, which would show it.
+[Collection(nameof(NoticeWindows))]
 public sealed class LockKeysFeatureTests : IDisposable
 {
     private readonly RecordingLogger<LockKeysFeature> _logger = new();
+    private readonly SharedNotice _notice = new(TimeProvider.System);
     private readonly LockKeysFeature _feature;
 
     public LockKeysFeatureTests()
     {
-        _feature = new LockKeysFeature(_logger, TimeProvider.System);
+        _feature = new LockKeysFeature(_logger, _notice);
     }
 
-    public void Dispose() => _feature.Dispose();
+    public void Dispose()
+    {
+        _feature.Dispose();
+        _notice.Dispose();
+    }
 
     [Fact]
     public void TheFeatureIsInTheInputModule()

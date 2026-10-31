@@ -2720,4 +2720,104 @@
     <value>When a shortcut is pressed, reads which windows are open, their styles, which display they're on and which app they belong to, never their titles or contents. Minimizes, brings back and orders other apps' windows, and asks apps running as administrator to minimize and come back; uses no keyboard or mouse hook and runs no code in other apps. Keeps the list of windows it minimized in memory only. Makes no network connections and sends nothing.</value>
     <comment>Hide Apps page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>Input Language per App</value>
+    <comment>Feature name, in the navigation pane, on Home and as the page title.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>Switch the keyboard language automatically for the app in front.</value>
+    <comment>Feature description, on Home and below the page title.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>You have only one keyboard or language. Add another in Language &amp; region to give apps their own.</value>
+    <comment>Input Language per App page: note shown when the user has fewer than two keyboards and languages in Windows. Language &amp; region is the Windows Settings page; use Windows&apos; name in the language.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>Open Language &amp; region</value>
+    <comment>Input Language per App page: button in InputLanguagePerAppFewInputMethodsInfo that opens the Language &amp; region page of Windows Settings.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>Apps with a language</value>
+    <comment>Input Language per App page: header of the list of apps.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>Each time one of these apps comes to the front, it switches to the language chosen for it.</value>
+    <comment>Input Language per App page: below InputLanguagePerAppAppsHeader.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>Language for {0}</value>
+    <comment>Input Language per App page: screen reader name of the language list in each app&apos;s row. {0} is the app&apos;s name, such as Telegram.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>Not in your languages</value>
+    <comment>Input Language per App page: shown in an app&apos;s language list when its language is no longer among the user&apos;s keyboards and languages in Windows.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Input Language per App page: an input method in the language lists. {0} is the language&apos;s name, such as German (Germany), and {1} the keyboard layout&apos;s, such as German; Windows gives both names.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>Other apps</value>
+    <comment>Input Language per App page: setting name for apps that aren&apos;t in the list.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>What apps without a language of their own get when they come to the front.</value>
+    <comment>Input Language per App page: below InputLanguagePerAppOtherAppsHeader.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>Remember each app's language</value>
+    <comment>Input Language per App page: choice of InputLanguagePerAppOtherAppsHeader. Each app gets back the language it had when the user last left it.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>Keep the language in use</value>
+    <comment>Input Language per App page: choice of InputLanguagePerAppOtherAppsHeader. PC Companion doesn&apos;t switch these apps.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>Use one language</value>
+    <comment>Input Language per App page: choice of InputLanguagePerAppOtherAppsHeader. All of them switch to the language chosen in InputLanguagePerAppOneLanguageHeader.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>Language for other apps</value>
+    <comment>Input Language per App page: setting name, shown with InputLanguagePerAppOtherAppsUse.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>Every app without a language of its own switches to this one.</value>
+    <comment>Input Language per App page: below InputLanguagePerAppOneLanguageHeader.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>Show a notice when the language changes</value>
+    <comment>Input Language per App page: setting name.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>Shows the new language at the bottom of the screen for 2 seconds when PC Companion switched it.</value>
+    <comment>Input Language per App page: below InputLanguagePerAppShowNoticeHeader.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>Windows' own setting</value>
+    <comment>Input Language per App page: name of the card about Windows&apos; setting for a language per app window.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>Let me use a different input method for each app window is on: with Keep the language in use, each window keeps its own language. It's in Typing, under Advanced keyboard settings.</value>
+    <comment>Input Language per App page: below InputLanguagePerAppWindowsSettingHeader while Windows&apos; setting is on. Let me use a different input method for each app window, Typing and Advanced keyboard settings are Windows&apos; names; use Windows&apos; terms in the language. Keep the language in use is InputLanguagePerAppOtherAppsKeep.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>Let me use a different input method for each app window is off: with Keep the language in use, the language in use follows you into every app. It's in Typing, under Advanced keyboard settings.</value>
+    <comment>Input Language per App page: shown instead of InputLanguagePerAppWindowsSettingOn while Windows&apos; setting is off.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>Open</value>
+    <comment>Input Language per App page: button that opens the Typing page of Windows Settings.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>Apps running as administrator keep the language Windows gives them, since PC Companion runs without admin rights. With Always run as administrator, in General, they switch like any other app.</value>
+    <comment>Input Language per App page: note shown while PC Companion runs without admin rights. Always run as administrator is GeneralRunAsAdministratorHeader, and General is NavigationGeneral.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so apps running as administrator switch like any other app.</value>
+    <comment>Input Language per App page: shown instead of InputLanguagePerAppAdministratorInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>When an app comes to the front, and once a second while an app's language is remembered, reads which window is in front, which app it belongs to and the language it types with, never window titles, contents or the keys you type. Asks the app in front to switch its language, as Windows does when you switch, and only to a language in your list; uses no keyboard hook and runs no code in other apps. Keeps the language each app had last, for up to 500 apps, in a file on this PC, which is deleted when the feature is off or other apps aren't remembered. Makes no network connections and sends nothing.</value>
+    <comment>Input Language per App page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

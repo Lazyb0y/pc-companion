@@ -2696,4 +2696,104 @@
     <value>按下快捷键时，读取打开了哪些窗口、它们的样式、所在的显示器和所属的应用，从不读取其标题或内容。最小化、还原和排列其他应用的窗口，并请求以管理员身份运行的应用最小化和还原；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。仅在内存中保存已最小化窗口的列表。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>按应用设置输入语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>自动为前台应用切换键盘语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>你只有一种键盘或语言。请在“语言和区域”中再添加一种，以便为应用分别设置语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>打开“语言和区域”</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>设置了语言的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>每当其中一个应用来到前台时，都会切换到为其选择的语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>{0} 的语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>不在你的语言中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} - {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>其他应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>没有自己语言的应用来到前台时获得的语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>记住每个应用的语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>保留正在使用的语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>使用一种语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>其他应用的语言</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>所有没有自己语言的应用都切换到此语言。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>语言更改时显示通知</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>PC Companion 切换语言后，在屏幕底部显示新语言 2 秒。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>Windows 自身的设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>“允许我为每个应用窗口使用不同的输入法”已打开：使用“保留正在使用的语言”时，每个窗口都会保留自己的语言。此设置位于“输入”的“高级键盘设置”中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>“允许我为每个应用窗口使用不同的输入法”已关闭：使用“保留正在使用的语言”时，正在使用的语言会跟随你进入每个应用。此设置位于“输入”的“高级键盘设置”中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>打开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>以管理员身份运行的应用会保留 Windows 为其设置的语言，因为 PC Companion 在没有管理员权限的情况下运行。启用“常规”中的“始终以管理员身份运行”后，它们会像其他应用一样切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用会像其他应用一样切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>当应用来到前台时，以及在记住某个应用的语言期间每秒一次，读取前台窗口、其所属应用及其输入所用的语言，从不读取窗口标题、内容或你按下的键。请求前台应用切换语言，方式与你自己切换时 Windows 的做法相同，并且只切换到你列表中的语言；不使用键盘挂钩，也不在其他应用中运行代码。将每个应用最后使用的语言（最多 500 个应用）保存在此电脑上的一个文件中，关闭此功能或不再记住其他应用时会删除该文件。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

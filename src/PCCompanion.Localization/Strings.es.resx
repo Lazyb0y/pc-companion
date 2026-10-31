@@ -2720,4 +2720,104 @@
     <value>Al presionar un método abreviado, lee qué ventanas están abiertas, sus estilos, en qué pantalla están y a qué aplicación pertenecen, nunca sus títulos ni su contenido. Minimiza, restaura y ordena las ventanas de otras aplicaciones, y pide a las aplicaciones que se ejecutan como administrador que se minimicen y vuelvan; no usa ningún enlace de teclado ni de mouse ni ejecuta código en otras aplicaciones. Guarda la lista de ventanas que minimizó solo en memoria. No establece conexiones de red ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="InputLanguagePerAppName" xml:space="preserve">
+    <value>Idioma de entrada por aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppDescription" xml:space="preserve">
+    <value>Cambia automáticamente el idioma del teclado para la aplicación en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppFewInputMethodsInfo" xml:space="preserve">
+    <value>Solo tienes un teclado o idioma. Agrega otro en Idioma y región para dar a las aplicaciones el suyo propio.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenLanguageSettings" xml:space="preserve">
+    <value>Abrir Idioma y región</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsHeader" xml:space="preserve">
+    <value>Aplicaciones con un idioma</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAppsDescription" xml:space="preserve">
+    <value>Cada vez que una de estas aplicaciones pasa al primer plano, cambia al idioma elegido para ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppLanguageName" xml:space="preserve">
+    <value>Idioma para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppNotInList" xml:space="preserve">
+    <value>No está entre tus idiomas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppInputMethod" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsHeader" xml:space="preserve">
+    <value>Otras aplicaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsDescription" xml:space="preserve">
+    <value>Lo que obtienen las aplicaciones sin idioma propio cuando pasan al primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsRemember" xml:space="preserve">
+    <value>Recordar el idioma de cada aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsKeep" xml:space="preserve">
+    <value>Mantener el idioma en uso</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOtherAppsUse" xml:space="preserve">
+    <value>Usar un solo idioma</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageHeader" xml:space="preserve">
+    <value>Idioma para otras aplicaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOneLanguageDescription" xml:space="preserve">
+    <value>Todas las aplicaciones sin idioma propio cambian a este.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeHeader" xml:space="preserve">
+    <value>Mostrar un aviso cuando cambie el idioma</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppShowNoticeDescription" xml:space="preserve">
+    <value>Muestra el nuevo idioma en la parte inferior de la pantalla durante 2 segundos cuando PC Companion lo cambió.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingHeader" xml:space="preserve">
+    <value>Configuración propia de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOn" xml:space="preserve">
+    <value>Permitirme usar un método de entrada diferente para cada ventana de aplicación está activado: con Mantener el idioma en uso, cada ventana conserva su propio idioma. Está en Escritura, en Configuración avanzada del teclado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppWindowsSettingOff" xml:space="preserve">
+    <value>Permitirme usar un método de entrada diferente para cada ventana de aplicación está desactivado: con Mantener el idioma en uso, el idioma en uso te sigue a cada aplicación. Está en Escritura, en Configuración avanzada del teclado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppOpenTypingSettings" xml:space="preserve">
+    <value>Abrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfo" xml:space="preserve">
+    <value>Las aplicaciones que se ejecutan como administrador mantienen el idioma que Windows les da, ya que PC Companion se ejecuta sin derechos de administrador. Con Ejecutar siempre como administrador, en General, cambian como cualquier otra aplicación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que las aplicaciones que se ejecutan como administrador cambian como cualquier otra aplicación.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="InputLanguagePerAppPermissions" xml:space="preserve">
+    <value>Cuando una aplicación pasa al primer plano, y una vez por segundo mientras se recuerda el idioma de una aplicación, lee qué ventana está en primer plano, a qué aplicación pertenece y el idioma en el que se escribe en ella, nunca los títulos de las ventanas, su contenido ni las teclas que pulsas. Pide a la aplicación en primer plano que cambie su idioma, como hace Windows cuando lo cambias, y solo a un idioma de tu lista; no usa ningún enlace de teclado y no ejecuta código en otras aplicaciones. Guarda el último idioma de cada aplicación, para un máximo de 500 aplicaciones, en un archivo de este PC, que se elimina cuando la característica está desactivada o no se recuerdan otras aplicaciones. No establece conexiones de red y no envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

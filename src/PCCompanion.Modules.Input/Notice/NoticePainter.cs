@@ -3,10 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.LockKeys;
+namespace PCCompanion.Modules.Input.Notice;
 
-/// <summary>A line of the notice: a key's state, such as "Caps Lock on", with a lock icon, closed when it's on.</summary>
-public readonly record struct NoticeLine(string Text, bool IsOn);
+/// <summary>
+/// A line of the notice, such as "Caps Lock on", and its icon from <see cref="NoticeIcons"/>. A line
+/// without an icon has its text where the other lines have theirs.
+/// </summary>
+public readonly record struct NoticeLine(string Text, string? Icon);
+
+/// <summary>The icons of the notice's lines, which Segoe Fluent Icons and Segoe MDL2 Assets both have.</summary>
+public static class NoticeIcons
+{
+    /// <summary>A closed lock, for a lock key that's on.</summary>
+    public const string Lock = "\uE72E";
+
+    /// <summary>An open lock, for a lock key that's off.</summary>
+    public const string Unlock = "\uE785";
+
+    /// <summary>A keyboard, for an input method.</summary>
+    public const string Keyboard = "\uE765";
+}
 
 /// <summary>The notice's colors, as 0xRRGGBB.</summary>
 /// <param name="HighContrast">High contrast is on: the border is wider and the corners square.</param>
@@ -52,14 +68,12 @@ public sealed record NoticeImage(int Width, int Height, uint[] Pixels);
 public sealed record NoticeLayout(int Width, int Height, int RowHeight, int IconX, int TextX);
 
 /// <summary>
-/// Draws the notice and the badge: a box with a lock icon and a key's state on each line, in the
-/// Windows mode's or high contrast colors. See "How the notice looks" in docs/features/input/lock-keys.md.
+/// Draws the notice and the badge: a box with an icon and a text on each line, in the Windows
+/// mode's or high contrast colors. See "How the notice looks" in docs/features/input/lock-keys.md.
 /// </summary>
 public static class NoticePainter
 {
     private const int Regular = 400;
-    private const string LockGlyph = "";
-    private const string UnlockGlyph = "";
 
     /// <summary>Works out the size of the notice and where its parts go.</summary>
     public static NoticeLayout Measure(IReadOnlyList<NoticeLine> lines, NoticeStyle style) => Draw(lines, style, paint: false).Layout;
@@ -77,8 +91,8 @@ public static class NoticePainter
 
         var sizes = new Sizes(style);
         var texts = lines.Select(line => TextMask.Render(line.Text, style.Fonts.Text, Regular, sizes.Text, style.RightToLeft)).ToArray();
-        var icons = lines.Select(line => TextMask.Render(line.IsOn ? LockGlyph : UnlockGlyph, style.Fonts.Icons, Regular, sizes.Icon)).ToArray();
-        var iconWidth = icons.Max(icon => icon.Width);
+        var icons = lines.Select(line => line.Icon is { } glyph ? TextMask.Render(glyph, style.Fonts.Icons, Regular, sizes.Icon) : null).ToArray();
+        var iconWidth = icons.Max(icon => icon?.Width ?? 0);
         var textWidth = texts.Max(text => text.Width);
         // A larger text size makes the lines taller.
         var rowHeight = Math.Max(sizes.Row, texts.Max(text => text.Height) + (2 * sizes.VerticalPadding));
@@ -100,9 +114,11 @@ public static class NoticePainter
 
             // The icon is centered by its visible pixels, the text by its line box, so lines of
             // any language sit alike.
-            var icon = icons[row];
-            var (inkTop, inkBottom) = InkRows(icon);
-            Stamp(coverage, width, icon, iconX + ((iconWidth - icon.Width) / 2), top + ((rowHeight - (inkTop + inkBottom)) / 2));
+            if (icons[row] is { } icon)
+            {
+                var (inkTop, inkBottom) = InkRows(icon);
+                Stamp(coverage, width, icon, iconX + ((iconWidth - icon.Width) / 2), top + ((rowHeight - (inkTop + inkBottom)) / 2));
+            }
 
             var text = texts[row];
             var x = style.RightToLeft ? textX + textWidth - text.Width : textX;

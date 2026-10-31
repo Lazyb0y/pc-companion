@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.LockKeys;
+namespace PCCompanion.Modules.Input.Notice;
 
 /// <summary>
 /// Where the notice and the badge show. See "Where the notice shows" in docs/features/input/lock-keys.md.

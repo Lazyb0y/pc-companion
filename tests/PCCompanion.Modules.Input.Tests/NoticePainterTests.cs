@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Modules.Input.Notice;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;
@@ -8,7 +8,8 @@ namespace PCCompanion.Modules.Input.Tests;
 // Draws into memory only; nothing is shown.
 public sealed class NoticePainterTests
 {
-    private static readonly NoticeLine CapsOn = new("Caps Lock on", true);
+    private static readonly NoticeLine CapsOn = new("Caps Lock on", NoticeIcons.Lock);
+    private static readonly NoticeLine NumOff = new("Num Lock off", NoticeIcons.Unlock);
     private static readonly NoticeStyle Dark = new(1, 1, NoticeColors.Dark, NoticeFonts.Windows11, RoundedCorners: true, RightToLeft: false);
 
     [Fact]
@@ -35,7 +36,7 @@ public sealed class NoticePainterTests
     [Fact]
     public void EachKeyGetsALine()
     {
-        var layout = NoticePainter.Measure([CapsOn, new NoticeLine("Num Lock off", false)], Dark);
+        var layout = NoticePainter.Measure([CapsOn, NumOff], Dark);
 
         Assert.Equal(2 * layout.RowHeight, layout.Height);
     }
@@ -44,7 +45,7 @@ public sealed class NoticePainterTests
     public void TheBadgeIsSmaller()
     {
         var notice = NoticePainter.Measure([CapsOn], Dark);
-        var badge = NoticePainter.Measure([new NoticeLine("Caps Lock", true)], Dark with { Badge = true });
+        var badge = NoticePainter.Measure([new NoticeLine("Caps Lock", NoticeIcons.Lock)], Dark with { Badge = true });
 
         Assert.Equal(28, badge.Height);
         Assert.True(badge.Width < notice.Width);
@@ -102,12 +103,29 @@ public sealed class NoticePainterTests
     [Fact]
     public void AnIconAndTextAreDrawnOnEachLine()
     {
-        var image = NoticePainter.Paint([CapsOn, new NoticeLine("Num Lock off", false)], Dark);
+        var image = NoticePainter.Paint([CapsOn, NumOff], Dark);
         var rowHeight = image.Height / 2;
 
         bool HasText(int fromRow) => image.Pixels.Skip(fromRow * image.Width).Take(rowHeight * image.Width).Contains(0xFFFFFFFFu);
         Assert.True(HasText(0));
         Assert.True(HasText(rowHeight));
+    }
+
+    [Fact]
+    public void ALineWithoutAnIconHasItsTextWhereTheOtherLinesHaveTheirs()
+    {
+        NoticeLine[] lines = [new("German (Germany)", NoticeIcons.Keyboard), new("German", null)];
+        var layout = NoticePainter.Measure(lines, Dark);
+        var image = NoticePainter.Paint(lines, Dark);
+
+        Assert.Equal(NoticePainter.Measure([lines[0], lines[1] with { Icon = NoticeIcons.Keyboard }], Dark), layout);
+
+        // Ink is anything but the box's color, between the border's rows.
+        bool HasInk(int top, int left, int right) =>
+            Enumerable.Range(top + 2, layout.RowHeight - 4).Any(y => Enumerable.Range(left, right - left).Any(x => image.Pixels[(y * image.Width) + x] != (0xFF000000u | NoticeColors.Dark.Background)));
+        Assert.True(HasInk(0, layout.IconX, layout.TextX));
+        Assert.False(HasInk(layout.RowHeight, layout.IconX, layout.TextX));
+        Assert.True(HasInk(layout.RowHeight, layout.TextX, layout.Width - layout.IconX));
     }
 
     [Fact]
