@@ -1,5 +1,5 @@
 using System;
-using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Modules.Input.Notice;
 using Xunit;
 
 namespace PCCompanion.Modules.Input.Tests;

@@ -1,6 +1,6 @@
 using System;
 
-namespace PCCompanion.Modules.Input.LockKeys;
+namespace PCCompanion.Modules.Input.Notice;
 
 /// <summary>
 /// How opaque the notice is over its time. With Windows' animation effects on, it fades in over
