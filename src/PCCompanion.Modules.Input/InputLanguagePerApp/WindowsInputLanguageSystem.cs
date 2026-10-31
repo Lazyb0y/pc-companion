@@ -12,6 +12,8 @@ internal sealed class WindowsInputLanguageSystem(InputLanguagePerAppFeature feat
 {
     public nint ForegroundWindow => Foreground.Window;
 
+    public bool IsPerWindow => KeyboardLayout.IsPerWindow();
+
     public nint RootOwner(nint window) => TopLevelWindows.RootOwner(window);
 
     public bool MayHaveTaskbarButton(nint window) => TopLevelWindows.MayHaveTaskbarButton(window);

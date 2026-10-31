@@ -236,8 +236,8 @@ public sealed partial class InputLanguagePerAppFeature(
 
         _window = window;
         _window.MessageReceived += OnMessageReceived;
-        _sessions.Locked += (_, _) => Guard(() => _locked = true);
-        _sessions.Unlocked += (_, _) => Guard(() => _locked = false);
+        _sessions.Locked += (_, _) => Guard(() => Lock(true));
+        _sessions.Unlocked += (_, _) => Guard(() => Lock(false));
         _foreground.Raised += (_, _) => Guard(OnForegroundChanged);
 
         _switcher = new LanguageSwitcher(system(this), time, Post, logger);
@@ -278,6 +278,12 @@ public sealed partial class InputLanguagePerAppFeature(
         _sessions?.Dispose();
         notice.Release(this);
         (_save, _switcher, _reads, _foreground, _sessions) = (null, null, null, null, null);
+    }
+
+    private void Lock(bool locked)
+    {
+        _locked = locked;
+        LogLocked(logger, locked);
     }
 
     // The lock screen shows nothing of the apps, so the app in front when it locked is the one in front after.
@@ -451,6 +457,9 @@ public sealed partial class InputLanguagePerAppFeature(
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App applied its settings: {Apps} listed apps, other apps {OtherApps}, notice {ShowNotice}.")]
     private static partial void LogConfigured(ILogger logger, int apps, OtherApps otherApps, bool showNotice);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: the session locked: {Locked}.")]
+    private static partial void LogLocked(ILogger logger, bool locked);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App showed no notice, since an app was full screen.")]
     private static partial void LogNoticeSkipped(ILogger logger);

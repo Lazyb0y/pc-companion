@@ -20,6 +20,7 @@ internal sealed class FakeInputLanguageSystem : IInputLanguageSystem
 
     private readonly List<Action<IReadOnlyList<InputMethod>>> _reads = [];
     private readonly List<(nint Window, uint ProcessId, Action<uint?> Found)> _lookups = [];
+    private (uint Thread, nint Layout)? _late;
 
     public List<FakeLanguageWindow> Windows { get; } = [];
 
@@ -43,6 +44,14 @@ internal sealed class FakeInputLanguageSystem : IInputLanguageSystem
 
     /// <summary>Windows' setting to keep an input method for each app window.</summary>
     public bool PerWindow { get; set; }
+
+    /// <summary>
+    /// Whether a window brought to the front gets the language in use only after the foreground
+    /// event, as Windows sometimes gives it, but before a request from it is handled.
+    /// </summary>
+    public bool ChangesLate { get; set; }
+
+    public bool IsPerWindow => PerWindow;
 
     public nint ForegroundWindow { get; set; }
 
@@ -80,12 +89,30 @@ internal sealed class FakeInputLanguageSystem : IInputLanguageSystem
     /// </summary>
     public void BringToFront(nint window)
     {
+        _late = null;
         if (!PerWindow && TypingWindow(ForegroundWindow) is { } before && TypingWindow(window) is { } after && Layouts.TryGetValue(ThreadOf(before), out var inUse))
         {
-            Layouts[ThreadOf(after)] = inUse;
+            if (ChangesLate)
+            {
+                _late = (ThreadOf(after), inUse);
+            }
+            else
+            {
+                Layouts[ThreadOf(after)] = inUse;
+            }
         }
 
         ForegroundWindow = window;
+    }
+
+    /// <summary>Gives the window brought to the front the language in use, with <see cref="ChangesLate"/>.</summary>
+    public void ApplyLateChange()
+    {
+        if (_late is { } late)
+        {
+            Layouts[late.Thread] = late.Layout;
+            _late = null;
+        }
     }
 
     /// <summary>Finishes the reads of the input methods with <see cref="InputMethods"/>.</summary>
@@ -135,6 +162,8 @@ internal sealed class FakeInputLanguageSystem : IInputLanguageSystem
 
     public LayoutRequest RequestSwitch(nint window, nint layout)
     {
+        // Windows' own change comes first, as the spike showed.
+        ApplyLateChange();
         Requests.Add((window, layout));
         if (Find(window) is not { } listed)
         {

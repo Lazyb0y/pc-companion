@@ -14,6 +14,12 @@ public interface IInputLanguageSystem : IAppIdentityReader
     /// <summary>The window in front, or 0 when there is none.</summary>
     nint ForegroundWindow { get; }
 
+    /// <summary>
+    /// Whether Windows' Let me use a different input method for each app window is on; while it's
+    /// off, Windows gives an app that comes to the front the language in use.
+    /// </summary>
+    bool IsPerWindow { get; }
+
     /// <summary>The window at the end of <paramref name="window"/>'s chain of owners, or the window itself.</summary>
     nint RootOwner(nint window);
 

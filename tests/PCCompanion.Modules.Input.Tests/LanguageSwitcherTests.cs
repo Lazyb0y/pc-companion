@@ -313,6 +313,39 @@ public sealed class LanguageSwitcherTests : IDisposable
     }
 
     [Fact]
+    public void WithWindowsSettingOffTheRequestComesWhenTheAppStillReadsItsOwnInputMethod()
+    {
+        // At the foreground event, A still reads German, its rule's; Windows gives it English after.
+        _system.ChangesLate = true;
+        _system.Layouts[100] = German;
+        Start(WindowB, Rules((AppA, FakeInputLanguageSystem.German)));
+
+        Front(WindowA);
+        Confirm();
+
+        Assert.Equal([(WindowA, German)], _system.Requests);
+        Assert.Equal(German, _system.Layouts[100]);
+        Assert.Equal([FakeInputLanguageSystem.German], _system.Notices);
+    }
+
+    [Fact]
+    public void WithWindowsSettingOffNothingIsAskedWhenWindowsGivesTheAppItsInputMethod()
+    {
+        // B's English is the language in use; A still reads its own Japanese at the event.
+        _system.ChangesLate = true;
+        _system.Layouts[100] = Japanese;
+        Start(WindowB, Rules((AppA, FakeInputLanguageSystem.UnitedStates)));
+
+        Front(WindowA);
+        _system.ApplyLateChange();
+        Confirm();
+
+        Assert.Empty(_system.Requests);
+        Assert.Equal(English, _system.Layouts[100]);
+        Assert.Empty(_system.Notices);
+    }
+
+    [Fact]
     public void AnAppThatHasTheRightInputMethodAlreadyIsntAsked()
     {
         _system.PerWindow = true;
@@ -442,6 +475,7 @@ public sealed class LanguageSwitcherTests : IDisposable
         Front(6);
         _system.FinishLookups();
         Front(WindowA);
+        _system.Layouts[100] = English;
         Front(6);
 
         Assert.Equal(0, _system.PendingLookups);

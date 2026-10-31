@@ -38,6 +38,7 @@ public sealed partial class LanguageSwitcher : IDisposable
     private Front? _front;
     private ITimer? _confirm;
     private InputMethodId? _asked;
+    private SwitchSource _askedSource;
     private bool _readsEverySecond;
     private bool _disposed;
 
@@ -144,6 +145,7 @@ public sealed partial class LanguageSwitcher : IDisposable
         var processId = root == 0 || !_system.MayHaveTaskbarButton(root) ? 0 : _system.ProcessIdOf(root);
         if (processId == 0 || _system.FocusInFront() is not { } focus)
         {
+            LogNotAnApp(_logger);
             return;
         }
 
@@ -151,10 +153,16 @@ public sealed partial class LanguageSwitcher : IDisposable
         var app = new AppOfWindow(_system.WindowAppId(root), _system.PackageAppId(processId), _system.ProgramPath(processId), processId);
 
         // The app being left still has its own input method as the next window comes to the front.
+        // With Windows' setting off, that's the language in use, which Windows gives the next app,
+        // sometimes only after the foreground event, when the app still reads its own.
+        InputMethodId? inUse = null;
         if (_front is { } left)
         {
-            Record(left, Read(left));
+            inUse = Read(left);
+            Record(left, inUse);
         }
+
+        var given = _system.IsPerWindow ? null : inUse;
 
         if (_front is { } current && current.App.IsSameAppAs(app))
         {
@@ -168,11 +176,16 @@ public sealed partial class LanguageSwitcher : IDisposable
                 && (_settings.OtherApps != OtherApps.Keep || HasRule(app))
                 && (_asked ?? current.InputMethod) is { } inputMethod)
             {
-                Switch(current, inputMethod, SwitchSource.AppWindow);
+                Switch(current, inputMethod, SwitchSource.AppWindow, given);
             }
 
             UpdateReads();
             return;
+        }
+
+        if (_confirm is not null)
+        {
+            LogNotConfirmed(_logger, _askedSource);
         }
 
         StopConfirming();
@@ -185,7 +198,12 @@ public sealed partial class LanguageSwitcher : IDisposable
 
         if (switching && TargetFor(app) is { } target)
         {
-            Switch(next, target.InputMethod, target.Source);
+            LogAppInFront(_logger, target.Source);
+            Switch(next, target.InputMethod, target.Source, given);
+        }
+        else if (switching)
+        {
+            LogAppInFrontWithNothing(_logger);
         }
     }
 
@@ -209,7 +227,8 @@ public sealed partial class LanguageSwitcher : IDisposable
 
     private bool HasRule(AppOfWindow app) => _rules.Any(rule => rule.App.Matches(app));
 
-    private void Switch(Front front, InputMethodId inputMethod, SwitchSource source)
+    // Given is the input method Windows gives the app as it comes to the front, with its setting off.
+    private void Switch(Front front, InputMethodId inputMethod, SwitchSource source, InputMethodId? given)
     {
         var handle = InputMethods.HandleOf(inputMethod, _inputMethods);
         if (handle == 0)
@@ -219,8 +238,9 @@ public sealed partial class LanguageSwitcher : IDisposable
         }
 
         // Only when it differs, so the foreground event coming twice does no harm.
-        if (Read(front) == inputMethod)
+        if ((given ?? Read(front)) == inputMethod)
         {
+            LogHasItAlready(_logger, source, given is not null);
             return;
         }
 
@@ -282,6 +302,7 @@ public sealed partial class LanguageSwitcher : IDisposable
         }), null, ConfirmCheck, ConfirmCheck);
         _confirm = timer;
         _asked = inputMethod;
+        _askedSource = source;
     }
 
     private void StopConfirming()
@@ -454,6 +475,21 @@ public sealed partial class LanguageSwitcher : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: a switch from {Source} held after {Milliseconds:F0} ms.")]
     private static partial void LogHeld(ILogger logger, SwitchSource source, double milliseconds);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: another app came to the front, with a switch from {Source}.")]
+    private static partial void LogAppInFront(ILogger logger, SwitchSource source);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: a window that isn't an app came to the front.")]
+    private static partial void LogNotAnApp(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: another app came to the front, with nothing to switch it to.")]
+    private static partial void LogAppInFrontWithNothing(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: the app has the input method of a switch from {Source} already; from the app left: {FromAppLeft}.")]
+    private static partial void LogHasItAlready(ILogger logger, SwitchSource source, bool fromAppLeft);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: another app came to the front before a switch from {Source} was confirmed.")]
+    private static partial void LogNotConfirmed(ILogger logger, SwitchSource source);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Input Language per App: the app didn't take a switch from {Source} within 500 ms.")]
     private static partial void LogNotTaken(ILogger logger, SwitchSource source);
