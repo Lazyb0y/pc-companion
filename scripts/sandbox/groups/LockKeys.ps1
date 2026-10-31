@@ -8,7 +8,7 @@
 # shows nothing. With the session's lock report, a change shows nothing until the unlock report.
 # The lock keys stay as they were. Detailed logging is on for the Debug entries.
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
-$noticeClass = 'PCCompanion.LockKeys.Notice'
+$noticeClass = 'PCCompanion.Notice'
 $personalize = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
 $lightModeAtStart = (Get-ItemProperty $personalize -Name SystemUsesLightTheme -ErrorAction SilentlyContinue).SystemUsesLightTheme
 $capsAtStart = [Console]::CapsLock
