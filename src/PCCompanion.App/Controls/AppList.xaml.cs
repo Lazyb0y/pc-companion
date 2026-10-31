@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;
@@ -10,8 +11,9 @@ using WinRT.Interop;
 namespace PCCompanion.App.Controls;
 
 /// <summary>
-/// A page's list of apps, under a header and a description: each app with its icon and a Remove
-/// button, and Add an app, which adds a running app or a program file.
+/// A page's list of apps, under a header and a description: each app with its icon, a list of what
+/// it gets when the page has one, and a Remove button, and Add an app, which adds a running app or
+/// a program file.
 /// </summary>
 public sealed partial class AppList : UserControl
 {
@@ -65,7 +67,7 @@ public sealed partial class AppList : UserControl
 
         if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Chosen is { } app)
         {
-            apps.Add(app);
+            Add(apps, app);
         }
     }
 
@@ -83,8 +85,38 @@ public sealed partial class AppList : UserControl
         var name = await Task.Run(() => ProgramFile.Check(program, File.Exists) == ProgramProblem.None ? AppDisplay.NameOfProgram(program) : null).ConfigureAwait(true);
         if (name is not null)
         {
-            apps.Add(new ListedApp { Name = name, Program = program });
+            Add(apps, new ListedApp { Name = name, Program = program });
         }
+    }
+
+    // An app added at the end of a list whose rows have a list of what the app gets takes the
+    // focus to the new row's list.
+    private void Add(AppListViewModel apps, ListedApp app)
+    {
+        if (!apps.Add(app) || !apps.HasChoices)
+        {
+            return;
+        }
+
+        Rows.UpdateLayout();
+        if (Rows.ContainerFromIndex(apps.Items.Count - 1) is { } row && FindList(row) is { } list)
+        {
+            list.Focus(FocusState.Programmatic);
+        }
+    }
+
+    private static ComboBox? FindList(DependencyObject parent)
+    {
+        for (var index = 0; index < VisualTreeHelper.GetChildrenCount(parent); index++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, index);
+            if ((child as ComboBox ?? FindList(child)) is { } list)
+            {
+                return list;
+            }
+        }
+
+        return null;
     }
 
     private void OnRemoveAppClick(object sender, RoutedEventArgs e)
