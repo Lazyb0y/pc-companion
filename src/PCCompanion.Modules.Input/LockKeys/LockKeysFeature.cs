@@ -1,10 +1,8 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
@@ -19,15 +17,11 @@ namespace PCCompanion.Modules.Input.LockKeys;
 /// Shows a short notice when Caps Lock, Num Lock or Scroll Lock turns on or off. Everything runs on
 /// the host's UI thread. See docs/features/input/lock-keys.md.
 /// </summary>
-public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, TimeProvider time) : IFeature
+/// <param name="notice">The notice window Lock Keys shares with Input Language per App.</param>
+public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, SharedNotice notice) : IFeature
 {
     private const string WindowClassName = "PCCompanion.LockKeys";
-    private const string NoticeClassName = "PCCompanion.LockKeys.Notice";
     private const string BadgeClassName = "PCCompanion.LockKeys.Badge";
-    private const int Windows11Build = 22000;
-
-    // The gap between the badge and a notice next to it, in effective pixels.
-    private const int BadgeGap = 8;
 
     private static readonly TimeSpan CheckInterval = TimeSpan.FromMilliseconds(100);
     private static readonly TimeSpan CheckTolerance = TimeSpan.FromMilliseconds(50);
@@ -43,17 +37,12 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
     private DisplayStateMonitor? _displayState;
     private WinEventHook? _foreground;
     private WinEventHook? _desktops;
-    private LayeredWindow? _notice;
     private LayeredWindow? _badge;
-    private ITimer? _noticeTimer;
     private CoalescableTimer? _badgeCheck;
     private Away _away;
     private bool _failed;
 
-    // The notice that shows: when, whether it fades, and whether it says Caps Lock turned on.
-    private long _noticeShownAt;
-    private bool _noticeAnimates;
-    private bool _noticeFadesOut;
+    // Whether Lock Keys' notice that shows says Caps Lock turned on.
     private bool _noticeShowsCapsLockOn;
 
     // The badge that shows, which isn't drawn again while nothing it depends on changed.
@@ -159,7 +148,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
             _displayState = new DisplayStateMonitor(window);
             _foreground = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, skipOwnProcess: true);
             _desktops = new WinEventHook(WinEventHook.DesktopSwitchEvent, WinEventHook.DesktopSwitchEvent);
-            _notice = new LayeredWindow(NoticeClassName, Strings.LockKeysName, clickThrough: true);
+            notice.Acquire(this);
             _badge = new LayeredWindow(BadgeClassName, Strings.LockKeysBadge, clickThrough: true);
         }
         catch
@@ -178,9 +167,6 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
         _desktops.Raised += (_, _) => Guard(OnDesktopSwitched);
         _foreground.Raised += (_, _) => Guard(UpdateBadge);
 
-        // Fires on the thread pool; the notice is changed on the window's thread.
-        _noticeTimer = time.CreateTimer(_ => window.BeginInvoke(() => Guard(AdvanceNotice)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-
         _away = InputDesktop.IsUsersOwn() ? Away.None : Away.OtherDesktop;
         _detector.Reset(ReadState());
         if (_away == Away.None)
@@ -196,7 +182,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
     // so it's done once on the thread pool, in the user's language, before any notice shows.
     private void WarmUp()
     {
-        var style = StyleFor(new DisplayDetails(Rectangle.Empty, Rectangle.Empty, 96), badge: false);
+        var style = SharedNotice.StyleFor(new DisplayDetails(Rectangle.Empty, Rectangle.Empty, 96), badge: false);
         NoticeLine[] notice = [new(Strings.LockKeysCapsLockOn, NoticeIcons.Lock)];
         NoticeLine[] badge = [new(Strings.LockKeysBadge, NoticeIcons.Lock)];
         _ = Task.Run(() =>
@@ -231,16 +217,16 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
 
     private void DisposeParts()
     {
-        _noticeTimer?.Dispose();
+        notice.Release(this);
+        notice.Badge = null;
         _check?.Dispose();
         _badgeCheck?.Dispose();
         _foreground?.Dispose();
         _desktops?.Dispose();
         _displayState?.Dispose();
         _sessions?.Dispose();
-        _notice?.Dispose();
         _badge?.Dispose();
-        (_noticeTimer, _check, _badgeCheck, _foreground, _desktops, _displayState, _sessions, _notice, _badge) = (null, null, null, null, null, null, null, null, null);
+        (_check, _badgeCheck, _foreground, _desktops, _displayState, _sessions, _badge) = (null, null, null, null, null, null, null);
     }
 
     private void StartChecking()
@@ -345,7 +331,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
 
     private void ShowNotice(LockKeyChange[] changes)
     {
-        if (_notice is null || ChooseDisplay() is not { } display)
+        if (_window is null || SharedNotice.ChooseDisplay() is not { } display)
         {
             return;
         }
@@ -366,18 +352,10 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
         _noticeShowsCapsLockOn = changes.Any(change => change is { Key: LockKey.CapsLock, IsOn: true });
         UpdateBadge();
         var lines = changes.Select(change => new NoticeLine(TextOf(change), change.IsOn ? NoticeIcons.Lock : NoticeIcons.Unlock)).ToArray();
-        var image = NoticePainter.Paint(lines, StyleFor(display, badge: false));
-        var away = _badge is { IsShown: true } && display.Bounds.Contains(_badgeBounds) ? _badgeBounds.Height + (int)Math.Round(BadgeGap * display.Scale) : 0;
-        var bounds = NoticePlacement.Place(display, new Size(image.Width, image.Height), _settings.Position, away);
-
-        _noticeAnimates = WindowsTheme.AreAnimationsOn();
-        _noticeFadesOut = !(_noticeShowsCapsLockOn && _detector.ShowsBadge);
-        _noticeShownAt = time.GetTimestamp();
-        _notice.SetTitle(string.Join(", ", lines.Select(line => line.Text)));
-        _notice.SetOpacity(_noticeAnimates ? (byte)0 : byte.MaxValue);
-        _notice.Show(image.Pixels, bounds);
-        _notice.BringToFront();
-        AdvanceNotice();
+        var image = NoticePainter.Paint(lines, SharedNotice.StyleFor(display, badge: false));
+        var title = string.Join(", ", lines.Select(line => line.Text));
+        var fadesOut = !(_noticeShowsCapsLockOn && _detector.ShowsBadge);
+        notice.Show(this, image, display, _settings.Position, title, TimeSpan.FromMilliseconds(_settings.DurationMilliseconds), fadesOut, Post, NoticeEnded);
 
         foreach (var change in changes)
         {
@@ -385,35 +363,21 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
         }
     }
 
-    private void AdvanceNotice()
+    // The notice's time was up, or Input Language per App's notice took its place.
+    private void NoticeEnded()
     {
-        if (_notice is not { IsShown: true })
-        {
-            return;
-        }
-
-        var elapsed = time.GetElapsedTime(_noticeShownAt);
-        var duration = TimeSpan.FromMilliseconds(_settings.DurationMilliseconds);
-        if (NoticeFade.Opacity(elapsed, duration, _noticeAnimates, _noticeFadesOut) is not { } opacity)
-        {
-            HideNotice();
-            UpdateBadge();
-            return;
-        }
-
-        _notice.SetOpacity(opacity);
-        if (NoticeFade.NextChange(elapsed, duration, _noticeAnimates, _noticeFadesOut) is { } next)
-        {
-            _noticeTimer?.Change(next, Timeout.InfiniteTimeSpan);
-        }
+        _noticeShowsCapsLockOn = false;
+        UpdateBadge();
     }
 
     private void HideNotice()
     {
-        _noticeTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        _notice?.Hide();
+        notice.Hide(this);
         _noticeShowsCapsLockOn = false;
     }
+
+    // Runs an action later on the window's thread, inside the feature's error boundary.
+    private void Post(Action action) => _ = _window?.BeginInvoke(() => Guard(action));
 
     // Shows, moves or hides the badge: it shows while Caps Lock is on, unless the user is away, the
     // notice for Caps Lock turning on shows in its place, or an app is full screen on its display.
@@ -424,13 +388,13 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
             return;
         }
 
-        if (!_detector.ShowsBadge || _away != Away.None || (_noticeShowsCapsLockOn && _notice is { IsShown: true }) || ChooseDisplay() is not { } display || IsFullScreen(display))
+        if (!_detector.ShowsBadge || _away != Away.None || (_noticeShowsCapsLockOn && notice.IsShownBy(this)) || SharedNotice.ChooseDisplay() is not { } display || IsFullScreen(display))
         {
             HideBadge();
             return;
         }
 
-        var style = StyleFor(display, badge: true);
+        var style = SharedNotice.StyleFor(display, badge: true);
         var look = new BadgeLook(display, _settings.Position, style);
         if (look != _badgeLook || !_badge.IsShown)
         {
@@ -440,6 +404,7 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
             _badgeLook = look;
         }
 
+        notice.Badge = new NoticeBadge(_badgeBounds, _settings.Position);
         _badge.BringToFront();
 
         // A window can go full screen without another coming to the front.
@@ -453,29 +418,16 @@ public sealed partial class LockKeysFeature(ILogger<LockKeysFeature> logger, Tim
     private void HideBadge()
     {
         _badge?.Hide();
+        notice.Badge = null;
         _badgeCheck?.Dispose();
         _badgeCheck = null;
     }
-
-    private static DisplayDetails? ChooseDisplay() =>
-        NoticePlacement.ChooseDisplay(Displays.GetDetails(), Displays.AreaOf(Foreground.Window), InputState.PointerPosition);
 
     // Exclusive full screen always counts: a window can't show over it, and trying can take a game
     // out of full screen.
     private bool IsFullScreen(DisplayDetails display) =>
         (_fullScreen.FullScreenMode == FullScreenMode.Exclusive && _fullScreen.FrontWindowDisplay == display.Bounds)
         || (_settings.IgnoreFullScreenApps && FullScreenCheck.IsFullScreen(_fullScreen, display.Bounds));
-
-    // The Windows mode, high contrast and the text size are read each time, so a change shows next time.
-    private static NoticeStyle StyleFor(DisplayDetails display, bool badge)
-    {
-        var colors = WindowsTheme.IsHighContrast() ? NoticeColors.HighContrastTheme(WindowsTheme.WindowColor(), WindowsTheme.TextColor())
-            : WindowsTheme.IsDark() ? NoticeColors.Dark
-            : NoticeColors.Light;
-        var build = Environment.OSVersion.Version.Build;
-        var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
-        return new NoticeStyle(display.Scale, WindowsTheme.TextScale(), colors, NoticeFonts.For(build), build >= Windows11Build, rightToLeft, badge);
-    }
 
     // Runs on the window's thread, where an exception would end the host. Like a failing Apply,
     // a failure stops the feature until the host restarts.
