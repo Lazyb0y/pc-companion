@@ -1,4 +1,4 @@
-namespace PCCompanion.Modules.Input.LockKeys;
+namespace PCCompanion.Modules.Input.Notice;
 
 /// <summary>
 /// Where in a display's work area the notice shows: the three positions Windows 11 offers for its

@@ -1,5 +1,5 @@
 using System.Drawing;
-using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Platform.Windows;
 using Xunit;
 

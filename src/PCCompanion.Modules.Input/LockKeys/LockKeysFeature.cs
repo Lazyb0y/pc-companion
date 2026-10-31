@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.FullScreen;
+using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.LockKeys;

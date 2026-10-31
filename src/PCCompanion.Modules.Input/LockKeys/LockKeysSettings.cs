@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.LockKeys;

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.LockKeys;
+using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.LockKeys;

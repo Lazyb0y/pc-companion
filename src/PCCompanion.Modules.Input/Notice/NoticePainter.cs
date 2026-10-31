@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.LockKeys;
+namespace PCCompanion.Modules.Input.Notice;
 
 /// <summary>A line of the notice: a key's state, such as "Caps Lock on", with a lock icon, closed when it's on.</summary>
 public readonly record struct NoticeLine(string Text, bool IsOn);
