@@ -47,6 +47,7 @@ $startStates = [ordered] @{
     Languages = 'Installed'
     HotCorners = 'Installed'
     LockKeys = 'Installed'
+    InputLanguagePerApp = 'Installed'
     AppWindows = 'Installed'
     MinimizeToTray = 'Installed'
     HideApps = 'Installed'
