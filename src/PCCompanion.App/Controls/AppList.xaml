@@ -55,7 +55,10 @@
             TextWrapping="Wrap"
             Visibility="{x:Bind Apps.IsEmpty, Mode=OneWay}" />
 
-        <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Apps.Items, Mode=OneWay}">
+        <ItemsControl
+            x:Name="Rows"
+            IsTabStop="False"
+            ItemsSource="{x:Bind Apps.Items, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Spacing="4" />
@@ -67,11 +70,20 @@
                         Header="{x:Bind Name}"
                         HeaderIcon="{x:Bind Icon, Mode=OneWay}"
                         ToolTipService.ToolTip="{x:Bind Program}">
-                        <Button
-                            AutomationProperties.Name="{x:Bind RemoveName}"
-                            Click="OnRemoveAppClick"
-                            Content="{app:Localized Key=AppListRemove}"
-                            Tag="{x:Bind Index}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <ComboBox
+                                MinWidth="200"
+                                AutomationProperties.Name="{x:Bind ChoiceName}"
+                                ItemsSource="{x:Bind Choices}"
+                                PlaceholderText="{x:Bind ChoicePlaceholder}"
+                                SelectedItem="{x:Bind SelectedChoice, Mode=TwoWay}"
+                                Visibility="{x:Bind HasChoices}" />
+                            <Button
+                                AutomationProperties.Name="{x:Bind RemoveName}"
+                                Click="OnRemoveAppClick"
+                                Content="{app:Localized Key=AppListRemove}"
+                                Tag="{x:Bind Index}" />
+                        </StackPanel>
                     </toolkit:SettingsCard>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
