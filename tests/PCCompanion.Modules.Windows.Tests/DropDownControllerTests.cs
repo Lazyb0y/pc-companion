@@ -390,7 +390,8 @@ public sealed class DropDownControllerTests : IDisposable
 
         Press(DropDownShortcut.WindowsControlAboveTab);
 
-        Assert.Empty(_reports);
+        // The app has no window the taskbar shows, so it's started.
+        Assert.Equal([new DropDownReport(0, DropDownOutcome.Started)], _reports);
         Assert.All(_system.Windows, window => Assert.Equal(new Rectangle(300, 200, 800, 600), window.Bounds));
     }
 
@@ -457,6 +458,93 @@ public sealed class DropDownControllerTests : IDisposable
 
         Assert.False(window.Visible);
         Assert.Equal([DropDownOutcome.Shown, DropDownOutcome.Hidden], _reports.Select(report => report.Outcome));
+    }
+
+    [Fact]
+    public void AnAppWithoutAWindowIsStartedAndItsFirstWindowDropsDown()
+    {
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Assert.Equal([NotesProgram], _system.StartedApps.Select(app => app.Program));
+        Assert.Equal([new DropDownReport(0, DropDownOutcome.Started)], _reports);
+
+        var window = _system.Add(1, processId: 30, program: NotesProgram);
+        Settle();
+
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+        Assert.Equal(1, _system.ForegroundWindow);
+        Assert.Equal([new DropDownReport(0, DropDownOutcome.Started)], _reports);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
+    public void AStartedAppsWindowIsTakenOnlyOnceItIsntCloaked()
+    {
+        Press(DropDownShortcut.WindowsControlAlt1);
+        var window = _system.Add(1, processId: 30, appId: "Terminal.App");
+        window.Cloaked = true;
+        Settle();
+        Assert.Equal(new Rectangle(300, 200, 800, 600), window.Bounds);
+
+        window.Cloaked = false;
+        Settle();
+
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+    }
+
+    [Fact]
+    public void PressingAgainWhileTheAppStartsDoesntStartItAgain()
+    {
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Assert.Single(_system.StartedApps);
+        Assert.Single(_reports);
+    }
+
+    [Fact]
+    public void AWindowThatComesBeforeTheNextCheckIsTakenByTheNextPress()
+    {
+        _controller.Press(0);
+        var window = _system.Add(1, processId: 30, program: NotesProgram);
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Settle();
+
+        Assert.Single(_system.StartedApps);
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+        Assert.Equal([DropDownOutcome.Started, DropDownOutcome.Shown], _reports.Select(report => report.Outcome));
+    }
+
+    [Fact]
+    public void WithoutAWindowWithin30SecondsNothingDropsDown()
+    {
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        _clock.Advance(DropDownController.StartTimeout);
+        Settle();
+
+        Assert.Equal([DropDownOutcome.Started, DropDownOutcome.NoWindowInTime], _reports.Select(report => report.Outcome));
+        Assert.Equal(1, _system.Warnings);
+
+        // A press now starts the app again.
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Assert.Equal(2, _system.StartedApps.Count);
+    }
+
+    [Theory]
+    [InlineData(DropDownOutcome.ProgramMissing)]
+    [InlineData(DropDownOutcome.AppIdNotFound)]
+    [InlineData(DropDownOutcome.StartFailed)]
+    [InlineData(DropDownOutcome.NeedsAdminRights)]
+    public void AnAppThatDidntStartIsReportedWithTheWarningSound(DropDownOutcome outcome)
+    {
+        _system.StartOutcome = outcome;
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Assert.Equal([new DropDownReport(0, outcome)], _reports);
+        Assert.Equal(1, _system.Warnings);
     }
 
     private static DropDownAppsSettings Settings() => new()

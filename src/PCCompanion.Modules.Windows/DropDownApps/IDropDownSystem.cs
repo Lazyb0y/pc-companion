@@ -114,6 +114,12 @@ public interface IDropDownSystem : IAppIdentityReader, ISlideSystem
     void PlayWarning();
 
     /// <summary>
+    /// Starts the app off the feature's thread, as <see cref="AppStarter"/> does; <paramref name="done"/>
+    /// gets <see cref="DropDownOutcome.Started"/>, or why it didn't start, on the feature's thread.
+    /// </summary>
+    void StartLater(DropDownApp app, Action<DropDownOutcome> done);
+
+    /// <summary>
     /// Starts reporting the shows, destroys and minimizes of the process's windows to the
     /// controller, until <see cref="Unwatch"/>.
     /// </summary>

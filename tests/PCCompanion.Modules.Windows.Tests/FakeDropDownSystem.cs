@@ -238,6 +238,18 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public void PlayWarning() => Warnings++;
 
+    /// <summary>What starting an app answers.</summary>
+    public DropDownOutcome StartOutcome { get; set; } = DropDownOutcome.Started;
+
+    /// <summary>The apps started so far.</summary>
+    public List<DropDownApp> StartedApps { get; } = [];
+
+    public void StartLater(DropDownApp app, Action<DropDownOutcome> done)
+    {
+        StartedApps.Add(app);
+        done(StartOutcome);
+    }
+
     public void Watch(uint processId) => Watched.Add(processId);
 
     public void Unwatch(uint processId) => Watched.Remove(processId);
