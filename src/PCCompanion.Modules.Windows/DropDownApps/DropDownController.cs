@@ -26,7 +26,11 @@ public sealed partial class DropDownController : IDisposable
     /// <summary>How long after a window is in place its size is checked, and again after a correction.</summary>
     public static readonly TimeSpan SettleDelay = TimeSpan.FromMilliseconds(100);
 
+    /// <summary>How long after starting an app its first window is waited for.</summary>
+    public static readonly TimeSpan StartTimeout = TimeSpan.FromSeconds(30);
+
     private static readonly TimeSpan ShowCheck = TimeSpan.FromMilliseconds(15);
+    private static readonly TimeSpan StartCheck = TimeSpan.FromMilliseconds(100);
 
     private readonly IDropDownSystem _system;
     private readonly TimeProvider _time;
@@ -35,6 +39,7 @@ public sealed partial class DropDownController : IDisposable
     private readonly Dictionary<string, DropWindow> _windows = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, (double Width, double Height)> _draggedSizes = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<ITimer> _timers = [];
+    private readonly HashSet<string> _starting = new(StringComparer.OrdinalIgnoreCase);
     private DropDownAppsSettings _settings = new();
     private IReadOnlyList<DropDownShortcut> _shortcuts = [];
 
@@ -121,13 +126,19 @@ public sealed partial class DropDownController : IDisposable
             Forget(known);
         }
 
-        if (FindWindow(app) is { } found)
+        if (FindWindow(app, shownHere: false) is { } found)
         {
-            Adopt(found, index, app);
+            Adopt(found, index, app, report: true);
             return;
         }
 
-        LogNoWindow(_logger, index);
+        if (_starting.Contains(KeyOf(app)))
+        {
+            LogStillStarting(_logger, index);
+            return;
+        }
+
+        Start(app);
     }
 
     /// <summary>A window of a watched process was destroyed.</summary>
@@ -197,14 +208,15 @@ public sealed partial class DropDownController : IDisposable
         }
     }
 
-    // The app's front-most window that the taskbar shows, minimized or on another desktop too.
-    private TopLevelWindow? FindWindow(DropDownApp app)
+    // The app's front-most window that the taskbar shows, minimized or on another desktop too,
+    // or only one shown on this desktop.
+    private TopLevelWindow? FindWindow(DropDownApp app, bool shownHere)
     {
         var reader = new AppOfWindowReader(_system);
         var listed = app.App;
         foreach (var window in _system.Windows())
         {
-            if (MayHaveTaskbarButton(window) && Find(window.Handle) is null && listed.Matches(reader.Of(window)))
+            if (MayHaveTaskbarButton(window) && (!shownHere || !window.IsCloaked) && Find(window.Handle) is null && listed.Matches(reader.Of(window)))
             {
                 return window;
             }
@@ -213,8 +225,81 @@ public sealed partial class DropDownController : IDisposable
         return null;
     }
 
-    private void Adopt(TopLevelWindow found, int index, DropDownApp app)
+    // Starts the app, then drops down the first window of it that the taskbar shows on this desktop
+    // within 30 seconds. A Store app's frame first shows cloaked, so cloaked windows wait.
+    private void Start(DropDownApp app)
     {
+        var key = KeyOf(app);
+        _starting.Add(key);
+        _system.StartLater(app, outcome =>
+        {
+            if (outcome != DropDownOutcome.Started)
+            {
+                _starting.Remove(key);
+                if (IndexOf(key) is { } refused)
+                {
+                    Refuse(refused, outcome);
+                }
+
+                return;
+            }
+
+            if (IndexOf(key) is { } index)
+            {
+                Report(index, DropDownOutcome.Started);
+            }
+
+            var started = _time.GetTimestamp();
+            Repeat(StartCheck, () =>
+            {
+                if (!_starting.Contains(key))
+                {
+                    return true;
+                }
+
+                if (IndexOf(key) is not { } current)
+                {
+                    _starting.Remove(key);
+                    return true;
+                }
+
+                var listed = _settings.Apps[current];
+                if (FindWindow(listed, shownHere: true) is { } found)
+                {
+                    Adopt(found, current, listed, report: false);
+                    return true;
+                }
+
+                if (_time.GetElapsedTime(started) < StartTimeout)
+                {
+                    return false;
+                }
+
+                _starting.Remove(key);
+                Refuse(current, DropDownOutcome.NoWindowInTime);
+                return true;
+            });
+        });
+    }
+
+    private int? IndexOf(string key)
+    {
+        for (var index = 0; index < _settings.Apps.Count; index++)
+        {
+            if (string.Equals(KeyOf(_settings.Apps[index]), key, StringComparison.OrdinalIgnoreCase))
+            {
+                return index;
+            }
+        }
+
+        return null;
+    }
+
+    // Once one of the app's windows is taken, a start waits for no other. A start reports its own
+    // result, so the window that comes of it doesn't report one.
+    private void Adopt(TopLevelWindow found, int index, DropDownApp app, bool report)
+    {
+        _starting.Remove(KeyOf(app));
         var handle = found.Handle;
         if (string.Equals(_system.ClassName(handle), SharedAppFrameClass, StringComparison.Ordinal))
         {
@@ -259,7 +344,10 @@ public sealed partial class DropDownController : IDisposable
         }
 
         Show(window, index);
-        Report(index, DropDownOutcome.Shown);
+        if (report)
+        {
+            Report(index, DropDownOutcome.Shown);
+        }
     }
 
     private void Show(DropWindow window, int index)
@@ -627,6 +715,26 @@ public sealed partial class DropDownController : IDisposable
         _timers.Add(timer);
     }
 
+    // Runs the check every interval until it returns true.
+    private void Repeat(TimeSpan interval, Func<bool> check)
+    {
+        ITimer? timer = null;
+        timer = _time.CreateTimer(_ => _post(() =>
+        {
+            if (timer is null || !_timers.Contains(timer))
+            {
+                return;
+            }
+
+            if (check())
+            {
+                _timers.Remove(timer);
+                timer.Dispose();
+            }
+        }), null, interval, interval);
+        _timers.Add(timer);
+    }
+
     private void After(TimeSpan delay, Action action)
     {
         ITimer? timer = null;
@@ -646,8 +754,8 @@ public sealed partial class DropDownController : IDisposable
     [LoggerMessage(Level = LogLevel.Debug, Message = "Drop-down Apps, app {Index}: {Outcome}.")]
     private static partial void LogOutcome(ILogger logger, int index, DropDownOutcome outcome);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Drop-down Apps, app {Index}: the app has no window the taskbar shows.")]
-    private static partial void LogNoWindow(ILogger logger, int index);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Drop-down Apps, app {Index}: the app is starting, so it isn't started again.")]
+    private static partial void LogStillStarting(ILogger logger, int index);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Drop-down Apps, app {Index}: its window is still on its way in.")]
     private static partial void LogStillShowing(ILogger logger, int index);
