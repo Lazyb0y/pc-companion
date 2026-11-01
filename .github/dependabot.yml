@@ -27,3 +27,8 @@ updates:
     commit-message:
       prefix: ci
       include: scope
+    # CodeQL's steps must all use one version, so they update in one pull request.
+    groups:
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
