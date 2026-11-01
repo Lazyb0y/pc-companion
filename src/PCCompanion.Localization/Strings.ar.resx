@@ -2924,4 +2924,232 @@
     <value>أنزل نافذة تطبيق تختاره من أعلى الشاشة باختصار، وأعدها إلى أعلى بالاختصار نفسه.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsAppsHeader" xml:space="preserve">
+    <value>التطبيقات التي تنسدل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsAppsDescription" xml:space="preserve">
+    <value>ينزل اختصار كل تطبيق نافذته من أعلى الشاشة، ويعيدها إلى أعلى عند الضغط عليه مرة أخرى. ويبدأ تشغيل التطبيق إن لم يكن قيد التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutName" xml:space="preserve">
+    <value>اختصار {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlKey" xml:space="preserve">
+    <value>Windows + Ctrl + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutAltKey" xml:space="preserve">
+    <value>Windows + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlAltKey" xml:space="preserve">
+    <value>Windows + Ctrl + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayHeader" xml:space="preserve">
+    <value>الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayDescription" xml:space="preserve">
+    <value>أين تنسدل النافذة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayWithPointer" xml:space="preserve">
+    <value>الشاشة التي عليها المؤشر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayMain" xml:space="preserve">
+    <value>الشاشة الرئيسية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthHeader" xml:space="preserve">
+    <value>العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthDescription" xml:space="preserve">
+    <value>جزء من الشاشة دون شريط المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightHeader" xml:space="preserve">
+    <value>الارتفاع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightDescription" xml:space="preserve">
+    <value>جزء من الشاشة دون شريط المهام، من أعلاها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideHeader" xml:space="preserve">
+    <value>الانزلاق للداخل وللخارج</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideDescription" xml:space="preserve">
+    <value>يتبع تأثيرات الحركة في Windows: عندما تكون متوقفة، تظهر النوافذ وتختفي على الفور.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideHeader" xml:space="preserve">
+    <value>الإخفاء عند انتقال تطبيق آخر إلى المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideDescription" xml:space="preserve">
+    <value>تبقى النافذة التي فيها مربع حوار مفتوح.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideAnyDisplay" xml:space="preserve">
+    <value>على أي شاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideSameDisplay" xml:space="preserve">
+    <value>على شاشتها فقط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideNever" xml:space="preserve">
+    <value>أبدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopHeader" xml:space="preserve">
+    <value>الإبقاء في الأعلى أثناء العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopDescription" xml:space="preserve">
+    <value>تبقى النافذة المعروضة أمام النوافذ الأخرى حتى تختفي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsHeader" xml:space="preserve">
+    <value>النتائج الأخيرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsDescription" xml:space="preserve">
+    <value>ما فعله كل اختصار من آخر الاختصارات المضغوطة، الأحدث أولاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsUnavailable" xml:space="preserve">
+    <value>تظهر النتائج أثناء تشغيل التطبيقات المنسدلة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNone" xml:space="preserve">
+    <value>لم يُضغط أي اختصار بعد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNotAvailable" xml:space="preserve">
+    <value>النتائج الأخيرة غير متاحة الآن. إذا لم تعمل الاختصارات أيضًا، فأعد تشغيل PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResult" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRemovedApp" xml:space="preserve">
+    <value>تطبيق لم يعد في القائمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShown" xml:space="preserve">
+    <value>انسدلت</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultHidden" xml:space="preserve">
+    <value>أُخفيت</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtToFront" xml:space="preserve">
+    <value>نُقلت إلى المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtFromOtherDesktop" xml:space="preserve">
+    <value>نُقلت من سطح مكتب آخر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStarted" xml:space="preserve">
+    <value>بدأ تشغيله</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRunsAsAdministrator" xml:space="preserve">
+    <value>يعمل كمسؤول، لذا لا يمكن أن ينسدل ما دام PC Companion لا يعمل كمسؤول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultSharedAppFrame" xml:space="preserve">
+    <value>يعرضه Windows في إطار مشترك، لذا لا يمكن أن ينسدل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultDialogOpen" xml:space="preserve">
+    <value>هناك مربع حوار مفتوح، لذا تبقى النافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultProgramMissing" xml:space="preserve">
+    <value>البرنامج غير موجود أو ليس ملف ‎.exe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultAppIdNotFound" xml:space="preserve">
+    <value>التطبيق غير موجود في قائمة التطبيقات في «ابدأ»</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStartFailed" xml:space="preserve">
+    <value>تعذّر على Windows بدء تشغيله</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNeedsAdminRights" xml:space="preserve">
+    <value>يحتاج إلى صلاحيات المسؤول، ولا تبدأ التطبيقات المنسدلة تشغيله بها أبدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNoWindowInTime" xml:space="preserve">
+    <value>بدأ تشغيله، لكن لم تظهر أي نافذة خلال 30 ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStayedOnOtherDesktop" xml:space="preserve">
+    <value>بقيت النافذة على سطح مكتب آخر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShortcutTaken" xml:space="preserve">
+    <value>يستخدم برنامج آخر اختصاره</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfo" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ أن تنسدل: نوافذ التطبيقات التي تعمل كمسؤول، ونوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». عندما لا يستطيع اختصار إظهار نافذة أو إخفاءها، يُصدر Windows صوت التحذير، وتذكر «النتائج الأخيرة» السبب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ أن تنسدل: نوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». عندما لا يستطيع اختصار إظهار نافذة أو إخفاءها، يُصدر Windows صوت التحذير، وتذكر «النتائج الأخيرة» السبب. يعمل PC Companion كمسؤول، لذا تنسدل نوافذ التطبيقات التي تعمل كمسؤول أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsPermissions" xml:space="preserve">
+    <value>عند الضغط على اختصار، يقرأ النوافذ المفتوحة والتطبيقات التي تنتمي إليها ومكانها وما إذا كانت مصغّرة، ولا يقرأ عناوينها أو محتواها أبدًا، ويقرأ مكان المؤشر لاختيار الشاشة. وأثناء عرض نافذة، يقرأ النافذة التي تنتقل إلى المقدمة. ينقل نوافذ التطبيقات المدرجة ويظهرها ويخفيها ويبقيها في الأعلى، ويضع علامة على المخفية منها لتعود بعد أي عطل؛ ولا يستخدم أي خطاف للوحة المفاتيح أو الماوس ولا يشغّل أي تعليمات برمجية في تطبيقات أخرى. يبدأ تشغيل التطبيقات المدرجة، ولا يمنحها صلاحيات المسؤول أبدًا. تبقى النتائج الأخيرة في الذاكرة فقط. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeyAboveTab" xml:space="preserve">
+    <value>المفتاح الموجود فوق Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_zero" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_one" xml:space="preserve">
+    <value>مرة واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_two" xml:space="preserve">
+    <value>مرتان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_few" xml:space="preserve">
+    <value>{0} مرات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_many" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_other" xml:space="preserve">
+    <value>{0} مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -2804,4 +2804,212 @@
     <value>使用快捷键将所选应用的窗口从屏幕顶部滑下，再按同一快捷键将其收回。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsAppsHeader" xml:space="preserve">
+    <value>下拉的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsAppsDescription" xml:space="preserve">
+    <value>每个应用的快捷键会将其窗口从屏幕顶部滑下，再按一次则将其收回。未运行的应用会被启动。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutName" xml:space="preserve">
+    <value>{0} 的快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlKey" xml:space="preserve">
+    <value>Windows + Ctrl + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutAltKey" xml:space="preserve">
+    <value>Windows + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlAltKey" xml:space="preserve">
+    <value>Windows + Ctrl + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayHeader" xml:space="preserve">
+    <value>显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayDescription" xml:space="preserve">
+    <value>窗口在哪个显示器上下拉。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayWithPointer" xml:space="preserve">
+    <value>指针所在的显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayMain" xml:space="preserve">
+    <value>主显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthHeader" xml:space="preserve">
+    <value>宽度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthDescription" xml:space="preserve">
+    <value>占显示器（不含任务栏）的比例。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightHeader" xml:space="preserve">
+    <value>高度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightDescription" xml:space="preserve">
+    <value>占显示器（不含任务栏）的比例，从顶部算起。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideHeader" xml:space="preserve">
+    <value>滑入和滑出</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideDescription" xml:space="preserve">
+    <value>跟随 Windows 的动画效果：动画效果关闭时，窗口会立即显示和隐藏。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideHeader" xml:space="preserve">
+    <value>其他应用转到前台时隐藏</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideDescription" xml:space="preserve">
+    <value>打开了对话框的窗口会保留。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideAnyDisplay" xml:space="preserve">
+    <value>在任何显示器上</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideSameDisplay" xml:space="preserve">
+    <value>仅在其所在的显示器上</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideNever" xml:space="preserve">
+    <value>从不</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopHeader" xml:space="preserve">
+    <value>显示时保持在最前面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopDescription" xml:space="preserve">
+    <value>显示的窗口会一直位于其他窗口前面，直到被隐藏。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsHeader" xml:space="preserve">
+    <value>最近的结果</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsDescription" xml:space="preserve">
+    <value>最近按下的每个快捷键的结果，最新的在前。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsUnavailable" xml:space="preserve">
+    <value>下拉应用打开时会显示结果。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNone" xml:space="preserve">
+    <value>尚未按下任何快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNotAvailable" xml:space="preserve">
+    <value>最近的结果暂时不可用。如果快捷键也不起作用，请重新启动 PC Companion。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResult" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRemovedApp" xml:space="preserve">
+    <value>已不在列表中的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShown" xml:space="preserve">
+    <value>已下拉</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultHidden" xml:space="preserve">
+    <value>已隐藏</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtToFront" xml:space="preserve">
+    <value>已转到前台</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtFromOtherDesktop" xml:space="preserve">
+    <value>已从另一个桌面移来</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStarted" xml:space="preserve">
+    <value>已启动</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRunsAsAdministrator" xml:space="preserve">
+    <value>以管理员身份运行，因此在 PC Companion 不以管理员身份运行时无法下拉</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultSharedAppFrame" xml:space="preserve">
+    <value>Windows 在共享框架中显示它，因此无法下拉</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultDialogOpen" xml:space="preserve">
+    <value>打开了对话框，因此窗口保留</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultProgramMissing" xml:space="preserve">
+    <value>程序不存在或不是 .exe 文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultAppIdNotFound" xml:space="preserve">
+    <value>该应用不在“开始”的应用列表中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStartFailed" xml:space="preserve">
+    <value>Windows 无法启动它</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNeedsAdminRights" xml:space="preserve">
+    <value>它需要管理员权限，而下拉应用从不以管理员权限启动它</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNoWindowInTime" xml:space="preserve">
+    <value>已启动，但 30 秒内没有出现窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStayedOnOtherDesktop" xml:space="preserve">
+    <value>窗口留在了另一个桌面上</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShortcutTaken" xml:space="preserve">
+    <value>另一个程序占用了它的快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfo" xml:space="preserve">
+    <value>有些窗口无法下拉：以管理员身份运行的应用的窗口、Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法显示或隐藏窗口时，会播放 Windows 警告声，“最近的结果”会说明原因。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
+    <value>有些窗口无法下拉：Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法显示或隐藏窗口时，会播放 Windows 警告声，“最近的结果”会说明原因。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也能下拉。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsPermissions" xml:space="preserve">
+    <value>按下快捷键时，读取打开了哪些窗口、它们属于哪些应用、它们的位置以及是否最小化（从不读取标题或内容），并读取指针位置以选择显示器。窗口显示期间，读取哪个窗口转到前台。移动、显示、隐藏列表中应用的窗口并将其保持在最前面，并标记隐藏的窗口，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。启动列表中的应用，从不使用管理员权限。最近的结果仅保存在内存中。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeyAboveTab" xml:space="preserve">
+    <value>Tab 上方的键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultTimeAndCount" xml:space="preserve">
+    <value>{0}（{1}）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_other" xml:space="preserve">
+    <value>{0} 次</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

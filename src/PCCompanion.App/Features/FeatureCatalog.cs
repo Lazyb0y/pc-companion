@@ -6,6 +6,7 @@ using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
+using PCCompanion.App.Features.DropDownApps;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
@@ -30,6 +31,7 @@ using PCCompanion.Modules.Network;
 using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
+using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 
@@ -64,6 +66,7 @@ public static class FeatureCatalog
             new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
             new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage)),
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage)),
+            new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage)),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [

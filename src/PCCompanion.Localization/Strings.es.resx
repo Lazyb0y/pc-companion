@@ -2828,4 +2828,216 @@
     <value>Desliza hacia abajo la ventana de una aplicación elegida desde la parte superior de la pantalla con un método abreviado, y vuelve a subirla con el mismo método abreviado.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsAppsHeader" xml:space="preserve">
+    <value>Aplicaciones que se despliegan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsAppsDescription" xml:space="preserve">
+    <value>El método abreviado de cada aplicación desliza su ventana hacia abajo desde la parte superior de la pantalla, y la vuelve a subir cuando lo presionas de nuevo. Una aplicación que no se está ejecutando se inicia.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutName" xml:space="preserve">
+    <value>Método abreviado de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlKey" xml:space="preserve">
+    <value>Windows + Ctrl + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutAltKey" xml:space="preserve">
+    <value>Windows + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlAltKey" xml:space="preserve">
+    <value>Windows + Ctrl + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayHeader" xml:space="preserve">
+    <value>Pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayDescription" xml:space="preserve">
+    <value>Dónde se despliega una ventana.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayWithPointer" xml:space="preserve">
+    <value>La pantalla donde está el puntero</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayMain" xml:space="preserve">
+    <value>La pantalla principal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthHeader" xml:space="preserve">
+    <value>Ancho</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthDescription" xml:space="preserve">
+    <value>Parte de la pantalla sin la barra de tareas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightHeader" xml:space="preserve">
+    <value>Alto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightDescription" xml:space="preserve">
+    <value>Parte de la pantalla sin la barra de tareas, desde arriba.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideHeader" xml:space="preserve">
+    <value>Deslizar al entrar y salir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideDescription" xml:space="preserve">
+    <value>Sigue los efectos de animación de Windows: mientras están desactivados, las ventanas se muestran y se ocultan al instante.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideHeader" xml:space="preserve">
+    <value>Ocultar cuando otra aplicación pase a primer plano</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideDescription" xml:space="preserve">
+    <value>Una ventana con un cuadro de diálogo abierto se queda.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideAnyDisplay" xml:space="preserve">
+    <value>En cualquier pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideSameDisplay" xml:space="preserve">
+    <value>Solo en su pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideNever" xml:space="preserve">
+    <value>Nunca</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopHeader" xml:space="preserve">
+    <value>Mantener en primer plano mientras se muestra</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopDescription" xml:space="preserve">
+    <value>Una ventana mostrada se queda delante de las demás ventanas hasta que se oculta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsHeader" xml:space="preserve">
+    <value>Resultados recientes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsDescription" xml:space="preserve">
+    <value>Lo que hizo cada uno de los últimos métodos abreviados presionados, el más reciente primero.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsUnavailable" xml:space="preserve">
+    <value>Los resultados se muestran mientras Aplicaciones desplegables está activado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNone" xml:space="preserve">
+    <value>Todavía no se ha presionado ningún método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNotAvailable" xml:space="preserve">
+    <value>Los resultados recientes no están disponibles en este momento. Si los métodos abreviados tampoco funcionan, reinicia PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResult" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRemovedApp" xml:space="preserve">
+    <value>Una aplicación que ya no está en la lista</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShown" xml:space="preserve">
+    <value>desplegada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultHidden" xml:space="preserve">
+    <value>ocultada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtToFront" xml:space="preserve">
+    <value>traída al primer plano</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtFromOtherDesktop" xml:space="preserve">
+    <value>traída desde otro escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStarted" xml:space="preserve">
+    <value>iniciada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRunsAsAdministrator" xml:space="preserve">
+    <value>se ejecuta como administrador, así que no puede desplegarse mientras PC Companion no lo haga</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultSharedAppFrame" xml:space="preserve">
+    <value>Windows la muestra en un marco compartido, así que no puede desplegarse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultDialogOpen" xml:space="preserve">
+    <value>hay un cuadro de diálogo abierto, así que la ventana se queda</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultProgramMissing" xml:space="preserve">
+    <value>el programa no existe o no es un archivo .exe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultAppIdNotFound" xml:space="preserve">
+    <value>la aplicación no está en la lista de aplicaciones de Inicio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStartFailed" xml:space="preserve">
+    <value>Windows no pudo iniciarla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNeedsAdminRights" xml:space="preserve">
+    <value>necesita derechos de administrador, con los que Aplicaciones desplegables nunca la inicia</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNoWindowInTime" xml:space="preserve">
+    <value>iniciada, pero no apareció ninguna ventana en 30 segundos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStayedOnOtherDesktop" xml:space="preserve">
+    <value>la ventana se quedó en otro escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShortcutTaken" xml:space="preserve">
+    <value>otro programa tiene su método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfo" xml:space="preserve">
+    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
+    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo. PC Companion se ejecuta como administrador, así que las ventanas de las aplicaciones que se ejecutan como administrador también se despliegan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsPermissions" xml:space="preserve">
+    <value>Cuando se presiona un método abreviado, lee qué ventanas están abiertas, a qué aplicaciones pertenecen, su posición y si están minimizadas, nunca sus títulos ni su contenido, y dónde está el puntero, para elegir la pantalla. Mientras una ventana se muestra, lee qué ventana pasa a primer plano. Mueve, muestra, oculta y mantiene en primer plano las ventanas de las aplicaciones de la lista, y marca las ocultas para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. Inicia las aplicaciones de la lista, nunca con derechos de administrador. Los resultados recientes solo se guardan en la memoria. No establece conexiones de red ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeyAboveTab" xml:space="preserve">
+    <value>la tecla encima de Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_one" xml:space="preserve">
+    <value>{0} vez</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_other" xml:space="preserve">
+    <value>{0} veces</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

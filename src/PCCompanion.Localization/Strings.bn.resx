@@ -2828,4 +2828,216 @@
     <value>একটি শর্টকাটে বেছে নেওয়া অ্যাপের উইন্ডো স্ক্রিনের উপর থেকে নামিয়ে আনুন, এবং একই শর্টকাটে আবার উপরে তুলে দিন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsAppsHeader" xml:space="preserve">
+    <value>যে অ্যাপগুলো নেমে আসে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsAppsDescription" xml:space="preserve">
+    <value>প্রতিটি অ্যাপের শর্টকাট তার উইন্ডো স্ক্রিনের উপর থেকে নামিয়ে আনে, আর আবার চাপলে উপরে তুলে দেয়। যে অ্যাপ চলছে না সেটি চালু হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutName" xml:space="preserve">
+    <value>{0}-এর শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlKey" xml:space="preserve">
+    <value>Windows + Ctrl + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutAltKey" xml:space="preserve">
+    <value>Windows + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlAltKey" xml:space="preserve">
+    <value>Windows + Ctrl + Alt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayHeader" xml:space="preserve">
+    <value>ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayDescription" xml:space="preserve">
+    <value>উইন্ডো কোথায় নেমে আসে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayWithPointer" xml:space="preserve">
+    <value>যে ডিসপ্লেতে পয়েন্টার আছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDisplayMain" xml:space="preserve">
+    <value>প্রধান ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthHeader" xml:space="preserve">
+    <value>প্রস্থ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsWidthDescription" xml:space="preserve">
+    <value>টাস্কবার বাদে ডিসপ্লের অংশ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightHeader" xml:space="preserve">
+    <value>উচ্চতা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHeightDescription" xml:space="preserve">
+    <value>টাস্কবার বাদে ডিসপ্লের অংশ, উপর থেকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideHeader" xml:space="preserve">
+    <value>স্লাইড করে আসা ও যাওয়া</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsSlideDescription" xml:space="preserve">
+    <value>Windows-এর অ্যানিমেশন ইফেক্ট অনুসরণ করে: সেগুলো বন্ধ থাকলে উইন্ডো সঙ্গে সঙ্গে দেখায় ও লুকায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideHeader" xml:space="preserve">
+    <value>অন্য অ্যাপ সামনে এলে লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideDescription" xml:space="preserve">
+    <value>খোলা ডায়ালগসহ উইন্ডো থেকে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideAnyDisplay" xml:space="preserve">
+    <value>যেকোনো ডিসপ্লেতে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideSameDisplay" xml:space="preserve">
+    <value>শুধু তার নিজের ডিসপ্লেতে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsHideNever" xml:space="preserve">
+    <value>কখনো না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopHeader" xml:space="preserve">
+    <value>দেখানোর সময় সবার উপরে রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopDescription" xml:space="preserve">
+    <value>দেখানো উইন্ডো লুকানো পর্যন্ত অন্য উইন্ডোর সামনে থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsHeader" xml:space="preserve">
+    <value>সাম্প্রতিক ফলাফল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsDescription" xml:space="preserve">
+    <value>শেষ চাপা প্রতিটি শর্টকাট কী করেছে, নতুনটি আগে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsUnavailable" xml:space="preserve">
+    <value>ড্রপ-ডাউন অ্যাপ চালু থাকলে ফলাফল দেখায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNone" xml:space="preserve">
+    <value>এখনো কোনো শর্টকাট চাপা হয়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultsNotAvailable" xml:space="preserve">
+    <value>সাম্প্রতিক ফলাফল এখন পাওয়া যাচ্ছে না। শর্টকাটও কাজ না করলে PC Companion আবার চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResult" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRemovedApp" xml:space="preserve">
+    <value>এমন একটি অ্যাপ যা আর তালিকায় নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShown" xml:space="preserve">
+    <value>নেমে এসেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultHidden" xml:space="preserve">
+    <value>লুকানো হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtToFront" xml:space="preserve">
+    <value>সামনে আনা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtFromOtherDesktop" xml:space="preserve">
+    <value>অন্য ডেস্কটপ থেকে আনা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStarted" xml:space="preserve">
+    <value>চালু করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultRunsAsAdministrator" xml:space="preserve">
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলে, তাই PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে না চললে এটি নেমে আসতে পারে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultSharedAppFrame" xml:space="preserve">
+    <value>Windows এটিকে একটি শেয়ার করা ফ্রেমে দেখায়, তাই এটি নেমে আসতে পারে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultDialogOpen" xml:space="preserve">
+    <value>একটি ডায়ালগ খোলা আছে, তাই উইন্ডোটি থেকে যায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultProgramMissing" xml:space="preserve">
+    <value>প্রোগ্রামটি নেই বা এটি .exe ফাইল নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultAppIdNotFound" xml:space="preserve">
+    <value>অ্যাপটি স্টার্টের অ্যাপ তালিকায় নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStartFailed" xml:space="preserve">
+    <value>Windows এটি চালু করতে পারেনি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNeedsAdminRights" xml:space="preserve">
+    <value>এর অ্যাডমিন অধিকার লাগে, যা দিয়ে ড্রপ-ডাউন অ্যাপ এটিকে কখনো চালু করে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultNoWindowInTime" xml:space="preserve">
+    <value>চালু হয়েছে, কিন্তু ৩০ সেকেন্ডের মধ্যে কোনো উইন্ডো আসেনি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultStayedOnOtherDesktop" xml:space="preserve">
+    <value>উইন্ডোটি অন্য ডেস্কটপে থেকে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultShortcutTaken" xml:space="preserve">
+    <value>অন্য একটি প্রোগ্রাম এর শর্টকাট ব্যবহার করছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfo" xml:space="preserve">
+    <value>কিছু উইন্ডো নেমে আসতে পারে না: অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডো, সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। কোনো শর্টকাট উইন্ডো দেখাতে বা লুকাতে না পারলে Windows-এর সতর্কতা শব্দ বাজে, আর সাম্প্রতিক ফলাফলে কারণ বলা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
+    <value>কিছু উইন্ডো নেমে আসতে পারে না: সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। কোনো শর্টকাট উইন্ডো দেখাতে বা লুকাতে না পারলে Windows-এর সতর্কতা শব্দ বাজে, আর সাম্প্রতিক ফলাফলে কারণ বলা হয়। PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোও নেমে আসে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsPermissions" xml:space="preserve">
+    <value>শর্টকাট চাপলে পড়ে কোন উইন্ডোগুলো খোলা, সেগুলো কোন অ্যাপের, তাদের অবস্থান এবং সেগুলো ছোট করা কি না, কখনো তাদের শিরোনাম বা বিষয়বস্তু নয়, এবং ডিসপ্লে বাছাই করতে পয়েন্টার কোথায় আছে। কোনো উইন্ডো দেখানো থাকাকালীন পড়ে কোন উইন্ডো সামনে আসে। তালিকাভুক্ত অ্যাপের উইন্ডো সরায়, দেখায়, লুকায় ও সবার উপরে রাখে, এবং লুকানো উইন্ডোগুলো চিহ্নিত করে যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। তালিকাভুক্ত অ্যাপ চালু করে, কখনো অ্যাডমিন অধিকার দিয়ে নয়। সাম্প্রতিক ফলাফল শুধু মেমরিতে থাকে। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsKeyAboveTab" xml:space="preserve">
+    <value>Tab-এর উপরের কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_one" xml:space="preserve">
+    <value>{0} বার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_other" xml:space="preserve">
+    <value>{0} বার</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
