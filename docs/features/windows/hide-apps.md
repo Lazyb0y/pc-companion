@@ -51,6 +51,7 @@ Put away every window of the app in front, or of every other app, with one short
 - **Windows without a Minimize button,** as Windows + M leaves them.
 - **A window with a dialog open,** such as a Save dialog, recognized by its main window being disabled (`IsWindowEnabled`): minimizing it canceled a Windows Forms dialog in the spike, as for Minimize to Tray. Windows + Home, Windows + M and Windows + D leave such windows alone too.
 - **Windows on other virtual desktops,** which Windows keeps out of sight (cloaked), as Alt + Tab leaves them out by default.
+- **Drop-down Apps' windows,** which their own shortcut hides; see [With Hide Apps and Minimize to Tray](drop-down-apps.md#with-hide-apps-and-minimize-to-tray). Hide others keeps a shown one in sight, and Hide app with one in front minimizes the app's other windows. The features share a set, within the module, of the drop-down windows.
 - **Windows that are already minimized or hidden,** such as those in Minimize to Tray's tray.
 - **The desktop, the taskbar and the shell's other windows,** which the taskbar doesn't show.
 - **The stand-in Windows shows for a window that stopped responding** (class `Ghost`, in Desktop Window Manager's process). The window itself is asked to minimize, and does once its app responds.
