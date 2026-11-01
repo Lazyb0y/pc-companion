@@ -72,6 +72,38 @@ public sealed class HideAppsControllerTests : IDisposable
         Assert.True(_system[2].Minimized);
     }
 
+    [Fact]
+    public void HideAppWithADropDownWindowInFrontMinimizesTheAppsOtherWindowsOnly()
+    {
+        A(1);
+        A(2);
+        B(3);
+        _system.DropDown.Add(1);
+        _system.ForegroundWindow = 1;
+
+        Assert.Equal(new PressResult(PressOutcome.Hid, 1), _hide.HideApp());
+
+        Assert.False(_system[1].Minimized);
+        Assert.True(_system[2].Minimized);
+        Assert.False(_system[3].Minimized);
+    }
+
+    [Fact]
+    public void HideOthersLeavesAShownDropDownWindow()
+    {
+        A(1);
+        B(2);
+        B(3);
+        _system.DropDown.Add(2);
+        _system.ForegroundWindow = 1;
+
+        Assert.Equal(new PressResult(PressOutcome.Hid, 1), _hide.HideOthers());
+
+        Assert.False(_system[2].Minimized);
+        Assert.True(_system[3].Minimized);
+        Assert.Equal(0, _system.Warnings);
+    }
+
     [Theory]
     [InlineData("nothing")]
     [InlineData("desktop")]

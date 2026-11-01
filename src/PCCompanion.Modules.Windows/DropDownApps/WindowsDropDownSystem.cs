@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.DropDownApps;
@@ -23,6 +24,9 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
 
     private static readonly Lazy<WindowMark> Marks = new(() => new WindowMark(MarkName));
     private static readonly Lazy<WindowMark> OnTopMarks = new(() => new WindowMark(OnTopMarkName));
+
+    // Minimize to Tray's mark, on the windows in its tray, which can drop down.
+    private static readonly Lazy<WindowMark> TrayMarks = new(() => new WindowMark(WindowsTrayWindowsSystem.MarkName));
 
     private readonly MessageWindow? _window;
     private readonly Action<Action> _guard;
@@ -59,6 +63,9 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     public TopLevelWindow Describe(nint window) => TopLevelWindows.Describe(window);
 
     public IReadOnlyList<TopLevelWindow> Windows() => TopLevelWindows.List();
+
+    public IReadOnlyList<TopLevelWindow> TrayWindows() =>
+        [.. TrayMarks.Value.FindMarked().Where(window => !TopLevelWindows.IsVisible(window)).Select(TopLevelWindows.Describe)];
 
     public string? WindowAppId(nint window) => _identity.WindowAppId(window);
 

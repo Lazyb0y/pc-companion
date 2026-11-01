@@ -121,10 +121,14 @@ public sealed partial class TrayController : IDisposable
             return;
         }
 
-        // Hide Apps brings back the windows it minimized, so they stay on the taskbar.
-        if (_system.IsMinimizedByHideApps(window))
+        // Hide Apps brings back the windows it minimized, so they stay on the taskbar, and
+        // Drop-down Apps hides a drop-down window that's minimized itself.
+        if (_system.IsMinimizedByHideApps(window) || _system.IsDropDown(window))
         {
-            LogNotSent(_logger, _settings.ShiftMinimize && _system.IsShiftHeld ? SendWay.ShiftMinimize : SendWay.ListedApp, SendOutcome.MinimizedByHideApps);
+            LogNotSent(
+                _logger,
+                _settings.ShiftMinimize && _system.IsShiftHeld ? SendWay.ShiftMinimize : SendWay.ListedApp,
+                _system.IsDropDown(window) ? SendOutcome.DropDownWindow : SendOutcome.MinimizedByHideApps);
             return;
         }
 
@@ -380,6 +384,11 @@ public sealed partial class TrayController : IDisposable
         if (!_system.MayHaveTaskbarButton(window))
         {
             return SendOutcome.NotOnTaskbar;
+        }
+
+        if (_system.IsDropDown(window))
+        {
+            return SendOutcome.DropDownWindow;
         }
 
         if (string.Equals(_system.ClassName(window), SharedAppFrameClass, StringComparison.Ordinal))

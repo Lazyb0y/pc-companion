@@ -893,6 +893,37 @@ public sealed class DropDownControllerTests : IDisposable
         Assert.False(onTop.Topmost);
     }
 
+    [Fact]
+    public void AWindowInMinimizeToTraysTrayDropsDown()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        (window.Visible, window.Minimized, window.InTray) = (false, true, true);
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Assert.True(window.Visible);
+        Assert.False(window.Minimized);
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+        Assert.Equal([new DropDownReport(0, DropDownOutcome.Shown)], _reports);
+        Assert.Empty(_system.StartedApps);
+    }
+
+    [Fact]
+    public void TheSharedSetHasTheDropDownWindowsWhileTheyAreDropDownWindows()
+    {
+        var shared = new DropDownWindows();
+        using var controller = new DropDownController(_system, _clock, _thread.Enqueue, new RecordingLogger<DropDownController>(), shared);
+        controller.Apply(Settings());
+        _system.Add(1, program: NotesProgram);
+
+        controller.Press(0);
+        Settle();
+        Assert.True(shared.Contains(1));
+
+        controller.ReleaseAll();
+        Assert.False(shared.Contains(1));
+    }
+
     private FakeDropWindow DropDown()
     {
         var window = _system.Add(1, program: NotesProgram);

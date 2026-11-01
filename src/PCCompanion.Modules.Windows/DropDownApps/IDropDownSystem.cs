@@ -30,6 +30,9 @@ public interface IDropDownSystem : IAppIdentityReader, ISlideSystem
     /// <summary>The visible top-level windows, front to back, minimized and cloaked ones included.</summary>
     IReadOnlyList<TopLevelWindow> Windows();
 
+    /// <summary>The hidden windows in Minimize to Tray's tray, which carry its mark.</summary>
+    IReadOnlyList<TopLevelWindow> TrayWindows();
+
     /// <summary>The window at the end of <paramref name="window"/>'s chain of owners, or the window itself.</summary>
     nint RootOwner(nint window);
 

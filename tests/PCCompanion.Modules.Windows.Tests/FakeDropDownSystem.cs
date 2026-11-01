@@ -63,6 +63,9 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public TopLevelWindow Describe(nint window) => Describe(Get(window));
 
+    public IReadOnlyList<TopLevelWindow> TrayWindows() =>
+        [.. Windows.Where(window => window.InTray && !window.Visible && !window.Destroyed).Select(Describe)];
+
     public string? WindowAppId(nint window) => Find(window)?.AppId;
 
     public string? PackageAppId(uint processId) => null;
@@ -305,6 +308,9 @@ internal sealed class FakeDropWindow
     public bool ToolWindow { get; set; }
 
     public bool NoActivate { get; set; }
+
+    /// <summary>Whether it carries Minimize to Tray's mark, as a window in its tray.</summary>
+    public bool InTray { get; set; }
 
     public bool OnSecondDisplay { get; set; }
 

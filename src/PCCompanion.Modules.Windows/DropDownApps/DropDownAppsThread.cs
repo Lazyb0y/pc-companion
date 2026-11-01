@@ -23,20 +23,24 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
     private readonly IHostCommands _commands;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly DropDownWindows _shared;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Dropper? _dropper;
 
-    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownAppsThread? previous = null)
+    /// <param name="shared">The drop-down windows as Hide Apps and Minimize to Tray read them.</param>
+    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownAppsThread? previous = null)
         : base("Drop-down Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(shared);
 
         _commands = commands;
         _time = time;
         _logger = logger;
+        _shared = shared;
         Start();
     }
 
@@ -104,7 +108,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             _window = window;
             Action<Action> post = action => window.BeginInvoke(() => owner.Guard(action));
             _system = new WindowsDropDownSystem(window, owner.Guard, owner._commands);
-            Controller = new DropDownController(_system, owner._time, post, owner._logger);
+            Controller = new DropDownController(_system, owner._time, post, owner._logger, owner._shared);
             _shortcuts = new ShortcutKeeper(new WindowsShortcutEnvironment(window), owner._time, post, owner._logger, "Drop-down Apps");
 
             // Another program's window coming to the front: the keyboard layout may change, and a
