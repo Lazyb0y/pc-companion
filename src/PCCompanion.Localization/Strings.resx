@@ -2828,4 +2828,216 @@
     <value>Slide a chosen app's window down from the top of the screen with a shortcut, and back up with the same shortcut.</value>
     <comment>Drop-down Apps: one-sentence description below the feature name.</comment>
   </data>
+  <data name="DropDownAppsAppsHeader" xml:space="preserve">
+    <value>Apps that drop down</value>
+    <comment>Drop-down Apps page: header of the list of apps.</comment>
+  </data>
+  <data name="DropDownAppsAppsDescription" xml:space="preserve">
+    <value>Each app's shortcut slides its window down from the top of the screen, and back up when you press it again. An app that isn't running starts.</value>
+    <comment>Drop-down Apps page: below DropDownAppsAppsHeader.</comment>
+  </data>
+  <data name="DropDownAppsShortcutName" xml:space="preserve">
+    <value>Shortcut for {0}</value>
+    <comment>Drop-down Apps page: screen reader name of the shortcut list in each app's row. {0} is the app's name, such as Terminal.</comment>
+  </data>
+  <data name="DropDownAppsShortcutNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Drop-down Apps page: in an app's shortcut list, no shortcut.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlKey" xml:space="preserve">
+    <value>Windows + Ctrl + {0}</value>
+    <comment>Drop-down Apps page: a shortcut in an app's list. {0} is the character the key above Tab types in the user's keyboard layout, such as ` or ^, or DropDownAppsKeyAboveTab.</comment>
+  </data>
+  <data name="DropDownAppsShortcutAltKey" xml:space="preserve">
+    <value>Windows + Alt + {0}</value>
+    <comment>Drop-down Apps page: a shortcut in an app's list. {0} is as in DropDownAppsShortcutControlKey.</comment>
+  </data>
+  <data name="DropDownAppsShortcutControlAltKey" xml:space="preserve">
+    <value>Windows + Ctrl + Alt + {0}</value>
+    <comment>Drop-down Apps page: a shortcut in an app's list. {0} is a number from 1 to 9.</comment>
+  </data>
+  <data name="DropDownAppsDisplayHeader" xml:space="preserve">
+    <value>Display</value>
+    <comment>Drop-down Apps page: header of the choice of display.</comment>
+  </data>
+  <data name="DropDownAppsDisplayDescription" xml:space="preserve">
+    <value>Where a window drops down.</value>
+    <comment>Drop-down Apps page: below DropDownAppsDisplayHeader.</comment>
+  </data>
+  <data name="DropDownAppsDisplayWithPointer" xml:space="preserve">
+    <value>The display with the pointer</value>
+    <comment>Drop-down Apps page: a choice of DropDownAppsDisplayHeader.</comment>
+  </data>
+  <data name="DropDownAppsDisplayMain" xml:space="preserve">
+    <value>The main display</value>
+    <comment>Drop-down Apps page: a choice of DropDownAppsDisplayHeader.</comment>
+  </data>
+  <data name="DropDownAppsWidthHeader" xml:space="preserve">
+    <value>Width</value>
+    <comment>Drop-down Apps page: header of the slider for a window's width.</comment>
+  </data>
+  <data name="DropDownAppsWidthDescription" xml:space="preserve">
+    <value>Part of the display without the taskbar.</value>
+    <comment>Drop-down Apps page: below DropDownAppsWidthHeader; the slider shows a percentage.</comment>
+  </data>
+  <data name="DropDownAppsHeightHeader" xml:space="preserve">
+    <value>Height</value>
+    <comment>Drop-down Apps page: header of the slider for a window's height.</comment>
+  </data>
+  <data name="DropDownAppsHeightDescription" xml:space="preserve">
+    <value>Part of the display without the taskbar, from its top.</value>
+    <comment>Drop-down Apps page: below DropDownAppsHeightHeader; the slider shows a percentage.</comment>
+  </data>
+  <data name="DropDownAppsSlideHeader" xml:space="preserve">
+    <value>Slide in and out</value>
+    <comment>Drop-down Apps page: header of the switch for the slide.</comment>
+  </data>
+  <data name="DropDownAppsSlideDescription" xml:space="preserve">
+    <value>Follows Windows' animation effects: while they're off, windows show and hide at once.</value>
+    <comment>Drop-down Apps page: below DropDownAppsSlideHeader. Animation effects is the setting in Windows Settings &gt; Accessibility &gt; Visual effects.</comment>
+  </data>
+  <data name="DropDownAppsHideHeader" xml:space="preserve">
+    <value>Hide when another app comes to the front</value>
+    <comment>Drop-down Apps page: header of the choice of when a shown window hides.</comment>
+  </data>
+  <data name="DropDownAppsHideDescription" xml:space="preserve">
+    <value>A window with a dialog open stays.</value>
+    <comment>Drop-down Apps page: below DropDownAppsHideHeader.</comment>
+  </data>
+  <data name="DropDownAppsHideAnyDisplay" xml:space="preserve">
+    <value>On any display</value>
+    <comment>Drop-down Apps page: a choice of DropDownAppsHideHeader.</comment>
+  </data>
+  <data name="DropDownAppsHideSameDisplay" xml:space="preserve">
+    <value>Only on its display</value>
+    <comment>Drop-down Apps page: a choice of DropDownAppsHideHeader: only when the other app comes to the front on the display the window is on.</comment>
+  </data>
+  <data name="DropDownAppsHideNever" xml:space="preserve">
+    <value>Never</value>
+    <comment>Drop-down Apps page: a choice of DropDownAppsHideHeader.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopHeader" xml:space="preserve">
+    <value>Keep on top while shown</value>
+    <comment>Drop-down Apps page: header of the switch for keeping a shown window on top.</comment>
+  </data>
+  <data name="DropDownAppsKeepOnTopDescription" xml:space="preserve">
+    <value>A shown window stays in front of other windows until it hides.</value>
+    <comment>Drop-down Apps page: below DropDownAppsKeepOnTopHeader.</comment>
+  </data>
+  <data name="DropDownAppsResultsHeader" xml:space="preserve">
+    <value>Recent results</value>
+    <comment>Drop-down Apps page: header of the list of recent results.</comment>
+  </data>
+  <data name="DropDownAppsResultsDescription" xml:space="preserve">
+    <value>What each of the last shortcuts pressed did, newest first.</value>
+    <comment>Drop-down Apps page: below DropDownAppsResultsHeader.</comment>
+  </data>
+  <data name="DropDownAppsResultsUnavailable" xml:space="preserve">
+    <value>Results show while Drop-down Apps is on.</value>
+    <comment>Drop-down Apps page: shown instead of the recent results while Drop-down Apps is off.</comment>
+  </data>
+  <data name="DropDownAppsResultsNone" xml:space="preserve">
+    <value>No shortcut has been pressed yet.</value>
+    <comment>Drop-down Apps page: shown instead of the recent results while there are none.</comment>
+  </data>
+  <data name="DropDownAppsResultsNotAvailable" xml:space="preserve">
+    <value>Recent results aren't available right now. If the shortcuts don't work either, restart PC Companion.</value>
+    <comment>Drop-down Apps page: shown instead of the recent results while Drop-down Apps is on but PC Companion hasn't given them for a few seconds, for example because it stopped.</comment>
+  </data>
+  <data name="DropDownAppsResult" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Drop-down Apps page: a recent result. {0} is an app's name, such as Terminal, or DropDownAppsResultRemovedApp; {1} is what happened, such as DropDownAppsResultShown.</comment>
+  </data>
+  <data name="DropDownAppsResultRemovedApp" xml:space="preserve">
+    <value>An app no longer listed</value>
+    <comment>Drop-down Apps page: {0} of DropDownAppsResult for an app that was removed from the list.</comment>
+  </data>
+  <data name="DropDownAppsResultShown" xml:space="preserve">
+    <value>dropped down</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultHidden" xml:space="preserve">
+    <value>hidden</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtToFront" xml:space="preserve">
+    <value>brought to the front</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultBroughtFromOtherDesktop" xml:space="preserve">
+    <value>brought from another desktop</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult: the window was on another virtual desktop.</comment>
+  </data>
+  <data name="DropDownAppsResultStarted" xml:space="preserve">
+    <value>started</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult: the app wasn't running, so it was started.</comment>
+  </data>
+  <data name="DropDownAppsResultRunsAsAdministrator" xml:space="preserve">
+    <value>runs as administrator, so it can't drop down while PC Companion doesn't</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultSharedAppFrame" xml:space="preserve">
+    <value>Windows shows it in a shared frame, so it can't drop down</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult, for apps such as Settings.</comment>
+  </data>
+  <data name="DropDownAppsResultDialogOpen" xml:space="preserve">
+    <value>a dialog is open, so the window stays</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultProgramMissing" xml:space="preserve">
+    <value>the program is missing or isn't an .exe file</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultAppIdNotFound" xml:space="preserve">
+    <value>the app isn't in Start's list of apps</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultStartFailed" xml:space="preserve">
+    <value>Windows couldn't start it</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultNeedsAdminRights" xml:space="preserve">
+    <value>it needs admin rights, which Drop-down Apps never starts it with</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultNoWindowInTime" xml:space="preserve">
+    <value>started, but no window came within 30 seconds</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsResultStayedOnOtherDesktop" xml:space="preserve">
+    <value>the window stayed on another desktop</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult: the window was on another virtual desktop and didn't come to this one.</comment>
+  </data>
+  <data name="DropDownAppsResultShortcutTaken" xml:space="preserve">
+    <value>another program has its shortcut</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfo" xml:space="preserve">
+    <value>Some windows can't drop down: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why.</value>
+    <comment>Drop-down Apps page: the windows that can't drop down, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog.</comment>
+  </data>
+  <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
+    <value>Some windows can't drop down: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why. PC Companion runs as administrator, so windows of apps running as administrator drop down too.</value>
+    <comment>Drop-down Apps page: shown instead of DropDownAppsCantDropInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="DropDownAppsPermissions" xml:space="preserve">
+    <value>When a shortcut is pressed, reads which windows are open, which apps they belong to, their place and whether they're minimized, never their titles or contents, and where the pointer is, to choose the display. While a window is shown, reads which window comes to the front. Moves, shows, hides and puts on top the listed apps' windows, and marks hidden ones so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Starts listed apps, never with admin rights. Recent results stay in memory only. Makes no network connections and sends nothing.</value>
+    <comment>Drop-down Apps page: below FeaturePermissionsHeader.</comment>
+  </data>
+  <data name="DropDownAppsKeyAboveTab" xml:space="preserve">
+    <value>the key above Tab</value>
+    <comment>Drop-down Apps page: used in DropDownAppsShortcutControlKey and DropDownAppsShortcutAltKey when the key above Tab types no character that can be shown.</comment>
+  </data>
+  <data name="DropDownAppsResultTimeAndCount" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Drop-down Apps page: when a recent result happened. {0} is the time of the latest one; {1} is DropDownAppsResultCount.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_one" xml:space="preserve">
+    <value>{0} time</value>
+    <comment>Plural form "one". Drop-down Apps page: how many times in a row a recent result happened. {0} is the number.</comment>
+  </data>
+  <data name="DropDownAppsResultCount_other" xml:space="preserve">
+    <value>{0} times</value>
+    <comment>Plural form "other". Drop-down Apps page: how many times in a row a recent result happened. {0} is the number.</comment>
+  </data>
 </root>

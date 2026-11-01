@@ -56,7 +56,7 @@ public sealed partial class DropDownAppsFeature : IFeature
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
-    public static FeatureInfo Definition { get; } = new("dropDownApps", WindowsModule.Id, "DropDownAppsName", "DropDownAppsDescription", "");
+    public static FeatureInfo Definition { get; } = new("dropDownApps", WindowsModule.Id, "DropDownAppsName", "DropDownAppsDescription", "");
 
     /// <summary>
     /// Whether this PC can run Drop-down Apps, for the settings app, which doesn't create the feature.
