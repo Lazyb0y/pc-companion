@@ -16,6 +16,9 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 {
     public static readonly DisplayDetails Display = new(new Rectangle(0, 0, 1920, 1080), new Rectangle(0, 0, 1920, 1032), 96);
 
+    /// <summary>A second display, right of the first, for the windows on it.</summary>
+    public static readonly DisplayDetails SecondDisplay = new(new Rectangle(1920, 0, 1920, 1080), new Rectangle(1920, 0, 1920, 1032), 96);
+
     /// <summary>The invisible borders of every window.</summary>
     public static readonly FrameInsets Borders = new(7, 0, 7, 7);
 
@@ -37,6 +40,8 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public bool AnimationsOn { get; set; } = true;
 
+    public bool IsMouseButtonHeld { get; set; }
+
     public List<Rectangle> OtherDisplays { get; } = [];
 
     /// <summary>Whether placing a minimized or maximized window is done at once; otherwise the test answers the requests.</summary>
@@ -54,17 +59,9 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
     public FakeDropWindow Get(nint handle) => Windows.Single(window => window.Handle == handle);
 
     IReadOnlyList<TopLevelWindow> IDropDownSystem.Windows() =>
-        [.. Windows.Where(window => window.Visible && !window.Destroyed).Select(window => new TopLevelWindow(
-            window.Handle,
-            window.ProcessId,
-            window.Minimized,
-            window.Cloaked,
-            window.ToolWindow,
-            IsAppWindow: false,
-            IsNoActivate: false,
-            window.Topmost,
-            HasOwner: window.Owner != 0,
-            IsDesktop: false))];
+        [.. Windows.Where(window => window.Visible && !window.Destroyed).Select(Describe)];
+
+    public TopLevelWindow Describe(nint window) => Describe(Get(window));
 
     public string? WindowAppId(nint window) => Find(window)?.AppId;
 
@@ -127,7 +124,7 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public DisplayDetails? MainDisplay() => Display;
 
-    public DisplayDetails? DisplayOf(nint window) => Display;
+    public DisplayDetails? DisplayOf(nint window) => Find(window)?.OnSecondDisplay == true ? SecondDisplay : Display;
 
     public IReadOnlyList<Rectangle> DisplayAreas() => [Display.Bounds, .. OtherDisplays];
 
@@ -254,6 +251,18 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public void Unwatch(uint processId) => Watched.Remove(processId);
 
+    private static TopLevelWindow Describe(FakeDropWindow window) => new(
+        window.Handle,
+        window.ProcessId,
+        window.Minimized,
+        window.Cloaked,
+        window.ToolWindow,
+        IsAppWindow: false,
+        window.NoActivate,
+        window.Topmost,
+        HasOwner: window.Owner != 0,
+        IsDesktop: false);
+
     private FakeDropWindow? Find(nint window) => Windows.FirstOrDefault(found => found.Handle == window && !found.Destroyed);
 }
 
@@ -294,6 +303,10 @@ internal sealed class FakeDropWindow
     public bool Topmost { get; set; }
 
     public bool ToolWindow { get; set; }
+
+    public bool NoActivate { get; set; }
+
+    public bool OnSecondDisplay { get; set; }
 
     public nint Owner { get; set; }
 
