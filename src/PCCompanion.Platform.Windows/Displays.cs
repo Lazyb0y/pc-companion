@@ -49,11 +49,9 @@ public static class Displays
 
         PInvoke.EnumDisplayMonitors(HDC.Null, (RECT?)null, (monitor, _, _, _) =>
         {
-            var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
-            if (PInvoke.GetMonitorInfo(monitor, &info))
+            if (Details(monitor) is { } details)
             {
-                var dpi = PInvoke.GetDpiForMonitor(monitor, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var x, out _).Succeeded ? x : 96;
-                displays.Add(new DisplayDetails(ToRectangle(info.rcMonitor), ToRectangle(info.rcWork), dpi));
+                displays.Add(details);
             }
 
             return true;
@@ -61,6 +59,23 @@ public static class Displays
 
         return displays;
     }
+
+    /// <summary>
+    /// The display <paramref name="point"/> is on, or the nearest one, as for the pointer, in
+    /// physical pixels when the process is per-monitor DPI aware; <see langword="null"/> when its
+    /// details can't be read.
+    /// </summary>
+    public static DisplayDetails? At(Point point) => Details(PInvoke.MonitorFromPoint(point, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST));
+
+    /// <summary>The main display, where the taskbar's notification area is, as <see cref="At"/> reads it.</summary>
+    public static DisplayDetails? Main() => Details(PInvoke.MonitorFromPoint(Point.Empty, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTOPRIMARY));
+
+    /// <summary>
+    /// The display <paramref name="window"/> is mostly on, or nearest to, as <see cref="At"/> reads
+    /// it; <see langword="null"/> when there's no window.
+    /// </summary>
+    public static DisplayDetails? Of(nint window) =>
+        window == 0 ? null : Details(PInvoke.MonitorFromWindow(new HWND(window), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST));
 
     /// <summary>
     /// The area of the display that <paramref name="window"/> is on, mostly on or nearest to, in
@@ -102,6 +117,18 @@ public static class Displays
 
     /// <summary>The size of small icons, such as notification icons, at a DPI: 16 pixels at 96.</summary>
     public static int SmallIconSize(uint dpi) => PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSMICON, dpi);
+
+    private static unsafe DisplayDetails? Details(HMONITOR monitor)
+    {
+        var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
+        if (monitor.IsNull || !PInvoke.GetMonitorInfo(monitor, &info))
+        {
+            return null;
+        }
+
+        var dpi = PInvoke.GetDpiForMonitor(monitor, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out var x, out _).Succeeded ? x : 96;
+        return new DisplayDetails(ToRectangle(info.rcMonitor), ToRectangle(info.rcWork), dpi);
+    }
 
     private static Rectangle ToRectangle(RECT area) => Rectangle.FromLTRB(area.left, area.top, area.right, area.bottom);
 }

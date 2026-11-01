@@ -20,6 +20,7 @@ public sealed class TopLevelWindowsTests
     private const nuint MinimizeCommand = 0xF020; // SC_MINIMIZE
     private const nuint RestoreCommand = 0xF120; // SC_RESTORE
     private const int StyleIndex = -16; // GWL_STYLE
+    private const int OwnerIndex = -8; // GWLP_HWNDPARENT, which sets a top-level window's owner
     private const nint MinimizeBoxStyle = 0x00020000; // WS_MINIMIZEBOX
 
     [Fact]
@@ -491,6 +492,150 @@ public sealed class TopLevelWindowsTests
             release.Set();
             Assert.True(thread.Join(TimeSpan.FromSeconds(30)));
         }
+    }
+
+    [Fact]
+    public void DescribeReadsAWindowAsTheListDoes()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+
+        Assert.Equal(Assert.Single(TopLevelWindows.List(), listed => listed.Handle == window.Handle), TopLevelWindows.Describe(window.Handle));
+    }
+
+    [Fact]
+    public void AWindowsOwnedWindowsAreListedWhileTheyShow()
+    {
+        using var owner = new MessageWindow(UniqueClassName());
+        using var owned = new MessageWindow(UniqueClassName());
+        using var other = new MessageWindow(UniqueClassName());
+        _ = SetWindowLongPtr(owned.Handle, OwnerIndex, owner.Handle);
+        Show(owner.Handle);
+        Show(other.Handle);
+        Assert.Empty(TopLevelWindows.VisibleOwnedWindows(owner.Handle));
+
+        // Not a popup window, which GA_ROOTOWNER wouldn't follow to its owner.
+        Show(owned.Handle);
+
+        Assert.Equal([owned.Handle], TopLevelWindows.VisibleOwnedWindows(owner.Handle));
+    }
+
+    [Fact]
+    public void PlaceMovesAndSizesAHiddenWindowWithoutShowingIt()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var bounds = new Rectangle(30, 40, 500, 350);
+
+        Assert.True(TopLevelWindows.Place(window.Handle, bounds));
+        RunUntil(window, () => TopLevelWindows.Bounds(window.Handle) == bounds);
+
+        Assert.Equal(bounds, TopLevelWindows.Bounds(window.Handle));
+        Assert.False(TopLevelWindows.IsVisible(window.Handle));
+    }
+
+    [Fact]
+    public void MoveToMovesAWindowAndKeepsItsSize()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(TopLevelWindows.Place(window.Handle, new Rectangle(30, 40, 500, 350)));
+
+        Assert.True(TopLevelWindows.MoveTo(window.Handle, new Point(60, -200)));
+        RunUntil(window, () => TopLevelWindows.Bounds(window.Handle)?.Location == new Point(60, -200));
+
+        Assert.Equal(new Rectangle(60, -200, 500, 350), TopLevelWindows.Bounds(window.Handle));
+    }
+
+    [Fact]
+    public void TheVisibleBoundsAreInsideTheBounds()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(TopLevelWindows.Place(window.Handle, new Rectangle(30, 40, 500, 350)));
+        Show(window.Handle);
+
+        var visible = TopLevelWindows.VisibleBounds(window.Handle);
+
+        Assert.NotNull(visible);
+        Assert.True(new Rectangle(30, 40, 500, 350).Contains(visible.Value), $"{visible}");
+    }
+
+    [Fact]
+    public void AClosedWindowHasNoBounds()
+    {
+        var window = new MessageWindow(UniqueClassName());
+        var handle = window.Handle;
+        window.Dispose();
+
+        Assert.Null(TopLevelWindows.Bounds(handle));
+        Assert.Null(TopLevelWindows.VisibleBounds(handle));
+        Assert.Null(TopLevelWindows.Placement(handle));
+    }
+
+    [Fact]
+    public void ShowWithoutActivatingShowsAHiddenWindowWithoutActivatingIt()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(WindowCloak.Set(window.Handle, cloaked: true));
+
+        Assert.True(TopLevelWindows.ShowWithoutActivating(window.Handle));
+        RunUntil(window, () => TopLevelWindows.IsVisible(window.Handle));
+
+        Assert.True(TopLevelWindows.IsVisible(window.Handle));
+        Assert.False(TopLevelWindows.IsMinimized(window.Handle));
+        Assert.NotEqual(window.Handle, Foreground.Window);
+    }
+
+    [Fact]
+    public void SetTopmostPutsAWindowOnTopAndTakesItOff()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Show(window.Handle);
+
+        Assert.True(TopLevelWindows.SetTopmost(window.Handle, topmost: true));
+        RunUntil(window, () => TopLevelWindows.IsTopmost(window.Handle));
+        Assert.True(TopLevelWindows.IsTopmost(window.Handle));
+
+        Assert.True(TopLevelWindows.SetTopmost(window.Handle, topmost: false));
+        RunUntil(window, () => !TopLevelWindows.IsTopmost(window.Handle));
+        Assert.False(TopLevelWindows.IsTopmost(window.Handle));
+    }
+
+    [Fact]
+    public void ThePlacementOfAWindowIsItsNormalRectangle()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var bounds = new Rectangle(30, 40, 500, 350);
+        Assert.True(TopLevelWindows.Place(window.Handle, bounds));
+
+        Assert.Equal(new WindowPlacement(bounds, WindowState.Normal, RestoresMaximized: false), TopLevelWindows.Placement(window.Handle));
+        Assert.False(TopLevelWindows.IsMaximized(window.Handle));
+    }
+
+    [Fact]
+    public void SetPlacementShowsAHiddenWindowAtItsNormalRectangleWithoutActivatingIt()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(WindowCloak.Set(window.Handle, cloaked: true));
+        var bounds = new Rectangle(70, 80, 450, 300);
+
+        Assert.True(TopLevelWindows.SetPlacement(window.Handle, bounds, minimized: false, restoresMaximized: false));
+
+        Assert.True(TopLevelWindows.IsVisible(window.Handle));
+        Assert.Equal(bounds, TopLevelWindows.Bounds(window.Handle));
+        Assert.NotEqual(window.Handle, Foreground.Window);
+    }
+
+    [Fact]
+    public void SetPlacementCanShowAWindowMinimizedToComeBackMaximized()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(WindowCloak.Set(window.Handle, cloaked: true));
+        var bounds = new Rectangle(70, 80, 450, 300);
+
+        Assert.True(TopLevelWindows.SetPlacement(window.Handle, bounds, minimized: true, restoresMaximized: true));
+
+        Assert.True(TopLevelWindows.IsMinimized(window.Handle));
+        Assert.Equal(new WindowPlacement(bounds, WindowState.Minimized, RestoresMaximized: true), TopLevelWindows.Placement(window.Handle));
+        Assert.NotEqual(window.Handle, Foreground.Window);
     }
 
     // Cloaked first, so it never appears.
