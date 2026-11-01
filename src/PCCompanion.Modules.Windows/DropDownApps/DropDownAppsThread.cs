@@ -24,23 +24,27 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly DropDownWindows _shared;
+    private readonly DropDownResults _results;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Dropper? _dropper;
 
     /// <param name="shared">The drop-down windows as Hide Apps and Minimize to Tray read them.</param>
-    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownAppsThread? previous = null)
+    /// <param name="results">The recent results, which the feature gives the settings app.</param>
+    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownResults results, DropDownAppsThread? previous = null)
         : base("Drop-down Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(shared);
+        ArgumentNullException.ThrowIfNull(results);
 
         _commands = commands;
         _time = time;
         _logger = logger;
         _shared = shared;
+        _results = results;
         Start();
     }
 
@@ -118,7 +122,9 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             _system.WindowShown += (_, shown) => Controller.OnShown(shown);
             _system.WindowDestroyed += (_, destroyed) => Controller.OnDestroyed(destroyed);
             _system.MinimizeStarted += (_, minimizing) => Controller.OnMinimizeStart(minimizing);
+            Controller.Reported += (_, report) => owner._results.Add(report.AppIndex, report.Outcome);
             _shortcuts.Pressed += (_, keys) => owner.Guard(() => Press(keys));
+            _shortcuts.Refused += (_, keys) => owner.Guard(() => Refused(keys));
             _foreground.Raised += (_, _) => owner.Guard(() =>
             {
                 _shortcuts.Check();
@@ -164,14 +170,20 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             _owner._dropper = null;
         }
 
-        private void Press(KeyPositionShortcut keys)
+        private static DropDownShortcut ShortcutOf(KeyPositionShortcut keys) =>
+            DropDownShortcuts.All.FirstOrDefault(shortcut => DropDownShortcuts.KeysOf(shortcut) == keys, DropDownShortcut.None);
+
+        private void Press(KeyPositionShortcut keys) => Controller.Press(ShortcutOf(keys));
+
+        // Another program has the shortcut, which the recent results say for the app that has it.
+        private void Refused(KeyPositionShortcut keys)
         {
-            foreach (var shortcut in DropDownShortcuts.All)
+            var shortcut = ShortcutOf(keys);
+            for (var index = 0; index < Controller.Shortcuts.Count; index++)
             {
-                if (DropDownShortcuts.KeysOf(shortcut) == keys)
+                if (Controller.Shortcuts[index] == shortcut && shortcut != DropDownShortcut.None)
                 {
-                    Controller.Press(shortcut);
-                    return;
+                    _owner._results.Add(index, DropDownOutcome.ShortcutTaken);
                 }
             }
         }

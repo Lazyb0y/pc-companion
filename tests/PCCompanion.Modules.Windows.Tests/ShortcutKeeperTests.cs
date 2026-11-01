@@ -139,6 +139,19 @@ public sealed class ShortcutKeeperTests : IDisposable
     }
 
     [Fact]
+    public void ARefusedShortcutIsReportedOnceForItsKey()
+    {
+        var refused = new List<KeyPositionShortcut>();
+        _keeper.Refused += (_, shortcut) => refused.Add(shortcut);
+        _environment.Taken.Add((Alt, 0xC0));
+
+        _keeper.Configure([AltAboveTab, AltShiftAboveTab]);
+        _keeper.Check();
+
+        Assert.Equal([AltAboveTab], refused);
+    }
+
+    [Fact]
     public void ARefusedShortcutIsTriedAgainWhenTheSettingsApply()
     {
         _environment.Taken.Add((Alt, 0xC0));
