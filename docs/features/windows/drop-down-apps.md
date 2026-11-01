@@ -122,7 +122,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 - **Recomputed at each show,** from the work area as it is then, so a change of displays, taskbar or scale is followed.
 - **A size the user drags** while the window is shown is kept for that app, as a share of the work area, until PC Companion exits. The page's sizes stay as they are.
 - **An app that won't be smaller** than its minimum size keeps it: the window is centered again from its actual size, as Windows enforces the minimum (spike).
-- **Another display scale:** when the display has another scale than the window had, the app may resize the window as it moves (`WM_DPICHANGED`), so its size is set again once the move is done.
+- **Another display scale:** when the display has another scale than the window had, the app may resize the window as it moves (`WM_DPICHANGED`), so its size is set again once the move is done: 100 ms after the window is in place, its size is checked, set again if the app changed it, and checked once more 100 ms later.
 
 ### Sliding in
 
@@ -143,6 +143,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 - **Minimized or maximized windows:** a hidden window that's minimized or maximized, such as one taken from the taskbar or maximized by the user, is shown with `SetWindowPlacement` instead.
   - **How:** its normal place is set just above the work area, and it's shown without taking the front (`SW_SHOWNOACTIVATE`). Moving a hidden maximized window leaves it maximized, and restoring it first shows it for a moment at its old place, as the spike showed.
   - **On the thread pool:** `SetWindowPlacement` waits for the app (4.7 seconds for one that stopped responding, in the spike), so it runs there and the slide starts when it returns.
+  - **Its invisible borders** aren't known while it's minimized, so its size is set again once it shows, as for another display scale.
   - The place and state the window had before it first dropped down are kept, to put it back when the feature lets it go; see [Never losing a window](#never-losing-a-window).
 
 ### Keep on top
@@ -182,14 +183,15 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 ### Minimized, or shown by someone else
 
 - **Minimized:** when the shown drop-down window is minimized, from its Minimize button, Windows + Down, Windows + M or Show desktop (`EVENT_SYSTEM_MINIMIZESTART`, which Show desktop raised for it in the spike), it's hidden once minimized and counts as hidden, and its shortcut brings it back.
-- **Shown by someone else:** when its app shows the hidden window, or another program does (`EVENT_OBJECT_SHOW`), the app wins. The window stays where it shows, its mark is removed, and it counts as shown.
+- **Shown by someone else:** when its app shows the hidden window, or another program does (`EVENT_OBJECT_SHOW`), the app wins. The window stays where it shows, its mark is removed, and it counts as shown. The report of a show of Drop-down Apps' own can arrive after a later hide, so the window is checked again 100 ms later, and only one still shown and hidden by Drop-down Apps counts.
 
 ## Virtual desktops
 
 - **Shown on the current desktop:** a hidden window shows on the virtual desktop that's showing, as Windows places a window that's shown again. Windows doesn't switch desktops, as Minimize to Tray's spike and this spike showed.
 - **Shown on another desktop:** when the shortcut is pressed while the window is shown on another desktop (cloaked), it's hidden, then shown here 100 ms later.
   - **Why the wait:** in the spike, a window shown again at once came back on its old desktop, and bringing it to the front then switched to that desktop. With 50 ms or more in between, it came here every time.
-  - **Activated only once here:** the window is brought to the front only once it isn't cloaked. When it still is, it's tried once more after 200 ms, and then the warning sound plays and a recent result says so.
+  - **Activated only once here:** the window is brought to the front only once it shows and isn't cloaked, checked every 15 ms for up to 300 ms. When it's still cloaked then, the warning sound plays and a recent result says so.
+- **Told apart by cloaking:** a shown window that's cloaked counts as shown on another desktop; Windows' desktop interface (`IVirtualDesktopManager`) isn't needed.
 - Moving another program's window to a desktop (`IVirtualDesktopManager::MoveWindowToDesktop`) is refused (Minimize to Tray's spike), so it isn't used.
 
 ## Never losing a window
@@ -231,7 +233,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - **Minimize to Tray's shortcut** plays the warning sound for a drop-down window, and its page lists it among the windows that can't go to the tray.
 - **The shared set:** the module keeps the drop-down windows in a set that both features read, as Minimize to Tray reads Hide Apps' (`HideAppsMinimized`). Drop-down Apps' thread changes it, and the others read it on their threads.
 - **A window in Minimize to Tray's tray** can drop down. Drop-down Apps shows it, and Minimize to Tray lets it go as when its app shows it: it removes its mark and icon.
-- **Their specs** get a line each on these points with the code.
+- **Their specs** say so too: [Hide Apps](hide-apps.md#windows-that-stay) and [Minimize to Tray](minimize-to-tray.md#windows-that-cant-go-to-the-tray).
 - **With either feature off,** nothing changes.
 
 ## Recent results
@@ -247,6 +249,8 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - no window came within 30 seconds;
   - the window stayed on another desktop;
   - another program has the shortcut.
+
+  The same result again right after itself is counted, with its latest time, instead of pushing the others out, as on the Hot Corners page.
 - **Results name no app:** they hold only its place in the list, which the page shows with the name the list keeps. They aren't written to disk, and they're gone when the feature is turned off or the host exits.
 - **On the page:** a **Recent results** card lists them, newest first, such as "Notes: runs as administrator, so it can't drop down while PC Companion doesn't", with the time in the user's format. It works as Hot Corners' card does: it updates while the page is shown, and says when results aren't available.
 - **How they get there:** through a named pipe that only the user's own account and the system can open, named `PCCompanion.DropDownApps.Results.<session ID>`, which rejects remote clients and reads nothing (`SnapshotPipe`), as for Hot Corners.
@@ -371,7 +375,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
 - **When the feature is first turned on:** no app is listed, the display is the one with the pointer, the width is 100% and the height 50%, the slide is on, the window hides when another app comes to the front on any display, and Keep on top is off.
 - **The switch on Home** changes only `enabled` and keeps the other settings.
 - **A section that can't be read,** for example after a hand edit, turns the feature off with a warning in the log.
-- **Listed apps** are read as Hot Corners reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out.
+- **Listed apps** are read as Hot Corners reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out, as is an app listed a second time.
 - **Unknown or out-of-range values:**
   - An unknown shortcut is None, with a warning.
   - A shortcut that a listed app earlier in the list has is None for the later one, with a warning.
@@ -386,7 +390,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
       { "name": "Terminal", "appId": "Microsoft.WindowsTerminal_8wekyb3d8bbwe!App", "shortcut": "WindowsControlAboveTab" },
       { "name": "Obsidian", "program": "C:\\Users\\Me\\AppData\\Local\\Programs\\Obsidian\\Obsidian.exe", "shortcut": "WindowsControlAlt1" }
     ],
-    "display": "Pointer",
+    "display": "WithPointer",
     "width": 100,
     "height": 50,
     "slide": true,
@@ -397,7 +401,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
 ```
 
 - `shortcut`: `WindowsControlAboveTab`, `WindowsAltAboveTab`, `WindowsControlAlt1` to `WindowsControlAlt9`, or `None`.
-- `display`: `Pointer` or `Main`.
+- `display`: `WithPointer` or `Main`.
 - `width`: 30 to 100. `height`: 20 to 100.
 - `hideWhenInactive`: `AnyDisplay`, `SameDisplay` or `Never`.
 - `name` is shown on the page and in recent results only.
@@ -423,7 +427,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
   - windows: `ShowWindowAsync`, `SetWindowPos`, `SetWindowPlacement`, `GetWindowPlacement`, `SetForegroundWindow`, `GetLastActivePopup`, `IsWindowEnabled`, `SetProp`, `GetProp` and `RemoveProp`;
   - events and keys: `SetWinEventHook`, `RegisterHotKey`, `MapVirtualKeyEx` and `GetAsyncKeyState`;
   - displays and composition: `DwmGetWindowAttribute`, `DwmFlush`, `MonitorFromPoint`, `MonitorFromWindow`, `GetMonitorInfo`, `GetCursorPos` and `SystemParametersInfo`;
-  - the shell: `IVirtualDesktopManager` and `SHCreateItemFromParsingName`;
+  - the shell: `SHCreateItemFromParsingName`;
   - the session: `SetProcessShutdownParameters` and `MessageBeep`.
 - The spike ran on Windows 11 only, so Windows 10 is tested by hand.
 
@@ -483,27 +487,28 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
   - **the shared set** read by Hide Apps and Minimize to Tray;
   - **the settings:** defaults, the spec's example, an unknown shortcut, a shortcut listed twice, values out of range, and a section that can't be read;
   - **recent results:** the last 5 kept, the JSON the pipe gives, and the page's text for each outcome.
-- **Sandbox checks** (`scripts/sandbox/groups/DropDownApps.ps1`), with test windows the checks start, and animation effects turned on for the slide, since the Sandbox has them off:
-  - **the page:** the Home switch turns the feature on with its defaults, and the page saves the list, each row's shortcut and the other settings; Running app adds an app with the first free shortcut;
-  - **dropping down:** the shortcut, sent by `SendInput` by scan code, slides a test window in at the top of the work area at the page's width and height, in front, and keys sent during the slide reach it; the host logs the slide's frames;
-  - **hiding:** pressing it again hides the window, off the taskbar, and the window that had the front gets it back; with animation effects off, the window shows and hides at once;
-  - **starting:** with the test program not running, the shortcut starts it and drops down its window; Edge starts by its app ID; an app ID that isn't in the Apps folder opens nothing and gives its recent result;
-  - **several windows:** with the app's two windows, the front-most drops down; closing it, the next press takes the other;
-  - **hiding on focus loss:** the window hides when another test window comes to the front and when the desktop is clicked, and stays for its own dialog, its context menu and the emoji panel;
-  - **maximized windows:** a maximized test window drops down without showing at its old place, and comes back maximized after **Exit**;
-  - **windows that stay:** a window with a dialog open stays, with its recent result;
-  - **keep on top:** the window is on top while shown, and not after it hides or after **Exit**;
-  - **virtual desktops:** with a second virtual desktop, a window shown there comes to the first desktop without a switch;
-  - **an app that stopped responding:** a test window that stops responding doesn't hold the host, as the host's log shows, and reaches its place once it responds;
-  - **apps running as administrator:** with the host's file labeled Medium integrity, as the spike did, a test window running as administrator doesn't drop down, and the recent result says why; Settings doesn't either;
-  - **with the other features:** Hide others leaves a shown drop-down window, Minimize to Tray's shortcut refuses one, and a window in Minimize to Tray's tray drops down;
-  - **never losing a window:** **Exit** brings hidden windows back on the taskbar, minimized; ending the host with `Stop-Process` leaves them hidden, and the next start brings them back;
-  - **recent results** show on the page as they happen;
+- **Sandbox checks** (`scripts/sandbox/groups/DropDownApps.ps1`), with test programs the checks build and start, and animation effects turned on for the slide, since the Sandbox has them off:
+  - **the page:** the Home switch turns the feature on, and the page saves the list, with Running app adding an app with the first shortcut, the shortcut chosen in its row, Keep on top and Remove;
+  - **dropping down:** the shortcut, sent by `SendInput` by scan code, slides the app's front-most window in at the top of the work area at the page's width and height, in front, and leaves its other window; the host logs the slide's frames;
+  - **hiding:** pressing it again slides the window up and hides it, marked, and the window that had the front gets it back; with animation effects off, the window shows and hides at once;
+  - **hiding on focus loss:** the window hides when another test program's window comes to the front;
+  - **windows that stay:** a window with a dialog open stays, and the host logs why;
+  - **keep on top:** the window is on top while shown, and not after it hides;
+  - **an app that stopped responding:** a test window that stops responding doesn't hold the shortcut, as the host's log shows, and is hidden once it responds;
+  - **virtual desktops:** a window shown on the first desktop comes to a second one, in front, without a switch;
+  - **with the other features:** Minimize to Tray's shortcut and Hide others leave a shown drop-down window, and a window in Minimize to Tray's tray drops down and leaves the tray;
+  - **never losing a window:** **Exit** brings a hidden window back on the taskbar, minimized; ending the host with `Stop-Process` leaves it hidden and marked, and the next start brings it back;
+  - **maximized windows:** a maximized test window drops down unmaximized, and comes back maximized after **Exit**;
+  - **starting:** with the test program not running, the shortcut starts it and drops down its window; Edge starts by its app ID and drops down; an app ID that isn't in the Apps folder opens nothing, and the host logs why;
+  - **recent results** show on the page;
+  - **apps running as administrator:** with the host's file labeled Medium integrity, as the spike did, a test window running as administrator doesn't drop down, and the host logs why; Settings, in the shared frame, doesn't either;
   - no feature holds the host's UI thread, as every group checks.
 - The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
 - **What the Sandbox can't check:** several displays and scales, a display above another, the foreground lock, UAC on, Windows 10, Narrator, and smoothness on a real display (the Sandbox draws about 32 frames a second).
 - **By hand:**
   - the slide on real displays at 60 Hz and 120 to 144 Hz, with animation effects on, including Windows' own transitions;
+  - keys typed during the slide reaching the window;
+  - a click on the desktop, the window's own context menu, the emoji panel and Clipboard history, with hiding on focus loss;
   - several displays at different scales: the display with the pointer, the main display, a display above another, and a window moving to a display with another scale;
   - that the window comes to the front, and the front goes back, on a PC, where the foreground lock applies;
   - an app running as administrator with UAC on, with and without Always run as administrator;
