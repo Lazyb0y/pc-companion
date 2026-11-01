@@ -16,6 +16,12 @@ public sealed class ShellActionsTests
     }
 
     [Fact]
+    public void AnAppIdThatIsntInTheAppsFolderIsNotThere()
+    {
+        Assert.False(ShellActions.IsInAppsFolder("PCCompanion.Tests.NoSuchApp." + Guid.NewGuid().ToString("N")));
+    }
+
+    [Fact]
     public void RelativeAddressesAreRefused()
     {
         Assert.Throws<ArgumentException>(() => ShellActions.OpenWebPage(new Uri("releases/latest", UriKind.Relative)));

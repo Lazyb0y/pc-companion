@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
+using Windows.Win32.UI.Shell;
 
 namespace PCCompanion.Platform.Windows;
 
@@ -18,6 +19,8 @@ namespace PCCompanion.Platform.Windows;
 public static class ShellActions
 {
     private const nint MonitorOff = 2;
+
+    private const string AppsFolder = @"shell:AppsFolder\";
 
     // Unassigned, so pressing it does nothing.
     private const VIRTUAL_KEY MaskKey = (VIRTUAL_KEY)0xE8;
@@ -75,6 +78,44 @@ public static class ShellActions
         }
 
         return OpenAddress(address);
+    }
+
+    /// <summary>
+    /// Whether Start's Apps folder has an app with the app ID <paramref name="appId"/>
+    /// (<c>shell:AppsFolder\</c> and the app ID). Windows opens File Explorer, without an error,
+    /// for an app ID that isn't there.
+    /// </summary>
+    public static unsafe bool IsInAppsFolder(string appId)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(appId);
+
+        var iid = typeof(IShellItem).GUID;
+        fixed (char* name = AppsFolder + appId)
+        {
+            return PInvoke.SHCreateItemFromParsingName(name, null, &iid, out var item).Succeeded && item is not null;
+        }
+    }
+
+    /// <summary>
+    /// Opens the app with the app ID <paramref name="appId"/> through Start's Apps folder, as Start
+    /// does, with this process's rights, without waiting for the app. Check with
+    /// <see cref="IsInAppsFolder"/> first. Returns 0, or Windows' error code when File Explorer,
+    /// which opens it, didn't start.
+    /// </summary>
+    public static int OpenApp(string appId)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(appId);
+
+        try
+        {
+            var explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+            using var process = Process.Start(new ProcessStartInfo(explorer) { ArgumentList = { AppsFolder + appId } });
+            return 0;
+        }
+        catch (Win32Exception exception)
+        {
+            return exception.NativeErrorCode;
+        }
     }
 
     /// <summary>

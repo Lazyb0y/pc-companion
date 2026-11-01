@@ -14,6 +14,7 @@ public sealed class HostCommandsTests
 {
     private static readonly Uri Address = new("https://tracking.example.com/?number=1Z999");
     private const string Program = @"C:\Users\Someone\Tools\Viewer.exe";
+    private const string AppId = "Chrome.UserData.Profile1";
 
     private readonly RecordingLogger<HostCommands> _logger = new();
 
@@ -25,7 +26,7 @@ public sealed class HostCommandsTests
     {
         var commands = new HostCommands(_logger);
         int settings = 0, exits = 0;
-        commands.Attach(_uiThread.Enqueue, _ => settings++, () => exits++, _ => true, (_, _) => 0);
+        commands.Attach(_uiThread.Enqueue, _ => settings++, () => exits++, _ => true, (_, _) => 0, _ => 0);
 
         await Task.Run(commands.OpenSettings, TestContext.Current.CancellationToken);
         await Task.Run(commands.ExitApp, TestContext.Current.CancellationToken);
@@ -40,7 +41,7 @@ public sealed class HostCommandsTests
     {
         var commands = new HostCommands(_logger);
         var pages = new List<string?>();
-        commands.Attach(_uiThread.Enqueue, pages.Add, () => { }, _ => true, (_, _) => 0);
+        commands.Attach(_uiThread.Enqueue, pages.Add, () => { }, _ => true, (_, _) => 0, _ => 0);
 
         commands.OpenSettings();
         commands.OpenFeatureSettings("networkProfiles");
@@ -58,17 +59,18 @@ public sealed class HostCommandsTests
         commands.ExitApp();
         Assert.False(commands.OpenWebPage(Address));
         Assert.False(commands.StartProgram(Program, [], out var errorCode));
+        Assert.False(commands.StartApp(AppId, out var appErrorCode));
 
-        Assert.Equal(21, errorCode);
+        Assert.Equal((21, 21), (errorCode, appErrorCode));
         Assert.Empty(_uiThread);
-        Assert.Equal(4, _logger.Entries.Count(entry => entry.Level == LogLevel.Warning));
+        Assert.Equal(5, _logger.Entries.Count(entry => entry.Level == LogLevel.Warning));
     }
 
     [Fact]
     public void AFailingCommandIsLoggedAndDoesNotReachTheUiThreadsLoop()
     {
         var commands = new HostCommands(_logger);
-        commands.Attach(_uiThread.Enqueue, _ => throw new InvalidOperationException("Can't open."), () => { }, _ => true, (_, _) => 0);
+        commands.Attach(_uiThread.Enqueue, _ => throw new InvalidOperationException("Can't open."), () => { }, _ => true, (_, _) => 0, _ => 0);
 
         commands.OpenSettings();
         RunUiThread();
@@ -87,7 +89,7 @@ public sealed class HostCommandsTests
         {
             asked.Add(address);
             return opened;
-        }, (_, _) => 0);
+        }, (_, _) => 0, _ => 0);
 
         Assert.Equal(opened, commands.OpenWebPage(Address));
 
@@ -99,7 +101,7 @@ public sealed class HostCommandsTests
     public void AWebPageIsLoggedWithoutItsAddress()
     {
         var commands = new HostCommands(_logger);
-        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true, (_, _) => 0);
+        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true, (_, _) => 0, _ => 0);
 
         commands.OpenWebPage(Address);
 
@@ -118,7 +120,7 @@ public sealed class HostCommandsTests
         {
             asked.Add((program, arguments));
             return answer;
-        });
+        }, _ => 0);
 
         Assert.Equal(answer == 0, commands.StartProgram(Program, ["--open", "a b"], out var errorCode));
 
@@ -133,12 +135,34 @@ public sealed class HostCommandsTests
     public void AProgramIsLoggedWithoutItsPathOrArguments()
     {
         var commands = new HostCommands(_logger);
-        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true, (_, _) => 0);
+        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true, (_, _) => 0, _ => 0);
 
         commands.StartProgram(Program, ["copied text"], out _);
 
         var entry = Assert.Single(_logger.Entries);
         Assert.Equal((LogLevel.Debug, "A feature asked for a program."), (entry.Level, entry.Message));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)] // ERROR_FILE_NOT_FOUND
+    public void AnAppOpensOnTheCallingThreadWithTheHostsAnswerAndIsLoggedWithoutItsAppId(int answer)
+    {
+        var commands = new HostCommands(_logger);
+        var asked = new List<string>();
+        commands.Attach(_uiThread.Enqueue, _ => { }, () => { }, _ => true, (_, _) => 0, appId =>
+        {
+            asked.Add(appId);
+            return answer;
+        });
+
+        Assert.Equal(answer == 0, commands.StartApp(AppId, out var errorCode));
+
+        Assert.Equal(answer, errorCode);
+        Assert.Equal([AppId], asked);
+        Assert.Empty(_uiThread);
+        var entry = Assert.Single(_logger.Entries);
+        Assert.Equal((LogLevel.Debug, "A feature asked for an app."), (entry.Level, entry.Message));
     }
 
     private void RunUiThread()
