@@ -85,8 +85,9 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         _foreground = foreground;
 
         // The timer fires on the thread pool; the keeper runs on the window's thread.
-        _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)), logger);
-        _shortcut.Pressed += (_, direction) => Guard(() => Switch(direction));
+        _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)), logger, "App Windows");
+        _shortcut.Pressed += (_, shortcut) => Guard(() =>
+            Switch(shortcut.Modifiers.HasFlag(HotKeyModifiers.Shift) ? SwitchDirection.Back : SwitchDirection.Forward));
         _foreground.Raised += (_, _) => Guard(() => _shortcut?.Check());
         LogStarted(logger);
     }
@@ -119,7 +120,10 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
             LogUnknownShortcut(logger);
         }
 
-        _shortcut?.Configure(modifiers);
+        // The shortcut with Shift added goes back.
+        _shortcut?.Configure(modifiers is { } held
+            ? [new(held, ShortcutKeeper.KeyAboveTab), new(held | HotKeyModifiers.Shift, ShortcutKeeper.KeyAboveTab)]
+            : []);
         LogConfigured(logger, _settings.Shortcut, _settings.IncludeMinimized, _shortcut?.ChecksLayout ?? false);
     }
 
