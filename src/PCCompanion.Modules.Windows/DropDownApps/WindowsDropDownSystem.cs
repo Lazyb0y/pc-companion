@@ -22,6 +22,9 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     /// <summary>The name of the mark on windows Drop-down Apps put on top.</summary>
     public const string OnTopMarkName = "PCCompanion.DropDownApps.OnTop";
 
+    // Within the host's wait of 2 seconds for the feature's thread as it exits.
+    private static readonly TimeSpan PlacementWait = TimeSpan.FromSeconds(1.5);
+
     private static readonly Lazy<WindowMark> Marks = new(() => new WindowMark(MarkName));
     private static readonly Lazy<WindowMark> OnTopMarks = new(() => new WindowMark(OnTopMarkName));
 
@@ -33,6 +36,7 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     private readonly IHostCommands? _commands;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, (WinEventHook Shows, WinEventHook Minimizes)> _watched = [];
+    private readonly List<Task> _placements = [];
 
     /// <param name="window">The feature thread's window, where reports and results arrive.</param>
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
@@ -134,11 +138,12 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
         ArgumentNullException.ThrowIfNull(done);
 
         var thread = _window ?? throw new InvalidOperationException("Placing windows needs the feature thread's window.");
-        _ = Task.Run(() =>
+        _placements.RemoveAll(placement => placement.IsCompleted);
+        _placements.Add(Task.Run(() =>
         {
             var placed = TopLevelWindows.SetPlacement(window, normalBounds, minimized, restoresMaximized);
             thread.BeginInvoke(() => _guard(() => done(placed)));
-        });
+        }));
     }
 
     public bool Mark(nint window) => Marks.Value.Set(window);
@@ -222,11 +227,15 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
         }
     }
 
+    // A window let go as the feature stops, such as one that comes back maximized, is placed before
+    // the host ends, within its wait for the feature's thread.
     public void Dispose()
     {
         foreach (var processId in _watched.Keys.ToList())
         {
             Unwatch(processId);
         }
+
+        _ = Task.WaitAll([.. _placements], PlacementWait);
     }
 }
