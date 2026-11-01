@@ -38,6 +38,9 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
     /// <summary>Raised on the keeper's thread when one of the shortcuts is pressed.</summary>
     public event EventHandler<KeyPositionShortcut>? Pressed;
 
+    /// <summary>Raised on the keeper's thread when Windows refuses one of the shortcuts, once for each key it's tried with.</summary>
+    public event EventHandler<KeyPositionShortcut>? Refused;
+
     /// <summary>Whether the layout is checked once a second, because the user's layouts disagree on one of the keys.</summary>
     public bool ChecksLayout => _timer is not null;
 
@@ -147,6 +150,7 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         if (registration.Handle is null)
         {
             LogRefused(logger, feature, shortcut.Modifiers, key);
+            Refused?.Invoke(this, shortcut);
         }
         else
         {

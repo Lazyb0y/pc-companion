@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
@@ -20,7 +21,9 @@ public sealed partial class DropDownAppsFeature : IFeature
     private readonly ILogger<DropDownAppsFeature> _logger;
     private readonly Func<IDropDownSystem> _recoverySystem;
     private readonly DropDownWindows _shared;
+    private readonly DropDownResults _results;
     private DropDownAppsThread? _thread;
+    private SnapshotPipe? _resultsPipe;
     private DropDownAppsThread? _stopped;
     private bool _failed;
     private bool _recovered;
@@ -47,6 +50,7 @@ public sealed partial class DropDownAppsFeature : IFeature
         _logger = logger;
         _shared = shared;
         _recoverySystem = recoverySystem;
+        _results = new DropDownResults(time);
 
         // A crash ends the host without stopping the feature, so the windows go back on the taskbar first.
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -122,8 +126,9 @@ public sealed partial class DropDownAppsFeature : IFeature
 
         if (_thread is null)
         {
-            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _stopped);
+            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _results, _stopped);
             _stopped = null;
+            _resultsPipe = ServeResults();
         }
         else
         {
@@ -154,6 +159,23 @@ public sealed partial class DropDownAppsFeature : IFeature
 
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
+        _resultsPipe?.Dispose();
+        _resultsPipe = null;
+        _results.Clear();
+    }
+
+    // The settings app shows the results while the feature runs; without the pipe, shortcuts still work.
+    private SnapshotPipe? ServeResults()
+    {
+        try
+        {
+            return SnapshotPipe.Serve(DropDownResults.PipeName, _results.ToJson, exception => LogResultsFailed(_logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogResultsFailed(_logger, exception);
+            return null;
+        }
     }
 
     // Runs on the crashing thread; nothing here may throw.
@@ -183,4 +205,7 @@ public sealed partial class DropDownAppsFeature : IFeature
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Drop-down Apps couldn't bring its windows back on the taskbar as PC Companion crashed.")]
     private static partial void LogReleaseFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Drop-down Apps can't give the settings app its recent results.")]
+    private static partial void LogResultsFailed(ILogger logger, Exception exception);
 }
