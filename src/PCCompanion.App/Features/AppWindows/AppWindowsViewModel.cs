@@ -5,6 +5,7 @@ using System.Text;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Platform.Windows;
 

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows.AppWindows;
+namespace PCCompanion.Modules.Windows;
 
 /// <summary>
 /// Keeps the App Windows shortcut registered for the key above Tab, which means a different
