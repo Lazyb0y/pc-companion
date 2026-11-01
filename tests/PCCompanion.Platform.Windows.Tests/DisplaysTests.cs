@@ -67,6 +67,43 @@ public sealed class DisplaysTests
         Assert.Equal(Displays.MainDisplayDpi(), details.Single(display => display.Bounds.Location == Point.Empty).Dpi);
     }
 
+    [Fact]
+    public void TheDisplayAtTheOriginIsTheMainDisplay()
+    {
+        var main = Displays.Main();
+
+        Assert.NotNull(main);
+        Assert.Equal(Point.Empty, main.Bounds.Location);
+        Assert.Equal(main, Displays.At(Point.Empty));
+        Assert.Contains(main, Displays.GetDetails());
+    }
+
+    [Fact]
+    public void APointOffEveryDisplayIsOnTheNearestOne()
+    {
+        Assert.Contains(Displays.At(new Point(-100_000, -100_000)), Displays.GetDetails());
+    }
+
+    [Fact]
+    public void AWindowsDisplayIsOneOfTheDisplays()
+    {
+        // Never shown, so nothing appears.
+        using var window = new MessageWindow("PCCompanion.Tests." + Guid.NewGuid().ToString("N"));
+
+        Assert.Contains(Displays.Of(window.Handle), Displays.GetDetails());
+        Assert.Null(Displays.Of(0));
+    }
+
+    [Fact]
+    public void WaitingForTheNextFrameTakesLessThanASecond()
+    {
+        var started = Environment.TickCount64;
+
+        _ = DesktopComposition.WaitForNextFrame();
+
+        Assert.InRange(Environment.TickCount64 - started, 0, 1000);
+    }
+
     [Theory]
     [InlineData(96u, 1.0)]
     [InlineData(144u, 1.5)]

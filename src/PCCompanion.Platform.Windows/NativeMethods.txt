@@ -368,3 +368,8 @@ Process32NextW
 Thread32First
 Thread32Next
 EnumThreadWindows
+DwmFlush
+GetWindowPlacement
+SetWindowPlacement
+IsZoomed
+HWND_NOTOPMOST
