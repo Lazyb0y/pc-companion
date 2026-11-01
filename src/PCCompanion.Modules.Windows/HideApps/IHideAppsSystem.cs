@@ -27,6 +27,9 @@ public interface IHideAppsSystem : IAppIdentityReader
     /// <summary>Whether the window takes input; a window with a dialog open doesn't.</summary>
     bool IsEnabled(nint window);
 
+    /// <summary>Whether the window is a drop-down window, which Hide Apps leaves alone.</summary>
+    bool IsDropDown(nint window);
+
     bool HasMinimizeButton(nint window);
 
     /// <summary>The window's class name, which tells Windows' stand-ins apart and goes in the log; never a title.</summary>

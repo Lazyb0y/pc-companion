@@ -19,28 +19,33 @@ public sealed partial class DropDownAppsFeature : IFeature
     private readonly TimeProvider _time;
     private readonly ILogger<DropDownAppsFeature> _logger;
     private readonly Func<IDropDownSystem> _recoverySystem;
+    private readonly DropDownWindows _shared;
     private DropDownAppsThread? _thread;
     private DropDownAppsThread? _stopped;
     private bool _failed;
     private bool _recovered;
     private bool _askedToEndFirst;
 
-    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger)
-        : this(commands, time, logger, () => new WindowsDropDownSystem(null, action => action(), null))
+    /// <param name="shared">The drop-down windows, which Hide Apps and Minimize to Tray leave alone.</param>
+    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared)
+        : this(commands, time, logger, shared, () => new WindowsDropDownSystem(null, action => action(), null))
     {
     }
 
+    /// <param name="shared">The drop-down windows, which Hide Apps and Minimize to Tray leave alone.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, Func<IDropDownSystem> recoverySystem)
+    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared, Func<IDropDownSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(shared);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
         _commands = commands;
         _time = time;
         _logger = logger;
+        _shared = shared;
         _recoverySystem = recoverySystem;
 
         // A crash ends the host without stopping the feature, so the windows go back on the taskbar first.
@@ -117,7 +122,7 @@ public sealed partial class DropDownAppsFeature : IFeature
 
         if (_thread is null)
         {
-            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _stopped);
+            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _stopped);
             _stopped = null;
         }
         else

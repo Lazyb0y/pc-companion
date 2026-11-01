@@ -77,6 +77,11 @@ internal sealed class FakeHideAppsSystem : IHideAppsSystem
 
     public bool IsEnabled(nint window) => Find(window) is { DialogOpen: false };
 
+    /// <summary>The drop-down windows, which Hide Apps leaves alone.</summary>
+    public HashSet<nint> DropDown { get; } = [];
+
+    public bool IsDropDown(nint window) => DropDown.Contains(window);
+
     public bool HasMinimizeButton(nint window) => Find(window) is { MinimizeButton: true };
 
     public string ClassName(nint window) => Find(window)?.ClassName ?? string.Empty;

@@ -21,7 +21,7 @@ public sealed class DropDownAppsFeatureTests : IDisposable
 
     public DropDownAppsFeatureTests()
     {
-        _feature = new DropDownAppsFeature(new FakeHostCommands(), TimeProvider.System, _logger, () =>
+        _feature = new DropDownAppsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new DropDownWindows(), () =>
         {
             _recoveries++;
             return _left;

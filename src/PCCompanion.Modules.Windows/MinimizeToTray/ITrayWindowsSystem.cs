@@ -36,6 +36,9 @@ public interface ITrayWindowsSystem : IAppIdentityReader
     /// <summary>Whether Hide Apps minimized the window and brings it back itself, so it stays on the taskbar.</summary>
     bool IsMinimizedByHideApps(nint window);
 
+    /// <summary>Whether the window is a drop-down window, which Drop-down Apps hides and shows itself.</summary>
+    bool IsDropDown(nint window);
+
     string ClassName(nint window);
 
     string Title(nint window);
@@ -150,6 +153,9 @@ public enum SendOutcome
 
     /// <summary>Hide Apps minimized the window, and brings it back itself.</summary>
     MinimizedByHideApps,
+
+    /// <summary>A drop-down window, which Drop-down Apps hides and shows itself.</summary>
+    DropDownWindow,
 }
 
 /// <summary>Why a window left the tray.</summary>

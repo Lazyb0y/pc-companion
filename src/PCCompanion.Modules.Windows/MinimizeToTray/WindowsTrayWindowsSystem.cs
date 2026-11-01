@@ -28,19 +28,22 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     private readonly MessageWindow? _window;
     private readonly Action<Action> _guard;
     private readonly HideAppsMinimized? _hideApps;
+    private readonly DropDownWindows? _dropDown;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, (WinEventHook Shows, WinEventHook Titles)> _watched = [];
 
     /// <param name="window">The feature thread's window, where reports arrive.</param>
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
-    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard, HideAppsMinimized? hideApps = null)
+    /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
+    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard, HideAppsMinimized? hideApps = null, DropDownWindows? dropDown = null)
     {
         ArgumentNullException.ThrowIfNull(guard);
 
         _window = window;
         _guard = guard;
         _hideApps = hideApps;
+        _dropDown = dropDown;
     }
 
     public event EventHandler<nint>? WindowShown;
@@ -74,6 +77,8 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     public bool IsEnabled(nint window) => TopLevelWindows.IsEnabled(window);
 
     public bool IsMinimizedByHideApps(nint window) => _hideApps?.Contains(window) ?? false;
+
+    public bool IsDropDown(nint window) => _dropDown?.Contains(window) ?? false;
 
     public string ClassName(nint window) => TopLevelWindows.ClassName(window);
 

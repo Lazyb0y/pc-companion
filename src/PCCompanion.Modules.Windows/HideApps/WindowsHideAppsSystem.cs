@@ -12,17 +12,20 @@ namespace PCCompanion.Modules.Windows.HideApps;
 public sealed class WindowsHideAppsSystem : IHideAppsSystem, IDisposable
 {
     private readonly Action<Action> _guard;
+    private readonly DropDownWindows? _dropDown;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, WinEventHook> _watched = [];
     private WinEventHook? _restores;
     private WinEventHook? _order;
 
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
-    public WindowsHideAppsSystem(Action<Action> guard)
+    /// <param name="dropDown">The drop-down windows, which Hide Apps leaves alone.</param>
+    public WindowsHideAppsSystem(Action<Action> guard, DropDownWindows? dropDown = null)
     {
         ArgumentNullException.ThrowIfNull(guard);
 
         _guard = guard;
+        _dropDown = dropDown;
     }
 
     /// <summary>A window started to come back from minimized.</summary>
@@ -51,6 +54,8 @@ public sealed class WindowsHideAppsSystem : IHideAppsSystem, IDisposable
     public bool IsMinimized(nint window) => TopLevelWindows.IsMinimized(window);
 
     public bool IsEnabled(nint window) => TopLevelWindows.IsEnabled(window);
+
+    public bool IsDropDown(nint window) => _dropDown?.Contains(window) ?? false;
 
     public bool HasMinimizeButton(nint window) => TopLevelWindows.HasMinimizeButton(window);
 

@@ -21,20 +21,24 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
     private readonly TimeProvider _time;
     private readonly ILogger<HideAppsFeature> _logger;
     private readonly HideAppsMinimized _minimized;
+    private readonly DropDownWindows _dropDown;
     private HideAppsThread? _thread;
     private HideAppsThread? _stopped;
     private bool _failed;
 
     /// <param name="minimized">The windows Hide Apps minimized, shared with Minimize to Tray.</param>
-    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized)
+    /// <param name="dropDown">The drop-down windows, which Hide Apps leaves alone.</param>
+    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized, DropDownWindows dropDown)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(minimized);
+        ArgumentNullException.ThrowIfNull(dropDown);
 
         _time = time;
         _logger = logger;
         _minimized = minimized;
+        _dropDown = dropDown;
     }
 
     public static FeatureInfo Definition { get; } = new("hideApps", WindowsModule.Id, "HideAppsName", "HideAppsDescription", "");
@@ -84,7 +88,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
         if (_thread is null)
         {
-            _thread = new HideAppsThread(read, _time, _logger, _minimized, _stopped);
+            _thread = new HideAppsThread(read, _time, _logger, _minimized, _dropDown, _stopped);
             _stopped = null;
         }
         else

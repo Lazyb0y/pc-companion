@@ -46,6 +46,7 @@ public sealed partial class DropDownController : IDisposable
     private readonly TimeProvider _time;
     private readonly Action<Action> _post;
     private readonly ILogger _logger;
+    private readonly DropDownWindows? _shared;
     private readonly Dictionary<string, DropWindow> _windows = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, (double Width, double Height)> _draggedSizes = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<ITimer> _timers = [];
@@ -61,7 +62,8 @@ public sealed partial class DropDownController : IDisposable
     /// Runs an action later on the feature's thread, inside its error boundary, behind its other
     /// messages, as slides and timers need.
     /// </param>
-    public DropDownController(IDropDownSystem system, TimeProvider time, Action<Action> post, ILogger logger)
+    /// <param name="shared">The drop-down windows as Hide Apps and Minimize to Tray read them, which it keeps up to date.</param>
+    public DropDownController(IDropDownSystem system, TimeProvider time, Action<Action> post, ILogger logger, DropDownWindows? shared = null)
     {
         ArgumentNullException.ThrowIfNull(system);
         ArgumentNullException.ThrowIfNull(time);
@@ -72,6 +74,7 @@ public sealed partial class DropDownController : IDisposable
         _time = time;
         _post = post;
         _logger = logger;
+        _shared = shared;
     }
 
     /// <summary>What a press did or why it did nothing, for the listed app it was for.</summary>
@@ -384,13 +387,14 @@ public sealed partial class DropDownController : IDisposable
         }
     }
 
-    // The app's front-most window that the taskbar shows, minimized or on another desktop too,
-    // or only one shown on this desktop.
+    // The app's front-most window that the taskbar shows, minimized, on another desktop or in
+    // Minimize to Tray's tray too, or only one shown on this desktop.
     private TopLevelWindow? FindWindow(DropDownApp app, bool shownHere)
     {
         var reader = new AppOfWindowReader(_system);
         var listed = app.App;
-        foreach (var window in _system.Windows())
+        var windows = shownHere ? _system.Windows() : _system.Windows().Concat(_system.TrayWindows());
+        foreach (var window in windows)
         {
             if (MayHaveTaskbarButton(window) && (!shownHere || !window.IsCloaked) && Find(window.Handle) is null && listed.Matches(reader.Of(window)))
             {
@@ -945,13 +949,17 @@ public sealed partial class DropDownController : IDisposable
         }
     }
 
-    // What a crash brings back, for any thread to read.
-    private void Publish() =>
+    // What a crash brings back, and the windows Hide Apps and Minimize to Tray leave alone, for
+    // any thread to read.
+    private void Publish()
+    {
         Volatile.Write(ref _released, [.. _windows.Values.Select(window => new ReleasedWindow(
             window.Handle,
             [.. window.HiddenOwned],
             Hidden: window.State != DropState.Shown,
             window.PutOnTop))]);
+        _shared?.Set(_windows.Values.Select(window => window.Handle));
+    }
 
     private void Refuse(int index, DropDownOutcome outcome)
     {

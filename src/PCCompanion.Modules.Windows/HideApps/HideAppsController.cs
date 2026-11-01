@@ -245,7 +245,11 @@ public sealed partial class HideAppsController : IDisposable
     // The windows Alt + Tab shows, as App Windows switches between them, that aren't minimized.
     private static bool IsShown(TopLevelWindow window) => WindowSwitcher.IsSwitchable(window, includeMinimized: false);
 
-    private bool IsCandidate(TopLevelWindow window) => IsShown(window) && _system.ClassName(window.Handle) != GhostClass;
+    private bool IsAppWindow(TopLevelWindow window) => IsShown(window) && _system.ClassName(window.Handle) != GhostClass;
+
+    // Drop-down windows are left alone: hidden ones aren't shown, and a shown one stays in sight, as
+    // its own shortcut hides it. In front, one still tells which app is in front.
+    private bool IsCandidate(TopLevelWindow window) => IsAppWindow(window) && !_system.IsDropDown(window.Handle);
 
     // The visible windows, the app reader for them, and the window in front's main window and app; null with no app in front.
     private (IReadOnlyList<TopLevelWindow> Windows, AppOfWindowReader Apps, nint Root, AppOfWindow App)? FrontApp()
@@ -258,7 +262,7 @@ public sealed partial class HideAppsController : IDisposable
 
         var root = _system.RootOwner(front);
         var windows = _system.ListWindows();
-        if (windows.FirstOrDefault(window => window.Handle == root) is not { } rootWindow || !IsCandidate(rootWindow))
+        if (windows.FirstOrDefault(window => window.Handle == root) is not { } rootWindow || !IsAppWindow(rootWindow))
         {
             return null;
         }

@@ -30,6 +30,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly HideAppsMinimized _hideApps;
+    private readonly DropDownWindows _dropDown;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Tray? _tray;
@@ -37,18 +38,20 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     // The feature thread's own: whether an icon's menu is open.
     private bool _menuOpen;
 
-    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, MinimizeToTrayThread? previous = null)
+    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, DropDownWindows dropDown, MinimizeToTrayThread? previous = null)
         : base("Minimize to Tray", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(hideApps);
+        ArgumentNullException.ThrowIfNull(dropDown);
 
         _commands = commands;
         _time = time;
         _logger = logger;
         _hideApps = hideApps;
+        _dropDown = dropDown;
         Start();
     }
 
@@ -202,7 +205,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
         {
             _owner = owner;
             _window = window;
-            _system = new WindowsTrayWindowsSystem(window, owner.Guard, owner._hideApps);
+            _system = new WindowsTrayWindowsSystem(window, owner.Guard, owner._hideApps, owner._dropDown);
             _icons = new WindowsTrayIcons(window);
             Controller = new TrayController(_system, _icons, owner._time, action => window.BeginInvoke(() => owner.Guard(action)), owner._logger);
 
