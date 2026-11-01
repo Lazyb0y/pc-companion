@@ -30,8 +30,13 @@ internal sealed class FakeShortcutEnvironment : IShortcutEnvironment
 
     public IReadOnlyList<nint> InstalledLayouts() => Layouts;
 
-    public uint? VirtualKeyOf(uint scanCode, nint layout) =>
-        scanCode == ShortcutKeeper.KeyAboveTab && KeyAboveTab.TryGetValue(layout, out var key) ? key : null;
+    // The number keys 1 to 9 have the scan codes 2 to 10 and the same virtual keys in every layout.
+    public uint? VirtualKeyOf(uint scanCode, nint layout) => scanCode switch
+    {
+        ShortcutKeeper.KeyAboveTab => KeyAboveTab.TryGetValue(layout, out var key) ? key : null,
+        >= 0x02 and <= 0x0A when KeyAboveTab.ContainsKey(layout) => 0x31 + scanCode - 0x02,
+        _ => null,
+    };
 
     public IDisposable? Register(HotKeyModifiers modifiers, uint virtualKey, Action pressed)
     {
