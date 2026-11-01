@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Manche Fenster können nicht in den Infobereich: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt.</value>
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Manche Fenster können nicht in den Infobereich: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. PC Companion wird als Administrator ausgeführt, daher gehen auch Fenster von Apps, die als Administrator ausgeführt werden, in den Infobereich.</value>
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. PC Companion wird als Administrator ausgeführt, daher gehen auch Fenster von Apps, die als Administrator ausgeführt werden, in den Infobereich. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">

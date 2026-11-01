@@ -2617,11 +2617,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>有些窗口无法进入通知区域：以管理员身份运行的应用的窗口、Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。</value>
+    <value>有些窗口无法进入通知区域：以管理员身份运行的应用的窗口、Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。下拉应用的窗口也不会进入通知区域：它们由自己的快捷键隐藏。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>有些窗口无法进入通知区域：Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也能进入通知区域。</value>
+    <value>有些窗口无法进入通知区域：Windows 在共享框架中显示的应用（如“设置”）的窗口，以及打开了对话框（如“保存”）的窗口。快捷键无法发送窗口时，会播放 Windows 警告声。此时，Shift + 最小化会照常最小化窗口。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也能进入通知区域。下拉应用的窗口也不会进入通知区域：它们由自己的快捷键隐藏。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">

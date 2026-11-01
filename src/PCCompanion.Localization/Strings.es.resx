@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre.</value>
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. PC Companion se ejecuta como administrador, así que las ventanas de aplicaciones que se ejecutan como administrador también van al área de notificación.</value>
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. PC Companion se ejecuta como administrador, así que las ventanas de aplicaciones que se ejecutan como administrador también van al área de notificación. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
