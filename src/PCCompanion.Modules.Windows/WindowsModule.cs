@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.AppWindows;
+using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 
@@ -22,6 +23,7 @@ public static class WindowsModule
         services.AddSingleton<IFeature, AppWindowsFeature>();
         services.AddSingleton<IFeature, MinimizeToTrayFeature>();
         services.AddSingleton<IFeature, HideAppsFeature>();
+        services.AddSingleton<IFeature, DropDownAppsFeature>();
         return services;
     }
 }

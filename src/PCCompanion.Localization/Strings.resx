@@ -2820,4 +2820,12 @@
     <value>When an app comes to the front, and once a second while an app's language is remembered, reads which window is in front, which app it belongs to and the language it types with, never window titles, contents or the keys you type. Asks the app in front to switch its language, as Windows does when you switch, and only to a language in your list; uses no keyboard hook and runs no code in other apps. Keeps the language each app had last, for up to 500 apps, in a file on this PC, which is deleted when the feature is off or other apps aren't remembered. Makes no network connections and sends nothing.</value>
     <comment>Input Language per App page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="DropDownAppsName" xml:space="preserve">
+    <value>Drop-down Apps</value>
+    <comment>Feature name: navigation pane, Home and the Drop-down Apps page.</comment>
+  </data>
+  <data name="DropDownAppsDescription" xml:space="preserve">
+    <value>Slide a chosen app's window down from the top of the screen with a shortcut, and back up with the same shortcut.</value>
+    <comment>Drop-down Apps: one-sentence description below the feature name.</comment>
+  </data>
 </root>

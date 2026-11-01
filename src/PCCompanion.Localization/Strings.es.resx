@@ -2820,4 +2820,12 @@
     <value>Cuando una aplicación pasa al primer plano, y una vez por segundo mientras se recuerda el idioma de una aplicación, lee qué ventana está en primer plano, a qué aplicación pertenece y el idioma en el que se escribe en ella, nunca los títulos de las ventanas, su contenido ni las teclas que pulsas. Pide a la aplicación en primer plano que cambie su idioma, como hace Windows cuando lo cambias, y solo a un idioma de tu lista; no usa ningún enlace de teclado y no ejecuta código en otras aplicaciones. Guarda el último idioma de cada aplicación, para un máximo de 500 aplicaciones, en un archivo de este PC, que se elimina cuando la característica está desactivada o no se recuerdan otras aplicaciones. No establece conexiones de red y no envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsName" xml:space="preserve">
+    <value>Aplicaciones desplegables</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDescription" xml:space="preserve">
+    <value>Desliza hacia abajo la ventana de una aplicación elegida desde la parte superior de la pantalla con un método abreviado, y vuelve a subirla con el mismo método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
