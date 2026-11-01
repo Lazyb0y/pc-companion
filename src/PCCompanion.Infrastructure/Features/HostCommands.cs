@@ -7,14 +7,15 @@ namespace PCCompanion.Infrastructure.Features;
 
 /// <summary>
 /// Carries out the host's commands for features: Settings and Exit on the host's UI thread, from
-/// whichever thread asks, and web pages and programs on the calling thread. The host attaches its UI
-/// thread and its own commands once its window exists; a command asked for before that is logged
-/// and dropped.
+/// whichever thread asks, and web pages, programs and apps on the calling thread. The host attaches
+/// its UI thread and its own commands once its window exists; a command asked for before that is
+/// logged and dropped.
 /// </summary>
 public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCommands
 {
     private const string WebPage = "a web page";
     private const string Program = "a program";
+    private const string App = "an app";
     private const int NotReady = 21; // ERROR_NOT_READY
 
     private volatile Connection? _connection;
@@ -32,15 +33,26 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
     /// Starts a program and its arguments without admin rights, on the calling thread, and returns 0,
     /// or Windows' error code when it can't.
     /// </param>
-    public void Attach(Action<Action> runOnUiThread, Action<string?> openSettings, Action exit, Func<Uri, bool> openWebPage, Func<string, IReadOnlyList<string>, int> startProgram)
+    /// <param name="startApp">
+    /// Opens an app by its app ID without admin rights, on the calling thread, and returns 0, or
+    /// Windows' error code when it can't.
+    /// </param>
+    public void Attach(
+        Action<Action> runOnUiThread,
+        Action<string?> openSettings,
+        Action exit,
+        Func<Uri, bool> openWebPage,
+        Func<string, IReadOnlyList<string>, int> startProgram,
+        Func<string, int> startApp)
     {
         ArgumentNullException.ThrowIfNull(runOnUiThread);
         ArgumentNullException.ThrowIfNull(openSettings);
         ArgumentNullException.ThrowIfNull(exit);
         ArgumentNullException.ThrowIfNull(openWebPage);
         ArgumentNullException.ThrowIfNull(startProgram);
+        ArgumentNullException.ThrowIfNull(startApp);
 
-        _connection = new Connection(runOnUiThread, openSettings, exit, openWebPage, startProgram);
+        _connection = new Connection(runOnUiThread, openSettings, exit, openWebPage, startProgram, startApp);
     }
 
     public void OpenSettings() => Run("Settings", connection => connection.OpenSettings(null));
@@ -88,6 +100,23 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
         return errorCode == 0;
     }
 
+    // Not logged with the app ID, which can name a browser profile or an app of the user's own.
+    public bool StartApp(string appId, out int errorCode)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(appId);
+
+        if (_connection is not { } connection)
+        {
+            LogNotAttached(logger, App);
+            errorCode = NotReady;
+            return false;
+        }
+
+        LogRunning(logger, App);
+        errorCode = connection.StartApp(appId);
+        return errorCode == 0;
+    }
+
     private void Run(string command, Action<Connection> action)
     {
         if (_connection is not { } connection)
@@ -111,7 +140,13 @@ public sealed partial class HostCommands(ILogger<HostCommands> logger) : IHostCo
         });
     }
 
-    private sealed record Connection(Action<Action> RunOnUiThread, Action<string?> OpenSettings, Action Exit, Func<Uri, bool> OpenWebPage, Func<string, IReadOnlyList<string>, int> StartProgram);
+    private sealed record Connection(
+        Action<Action> RunOnUiThread,
+        Action<string?> OpenSettings,
+        Action Exit,
+        Func<Uri, bool> OpenWebPage,
+        Func<string, IReadOnlyList<string>, int> StartProgram,
+        Func<string, int> StartApp);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "A feature asked for {Command}.")]
     private static partial void LogRunning(ILogger logger, string command);

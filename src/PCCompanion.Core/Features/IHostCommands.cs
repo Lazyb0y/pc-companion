@@ -6,7 +6,7 @@ namespace PCCompanion.Core.Features;
 /// <summary>
 /// Commands the host carries out for features, such as from a feature's own menu. They may be
 /// called from any thread. The host runs Settings and Exit on its UI thread, and opens web pages and
-/// starts programs on the calling thread.
+/// starts programs and apps on the calling thread.
 /// </summary>
 public interface IHostCommands
 {
@@ -43,4 +43,14 @@ public interface IHostCommands
     /// </summary>
     /// <param name="program">The full path of a program file that was checked to exist.</param>
     bool StartProgram(string program, IReadOnlyList<string> arguments, out int errorCode);
+
+    /// <summary>
+    /// Opens the app with the app ID <paramref name="appId"/> through Start's Apps folder, as Start
+    /// does, with the user's rights, never with admin rights: a host running as administrator has a
+    /// copy of itself without them open it. An app ID that isn't in the Apps folder isn't opened,
+    /// since Windows would open File Explorer instead. It waits for Windows, up to 30 seconds, so
+    /// don't call it on the host's UI thread. Returns false, with Windows' error code, when the app
+    /// wasn't opened: <c>ERROR_FILE_NOT_FOUND</c> (2) when the app ID isn't in the Apps folder.
+    /// </summary>
+    bool StartApp(string appId, out int errorCode);
 }

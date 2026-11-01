@@ -14,6 +14,7 @@ public sealed class FakeHostCommands : IHostCommands
     private readonly List<Uri> _webPages = [];
     private readonly List<string> _pages = [];
     private readonly List<(string Program, IReadOnlyList<string> Arguments)> _programs = [];
+    private readonly List<string> _apps = [];
     private int _settings;
     private int _exits;
 
@@ -34,6 +35,21 @@ public sealed class FakeHostCommands : IHostCommands
             lock (_programs)
             {
                 return [.. _programs];
+            }
+        }
+    }
+
+    /// <summary>The error code <see cref="StartApp"/> answers with; 0 opens the app.</summary>
+    public int AppErrorCode { get; set; }
+
+    /// <summary>The app IDs asked for so far.</summary>
+    public IReadOnlyList<string> Apps
+    {
+        get
+        {
+            lock (_apps)
+            {
+                return [.. _apps];
             }
         }
     }
@@ -101,6 +117,17 @@ public sealed class FakeHostCommands : IHostCommands
         }
 
         errorCode = ProgramErrorCode;
+        return errorCode == 0;
+    }
+
+    public bool StartApp(string appId, out int errorCode)
+    {
+        lock (_apps)
+        {
+            _apps.Add(appId);
+        }
+
+        errorCode = AppErrorCode;
         return errorCode == 0;
     }
 }

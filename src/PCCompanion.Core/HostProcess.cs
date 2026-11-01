@@ -147,6 +147,51 @@ public static class HostProcess
     /// </summary>
     public static string? ReadRunProgramPipe(IReadOnlyList<string> arguments) => ReadPipe(arguments, RunProgramArgument);
 
+    /// <summary>
+    /// The argument, followed by the name of a pipe, that a host running as administrator starts a
+    /// copy of itself with, without admin rights, to open an app by its app ID for a feature: the
+    /// copy reads the app ID from the pipe, as <see cref="AppIdHandOff"/> writes it, opens it
+    /// through Start's Apps folder if it's there, and exits with 0 or Windows' error code. See
+    /// <see cref="OpenAppArguments"/>.
+    /// </summary>
+    public const string OpenAppArgument = "--open-app";
+
+    /// <summary>The most characters an app ID (AppUserModelID) has.</summary>
+    public const int MaximumAppIdLength = 128;
+
+    /// <summary>
+    /// Whether <paramref name="appId"/> can be opened as an app ID through Start's Apps folder: 1
+    /// to 128 characters, without control characters, slashes or backslashes, so that it names an
+    /// app in the folder and no other place.
+    /// </summary>
+    public static bool IsAppId([NotNullWhen(true)] string? appId) =>
+        !string.IsNullOrEmpty(appId)
+        && appId.Length <= MaximumAppIdLength
+        && appId is not ("." or "..")
+        && !appId.Any(character => char.IsControl(character) || character is '\\' or '/');
+
+    /// <summary>
+    /// The arguments that make the host open the app whose app ID it reads from the pipe named
+    /// <paramref name="pipeName"/>: <see cref="OpenAppArgument"/> and the name.
+    /// </summary>
+    /// <exception cref="ArgumentException">The name has other characters than letters, digits and dots.</exception>
+    public static string OpenAppArguments(string pipeName) => PipeArguments(OpenAppArgument, pipeName);
+
+    /// <summary>
+    /// The pipe name after <see cref="OpenAppArgument"/> in the host's arguments, or
+    /// <see langword="null"/> when there is none or it isn't one.
+    /// </summary>
+    public static string? ReadOpenAppPipe(IReadOnlyList<string> arguments) => ReadPipe(arguments, OpenAppArgument);
+
+    /// <summary><paramref name="appId"/> as the host hands it to the copy, in UTF-8.</summary>
+    /// <exception cref="ArgumentException">It isn't an app ID; see <see cref="IsAppId"/>.</exception>
+    public static byte[] AppIdHandOff(string appId) =>
+        IsAppId(appId) ? Encoding.UTF8.GetBytes(appId) : throw new ArgumentException("Only app IDs are opened.", nameof(appId));
+
+    /// <summary>The app ID the copy read from the pipe, or <see langword="null"/> when it isn't one.</summary>
+    public static string? ReadAppId(ReadOnlySpan<byte> handOff) =>
+        Encoding.UTF8.GetString(handOff) is var appId && IsAppId(appId) ? appId : null;
+
     private static string PipeArguments(string argument, string pipeName) =>
         IsPipeName(pipeName)
             ? argument + " " + pipeName
