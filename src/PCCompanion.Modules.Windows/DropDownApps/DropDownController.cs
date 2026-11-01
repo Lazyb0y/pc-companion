@@ -54,6 +54,9 @@ public sealed partial class DropDownController : IDisposable
     private IReadOnlyList<DropDownShortcut> _shortcuts = [];
     private bool _decisionPending;
 
+    // Replaced, never changed, so the crashing thread always reads a whole list.
+    private IReadOnlyList<ReleasedWindow> _released = [];
+
     /// <param name="post">
     /// Runs an action later on the feature's thread, inside its error boundary, behind its other
     /// messages, as slides and timers need.
@@ -83,9 +86,64 @@ public sealed partial class DropDownController : IDisposable
     /// <summary>The drop-down windows, shown or hidden.</summary>
     public IReadOnlyCollection<nint> Windows => [.. _windows.Values.Select(window => window.Handle)];
 
+    /// <summary>
+    /// Brings back on the taskbar, minimized, every hidden window that carries the mark, as left by
+    /// a PC Companion that ended without bringing them back, takes off the top every window marked
+    /// as put on top, and removes the marks. Owned windows show before their owners minimize, so
+    /// they go and come back with them. Returns how many windows came back.
+    /// </summary>
+    public static int Recover(IDropDownSystem system)
+    {
+        ArgumentNullException.ThrowIfNull(system);
+
+        var marked = system.FindMarked();
+        var hidden = marked.Where(window => !system.IsVisible(window)).ToList();
+        foreach (var owned in hidden.Where(window => system.RootOwner(window) != window))
+        {
+            system.ShowWithoutActivating(owned);
+        }
+
+        var recovered = 0;
+        foreach (var window in hidden.Where(window => system.RootOwner(window) == window))
+        {
+            if (system.ShowMinimized(window))
+            {
+                recovered++;
+            }
+        }
+
+        foreach (var window in marked)
+        {
+            system.Unmark(window);
+        }
+
+        foreach (var window in system.FindMarkedOnTop())
+        {
+            system.SetTopmost(window, topmost: false);
+            system.UnmarkOnTop(window);
+        }
+
+        return recovered;
+    }
+
     public void Apply(DropDownAppsSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
+
+        // A window whose app left the list is let go, as when the feature stops.
+        var listed = settings.Apps.Select(KeyOf).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var removed in _windows.Values.Where(window => !listed.Contains(window.Key)).ToList())
+        {
+            Release(removed);
+        }
+
+        if (!settings.KeepOnTop)
+        {
+            foreach (var window in _windows.Values.Where(window => window.PutOnTop))
+            {
+                TakeOffTop(window);
+            }
+        }
 
         _settings = settings;
         var assigned = DropDownShortcuts.Assign(settings.Apps);
@@ -226,6 +284,47 @@ public sealed partial class DropDownController : IDisposable
             hidden.Change(DropState.Shown);
             LogShownByOthers(_logger);
         });
+    }
+
+    /// <summary>
+    /// Lets every drop-down window go, as PC Companion stops or the session is ending: a hidden one
+    /// comes back on the taskbar, minimized and without taking the front, at the place and size it
+    /// had before it first dropped down, with its owned windows; a shown one stays where it is,
+    /// taken off the top when Drop-down Apps put it there. Returns how many hidden windows came back.
+    /// </summary>
+    public int ReleaseAll()
+    {
+        _starting.Clear();
+        return _windows.Values.ToList().Count(Release);
+    }
+
+    /// <summary>
+    /// Brings the hidden drop-down windows back on the taskbar at once, and takes those put on top
+    /// off it, from any thread, as a crash ends the host. It changes nothing else, since the
+    /// process is ending.
+    /// </summary>
+    public void ReleaseNow()
+    {
+        foreach (var window in Volatile.Read(ref _released))
+        {
+            if (window.Hidden)
+            {
+                foreach (var owned in window.Owned)
+                {
+                    _system.ShowWithoutActivating(owned);
+                    _system.Unmark(owned);
+                }
+
+                _system.ShowMinimized(window.Handle);
+                _system.Unmark(window.Handle);
+            }
+
+            if (window.OnTop)
+            {
+                _system.SetTopmost(window.Handle, topmost: false);
+                _system.UnmarkOnTop(window.Handle);
+            }
+        }
     }
 
     public void Dispose()
@@ -399,7 +498,7 @@ public sealed partial class DropDownController : IDisposable
         }
 
         _system.Unmark(handle);
-        var window = new DropWindow(handle, found.ProcessId, KeyOf(app)) { Original = _system.Placement(handle) };
+        var window = new DropWindow(handle, found.ProcessId, KeyOf(app), Publish) { Original = _system.Placement(handle) };
         if (!found.IsMinimized && !found.IsCloaked && !_system.IsMaximized(handle))
         {
             MeasureInsets(window);
@@ -616,13 +715,7 @@ public sealed partial class DropDownController : IDisposable
     private void Hidden(DropWindow window)
     {
         _system.Hide(window.Handle);
-        if (window.PutOnTop)
-        {
-            _system.SetTopmost(window.Handle, topmost: false);
-            _system.UnmarkOnTop(window.Handle);
-            window.PutOnTop = false;
-        }
-
+        TakeOffTop(window);
         window.Change(DropState.Hidden);
     }
 
@@ -786,6 +879,7 @@ public sealed partial class DropDownController : IDisposable
         }
 
         _windows[window.Key] = window;
+        Publish();
     }
 
     private void Forget(DropWindow window)
@@ -797,7 +891,67 @@ public sealed partial class DropDownController : IDisposable
         {
             _system.Unwatch(window.ProcessId);
         }
+
+        Publish();
     }
+
+    // Lets the window go, as "Never losing a window" says. Returns whether a hidden window came back.
+    private bool Release(DropWindow window)
+    {
+        window.Slide?.Finish();
+        var handle = window.Handle;
+        var cameBack = false;
+        if (_system.Exists(handle) && !_system.IsVisible(handle))
+        {
+            foreach (var owned in window.HiddenOwned)
+            {
+                _system.Unmark(owned);
+                _system.ShowWithoutActivating(owned);
+            }
+
+            // A hidden window that's minimized, as one minimized while shown, keeps its normal
+            // place apart, so it's set with the placement.
+            var original = window.Original;
+            var restoresMaximized = original is { State: WindowState.Maximized } or { State: WindowState.Minimized, RestoresMaximized: true };
+            var minimized = _system.IsMinimized(handle);
+            if (original is not null && !restoresMaximized && !minimized)
+            {
+                _system.Place(handle, original.NormalBounds);
+            }
+
+            cameBack = _system.ShowMinimized(handle);
+            if (original is not null && (restoresMaximized || minimized))
+            {
+                // Windows waits for the app, so its normal place, and whether it comes back
+                // maximized, are set off this thread, after it's on the taskbar.
+                _system.SetPlacementLater(handle, original.NormalBounds, minimized: true, restoresMaximized, _ => { });
+            }
+        }
+
+        _system.Unmark(handle);
+        TakeOffTop(window);
+        Forget(window);
+        return cameBack;
+    }
+
+    private void TakeOffTop(DropWindow window)
+    {
+        if (window.PutOnTop)
+        {
+            _system.SetTopmost(window.Handle, topmost: false);
+            _system.UnmarkOnTop(window.Handle);
+            window.PutOnTop = false;
+            Publish();
+        }
+    }
+
+    // What a crash brings back, for any thread to read.
+    private void Publish() =>
+        Volatile.Write(ref _released, [.. _windows.Values.Select(window => new ReleasedWindow(
+            window.Handle,
+            [.. window.HiddenOwned],
+            Hidden: window.State != DropState.Shown,
+            window.PutOnTop))]);
 
     private void Refuse(int index, DropDownOutcome outcome)
     {
@@ -926,8 +1080,11 @@ public sealed partial class DropDownController : IDisposable
         Hiding,
     }
 
+    // A drop-down window as a crash brings it back.
+    private sealed record ReleasedWindow(nint Handle, IReadOnlyList<nint> Owned, bool Hidden, bool OnTop);
+
     // A listed app's drop-down window, and what Drop-down Apps did to it.
-    private sealed class DropWindow(nint handle, uint processId, string key)
+    private sealed class DropWindow(nint handle, uint processId, string key, Action changed)
     {
         public nint Handle { get; } = handle;
 
@@ -963,6 +1120,7 @@ public sealed partial class DropDownController : IDisposable
         {
             State = state;
             Generation++;
+            changed();
         }
     }
 }
