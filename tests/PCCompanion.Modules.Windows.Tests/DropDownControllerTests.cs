@@ -744,6 +744,155 @@ public sealed class DropDownControllerTests : IDisposable
         Assert.True(window.Marked);
     }
 
+    [Fact]
+    public void LettingGoBringsAHiddenWindowBackMinimizedAtItsPlaceBefore()
+    {
+        var window = DropDown();
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        _system.Calls.Clear();
+
+        Assert.Equal(1, _controller.ReleaseAll());
+
+        Assert.True(window.Visible);
+        Assert.True(window.Minimized);
+        Assert.False(window.Marked);
+        Assert.Equal(new Rectangle(300, 200, 800, 600), window.Bounds);
+        Assert.Equal(["place 1 300,200,800,600", "show minimized 1"], _system.Calls);
+        Assert.Empty(_system.Watched);
+        Assert.Equal(Other, _system.ForegroundWindow);
+    }
+
+    [Fact]
+    public void LettingGoLeavesAShownWindowWhereItIsAndTakesItOffTheTop()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        Apply(Settings() with { KeepOnTop = true });
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Assert.Equal(0, _controller.ReleaseAll());
+
+        Assert.True(window.Visible);
+        Assert.False(window.Minimized);
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+        Assert.False(window.Topmost);
+        Assert.False(window.MarkedOnTop);
+    }
+
+    [Fact]
+    public void AWindowThatWasMaximizedComesBackMinimizedToBeMaximizedAgain()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        (window.Maximized, window.Normal) = (true, new Rectangle(100, 100, 900, 700));
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        _controller.ReleaseAll();
+
+        Assert.True(window.Minimized);
+        Assert.True(window.RestoresMaximized);
+        Assert.Equal(new Rectangle(100, 100, 900, 700), window.Normal);
+        Assert.False(window.Marked);
+    }
+
+    [Fact]
+    public void LettingGoBringsBackTheHiddenOwnedWindows()
+    {
+        var window = DropDown();
+        var palette = _system.Add(3, program: NotesProgram);
+        palette.Owner = 1;
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        _controller.ReleaseAll();
+
+        Assert.True(palette.Visible);
+        Assert.False(palette.Marked);
+        Assert.True(_system.Calls.LastIndexOf("show 3") < _system.Calls.LastIndexOf("show minimized 1"));
+    }
+
+    [Fact]
+    public void LettingGoDuringASlideEndsItFirst()
+    {
+        var window = DropDown();
+        _controller.Press(0);
+        RunSteps(2);
+
+        _controller.ReleaseAll();
+        Settle();
+
+        Assert.True(window.Visible);
+        Assert.True(window.Minimized);
+        Assert.False(window.Marked);
+    }
+
+    [Fact]
+    public void RemovingAnAppFromTheListLetsItsWindowGo()
+    {
+        var window = DropDown();
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Apply(Settings() with { Apps = [Settings().Apps[1]] });
+
+        Assert.True(window.Visible);
+        Assert.True(window.Minimized);
+        Assert.False(window.Marked);
+        Assert.Empty(_controller.Windows);
+    }
+
+    [Fact]
+    public void TurningKeepOnTopOffTakesAShownWindowOffTheTop()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        Apply(Settings() with { KeepOnTop = true });
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Apply(Settings());
+
+        Assert.False(window.Topmost);
+        Assert.False(window.MarkedOnTop);
+        Assert.True(window.Visible);
+    }
+
+    [Fact]
+    public void ACrashBringsBackHiddenWindowsAndTakesWindowsOffTheTop()
+    {
+        var hidden = DropDown();
+        var palette = _system.Add(3, program: NotesProgram);
+        palette.Owner = 1;
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        var onTop = _system.Add(2, appId: "Terminal.App");
+        Apply(Settings() with { KeepOnTop = true });
+        Press(DropDownShortcut.WindowsControlAlt1);
+
+        _controller.ReleaseNow();
+
+        Assert.True(hidden.Visible && hidden.Minimized && !hidden.Marked);
+        Assert.True(palette.Visible && !palette.Marked);
+        Assert.False(onTop.Topmost || onTop.MarkedOnTop);
+        Assert.False(onTop.Minimized);
+    }
+
+    [Fact]
+    public void AtTheNextStartMarkedWindowsComeBackAndOffTheTop()
+    {
+        var hidden = _system.Add(1, program: NotesProgram);
+        (hidden.Visible, hidden.Marked) = (false, true);
+        var palette = _system.Add(3, program: NotesProgram);
+        (palette.Visible, palette.Marked, palette.Owner) = (false, true, 1);
+        var shown = _system.Add(2, program: NotesProgram);
+        shown.Marked = true;
+        var onTop = _system.Add(4, program: NotesProgram);
+        (onTop.Topmost, onTop.MarkedOnTop) = (true, true);
+
+        Assert.Equal(1, DropDownController.Recover(_system));
+
+        Assert.True(hidden.Visible && hidden.Minimized);
+        Assert.True(palette.Visible && !palette.Minimized);
+        Assert.True(_system.Calls.IndexOf("show 3") < _system.Calls.IndexOf("show minimized 1"));
+        Assert.False(shown.Minimized);
+        Assert.DoesNotContain(_system.Windows, window => window.Marked || window.MarkedOnTop);
+        Assert.False(onTop.Topmost);
+    }
+
     private FakeDropWindow DropDown()
     {
         var window = _system.Add(1, program: NotesProgram);
