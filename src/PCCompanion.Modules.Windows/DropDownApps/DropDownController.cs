@@ -29,8 +29,18 @@ public sealed partial class DropDownController : IDisposable
     /// <summary>How long after starting an app its first window is waited for.</summary>
     public static readonly TimeSpan StartTimeout = TimeSpan.FromSeconds(30);
 
+    /// <summary>How long after another window comes to the front the decision to hide is made.</summary>
+    public static readonly TimeSpan DecisionDelay = TimeSpan.FromMilliseconds(150);
+
+    // Start, Search and the notification center: on top, and they pass the taskbar's test.
+    private const string ShellWindowClass = "Windows.UI.Core.CoreWindow";
+
+    // The desktop is a tool window, but a click on it does count as another app.
+    private static readonly string[] DesktopClasses = ["Progman", "WorkerW"];
+
     private static readonly TimeSpan ShowCheck = TimeSpan.FromMilliseconds(15);
     private static readonly TimeSpan StartCheck = TimeSpan.FromMilliseconds(100);
+    private static readonly TimeSpan ButtonCheck = TimeSpan.FromMilliseconds(100);
 
     private readonly IDropDownSystem _system;
     private readonly TimeProvider _time;
@@ -42,6 +52,7 @@ public sealed partial class DropDownController : IDisposable
     private readonly HashSet<string> _starting = new(StringComparer.OrdinalIgnoreCase);
     private DropDownAppsSettings _settings = new();
     private IReadOnlyList<DropDownShortcut> _shortcuts = [];
+    private bool _decisionPending;
 
     /// <param name="post">
     /// Runs an action later on the feature's thread, inside its error boundary, behind its other
@@ -149,6 +160,72 @@ public sealed partial class DropDownController : IDisposable
             Forget(closed);
             LogClosed(_logger);
         }
+    }
+
+    /// <summary>
+    /// Another window came to the front, while a drop-down window is shown. The decision whether it
+    /// hides waits a moment, then looks at the window in front then: Alt + Tab first brings hidden
+    /// helper windows of the shell to the front.
+    /// </summary>
+    public void OnForeground()
+    {
+        if (_settings.HideWhenInactive == HideWhenInactive.Never || _decisionPending || !HasShownWindow)
+        {
+            return;
+        }
+
+        _decisionPending = true;
+        After(DecisionDelay, DecideOnFront);
+    }
+
+    /// <summary>A window of a watched process started to minimize.</summary>
+    public void OnMinimizeStart(nint window)
+    {
+        if (Find(window) is not { State: DropState.Shown } minimizing)
+        {
+            return;
+        }
+
+        // Once minimized, it's hidden and counts as hidden, so its shortcut brings it back.
+        var generation = minimizing.Generation;
+        WaitUntil(() => _system.IsMinimized(window), minimized =>
+        {
+            if (minimized && IsCurrent(minimizing, generation) && HideNow(minimizing))
+            {
+                LogMinimized(_logger);
+            }
+        });
+    }
+
+    /// <summary>A window of a watched process was shown.</summary>
+    public void OnShown(nint window)
+    {
+        if (Find(window) is not { State: DropState.Hidden } hidden)
+        {
+            return;
+        }
+
+        // Its app, or another program, showed it. The report of a show of its own can arrive after
+        // a later hide, so it's checked again a moment later, once the hide is done.
+        var generation = hidden.Generation;
+        After(SettleDelay, () =>
+        {
+            if (!IsCurrent(hidden, generation) || hidden.State != DropState.Hidden || !_system.IsVisible(window))
+            {
+                return;
+            }
+
+            _system.Unmark(window);
+            foreach (var owned in hidden.HiddenOwned)
+            {
+                _system.Unmark(owned);
+                _system.ShowWithoutActivating(owned);
+            }
+
+            hidden.HiddenOwned.Clear();
+            hidden.Change(DropState.Shown);
+            LogShownByOthers(_logger);
+        });
     }
 
     public void Dispose()
@@ -626,6 +703,54 @@ public sealed partial class DropDownController : IDisposable
         }
     }
 
+    // Hides the shown windows the window in front counts against, as "When another app comes to
+    // the front" says. While a mouse button is held, as in a drag and drop, it waits.
+    private void DecideOnFront()
+    {
+        if (_system.IsMouseButtonHeld)
+        {
+            After(ButtonCheck, DecideOnFront);
+            return;
+        }
+
+        _decisionPending = false;
+        var front = _system.ForegroundWindow;
+        if (front == 0 || _settings.HideWhenInactive == HideWhenInactive.Never)
+        {
+            return;
+        }
+
+        foreach (var window in _windows.Values.Where(window => window.State == DropState.Shown).ToList())
+        {
+            if (CountsAsAnotherApp(front, window) && _system.IsEnabled(window.Handle) && MarkAndHideOwned(window))
+            {
+                RememberDraggedSize(window);
+                SlideOutAndHide(window);
+                LogHiddenOnFocusLoss(_logger);
+            }
+        }
+    }
+
+    private bool CountsAsAnotherApp(nint front, DropWindow window)
+    {
+        // Its own windows: those it owns, such as its dialogs, and other windows of its process.
+        if (front == window.Handle || _system.RootOwner(front) == window.Handle || _system.ProcessIdOf(front) == window.ProcessId)
+        {
+            return false;
+        }
+
+        var className = _system.ClassName(front);
+        var described = _system.Describe(front);
+        if (!DesktopClasses.Contains(className, StringComparer.Ordinal)
+            && (described.IsNoActivate || described.IsToolWindow || string.Equals(className, ShellWindowClass, StringComparison.Ordinal)))
+        {
+            return false;
+        }
+
+        return _settings.HideWhenInactive != HideWhenInactive.SameDisplay
+            || _system.DisplayOf(front)?.Bounds == _system.DisplayOf(window.Handle)?.Bounds;
+    }
+
     private bool IsInFront(DropWindow window)
     {
         var front = _system.ForegroundWindow;
@@ -768,6 +893,15 @@ public sealed partial class DropDownController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "A drop-down window closed.")]
     private static partial void LogClosed(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "A drop-down window hid because another app came to the front.")]
+    private static partial void LogHiddenOnFocusLoss(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "A drop-down window was minimized, so it's hidden.")]
+    private static partial void LogMinimized(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "A hidden drop-down window was shown by its app or another program, so it counts as shown.")]
+    private static partial void LogShownByOthers(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't bring a drop-down window to the front.")]
     private static partial void LogNotInFront(ILogger logger);

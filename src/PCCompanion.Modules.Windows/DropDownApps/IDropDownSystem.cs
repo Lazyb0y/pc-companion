@@ -21,6 +21,12 @@ public interface IDropDownSystem : IAppIdentityReader, ISlideSystem
     /// <summary>Whether Windows' animation effects are on.</summary>
     bool AnimationsOn { get; }
 
+    /// <summary>Whether a mouse button is held down, as in a drag and drop.</summary>
+    bool IsMouseButtonHeld { get; }
+
+    /// <summary>What a top-level window is like now: its styles, owner and process.</summary>
+    TopLevelWindow Describe(nint window);
+
     /// <summary>The visible top-level windows, front to back, minimized and cloaked ones included.</summary>
     IReadOnlyList<TopLevelWindow> Windows();
 

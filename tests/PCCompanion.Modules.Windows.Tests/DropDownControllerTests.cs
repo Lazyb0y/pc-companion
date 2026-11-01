@@ -547,6 +547,211 @@ public sealed class DropDownControllerTests : IDisposable
         Assert.Equal(1, _system.Warnings);
     }
 
+    [Fact]
+    public void AnotherAppComingToTheFrontHidesTheWindowAMomentLater()
+    {
+        var window = DropDown();
+        _system.ForegroundWindow = Other;
+
+        _controller.OnForeground();
+        _clock.Advance(DropDownController.DecisionDelay - TimeSpan.FromMilliseconds(1));
+        RunThread();
+        Assert.True(window.Visible);
+        Settle();
+
+        Assert.False(window.Visible);
+        Assert.True(window.Marked);
+        Assert.Equal(Other, _system.ForegroundWindow);
+        Assert.DoesNotContain(_system.Calls, call => call.StartsWith("front", StringComparison.Ordinal));
+        Assert.Single(_reports);
+
+        // Its shortcut brings it back.
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Assert.True(window.Visible);
+    }
+
+    [Fact]
+    public void TheDecisionIsOnTheWindowInFrontOnceTheMomentPassed()
+    {
+        var window = DropDown();
+        _system.ForegroundWindow = Other;
+
+        _controller.OnForeground();
+        _system.ForegroundWindow = 1;
+        Settle();
+
+        Assert.True(window.Visible);
+    }
+
+    [Fact]
+    public void ItsOwnWindowsDontCountAsAnotherApp()
+    {
+        var window = DropDown();
+        _system.Add(3, processId: 10, program: NotesProgram).Owner = 1;
+        _system.Add(4, processId: 10, program: NotesProgram);
+
+        foreach (var front in new nint[] { 3, 4 })
+        {
+            _system.ForegroundWindow = front;
+            _controller.OnForeground();
+            Settle();
+        }
+
+        Assert.True(window.Visible);
+    }
+
+    [Fact]
+    public void NoActivateToolAndShellWindowsDontCountAsAnotherApp()
+    {
+        var window = DropDown();
+        _system.Add(3, processId: 40).NoActivate = true;
+        _system.Add(4, processId: 41).ToolWindow = true;
+        _system.Add(5, processId: 42).ClassName = "Windows.UI.Core.CoreWindow";
+
+        foreach (var front in new nint[] { 3, 4, 5 })
+        {
+            _system.ForegroundWindow = front;
+            _controller.OnForeground();
+            Settle();
+        }
+
+        Assert.True(window.Visible);
+    }
+
+    [Theory]
+    [InlineData("Progman")]
+    [InlineData("WorkerW")]
+    public void AClickOnTheDesktopHidesIt(string className)
+    {
+        var window = DropDown();
+        var desktop = _system.Add(3, processId: 50);
+        (desktop.ClassName, desktop.ToolWindow) = (className, true);
+
+        _system.ForegroundWindow = 3;
+        _controller.OnForeground();
+        Settle();
+
+        Assert.False(window.Visible);
+    }
+
+    [Fact]
+    public void WithNeverTheWindowStays()
+    {
+        var window = DropDown();
+        Apply(Settings() with { HideWhenInactive = HideWhenInactive.Never });
+
+        _system.ForegroundWindow = Other;
+        _controller.OnForeground();
+        Settle();
+
+        Assert.True(window.Visible);
+    }
+
+    [Fact]
+    public void OnlyOnItsDisplayAWindowInFrontOnAnotherDisplayDoesntHideIt()
+    {
+        var window = DropDown();
+        Apply(Settings() with { HideWhenInactive = HideWhenInactive.SameDisplay });
+        _system.Get(Other).OnSecondDisplay = true;
+
+        _system.ForegroundWindow = Other;
+        _controller.OnForeground();
+        Settle();
+        Assert.True(window.Visible);
+
+        _system.Get(Other).OnSecondDisplay = false;
+        _controller.OnForeground();
+        Settle();
+        Assert.False(window.Visible);
+    }
+
+    [Fact]
+    public void WhileAMouseButtonIsHeldTheDecisionWaits()
+    {
+        var window = DropDown();
+        _system.IsMouseButtonHeld = true;
+
+        _system.ForegroundWindow = Other;
+        _controller.OnForeground();
+        Settle();
+        Assert.True(window.Visible);
+
+        _system.IsMouseButtonHeld = false;
+        Settle();
+        Assert.False(window.Visible);
+    }
+
+    [Fact]
+    public void AWindowWithADialogOpenDoesntHideWhenAnotherAppComesToTheFront()
+    {
+        var window = DropDown();
+        window.Enabled = false;
+
+        _system.ForegroundWindow = Other;
+        _controller.OnForeground();
+        Settle();
+
+        Assert.True(window.Visible);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
+    public void AMinimizedWindowIsHiddenAndItsShortcutBringsItBack()
+    {
+        var window = DropDown();
+
+        window.Minimized = true;
+        _controller.OnMinimizeStart(1);
+        Settle();
+        Assert.False(window.Visible);
+        Assert.True(window.Marked);
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        Assert.True(window.Visible);
+        Assert.False(window.Minimized);
+        Assert.Equal(TopHalf, FakeDropDownSystem.Borders.Inside(window.Bounds));
+        Assert.Equal(DropDownOutcome.Shown, _reports[^1].Outcome);
+    }
+
+    [Fact]
+    public void AHiddenWindowItsAppShowsCountsAsShownWhereItShows()
+    {
+        var window = DropDown();
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        window.Visible = true;
+        _controller.OnShown(1);
+        Settle();
+
+        Assert.False(window.Marked);
+        _system.ForegroundWindow = 1;
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Assert.False(window.Visible);
+        Assert.Equal(DropDownOutcome.Hidden, _reports[^1].Outcome);
+    }
+
+    [Fact]
+    public void TheReportOfItsOwnShowArrivingAfterAHideChangesNothing()
+    {
+        var window = DropDown();
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        _controller.OnShown(1);
+        Settle();
+
+        Assert.False(window.Visible);
+        Assert.True(window.Marked);
+    }
+
+    private FakeDropWindow DropDown()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        Press(DropDownShortcut.WindowsControlAboveTab);
+        Assert.True(window.Visible);
+        return window;
+    }
+
     private static DropDownAppsSettings Settings() => new()
     {
         Enabled = true,
