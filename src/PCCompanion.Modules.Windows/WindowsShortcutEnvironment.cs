@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows.AppWindows;
+namespace PCCompanion.Modules.Windows;
 
 /// <summary>
 /// Reads keyboard layouts from Windows and registers shortcuts for <paramref name="window"/>.

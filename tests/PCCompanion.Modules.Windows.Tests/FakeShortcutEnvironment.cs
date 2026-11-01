@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.Tests;
