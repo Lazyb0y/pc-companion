@@ -2820,4 +2820,12 @@
     <value>Liest, wenn eine App in den Vordergrund kommt, und einmal pro Sekunde, solange die Sprache einer App gemerkt wird, welches Fenster im Vordergrund ist, zu welcher App es gehört und mit welcher Sprache darin geschrieben wird, nie Fenstertitel, Inhalte oder die Tasten, die Sie drücken. Bittet die App im Vordergrund, ihre Sprache zu wechseln, wie Windows es beim Wechseln tut, und nur zu einer Sprache in Ihrer Liste; verwendet keinen Tastaturhook und führt keinen Code in anderen Apps aus. Speichert die zuletzt verwendete Sprache jeder App, für bis zu 500 Apps, in einer Datei auf diesem PC, die gelöscht wird, wenn die Funktion deaktiviert ist oder andere Apps nicht gemerkt werden. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsName" xml:space="preserve">
+    <value>Drop-down-Apps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDescription" xml:space="preserve">
+    <value>Das Fenster einer gewählten App mit einer Tastenkombination vom oberen Bildschirmrand herunterziehen und mit derselben Tastenkombination wieder nach oben schieben.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

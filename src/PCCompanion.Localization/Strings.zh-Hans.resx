@@ -2796,4 +2796,12 @@
     <value>当应用来到前台时，以及在记住某个应用的语言期间每秒一次，读取前台窗口、其所属应用及其输入所用的语言，从不读取窗口标题、内容或你按下的键。请求前台应用切换语言，方式与你自己切换时 Windows 的做法相同，并且只切换到你列表中的语言；不使用键盘挂钩，也不在其他应用中运行代码。将每个应用最后使用的语言（最多 500 个应用）保存在此电脑上的一个文件中，关闭此功能或不再记住其他应用时会删除该文件。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DropDownAppsName" xml:space="preserve">
+    <value>下拉应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsDescription" xml:space="preserve">
+    <value>使用快捷键将所选应用的窗口从屏幕顶部滑下，再按同一快捷键将其收回。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
