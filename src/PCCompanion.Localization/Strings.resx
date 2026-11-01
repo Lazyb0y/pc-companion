@@ -2641,11 +2641,11 @@
     <comment>Minimize to Tray page: note with the OpenTaskbarSettings button. Use Windows' names for the hidden icons menu and the taskbar settings.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Some windows can't go to the tray: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual.</value>
+    <value>Some windows can't go to the tray: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them.</value>
     <comment>Minimize to Tray page: the windows that can't go to the tray, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Some windows can't go to the tray: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. PC Companion runs as administrator, so windows of apps running as administrator go to the tray too.</value>
+    <value>Some windows can't go to the tray: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. PC Companion runs as administrator, so windows of apps running as administrator go to the tray too. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them.</value>
     <comment>Minimize to Tray page: shown instead of MinimizeToTrayCantGoInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">

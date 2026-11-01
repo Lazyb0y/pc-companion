@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude.</value>
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. PC Companion est exécuté en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur vont aussi dans la zone de notification.</value>
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. PC Companion est exécuté en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur vont aussi dans la zone de notification. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
