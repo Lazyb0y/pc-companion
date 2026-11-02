@@ -12,7 +12,9 @@ Outputs: C:\Test\results: <page>-light.png and <page>-dark.png for each page in 
 Installs PC Companion just for the current user, turns its features on, and saves each page of the
 settings app in the light and dark themes, on a plain desktop: Home as the whole window, the other
 pages cropped to the page itself. When a release adds a feature, add its page to $pages and turn it
-on in $features.
+on in $features. Display Profiles isn't among them: Windows Sandbox is a remote session, where its
+page says profiles aren't available, so its screenshot is taken on a PC; see
+docs\development\website.md.
 #>
 
 $ErrorActionPreference = 'Continue'
@@ -21,8 +23,9 @@ New-Item -ItemType Directory -Force -Path $results | Out-Null
 Set-Content -Path $report -Value "PC Companion website screenshots - $(Get-Date -Format o)" -Encoding utf8
 
 # The pages, by their names in the navigation pane, and the features' settings: an action for each
-# corner, and a key for one, two rules and two profiles, so the pages show what the features can do.
-$pages = 'Home', 'Hot Corners', 'App Windows', 'System Meters', 'Clipboard Actions', 'Network Profiles', 'General'
+# corner, and a key for one, apps with a language, a shortcut or the tray, rules and profiles, so
+# the pages show what the features can do. %USERPROFILE% stands for the user's folder.
+$pages = 'Home', 'Hot Corners', 'Lock Keys', 'Input Language per App', 'App Windows', 'Minimize to Tray', 'Hide Apps', 'Drop-down Apps', 'System Meters', 'Clipboard Actions', 'Network Profiles', 'Folder Rules', 'General'
 $features = @'
 "hotCorners": {
     "enabled": true,
@@ -33,7 +36,27 @@ $features = @'
     "activationDelayMilliseconds": 150,
     "ignoreFullScreenApps": true
 },
+"lockKeys": { "enabled": true },
+"inputLanguagePerApp": {
+    "enabled": true,
+    "apps": [
+        { "name": "Microsoft Edge", "program": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "inputMethod": "0407:00000407" },
+        { "name": "Windows PowerShell", "program": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "inputMethod": "0409:00000409" }
+    ]
+},
 "appWindows": { "enabled": true, "shortcut": "AltAboveTab", "includeMinimized": false },
+"minimizeToTray": {
+    "enabled": true,
+    "minimizedApps": [ { "name": "Task Manager", "program": "C:\\Windows\\System32\\Taskmgr.exe" } ]
+},
+"hideApps": { "enabled": true },
+"dropDownApps": {
+    "enabled": true,
+    "apps": [
+        { "name": "Windows PowerShell", "program": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", "shortcut": "WindowsControlAboveTab" },
+        { "name": "Microsoft Edge", "program": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "shortcut": "WindowsControlAlt1" }
+    ]
+},
 "systemMeters": { "enabled": true },
 "clipboardActions": {
     "enabled": true,
@@ -49,8 +72,22 @@ $features = @'
         { "name": "Office", "proxy": { "autoDetect": false, "useScript": false, "scriptAddress": "", "useServer": true, "server": "proxy.example.com:8080", "exceptions": ["*.example.com", "10.*"], "bypassLocal": true } },
         { "name": "Home", "proxy": { "autoDetect": true, "useScript": false, "scriptAddress": "", "useServer": false, "server": "", "exceptions": [], "bypassLocal": false } }
     ]
+},
+"folderRules": {
+    "enabled": true,
+    "folders": [
+        {
+            "path": "%USERPROFILE%\\Downloads",
+            "rules": [
+                { "name": "Installers", "extensions": ["exe", "msi"], "action": "Move", "destination": "%USERPROFILE%\\Downloads\\Installers", "ifExists": "AddNumber" },
+                { "name": "Invoices", "names": ["invoice*"], "extensions": ["pdf"], "action": "Move", "destination": "%USERPROFILE%\\Documents\\Invoices\\{year}", "ifExists": "AddNumber" },
+                { "name": "Photos", "extensions": ["jpg", "png"], "action": "Copy", "destination": "%USERPROFILE%\\Pictures\\Downloaded", "ifExists": "Skip" }
+            ]
+        }
+    ]
 }
 '@
+$features = $features.Replace('%USERPROFILE%', $env:USERPROFILE.Replace('\', '\\'))
 
 # The desktop's gray, from 0 to 255: the window's Mica backdrop takes its tint from the desktop
 # behind it, so a plain gray one leaves it neutral in both themes, without the colors of the
@@ -186,6 +223,16 @@ function Save-Page([string] $Name) {
 # Keeps the pointer off the window, so nothing shows as hovered, and out of the corners.
 function Move-PointerAside { [void] (Move-Pointer ($screen.Width - 20) ([int] ($screen.Height / 2))) }
 
+# Waits until no Lock Keys or Input Language per App notice is on screen, such as one for Num Lock,
+# which the Sandbox can turn on to match the PC, so none shows in a screenshot.
+function Wait-NoNotice {
+    $gone = Wait-Until {
+        $notice = [Win32]::FindWindow('PCCompanion.LockKeys', [NullString]::Value)
+        ($notice -eq [IntPtr]::Zero) -or -not [Win32]::IsWindowVisible($notice)
+    } 10
+    if (-not $gone) { Test-Check 'no notice is on screen' $false }
+}
+
 Write-Report (& (Join-Path $PSScriptRoot 'smart-app-control.ps1') Off)
 $graphics = [System.Drawing.Graphics]::FromHwnd([IntPtr]::Zero)
 $scale = $graphics.DpiX / 96
@@ -194,6 +241,17 @@ Test-Check 'the display is at 100% scaling' ($scale -eq 1) "$($screen.Width) x $
 Test-Check 'the window fits on the display' (($screen.Width -ge $width + 80) -and ($screen.Height -ge $height + 80)) "$($screen.Width) x $($screen.Height)"
 
 Set-PlainDesktop
+
+# English and German input methods, for Input Language per App's apps, and the folders Folder
+# Rules' destinations name, so its page shows no warnings.
+$languages = New-WinUserLanguageList en-US
+$languages.Add('de-DE')
+Set-WinUserLanguageList $languages -Force
+$tags = @(Get-WinUserLanguageList | ForEach-Object { $_.LanguageTag })
+Test-Check 'the user has English and German input methods' (($tags -contains 'en-US') -and ($tags -contains 'de-DE')) ($tags -join ', ')
+foreach ($folder in 'Downloads\Installers', 'Documents\Invoices', 'Pictures\Downloaded') {
+    New-Item -ItemType Directory -Force -Path (Join-Path $env:USERPROFILE $folder) | Out-Null
+}
 
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install for the current user' ($code -eq 0) "exit code $code"
@@ -212,6 +270,7 @@ foreach ($theme in 'Light', 'Dark') {
         Test-Check "$theme`: show $page" (Show-Page $page)
         Move-PointerAside
         Start-Sleep -Seconds 3
+        Wait-NoNotice
         $name = "$($page.ToLowerInvariant() -replace ' ', '-')-$($theme.ToLowerInvariant())"
         if ($page -eq 'Home') { Save-Window $name } else { Save-Page $name }
     }
