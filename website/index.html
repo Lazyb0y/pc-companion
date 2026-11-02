@@ -107,6 +107,42 @@
           </div>
         </article>
 
+        <article class="feature feature-reverse" aria-labelledby="lock-keys-title">
+          <div class="feature-text">
+            <p class="eyebrow">Input &amp; Triggers</p>
+            <h3 id="lock-keys-title">Lock Keys</h3>
+            <p>See a short notice on screen when <kbd>Caps Lock</kbd>, <kbd>Num Lock</kbd> or <kbd>Scroll Lock</kbd> turns on or off, such as "Caps Lock on", on the display you're typing on. Inspired by the lock key notices of KDE Plasma and ChromeOS, and by the Caps Lock indicator of macOS.</p>
+            <ul class="points">
+              <li>Choose the keys, whether a key turning off shows too, where the notice shows and for how long.</li>
+              <li><strong>Keep showing while Caps Lock is on</strong> keeps a small badge on screen that follows the window in front.</li>
+              <li>Stays out of full-screen apps, follows the display's scale, your light or dark mode and high contrast, and never takes the focus.</li>
+              <li>No keyboard hook: PC Companion reads only whether the keys are on, never the keys you type.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/lock-keys-light.png" width="763" height="678" loading="lazy" alt="The Lock Keys page, with Caps Lock and Num Lock chosen, the notice's position and how long it shows.">
+            <img class="shot-dark" src="images/lock-keys-dark.png" width="763" height="678" loading="lazy" alt="The Lock Keys page, with Caps Lock and Num Lock chosen, the notice's position and how long it shows.">
+          </div>
+        </article>
+
+        <article class="feature" aria-labelledby="input-language-title">
+          <div class="feature-text">
+            <p class="eyebrow">Input &amp; Triggers</p>
+            <h3 id="input-language-title">Input Language per App</h3>
+            <p>The keyboard language switches by itself for the app in front, such as German in your browser and English in PowerShell. Inspired by the keyboard layout policies of KDE Plasma and the per-app input source tools of macOS.</p>
+            <ul class="points">
+              <li>Give the apps you choose an input method from your language list.</li>
+              <li>Every other app gets back the language it had when you left it, also after a restart. Or leave them the language in use, or give them all one language.</li>
+              <li>It switches only when an app comes to the front, so a language you choose by hand stays until you leave the app.</li>
+              <li>A short notice shows the new language. PC Companion never adds input methods or changes Windows' language settings.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/input-language-per-app-light.png" width="763" height="708" loading="lazy" alt="The Input Language per App page, with German for Microsoft Edge, English for Windows PowerShell, and other apps remembering their language.">
+            <img class="shot-dark" src="images/input-language-per-app-dark.png" width="763" height="708" loading="lazy" alt="The Input Language per App page, with German for Microsoft Edge, English for Windows PowerShell, and other apps remembering their language.">
+          </div>
+        </article>
+
         <article class="feature feature-reverse" aria-labelledby="app-windows-title">
           <div class="feature-text">
             <p class="eyebrow">Window Management</p>
@@ -125,7 +161,61 @@
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="system-meters-title">
+        <article class="feature" aria-labelledby="minimize-to-tray-title">
+          <div class="feature-text">
+            <p class="eyebrow">Window Management</p>
+            <h3 id="minimize-to-tray-title">Minimize to Tray</h3>
+            <p>Send any app's window to an icon in the notification area instead of the taskbar, and bring it back from there. Inspired by tools for Linux desktops that dock any window in the tray, and by Hide in macOS.</p>
+            <ul class="points">
+              <li>Press <kbd>Windows</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd>, or hold <kbd>Shift</kbd> as you select a window's Minimize button.</li>
+              <li>List apps whose windows go to the tray whenever they're minimized, such as Task Manager or a chat app.</li>
+              <li>Each app gets one icon: select it to bring back the window, or open its menu to choose a window or bring them all back.</li>
+              <li>No window is lost: turning the feature off, exiting, signing out and a crash bring every window back to the taskbar.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/minimize-to-tray-light.png" width="763" height="627" loading="lazy" alt="The Minimize to Tray page, with the shortcut, Shift + Minimize, and Task Manager among the apps that go to the tray when minimized.">
+            <img class="shot-dark" src="images/minimize-to-tray-dark.png" width="763" height="627" loading="lazy" alt="The Minimize to Tray page, with the shortcut, Shift + Minimize, and Task Manager among the apps that go to the tray when minimized.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="hide-apps-title">
+          <div class="feature-text">
+            <p class="eyebrow">Window Management</p>
+            <h3 id="hide-apps-title">Hide Apps</h3>
+            <p>Put away every window of the app in front, or of every other app, with one shortcut, and bring them back as they were. Inspired by Hide, Hide Others and Show All in macOS.</p>
+            <ul class="points">
+              <li><kbd>Windows</kbd> + <kbd>Ctrl</kbd> + <kbd>H</kbd> hides the app in front, such as every File Explorer window.</li>
+              <li><kbd>Windows</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> hides every other app, optionally only on the display in front. Press it again to bring them back.</li>
+              <li>When one window comes back, the app's other windows come with it, in their order. <strong>Show all hidden windows</strong> in the PC Companion icon's menu brings back everything.</li>
+              <li>Windows are only minimized, so they keep their taskbar buttons and none is lost if PC Companion closes.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/hide-apps-light.png" width="763" height="643" loading="lazy" alt="The Hide Apps page, with the Hide app and Hide others shortcuts and their options.">
+            <img class="shot-dark" src="images/hide-apps-dark.png" width="763" height="643" loading="lazy" alt="The Hide Apps page, with the Hide app and Hide others shortcuts and their options.">
+          </div>
+        </article>
+
+        <article class="feature" aria-labelledby="drop-down-apps-title">
+          <div class="feature-text">
+            <p class="eyebrow">Window Management</p>
+            <h3 id="drop-down-apps-title">Drop-down Apps</h3>
+            <p>Press a shortcut to slide a chosen app's window down from the top of the screen, and again to slide it back up out of the way, as drop-down terminals do, for any app. Inspired by Yakuake and the i3 scratchpad.</p>
+            <ul class="points">
+              <li>Give each app its own shortcut: <kbd>Windows</kbd> + <kbd>Ctrl</kbd> or <kbd>Alt</kbd> with the key above <kbd>Tab</kbd>, or <kbd>Windows</kbd> + <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd> to <kbd>9</kbd>.</li>
+              <li>Choose the display, the width and height, the slide, whether the window hides when another app comes to the front, and whether it stays on top.</li>
+              <li>When the app isn't running, the shortcut starts it. A window on another virtual desktop comes to the one you're on.</li>
+              <li>The window you were using gets the focus back, and hidden windows come back on the taskbar when the feature stops or PC Companion exits.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/drop-down-apps-light.png" width="763" height="692" loading="lazy" alt="The Drop-down Apps page, with a shortcut for Windows PowerShell and one for Microsoft Edge, and the display, width and height windows show at.">
+            <img class="shot-dark" src="images/drop-down-apps-dark.png" width="763" height="692" loading="lazy" alt="The Drop-down Apps page, with a shortcut for Windows PowerShell and one for Microsoft Edge, and the display, width and height windows show at.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="system-meters-title">
           <div class="feature-text">
             <p class="eyebrow">Desktop</p>
             <h3 id="system-meters-title">System Meters</h3>
@@ -143,7 +233,7 @@
           </div>
         </article>
 
-        <article class="feature feature-reverse" aria-labelledby="clipboard-actions-title">
+        <article class="feature" aria-labelledby="clipboard-actions-title">
           <div class="feature-text">
             <p class="eyebrow">Clipboard &amp; Text</p>
             <h3 id="clipboard-actions-title">Clipboard Actions</h3>
@@ -161,7 +251,7 @@
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="network-profiles-title">
+        <article class="feature feature-reverse" aria-labelledby="network-profiles-title">
           <div class="feature-text">
             <p class="eyebrow">Network</p>
             <h3 id="network-profiles-title">Network Profiles</h3>
@@ -179,7 +269,43 @@
           </div>
         </article>
 
-        <article class="feature feature-reverse" aria-labelledby="general-title">
+        <article class="feature" aria-labelledby="folder-rules-title">
+          <div class="feature-text">
+            <p class="eyebrow">Files</p>
+            <h3 id="folder-rules-title">Folder Rules</h3>
+            <p>Keep folders such as Downloads tidy: rules move, copy, rename or sort files as they arrive, or move them to the Recycle Bin. Inspired by Folder Actions in macOS and by folder automation on Linux.</p>
+            <ul class="points">
+              <li>A rule matches a file's name, type, size and date, and the site it was downloaded from.</li>
+              <li>Destinations and new names can use parts of the file, such as <code>Invoices\{year}</code> or <code>{date} {name}</code>.</li>
+              <li>See the files a rule would act on while you edit it, run it on the files already there, and undo what it did from the history.</li>
+              <li>Never replaces a file or deletes one for good, and waits until a download has finished.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/folder-rules-light.png" width="763" height="652" loading="lazy" alt="The Folder Rules page, with the Downloads folder and its rules for installers, invoices and photos.">
+            <img class="shot-dark" src="images/folder-rules-dark.png" width="763" height="652" loading="lazy" alt="The Folder Rules page, with the Downloads folder and its rules for installers, invoices and photos.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="display-profiles-title">
+          <div class="feature-text">
+            <p class="eyebrow">Display</p>
+            <h3 id="display-profiles-title">Display Profiles</h3>
+            <p>Save display setups as profiles, such as Desk, TV and Presenting, and switch between them from the PC Companion icon's menu. Inspired by KDE Plasma and GNOME, which ask before keeping a display change, and by autorandr on Linux.</p>
+            <ul class="points">
+              <li>A profile sets which displays are on, the main display, the arrangement, and each display's resolution, refresh rate, orientation and HDR.</li>
+              <li>Make profiles from the setup you're using, so each one is a setup Windows accepted.</li>
+              <li>After a switch that could leave a display black, PC Companion asks whether to keep it, and goes back after 15 seconds without an answer.</li>
+              <li>Recognizes displays by their model and serial number, across restarts, driver updates and cable changes, and needs no admin rights.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/display-profiles-light.png" width="763" height="723" loading="lazy" alt="The Display Profiles page, with Desk, in use, One display and Presenting profiles for two displays, each with a picture of its arrangement and a line for each display.">
+            <img class="shot-dark" src="images/display-profiles-dark.png" width="763" height="723" loading="lazy" alt="The Display Profiles page, with Desk, in use, One display and Presenting profiles for two displays, each with a picture of its arrangement and a line for each display.">
+          </div>
+        </article>
+
+        <article class="feature" aria-labelledby="general-title">
           <div class="feature-text">
             <p class="eyebrow">General</p>
             <h3 id="general-title">Made to fit Windows</h3>
@@ -225,7 +351,7 @@
           </li>
           <li class="card">
             <h3>Stays on your PC</h3>
-            <p>Your settings and logs are kept in <code>%LOCALAPPDATA%\<wbr>PCCompanion</code>. Logs leave your PC only if you share them.</p>
+            <p>Your settings, logs and the features' history, such as Folder Rules' undo list, are kept in <code>%LOCALAPPDATA%\<wbr>PCCompanion</code>. Logs leave your PC only if you share them.</p>
           </li>
           <li class="card">
             <h3>One connection</h3>
