@@ -77,6 +77,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 - **When:**
   - The window is asked when the pointer comes into a window's top band, and after each move there, with at most one question waiting.
   - Raw input reports a move before the pointer's position follows it, so when an answer is about where the pointer was, the window is asked again.
+  - A window can also answer before the position catches up, and once the pointer stops, no event comes to ask again. So 50 ms after the last pointer event, while no question waits, the window under the pointer is asked again when the pointer isn't where it was looked at last. The full Sandbox round showed it: a claim left a few pixels behind the pointer let the click through.
   - A question with no answer within 150 ms is dropped, and the next move asks again.
 - **Windows that aren't DPI aware:** for a window that isn't per-monitor DPI aware, the point is converted to its own coordinates (`PhysicalToLogicalPointForPerMonitorDPI`) before it's asked.
 - **Not used:**
@@ -339,7 +340,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 
 ## Performance
 
-- **Away from title bars,** each pointer event costs `WindowFromPoint` and reading the window's frame, a few microseconds on the UI thread. Raw input costs nothing while the pointer is still.
+- **Away from title bars,** each pointer event costs `WindowFromPoint` and reading the window's frame, a few microseconds on the UI thread, and resets a timer that looks once more 50 ms after the pointer stops. Raw input costs nothing while the pointer is still.
 - **In a window's top band,** the window is asked once per move, with at most one question waiting, without waiting for the answer.
 - **The hook** is set only while the pointer rests on a title bar. While it's set, every pointer event passes through its thread, which only compares the event with the claims. Setting and removing it takes about 2 µs.
 - **Opacity:** `SetLayeredWindowAttributes` took under 2 ms per notch in the spike.
@@ -368,7 +369,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
     - `HTCAPTION` counts, and `HTCLIENT`, the icon, the buttons and the borders don't;
     - a child's answer, and `HTTRANSPARENT` passed to the parent;
     - the top band at several DPIs, and the point converted for a window that isn't DPI aware;
-    - an answer about where the pointer was, asked again;
+    - an answer about where the pointer was, asked again, also when it came before the pointer's position caught up;
     - a question unanswered for 150 ms, dropped;
   - **which windows get nothing:** non-taskbar windows, disabled windows, windows of apps that stopped responding, the shell's windows, listed apps by app ID and by program, and apps whose question Windows refuses;
   - **claims:**

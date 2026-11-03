@@ -207,6 +207,57 @@ public sealed class TitleBarFinderTests
         Assert.Equal(TitleBarCheck.AppListed, _finder.Check(OnTitleBar, _ => Assert.Fail("A listed app's window was checked.")));
     }
 
+    // Raw input reports a move before the pointer's position follows it: here the window answered
+    // for where the pointer was, and its position caught up with no event after.
+    [Fact]
+    public void OnceThePointerSettlesWhereItWasntAskedTheSpotFollowsIt()
+    {
+        MoveTo(new Point(420, 120));
+        _windows.PointerPosition = OnTitleBar;
+        Assert.Equal(new Point(420, 120), _finder.Spot?.Point);
+
+        _finder.Settle();
+
+        Assert.Equal(new TitleBarSpot(Window, OnTitleBar), _finder.Spot);
+    }
+
+    [Fact]
+    public void OnceThePointerSettlesOnATitleBarFromATabTheSpotComes()
+    {
+        MoveTo(OnTab);
+        _windows.PointerPosition = OnTitleBar;
+        Assert.Null(_finder.Spot);
+
+        _finder.Settle();
+
+        Assert.Equal(new TitleBarSpot(Window, OnTitleBar), _finder.Spot);
+    }
+
+    [Fact]
+    public void SettlingWhereTheFinderLookedAsksNothing()
+    {
+        MoveTo(OnTitleBar);
+
+        _finder.Settle();
+
+        Assert.Single(_windows.Asked);
+    }
+
+    [Fact]
+    public void SettlingWhileAQuestionWaitsLeavesItToTheAnswer()
+    {
+        _windows.AnswersLater = true;
+        MoveTo(OnTitleBar);
+        _windows.PointerPosition = new Point(410, 120);
+
+        _finder.Settle();
+        Assert.Single(_windows.Asked);
+        _windows.Answer();
+        _windows.Answer();
+
+        Assert.Equal(new TitleBarSpot(Window, new Point(410, 120)), _finder.Spot);
+    }
+
     [Fact]
     public void CheckSaysWhyAWindowWasntAsked()
     {

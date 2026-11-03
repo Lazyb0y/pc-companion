@@ -62,6 +62,18 @@ public sealed class TitleBarControllerTests : IDisposable
     }
 
     [Fact]
+    public void AMomentAfterThePointerStopsTheClaimFollowsItsPosition()
+    {
+        // The window answered for where the pointer was, before its position caught up.
+        MoveTo(new Point(420, 120));
+        _windows.PointerPosition = OnTitleBar;
+
+        _clock.Advance(TitleBarController.SettleDelay);
+
+        Assert.Equal(new Rectangle(398, 118, 5, 5), _system.Claimed?.Area);
+    }
+
+    [Fact]
     public void ClaimingAndRemovingTheClaimAreLoggedOnceEach()
     {
         MoveTo(OnTitleBar);
