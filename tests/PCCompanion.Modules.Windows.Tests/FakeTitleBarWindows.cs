@@ -32,14 +32,15 @@ internal sealed class FakeTitleBarWindows : ITitleBarWindows
 
     public int Waiting => _waiting.Count;
 
-    /// <summary>Adds a window; a child is found before its parent where they overlap.</summary>
+    /// <summary>Adds a window in front of the others; a child is found before its parent where they overlap.</summary>
     public void Add(nint handle, Rectangle bounds, nint parent = 0, uint dpi = 96) => _windows.Add((handle, bounds, parent, dpi));
 
     /// <summary>Delivers the oldest answer that waits.</summary>
     public void Answer() => _waiting.Dequeue()();
 
     public nint WindowAt(Point point) =>
-        _windows.Where(window => window.Bounds.Contains(point)).OrderByDescending(window => Depth(window.Handle)).Select(window => window.Handle).FirstOrDefault();
+        _windows.Select((window, index) => (window, index)).Where(entry => entry.window.Bounds.Contains(point))
+            .OrderByDescending(entry => Depth(entry.window.Handle)).ThenByDescending(entry => entry.index).Select(entry => entry.window.Handle).FirstOrDefault();
 
     public nint Root(nint window)
     {

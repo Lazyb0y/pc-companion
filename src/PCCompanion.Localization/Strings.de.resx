@@ -3040,4 +3040,12 @@
     <value>{0}-mal</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>Titelleistenaktionen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>Mit einem Mittelklick auf die Titelleiste ein Fenster minimieren oder in den Hintergrund schicken, oder dort mit dem Mausrad seine Deckkraft ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

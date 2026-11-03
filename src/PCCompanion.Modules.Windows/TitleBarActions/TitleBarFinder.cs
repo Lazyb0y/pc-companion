@@ -147,18 +147,20 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
         });
     }
 
-    // The window under the point and its top-level window, when the point is in that window's top band.
+    // The window under the point and its top-level window, when the point is in that window's top
+    // band and the window may get actions. The band, which most pointer moves are outside, is
+    // checked first.
     private (nint Under, nint Root)? Find(Point point)
     {
         var under = windows.WindowAt(point);
         var root = under == 0 ? 0 : windows.Root(under);
-        if (root == 0 || !windows.IsCandidate(root) || windows.VisibleFrame(root) is not { } frame || !frame.Contains(point))
+        if (root == 0 || windows.VisibleFrame(root) is not { } frame || !frame.Contains(point))
         {
             return null;
         }
 
         var band = TopBand * windows.Dpi(root) / 96.0;
-        return point.Y < frame.Top + band ? (under, root) : null;
+        return point.Y < frame.Top + band && windows.IsCandidate(root) ? (under, root) : null;
     }
 
     private void SetSpot(TitleBarSpot? spot)

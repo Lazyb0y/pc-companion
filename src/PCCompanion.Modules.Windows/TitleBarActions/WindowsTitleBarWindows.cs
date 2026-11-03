@@ -19,7 +19,18 @@ public sealed class WindowsTitleBarWindows : ITitleBarWindows
 
     public uint Dpi(nint window) => TopLevelWindows.Dpi(window);
 
-    public bool IsCandidate(nint root) => !TopLevelWindows.IsNotResponding(root);
+    // A window the taskbar shows that takes input and responds, and isn't the desktop or a taskbar;
+    // see "Which windows" in docs/features/windows/title-bar-actions.md.
+    public bool IsCandidate(nint root)
+    {
+        if (!TopLevelWindows.MayHaveTaskbarButton(root) || !TopLevelWindows.IsEnabled(root) || TopLevelWindows.IsNotResponding(root))
+        {
+            return false;
+        }
+
+        var window = TopLevelWindows.Describe(root);
+        return !window.IsDesktop && !window.IsCloaked && TopLevelWindows.ClassName(root) is not ("Shell_TrayWnd" or "Shell_SecondaryTrayWnd");
+    }
 
     public bool Ask(nint window, Point point, Action<HitTestAnswer> answered) => WindowHitTest.Request(window, point, answered);
 }

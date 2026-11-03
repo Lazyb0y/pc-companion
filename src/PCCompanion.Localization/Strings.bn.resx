@@ -3040,4 +3040,12 @@
     <value>{0} বার</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>টাইটেল বারের অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>কোনো উইন্ডোর টাইটেল বারে মাঝের বোতামে ক্লিক করে সেটি ছোট করুন বা পিছনে পাঠান, অথবা সেখানে চাকা ঘুরিয়ে এর অস্বচ্ছতা বদলান।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
