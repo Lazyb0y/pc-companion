@@ -24,6 +24,12 @@ internal sealed class FakeTitleBarWindows : ITitleBarWindows
 
     public HashSet<nint> NotCandidates { get; } = [];
 
+    /// <summary>Each window's app; a window not listed is its own program's.</summary>
+    public Dictionary<nint, AppOfWindow> Apps { get; } = [];
+
+    /// <summary>The windows whose app was read, in turn.</summary>
+    public List<nint> AppsRead { get; } = [];
+
     public List<(nint Window, Point Point)> Asked { get; } = [];
 
     public bool AnswersLater { get; set; }
@@ -34,6 +40,9 @@ internal sealed class FakeTitleBarWindows : ITitleBarWindows
 
     /// <summary>Adds a window in front of the others; a child is found before its parent where they overlap.</summary>
     public void Add(nint handle, Rectangle bounds, nint parent = 0, uint dpi = 96) => _windows.Add((handle, bounds, parent, dpi));
+
+    /// <summary>Closes a window.</summary>
+    public void Remove(nint handle) => _windows.RemoveAll(window => window.Handle == handle);
 
     /// <summary>Delivers the oldest answer that waits.</summary>
     public void Answer() => _waiting.Dequeue()();
@@ -60,6 +69,14 @@ internal sealed class FakeTitleBarWindows : ITitleBarWindows
     public uint Dpi(nint window) => _windows.FirstOrDefault(other => other.Handle == window).Dpi;
 
     public bool IsCandidate(nint root) => !NotCandidates.Contains(root);
+
+    public AppOfWindow? AppOf(nint root)
+    {
+        AppsRead.Add(root);
+        return !Exists(root) ? null : Apps.GetValueOrDefault(root) ?? new AppOfWindow(null, null, $@"C:\Apps\{root}.exe", (uint)root);
+    }
+
+    public bool Exists(nint window) => _windows.Any(other => other.Handle == window);
 
     public bool Ask(nint window, Point point, Action<HitTestAnswer> answered)
     {

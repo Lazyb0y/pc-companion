@@ -182,7 +182,8 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
         }
 
         _controller?.Configure(_settings);
-        LogConfigured(logger, _settings.MiddleClick, _settings.ShiftMiddleClick, _settings.ControlMiddleClick, _settings.Wheel, _settings.ControlWheel);
+        var apps = _settings.ExcludedApps.Count;
+        LogConfigured(logger, _settings.MiddleClick, _settings.ShiftMiddleClick, _settings.ControlMiddleClick, _settings.Wheel, _settings.ControlWheel, apps);
     }
 
     // Runs on the window's thread, where an exception would end the host. Like a failing Apply,
@@ -207,8 +208,8 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions stopped.")]
     private static partial void LogStopped(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions applied its settings: middle-click {MiddleClick}, Shift + middle-click {ShiftMiddleClick}, Ctrl + middle-click {ControlMiddleClick}, wheel {Wheel}, Ctrl + wheel {ControlWheel}.")]
-    private static partial void LogConfigured(ILogger logger, TitleBarClickAction middleClick, TitleBarClickAction shiftMiddleClick, TitleBarClickAction controlMiddleClick, TitleBarWheelAction wheel, TitleBarWheelAction controlWheel);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions applied its settings: middle-click {MiddleClick}, Shift + middle-click {ShiftMiddleClick}, Ctrl + middle-click {ControlMiddleClick}, wheel {Wheel}, Ctrl + wheel {ControlWheel}, {Apps} apps keep their clicks.")]
+    private static partial void LogConfigured(ILogger logger, TitleBarClickAction middleClick, TitleBarClickAction shiftMiddleClick, TitleBarClickAction controlMiddleClick, TitleBarWheelAction wheel, TitleBarWheelAction controlWheel, int apps);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions gave {Count} windows their opacity back.")]
     private static partial void LogPutBack(ILogger logger, int count);

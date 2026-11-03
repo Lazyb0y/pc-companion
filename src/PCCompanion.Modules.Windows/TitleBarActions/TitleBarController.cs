@@ -30,6 +30,7 @@ public sealed partial class TitleBarController : IDisposable
     private readonly ITitleBarActionsSystem _system;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly ExcludedWindows _excluded;
     private readonly TitleBarFinder _finder;
     private readonly WindowOpacity _opacity;
     private readonly ITimer _timer;
@@ -53,7 +54,8 @@ public sealed partial class TitleBarController : IDisposable
         _opacity = opacity;
         _time = time;
         _logger = logger;
-        _finder = new TitleBarFinder(windows, time);
+        _excluded = new ExcludedWindows(windows);
+        _finder = new TitleBarFinder(windows, _excluded, time);
         _finder.SpotChanged += (_, _) => UpdateClaim();
         _timer = time.CreateTimer(_ => post(CheckClicks), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
@@ -61,10 +63,19 @@ public sealed partial class TitleBarController : IDisposable
     /// <summary>The window whose title bar is claimed now, or 0.</summary>
     public nint ClaimedWindow => _claimed;
 
-    /// <summary>Takes the actions from <paramref name="settings"/>; clicks without one reach the apps.</summary>
+    /// <summary>
+    /// Takes the actions and the apps that keep their title-bar clicks from
+    /// <paramref name="settings"/>; clicks without an action reach the apps.
+    /// </summary>
     public void Configure(TitleBarActionsSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
+
+        // The title bar the pointer rests on may be a newly listed app's, so it's found again.
+        if (_excluded.SetApps(settings.ExcludedApps))
+        {
+            _finder.Stop();
+        }
 
         var actions = new Dictionary<PointerTrigger, TitleBarClickAction>();
         Add(actions, PointerKeys.None, settings.MiddleClick);
@@ -216,13 +227,19 @@ public sealed partial class TitleBarController : IDisposable
                 _system.SetHookAgain();
             }
 
+            var found = TitleBarCheck.Elsewhere;
             if (click.Trigger.Button == PointerButton.Wheel)
             {
-                _finder.Check(click.Point, window => Turn(window, click.WheelDelta, ClickPath.LetThrough));
+                found = _finder.Check(click.Point, window => Turn(window, click.WheelDelta, ClickPath.LetThrough));
             }
             else if (_actions.TryGetValue(click.Trigger, out var action))
             {
-                _finder.Check(click.Point, window => Run(action, window, click.Trigger, ClickPath.LetThrough));
+                found = _finder.Check(click.Point, window => Run(action, window, click.Trigger, ClickPath.LetThrough));
+            }
+
+            if (found is TitleBarCheck.WindowLeftOut or TitleBarCheck.AppListed)
+            {
+                LogLeftOut(_logger, click.Trigger.Button, click.Trigger.Keys, found);
             }
         }
 
@@ -377,6 +394,9 @@ public sealed partial class TitleBarController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a middle-click with keys {Keys} was kept, but the window under the pointer changed, so nothing ran.")]
     private static partial void LogWindowChanged(ILogger logger, PointerKeys keys);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a click or notch ({Button}, keys {Keys}) near the top of a window got no action: {Reason}.")]
+    private static partial void LogLeftOut(ILogger logger, PointerButton button, PointerKeys keys, TitleBarCheck reason);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar changed the window's opacity to {Level}% ({Path}).")]
     private static partial void LogOpacity(ILogger logger, int level, ClickPath path);
