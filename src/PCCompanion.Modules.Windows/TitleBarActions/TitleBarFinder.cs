@@ -63,9 +63,9 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
         ArgumentNullException.ThrowIfNull(onTitleBar);
 
         var (found, under, root) = Look(point);
-        if (found == TitleBarCheck.Asked)
+        if (found == TitleBarCheck.Asked && !CheckOnce(under, root, point, onTitleBar, clock.GetTimestamp(), _generation))
         {
-            CheckOnce(under, root, point, onTitleBar, clock.GetTimestamp(), _generation);
+            return TitleBarCheck.Refused;
         }
 
         return found;
@@ -132,8 +132,8 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
         }
     }
 
-    private void CheckOnce(nint asked, nint root, Point point, Action<nint> onTitleBar, long sent, int generation)
-    {
+    // Returns false when Windows refused the question.
+    private bool CheckOnce(nint asked, nint root, Point point, Action<nint> onTitleBar, long sent, int generation) =>
         windows.Ask(asked, point, answer =>
         {
             if (generation != _generation || clock.GetElapsedTime(sent) >= AnswerTimeout)
@@ -143,14 +143,13 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
 
             if (answer == HitTestAnswer.Transparent && asked != root && windows.Parent(asked) is var parent and not 0)
             {
-                CheckOnce(parent, root, point, onTitleBar, sent, generation);
+                _ = CheckOnce(parent, root, point, onTitleBar, sent, generation);
             }
             else if (answer == HitTestAnswer.Caption)
             {
                 onTitleBar(root);
             }
         });
-    }
 
     // The window under the point and its top-level window, to ask, when the point is in that
     // window's top band and the window may get actions; otherwise why not. The band, which most
@@ -187,7 +186,7 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
 /// <summary>What <see cref="TitleBarFinder.Check"/> found at a point.</summary>
 public enum TitleBarCheck
 {
-    /// <summary>The window there was asked whether the point is on its title bar, unless Windows refused.</summary>
+    /// <summary>The window there was asked whether the point is on its title bar.</summary>
     Asked,
 
     /// <summary>No window's top band is there.</summary>
@@ -198,6 +197,9 @@ public enum TitleBarCheck
 
     /// <summary>The window's app is on the list of apps that keep their title-bar clicks.</summary>
     AppListed,
+
+    /// <summary>Windows refused the question, as for an app running as administrator while PC Companion doesn't.</summary>
+    Refused,
 }
 
 /// <summary>A point on a window's title bar, which the window answered for.</summary>

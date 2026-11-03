@@ -219,6 +219,14 @@ public sealed class TitleBarFinderTests
     }
 
     [Fact]
+    public void CheckSaysWhenWindowsRefusedTheQuestion()
+    {
+        _windows.Refuses = true;
+
+        Assert.Equal(TitleBarCheck.Refused, _finder.Check(OnTitleBar, _ => Assert.Fail("A refused question was answered.")));
+    }
+
+    [Fact]
     public void StopForgetsTheSpotAndDropsAnswersThatComeLater()
     {
         MoveTo(OnTitleBar);

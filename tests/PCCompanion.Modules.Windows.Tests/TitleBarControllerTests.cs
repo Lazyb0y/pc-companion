@@ -62,6 +62,30 @@ public sealed class TitleBarControllerTests : IDisposable
     }
 
     [Fact]
+    public void ClaimingAndRemovingTheClaimAreLoggedOnceEach()
+    {
+        MoveTo(OnTitleBar);
+        MoveTo(new Point(410, 120));
+        MoveTo(OnTab);
+
+        Assert.Single(_logger.Entries, entry => entry.Message.Contains("claimed the title bar", StringComparison.Ordinal));
+        Assert.Single(_logger.Entries, entry => entry.Message.Contains("removed its claim", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AClickOnAWindowThatRefusesTheQuestionIsLogged()
+    {
+        _windows.Refuses = true;
+        MoveTo(OnTitleBar);
+
+        Click(1);
+        _clock.Advance(TitleBarController.CheckDelay);
+
+        Assert.Empty(_system.Minimized);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("got no action: Refused", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void WithoutActionsNothingIsClaimed()
     {
         _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = TitleBarClickAction.None });
