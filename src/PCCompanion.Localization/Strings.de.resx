@@ -3048,4 +3048,96 @@
     <value>Mit einem Mittelklick auf die Titelleiste ein Fenster minimieren oder in den Hintergrund schicken, oder dort mit dem Mausrad seine Deckkraft ändern.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>Mittelklick</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>Was ein Klick mit dem Mausrad oder der mittleren Maustaste auf die Titelleiste eines Fensters bewirkt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Umschalt + Mittelklick</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>Was ein Mittelklick auf eine Titelleiste bewirkt, während Sie die Umschalttaste gedrückt halten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Strg + Mittelklick</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>Was ein Mittelklick auf eine Titelleiste bewirkt, während Sie die Strg-Taste gedrückt halten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>Die Aktionen „In den Infobereich minimieren“ und „App ausblenden“ funktionieren nur, solange die Funktionen „In den Infobereich minimieren“ und „Apps ausblenden“ eingeschaltet sind. Bis dahin erklingt stattdessen der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>Mausrad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>Was das Drehen des Mausrads über der Titelleiste eines Fensters bewirkt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Strg + Mausrad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>Was das Drehen des Mausrads über einer Titelleiste bewirkt, während Sie die Strg-Taste gedrückt halten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>Minimieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>In den Hintergrund</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>In den Infobereich minimieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>App ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>Deckkraft ändern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>Apps, die ihre Titelleistenklicks behalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>Ihre Titelleisten erhalten keine Aktionen. Für Apps, die dort selbst einen Mittelklick oder das Mausrad verwenden, etwa Firefox, das bei einem Mittelklick auf seine Registerkartenleiste eine Registerkarte öffnet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>Registerkarten, Schaltflächen und Suchfelder in einer Titelleiste behalten ihre eigenen Klicks. Einige Fenster erhalten keine Aktionen: Fenster mit einem geöffneten Dialogfeld wie „Speichern“, Fenster von Apps, die nicht mehr reagieren oder ihre Fenster selbst verschieben, ohne Windows mitzuteilen, wo ihre Titelleiste ist, und Fenster von Apps, die als Administrator ausgeführt werden. Der Warnton von Windows erklingt, wenn eine Aktion nicht ausgeführt werden kann, etwa „Minimieren“ bei einem Fenster ohne Schaltfläche „Minimieren“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>Registerkarten, Schaltflächen und Suchfelder in einer Titelleiste behalten ihre eigenen Klicks. Einige Fenster erhalten keine Aktionen: Fenster mit einem geöffneten Dialogfeld wie „Speichern“ und Fenster von Apps, die nicht mehr reagieren oder ihre Fenster selbst verschieben, ohne Windows mitzuteilen, wo ihre Titelleiste ist. Der Warnton von Windows erklingt, wenn eine Aktion nicht ausgeführt werden kann, etwa „Minimieren“ bei einem Fenster ohne Schaltfläche „Minimieren“. PC Companion wird als Administrator ausgeführt, daher erhalten auch Fenster von Apps, die als Administrator ausgeführt werden, Aktionen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>Mit der Tastatur minimiert Windows-Logo-Taste + Nach-unten-Taste das Fenster im Vordergrund, und Alt + Esc schickt es in den Hintergrund. „In den Infobereich minimieren“ und „Apps ausblenden“ haben eigene Tastenkombinationen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>Liest, solange der Mauszeiger oben in einem Fenster ist, welches Fenster darunter liegt, seine Position und seine Stile, und fragt das Fenster, wo seine Titelleiste ist; mit aufgeführten Apps liest es, zu welcher App das Fenster gehört; liest nie Titel oder Inhalte. Solange der Mauszeiger auf einer Titelleiste ruht, hält ein Maus-Hook die Mittelklicks und Mausraddrehungen mit einer Aktion von der App fern und vergleicht ihre Positionen, ohne sie zu speichern. Minimiert und ordnet Fenster anderer Apps, ändert ihre Deckkraft und markiert die geänderten, damit sie nach einem Absturz ihre Deckkraft zurückerhalten, und übergibt Fenster an „In den Infobereich minimieren“ und „Apps ausblenden“; führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

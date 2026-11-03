@@ -23,7 +23,7 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
     private bool _failed;
     private bool _recovered;
 
-    public static FeatureInfo Definition { get; } = new("titleBarActions", WindowsModule.Id, "TitleBarActionsName", "TitleBarActionsDescription", "");
+    public static FeatureInfo Definition { get; } = new("titleBarActions", WindowsModule.Id, "TitleBarActionsName", "TitleBarActionsDescription", "");
 
     /// <summary>
     /// Whether this PC can run Title Bar Actions, for the settings app, which doesn't create the feature.

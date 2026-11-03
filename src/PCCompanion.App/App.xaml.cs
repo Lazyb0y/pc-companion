@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -22,6 +22,7 @@ using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
+using PCCompanion.App.Features.TitleBarActions;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
 using PCCompanion.Core.Settings;
@@ -181,6 +182,7 @@ public partial class App : Application
             .AddTransient<MinimizeToTrayViewModel>()
             .AddTransient<HideAppsViewModel>()
             .AddTransient<DropDownAppsViewModel>()
+            .AddTransient<TitleBarActionsViewModel>()
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()

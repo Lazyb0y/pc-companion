@@ -14,6 +14,7 @@ using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
+using PCCompanion.App.Features.TitleBarActions;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -34,6 +35,7 @@ using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
+using PCCompanion.Modules.Windows.TitleBarActions;
 
 namespace PCCompanion.App.Features;
 
@@ -67,6 +69,7 @@ public static class FeatureCatalog
             new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage)),
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage)),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage)),
+            new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage)),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [
