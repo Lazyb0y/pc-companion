@@ -215,6 +215,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
   - Standard title bars answer `HTCAPTION` over the title.
   - Edge, Chrome and the Electron app answer it only between the tabs and on the empty strip, and `HTCLIENT` on tabs.
   - File Explorer answers through a child window, `TITLE_BAR_SCAFFOLDING_WINDOW_CLASS`, and Settings through `ApplicationFrameTitleBarWindow`. Asking their top-level windows gave other answers at 946 and 1,592 points of the title bar.
+  - In a narrower Settings window, as the Sandbox checks use, its own content, with its name and a search box, fills most of the title bar and answers `HTCLIENT`; only the strip beside its buttons, `ApplicationFrameTitleBarWindow`, answers `HTCAPTION`.
   - A drag-bar child, as Windows Terminal uses, answered for itself, and an `HTTRANSPARENT` child passed the question to its parent.
 - **Speed:**
   - `WindowFromPoint` took 3 µs.
@@ -390,11 +391,13 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 - **Sandbox checks** (`scripts/sandbox/groups/TitleBarActions.ps1`), with test windows the checks start:
   - **the page:** the Home switch turns the feature on with its defaults, and the page saves each choice and the app list, with Running app and Remove;
   - **minimizing:**
-    - a middle-click, sent by `SendInput`, on a test window's title bar minimizes it without activating it, and the window gets no click, as its log shows;
+    - a middle-click, sent by `SendInput`, on a test window's title bar minimizes it without activating it, and the window gets no click, as its log shows. The test window draws its own title bar, as a browser does;
     - one on its tab doesn't, and the window gets the click;
+    - one on the window in front minimizes it too;
   - **Edge:** a middle-click on the empty tab strip minimizes the window, and Edge isn't activated;
-  - **File Explorer and Settings,** which answer through child windows, are minimized the same way;
+  - **File Explorer and Settings,** which answer through child windows, are minimized the same way, Settings from the strip beside its buttons;
   - **send to back:** Ctrl + middle-click sends the window in front to the back, and the next window comes to the front;
+  - **the hook** keeps each of these clicks, as the host's log shows;
   - **opacity:**
     - the wheel changes a test window's opacity in 10% steps, the window gets no wheel message, and 100% removes the style;
     - Exit and turning the feature off make it opaque again;
@@ -403,14 +406,12 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
     - a test window that stops responding gets no action and doesn't hold the host;
     - a listed app's title bar gets no action, and the host logs why;
     - with the host labeled Medium integrity, a test window running as administrator gets no action, and the host logs why;
-  - **the hook:**
-    - it's set only while the pointer is on a title bar, as the host's log shows;
-    - removed without telling the feature, it's set again after the next click, with a warning;
+  - **the hook:** it's set only while the pointer is on a title bar, as the host's log shows;
   - **the other features:** with Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide its app; with them off, the warning sound plays and the host logs why;
   - **the page** in English and Arabic, in light, dark and high contrast, with screenshots;
   - no feature holds the host's UI thread, as every group checks.
 - The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
-- **What the Sandbox can't check:** a real mouse and touchpad, the foreground lock, several displays and scales, UAC on, Windows 10, Narrator, a real GPU, and apps it doesn't have.
+- **What the Sandbox can't check:** a real mouse and touchpad, the foreground lock, several displays and scales, UAC on, Windows 10, Narrator, a real GPU, and apps it doesn't have. Nor can it remove the host's hook without telling the feature: Windows doesn't remove a slow hook with injected input, as the spike showed, so the unit tests check that a click the hook never saw sets it again.
 - **By hand:**
   - a real mouse with middle button and wheel, a smooth-scrolling mouse, a touchpad's scrolling and a tilt wheel;
   - Send to back of the window in front on a PC, where the foreground lock applies;
