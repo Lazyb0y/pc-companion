@@ -16,9 +16,11 @@ public sealed class TitleBarControllerTests : IDisposable
     private static readonly Point OnTitleBar = new(400, 120);
     private static readonly Point OnTab = new(150, 120);
     private static readonly PointerTrigger MiddleClick = new(PointerButton.Middle, PointerKeys.None);
+    private static readonly PointerTrigger Wheel = new(PointerButton.Wheel, PointerKeys.None);
 
     private readonly FakeTitleBarWindows _windows = new();
     private readonly FakeTitleBarActionsSystem _system = new();
+    private readonly FakeWindowOpacitySystem _opacity = new();
     private readonly ManualTimeProvider _clock = new();
     private readonly RecordingLogger<TitleBarController> _logger = new();
     private readonly TitleBarController _controller;
@@ -28,7 +30,8 @@ public sealed class TitleBarControllerTests : IDisposable
         // A window whose title bar answers as Edge's does: tabs on the left, the empty strip on the right.
         _windows.Add(Window, new Rectangle(100, 100, 800, 600));
         _windows.Answers = (_, point) => point.Y < 140 && point.X >= 300 ? HitTestAnswer.Caption : HitTestAnswer.Elsewhere;
-        _controller = new TitleBarController(_windows, _system, _clock, action => action(), _logger);
+        var opacity = new WindowOpacity(_opacity, action => action(), action => action(), exception => throw exception);
+        _controller = new TitleBarController(_windows, _system, opacity, _clock, action => action(), _logger);
         _controller.Configure(new TitleBarActionsSettings { Enabled = true });
     }
 
@@ -235,6 +238,84 @@ public sealed class TitleBarControllerTests : IDisposable
 
         Assert.Null(_system.Claimed);
         Assert.Empty(_system.Minimized);
+    }
+
+    [Fact]
+    public void TheWheelIsClaimedWhenItChangesOpacity()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = TitleBarClickAction.None, ControlWheel = TitleBarWheelAction.Opacity });
+
+        MoveTo(OnTitleBar);
+
+        Assert.Equal([new PointerTrigger(PointerButton.Wheel, PointerKeys.Control)], Assert.IsType<PointerClaim>(_system.Claimed).Triggers);
+    }
+
+    [Fact]
+    public void AKeptNotchChangesTheWindowsOpacity()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 2));
+
+        Assert.Equal(80, _opacity.OpacityOf(Window));
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("opacity to 80% (Kept)", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void SmallerStepsAddUpToANotch()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -40, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -40, 2));
+        Assert.Equal(100, _opacity.OpacityOf(Window));
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -40, 3));
+        Assert.Equal(90, _opacity.OpacityOf(Window));
+    }
+
+    [Fact]
+    public void ANotchLetThroughStillChangesTheOpacity()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity });
+        MoveTo(OnTitleBar);
+        _system.Outcomes[5] = PointerInputOutcome.LetThrough;
+
+        _controller.OnPointerInput(new PointerInputEventArgs(PointerButtonChanges.Wheel, -120, 5));
+        _clock.Advance(TitleBarController.CheckDelay);
+
+        Assert.Equal(90, _opacity.OpacityOf(Window));
+    }
+
+    [Fact]
+    public void AWindowThatDrawsItselfPlaysTheWarningSoundOnce()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity });
+        _opacity.Layered.Add(Window);
+        _opacity.DrawItself.Add(Window);
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 2));
+
+        Assert.Equal(1, _system.Sounds);
+        Assert.Empty(_opacity.Broken);
+    }
+
+    [Fact]
+    public void StoppingPutsTheWindowsBack()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity });
+        MoveTo(OnTitleBar);
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -360, 1));
+
+        Assert.Equal(1, _controller.Stop());
+
+        Assert.Equal(100, _opacity.OpacityOf(Window));
+        Assert.Empty(_opacity.Marks);
     }
 
     private void MoveTo(Point point)

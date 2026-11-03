@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Platform.Windows;
@@ -7,7 +8,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Windows.TitleBarActions;
 
 /// <summary>
-/// Runs actions for a middle-click on any window's title bar. See docs/features/windows/title-bar-actions.md.
+/// Runs actions for a middle-click or the wheel on any window's title bar. See docs/features/windows/title-bar-actions.md.
 /// </summary>
 public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeature> logger, TimeProvider time) : IFeature
 {
@@ -19,6 +20,7 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
     private PointerHook? _hook;
     private TitleBarController? _controller;
     private bool _failed;
+    private bool _recovered;
 
     public static FeatureInfo Definition { get; } = new("titleBarActions", WindowsModule.Id, "TitleBarActionsName", "TitleBarActionsDescription", "");
 
@@ -35,6 +37,18 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
 
     public void Apply(JsonElement? settings)
     {
+        // Windows left translucent by a PC Companion that ended without putting them back get their
+        // opacity back, on or off; it reads every window's properties without waiting for any program.
+        if (!_recovered)
+        {
+            _recovered = true;
+            var recovered = WindowOpacity.Recover(new WindowsWindowOpacitySystem(), Background, exception => LogOpacityFailed(logger, exception));
+            if (recovered > 0)
+            {
+                LogRecovered(logger, recovered);
+            }
+        }
+
         if (_failed)
         {
             return;
@@ -85,12 +99,32 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
         _window = window;
         _monitor = monitor;
 
-        // The controller's timer fires on the thread pool; the controller runs on the window's thread.
-        var controller = new TitleBarController(new WindowsTitleBarWindows(), new WindowsTitleBarActionsSystem(_hook), time, action => window.BeginInvoke(() => Guard(action)), logger);
+        // The controller's timer and opacity changes run on the thread pool; the controller runs on
+        // the window's thread.
+        void Post(Action action) => window.BeginInvoke(() => Guard(action));
+        var opacity = new WindowOpacity(new WindowsWindowOpacitySystem(), Background, Post, exception => LogOpacityFailed(logger, exception));
+        var controller = new TitleBarController(new WindowsTitleBarWindows(), new WindowsTitleBarActionsSystem(_hook), opacity, time, Post, logger);
         _controller = controller;
         _monitor.InputReceived += (_, input) => Guard(() => controller.OnPointerInput(input));
         _hook.Kept += (_, input) => Guard(() => controller.OnKept(input));
         _hook.Failed += (_, failure) => Guard(() => throw new InvalidOperationException("The pointer hook failed.", failure.Exception));
+
+        // Setup closing PC Companion for an update or a removal, Restart Manager and the end of the
+        // session put the windows back, as Exit does.
+        window.MessageReceived += (_, message) =>
+        {
+            if (MessageWindow.IsCloseRequest(message.Message, message.WParam))
+            {
+                Guard(() =>
+                {
+                    var putBack = controller.PutBack();
+                    LogPutBack(logger, putBack);
+                });
+            }
+        };
+
+        // A crash ends the host without stopping the feature, so the windows get their opacity back first.
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         LogStarted(logger);
     }
 
@@ -101,12 +135,31 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
             return;
         }
 
+        AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
+        var putBack = _controller?.Stop() ?? 0;
         _controller?.Dispose();
         _hook?.Dispose();
         _monitor?.Dispose();
         _window.Dispose();
         (_controller, _hook, _monitor, _window) = (null, null, null, null);
+        LogPutBack(logger, putBack);
         LogStopped(logger);
+    }
+
+    // Giving a window the layered style waits for its program, so opacity changes run here.
+    private static void Background(Action action) => Task.Run(action);
+
+    // Runs on the crashing thread; nothing here may throw.
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        try
+        {
+            _controller?.PutBackNow();
+        }
+        catch (Exception exception)
+        {
+            LogOpacityFailed(logger, exception);
+        }
     }
 
     private void Configure()
@@ -155,6 +208,15 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions applied its settings: middle-click {MiddleClick}, Shift + middle-click {ShiftMiddleClick}, Ctrl + middle-click {ControlMiddleClick}, wheel {Wheel}, Ctrl + wheel {ControlWheel}.")]
     private static partial void LogConfigured(ILogger logger, TitleBarClickAction middleClick, TitleBarClickAction shiftMiddleClick, TitleBarClickAction controlMiddleClick, TitleBarWheelAction wheel, TitleBarWheelAction controlWheel);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions gave {Count} windows their opacity back.")]
+    private static partial void LogPutBack(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions gave {Count} windows left translucent their opacity back.")]
+    private static partial void LogRecovered(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Title Bar Actions couldn't change a window's opacity.")]
+    private static partial void LogOpacityFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "A Title Bar Actions action in the settings is unknown, so it does nothing.")]
     private static partial void LogUnknownAction(ILogger logger);

@@ -9,8 +9,8 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Windows.TitleBarActions;
 
 /// <summary>
-/// Runs the action chosen for a middle-click on a title bar, as docs/features/windows/title-bar-actions.md
-/// says. While the pointer rests on a title bar, it claims that point for the pointer hook, which
+/// Runs the action chosen for a middle-click or the wheel on a title bar, as
+/// docs/features/windows/title-bar-actions.md says. While the pointer rests on a title bar, it claims that point for the pointer hook, which
 /// keeps the clicks that have an action from the app. A click that reaches the app anyway, before
 /// the window answered or after Windows removed the hook, still gets its action once the window
 /// answers. Use it on one thread, the one <paramref name="post"/> runs on.
@@ -23,24 +23,34 @@ public sealed partial class TitleBarController : IDisposable
     // How far from the answered point, in pixels, a click still counts as there.
     private const int SpotMargin = 2;
 
+    // How far the wheel turns for a notch.
+    private const int Notch = 120;
+
     private readonly ITitleBarWindows _windows;
     private readonly ITitleBarActionsSystem _system;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly TitleBarFinder _finder;
+    private readonly WindowOpacity _opacity;
     private readonly ITimer _timer;
     private readonly List<RawClick> _clicks = [];
     private Dictionary<PointerTrigger, TitleBarClickAction> _actions = [];
+    private HashSet<PointerTrigger> _wheel = [];
     private nint _claimed;
     private bool _timerSet;
+    private nint _wheelWindow;
+    private int _wheelTurned;
+    private nint _soundedFor;
 
+    /// <param name="opacity">Changes the windows' opacity on the wheel, on this controller's thread.</param>
     /// <param name="post">Runs an action on this controller's thread, from the timer's.</param>
-    public TitleBarController(ITitleBarWindows windows, ITitleBarActionsSystem system, TimeProvider time, Action<Action> post, ILogger logger)
+    public TitleBarController(ITitleBarWindows windows, ITitleBarActionsSystem system, WindowOpacity opacity, TimeProvider time, Action<Action> post, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(post);
 
         _windows = windows;
         _system = system;
+        _opacity = opacity;
         _time = time;
         _logger = logger;
         _finder = new TitleBarFinder(windows, time);
@@ -61,6 +71,17 @@ public sealed partial class TitleBarController : IDisposable
         Add(actions, PointerKeys.Shift, settings.ShiftMiddleClick);
         Add(actions, PointerKeys.Control, settings.ControlMiddleClick);
         _actions = actions;
+        _wheel = [];
+        if (settings.Wheel == TitleBarWheelAction.Opacity)
+        {
+            _wheel.Add(new PointerTrigger(PointerButton.Wheel, PointerKeys.None));
+        }
+
+        if (settings.ControlWheel == TitleBarWheelAction.Opacity)
+        {
+            _wheel.Add(new PointerTrigger(PointerButton.Wheel, PointerKeys.Control));
+        }
+
         UpdateClaim();
     }
 
@@ -69,12 +90,15 @@ public sealed partial class TitleBarController : IDisposable
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        if ((input.Changes & PointerButtonChanges.MiddleDown) != 0 && _windows.PointerPosition is { } point)
+        var button = (input.Changes & PointerButtonChanges.MiddleDown) != 0 ? PointerButton.Middle
+            : (input.Changes & PointerButtonChanges.Wheel) != 0 ? PointerButton.Wheel
+            : (PointerButton?)null;
+        if (button is { } pressed && _windows.PointerPosition is { } point)
         {
-            var trigger = new PointerTrigger(PointerButton.Middle, _system.HeldKeys);
-            if (_actions.ContainsKey(trigger))
+            var trigger = new PointerTrigger(pressed, _system.HeldKeys);
+            if (_actions.ContainsKey(trigger) || _wheel.Contains(trigger))
             {
-                _clicks.Add(new RawClick(input.Time, trigger, point, WasClaimed: _claimed != 0, _time.GetTimestamp()));
+                _clicks.Add(new RawClick(input.Time, trigger, point, input.WheelDelta, WasClaimed: _claimed != 0, _time.GetTimestamp()));
                 ScheduleCheck();
             }
         }
@@ -87,7 +111,9 @@ public sealed partial class TitleBarController : IDisposable
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        if (!_actions.TryGetValue(input.Trigger, out var action))
+        var isWheel = input.Trigger.Button == PointerButton.Wheel;
+        var action = TitleBarClickAction.None;
+        if (isWheel ? !_wheel.Contains(input.Trigger) : !_actions.TryGetValue(input.Trigger, out action))
         {
             return;
         }
@@ -101,16 +127,37 @@ public sealed partial class TitleBarController : IDisposable
             return;
         }
 
-        Run(action, window, input.Trigger, ClickPath.Kept);
+        if (isWheel)
+        {
+            Turn(window, input.WheelDelta, ClickPath.Kept);
+        }
+        else
+        {
+            Run(action, window, input.Trigger, ClickPath.Kept);
+        }
     }
 
-    /// <summary>Forgets the title bar and the clicks waiting for their check, and removes the claim.</summary>
-    public void Stop()
+    /// <summary>Puts back every window whose opacity the wheel changed. Returns how many.</summary>
+    public int PutBack() => _opacity.PutBackAll();
+
+    /// <summary>
+    /// Shows every window whose opacity the wheel changed as before, without waiting, as when PC
+    /// Companion crashes. Any thread can call it. Returns how many.
+    /// </summary>
+    public int PutBackNow() => _opacity.PutBackNow();
+
+    /// <summary>
+    /// Forgets the title bar and the clicks waiting for their check, removes the claim, and puts
+    /// back every window whose opacity the wheel changed. Returns how many windows were put back.
+    /// </summary>
+    public int Stop()
     {
         _finder.Stop();
         _clicks.Clear();
         SetTimer(false);
         Release();
+        (_wheelWindow, _wheelTurned, _soundedFor) = (0, 0, 0);
+        return _opacity.PutBackAll();
     }
 
     public void Dispose()
@@ -129,14 +176,14 @@ public sealed partial class TitleBarController : IDisposable
 
     private void UpdateClaim()
     {
-        if (_finder.Spot is not { } spot || _actions.Count == 0)
+        if (_finder.Spot is not { } spot || (_actions.Count == 0 && _wheel.Count == 0))
         {
             Release();
             return;
         }
 
         var area = new Rectangle(spot.Point.X - SpotMargin, spot.Point.Y - SpotMargin, (2 * SpotMargin) + 1, (2 * SpotMargin) + 1);
-        _system.Claim(new PointerClaim(area, _actions.Keys.ToHashSet()));
+        _system.Claim(new PointerClaim(area, _actions.Keys.Concat(_wheel).ToHashSet()));
         _claimed = spot.Window;
     }
 
@@ -169,7 +216,11 @@ public sealed partial class TitleBarController : IDisposable
                 _system.SetHookAgain();
             }
 
-            if (_actions.TryGetValue(click.Trigger, out var action))
+            if (click.Trigger.Button == PointerButton.Wheel)
+            {
+                _finder.Check(click.Point, window => Turn(window, click.WheelDelta, ClickPath.LetThrough));
+            }
+            else if (_actions.TryGetValue(click.Trigger, out var action))
             {
                 _finder.Check(click.Point, window => Run(action, window, click.Trigger, ClickPath.LetThrough));
             }
@@ -253,14 +304,50 @@ public sealed partial class TitleBarController : IDisposable
         }
     }
 
+    // The wheel's smaller steps add up to notches, for one window at a time. A window whose opacity
+    // can't change plays the warning sound once.
+    private void Turn(nint window, short delta, ClickPath path)
+    {
+        if (window != _wheelWindow)
+        {
+            (_wheelWindow, _wheelTurned) = (window, 0);
+        }
+
+        _wheelTurned += delta;
+        var notches = _wheelTurned / Notch;
+        _wheelTurned -= notches * Notch;
+        if (notches == 0)
+        {
+            return;
+        }
+
+        var outcome = _opacity.Step(window, notches);
+        switch (outcome)
+        {
+            case OpacityStep.Changed:
+                var level = _opacity.Level(window) ?? 100;
+                LogOpacity(_logger, level, path);
+                break;
+            case OpacityStep.DrawsItself or OpacityStep.Refused:
+                if (_soundedFor != window)
+                {
+                    _soundedFor = window;
+                    _system.PlayWarningSound();
+                    LogOpacityRefused(_logger, outcome);
+                }
+
+                break;
+        }
+    }
+
     private void Refuse(PointerKeys click, TitleBarClickAction action, TitleBarRefusal reason)
     {
         _system.PlayWarningSound();
         LogRefused(_logger, click, action, reason);
     }
 
-    // A middle-click that raw input reported, waiting to be checked.
-    private sealed record RawClick(uint Time, PointerTrigger Trigger, Point Point, bool WasClaimed, long Reported);
+    // A middle-click or wheel notch that raw input reported, waiting to be checked.
+    private sealed record RawClick(uint Time, PointerTrigger Trigger, Point Point, short WheelDelta, bool WasClaimed, long Reported);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a middle-click on a title bar with keys {Keys}, {Action} ({Path}).")]
     private static partial void LogRan(ILogger logger, PointerKeys keys, TitleBarClickAction action, ClickPath path);
@@ -270,6 +357,12 @@ public sealed partial class TitleBarController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a middle-click with keys {Keys} was kept, but the window under the pointer changed, so nothing ran.")]
     private static partial void LogWindowChanged(ILogger logger, PointerKeys keys);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar changed the window's opacity to {Level}% ({Path}).")]
+    private static partial void LogOpacity(ILogger logger, int level, ClickPath path);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar didn't change the window's opacity: {Reason}.")]
+    private static partial void LogOpacityRefused(ILogger logger, OpacityStep reason);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions sent a window to the back, but Windows didn't give the front to the next window.")]
     private static partial void LogFrontNotGiven(ILogger logger);
