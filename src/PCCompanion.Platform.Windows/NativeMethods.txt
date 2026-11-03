@@ -381,3 +381,10 @@ MSLLHOOKSTRUCT
 WM_MBUTTONDOWN
 WM_MBUTTONUP
 WM_MOUSEWHEEL
+WindowFromPoint
+GetAwarenessFromDpiAwarenessContext
+PhysicalToLogicalPointForPerMonitorDPI
+WM_NCHITTEST
+HTCAPTION
+HTTRANSPARENT
+GetDesktopWindow
