@@ -236,6 +236,11 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 - **Their specs** say so too: [Hide Apps](hide-apps.md#windows-that-stay) and [Minimize to Tray](minimize-to-tray.md#windows-that-cant-go-to-the-tray).
 - **With either feature off,** nothing changes.
 
+## With Title Bar Actions
+
+- **Minimize,** an action for a middle-click on a title bar, hides a shown drop-down window, as minimizing one does.
+- **Minimize to tray** and **Hide app,** which pass the window to those features, leave drop-down windows alone, as those features do. See [With the other features](title-bar-actions.md#with-the-other-features).
+
 ## Recent results
 
 - The drop-down tools in [Compared with other systems](#compared-with-other-systems) don't say on screen why an app didn't drop down.
