@@ -195,6 +195,11 @@ public sealed partial class TitleBarController : IDisposable
 
         var area = new Rectangle(spot.Point.X - SpotMargin, spot.Point.Y - SpotMargin, (2 * SpotMargin) + 1, (2 * SpotMargin) + 1);
         _system.Claim(new PointerClaim(area, _actions.Keys.Concat(_wheel).ToHashSet()));
+        if (_claimed == 0)
+        {
+            LogClaimed(_logger);
+        }
+
         _claimed = spot.Window;
     }
 
@@ -204,6 +209,7 @@ public sealed partial class TitleBarController : IDisposable
         {
             _system.Claim(null);
             _claimed = 0;
+            LogReleased(_logger);
         }
     }
 
@@ -237,7 +243,7 @@ public sealed partial class TitleBarController : IDisposable
                 found = _finder.Check(click.Point, window => Run(action, window, click.Trigger, ClickPath.LetThrough));
             }
 
-            if (found is TitleBarCheck.WindowLeftOut or TitleBarCheck.AppListed)
+            if (found is TitleBarCheck.WindowLeftOut or TitleBarCheck.AppListed or TitleBarCheck.Refused)
             {
                 LogLeftOut(_logger, click.Trigger.Button, click.Trigger.Keys, found);
             }
@@ -394,6 +400,12 @@ public sealed partial class TitleBarController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a middle-click with keys {Keys} was kept, but the window under the pointer changed, so nothing ran.")]
     private static partial void LogWindowChanged(ILogger logger, PointerKeys keys);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions claimed the title bar under the pointer, so the pointer hook is set.")]
+    private static partial void LogClaimed(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions removed its claim as the pointer left the title bar, so the pointer hook is removed.")]
+    private static partial void LogReleased(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: a click or notch ({Button}, keys {Keys}) near the top of a window got no action: {Reason}.")]
     private static partial void LogLeftOut(ILogger logger, PointerButton button, PointerKeys keys, TitleBarCheck reason);
