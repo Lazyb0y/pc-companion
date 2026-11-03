@@ -386,6 +386,9 @@ public static class TopLevelWindows
             0,
             SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
 
+    /// <summary>The DPI <paramref name="window"/> is drawn at: 96 at 100% scale.</summary>
+    public static uint Dpi(nint window) => PInvoke.GetDpiForWindow(new HWND(window));
+
     /// <summary>Whether <paramref name="window"/> is maximized, shown or hidden.</summary>
     public static bool IsMaximized(nint window) => PInvoke.IsZoomed(new HWND(window));
 
