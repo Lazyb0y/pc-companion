@@ -388,3 +388,6 @@ WM_NCHITTEST
 HTCAPTION
 HTTRANSPARENT
 GetDesktopWindow
+SetLayeredWindowAttributes
+GetLayeredWindowAttributes
+SetWindowLongPtr
