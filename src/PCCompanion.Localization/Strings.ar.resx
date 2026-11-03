@@ -3160,4 +3160,96 @@
     <value>انقر بالزر الأوسط على شريط عنوان نافذة لتصغيرها أو إرسالها إلى الخلف، أو أدر العجلة عليه لتغيير عتامتها.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>النقر الأوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>ما يفعله النقر بالعجلة أو بزر الماوس الأوسط على شريط عنوان نافذة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Shift + النقر الأوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>ما يفعله النقر الأوسط على شريط العنوان أثناء الضغط باستمرار على Shift.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Ctrl + النقر الأوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>ما يفعله النقر الأوسط على شريط العنوان أثناء الضغط باستمرار على Ctrl.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>لا يعمل الإجراءان «التصغير إلى منطقة الإعلامات» و«إخفاء التطبيق» إلا أثناء تشغيل الميزتين «التصغير إلى منطقة الإعلامات» و«إخفاء التطبيقات». وحتى ذلك الحين، يُشغَّل صوت التحذير في Windows بدلاً منهما.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>العجلة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>ما يفعله تدوير العجلة فوق شريط عنوان نافذة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Ctrl + العجلة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>ما يفعله تدوير العجلة فوق شريط العنوان أثناء الضغط باستمرار على Ctrl.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>تصغير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>إرسال إلى الخلف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>التصغير إلى منطقة الإعلامات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>إخفاء التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>تغيير العتامة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>التطبيقات التي تحتفظ بنقرات شريط العنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>لا تتلقى أشرطة عناوينها أي إجراءات. وذلك للتطبيقات التي تستخدم بنفسها النقر الأوسط أو العجلة هناك، مثل Firefox الذي يفتح علامة تبويب عند النقر الأوسط على شريط علامات التبويب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>تحتفظ علامات التبويب والأزرار ومربعات البحث في شريط العنوان بنقراتها. لا تتلقى بعض النوافذ أي إجراءات: النوافذ التي فيها مربع حوار مفتوح، مثل «حفظ»، ونوافذ التطبيقات التي توقفت عن الاستجابة أو التي تحرك نوافذها بنفسها دون أن تخبر Windows بمكان شريط عنوانها، ونوافذ التطبيقات التي تعمل كمسؤول. يُشغَّل صوت التحذير في Windows عندما يتعذر تنفيذ إجراء، مثل «تصغير» على نافذة لا تحتوي على زر «تصغير».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>تحتفظ علامات التبويب والأزرار ومربعات البحث في شريط العنوان بنقراتها. لا تتلقى بعض النوافذ أي إجراءات: النوافذ التي فيها مربع حوار مفتوح، مثل «حفظ»، ونوافذ التطبيقات التي توقفت عن الاستجابة أو التي تحرك نوافذها بنفسها دون أن تخبر Windows بمكان شريط عنوانها. يُشغَّل صوت التحذير في Windows عندما يتعذر تنفيذ إجراء، مثل «تصغير» على نافذة لا تحتوي على زر «تصغير». يعمل PC Companion كمسؤول، لذا تتلقى نوافذ التطبيقات التي تعمل كمسؤول الإجراءات أيضاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>باستخدام لوحة المفاتيح، يصغّر مفتاح شعار Windows + السهم لأسفل النافذة الموجودة في المقدمة، ويرسلها Alt + Esc إلى الخلف. ولكل من «التصغير إلى منطقة الإعلامات» و«إخفاء التطبيقات» اختصارات خاصة به.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>عندما يكون المؤشر قرب أعلى نافذة، يقرأ النافذة الموجودة تحته وموضعها وأنماطها، ويسألها عن مكان شريط عنوانها؛ ومع وجود تطبيقات في القائمة، يقرأ التطبيق الذي تنتمي إليه؛ ولا يقرأ العناوين أو المحتويات أبداً. عندما يستقر المؤشر على شريط عنوان، يمنع خطاف للماوس وصول النقرات الوسطى وتدويرات العجلة التي لها إجراء إلى التطبيق، ويقارن مواضعها دون تخزينها. يصغّر نوافذ التطبيقات الأخرى ويرتبها، ويغيّر عتامتها ويضع علامة على التي غيّرها لتستعيد عتامتها بعد تعطل، ويمرر النوافذ إلى «التصغير إلى منطقة الإعلامات» و«إخفاء التطبيقات»؛ ولا يشغّل أي تعليمات برمجية في التطبيقات الأخرى. لا يُجري أي اتصالات بالشبكة ولا يرسل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -3048,4 +3048,96 @@
     <value>Cliquez avec le bouton central sur la barre de titre d’une fenêtre pour la réduire ou l’envoyer à l’arrière-plan, ou tournez la molette dessus pour changer son opacité.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>Clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>Ce que fait un clic avec la molette ou le bouton central de la souris sur la barre de titre d’une fenêtre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Maj + clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>Ce que fait un clic central sur une barre de titre quand vous maintenez la touche Maj enfoncée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Ctrl + clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>Ce que fait un clic central sur une barre de titre quand vous maintenez la touche Ctrl enfoncée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>Les actions Réduire dans la zone de notification et Masquer l’application ne fonctionnent que quand les fonctionnalités Réduire dans la zone de notification et Masquer les applications sont activées. D’ici là, le son d’avertissement de Windows retentit à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>Molette</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>Ce que fait la molette tournée sur la barre de titre d’une fenêtre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Ctrl + molette</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>Ce que fait la molette tournée sur une barre de titre quand vous maintenez la touche Ctrl enfoncée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>Aucune</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>Réduire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>Envoyer à l’arrière-plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>Réduire dans la zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>Masquer l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>Changer l’opacité</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>Applications qui gardent leurs clics dans la barre de titre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>Leurs barres de titre ne reçoivent aucune action. Pour les applications qui utilisent elles-mêmes un clic central ou la molette à cet endroit, comme Firefox, qui ouvre un onglet sur un clic central dans sa barre d’onglets.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>Les onglets, boutons et zones de recherche d’une barre de titre gardent leurs propres clics. Certaines fenêtres ne reçoivent aucune action : les fenêtres avec une boîte de dialogue ouverte, comme Enregistrer, les fenêtres des applications qui ne répondent plus ou qui déplacent elles-mêmes leurs fenêtres sans indiquer à Windows où est leur barre de titre, et les fenêtres des applications exécutées en tant qu’administrateur. Le son d’avertissement de Windows retentit quand une action ne peut pas s’exécuter, comme Réduire sur une fenêtre sans bouton Réduire.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>Les onglets, boutons et zones de recherche d’une barre de titre gardent leurs propres clics. Certaines fenêtres ne reçoivent aucune action : les fenêtres avec une boîte de dialogue ouverte, comme Enregistrer, et les fenêtres des applications qui ne répondent plus ou qui déplacent elles-mêmes leurs fenêtres sans indiquer à Windows où est leur barre de titre. Le son d’avertissement de Windows retentit quand une action ne peut pas s’exécuter, comme Réduire sur une fenêtre sans bouton Réduire. PC Companion s’exécute en tant qu’administrateur, donc les fenêtres des applications exécutées en tant qu’administrateur reçoivent aussi des actions.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>Au clavier, la touche du logo Windows + Flèche bas réduit la fenêtre au premier plan, et Alt + Échap l’envoie à l’arrière-plan. Réduire dans la zone de notification et Masquer les applications ont leurs propres raccourcis.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>Quand le pointeur est en haut d’une fenêtre, lit quelle fenêtre se trouve dessous, sa position et ses styles, et lui demande où est sa barre de titre ; avec des applications dans la liste, lit à quelle application elle appartient ; ne lit jamais les titres ni le contenu. Quand le pointeur reste sur une barre de titre, un hook souris empêche l’application de recevoir les clics centraux et les tours de molette qui ont une action, et compare leurs positions sans les enregistrer. Réduit et ordonne les fenêtres des autres applications, change leur opacité et marque celles qu’il a changées pour qu’elles retrouvent leur opacité après un plantage, et transmet des fenêtres à Réduire dans la zone de notification et Masquer les applications ; n’exécute aucun code dans les autres applications. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

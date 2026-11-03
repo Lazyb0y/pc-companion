@@ -3048,4 +3048,96 @@
     <value>Middle-click a window's title bar to minimize it or send it to the back, or turn the wheel there to change its opacity.</value>
     <comment>Title Bar Actions: one-sentence description below the feature name.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>Middle-click</value>
+    <comment>Title Bar Actions page: setting name, and the screen reader name of its list. A middle-click is a click with the mouse wheel or the middle mouse button.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>What a click with the wheel or the middle mouse button on a window's title bar does.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsMiddleClickHeader.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Shift + middle-click</value>
+    <comment>Title Bar Actions page: setting name, and the screen reader name of its list. Use the language's name for the Shift key.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>What a middle-click on a title bar does while you hold Shift.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsShiftMiddleClickHeader.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Ctrl + middle-click</value>
+    <comment>Title Bar Actions page: setting name, and the screen reader name of its list. Use the language's name for the Ctrl key.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>What a middle-click on a title bar does while you hold Ctrl.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsControlMiddleClickHeader.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>Minimize to tray works only while Minimize to Tray is on, and Hide app only while Hide Apps is on. Until then, Windows' warning sound plays instead.</value>
+    <comment>Title Bar Actions page: note below the click lists, shown while a click is set to Minimize to tray or Hide app and that feature is off. Use TitleBarActionsMinimizeToTray and TitleBarActionsHideApp for the actions, and MinimizeToTrayName and HideAppsName for the features.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>Wheel</value>
+    <comment>Title Bar Actions page: setting name, and the screen reader name of its list. The mouse wheel.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>What turning the wheel over a window's title bar does.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsWheelHeader.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Ctrl + wheel</value>
+    <comment>Title Bar Actions page: setting name, and the screen reader name of its list. Use the language's name for the Ctrl key.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>What turning the wheel over a title bar does while you hold Ctrl.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsControlWheelHeader.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Title Bar Actions page: the item of each list that does nothing, so the click or the wheel reaches the app.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>Minimize</value>
+    <comment>Title Bar Actions page: an action in the click lists. Use the name of the Minimize button in a window's title bar.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>Send to back</value>
+    <comment>Title Bar Actions page: an action in the click lists, which puts the window behind every other window.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>Minimize to tray</value>
+    <comment>Title Bar Actions page: an action in the click lists, which sends the window to the notification area through Minimize to Tray.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>Hide app</value>
+    <comment>Title Bar Actions page: an action in the click lists, which minimizes every window of the window's app through Hide Apps. Use HideAppsHideAppHeader.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>Change opacity</value>
+    <comment>Title Bar Actions page: the action in the wheel lists, which makes the window more or less see-through.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>Apps that keep their title-bar clicks</value>
+    <comment>Title Bar Actions page: header of the list of apps whose title bars get no actions.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>Their title bars get no actions. For apps that use a middle-click or the wheel there themselves, such as Firefox, which opens a tab on a middle-click on its tab bar.</value>
+    <comment>Title Bar Actions page: below TitleBarActionsAppsHeader. Firefox is the web browser.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>Tabs, buttons and search boxes in a title bar keep their own clicks. Some windows get no actions: windows with a dialog open, such as Save, windows of apps that stopped responding or that move their windows themselves without telling Windows where their title bar is, and windows of apps running as administrator. Windows' warning sound plays when an action can't run, such as Minimize on a window without a Minimize button.</value>
+    <comment>Title Bar Actions page: the windows that get no actions, shown while PC Companion runs without admin rights. Save is a dialog's name, and Minimize the name of the button in a window's title bar.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>Tabs, buttons and search boxes in a title bar keep their own clicks. Some windows get no actions: windows with a dialog open, such as Save, and windows of apps that stopped responding or that move their windows themselves without telling Windows where their title bar is. Windows' warning sound plays when an action can't run, such as Minimize on a window without a Minimize button. PC Companion runs as administrator, so windows of apps running as administrator get actions too.</value>
+    <comment>Title Bar Actions page: shown instead of TitleBarActionsLeftOutInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>With the keyboard, the Windows logo key + Down minimizes the window in front, and Alt + Esc sends it to the back. Minimize to Tray and Hide Apps have shortcuts of their own.</value>
+    <comment>Title Bar Actions page: shown at all times. Use the language's names for the keys; Down is the Down arrow key. Use MinimizeToTrayName and HideAppsName for the features.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>While the pointer is near the top of a window, reads which window is under it, its place and styles, and asks it where its title bar is; with apps listed, reads which app it belongs to; never reads titles or contents. While the pointer rests on a title bar, a mouse hook keeps the middle-clicks and wheel turns that have an action from the app, and compares their positions without storing them. Minimizes and orders other apps' windows, changes their opacity and marks those it changed so they get their opacity back after a crash, and passes windows to Minimize to Tray and Hide Apps; runs no code in other apps. Makes no network connections and sends nothing.</value>
+    <comment>Title Bar Actions page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

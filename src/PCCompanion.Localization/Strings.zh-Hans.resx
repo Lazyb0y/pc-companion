@@ -3020,4 +3020,96 @@
     <value>用鼠标中键单击窗口的标题栏可将其最小化或置于底层，在标题栏上转动滚轮可更改其不透明度。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>中键单击</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>用滚轮或鼠标中键单击窗口标题栏时执行的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Shift + 中键单击</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>按住 Shift 时在标题栏上中键单击执行的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Ctrl + 中键单击</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>按住 Ctrl 时在标题栏上中键单击执行的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>“最小化到通知区域”和“隐藏应用”操作仅在“最小化到通知区域”和“隐藏应用”功能打开时有效。在此之前，会改为播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>滚轮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>在窗口标题栏上转动滚轮时执行的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Ctrl + 滚轮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>按住 Ctrl 时在标题栏上转动滚轮执行的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>最小化</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>置于底层</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>最小化到通知区域</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>隐藏应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>更改不透明度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>保留标题栏单击的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>这些应用的标题栏不执行任何操作。适用于自己在标题栏上使用中键单击或滚轮的应用，例如 Firefox，在其选项卡栏上中键单击会打开一个选项卡。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>标题栏中的选项卡、按钮和搜索框保留其自身的单击。某些窗口不执行任何操作：打开了对话框（例如“保存”）的窗口、已停止响应或自行移动窗口而不告知 Windows 其标题栏位置的应用的窗口，以及以管理员身份运行的应用的窗口。当某个操作无法执行时，例如对没有“最小化”按钮的窗口执行“最小化”，会播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>标题栏中的选项卡、按钮和搜索框保留其自身的单击。某些窗口不执行任何操作：打开了对话框（例如“保存”）的窗口，以及已停止响应或自行移动窗口而不告知 Windows 其标题栏位置的应用的窗口。当某个操作无法执行时，例如对没有“最小化”按钮的窗口执行“最小化”，会播放 Windows 警告声音。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也会执行操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>使用键盘时，Windows 徽标键 + 向下键可最小化前台窗口，Alt + Esc 可将其置于底层。“最小化到通知区域”和“隐藏应用”有各自的快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>指针位于窗口顶部附近时，读取指针下方是哪个窗口、窗口的位置和样式，并询问窗口其标题栏的位置；列出了应用时，读取窗口所属的应用；从不读取标题或内容。指针停留在标题栏上时，鼠标挂钩会阻止应用收到具有操作的中键单击和滚轮转动，并比较其位置而不存储。最小化和排列其他应用的窗口，更改其不透明度并标记已更改的窗口，以便它们在崩溃后恢复不透明度，并将窗口传递给“最小化到通知区域”和“隐藏应用”；不在其他应用中运行代码。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

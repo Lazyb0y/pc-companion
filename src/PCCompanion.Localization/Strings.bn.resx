@@ -3048,4 +3048,96 @@
     <value>কোনো উইন্ডোর টাইটেল বারে মাঝের বোতামে ক্লিক করে সেটি ছোট করুন বা পিছনে পাঠান, অথবা সেখানে চাকা ঘুরিয়ে এর অস্বচ্ছতা বদলান।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsMiddleClickHeader" xml:space="preserve">
+    <value>মাঝের ক্লিক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMiddleClickDescription" xml:space="preserve">
+    <value>কোনো উইন্ডোর টাইটেল বারে চাকা বা মাউসের মাঝের বোতাম দিয়ে ক্লিক করলে কী হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickHeader" xml:space="preserve">
+    <value>Shift + মাঝের ক্লিক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsShiftMiddleClickDescription" xml:space="preserve">
+    <value>Shift ধরে রেখে টাইটেল বারে মাঝের ক্লিক করলে কী হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickHeader" xml:space="preserve">
+    <value>Ctrl + মাঝের ক্লিক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlMiddleClickDescription" xml:space="preserve">
+    <value>Ctrl ধরে রেখে টাইটেল বারে মাঝের ক্লিক করলে কী হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsFeaturesInfo" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকায় ছোট করুন ও অ্যাপ লুকান অ্যাকশন শুধু তখনই কাজ করে যখন একই নামের বৈশিষ্ট্যগুলো, বিজ্ঞপ্তি এলাকায় ছোট করুন ও অ্যাপ লুকান, চালু থাকে। ততক্ষণ এর বদলে Windows-এর সতর্কতা শব্দ বাজে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelHeader" xml:space="preserve">
+    <value>চাকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsWheelDescription" xml:space="preserve">
+    <value>কোনো উইন্ডোর টাইটেল বারের উপর চাকা ঘোরালে কী হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelHeader" xml:space="preserve">
+    <value>Ctrl + চাকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsControlWheelDescription" xml:space="preserve">
+    <value>Ctrl ধরে রেখে টাইটেল বারের উপর চাকা ঘোরালে কী হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimize" xml:space="preserve">
+    <value>ছোট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsSendToBack" xml:space="preserve">
+    <value>পিছনে পাঠান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsMinimizeToTray" xml:space="preserve">
+    <value>বিজ্ঞপ্তি এলাকায় ছোট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsHideApp" xml:space="preserve">
+    <value>অ্যাপ লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsOpacity" xml:space="preserve">
+    <value>অস্বচ্ছতা বদলান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsHeader" xml:space="preserve">
+    <value>যে অ্যাপগুলো তাদের টাইটেল বারের ক্লিক রাখে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsAppsDescription" xml:space="preserve">
+    <value>এগুলোর টাইটেল বার কোনো অ্যাকশন পায় না। যে অ্যাপগুলো নিজেরাই সেখানে মাঝের ক্লিক বা চাকা ব্যবহার করে তাদের জন্য, যেমন Firefox, যা ট্যাব বারে মাঝের ক্লিকে একটি ট্যাব খোলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfo" xml:space="preserve">
+    <value>টাইটেল বারের ট্যাব, বোতাম ও অনুসন্ধান বাক্স নিজেদের ক্লিক রাখে। কিছু উইন্ডো কোনো অ্যাকশন পায় না: সংরক্ষণ করুনের মতো ডায়ালগ খোলা থাকা উইন্ডো, যে অ্যাপগুলো সাড়া দেওয়া বন্ধ করেছে বা Windows-কে টাইটেল বার কোথায় তা না জানিয়ে নিজেরাই উইন্ডো সরায় সেগুলোর উইন্ডো, এবং প্রশাসক হিসেবে চলা অ্যাপের উইন্ডো। কোনো অ্যাকশন চালানো না গেলে Windows-এর সতর্কতা শব্দ বাজে, যেমন ছোট করুন বোতাম ছাড়া উইন্ডোতে ছোট করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsLeftOutInfoOn" xml:space="preserve">
+    <value>টাইটেল বারের ট্যাব, বোতাম ও অনুসন্ধান বাক্স নিজেদের ক্লিক রাখে। কিছু উইন্ডো কোনো অ্যাকশন পায় না: সংরক্ষণ করুনের মতো ডায়ালগ খোলা থাকা উইন্ডো, এবং যে অ্যাপগুলো সাড়া দেওয়া বন্ধ করেছে বা Windows-কে টাইটেল বার কোথায় তা না জানিয়ে নিজেরাই উইন্ডো সরায় সেগুলোর উইন্ডো। কোনো অ্যাকশন চালানো না গেলে Windows-এর সতর্কতা শব্দ বাজে, যেমন ছোট করুন বোতাম ছাড়া উইন্ডোতে ছোট করুন। PC Companion প্রশাসক হিসেবে চলছে, তাই প্রশাসক হিসেবে চলা অ্যাপের উইন্ডোগুলোও অ্যাকশন পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsKeyboardInfo" xml:space="preserve">
+    <value>কীবোর্ড দিয়ে, Windows লোগো কী + নিচের তীর সামনের উইন্ডোটি ছোট করে, এবং Alt + Esc সেটিকে পিছনে পাঠায়। বিজ্ঞপ্তি এলাকায় ছোট করুন ও অ্যাপ লুকানের নিজস্ব শর্টকাট আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsPermissions" xml:space="preserve">
+    <value>পয়েন্টার কোনো উইন্ডোর উপরের দিকে থাকলে, এর নিচে কোন উইন্ডো আছে, সেটির অবস্থান ও ধরন পড়ে, এবং সেটিকে জিজ্ঞাসা করে টাইটেল বার কোথায়; তালিকায় অ্যাপ থাকলে, সেটি কোন অ্যাপের তা পড়ে; কখনো শিরোনাম বা বিষয়বস্তু পড়ে না। পয়েন্টার টাইটেল বারে স্থির থাকলে, একটি মাউস হুক অ্যাকশন থাকা মাঝের ক্লিক ও চাকা ঘোরানো অ্যাপের কাছে যেতে দেয় না, এবং সেগুলোর অবস্থান সংরক্ষণ না করে তুলনা করে। অন্য অ্যাপের উইন্ডো ছোট করে ও সাজায়, সেগুলোর অস্বচ্ছতা বদলায় এবং বদলানো উইন্ডোগুলো চিহ্নিত করে যাতে ক্র্যাশের পরে সেগুলো অস্বচ্ছতা ফিরে পায়, এবং বিজ্ঞপ্তি এলাকায় ছোট করুন ও অ্যাপ লুকানকে উইন্ডো দেয়; অন্য অ্যাপে কোনো কোড চালায় না। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
