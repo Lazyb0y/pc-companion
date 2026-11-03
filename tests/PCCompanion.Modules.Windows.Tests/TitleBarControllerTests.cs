@@ -125,6 +125,59 @@ public sealed class TitleBarControllerTests : IDisposable
     }
 
     [Fact]
+    public void MinimizeToTrayAndHideAppPassTheWindowOnToTheirFeatures()
+    {
+        _controller.Configure(new TitleBarActionsSettings
+        {
+            Enabled = true,
+            ShiftMiddleClick = TitleBarClickAction.MinimizeToTray,
+            ControlMiddleClick = TitleBarClickAction.HideApp,
+        });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(new PointerTrigger(PointerButton.Middle, PointerKeys.Shift), OnTitleBar, 0, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(new PointerTrigger(PointerButton.Middle, PointerKeys.Control), OnTitleBar, 0, 2));
+
+        Assert.Equal(3, _system.Claimed!.Triggers.Count);
+        Assert.Equal([Window], _system.SentToTray);
+        Assert.Equal([Window], _system.AppsHidden);
+        Assert.Empty(_system.Minimized);
+        Assert.Equal(0, _system.Sounds);
+    }
+
+    [Theory]
+    [InlineData(TitleBarClickAction.MinimizeToTray)]
+    [InlineData(TitleBarClickAction.HideApp)]
+    public void WhileTheirFeatureIsOffTheClickIsStillKeptAndTheWarningSoundPlays(TitleBarClickAction action)
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = action });
+        (_system.TrayRuns, _system.HideAppsRuns) = (false, false);
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(MiddleClick, OnTitleBar, 0, 1));
+
+        Assert.Contains(MiddleClick, _system.Claimed!.Triggers);
+        Assert.Equal(1, _system.Sounds);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("FeatureOff", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData(TitleBarClickAction.MinimizeToTray)]
+    [InlineData(TitleBarClickAction.HideApp)]
+    public void AWindowWithoutAMinimizeButtonIsntPassedOn(TitleBarClickAction action)
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = action });
+        _system.WithoutMinimizeButton.Add(Window);
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(MiddleClick, OnTitleBar, 0, 1));
+
+        Assert.Empty(_system.SentToTray);
+        Assert.Empty(_system.AppsHidden);
+        Assert.Equal(1, _system.Sounds);
+    }
+
+    [Fact]
     public void TheKeysChooseTheAction()
     {
         _controller.Configure(new TitleBarActionsSettings { Enabled = true, ShiftMiddleClick = TitleBarClickAction.SendToBack });

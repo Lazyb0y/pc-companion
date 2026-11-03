@@ -10,7 +10,8 @@ namespace PCCompanion.Modules.Windows.TitleBarActions;
 /// <summary>
 /// Runs actions for a middle-click or the wheel on any window's title bar. See docs/features/windows/title-bar-actions.md.
 /// </summary>
-public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeature> logger, TimeProvider time) : IFeature
+/// <param name="requests">Where windows are passed on to Minimize to Tray and Hide Apps.</param>
+public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeature> logger, TimeProvider time, WindowRequests requests) : IFeature
 {
     private const string WindowClassName = "PCCompanion.TitleBarActions";
 
@@ -103,7 +104,7 @@ public sealed partial class TitleBarActionsFeature(ILogger<TitleBarActionsFeatur
         // the window's thread.
         void Post(Action action) => window.BeginInvoke(() => Guard(action));
         var opacity = new WindowOpacity(new WindowsWindowOpacitySystem(), Background, Post, exception => LogOpacityFailed(logger, exception));
-        var controller = new TitleBarController(new WindowsTitleBarWindows(), new WindowsTitleBarActionsSystem(_hook), opacity, time, Post, logger);
+        var controller = new TitleBarController(new WindowsTitleBarWindows(), new WindowsTitleBarActionsSystem(_hook, requests), opacity, time, Post, logger);
         _controller = controller;
         _monitor.InputReceived += (_, input) => Guard(() => controller.OnPointerInput(input));
         _hook.Kept += (_, input) => Guard(() => controller.OnKept(input));

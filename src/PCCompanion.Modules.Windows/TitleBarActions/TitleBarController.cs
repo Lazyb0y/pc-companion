@@ -168,7 +168,7 @@ public sealed partial class TitleBarController : IDisposable
 
     private static void Add(Dictionary<PointerTrigger, TitleBarClickAction> actions, PointerKeys keys, TitleBarClickAction action)
     {
-        if (action is TitleBarClickAction.Minimize or TitleBarClickAction.SendToBack)
+        if (action != TitleBarClickAction.None && Enum.IsDefined(action))
         {
             actions[new PointerTrigger(PointerButton.Middle, keys)] = action;
         }
@@ -260,6 +260,9 @@ public sealed partial class TitleBarController : IDisposable
             case TitleBarClickAction.SendToBack:
                 SendToBack(window, click, path);
                 break;
+            case TitleBarClickAction.MinimizeToTray or TitleBarClickAction.HideApp:
+                PassOn(action, window, click, path);
+                break;
         }
     }
 
@@ -276,6 +279,23 @@ public sealed partial class TitleBarController : IDisposable
         else
         {
             LogRan(_logger, click, TitleBarClickAction.Minimize, path);
+        }
+    }
+
+    // Minimize to Tray and Hide Apps carry it out on their threads, with their own rules and warning sound.
+    private void PassOn(TitleBarClickAction action, nint window, PointerKeys click, ClickPath path)
+    {
+        if (!_system.HasMinimizeButton(window))
+        {
+            Refuse(click, action, TitleBarRefusal.NoMinimizeButton);
+        }
+        else if (!(action == TitleBarClickAction.MinimizeToTray ? _system.SendToTray(window) : _system.HideApp(window)))
+        {
+            Refuse(click, action, TitleBarRefusal.FeatureOff);
+        }
+        else
+        {
+            LogRan(_logger, click, action, path);
         }
     }
 
@@ -389,6 +409,9 @@ public enum TitleBarRefusal
 
     /// <summary>The window is always on top, which sending it to the back would take away.</summary>
     AlwaysOnTop,
+
+    /// <summary>The feature that carries out the action, Minimize to Tray or Hide Apps, is off.</summary>
+    FeatureOff,
 
     /// <summary>Windows refused.</summary>
     Refused,

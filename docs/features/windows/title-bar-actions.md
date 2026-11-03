@@ -176,7 +176,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 - **Minimize to tray** passes the window to [Minimize to Tray](minimize-to-tray.md), which sends it as its shortcut does, with its own rules. It refuses Store apps in the shared frame, windows with a dialog open, apps running as administrator while it can't hide them, and Drop-down Apps' windows; for each, the warning sound plays.
 - **Hide app** passes the window to [Hide Apps](hide-apps.md), which minimizes every window of that window's app as Hide app does, with its own rules.
 - **While Minimize to Tray or Hide Apps is off,** the action plays the warning sound, and the click is still kept. The page offers both actions all the time, with a note that they need their feature turned on.
-- **How:** within the module, a request carries the window to the other feature's thread, as the features already share `HideAppsMinimized` and `DropDownWindows`.
+- **How:** within the module, a request carries the window to the other feature's thread (`WindowRequests`), as the features already share `HideAppsMinimized` and `DropDownWindows`. Each feature sets its part as it starts and clears it as it stops.
 - **Shift + Minimize:** when Shift + middle-click is set to **Minimize** and Minimize to Tray's **Shift + Minimize** is on, the window minimizes with Shift held, so Minimize to Tray takes it to the tray, as it does a click on the Minimize button with Shift held.
 - **Drop-down Apps' windows:** Minimize hides a shown drop-down window, as Drop-down Apps does whenever one is minimized. Minimize to tray and Hide app leave drop-down windows alone, as those features do.
 

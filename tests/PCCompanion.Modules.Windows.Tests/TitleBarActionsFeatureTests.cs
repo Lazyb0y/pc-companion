@@ -16,7 +16,7 @@ public sealed class TitleBarActionsFeatureTests : IDisposable
 
     public TitleBarActionsFeatureTests()
     {
-        _feature = new TitleBarActionsFeature(_logger, TimeProvider.System);
+        _feature = new TitleBarActionsFeature(_logger, TimeProvider.System, new WindowRequests());
     }
 
     public void Dispose() => _feature.Dispose();

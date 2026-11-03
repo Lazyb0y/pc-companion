@@ -28,6 +28,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     private readonly Func<ITrayWindowsSystem> _recoverySystem;
     private readonly HideAppsMinimized _hideApps;
     private readonly DropDownWindows _dropDown;
+    private readonly WindowRequests _requests;
     private MinimizeToTrayThread? _thread;
     private MinimizeToTrayThread? _stopped;
     private IReadOnlyList<TrayWindowInfo> _menuWindows = [];
@@ -37,21 +38,24 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
 
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown)
-        : this(commands, time, logger, hideApps, dropDown, () => new WindowsTrayWindowsSystem(null, action => action()))
+    /// <param name="requests">Where Title Bar Actions passes on windows to send to the tray.</param>
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests)
+        : this(commands, time, logger, hideApps, dropDown, requests, () => new WindowsTrayWindowsSystem(null, action => action()))
     {
     }
 
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
+    /// <param name="requests">Where Title Bar Actions passes on windows to send to the tray.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, Func<ITrayWindowsSystem> recoverySystem)
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests, Func<ITrayWindowsSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(hideApps);
         ArgumentNullException.ThrowIfNull(dropDown);
+        ArgumentNullException.ThrowIfNull(requests);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
         _commands = commands;
@@ -59,6 +63,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
         _logger = logger;
         _hideApps = hideApps;
         _dropDown = dropDown;
+        _requests = requests;
         _recoverySystem = recoverySystem;
 
         // A crash ends the host without stopping the feature, so the windows go back on the taskbar first.
@@ -137,6 +142,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
         {
             _thread = new MinimizeToTrayThread(read, _commands, _time, _logger, _hideApps, _dropDown, _stopped);
             _stopped = null;
+            _requests.SetTray(_thread.SendFromTitleBar);
         }
         else
         {
@@ -196,6 +202,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
             return;
         }
 
+        _requests.SetTray(null);
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
     }

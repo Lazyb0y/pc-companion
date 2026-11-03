@@ -30,6 +30,16 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
 
     public List<nint> BroughtToFront { get; } = [];
 
+    /// <summary>The windows passed on to Minimize to Tray, which takes them while <see cref="TrayRuns"/>.</summary>
+    public List<nint> SentToTray { get; } = [];
+
+    public bool TrayRuns { get; set; } = true;
+
+    /// <summary>The windows passed on to Hide Apps, which takes them while <see cref="HideAppsRuns"/>.</summary>
+    public List<nint> AppsHidden { get; } = [];
+
+    public bool HideAppsRuns { get; set; } = true;
+
     public int Sounds { get; private set; }
 
     public int HookSetAgain { get; private set; }
@@ -72,6 +82,26 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
     {
         BroughtToFront.Add(window);
         return true;
+    }
+
+    public bool SendToTray(nint window)
+    {
+        if (TrayRuns)
+        {
+            SentToTray.Add(window);
+        }
+
+        return TrayRuns;
+    }
+
+    public bool HideApp(nint window)
+    {
+        if (HideAppsRuns)
+        {
+            AppsHidden.Add(window);
+        }
+
+        return HideAppsRuns;
     }
 
     public void PlayWarningSound() => Sounds++;

@@ -47,6 +47,49 @@ public sealed class HideAppsControllerTests : IDisposable
     }
 
     [Fact]
+    public void HideAppFromATitleBarMinimizesThatWindowsAppWithoutTakingTheFront()
+    {
+        A(1);
+        B(2);
+        A(3);
+        C(4);
+        _system.ForegroundWindow = 4;
+
+        Assert.Equal(new PressResult(PressOutcome.Hid, 2), _hide.HideApp(3));
+
+        Assert.Equal(["minimize quietly 1", "minimize quietly 3"], _system.Calls.FindAll(call => call.StartsWith("minimize", StringComparison.Ordinal)));
+        Assert.False(_system[2].Minimized || _system[4].Minimized);
+        Assert.Equal(4, _system.ForegroundWindow);
+        Assert.Equal(2, _hide.Count);
+    }
+
+    [Fact]
+    public void HideAppFromATitleBarOfTheAppInFrontMinimizesTheWindowInFrontLast()
+    {
+        A(1);
+        B(2);
+        A(3);
+        _system.ForegroundWindow = 1;
+
+        Assert.Equal(new PressResult(PressOutcome.Hid, 2), _hide.HideApp(3));
+
+        Assert.Equal(["minimize quietly 3", "minimize 1"], _system.Calls.FindAll(call => call.StartsWith("minimize", StringComparison.Ordinal)));
+        Assert.Equal(2, _system.ForegroundWindow);
+    }
+
+    [Fact]
+    public void HideAppFromATitleBarOfAWindowThatsGonePlaysTheWarning()
+    {
+        A(1);
+        _system.ForegroundWindow = 1;
+
+        Assert.Equal(new PressResult(PressOutcome.NoAppInFront), _hide.HideApp(9));
+
+        Assert.False(_system[1].Minimized);
+        Assert.Equal(1, _system.Warnings);
+    }
+
+    [Fact]
     public void HideAppActsOnTheAppOfTheWindowThatOwnsAPaletteInFront()
     {
         A(1);

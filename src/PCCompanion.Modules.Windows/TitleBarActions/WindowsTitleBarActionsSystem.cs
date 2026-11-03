@@ -2,8 +2,11 @@ using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.TitleBarActions;
 
-/// <summary>Title Bar Actions' claim and actions in Windows itself, with <paramref name="hook"/> keeping the clicks.</summary>
-public sealed class WindowsTitleBarActionsSystem(PointerHook hook) : ITitleBarActionsSystem
+/// <summary>
+/// Title Bar Actions' claim and actions in Windows itself, with <paramref name="hook"/> keeping the
+/// clicks and <paramref name="requests"/> passing windows on to the other features.
+/// </summary>
+public sealed class WindowsTitleBarActionsSystem(PointerHook hook, WindowRequests requests) : ITitleBarActionsSystem
 {
     public PointerKeys HeldKeys =>
         (InputState.IsModifierHeld(ModifierKey.Shift) ? PointerKeys.Shift : PointerKeys.None)
@@ -48,6 +51,10 @@ public sealed class WindowsTitleBarActionsSystem(PointerHook hook) : ITitleBarAc
     public bool SendToBack(nint window) => TopLevelWindows.SendToBack(window);
 
     public bool BringToFront(nint window) => TopLevelWindows.Activate(window);
+
+    public bool SendToTray(nint window) => requests.SendToTray(window);
+
+    public bool HideApp(nint window) => requests.HideApp(window);
 
     public void PlayWarningSound() => WarningSound.Play();
 }

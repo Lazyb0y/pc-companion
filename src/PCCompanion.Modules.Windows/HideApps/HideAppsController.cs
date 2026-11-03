@@ -73,38 +73,45 @@ public sealed partial class HideAppsController : IDisposable
     }
 
     /// <summary>Minimizes every window of the app in front, the window in front last.</summary>
-    public PressResult HideApp()
+    public PressResult HideApp() => HideApp(_system.ForegroundWindow);
+
+    /// <summary>
+    /// Minimizes every window of <paramref name="window"/>'s app, as for a click on its title bar.
+    /// When the app's window is in front, it goes last.
+    /// </summary>
+    public PressResult HideApp(nint window)
     {
         var started = _time.GetTimestamp();
-        if (FrontApp() is not var (windows, apps, root, app))
+        if (AppOf(window) is not var (windows, apps, _, app))
         {
             return Finish(HideAction.HideApp, PressOutcome.NoAppInFront, 0, [], started);
         }
 
         var stays = new List<StayReason>();
         var targets = windows
-            .Where(window => IsCandidate(window) && apps.Of(window).IsSameAppAs(app))
-            .Where(window => MayGo(window.Handle, stays))
+            .Where(listed => IsCandidate(listed) && apps.Of(listed).IsSameAppAs(app))
+            .Where(listed => MayGo(listed.Handle, stays))
             .ToList();
 
         // The window in front goes last, so Windows brings the window behind the app's windows to the front.
-        var order = targets.Where(window => window.Handle != root).ToList();
-        if (targets.FirstOrDefault(window => window.Handle == root) is { } rootTarget)
+        var front = _system.RootOwner(_system.ForegroundWindow);
+        var order = targets.Where(listed => listed.Handle != front).ToList();
+        if (targets.FirstOrDefault(listed => listed.Handle == front) is { } frontTarget)
         {
-            order.Add(rootTarget);
+            order.Add(frontTarget);
         }
 
         var added = new List<PutAway>();
-        foreach (var window in order)
+        foreach (var listed in order)
         {
-            if (Put(window, apps.Of(window), HideAction.HideApp, inFront: window.Handle == root, stays) is { } put)
+            if (Put(listed, apps.Of(listed), HideAction.HideApp, inFront: listed.Handle == front, stays) is { } put)
             {
                 added.Add(put);
             }
         }
 
         // Kept in the order they had, front to back.
-        _list.InsertRange(0, added.OrderBy(put => targets.FindIndex(window => window.Handle == put.Window)));
+        _list.InsertRange(0, added.OrderBy(put => targets.FindIndex(listed => listed.Handle == put.Window)));
         Changed();
         return Finish(HideAction.HideApp, added.Count > 0 ? PressOutcome.Hid : PressOutcome.NothingToDo, added.Count, stays, started);
     }
@@ -252,17 +259,19 @@ public sealed partial class HideAppsController : IDisposable
     private bool IsCandidate(TopLevelWindow window) => IsAppWindow(window) && !_system.IsDropDown(window.Handle);
 
     // The visible windows, the app reader for them, and the window in front's main window and app; null with no app in front.
-    private (IReadOnlyList<TopLevelWindow> Windows, AppOfWindowReader Apps, nint Root, AppOfWindow App)? FrontApp()
+    private (IReadOnlyList<TopLevelWindow> Windows, AppOfWindowReader Apps, nint Root, AppOfWindow App)? FrontApp() => AppOf(_system.ForegroundWindow);
+
+    // The same for any window; null when it isn't an app's window.
+    private (IReadOnlyList<TopLevelWindow> Windows, AppOfWindowReader Apps, nint Root, AppOfWindow App)? AppOf(nint window)
     {
-        var front = _system.ForegroundWindow;
-        if (front == 0)
+        if (window == 0)
         {
             return null;
         }
 
-        var root = _system.RootOwner(front);
+        var root = _system.RootOwner(window);
         var windows = _system.ListWindows();
-        if (windows.FirstOrDefault(window => window.Handle == root) is not { } rootWindow || !IsAppWindow(rootWindow))
+        if (windows.FirstOrDefault(listed => listed.Handle == root) is not { } rootWindow || !IsAppWindow(rootWindow))
         {
             return null;
         }

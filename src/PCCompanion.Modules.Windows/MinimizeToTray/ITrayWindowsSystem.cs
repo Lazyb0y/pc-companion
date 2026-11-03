@@ -121,6 +121,9 @@ public enum SendWay
     Shortcut,
     ShiftMinimize,
     ListedApp,
+
+    /// <summary>Title Bar Actions passed it on from a click on its title bar.</summary>
+    TitleBar,
 }
 
 /// <summary>Whether a window went to the tray, and why not.</summary>

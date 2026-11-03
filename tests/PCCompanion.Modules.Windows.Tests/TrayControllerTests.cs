@@ -98,6 +98,46 @@ public sealed class TrayControllerTests : IDisposable
     }
 
     [Fact]
+    public void AClickOnATitleBarSendsThatWindowAsTheShortcutDoes()
+    {
+        var window = _system.Add(1);
+        _system.Add(2, processId: 20, program: @"C:\Apps\Other.exe");
+        _system.ForegroundWindow = 2;
+
+        Assert.Equal(SendOutcome.Sent, _tray.SendFromTitleBar(1));
+
+        Assert.False(window.Visible);
+        Assert.True(window.Minimized);
+        Assert.Equal(["mark 1", "minimize 1", "watch 10", "hide 1"], _system.Calls);
+        Assert.True(_system.Windows[2].Visible);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
+    public void ATitleBarsWindowThatCantGoPlaysTheWarning()
+    {
+        _system.Windows[1] = new FakeWindow { Handle = 1, ProcessId = 10, Program = @"C:\Apps\App.exe", ClassName = "ApplicationFrameWindow" };
+
+        Assert.Equal(SendOutcome.SharedAppFrame, _tray.SendFromTitleBar(1));
+
+        Assert.True(_system.Windows[1].Visible);
+        Assert.Equal(1, _system.Warnings);
+    }
+
+    [Fact]
+    public void ATitleBarsWindowGoesAlsoWhenItsProgramHasntHandledTheMinimizeYet()
+    {
+        _system.ReadsLooksAtOnce = false;
+        _system.Windows[1] = new FakeWindow { Handle = 1, ProcessId = 10, Program = @"C:\Apps\App.exe", Unresponsive = true };
+        _tray.SendFromTitleBar(1);
+
+        _system.FinishReadingLooks();
+
+        Assert.False(_system.Windows[1].Visible);
+        Assert.Single(_icons.Icons);
+    }
+
+    [Fact]
     public void AWindowThatCantBeHiddenLeavesNoIconOrMark()
     {
         _system.Windows[1] = new FakeWindow { Handle = 1, ProcessId = 10, Program = @"C:\Apps\App.exe", RefusesHide = true };
