@@ -3040,4 +3040,12 @@
     <value>{0} times</value>
     <comment>Plural form "other". Drop-down Apps page: how many times in a row a recent result happened. {0} is the number.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>Title Bar Actions</value>
+    <comment>Feature name: navigation pane, Home and the Title Bar Actions page.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>Middle-click a window's title bar to minimize it or send it to the back, or turn the wheel there to change its opacity.</value>
+    <comment>Title Bar Actions: one-sentence description below the feature name.</comment>
+  </data>
 </root>

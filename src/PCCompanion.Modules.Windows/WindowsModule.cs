@@ -4,6 +4,7 @@ using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
+using PCCompanion.Modules.Windows.TitleBarActions;
 
 namespace PCCompanion.Modules.Windows;
 
@@ -25,6 +26,7 @@ public static class WindowsModule
         services.AddSingleton<IFeature, MinimizeToTrayFeature>();
         services.AddSingleton<IFeature, HideAppsFeature>();
         services.AddSingleton<IFeature, DropDownAppsFeature>();
+        services.AddSingleton<IFeature, TitleBarActionsFeature>();
         return services;
     }
 }

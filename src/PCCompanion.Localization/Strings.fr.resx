@@ -3040,4 +3040,12 @@
     <value>{0} fois</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>Actions de la barre de titre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>Cliquez avec le bouton central sur la barre de titre d’une fenêtre pour la réduire ou l’envoyer à l’arrière-plan, ou tournez la molette dessus pour changer son opacité.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

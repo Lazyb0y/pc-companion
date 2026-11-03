@@ -3012,4 +3012,12 @@
     <value>{0} 次</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>标题栏操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>用鼠标中键单击窗口的标题栏可将其最小化或置于底层，在标题栏上转动滚轮可更改其不透明度。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

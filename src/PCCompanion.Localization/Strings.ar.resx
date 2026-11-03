@@ -3152,4 +3152,12 @@
     <value>{0} مرة</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>إجراءات شريط العنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>انقر بالزر الأوسط على شريط عنوان نافذة لتصغيرها أو إرسالها إلى الخلف، أو أدر العجلة عليه لتغيير عتامتها.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

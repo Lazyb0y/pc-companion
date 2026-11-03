@@ -3040,4 +3040,12 @@
     <value>{0} veces</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsName" xml:space="preserve">
+    <value>Acciones de la barra de título</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsDescription" xml:space="preserve">
+    <value>Haz clic con el botón central en la barra de título de una ventana para minimizarla o enviarla al fondo, o gira la rueda allí para cambiar su opacidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
