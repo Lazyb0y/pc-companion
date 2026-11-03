@@ -16,6 +16,7 @@ public sealed class TopLevelWindowsTests
     private const int ShowWithoutActivating = 4; // SW_SHOWNOACTIVATE
     private const uint MoveWithoutActivating = 0x0014; // SWP_NOZORDER | SWP_NOACTIVATE
     private const uint ReorderWithoutActivating = 0x0013; // SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE
+    private const nint AlwaysOnTop = -1; // HWND_TOPMOST
     private const uint SystemCommandMessage = 0x0112; // WM_SYSCOMMAND
     private const nuint MinimizeCommand = 0xF020; // SC_MINIMIZE
     private const nuint RestoreCommand = 0xF120; // SC_RESTORE
@@ -587,6 +588,19 @@ public sealed class TopLevelWindowsTests
     [Fact]
     public void SetTopmostPutsAWindowOnTopAndTakesItOff()
     {
+        // Windows puts a window on top only while its process may bring windows to the front, and
+        // otherwise reports success and leaves it as it was. A test process loses that right as
+        // soon as the user works in another app, so the test is skipped then.
+        using (var probe = new MessageWindow(UniqueClassName()))
+        {
+            Show(probe.Handle);
+            SetWindowPos(probe.Handle, AlwaysOnTop, 0, 0, 0, 0, ReorderWithoutActivating);
+            if (!TopLevelWindows.IsTopmost(probe.Handle))
+            {
+                Assert.Skip("Windows doesn't let this process put windows on top now, as while the user works in another app.");
+            }
+        }
+
         using var window = new MessageWindow(UniqueClassName());
         Show(window.Handle);
 
