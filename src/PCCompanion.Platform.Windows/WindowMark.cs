@@ -11,7 +11,8 @@ namespace PCCompanion.Platform.Windows;
 /// process finds the window again: a window property, which Windows keeps with the window until
 /// it's removed or the window is destroyed, also after this process ends. Windows refuses it on a
 /// window of a program with more rights, such as an app running as administrator while this
-/// process doesn't. Setting, reading and removing it send the window no message.
+/// process doesn't. A mark can hold a small value, such as what the window had before this process
+/// changed it. Setting, reading and removing it send the window no message.
 /// </summary>
 public sealed class WindowMark
 {
@@ -36,10 +37,28 @@ public sealed class WindowMark
     private unsafe PCWSTR Name => new((char*)_atom);
 
     /// <summary>Marks <paramref name="window"/>. Returns false when Windows refused.</summary>
-    public bool Set(nint window) => PInvoke.SetProp(new HWND(window), Name, new HANDLE(1));
+    public bool Set(nint window) => Set(window, 1);
+
+    /// <summary>
+    /// Marks <paramref name="window"/> with <paramref name="value"/>, which a later process reads
+    /// with <see cref="Value"/>; marking it again replaces the value. Returns false when Windows
+    /// refused.
+    /// </summary>
+    /// <param name="window">The window to mark.</param>
+    /// <param name="value">Anything but 0, which a window without the mark reads as.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is 0.</exception>
+    public bool Set(nint window, nint value)
+    {
+        ArgumentOutOfRangeException.ThrowIfZero(value);
+
+        return PInvoke.SetProp(new HWND(window), Name, new HANDLE(value));
+    }
+
+    /// <summary>The value <paramref name="window"/>'s mark holds, or 0 when it has no mark.</summary>
+    public nint Value(nint window) => PInvoke.GetProp(new HWND(window), Name);
 
     /// <summary>Whether <paramref name="window"/> carries the mark.</summary>
-    public bool IsOn(nint window) => PInvoke.GetProp(new HWND(window), Name) != HANDLE.Null;
+    public bool IsOn(nint window) => Value(window) != 0;
 
     /// <summary>Removes the mark from <paramref name="window"/>, if it has it.</summary>
     public void Remove(nint window) => PInvoke.RemoveProp(new HWND(window), Name);

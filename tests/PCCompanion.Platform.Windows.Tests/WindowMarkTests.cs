@@ -72,5 +72,64 @@ public sealed class WindowMarkTests
         Assert.DoesNotContain(handle, mark.FindMarked());
     }
 
+    [Fact]
+    public void AMarksValueIsReadAsALaterProcessWouldReadIt()
+    {
+        var name = UniqueName();
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.True(new WindowMark(name).Set(window.Handle, 0x1A5));
+
+        var later = new WindowMark(name);
+
+        Assert.Equal(0x1A5, later.Value(window.Handle));
+        Assert.True(later.IsOn(window.Handle));
+    }
+
+    [Fact]
+    public void MarkingAgainReplacesTheValue()
+    {
+        var mark = new WindowMark(UniqueName());
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.True(mark.Set(window.Handle, 7));
+        Assert.True(mark.Set(window.Handle, 255));
+
+        Assert.Equal(255, mark.Value(window.Handle));
+    }
+
+    [Fact]
+    public void AWindowWithoutTheMarkHasNoValue()
+    {
+        var mark = new WindowMark(UniqueName());
+        using var window = new MessageWindow(UniqueClassName());
+        Assert.Equal(0, mark.Value(window.Handle));
+
+        Assert.True(mark.Set(window.Handle, 3));
+        mark.Remove(window.Handle);
+
+        Assert.Equal(0, mark.Value(window.Handle));
+    }
+
+    [Fact]
+    public void AMarkWithoutAValueIsOn()
+    {
+        var mark = new WindowMark(UniqueName());
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.True(mark.Set(window.Handle));
+
+        Assert.NotEqual(0, mark.Value(window.Handle));
+    }
+
+    [Fact]
+    public void ZeroIsRefusedAsAValue()
+    {
+        var mark = new WindowMark(UniqueName());
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => mark.Set(window.Handle, 0));
+        Assert.False(mark.IsOn(window.Handle));
+    }
+
     private static string UniqueName() => "PCCompanion.Tests.Mark." + Guid.NewGuid().ToString("N");
 }
