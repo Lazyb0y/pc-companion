@@ -20,6 +20,9 @@ public sealed partial class TitleBarController : IDisposable
     /// <summary>How long after raw input reports a click its check waits for the hook to have seen it.</summary>
     public static readonly TimeSpan CheckDelay = TimeSpan.FromMilliseconds(60);
 
+    /// <summary>How long after the last pointer event the finder looks again where the pointer rests.</summary>
+    public static readonly TimeSpan SettleDelay = TimeSpan.FromMilliseconds(50);
+
     // How far from the answered point, in pixels, a click still counts as there.
     private const int SpotMargin = 2;
 
@@ -34,6 +37,7 @@ public sealed partial class TitleBarController : IDisposable
     private readonly TitleBarFinder _finder;
     private readonly WindowOpacity _opacity;
     private readonly ITimer _timer;
+    private readonly ITimer _settleTimer;
     private readonly List<RawClick> _clicks = [];
     private Dictionary<PointerTrigger, TitleBarClickAction> _actions = [];
     private HashSet<PointerTrigger> _wheel = [];
@@ -58,6 +62,7 @@ public sealed partial class TitleBarController : IDisposable
         _finder = new TitleBarFinder(windows, _excluded, time);
         _finder.SpotChanged += (_, _) => UpdateClaim();
         _timer = time.CreateTimer(_ => post(CheckClicks), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _settleTimer = time.CreateTimer(_ => post(_finder.Settle), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>The window whose title bar is claimed now, or 0.</summary>
@@ -75,6 +80,7 @@ public sealed partial class TitleBarController : IDisposable
         if (_excluded.SetApps(settings.ExcludedApps))
         {
             _finder.Stop();
+            _settleTimer.Change(SettleDelay, Timeout.InfiniteTimeSpan);
         }
 
         var actions = new Dictionary<PointerTrigger, TitleBarClickAction>();
@@ -115,6 +121,7 @@ public sealed partial class TitleBarController : IDisposable
         }
 
         _finder.PointerMoved();
+        _settleTimer.Change(SettleDelay, Timeout.InfiniteTimeSpan);
     }
 
     /// <summary>Call it for each click the pointer hook kept for this controller's claim.</summary>
@@ -166,6 +173,7 @@ public sealed partial class TitleBarController : IDisposable
         _finder.Stop();
         _clicks.Clear();
         SetTimer(false);
+        _settleTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         Release();
         (_wheelWindow, _wheelTurned, _soundedFor) = (0, 0, 0);
         return _opacity.PutBackAll();
@@ -175,6 +183,7 @@ public sealed partial class TitleBarController : IDisposable
     {
         Stop();
         _timer.Dispose();
+        _settleTimer.Dispose();
     }
 
     private static void Add(Dictionary<PointerTrigger, TitleBarClickAction> actions, PointerKeys keys, TitleBarClickAction action)

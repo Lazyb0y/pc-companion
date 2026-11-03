@@ -22,6 +22,9 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
     private bool _moved;
     private int _generation;
 
+    // Where the pointer was when the finder last looked.
+    private Point? _lookedAt;
+
     /// <summary>
     /// The window whose title bar the pointer rests on, and the point it answered for, or
     /// <see langword="null"/> when the pointer isn't on a title bar or the window hasn't answered yet.
@@ -53,6 +56,20 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
     }
 
     /// <summary>
+    /// Call it a moment after the last pointer event. Raw input reports a move before the pointer's
+    /// position follows it, so a window can answer for where the pointer was before the position
+    /// catches up, and once the pointer stops, no event comes to ask again. When no question waits
+    /// and the pointer isn't where the finder last looked, it looks again.
+    /// </summary>
+    public void Settle()
+    {
+        if (_hover is null && windows.PointerPosition is { } point && point != _lookedAt)
+        {
+            AskAtPointer();
+        }
+    }
+
+    /// <summary>
     /// Asks whether <paramref name="point"/> is on a title bar, as for a click that reached the app.
     /// <paramref name="onTitleBar"/> gets the window when it answers that it is, within
     /// <see cref="AnswerTimeout"/>; otherwise it isn't called. Returns whether the window there was
@@ -77,13 +94,15 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows exc
         _generation++;
         _hover = null;
         _moved = false;
+        _lookedAt = null;
         SetSpot(null);
     }
 
     private void AskAtPointer()
     {
         _moved = false;
-        if (windows.PointerPosition is not { } point || Look(point) is not (TitleBarCheck.Asked, var under, var root))
+        _lookedAt = windows.PointerPosition;
+        if (_lookedAt is not { } point || Look(point) is not (TitleBarCheck.Asked, var under, var root))
         {
             SetSpot(null);
             return;
