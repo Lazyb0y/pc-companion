@@ -145,6 +145,12 @@ Send any app's window to an icon in the notification area instead of the taskbar
 - With Always run as administrator, or UAC off, every window goes to the tray. Running as administrator, the host's window accepts the taskbar's messages, as the PC Companion icon's window does (`TrayIcon`).
 - In the spike, a minimize posted by the program without admin rights (`WM_SYSCOMMAND` with `SC_MINIMIZE`) did minimize the window of the one with them, with UAC off. Minimize to Tray doesn't rely on it; it's checked by hand with UAC on.
 
+## With Title Bar Actions
+
+- **Minimize to tray,** an action for a middle-click on a title bar, passes the clicked window to Minimize to Tray, which sends it as its shortcut sends the window in front, with the same rules and warning sound. Its log names the way `TitleBar`. See [With the other features](title-bar-actions.md#with-the-other-features).
+- **Shift + Minimize:** when Shift + middle-click is set to **Minimize** and **Shift + Minimize** is on, the window minimizes with Shift held, so it goes to the tray, as with its Minimize button.
+- **With Minimize to Tray off,** the action plays the warning sound, and the click is still kept from the app.
+
 ## Threads
 
 - Minimize to Tray runs on a thread of its own, derived from `MessageLoopThread<TSettings>`, as [Threads and processes](../../architecture/features.md#threads-and-processes) requires: `Shell_NotifyIcon` waits for Explorer with no time limit, so a slow Explorer delays only these icons, never the other features ([#184](https://github.com/Lazyb0y/pc-companion/issues/184) is the same for the PC Companion icon).

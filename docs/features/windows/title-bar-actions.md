@@ -325,13 +325,13 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
   - It runs in PC Companion's process and loads no code into other apps.
 - **Changes:** other apps' windows. It minimizes them, sends them to the back, gives the front to the next window, changes their opacity and style, and adds and removes its mark on them. It passes windows to Minimize to Tray and Hide Apps. It sends no input to other apps and writes no file.
 - **Logs:**
-  - **Debug entries** for each click or notch on a title bar: which click, which action, whether the hook kept it or it was let through, and why nothing ran, such as a listed app, a window that doesn't respond or a feature that's off.
+  - **Debug entries** for each click or notch on a title bar: which click, which action, whether the hook kept it or it was let through, and why nothing ran, such as a listed app, a window that doesn't respond, a window Windows keeps it from or a feature that's off; and when it claims the title bar under the pointer and removes the claim, as the hook is set and removed.
   - **Never** titles, app IDs, names, paths or pointer positions, which can name documents, profiles or users.
   - **Warnings** when Windows removed the hook, when the settings section can't be read and when a value is unknown.
   - **An error** when a failure stops the feature.
 - **Settings:** a changed settings file can only choose among these actions for title-bar clicks and list apps that keep their clicks.
 - **The mark:** another program running as the user could mark a window, so that PC Companion gives it full opacity at its next start. It could change that window's opacity itself just as well. Windows refuses a program without admin rights the mark on a window of an app running as administrator.
-- **Network:** none. `PRIVACY.md` gets a line on Title Bar Actions.
+- **Network:** none. `PRIVACY.md` has a line on Title Bar Actions.
 - **Rights:**
   - It runs with the host's rights: without admin rights, unless Always run as administrator is on or UAC is off.
   - Running as administrator, it also acts on the windows of apps running as administrator, which the user can minimize anyway.
