@@ -9,7 +9,8 @@ namespace PCCompanion.Modules.Windows.TitleBarActions;
 /// bar" in docs/features/windows/title-bar-actions.md says. Use it on one thread, the one its
 /// <see cref="ITitleBarWindows"/> answers on.
 /// </summary>
-public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
+/// <param name="excluded">The windows of the apps that keep their title-bar clicks, which aren't asked.</param>
+public sealed class TitleBarFinder(ITitleBarWindows windows, ExcludedWindows excluded, TimeProvider clock)
 {
     /// <summary>How tall, in effective pixels, the band at the top of a window is that holds its title bar.</summary>
     public const int TopBand = 64;
@@ -54,16 +55,20 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
     /// <summary>
     /// Asks whether <paramref name="point"/> is on a title bar, as for a click that reached the app.
     /// <paramref name="onTitleBar"/> gets the window when it answers that it is, within
-    /// <see cref="AnswerTimeout"/>; otherwise it isn't called.
+    /// <see cref="AnswerTimeout"/>; otherwise it isn't called. Returns whether the window there was
+    /// asked, and why not.
     /// </summary>
-    public void Check(Point point, Action<nint> onTitleBar)
+    public TitleBarCheck Check(Point point, Action<nint> onTitleBar)
     {
         ArgumentNullException.ThrowIfNull(onTitleBar);
 
-        if (Find(point) is { } found)
+        var (found, under, root) = Look(point);
+        if (found == TitleBarCheck.Asked)
         {
-            CheckOnce(found.Under, found.Root, point, onTitleBar, clock.GetTimestamp(), _generation);
+            CheckOnce(under, root, point, onTitleBar, clock.GetTimestamp(), _generation);
         }
+
+        return found;
     }
 
     /// <summary>Forgets the spot and every question waiting; answers that come later are dropped.</summary>
@@ -78,18 +83,18 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
     private void AskAtPointer()
     {
         _moved = false;
-        if (windows.PointerPosition is not { } point || Find(point) is not { } found)
+        if (windows.PointerPosition is not { } point || Look(point) is not (TitleBarCheck.Asked, var under, var root))
         {
             SetSpot(null);
             return;
         }
 
-        if (Spot is { } spot && spot.Point == point && spot.Window == found.Root)
+        if (Spot is { } spot && spot.Point == point && spot.Window == root)
         {
             return;
         }
 
-        Ask(new Question(found.Under, found.Root, point, clock.GetTimestamp()));
+        Ask(new Question(under, root, point, clock.GetTimestamp()));
     }
 
     private void Ask(Question question)
@@ -147,20 +152,21 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
         });
     }
 
-    // The window under the point and its top-level window, when the point is in that window's top
-    // band and the window may get actions. The band, which most pointer moves are outside, is
-    // checked first.
-    private (nint Under, nint Root)? Find(Point point)
+    // The window under the point and its top-level window, to ask, when the point is in that
+    // window's top band and the window may get actions; otherwise why not. The band, which most
+    // pointer moves are outside, is checked first, and the list of apps last.
+    private (TitleBarCheck Found, nint Under, nint Root) Look(Point point)
     {
         var under = windows.WindowAt(point);
         var root = under == 0 ? 0 : windows.Root(under);
-        if (root == 0 || windows.VisibleFrame(root) is not { } frame || !frame.Contains(point))
+        if (root == 0 || windows.VisibleFrame(root) is not { } frame || !frame.Contains(point) || point.Y >= frame.Top + (TopBand * windows.Dpi(root) / 96.0))
         {
-            return null;
+            return (TitleBarCheck.Elsewhere, 0, 0);
         }
 
-        var band = TopBand * windows.Dpi(root) / 96.0;
-        return point.Y < frame.Top + band && windows.IsCandidate(root) ? (under, root) : null;
+        return !windows.IsCandidate(root) ? (TitleBarCheck.WindowLeftOut, 0, 0)
+            : excluded.Contains(root) ? (TitleBarCheck.AppListed, 0, 0)
+            : (TitleBarCheck.Asked, under, root);
     }
 
     private void SetSpot(TitleBarSpot? spot)
@@ -176,6 +182,22 @@ public sealed class TitleBarFinder(ITitleBarWindows windows, TimeProvider clock)
 
     // A question about one point, to one window, for a top-level window's title bar.
     private sealed record Question(nint Asked, nint Root, Point Point, long Sent);
+}
+
+/// <summary>What <see cref="TitleBarFinder.Check"/> found at a point.</summary>
+public enum TitleBarCheck
+{
+    /// <summary>The window there was asked whether the point is on its title bar, unless Windows refused.</summary>
+    Asked,
+
+    /// <summary>No window's top band is there.</summary>
+    Elsewhere,
+
+    /// <summary>The window there gets no actions, as one that stopped responding or has a dialog open.</summary>
+    WindowLeftOut,
+
+    /// <summary>The window's app is on the list of apps that keep their title-bar clicks.</summary>
+    AppListed,
 }
 
 /// <summary>A point on a window's title bar, which the window answered for.</summary>

@@ -32,5 +32,13 @@ public sealed class WindowsTitleBarWindows : ITitleBarWindows
         return !window.IsDesktop && !window.IsCloaked && TopLevelWindows.ClassName(root) is not ("Shell_TrayWnd" or "Shell_SecondaryTrayWnd");
     }
 
+    public AppOfWindow? AppOf(nint root)
+    {
+        var processId = TopLevelWindows.ProcessIdOf(root);
+        return processId == 0 ? null : new AppOfWindow(AppIdentity.OfWindow(root), AppIdentity.OfPackagedProcess(processId), AppIdentity.ProgramPath(processId), processId);
+    }
+
+    public bool Exists(nint window) => TopLevelWindows.Exists(window);
+
     public bool Ask(nint window, Point point, Action<HitTestAnswer> answered) => WindowHitTest.Request(window, point, answered);
 }

@@ -31,6 +31,11 @@ public interface ITitleBarWindows
     /// <summary>Whether the top-level window's title bar may get actions; one whose program stopped responding never does.</summary>
     bool IsCandidate(nint root);
 
+    /// <summary>The top-level window's app, as the taskbar groups apps, or <see langword="null"/> when it has closed.</summary>
+    AppOfWindow? AppOf(nint root);
+
+    bool Exists(nint window);
+
     /// <summary>
     /// Asks <paramref name="window"/> what part of it is at <paramref name="point"/>; the answer
     /// comes later on this thread, or at once for a window of this thread. Returns false when

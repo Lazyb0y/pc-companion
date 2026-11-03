@@ -17,6 +17,7 @@ public sealed class TitleBarControllerTests : IDisposable
     private static readonly Point OnTab = new(150, 120);
     private static readonly PointerTrigger MiddleClick = new(PointerButton.Middle, PointerKeys.None);
     private static readonly PointerTrigger Wheel = new(PointerButton.Wheel, PointerKeys.None);
+    private static readonly ListedApp Listed = new() { Name = "App", Program = @"C:\Apps\10.exe" };
 
     private readonly FakeTitleBarWindows _windows = new();
     private readonly FakeTitleBarActionsSystem _system = new();
@@ -278,6 +279,47 @@ public sealed class TitleBarControllerTests : IDisposable
 
         Assert.Empty(_windows.Asked);
         Assert.Empty(_system.Minimized);
+    }
+
+    [Fact]
+    public void AListedAppsTitleBarIsntClaimedAndAClickThereIsLoggedWithoutAnAction()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, ExcludedApps = [Listed] });
+        MoveTo(OnTitleBar);
+        Assert.Empty(_system.Claims);
+
+        Click(1);
+        _clock.Advance(TitleBarController.CheckDelay);
+
+        Assert.Empty(_system.Minimized);
+        Assert.Equal(0, _system.Sounds);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("AppListed", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ListingTheAppWhoseTitleBarIsClaimedRemovesTheClaim()
+    {
+        MoveTo(OnTitleBar);
+        Assert.NotNull(_system.Claimed);
+
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, ExcludedApps = [Listed] });
+        MoveTo(OnTitleBar);
+
+        Assert.Null(_system.Claimed);
+        Assert.Equal(0, _controller.ClaimedWindow);
+    }
+
+    [Fact]
+    public void AClickNearTheTopOfAWindowThatGetsNothingIsLogged()
+    {
+        _windows.NotCandidates.Add(Window);
+        MoveTo(OnTitleBar);
+
+        Click(1);
+        _clock.Advance(TitleBarController.CheckDelay);
+
+        Assert.Empty(_system.Minimized);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("WindowLeftOut", StringComparison.Ordinal));
     }
 
     [Fact]

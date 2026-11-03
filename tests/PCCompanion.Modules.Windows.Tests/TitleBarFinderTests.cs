@@ -17,6 +17,7 @@ public sealed class TitleBarFinderTests
 
     private readonly FakeTitleBarWindows _windows = new();
     private readonly ManualTimeProvider _clock = new();
+    private readonly ExcludedWindows _excluded;
     private readonly TitleBarFinder _finder;
 
     public TitleBarFinderTests()
@@ -24,7 +25,8 @@ public sealed class TitleBarFinderTests
         // A window at (100, 100) whose title bar answers as Edge's does: tabs on the left, the empty strip on the right.
         _windows.Add(Window, new Rectangle(100, 100, 800, 600));
         _windows.Answers = (_, point) => point.Y < 140 && point.X >= 300 ? HitTestAnswer.Caption : HitTestAnswer.Elsewhere;
-        _finder = new TitleBarFinder(_windows, _clock);
+        _excluded = new ExcludedWindows(_windows);
+        _finder = new TitleBarFinder(_windows, _excluded, _clock);
     }
 
     [Fact]
@@ -54,7 +56,7 @@ public sealed class TitleBarFinderTests
     {
         var windows = new FakeTitleBarWindows { Answers = (_, _) => HitTestAnswer.Caption };
         windows.Add(Window, new Rectangle(100, 100, 800, 600), dpi: dpi);
-        var finder = new TitleBarFinder(windows, _clock);
+        var finder = new TitleBarFinder(windows, new ExcludedWindows(windows), _clock);
 
         windows.PointerPosition = new Point(400, y);
         finder.PointerMoved();
@@ -191,6 +193,29 @@ public sealed class TitleBarFinderTests
         _windows.Answer();
 
         Assert.Empty(found);
+    }
+
+    [Fact]
+    public void AListedAppsWindowIsntAskedAndGivesNoSpot()
+    {
+        _excluded.SetApps([new ListedApp { Name = "App", Program = @"C:\Apps\10.exe" }]);
+
+        MoveTo(OnTitleBar);
+
+        Assert.Null(_finder.Spot);
+        Assert.Empty(_windows.Asked);
+        Assert.Equal(TitleBarCheck.AppListed, _finder.Check(OnTitleBar, _ => Assert.Fail("A listed app's window was checked.")));
+    }
+
+    [Fact]
+    public void CheckSaysWhyAWindowWasntAsked()
+    {
+        Assert.Equal(TitleBarCheck.Elsewhere, _finder.Check(new Point(400, 500), _ => { }));
+
+        _windows.NotCandidates.Add(Window);
+
+        Assert.Equal(TitleBarCheck.WindowLeftOut, _finder.Check(OnTitleBar, _ => { }));
+        Assert.Empty(_windows.Asked);
     }
 
     [Fact]

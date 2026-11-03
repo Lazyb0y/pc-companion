@@ -1,5 +1,6 @@
 using System.Text.Json;
 using PCCompanion.Modules.Windows.TitleBarActions;
+using PCCompanion.Platform.Windows;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
 
@@ -18,6 +19,7 @@ public sealed class TitleBarActionsSettingsTests
         Assert.Equal(TitleBarClickAction.None, settings.ControlMiddleClick);
         Assert.Equal(TitleBarWheelAction.None, settings.Wheel);
         Assert.Equal(TitleBarWheelAction.None, settings.ControlWheel);
+        Assert.Empty(settings.ExcludedApps);
     }
 
     [Fact]
@@ -30,7 +32,10 @@ public sealed class TitleBarActionsSettingsTests
               "shiftMiddleClick": "MinimizeToTray",
               "controlMiddleClick": "SendToBack",
               "wheel": "None",
-              "controlWheel": "Opacity"
+              "controlWheel": "Opacity",
+              "excludedApps": [
+                { "name": "Firefox", "program": "C:\\Program Files\\Mozilla Firefox\\firefox.exe" }
+              ]
             }
             """));
 
@@ -43,6 +48,7 @@ public sealed class TitleBarActionsSettingsTests
                 ControlMiddleClick = TitleBarClickAction.SendToBack,
                 Wheel = TitleBarWheelAction.None,
                 ControlWheel = TitleBarWheelAction.Opacity,
+                ExcludedApps = [new ListedApp { Name = "Firefox", Program = @"C:\Program Files\Mozilla Firefox\firefox.exe" }],
             },
             settings);
     }
@@ -50,7 +56,13 @@ public sealed class TitleBarActionsSettingsTests
     [Fact]
     public void WritingAndReadingGivesTheSameSettings()
     {
-        var settings = new TitleBarActionsSettings { Enabled = true, MiddleClick = TitleBarClickAction.HideApp, Wheel = TitleBarWheelAction.Opacity };
+        var settings = new TitleBarActionsSettings
+        {
+            Enabled = true,
+            MiddleClick = TitleBarClickAction.HideApp,
+            Wheel = TitleBarWheelAction.Opacity,
+            ExcludedApps = [new ListedApp { Name = "App", AppId = "App.Id" }],
+        };
 
         Assert.Equal(settings, TitleBarActionsSettings.Read(settings.Write()));
         Assert.Equal("HideApp", settings.Write().GetProperty("middleClick").GetString());
@@ -59,6 +71,36 @@ public sealed class TitleBarActionsSettingsTests
     [Fact]
     public void AnUnknownNameCantBeRead() =>
         Assert.ThrowsAny<JsonException>(() => TitleBarActionsSettings.Read(Section("""{ "middleClick": "Close" }""")));
+
+    [Fact]
+    public void ListedAppsThatDontMatchTheFormatOrAreListedAgainAreLeftOut()
+    {
+        var settings = TitleBarActionsSettings.Read(Section("""
+            {
+              "excludedApps": [
+                null,
+                { "name": "Blank", "program": "  " },
+                { "name": "Both", "program": "C:\\a.exe", "appId": "A" },
+                { "name": "Neither" },
+                { "name": "Kept", "appId": "B", "program": "" },
+                { "name": "Again", "appId": "b" }
+              ]
+            }
+            """));
+
+        Assert.Equal([new ListedApp { Name = "Kept", AppId = "B" }], settings.ExcludedApps);
+    }
+
+    [Fact]
+    public void AnAppIsListedOnce()
+    {
+        var app = new ListedApp { Name = "App", Program = @"C:\Apps\App.exe" };
+        var settings = new TitleBarActionsSettings().WithExcludedApp(app);
+
+        Assert.Same(settings, settings.WithExcludedApp(app with { Program = @"c:\apps\app.exe" }));
+        Assert.Same(settings, settings.WithExcludedApp(new ListedApp { Name = "Neither" }));
+        Assert.Empty(settings.WithoutExcludedApp(0).ExcludedApps);
+    }
 
     [Fact]
     public void WithEnabledChangesOnlyEnabled()
