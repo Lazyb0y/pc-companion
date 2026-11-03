@@ -374,7 +374,9 @@ public static class TopLevelWindows
 
     /// <summary>
     /// Puts another program's <paramref name="window"/> always on top, or takes it off, without
-    /// moving or activating it. Returns false when Windows refused. It doesn't wait.
+    /// moving or activating it. Returns false when Windows refused. It doesn't wait. Windows puts
+    /// a window on top only while the window's process may bring windows to the front, as the app
+    /// in front may; otherwise it reports success and leaves the window as it was.
     /// </summary>
     public static bool SetTopmost(nint window, bool topmost) =>
         PInvoke.SetWindowPos(
