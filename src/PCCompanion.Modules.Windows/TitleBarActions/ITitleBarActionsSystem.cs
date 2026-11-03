@@ -40,6 +40,18 @@ public interface ITitleBarActionsSystem
     /// <summary>Brings the window to the front. Returns false when Windows refused.</summary>
     bool BringToFront(nint window);
 
+    /// <summary>
+    /// Passes the window on to Minimize to Tray, which sends it to the tray on its thread, or plays
+    /// the warning sound itself. Returns false while Minimize to Tray doesn't run.
+    /// </summary>
+    bool SendToTray(nint window);
+
+    /// <summary>
+    /// Passes the window on to Hide Apps, which minimizes every window of its app on its thread, or
+    /// plays the warning sound itself. Returns false while Hide Apps doesn't run.
+    /// </summary>
+    bool HideApp(nint window);
+
     /// <summary>Plays Windows' warning sound.</summary>
     void PlayWarningSound();
 }

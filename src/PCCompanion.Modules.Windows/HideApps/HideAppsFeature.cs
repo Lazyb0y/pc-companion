@@ -22,23 +22,27 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
     private readonly ILogger<HideAppsFeature> _logger;
     private readonly HideAppsMinimized _minimized;
     private readonly DropDownWindows _dropDown;
+    private readonly WindowRequests _requests;
     private HideAppsThread? _thread;
     private HideAppsThread? _stopped;
     private bool _failed;
 
     /// <param name="minimized">The windows Hide Apps minimized, shared with Minimize to Tray.</param>
     /// <param name="dropDown">The drop-down windows, which Hide Apps leaves alone.</param>
-    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized, DropDownWindows dropDown)
+    /// <param name="requests">Where Title Bar Actions passes on windows whose apps to hide.</param>
+    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized, DropDownWindows dropDown, WindowRequests requests)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(minimized);
         ArgumentNullException.ThrowIfNull(dropDown);
+        ArgumentNullException.ThrowIfNull(requests);
 
         _time = time;
         _logger = logger;
         _minimized = minimized;
         _dropDown = dropDown;
+        _requests = requests;
     }
 
     public static FeatureInfo Definition { get; } = new("hideApps", WindowsModule.Id, "HideAppsName", "HideAppsDescription", "");
@@ -90,6 +94,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
         {
             _thread = new HideAppsThread(read, _time, _logger, _minimized, _dropDown, _stopped);
             _stopped = null;
+            _requests.SetHideApps(_thread.HideApp);
         }
         else
         {
@@ -128,6 +133,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
             return;
         }
 
+        _requests.SetHideApps(null);
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
     }

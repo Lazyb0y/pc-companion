@@ -14,11 +14,12 @@ public sealed class HideAppsFeatureTests : IDisposable
     private const string Quiet = """{ "enabled": true, "hideAppShortcut": "None", "hideOthersShortcut": "None" }""";
 
     private readonly RecordingLogger<HideAppsFeature> _logger = new();
+    private readonly WindowRequests _requests = new();
     private readonly HideAppsFeature _feature;
 
     public HideAppsFeatureTests()
     {
-        _feature = new HideAppsFeature(TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows());
+        _feature = new HideAppsFeature(TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests);
     }
 
     public void Dispose() => _feature.Dispose();
@@ -46,6 +47,17 @@ public sealed class HideAppsFeatureTests : IDisposable
 
         _feature.Apply(Section("""{ "enabled": false }"""));
         Assert.False(_feature.IsRunning);
+    }
+
+    [Fact]
+    public void WhileItsOffItTakesNoWindowFromATitleBar()
+    {
+        Assert.False(_requests.HideApp(1));
+
+        _feature.Apply(Section(Quiet));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.False(_requests.HideApp(1));
     }
 
     [Fact]

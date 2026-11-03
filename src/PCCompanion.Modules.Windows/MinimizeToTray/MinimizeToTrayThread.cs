@@ -63,6 +63,21 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
 
     public void BringAllBack() => Post(() => _tray?.Controller.BringAllBack());
 
+    /// <summary>
+    /// Sends a window to the tray, for a click on its title bar, on the feature's thread. Returns
+    /// false while the feature's thread doesn't run, as when it's starting or failed.
+    /// </summary>
+    public bool SendFromTitleBar(nint window)
+    {
+        if (_tray is null)
+        {
+            return false;
+        }
+
+        Post(() => _tray?.Controller.SendFromTitleBar(window));
+        return true;
+    }
+
     /// <summary>Puts the windows in the tray back on the taskbar at once, from any thread, as the host crashes.</summary>
     public void ReleaseNow() => _tray?.Controller.ReleaseNow();
 

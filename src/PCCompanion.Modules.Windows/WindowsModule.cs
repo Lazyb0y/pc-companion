@@ -22,6 +22,7 @@ public static class WindowsModule
     {
         services.AddSingleton<HideAppsMinimized>();
         services.AddSingleton<DropDownWindows>();
+        services.AddSingleton<WindowRequests>();
         services.AddSingleton<IFeature, AppWindowsFeature>();
         services.AddSingleton<IFeature, MinimizeToTrayFeature>();
         services.AddSingleton<IFeature, HideAppsFeature>();

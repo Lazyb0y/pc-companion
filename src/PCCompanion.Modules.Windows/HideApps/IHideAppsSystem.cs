@@ -102,7 +102,10 @@ public enum PressOutcome
     /// <summary>Windows that Hide Apps minimized came back.</summary>
     BroughtBack,
 
-    /// <summary>No app's window is in front, such as the desktop or the taskbar.</summary>
+    /// <summary>
+    /// No app's window is in front, such as the desktop or the taskbar, or the window from a title
+    /// bar isn't an app's window any more.
+    /// </summary>
     NoAppInFront,
 
     /// <summary>No window to minimize or bring back.</summary>

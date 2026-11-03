@@ -47,6 +47,21 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
     /// <summary>Brings back every window that Hide Apps minimized, on the feature's thread.</summary>
     public void ShowAll() => Post(() => _hider?.Press(HideAction.ShowAll));
 
+    /// <summary>
+    /// Minimizes every window of a window's app, for a click on its title bar, on the feature's
+    /// thread. Returns false while the feature's thread doesn't run, as when it's starting or failed.
+    /// </summary>
+    public bool HideApp(nint window)
+    {
+        if (_hider is null)
+        {
+            return false;
+        }
+
+        Post(() => _hider?.Controller.HideApp(window));
+        return true;
+    }
+
     protected override IDisposable Open(MessageWindow window)
     {
         var hider = new Hider(this, window);

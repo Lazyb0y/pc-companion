@@ -96,17 +96,13 @@ public sealed partial class TrayController : IDisposable
     }
 
     /// <summary>Sends the window in front, or the window that owns it, to the tray, for the shortcut.</summary>
-    public SendOutcome SendFront()
-    {
-        var front = _system.ForegroundWindow;
-        var outcome = front == 0 ? SendOutcome.NoWindow : Send(_system.RootOwner(front), SendWay.Shortcut);
-        if (outcome is not (SendOutcome.Sent or SendOutcome.AlreadyInTray))
-        {
-            _system.PlayWarning();
-        }
+    public SendOutcome SendFront() => SendOnScreen(_system.ForegroundWindow, SendWay.Shortcut);
 
-        return outcome;
-    }
+    /// <summary>
+    /// Sends <paramref name="window"/>, or the window that owns it, to the tray, for a click on its
+    /// title bar, as the shortcut sends the window in front.
+    /// </summary>
+    public SendOutcome SendFromTitleBar(nint window) => SendOnScreen(window, SendWay.TitleBar);
 
     /// <summary>A window started to minimize.</summary>
     public void OnMinimizeStart(nint window)
@@ -328,6 +324,21 @@ public sealed partial class TrayController : IDisposable
 
     private bool IsPending(nint window) => _pending.Any(pending => pending.Window == window);
 
+    // The ways that send a window still on screen, which is minimized first; the others send one that's minimizing already.
+    private static bool IsOnScreen(SendWay way) => way is SendWay.Shortcut or SendWay.TitleBar;
+
+    // The warning sound plays when the window doesn't go.
+    private SendOutcome SendOnScreen(nint window, SendWay way)
+    {
+        var outcome = window == 0 ? SendOutcome.NoWindow : Send(_system.RootOwner(window), way);
+        if (outcome is not (SendOutcome.Sent or SendOutcome.AlreadyInTray))
+        {
+            _system.PlayWarning();
+        }
+
+        return outcome;
+    }
+
     private SendOutcome Send(nint window, SendWay way)
     {
         var outcome = Check(window);
@@ -343,8 +354,8 @@ public sealed partial class TrayController : IDisposable
             return SendOutcome.Refused;
         }
 
-        // The shortcut's window is still on screen; the others are minimizing already.
-        if (way == SendWay.Shortcut && !_system.Minimize(window))
+        // Windows gives the front to the next window only when this one had it, as Hide Apps' spike showed.
+        if (IsOnScreen(way) && !_system.Minimize(window))
         {
             _system.Unmark(window);
             LogNotSent(_logger, way, SendOutcome.Refused);
@@ -437,9 +448,9 @@ public sealed partial class TrayController : IDisposable
     private SendOutcome Commit(nint window, SendWay way, string key, TrayLooks looks, bool afterWaiting)
     {
         // While its app's name was read, the window can have closed, and one that was minimizing,
-        // the user can have shown again. The shortcut's window may not be minimized yet: its
+        // the user can have shown again. A window that was on screen may not be minimized yet: its
         // program may not have handled the minimize, as one that stopped responding hasn't.
-        if (!_system.Exists(window) || (afterWaiting && way != SendWay.Shortcut && !_system.IsMinimized(window)))
+        if (!_system.Exists(window) || (afterWaiting && !IsOnScreen(way) && !_system.IsMinimized(window)))
         {
             _system.Unmark(window);
             LogNotSent(_logger, way, SendOutcome.NoWindow);

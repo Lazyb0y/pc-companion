@@ -16,12 +16,13 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
 
     private readonly RecordingLogger<MinimizeToTrayFeature> _logger = new();
     private readonly FakeTrayWindowsSystem _left = new();
+    private readonly WindowRequests _requests = new();
     private readonly MinimizeToTrayFeature _feature;
     private int _recoveries;
 
     public MinimizeToTrayFeatureTests()
     {
-        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), () =>
+        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests, () =>
         {
             _recoveries++;
             return _left;
@@ -68,6 +69,17 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
 
         _feature.Apply(Section("""{ "enabled": false }"""));
         Assert.False(_feature.IsRunning);
+    }
+
+    [Fact]
+    public void WhileItsOffItTakesNoWindowFromATitleBar()
+    {
+        Assert.False(_requests.SendToTray(1));
+
+        _feature.Apply(Section(Quiet));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.False(_requests.SendToTray(1));
     }
 
     [Fact]
