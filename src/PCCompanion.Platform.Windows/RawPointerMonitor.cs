@@ -9,7 +9,7 @@ namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// Reports mouse input anywhere on the desktop through raw input, which costs nothing while the
-/// mouse is still. Windows doesn't deliver it while an app running as administrator is in front,
+/// mouse is still: moves, buttons and the wheel, with the time of each. Windows doesn't deliver it while an app running as administrator is in front,
 /// unless this process runs as administrator too. A process has one raw input registration per
 /// device type, so every monitor shares one: the first monitor makes it, with a hidden window on
 /// its thread, and the last one disposed removes it. While any monitor exists, create and dispose
@@ -28,9 +28,10 @@ public sealed class RawPointerMonitor : IDisposable
 
     /// <summary>
     /// Raised on the monitors' thread for each mouse event: movement, a button or the wheel.
-    /// Read the position with <see cref="InputState.PointerPosition"/>.
+    /// Read the position with <see cref="InputState.PointerPosition"/>. Raw input can report an
+    /// event before the pointer's position follows it, and before low-level mouse hooks see it.
     /// </summary>
-    public event EventHandler? InputReceived;
+    public event EventHandler<PointerInputEventArgs>? InputReceived;
 
     /// <exception cref="InvalidOperationException">Called on another thread than the monitors'.</exception>
     public void Dispose()
@@ -118,13 +119,30 @@ public sealed class RawPointerMonitor : IDisposable
                 return;
             }
 
+            var input = Read(e.LParam);
             foreach (var monitor in _monitors)
             {
                 if (!monitor._disposed)
                 {
-                    monitor.InputReceived?.Invoke(monitor, EventArgs.Empty);
+                    monitor.InputReceived?.Invoke(monitor, input);
                 }
             }
+        }
+
+        // The mouse's button flags and their data. Input that can't be read counts as a move.
+        private static unsafe PointerInputEventArgs Read(nint handle)
+        {
+            var time = unchecked((uint)PInvoke.GetMessageTime());
+            RAWINPUT data;
+            var size = (uint)sizeof(RAWINPUT);
+            var read = PInvoke.GetRawInputData(new HRAWINPUT(handle), RAW_INPUT_DATA_COMMAND_FLAGS.RID_INPUT, &data, &size, (uint)sizeof(RAWINPUTHEADER));
+            if (read == uint.MaxValue || read < sizeof(RAWINPUTHEADER) || data.header.dwType != (uint)RID_DEVICE_INFO_TYPE.RIM_TYPEMOUSE)
+            {
+                return new PointerInputEventArgs(PointerButtonChanges.None, 0, time);
+            }
+
+            var buttons = data.data.mouse.Anonymous.Anonymous;
+            return PointerInputEventArgs.FromRawMouse(buttons.usButtonFlags, buttons.usButtonData, time);
         }
 
         private static unsafe bool Register(RAWINPUTDEVICE_FLAGS flags, HWND target)

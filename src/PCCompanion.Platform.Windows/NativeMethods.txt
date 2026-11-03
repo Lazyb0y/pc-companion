@@ -373,3 +373,7 @@ GetWindowPlacement
 SetWindowPlacement
 IsZoomed
 HWND_NOTOPMOST
+GetRawInputData
+GetMessageTime
+RAWINPUT
+RID_DEVICE_INFO_TYPE
