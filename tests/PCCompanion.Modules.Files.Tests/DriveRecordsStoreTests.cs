@@ -79,15 +79,25 @@ public sealed class DriveRecordsStoreTests : IDisposable
     }
 
     [Fact]
-    public void ARemovedDrivesRecordsAreDeleted()
+    public void RemovedDrivesRecordsAreDeletedAndOtherFilesStay()
     {
+        const string removed = "0123456789abcdef0123456789abcdef";
         var store = new DriveRecordsStore(_folder.FullPath);
         store.Save(Id, new DriveRecords());
+        store.Save(removed, new DriveRecords());
+        store.Save(DriveRecordsStore.CameraCardsKey, new DriveRecords());
+        System.IO.File.WriteAllText(Path.Join(_folder.FullPath, "notes.json"), "{}");
 
-        store.Delete(Id);
+        store.DeleteOthers([Id]);
 
-        Assert.False(System.IO.File.Exists(Path.Join(_folder.FullPath, Id + ".json")));
+        Assert.True(System.IO.File.Exists(Path.Join(_folder.FullPath, Id + ".json")));
+        Assert.False(System.IO.File.Exists(Path.Join(_folder.FullPath, removed + ".json")));
+        Assert.False(System.IO.File.Exists(Path.Join(_folder.FullPath, DriveRecordsStore.CameraCardsKey + ".json")));
+        Assert.True(System.IO.File.Exists(Path.Join(_folder.FullPath, "notes.json")));
     }
+
+    [Fact]
+    public void WithoutTheFolderNothingIsDeleted() => new DriveRecordsStore(Path.Join(_folder.FullPath, "missing")).DeleteOthers([]);
 
     [Theory]
     [InlineData(@"..\settings")]

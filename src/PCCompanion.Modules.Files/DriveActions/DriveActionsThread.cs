@@ -1,5 +1,7 @@
 using System;
+using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 
@@ -8,9 +10,10 @@ namespace PCCompanion.Modules.Files.DriveActions;
 /// <summary>
 /// Runs Drive Actions on a <see cref="MessageLoopThread{TSettings}"/> of its own, at background
 /// priority, as "Threads" in docs/features/files/drive-actions.md says: a <see cref="DriveActionsRunner"/>
-/// recognizes the drives and runs their actions there, one file at a time. The host's UI thread
-/// starts it, passes it Windows' messages and new settings, and stops it, and never waits for it,
-/// except for <see cref="MessageLoopThread{TSettings}.Join"/> when the host exits.
+/// recognizes the drives and runs their actions there, one file at a time, and answers the
+/// settings app's requests. The host's UI thread starts it, passes it Windows' messages and new
+/// settings, and stops it, and never waits for it, except for
+/// <see cref="MessageLoopThread{TSettings}.Join"/> when the host exits.
 /// </summary>
 public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsSettings>
 {
@@ -22,12 +25,14 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
     private readonly DriveActionsHistoryStore _history;
     private readonly SpecialFolders _places;
     private readonly TimeProvider _time;
+    private readonly string _pipeName;
     private readonly ILogger _logger;
     private volatile MessageWindow? _window;
     private volatile DriveActionsRunner? _runner;
     private bool _applied;
 
     /// <param name="host">Makes what the runner asks of the host's UI thread, once the thread has its window.</param>
+    /// <param name="pipeName">The pipe through which the settings app asks for the drives, the history, Run now and Undo; <see cref="DriveActionsPipe.Name"/>.</param>
     /// <param name="previous">A thread that was asked to stop, which this one waits for first, so that they don't share the history.</param>
     public DriveActionsThread(
         DriveActionsSettings settings,
@@ -37,6 +42,7 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
         DriveActionsHistoryStore history,
         SpecialFolders places,
         TimeProvider time,
+        string pipeName,
         ILogger logger,
         DriveActionsThread? previous = null)
         : base("Drive Actions", WindowClassName, settings, previous)
@@ -47,6 +53,7 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
         ArgumentNullException.ThrowIfNull(history);
         ArgumentNullException.ThrowIfNull(places);
         ArgumentNullException.ThrowIfNull(time);
+        ArgumentException.ThrowIfNullOrEmpty(pipeName);
         ArgumentNullException.ThrowIfNull(logger);
 
         _system = system;
@@ -55,6 +62,7 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
         _history = history;
         _places = places;
         _time = time;
+        _pipeName = pipeName;
         _logger = logger;
         Start();
     }
@@ -95,7 +103,7 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
         _window = window;
         var runner = new DriveActionsRunner(_system, _host(this), _records, _history, _places, _time, _logger);
         _runner = runner;
-        return new Closing(runner);
+        return new Closing(runner, Serve());
     }
 
     protected override void Apply(DriveActionsSettings settings)
@@ -116,9 +124,67 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
 
-    private sealed class Closing(DriveActionsRunner runner) : IDisposable
+    // The settings app's requests come through the pipe on the thread pool and are answered on
+    // this thread, which has the drives and the history. While the host runs as administrator
+    // there's no thread, and no pipe.
+    private RequestPipe? Serve()
     {
-        public void Dispose() => runner.Close();
+        try
+        {
+            return RequestPipe.Serve(_pipeName, DriveActionsPipe.MaximumRequestLength, AnswerAsync, exception => LogPipeFailed(_logger, exception.HResult));
+        }
+        catch (Win32Exception exception)
+        {
+            LogPipeNotServed(_logger, exception.NativeErrorCode);
+            return null;
+        }
+    }
+
+    // On the thread pool. A request that can't be read, or that the thread can't take because it
+    // ended or failed, is refused.
+    private Task<byte[]> AnswerAsync(byte[] request)
+    {
+        var refused = DriveActionsPipe.Write(new DriveActionsAnswer { Status = DriveActionsAnswerStatus.Refused });
+        if (DriveActionsPipe.ReadRequest(request) is not { } read || _window is not { } window)
+        {
+            return Task.FromResult(refused);
+        }
+
+        var answered = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var posted = window.BeginInvoke(() =>
+        {
+            var taken = false;
+            Guard(() =>
+            {
+                if (_runner is { } runner)
+                {
+                    runner.Answer(read, answer => answered.TrySetResult(DriveActionsPipe.Write(answer)));
+                    taken = true;
+                }
+            });
+
+            if (!taken)
+            {
+                answered.TrySetResult(refused);
+            }
+        });
+
+        if (!posted)
+        {
+            answered.TrySetResult(refused);
+        }
+
+        return answered.Task;
+    }
+
+    // The pipe goes first, so that no request reaches the runner once it's closed.
+    private sealed class Closing(DriveActionsRunner runner, RequestPipe? pipe) : IDisposable
+    {
+        public void Dispose()
+        {
+            pipe?.Dispose();
+            runner.Close();
+        }
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Drive Actions started on its own thread.")]
@@ -129,4 +195,10 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Drive Actions failed, so it's off until PC Companion restarts.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Drive Actions' pipe for the settings app couldn't be created (error {ErrorCode}), so the page can't show the drives or the history.")]
+    private static partial void LogPipeNotServed(ILogger logger, int errorCode);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Drive Actions' pipe for the settings app failed (error {ErrorCode}).")]
+    private static partial void LogPipeFailed(ILogger logger, int errorCode);
 }

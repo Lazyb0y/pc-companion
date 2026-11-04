@@ -40,7 +40,7 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
     {
     }
 
-    public void AddDrive(char letter, string label = "BACKUP", string fileSystem = "NTFS", uint serial = 0xA8D4F2F8, string? hardwareSerial = "0LVF0HQ5", bool locked = false, int bus = 7, bool removable = true)
+    public void AddDrive(char letter, string label = "BACKUP", string fileSystem = "NTFS", uint serial = 0xA8D4F2F8, string? hardwareSerial = "0LVF0HQ5", bool locked = false, int bus = 7, bool removable = true, bool ejectable = true)
     {
         _drives[letter] = new DriveReading(
             $@"\\?\Volume{{{letter}}}\",
@@ -56,7 +56,7 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
             Free: 32L << 30,
             bus,
             hardwareSerial,
-            Ejectable: true,
+            ejectable,
             IsWindowsDrive: false);
         _folders.Add($"{letter}:\\");
     }
@@ -192,6 +192,30 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
 
     public int Delete(string path) => _files.Remove(path) ? 0 : 2;
 
+    /// <summary>What <see cref="WriteIdFile"/> answers; with 0 it writes the file.</summary>
+    public int IdFileError { get; set; }
+
+    public int WriteIdFile(string root, string id)
+    {
+        if (IdFileError != 0)
+        {
+            return IdFileError;
+        }
+
+        AddFile(Path.Join(root, DriveIdentity.IdFileName), id.Length, attributes: FileAttributes.Hidden | FileAttributes.System, text: id);
+        return 0;
+    }
+
+    /// <summary>What the Recycle Bin does with each file.</summary>
+    public RecycleOutcome RecycleAnswer { get; set; } = RecycleOutcome.Recycled;
+
+    /// <summary>The files sent to the Recycle Bin.</summary>
+    public List<string> Recycled { get; } = [];
+
+    public bool RecycleBinDisposed { get; private set; }
+
+    public IRecycleBin CreateRecycleBin() => new RecycleBin(this);
+
     public bool HasMark(string path) => _files.TryGetValue(path, out var file) && file.Marked;
 
     public long FreeSpace(string folder) => _free.TryGetValue(char.ToUpperInvariant(folder[0]), out var free) ? free : 100L << 30;
@@ -203,6 +227,22 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
     }
 
     public IDriveActionsDevices WatchDevices() => throw new NotSupportedException("The runner's tests have no host UI thread.");
+
+    // Answers at once; the runner takes the answer on its thread, through the host's Later.
+    private sealed class RecycleBin(FakeDriveActionsSystem system) : IRecycleBin
+    {
+        public void Recycle(string path, Action asking, Action<RecycleResult> done)
+        {
+            if (system.RecycleAnswer == RecycleOutcome.Recycled && system._files.Remove(path))
+            {
+                system.Recycled.Add(path);
+            }
+
+            done(new RecycleResult(system.RecycleAnswer));
+        }
+
+        public void Dispose() => system.RecycleBinDisposed = true;
+    }
 
     internal sealed record FakeFile(long Size, DateTimeOffset Modified, FileAttributes Attributes, bool Marked, string? Text)
     {

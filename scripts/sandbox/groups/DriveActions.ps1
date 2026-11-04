@@ -9,8 +9,11 @@
 # gets nothing. A camera card encrypted with BitLocker arrives locked and gets nothing until it's
 # unlocked, and is imported then. While the session is locked, as the session's messages to the feature's window say,
 # nothing runs, and the card is asked about once it's unlocked; a card attached before the host
-# starts is asked about too. The history file has the runs, and the logs hold no drive names or
-# folders. Detailed logging is on for the Debug entries.
+# starts is asked about too. Through the pipe, as the settings app asks, the host lists the
+# drives, Run now lists the card's photos and copies only the one chosen, Undo sends its copy to
+# the Recycle Bin, and Add a drive writes a new disk's ID file and gives its entry. The history
+# file has the runs, and the logs hold no drive names or folders. Detailed logging is on for the
+# Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'DriveActionsTest'
 $documents = Join-Path $root 'Documents'
@@ -90,6 +93,32 @@ function Write-IdFile([string] $Letter) {
     Set-Content -Path $path -Value $driveId -NoNewline -Encoding ascii
     (Get-Item $path -Force).Attributes = 'Hidden, System'
 }
+
+# Asks the host through Drive Actions' pipe, as the settings app does, and returns its answer, or
+# $null when the host doesn't serve the pipe.
+function Invoke-DriveActionsPipe([hashtable] $Request) {
+    $pipe = New-Object IO.Pipes.NamedPipeClientStream('.', "PCCompanion.DriveActions.$((Get-Process -Id $PID).SessionId)", [IO.Pipes.PipeDirection]::InOut)
+    try {
+        $pipe.Connect(3000)
+        $pipe.ReadMode = [IO.Pipes.PipeTransmissionMode]::Message
+        $bytes = [Text.Encoding]::UTF8.GetBytes(($Request | ConvertTo-Json -Depth 6 -Compress))
+        $pipe.Write($bytes, 0, $bytes.Length)
+        $answer = New-Object IO.MemoryStream
+        $buffer = [byte[]]::new(65536)
+        do {
+            $read = $pipe.Read($buffer, 0, $buffer.Length)
+            if ($read -eq 0) { return $null }
+            $answer.Write($buffer, 0, $read)
+        } while (-not $pipe.IsMessageComplete)
+        [Text.Encoding]::UTF8.GetString($answer.ToArray()) | ConvertFrom-Json
+    } catch {
+        $null
+    } finally {
+        $pipe.Dispose()
+    }
+}
+
+function Get-ConnectedDrive([string] $Letter) { @((Invoke-DriveActionsPipe @{ kind = 'Drives' }).drives) | Where-Object { $_.letter -eq $Letter } }
 
 function Send-SessionChange([int] $Change) {
     $window = [Win32]::FindWindow('PCCompanion.DriveActions.Devices', $null)
@@ -227,6 +256,37 @@ Start-Process $hostExe
 Test-Check 'a card connected before the host starts is asked about' (Wait-Until { (Get-MatchCount (Get-HostLog) 'Asking whether to run the actions of the drive "?P"?\.') -gt $cardAsked } 20)
 Test-Check 'not acted on at once' ((Get-MatchCount (Get-HostLog) 'Running the actions of the drive "?P"?,') -eq $cardRuns)
 
+# The settings app's requests, through the pipe: the drives, Run now with a photo chosen, the
+# history and Undo.
+$card = Get-ConnectedDrive 'P'
+Test-Check 'the pipe lists the card as a camera card' ($card.outcome -eq 'CameraCards') ($card | ConvertTo-Json -Compress)
+$cardRequest = @{ letter = 'P'; volume = $card.volume; key = 'camera-cards' }
+$list = Invoke-DriveActionsPipe (@{ kind = 'RunNowList' } + $cardRequest)
+$listed = @(@($list.actions)[0].files)
+Test-Check 'Run now lists the card''s photos, imported before' (($listed.Count -eq 2) -and -not ($listed | Where-Object { -not $_.importedBefore })) "$($listed.Count) files"
+$runNow = Invoke-DriveActionsPipe (@{ kind = 'RunNow'; chosen = @(@{ action = 0; files = @('100TEST\IMG_0001.JPG') }) } + $cardRequest)
+Test-Check 'Run now with a photo chosen imports it again' (($runNow.status -eq 'Done') -and (Wait-Until { Test-Path "$month\IMG_0001 (2).JPG" } 20)) ($runNow | ConvertTo-Json -Compress)
+Test-Check 'and only it' (Wait-Until { (Get-HostLog) -match 'The run for the drive "?P"? ended: "?Done"?, 1 files copied, 0 skipped\.' } 15)
+$last = @((Invoke-DriveActionsPipe @{ kind = 'History' }).runs)[0]
+Test-Check 'the pipe gives the history, newest first' (@($last.actions)[0].copied -eq 1)
+$started = if ($last.started -is [DateTime]) { $last.started.ToString('o') } else { $last.started }
+$undo = Invoke-DriveActionsPipe @{ kind = 'Undo'; run = $last.id; started = $started }
+Test-Check 'Undo sends the copy to the Recycle Bin' (($undo.undone -eq 1) -and -not (Test-Path "$month\IMG_0001 (2).JPG")) ($undo | ConvertTo-Json -Compress)
+Test-Check 'and the photo stays on the card' (Test-Path 'P:\DCIM\100TEST\IMG_0001.JPG')
+
+# Add a drive writes a new disk's ID file and gives its entry; a request with another volume gets nothing.
+New-TestDisk 'newdrive' 'ntfs' 'NEWDRIVE' 'T'
+Test-Check 'a new disk is listed, and can be added' (Wait-Until { (Get-ConnectedDrive 'T').addProblem -eq 'None' } 15)
+$newDrive = Get-ConnectedDrive 'T'
+$idPath = 'T:\.pccompanion-drive'
+$wrong = Invoke-DriveActionsPipe @{ kind = 'AddDrive'; letter = 'T'; volume = $card.volume }
+Test-Check 'Add a drive with another disk''s volume is refused' (($wrong.status -eq 'NotConnected') -and -not [IO.File]::Exists($idPath)) ($wrong | ConvertTo-Json -Compress)
+$added = Invoke-DriveActionsPipe @{ kind = 'AddDrive'; letter = 'T'; volume = $newDrive.volume; name = 'USB drive' }
+$attributes = if ([IO.File]::Exists($idPath)) { [IO.File]::GetAttributes($idPath).ToString() } else { '' }
+Test-Check 'Add a drive writes the ID file, hidden and system' (($added.status -eq 'Done') -and ($attributes -match 'Hidden') -and ($attributes -match 'System')) "$($added.status) $attributes"
+Test-Check 'and gives the entry with the ID, the label and the serial number''s hash' (($added.entry.id -eq [IO.File]::ReadAllText($idPath)) -and ($added.entry.name -eq 'NEWDRIVE') -and ($added.entry.volumeSerial -eq (Get-SerialHash (Get-VolumeSerial 'T')))) ($added.entry | ConvertTo-Json -Compress)
+Dismount-TestDisk 'newdrive' 'T'
+
 # The history has the runs; the logs hold no drive names or folders.
 Stop-All
 $history = Get-Content $historyFile -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
@@ -235,6 +295,6 @@ Test-Check 'with the photos the card''s first run imported' (@($history.runs)[0]
 $hostLog = Get-HostLog
 Test-Check 'the logs hold no drive names, labels or folders' (($hostLog -notmatch 'Backup drive') -and ($hostLog -notmatch 'EOS_DIGITAL') -and ($hostLog -notmatch [regex]::Escape($documents)) -and ($hostLog -notmatch [regex]::Escape($driveId)))
 
-foreach ($disk in @(@('card', 'P'), @('backup', 'Q'), @('lookalike', 'R'), @('lockedcard', 'S'))) {
+foreach ($disk in @(@('card', 'P'), @('backup', 'Q'), @('lookalike', 'R'), @('lockedcard', 'S'), @('newdrive', 'T'))) {
     if (Test-Path "$($disk[1]):\") { Dismount-TestDisk $disk[0] $disk[1] }
 }

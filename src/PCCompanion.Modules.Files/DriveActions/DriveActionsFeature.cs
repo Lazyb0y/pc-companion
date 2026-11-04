@@ -16,11 +16,13 @@ namespace PCCompanion.Modules.Files.DriveActions;
 /// Imports from, backs up to and opens folders of the drives the user chose when they're connected.
 /// See docs/features/files/drive-actions.md.
 /// </summary>
+/// <param name="pipeName">The pipe through which the settings app asks for the drives, the history, Run now and Undo; <see cref="DriveActionsPipe.Name"/>.</param>
 public sealed partial class DriveActionsFeature(
     IDriveActionsSystem system,
     IHostNotifications notifications,
     IHostCommands commands,
     DataFolder dataFolder,
+    string pipeName,
     TimeProvider time,
     ILogger<DriveActionsFeature> logger) : IFeature, IHostMenuItems
 {
@@ -54,7 +56,7 @@ public sealed partial class DriveActionsFeature(
     private bool _paused;
 
     public DriveActionsFeature(IHostNotifications notifications, IHostCommands commands, DataFolder dataFolder, TimeProvider time, ILogger<DriveActionsFeature> logger)
-        : this(new WindowsDriveActionsSystem(), notifications, commands, dataFolder, time, logger)
+        : this(new WindowsDriveActionsSystem(), notifications, commands, dataFolder, DriveActionsPipe.Name, time, logger)
     {
     }
 
@@ -135,7 +137,7 @@ public sealed partial class DriveActionsFeature(
             });
             _devices.SessionLocked += (_, _) => Send(runner => runner.SessionLocked());
             _devices.SessionUnlocked += (_, _) => Send(runner => runner.SessionUnlocked());
-            _thread = new DriveActionsThread(read, system, thread => new Host(this, thread), _records, _history, _places, time, logger, _stopped);
+            _thread = new DriveActionsThread(read, system, thread => new Host(this, thread), _records, _history, _places, time, pipeName, logger, _stopped);
             _stopped = null;
         }
         else

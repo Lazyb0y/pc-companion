@@ -111,6 +111,41 @@ internal sealed class WindowsDriveActionsSystem : IDriveActionsSystem
         }
     }
 
+    public int WriteIdFile(string root, string id)
+    {
+        var path = Path.Join(root, DriveIdentity.IdFileName);
+        try
+        {
+            if (FileDetails.Read(path) is { } existing)
+            {
+                if (existing.IsFolder || existing.IsLink)
+                {
+                    return 80; // ERROR_FILE_EXISTS: something else has the name.
+                }
+
+                File.SetAttributes(path, FileAttributes.Normal);
+            }
+
+            File.WriteAllText(path, id);
+            File.SetAttributes(path, FileAttributes.Hidden | FileAttributes.System);
+            return 0;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return 5;
+        }
+        catch (IOException exception)
+        {
+            return exception.HResult & 0xFFFF;
+        }
+        catch (Win32Exception exception)
+        {
+            return exception.NativeErrorCode;
+        }
+    }
+
+    public IRecycleBin CreateRecycleBin() => new WindowsRecycleBin();
+
     public bool HasMark(string path) => MarkOfTheWeb.Read(path) is not null;
 
     public long FreeSpace(string folder)
