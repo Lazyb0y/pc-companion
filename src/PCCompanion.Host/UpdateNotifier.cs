@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
+using PCCompanion.Core.Features;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Localization;
@@ -26,14 +27,15 @@ internal sealed partial class UpdateNotifier : IDisposable
     private readonly UpdateChecker _checker;
     private readonly UpdateCheckStore _store;
     private readonly UpdateCheckScheduler _scheduler;
+    private readonly IHostNotifications _notifications;
     private readonly ILogger<UpdateNotifier> _logger;
     private MessageWindow? _window;
-    private TrayController? _tray;
 
-    public UpdateNotifier(UpdateChecker checker, UpdateCheckStore store, TimeProvider time, ILogger<UpdateNotifier> logger, ILogger<UpdateCheckScheduler> schedulerLogger)
+    public UpdateNotifier(UpdateChecker checker, UpdateCheckStore store, IHostNotifications notifications, TimeProvider time, ILogger<UpdateNotifier> logger, ILogger<UpdateCheckScheduler> schedulerLogger)
     {
         _checker = checker;
         _store = store;
+        _notifications = notifications;
         _logger = logger;
         _scheduler = new UpdateCheckScheduler(CheckAsync, store, time, schedulerLogger);
 
@@ -46,17 +48,14 @@ internal sealed partial class UpdateNotifier : IDisposable
         ReleaseVersion.FromAssemblyVersion(typeof(UpdateNotifier).Assembly.GetName().Version ?? new Version(0, 0, 0));
 
     /// <summary>
-    /// Shows the notifications from the host's tray icon. Call it on the window's thread, once the
-    /// icon is shown.
+    /// Shows the notifications on the host's window's thread. Call it on that thread, once the
+    /// tray icon is shown.
     /// </summary>
-    public void Attach(MessageWindow window, TrayController tray)
+    public void Attach(MessageWindow window)
     {
         ArgumentNullException.ThrowIfNull(window);
-        ArgumentNullException.ThrowIfNull(tray);
 
         _window = window;
-        _tray = tray;
-        tray.NotificationSelected += (_, _) => Task.Run(OpenReleasePage);
     }
 
     /// <summary>Starts or stops the checks; call it at startup and after every settings change.</summary>
@@ -86,7 +85,7 @@ internal sealed partial class UpdateNotifier : IDisposable
     {
         // Parsed each time: the host's language can change while it runs.
         var title = string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.UpdateNotificationTitle), version);
-        if (_tray?.ShowNotification(title, Strings.UpdateNotificationMessage) == true)
+        if (_notifications.Show(title, Strings.UpdateNotificationMessage, () => Task.Run(OpenReleasePage)))
         {
             LogShown(_logger, version);
         }
