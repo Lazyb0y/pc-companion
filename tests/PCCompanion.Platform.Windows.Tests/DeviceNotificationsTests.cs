@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using PCCompanion.Testing;
 using Xunit;
@@ -89,6 +91,47 @@ public sealed class DeviceNotificationsTests
     }
 
     [Fact]
+    public void TheLettersOfVolumesThatArriveAndGoAreReported()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var devices = new DeviceNotifications(window);
+        var arrived = new List<char>();
+        var removed = new List<char>();
+        devices.VolumesArrived += (_, e) => arrived.AddRange(e.Drives);
+        devices.VolumesRemoved += (_, e) => removed.AddRange(e.Drives);
+
+        SendVolumeChange(window.Handle, DeviceArrival, (1u << ('E' - 'A')) | (1u << ('J' - 'A')));
+        SendVolumeChange(window.Handle, DeviceRemoveComplete, 1u << ('E' - 'A'));
+
+        Assert.Equal(['E', 'J'], arrived);
+        Assert.Equal(['E'], removed);
+    }
+
+    [Fact]
+    public void AVolumeIsWatchedThroughAHandleWithoutAccessUntilItsRegistrationIsDisposed()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var devices = new DeviceNotifications(window);
+        var windowsDrive = Path.GetPathRoot(Environment.SystemDirectory)![0];
+
+        // Opening the volume without access needs no admin rights and reads nothing on it.
+        var registration = devices.WatchVolume(windowsDrive, () => { }, _ => { });
+        registration.Dispose();
+        registration.Dispose();
+    }
+
+    [Fact]
+    public void AVolumeThatIsntThereCantBeWatched()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var devices = new DeviceNotifications(window);
+        var free = Enumerable.Range(0, 26).Where(index => (DriveDevices.Letters & (1u << index)) == 0).Select(index => (char)('A' + index)).Last();
+
+        Assert.Throws<System.ComponentModel.Win32Exception>(() => { devices.WatchVolume(free, () => { }, _ => { }); });
+        Assert.Throws<ArgumentOutOfRangeException>(() => { devices.WatchVolume('1', () => { }, _ => { }); });
+    }
+
+    [Fact]
     public void DisplaysThatArriveOrLeaveAreReportedWhileWatched()
     {
         using var window = new MessageWindow(UniqueClassName());
@@ -134,6 +177,21 @@ public sealed class DeviceNotificationsTests
         RunPostedMessages();
 
         Assert.Equal(1, resumed);
+    }
+
+    // Windows sends this message, with the volumes' drive letters, rather than posting it.
+    private static void SendVolumeChange(nint window, nuint change, uint letters)
+    {
+        var broadcast = Marshal.AllocHGlobal(Marshal.SizeOf<VolumeBroadcast>());
+        try
+        {
+            Marshal.StructureToPtr(new VolumeBroadcast { Size = (uint)Marshal.SizeOf<VolumeBroadcast>(), DeviceType = 2, UnitMask = letters }, broadcast, false);
+            SendMessage(window, DeviceChange, change, broadcast);
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(broadcast);
+        }
     }
 
     // Windows sends this message, with the device interface's class and name, rather than posting it.

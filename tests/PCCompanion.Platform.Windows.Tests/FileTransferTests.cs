@@ -106,4 +106,48 @@ public sealed class FileTransferTests
         Assert.False(File.Exists(destination));
         Assert.True(File.Exists(source));
     }
+
+    [Fact]
+    public void ANewCopyTakesTheOldOnesPlace()
+    {
+        using var folder = new TemporaryFolder();
+        var file = NewFile(folder, "notes.txt", "old");
+        var newCopy = NewFile(folder, "notes.txt.new", "new");
+
+        Assert.Equal(0, FileTransfer.Replace(newCopy, file));
+
+        Assert.Equal("new", File.ReadAllText(file));
+        Assert.False(File.Exists(newCopy));
+    }
+
+    [Fact]
+    public void AReadOnlyFileIsntReplaced()
+    {
+        using var folder = new TemporaryFolder();
+        var file = NewFile(folder, "notes.txt", "old");
+        var newCopy = NewFile(folder, "notes.txt.new", "new");
+        File.SetAttributes(file, FileAttributes.ReadOnly);
+        try
+        {
+            Assert.NotEqual(0, FileTransfer.Replace(newCopy, file));
+
+            Assert.Equal("old", File.ReadAllText(file));
+            Assert.True(File.Exists(newCopy));
+        }
+        finally
+        {
+            File.SetAttributes(file, FileAttributes.Normal);
+        }
+    }
+
+    [Fact]
+    public void ReplacingWithACopyThatsGoneIsReported()
+    {
+        using var folder = new TemporaryFolder();
+        var file = NewFile(folder, "notes.txt", "old");
+
+        Assert.Equal(2, FileTransfer.Replace(Path.Combine(folder.FullPath, "missing.new"), file));
+
+        Assert.Equal("old", File.ReadAllText(file));
+    }
 }
