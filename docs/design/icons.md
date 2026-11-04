@@ -47,6 +47,8 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
   - **Clipboard Actions:** a clipboard, with an amber bolt, the action, at its bottom right.
   - **System Meters:** three meters, with their levels in amber.
 - One idea per icon. A literal, familiar object, such as a screen, a clipboard or a drive, so the icon reads without its name.
+- When a familiar symbol reads better than an object at 16 pixels, the symbol is the blue object, as the eye of Hide Apps is.
+- Features of a kind share their accent: the bolt of Clipboard Actions and Drive Actions, and the bookmark of Network Profiles and Display Profiles, a saved profile.
 - Flat shapes seen from the front, with soft gradients lit from the top left; no perspective, shadows or textures.
 - The same family as the app icon: its blue and amber, rounded corners and light from the top left.
 

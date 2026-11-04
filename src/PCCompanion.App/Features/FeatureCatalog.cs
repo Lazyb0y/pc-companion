@@ -87,16 +87,16 @@ public static class FeatureCatalog
         ]),
         new(NetworkModule.Id, "ModuleNetworkName",
         [
-            new(NetworkProfilesFeature.Definition, NetworkProfilesFeature.CurrentSupport, typeof(NetworkProfilesPage), NetworkProfilesFirstSettings.Create),
+            new(NetworkProfilesFeature.Definition, NetworkProfilesFeature.CurrentSupport, typeof(NetworkProfilesPage), NetworkProfilesFirstSettings.Create, DrawnIcon: "network-profiles"),
         ]),
         new(FilesModule.Id, "ModuleFilesName",
         [
-            new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage)),
-            new(DriveActionsFeature.Definition, DriveActionsFeature.CurrentSupport, typeof(DriveActionsPage)),
+            new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage), DrawnIcon: "folder-rules"),
+            new(DriveActionsFeature.Definition, DriveActionsFeature.CurrentSupport, typeof(DriveActionsPage), DrawnIcon: "drive-actions"),
         ]),
         new(DisplayModule.Id, "ModuleDisplayName",
         [
-            new(DisplayProfilesFeature.Definition, DisplayProfilesFeature.CurrentSupport, typeof(DisplayProfilesPage), DisplayProfilesFirstSettings.Create),
+            new(DisplayProfilesFeature.Definition, DisplayProfilesFeature.CurrentSupport, typeof(DisplayProfilesPage), DisplayProfilesFirstSettings.Create, DrawnIcon: "display-profiles"),
         ]),
     ];
 

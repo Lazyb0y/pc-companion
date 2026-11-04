@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <clipPath id="gap">
+            <path clip-rule="evenodd" d="M0 0H32V32H0ZM28.144 15.495L27.266 19.3L29.5 19.3A2.2 2.2 0 0 1 31.218 22.874L23.218 32.874A2.2 2.2 0 0 1 19.385 30.896L20.583 26.7L18.5 26.7A2.2 2.2 0 0 1 16.773 23.137L24.273 13.637A2.2 2.2 0 0 1 28.144 15.495Z"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#gap)">
+        <path fill="currentColor" fill-rule="evenodd" d="M13 2H19A1.5 1.5 0 0 1 20.5 3.5V8.5A1.5 1.5 0 0 1 19 10H13A1.5 1.5 0 0 1 11.5 8.5V3.5A1.5 1.5 0 0 1 13 2ZM14 4H15A0.5 0.5 0 0 1 15.5 4.5V6A0.5 0.5 0 0 1 15 6.5H14A0.5 0.5 0 0 1 13.5 6V4.5A0.5 0.5 0 0 1 14 4ZM17 4H18A0.5 0.5 0 0 1 18.5 4.5V6A0.5 0.5 0 0 1 18 6.5H17A0.5 0.5 0 0 1 16.5 6V4.5A0.5 0.5 0 0 1 17 4Z"/>
+        <path fill="currentColor" fill-rule="evenodd" d="M12.5 9H19.5A3.5 3.5 0 0 1 23 12.5V26.5A3.5 3.5 0 0 1 19.5 30H12.5A3.5 3.5 0 0 1 9 26.5V12.5A3.5 3.5 0 0 1 12.5 9ZM13 12.5H19A1.5 1.5 0 0 1 20.5 14V23A1.5 1.5 0 0 1 19 24.5H13A1.5 1.5 0 0 1 11.5 23V14A1.5 1.5 0 0 1 13 12.5Z"/>
+    </g>
+    <path fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" d="M26 15L18.5 24.5L23.5 24.5L21.5 31.5L29.5 21.5L24.5 21.5Z"/>
+</svg>
