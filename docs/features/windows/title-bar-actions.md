@@ -409,7 +409,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
     - with the host labeled Medium integrity, a test window running as administrator gets no action, and the host logs why;
   - **the hook:** it's set only while the pointer is on a title bar, as the host's log shows;
   - **the other features:** with Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide its app; with them off, the warning sound plays and the host logs why;
-  - **the page** in English and Arabic, in light, dark and high contrast, with screenshots;
+  - **the page** in English and Arabic, in light and dark, with screenshots;
   - no feature holds the host's UI thread, as every group checks.
 - The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
 - **What the Sandbox can't check:** a real mouse and touchpad, the foreground lock, several displays and scales, UAC on, Windows 10, Narrator, a real GPU, and apps it doesn't have. Nor can it remove the host's hook without telling the feature: Windows doesn't remove a slow hook with injected input, as the spike showed, so the unit tests check that a click the hook never saw sets it again.

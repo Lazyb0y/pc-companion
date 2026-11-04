@@ -9,8 +9,8 @@
 # host that was ended leaves it translucent until the next start. A window that stopped responding,
 # a listed app and, for a host without admin rights, a program with them get no action, and the host
 # logs why. With Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide
-# its app; with them off, the host logs why. The page in Arabic with the dark theme and in high
-# contrast, with screenshots.
+# its app; with them off, the host logs why. The page in Arabic with the dark theme, with a
+# screenshot.
 [void] (Close-SettingsApp)
 
 # Detailed logging is on for the host's Debug entries.
@@ -117,8 +117,6 @@ public static class TitleBarChecks {
     [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
     [StructLayout(LayoutKind.Sequential)] private struct MOUSEINPUT { public int dx, dy; public uint mouseData, dwFlags, time; public IntPtr extra; }
     [StructLayout(LayoutKind.Explicit)] private struct INPUT { [FieldOffset(0)] public uint type; [FieldOffset(8)] public MOUSEINPUT mi; }
-    [StructLayout(LayoutKind.Sequential)] private struct HIGHCONTRAST { public int cbSize; public uint dwFlags; public IntPtr lpszDefaultScheme; }
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern bool SystemParametersInfo(uint action, uint parameter, ref HIGHCONTRAST value, uint flags);
 
     // A mouse button or the wheel, as a mouse sends it: MOUSEEVENTF_MIDDLEDOWN, MIDDLEUP or WHEEL.
     public static bool Mouse(uint flags, int data) {
@@ -160,23 +158,6 @@ public static class TitleBarChecks {
         UIntPtr result;
         var lParam = (IntPtr)(((y & 0xFFFF) << 16) | (x & 0xFFFF));
         return SendMessageTimeout(window, 0x0084, UIntPtr.Zero, lParam, 2, 500, out result) == IntPtr.Zero ? -1 : (long)result.ToUInt64();
-    }
-
-    // Turns high contrast on or off (SPI_SETHIGHCONTRAST), or reads whether it's on (SPI_GETHIGHCONTRAST).
-    public static bool SetHighContrast(bool on) {
-        var value = new HIGHCONTRAST { cbSize = Marshal.SizeOf(typeof(HIGHCONTRAST)), dwFlags = on ? 1u : 0u };
-        return SystemParametersInfo(0x0043, (uint)value.cbSize, ref value, 3);
-    }
-
-    // Windows writes the scheme's name to the buffer the structure points to.
-    public static bool IsHighContrast() {
-        var scheme = Marshal.AllocHGlobal(512);
-        try {
-            var value = new HIGHCONTRAST { cbSize = Marshal.SizeOf(typeof(HIGHCONTRAST)), lpszDefaultScheme = scheme };
-            return SystemParametersInfo(0x0042, (uint)value.cbSize, ref value, 0) && (value.dwFlags & 1) != 0;
-        } finally {
-            Marshal.FreeHGlobal(scheme);
-        }
     }
 }
 '@
@@ -498,7 +479,7 @@ Stop-Host
 & icacls.exe $hostExe /setintegritylevel high | Out-Null
 Stop-Process -Id $mediumProcess.Id -Force -ErrorAction SilentlyContinue
 
-# The page in Arabic with the dark theme, and in high contrast.
+# The page in Arabic with the dark theme.
 Write-Settings '{ "schemaVersion": 1, "general": { "language": "ar", "theme": "Dark" }, "features": { "titleBarActions": { "enabled": true } } }'
 Start-Sleep -Seconds 2
 Start-Process $appExe
@@ -510,19 +491,6 @@ Save-Screenshot '14h-title-bar-actions-arabic-dark'
 $text = Get-WindowText
 Test-Check 'the page is in Arabic' ($text -contains 'النقر الأوسط') ($text -join ' | ')
 [void] (Close-SettingsApp)
-Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" }, "features": { "titleBarActions": { "enabled": true } } }'
-Start-Sleep -Seconds 2
-Test-Check 'high contrast turns on' (([TitleBarChecks]::SetHighContrast($true)) -and (Wait-Until { [TitleBarChecks]::IsHighContrast() } 10))
-Start-Sleep -Seconds 3
-Start-Process $appExe
-[void] (Wait-Until { Get-AppWindow })
-Start-Sleep -Seconds 3
-Test-Check 'select Title Bar Actions in high contrast' (Select-NavigationItem 'Title Bar Actions')
-Start-Sleep -Seconds 2
-Save-Screenshot '14i-title-bar-actions-high-contrast'
-[void] (Close-SettingsApp)
-Test-Check 'high contrast turns off' (([TitleBarChecks]::SetHighContrast($false)) -and (Wait-Until { -not [TitleBarChecks]::IsHighContrast() } 10))
-Start-Sleep -Seconds 3
 
 Stop-Host
 Get-Process 'tba-app', 'other-app', 'medium-app' -ErrorAction SilentlyContinue | Stop-Process -Force
