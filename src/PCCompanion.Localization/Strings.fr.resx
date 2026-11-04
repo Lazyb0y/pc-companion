@@ -3140,4 +3140,84 @@
     <value>Quand le pointeur est en haut d’une fenêtre, lit quelle fenêtre se trouve dessous, sa position et ses styles, et lui demande où est sa barre de titre ; avec des applications dans la liste, lit à quelle application elle appartient ; ne lit jamais les titres ni le contenu. Quand le pointeur reste sur une barre de titre, un hook souris empêche l’application de recevoir les clics centraux et les tours de molette qui ont une action, et compare leurs positions sans les enregistrer. Réduit et ordonne les fenêtres des autres applications, change leur opacité et marque celles qu’il a changées pour qu’elles retrouvent leur opacité après un plantage, et transmet des fenêtres à Réduire dans la zone de notification et Masquer les applications ; n’exécute aucun code dans les autres applications. N’établit aucune connexion réseau et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>Actions des lecteurs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>Faites quelque chose d'utile quand un lecteur est connecté, comme importer les photos d'une carte d'appareil photo ou sauvegarder des dossiers sur une clé USB.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} est connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>Sélectionnez pour exécuter ses actions.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>Exécution de ses actions. Ne retirez pas le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>{0} fichier importé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>{0} fichiers importés</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>{0} fichier sauvegardé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>{0} fichiers sauvegardés</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>{0} fichier ignoré</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>{0} fichiers ignorés</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>Vous pouvez retirer le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>Arrêté.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>Arrêté : le lecteur a été retiré.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>Espace insuffisant : {0} nécessaires, {1} libres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0} : pas le même lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>Un lecteur portant l'ID de ce lecteur a été connecté, mais ce n'est pas le même lecteur. Rien n'a été copié.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>Exécuter les actions de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0} : {1} sur {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>Arrêter</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

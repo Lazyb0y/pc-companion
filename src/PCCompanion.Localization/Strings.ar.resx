@@ -3252,4 +3252,132 @@
     <value>عندما يكون المؤشر قرب أعلى نافذة، يقرأ النافذة الموجودة تحته وموضعها وأنماطها، ويسألها عن مكان شريط عنوانها؛ ومع وجود تطبيقات في القائمة، يقرأ التطبيق الذي تنتمي إليه؛ ولا يقرأ العناوين أو المحتويات أبداً. عندما يستقر المؤشر على شريط عنوان، يمنع خطاف للماوس وصول النقرات الوسطى وتدويرات العجلة التي لها إجراء إلى التطبيق، ويقارن مواضعها دون تخزينها. يصغّر نوافذ التطبيقات الأخرى ويرتبها، ويغيّر عتامتها ويضع علامة على التي غيّرها لتستعيد عتامتها بعد تعطل، ويمرر النوافذ إلى «التصغير إلى منطقة الإعلامات» و«إخفاء التطبيقات»؛ ولا يشغّل أي تعليمات برمجية في التطبيقات الأخرى. لا يُجري أي اتصالات بالشبكة ولا يرسل شيئاً.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>إجراءات محركات الأقراص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>نفّذ إجراءً مفيدًا عند توصيل محرك أقراص، مثل استيراد صور بطاقة الكاميرا أو نسخ المجلدات احتياطيًا إلى محرك USB.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} متصل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>حدد لتشغيل إجراءاته.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>جارٍ تشغيل إجراءاته. لا تُزل محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_zero" xml:space="preserve">
+    <value>تم استيراد {0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>تم استيراد ملف واحد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_two" xml:space="preserve">
+    <value>تم استيراد ملفين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_few" xml:space="preserve">
+    <value>تم استيراد {0} ملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_many" xml:space="preserve">
+    <value>تم استيراد {0} ملفًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>تم استيراد {0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_zero" xml:space="preserve">
+    <value>تم نسخ {0} ملف احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>تم نسخ ملف واحد احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_two" xml:space="preserve">
+    <value>تم نسخ ملفين احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_few" xml:space="preserve">
+    <value>تم نسخ {0} ملفات احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_many" xml:space="preserve">
+    <value>تم نسخ {0} ملفًا احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>تم نسخ {0} ملف احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_zero" xml:space="preserve">
+    <value>تم تخطي {0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>تم تخطي ملف واحد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_two" xml:space="preserve">
+    <value>تم تخطي ملفين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_few" xml:space="preserve">
+    <value>تم تخطي {0} ملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_many" xml:space="preserve">
+    <value>تم تخطي {0} ملفًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>تم تخطي {0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>يمكنك إزالة محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>توقف.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>توقف: تمت إزالة محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>لا توجد مساحة كافية: المطلوب {0}، والمتاح {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}: ليس محرك الأقراص نفسه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>تم توصيل محرك أقراص يحمل معرّف محرك الأقراص هذا، لكنه ليس محرك الأقراص نفسه. لم يُنسخ أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>تشغيل إجراءات {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}: {1} من {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>إيقاف</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

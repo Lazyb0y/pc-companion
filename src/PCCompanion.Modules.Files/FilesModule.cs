@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Files.DriveActions;
 using PCCompanion.Modules.Files.FolderRules;
 
 namespace PCCompanion.Modules.Files;
@@ -17,6 +18,7 @@ public static class FilesModule
     public static IServiceCollection AddFilesModule(this IServiceCollection services)
     {
         services.AddSingleton<IFeature, FolderRulesFeature>();
+        services.AddSingleton<IFeature, DriveActionsFeature>();
         return services;
     }
 }

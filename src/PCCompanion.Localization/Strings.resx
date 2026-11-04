@@ -3140,4 +3140,84 @@
     <value>While the pointer is near the top of a window, reads which window is under it, its place and styles, and asks it where its title bar is; with apps listed, reads which app it belongs to; never reads titles or contents. While the pointer rests on a title bar, a mouse hook keeps the middle-clicks and wheel turns that have an action from the app, and compares their positions without storing them. Minimizes and orders other apps' windows, changes their opacity and marks those it changed so they get their opacity back after a crash, and passes windows to Minimize to Tray and Hide Apps; runs no code in other apps. Makes no network connections and sends nothing.</value>
     <comment>Title Bar Actions page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>Drive Actions</value>
+    <comment>Drive Actions: the feature's name, in the navigation pane, on Home, on its page and as its submenu of the PC Companion icon's menu.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>Do something useful when a drive is connected, such as importing a camera card's photos or backing up folders to a USB drive.</value>
+    <comment>Drive Actions: the feature's description, on Home and below its name on its page.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} is connected</value>
+    <comment>Drive Actions: title of the notification that asks whether to run a connected drive's actions. {0} is the drive's name, such as Backup drive. At most 63 characters with the name.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>Select to run its actions.</value>
+    <comment>Drive Actions: text of the notification below DriveActionsAskTitle; selecting the notification runs the drive's actions.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>Running its actions. Don't remove the drive.</value>
+    <comment>Drive Actions: text of the notification when a drive's actions start on their own; its title is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>Imported {0} file</value>
+    <comment>Plural form "one". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files imported to the PC.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>Imported {0} files</value>
+    <comment>Plural form "other". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files imported to the PC.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>Backed up {0} file</value>
+    <comment>Plural form "one". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files backed up to the drive.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>Backed up {0} files</value>
+    <comment>Plural form "other". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files backed up to the drive.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>{0} file skipped</value>
+    <comment>Plural form "one". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files left where they were.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>{0} files skipped</value>
+    <comment>Plural form "other". Drive Actions: line of the notification when a drive's actions are done. {0} is the number of files left where they were.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>You can remove the drive.</value>
+    <comment>Drive Actions: last line of the notification when a drive's actions are done.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>Stopped.</value>
+    <comment>Drive Actions: last line of the notification when the user stopped a drive's actions.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>Stopped: the drive was removed.</value>
+    <comment>Drive Actions: last line of the notification when a drive was ejected or pulled out while its actions ran.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>Not enough space: {0} needed, {1} free.</value>
+    <comment>Drive Actions: last line of the notification when an import or backup didn't fit. {0} is the space needed and {1} the space free, such as 12.3 GB, written as File Explorer writes sizes.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}: not the same drive</value>
+    <comment>Drive Actions: title of the notification when a drive has the ID file of a drive in the list but other serial numbers. {0} is the drive's name in the list.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>A drive with this drive's ID was connected, but it isn't the same drive. Nothing was copied.</value>
+    <comment>Drive Actions: text of the notification below DriveActionsLookAlikeTitle.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>Run actions for {0}</value>
+    <comment>Drive Actions: item of its submenu of the PC Companion icon's menu, for a connected drive. {0} is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}: {1} of {2}</value>
+    <comment>Drive Actions: dimmed item of its submenu while a drive's actions run. {0} is the drive's name, {1} the number of the file being copied and {2} the number of files.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>Stop</value>
+    <comment>Drive Actions: item of its submenu that stops the run that's going.</comment>
+  </data>
 </root>
