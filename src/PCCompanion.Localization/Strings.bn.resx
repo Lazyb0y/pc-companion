@@ -3672,4 +3672,188 @@
     <value>পুরো একটি ড্রাইভের ব্যাকআপ নেওয়া যায় না। এতে থাকা ফোল্ডার বেছে নিন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>অ্যাকশন যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>{0}-এ একটি অ্যাকশন যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>{1}-এর অ্যাকশন {0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>একটি অ্যাকশন যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>অ্যাকশনটি সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>থেকে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>ড্রাইভের একটি ফোল্ডার, এর সাবফোল্ডারসহ, যেমন DCIM। পুরো ড্রাইভের জন্য এটি খালি রাখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>ড্রাইভের ফোল্ডারটি ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>যে ফোল্ডার থেকে আমদানি করবেন, ড্রাইভের সেই ফোল্ডারটি বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>ড্রাইভের একটি ফোল্ডার বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>ধরন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>এক্সটেনশনগুলো, সেমিকোলন দিয়ে আলাদা করা। অন্য ধরনের ফাইল ড্রাইভেই থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>একটি ধরন যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>ক্যামেরার ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>ভিডিও</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>সংগীত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>ডকুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>যেখানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>পিসির একটি ফোল্ডার। বন্ধনীর অংশগুলো, যেমন {year} ও {month}, ফাইলগুলোকে তারিখ অনুযায়ী সাবফোল্ডারে সাজায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>যে ফোল্ডারে আমদানি করবেন সেটি ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>যে ফোল্ডারে আমদানি করবেন সেটি বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>সেই নামের ফাইল থাকলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>একটি সংখ্যা যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>এড়িয়ে যান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>প্রতিটি এর সাবফোল্ডারসহ ড্রাইভে একই নামের একটি ফোল্ডারে কপি হয়। ড্রাইভের কিছুই মোছা হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>ফোল্ডার যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>ডকুমেন্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>ডেস্কটপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>সংগীত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>ভিডিও</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>ব্রাউজ করুন…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>ব্যাকআপ নেওয়ার জন্য একটি ফোল্ডার বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>{0} সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>ড্রাইভের গন্তব্য</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>ড্রাইভের একটি ফোল্ডার, এর অক্ষর ছাড়া, যেমন Backup।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>ড্রাইভের একটি ফোল্ডার, এর অক্ষর ছাড়া, যেমন DCIM, অথবা ড্রাইভের জন্য খালি; অথবা পিসির একটি ফোল্ডার, এর পূর্ণ পথসহ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>যে ফোল্ডারটি খুলবেন সেটি ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>যে ফোল্ডারটি খুলবেন সেটি বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -3672,4 +3672,188 @@
     <value>No se puede copiar una unidad entera. Elige carpetas de ella.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>Agregar acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>Agregar una acción a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>Editar la acción {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>Agregar una acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>Editar la acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>Acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>Desde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>Una carpeta de la unidad, con sus subcarpetas, como DCIM. Déjala vacía para toda la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>Examinar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>Buscar la carpeta de la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>Elige la carpeta de la unidad desde la que importar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>Elige una carpeta de la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>Tipos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>Extensiones, separadas por punto y coma. Los archivos de otros tipos se quedan en la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>Agregar un tipo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>Archivos de cámara</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>Imágenes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>Videos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>Música</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>A</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>Una carpeta del PC. Las partes entre llaves, como {year} y {month}, ordenan los archivos en subcarpetas por su fecha.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>Buscar la carpeta a la que importar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>Elige la carpeta a la que importar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>Cuando ya hay un archivo con ese nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>Agregar un número</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>Omitir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>Carpetas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>Cada una se copia con sus subcarpetas en una carpeta del mismo nombre de la unidad. No se elimina nada de la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>Agregar carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>Documentos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>Imágenes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>Escritorio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>Música</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>Videos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>Examinar…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>Elige una carpeta para copiar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>Quitar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>Destino en la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>Una carpeta de la unidad, sin su letra, como Backup.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>Carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>Una carpeta de la unidad, sin su letra, como DCIM, o vacía para la unidad; o una carpeta del PC, con su ruta completa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>Buscar la carpeta que se abrirá</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>Elige la carpeta que se abrirá</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

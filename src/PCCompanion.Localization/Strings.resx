@@ -3672,4 +3672,188 @@
     <value>A whole drive can't be backed up. Choose folders on it.</value>
     <comment>Drive Actions page: why a backup's folder can't be used: it's the root of a drive.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>Add action</value>
+    <comment>Drive Actions page: button on a drive's Actions card that opens the action editor for a new action.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>Add an action to {0}</value>
+    <comment>Drive Actions page: accessible name of a drive's Add action button. {0} is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Drive Actions page: button on an action that opens it in the action editor.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>Edit action {0} of {1}</value>
+    <comment>Drive Actions page: accessible name of an action's Edit button. {0} is the action's number in the drive's list, {1} the drive's name.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>Add an action</value>
+    <comment>Drive Actions: title of the action editor for a new action.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>Edit the action</value>
+    <comment>Drive Actions: title of the action editor for an action in the list.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Drive Actions: the action editor's button that saves the action.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Drive Actions: header of the action editor's choice of what the action does.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>From</value>
+    <comment>Drive Actions: header of an import's folder on the drive in the action editor.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>A folder on the drive, with its subfolders, such as DCIM. Leave it empty for the whole drive.</value>
+    <comment>Drive Actions: note under an import's folder on the drive. DCIM is a folder name and stays as it is.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Drive Actions: button in the action editor that opens a folder picker.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>Browse for the folder on the drive</value>
+    <comment>Drive Actions: accessible name of the Browse button for an import's folder on the drive.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>Choose the folder on the drive to import from</value>
+    <comment>Drive Actions: title of the folder picker for an import's folder on the drive.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>Choose a folder on the drive.</value>
+    <comment>Drive Actions: shown when Browse for an import's folder chose a folder that isn't on the drive.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>Types</value>
+    <comment>Drive Actions: header of an import's file types in the action editor.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>Extensions, separated by semicolons. Files of other types stay on the drive.</value>
+    <comment>Drive Actions: note under an import's file types.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>Add a kind</value>
+    <comment>Drive Actions: button in the action editor that adds the extensions of a kind of file.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>Camera files</value>
+    <comment>Drive Actions: a kind of file in Add a kind: what cameras and phones save, photos, raw photos and videos.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>Pictures</value>
+    <comment>Drive Actions: a kind of file in Add a kind.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>Videos</value>
+    <comment>Drive Actions: a kind of file in Add a kind.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>Music</value>
+    <comment>Drive Actions: a kind of file in Add a kind.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Drive Actions: a kind of file in Add a kind.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>To</value>
+    <comment>Drive Actions: header of an import's destination on the PC in the action editor.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>A folder on the PC. Parts in braces, such as {year} and {month}, sort the files into subfolders by their date.</value>
+    <comment>Drive Actions: note under an import's destination. {year} and {month} are parts that stay as they are.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>Browse for the folder to import to</value>
+    <comment>Drive Actions: accessible name of the Browse button for an import's destination.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>Choose the folder to import to</value>
+    <comment>Drive Actions: title of the folder picker for an import's destination.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>When a file with that name is there</value>
+    <comment>Drive Actions: header of an import's choice when a file with the name is in the destination.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>Add a number</value>
+    <comment>Drive Actions: choice for an import when the name is taken: the copy gets a number.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>Skip</value>
+    <comment>Drive Actions: choice for an import when the name is taken: the file isn't copied.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>Folders</value>
+    <comment>Drive Actions: header of a backup's folders in the action editor.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>Each is copied with its subfolders into a folder of the same name on the drive. Nothing on the drive is deleted.</value>
+    <comment>Drive Actions: note under a backup's folders.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>Add folder</value>
+    <comment>Drive Actions: button in the action editor that adds a folder to back up.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Drive Actions: Add folder menu item that adds the user's Documents folder.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>Pictures</value>
+    <comment>Drive Actions: Add folder menu item that adds the user's Pictures folder.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>Desktop</value>
+    <comment>Drive Actions: Add folder menu item that adds the user's Desktop folder.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>Music</value>
+    <comment>Drive Actions: Add folder menu item that adds the user's Music folder.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>Videos</value>
+    <comment>Drive Actions: Add folder menu item that adds the user's Videos folder.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>Browse…</value>
+    <comment>Drive Actions: Add folder menu item that opens a folder picker.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>Choose a folder to back up</value>
+    <comment>Drive Actions: title of the folder picker for a folder to back up.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>Remove {0}</value>
+    <comment>Drive Actions: accessible name and tooltip of the button that removes a folder from a backup. {0} is the folder's path.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>Destination on the drive</value>
+    <comment>Drive Actions: header of a backup's folder on the drive in the action editor.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>A folder on the drive, without its letter, such as Backup.</value>
+    <comment>Drive Actions: note under a backup's folder on the drive. Backup is a folder name and stays as it is.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>Folder</value>
+    <comment>Drive Actions: header of the folder an Open a folder action opens, in the action editor.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>A folder on the drive, without its letter, such as DCIM, or empty for the drive; or a folder on the PC, with its full path.</value>
+    <comment>Drive Actions: note under the folder an Open a folder action opens. DCIM is a folder name and stays as it is.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>Browse for the folder to open</value>
+    <comment>Drive Actions: accessible name of the Browse button for the folder an Open a folder action opens.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>Choose the folder to open</value>
+    <comment>Drive Actions: title of the folder picker for the folder an Open a folder action opens.</comment>
+  </data>
 </root>

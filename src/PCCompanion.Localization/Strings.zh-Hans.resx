@@ -3632,4 +3632,188 @@
     <value>无法备份整个驱动器。请选择其中的文件夹。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>添加操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>向 {0} 添加操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>编辑 {1} 的操作 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>添加操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>编辑操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>从</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>驱动器上的文件夹（包括其子文件夹），例如 DCIM。留空表示整个驱动器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>浏览</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>浏览驱动器上的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>选择要从中导入的驱动器文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>请选择驱动器上的文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>类型</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>扩展名，用分号分隔。其他类型的文件会保留在驱动器上。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>添加类别</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>相机文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>视频</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>音乐</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>文档</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>到</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>电脑上的文件夹。大括号中的部分（例如 {year} 和 {month}）会按日期将文件分到子文件夹中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>浏览要导入到的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>选择要导入到的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>当已有同名文件时</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>添加编号</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>跳过</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>每个文件夹及其子文件夹都会复制到驱动器上同名的文件夹中。不会删除驱动器上的任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>添加文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>文档</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>音乐</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>视频</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>浏览…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>选择要备份的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>删除 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>驱动器上的目标位置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>驱动器上的文件夹，不含驱动器号，例如 Backup。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>驱动器上的文件夹（不含驱动器号，例如 DCIM），留空表示驱动器本身；或者电脑上的文件夹，使用完整路径。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>浏览要打开的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>选择要打开的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

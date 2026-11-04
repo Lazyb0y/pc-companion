@@ -3672,4 +3672,188 @@
     <value>Un lecteur entier ne peut pas être sauvegardé. Choisissez des dossiers qui s’y trouvent.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>Ajouter une action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>Ajouter une action à {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>Modifier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>Modifier l’action {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>Ajouter une action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>Modifier l’action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>Enregistrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>Depuis</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>Un dossier du lecteur, avec ses sous-dossiers, par exemple DCIM. Laissez-le vide pour tout le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>Parcourir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>Rechercher le dossier sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>Choisissez le dossier du lecteur depuis lequel importer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>Choisissez un dossier du lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>Types</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>Extensions, séparées par des points-virgules. Les fichiers d’autres types restent sur le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>Ajouter un genre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>Fichiers d’appareil photo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>Vidéos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>Musique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>Vers</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>Un dossier du PC. Les parties entre accolades, comme {year} et {month}, classent les fichiers dans des sous-dossiers selon leur date.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>Rechercher le dossier vers lequel importer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>Choisissez le dossier vers lequel importer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>Quand un fichier portant ce nom existe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>Ajouter un numéro</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>Ignorer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>Dossiers</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>Chacun est copié avec ses sous-dossiers dans un dossier du même nom sur le lecteur. Rien n’est supprimé sur le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>Ajouter un dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>Documents</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>Bureau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>Musique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>Vidéos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>Parcourir…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>Choisissez un dossier à sauvegarder</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>Supprimer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>Destination sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>Un dossier du lecteur, sans sa lettre, par exemple Backup.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>Dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>Un dossier du lecteur, sans sa lettre, par exemple DCIM, ou vide pour le lecteur ; ou un dossier du PC, avec son chemin complet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>Rechercher le dossier à ouvrir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>Choisissez le dossier à ouvrir</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

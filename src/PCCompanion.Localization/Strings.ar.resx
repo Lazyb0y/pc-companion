@@ -3832,4 +3832,188 @@
     <value>لا يمكن نسخ محرك أقراص كامل احتياطيًا. اختر مجلدات عليه.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAddAction" xml:space="preserve">
+    <value>إضافة إجراء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionName" xml:space="preserve">
+    <value>إضافة إجراء إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEdit" xml:space="preserve">
+    <value>تحرير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditName" xml:space="preserve">
+    <value>تحرير الإجراء {0} لـ {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddActionTitle" xml:space="preserve">
+    <value>إضافة إجراء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEditActionTitle" xml:space="preserve">
+    <value>تحرير الإجراء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSave" xml:space="preserve">
+    <value>حفظ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionHeader" xml:space="preserve">
+    <value>الإجراء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromHeader" xml:space="preserve">
+    <value>من</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFromNote" xml:space="preserve">
+    <value>مجلد على محرك الأقراص، مع مجلداته الفرعية، مثل DCIM. اتركه فارغًا لمحرك الأقراص بأكمله.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowse" xml:space="preserve">
+    <value>استعراض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromName" xml:space="preserve">
+    <value>استعراض المجلد على محرك الأقراص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFromTitle" xml:space="preserve">
+    <value>اختر المجلد على محرك الأقراص للاستيراد منه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotOnDrive" xml:space="preserve">
+    <value>اختر مجلدًا على محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesHeader" xml:space="preserve">
+    <value>الأنواع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsTypesNote" xml:space="preserve">
+    <value>الامتدادات، مفصولة بفواصل منقوطة. تبقى ملفات الأنواع الأخرى على محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddKind" xml:space="preserve">
+    <value>إضافة نوع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindCameraFiles" xml:space="preserve">
+    <value>ملفات الكاميرا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindPictures" xml:space="preserve">
+    <value>الصور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVideos" xml:space="preserve">
+    <value>مقاطع الفيديو</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMusic" xml:space="preserve">
+    <value>الموسيقى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindDocuments" xml:space="preserve">
+    <value>المستندات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToHeader" xml:space="preserve">
+    <value>إلى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsToNote" xml:space="preserve">
+    <value>مجلد على الكمبيوتر. الأجزاء بين القوسين، مثل {year} و{month}، ترتّب الملفات في مجلدات فرعية حسب تاريخها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToName" xml:space="preserve">
+    <value>استعراض المجلد للاستيراد إليه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseToTitle" xml:space="preserve">
+    <value>اختر المجلد للاستيراد إليه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsHeader" xml:space="preserve">
+    <value>عند وجود ملف بهذا الاسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsAddNumber" xml:space="preserve">
+    <value>إضافة رقم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsIfExistsSkip" xml:space="preserve">
+    <value>تخطي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersHeader" xml:space="preserve">
+    <value>المجلدات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFoldersNote" xml:space="preserve">
+    <value>يُنسخ كل منها مع مجلداته الفرعية إلى مجلد بالاسم نفسه على محرك الأقراص. لا يُحذف أي شيء على محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFolder" xml:space="preserve">
+    <value>إضافة مجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDocuments" xml:space="preserve">
+    <value>المستندات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownPictures" xml:space="preserve">
+    <value>الصور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownDesktop" xml:space="preserve">
+    <value>سطح المكتب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownMusic" xml:space="preserve">
+    <value>الموسيقى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKnownVideos" xml:space="preserve">
+    <value>مقاطع الفيديو</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseEllipsis" xml:space="preserve">
+    <value>استعراض…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFoldersTitle" xml:space="preserve">
+    <value>اختر مجلدًا لنسخه احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveFolderName" xml:space="preserve">
+    <value>إزالة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationHeader" xml:space="preserve">
+    <value>الوجهة على محرك الأقراص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackupDestinationNote" xml:space="preserve">
+    <value>مجلد على محرك الأقراص، بدون حرفه، مثل Backup.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderHeader" xml:space="preserve">
+    <value>المجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNote" xml:space="preserve">
+    <value>مجلد على محرك الأقراص، بدون حرفه، مثل DCIM، أو فارغ لمحرك الأقراص؛ أو مجلد على الكمبيوتر، بمساره الكامل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderName" xml:space="preserve">
+    <value>استعراض المجلد المراد فتحه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBrowseFolderTitle" xml:space="preserve">
+    <value>اختر المجلد المراد فتحه</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
