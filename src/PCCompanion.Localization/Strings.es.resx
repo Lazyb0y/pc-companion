@@ -3228,4 +3228,448 @@
     <value>Windows no expulsó la unidad. Puede que un programa la esté usando.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAdministratorInfo" xml:space="preserve">
+    <value>Mientras PC Companion se ejecuta como administrador tras un aviso de UAC, Acciones de unidades está en pausa: nunca toca archivos con derechos de administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotAnsweringInfo" xml:space="preserve">
+    <value>PC Companion no responde, así que la página no puede mostrar qué unidades están conectadas ni agregar una. Asegúrate de que PC Companion se esté ejecutando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAutoPlayInfo" xml:space="preserve">
+    <value>La reproducción automática de Windows también puede preguntar qué hacer cuando se conecta una unidad. Para que deje de preguntar, configura las unidades extraíbles y las tarjetas de memoria en No realizar ninguna acción.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenAutoPlaySettings" xml:space="preserve">
+    <value>Abrir la configuración de reproducción automática</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDrivesHeader" xml:space="preserve">
+    <value>Unidades</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDrivesDescription" xml:space="preserve">
+    <value>Lo que hace PC Companion cuando se conecta cada unidad. Reconoce una unidad por un identificador que escribe en ella y por los números de serie de la unidad, nunca por su nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDrive" xml:space="preserve">
+    <value>Agregar una unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNoDrives" xml:space="preserve">
+    <value>Aún no hay unidades. Conecta una unidad o la tarjeta de memoria de una cámara y selecciona Agregar una unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRename" xml:space="preserve">
+    <value>Cambiar nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemove" xml:space="preserve">
+    <value>Quitar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveTitle" xml:space="preserve">
+    <value>¿Quitar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveText" xml:space="preserve">
+    <value>PC Companion olvida esta unidad y lo que importó desde ella y copió en ella. El archivo de identificador y las copias de seguridad se quedan en la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoveUp" xml:space="preserve">
+    <value>Subir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoveDown" xml:space="preserve">
+    <value>Bajar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveActionTitle" xml:space="preserve">
+    <value>¿Quitar esta acción?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenConnectedHeader" xml:space="preserve">
+    <value>Al conectarse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenAsk" xml:space="preserve">
+    <value>Preguntar primero</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenAct" xml:space="preserve">
+    <value>Actuar de inmediato</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenNothing" xml:space="preserve">
+    <value>No hacer nada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenUnknown" xml:space="preserve">
+    <value>Elige qué ocurre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenConnectedName" xml:space="preserve">
+    <value>Cuando se conecte {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectHeader" xml:space="preserve">
+    <value>Expulsar al terminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectDescription" xml:space="preserve">
+    <value>Cuando terminan las acciones, PC Companion pide a Windows que expulse la unidad para poder quitarla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectName" xml:space="preserve">
+    <value>Expulsar {0} al terminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionsHeader" xml:space="preserve">
+    <value>Acciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionsDescription" xml:space="preserve">
+    <value>Se ejecutan en este orden, de una en una. Nunca se ejecuta nada de la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNoActions" xml:space="preserve">
+    <value>Aún no hay acciones.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionMoreName" xml:space="preserve">
+    <value>Más opciones para la acción {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionImport" xml:space="preserve">
+    <value>Importar desde la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionBackUp" xml:space="preserve">
+    <value>Hacer una copia de seguridad en la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionOpenFolder" xml:space="preserve">
+    <value>Abrir una carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionOther" xml:space="preserve">
+    <value>Acción de una versión más reciente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryImport" xml:space="preserve">
+    <value>Importa desde {0} a {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryImportDrive" xml:space="preserve">
+    <value>Importa desde la unidad a {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryBackUp" xml:space="preserve">
+    <value>Copia {0} en {1} de la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenDrive" xml:space="preserve">
+    <value>Abre la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenDriveFolder" xml:space="preserve">
+    <value>Abre {0} en la unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenFolder" xml:space="preserve">
+    <value>Abre {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryProblem" xml:space="preserve">
+    <value>No se usa. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBitLockerInfo" xml:space="preserve">
+    <value>Cualquiera que tenga esta unidad puede leer sus copias de seguridad. Activa BitLocker To Go para protegerlas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDrive" xml:space="preserve">
+    <value>Usar esta unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDriveTitle" xml:space="preserve">
+    <value>¿Usar esta unidad para {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDriveText" xml:space="preserve">
+    <value>Tiene el archivo de identificador de esta unidad pero otros números de serie, como una copia de la unidad o la misma tarjeta en otro lector de tarjetas. Úsala solo si es tuya: recibirá las copias de seguridad de esta unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeInfo" xml:space="preserve">
+    <value>Hay una unidad con el identificador de esta unidad pero otros números de serie conectada como {0}, así que no se copia nada en ella ni desde ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotRecognizedInfo" xml:space="preserve">
+    <value>Hay una unidad con los números de serie de esta unidad pero sin su archivo de identificador conectada como {0}, así que no se reconoce.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddAgain" xml:space="preserve">
+    <value>Agregar de nuevo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusConnected" xml:space="preserve">
+    <value>Conectada como {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusLocked" xml:space="preserve">
+    <value>Conectada como {0}, bloqueada con BitLocker</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusNotConnected" xml:space="preserve">
+    <value>No conectada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusRunning" xml:space="preserve">
+    <value>Ejecutando sus acciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsPermissions" xml:space="preserve">
+    <value>Lee las unidades que agregas: su archivo de identificador, sus números de serie y los archivos que copian sus acciones, que nunca abre ni ejecuta. Escribe el archivo de identificador y las copias de seguridad en esas unidades, y copia los archivos importados en las carpetas que elijas. Guarda el historial, con nombres de archivo, en este PC durante 30 días, y lo que importó y copió hasta que la unidad se quita de la lista.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCameraCards" xml:space="preserve">
+    <value>Tarjetas de cámara</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAdd" xml:space="preserve">
+    <value>Agregar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDescription" xml:space="preserve">
+    <value>Al agregar una unidad se escribe un pequeño archivo oculto, .pccompanion-drive, en su raíz. PC Companion reconoce la unidad por él y por sus números de serie.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddCameraCardsDetails" xml:space="preserve">
+    <value>Cualquier tarjeta de memoria o unidad con una carpeta DCIM, donde las cámaras guardan sus fotos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddCameraCardsThere" xml:space="preserve">
+    <value>Tarjetas de cámara ya está en la lista.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDriveName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDriveDetails" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLooking" xml:space="preserve">
+    <value>Buscando unidades conectadas…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNone" xml:space="preserve">
+    <value>No hay conectada ninguna unidad que PC Companion pueda usar, como una unidad USB, una tarjeta de memoria o un disco externo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNotAnswering" xml:space="preserve">
+    <value>PC Companion no responde, así que no puede mostrar las unidades conectadas. Activa Acciones de unidades y asegúrate de que PC Companion se esté ejecutando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLocked" xml:space="preserve">
+    <value>Bloqueada con BitLocker. Desbloquéala primero.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddReadOnly" xml:space="preserve">
+    <value>PC Companion no puede escribir en ella, como cuando el interruptor de bloqueo de una tarjeta está activado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddAlreadyAdded" xml:space="preserve">
+    <value>Ya está en la lista.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLookAlike" xml:space="preserve">
+    <value>Tiene el archivo de identificador de una unidad de la lista, con otros números de serie. Usar esta unidad, en esa unidad, puede usarla en su lugar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNotCounted" xml:space="preserve">
+    <value>PC Companion no usa este tipo de unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFailed" xml:space="preserve">
+    <value>Windows no dejó que PC Companion escribiera en la unidad (error {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddGone" xml:space="preserve">
+    <value>La unidad ya no está conectada, u otra unidad tomó su letra.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotAnswering" xml:space="preserve">
+    <value>PC Companion no respondió. Vuelve a intentarlo en un momento.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindUsbDrive" xml:space="preserve">
+    <value>Unidad USB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMemoryCard" xml:space="preserve">
+    <value>Tarjeta de memoria</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindExternalDisk" xml:space="preserve">
+    <value>Disco externo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVirtualDisk" xml:space="preserve">
+    <value>Disco virtual</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNumberedName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRenameTitle" xml:space="preserve">
+    <value>Cambiar el nombre de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameHeader" xml:space="preserve">
+    <value>Nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameEmpty" xml:space="preserve">
+    <value>Escribe un nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameTooLong" xml:space="preserve">
+    <value>Un nombre puede tener hasta {0} caracteres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameTaken" xml:space="preserve">
+    <value>Otra unidad de la lista tiene este nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNoName" xml:space="preserve">
+    <value>Esta unidad no tiene nombre, así que no se usa. Cámbiale el nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNameTooLong" xml:space="preserve">
+    <value>El nombre de esta unidad es demasiado largo, así que no se usa. Cámbiale el nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveSameName" xml:space="preserve">
+    <value>Una unidad anterior de la lista tiene el mismo nombre, así que esta no se usa. Cámbiale el nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveUnknownKind" xml:space="preserve">
+    <value>Esta unidad es de una versión más reciente de PC Companion, así que esta versión no la usa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveUnknownWhenConnected" xml:space="preserve">
+    <value>Al conectarse tiene una opción de una versión más reciente de PC Companion, así que esta versión no usa la unidad. Elige una abajo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNotAdded" xml:space="preserve">
+    <value>Esta unidad no tiene identificador, así que PC Companion no puede reconocerla. Quítala y vuelve a agregar la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveSecondCameraCards" xml:space="preserve">
+    <value>Tarjetas de cámara ya está en la lista, así que esta no se usa.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveTooMany" xml:space="preserve">
+    <value>Acciones de unidades solo usa las primeras {0} unidades.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionUnknown" xml:space="preserve">
+    <value>Es de una versión más reciente de PC Companion, con una acción que esta versión no conoce.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidDriveFolder" xml:space="preserve">
+    <value>Su carpeta de la unidad no es válida. Escríbela sin la letra de la unidad, como DCIM.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNoTypes" xml:space="preserve">
+    <value>No tiene tipos de archivo, así que no importaría nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidType" xml:space="preserve">
+    <value>Una extensión está vacía, tiene un punto dentro o tiene caracteres que un nombre de archivo no puede tener.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionDestinationNotAllowed" xml:space="preserve">
+    <value>Sus archivos no pueden ir a esta carpeta. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionUnknownIfExists" xml:space="preserve">
+    <value>Es de una versión más reciente de PC Companion, con una opción para nombres en uso que esta versión no conoce.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNotForCameraCards" xml:space="preserve">
+    <value>Las tarjetas de cámara solo traen archivos al PC, así que no pueden recibir copias de seguridad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNoFolders" xml:space="preserve">
+    <value>No tiene carpetas que copiar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionTooManyFolders" xml:space="preserve">
+    <value>Una copia de seguridad puede tener hasta {0} carpetas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionFolderNotAllowed" xml:space="preserve">
+    <value>No se puede copiar una carpeta. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionSameFolderName" xml:space="preserve">
+    <value>Dos de sus carpetas tienen el mismo nombre, así que compartirían una carpeta en la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidFolder" xml:space="preserve">
+    <value>La carpeta que se debe abrir no es ni una carpeta de la unidad ni una ruta completa del PC.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionTooMany" xml:space="preserve">
+    <value>Acciones de unidades solo usa las primeras {0} acciones de una unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNoPath" xml:space="preserve">
+    <value>Elige una carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderInvalidPath" xml:space="preserve">
+    <value>La ruta tiene caracteres que una carpeta no puede tener.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNotFullPath" xml:space="preserve">
+    <value>Escribe una ruta completa que empiece por una unidad, como C:\, o por una carpeta compartida.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderWindows" xml:space="preserve">
+    <value>Está en la carpeta de Windows, que solo pueden cambiar los administradores.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderProgramFiles" xml:space="preserve">
+    <value>Está en Program Files, que solo pueden cambiar los administradores.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderDataFolder" xml:space="preserve">
+    <value>Está en la carpeta de datos de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderSystem" xml:space="preserve">
+    <value>Es una carpeta oculta del sistema, que solo usa Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderInvalidPart" xml:space="preserve">
+    <value>Una parte entre llaves no es una que PC Companion conozca, o el nombre de una carpeta tiene caracteres que no puede tener.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderRoot" xml:space="preserve">
+    <value>No se puede copiar una unidad entera. Elige carpetas de ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

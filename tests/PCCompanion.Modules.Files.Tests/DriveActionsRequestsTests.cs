@@ -78,6 +78,47 @@ public sealed class DriveActionsRequestsTests : IDisposable
     }
 
     [Fact]
+    public void ADrivesKeyIsGivenWithIt()
+    {
+        Apply(Cards(), Backup());
+        AddBackupDrive('E');
+        AddCard('F');
+        Arrive('E', 'F');
+
+        var answer = Ask(new DriveActionsRequest { Kind = DriveActionsRequestKind.Drives });
+
+        Assert.Equal([Id, DriveRecordsStore.CameraCardsKey], answer.Drives.Select(drive => drive.Key));
+    }
+
+    [Fact]
+    public void ADriveWhoseIdFileIsGoneIsTheListsDriveWithItsSerials()
+    {
+        Apply(Backup());
+        _system.AddDrive('E', serial: Serial, hardwareSerial: HardwareSerial);
+        _system.AddDrive('F', serial: 0x12345678, hardwareSerial: HardwareSerial);
+        Arrive('E', 'F');
+
+        var answer = Ask(new DriveActionsRequest { Kind = DriveActionsRequestKind.Drives });
+
+        Assert.Equal((RecognitionOutcome.NotRecognized, 0, Id), (answer.Drives[0].Outcome, answer.Drives[0].Drive, answer.Drives[0].Key));
+        Assert.Equal((RecognitionOutcome.NotRecognized, -1, ""), (answer.Drives[1].Outcome, answer.Drives[1].Drive, answer.Drives[1].Key));
+    }
+
+    [Fact]
+    public void ALockedDriveIsTheListsDriveWithItsHardwareSerial()
+    {
+        Apply(Backup());
+        _system.AddDrive('E', hardwareSerial: HardwareSerial, locked: true);
+        _system.AddDrive('F', hardwareSerial: null, locked: true);
+        Arrive('E', 'F');
+
+        var answer = Ask(new DriveActionsRequest { Kind = DriveActionsRequestKind.Drives });
+
+        Assert.Equal((RecognitionOutcome.Locked, 0), (answer.Drives[0].Outcome, answer.Drives[0].Drive));
+        Assert.Equal((RecognitionOutcome.Locked, -1), (answer.Drives[1].Outcome, answer.Drives[1].Drive));
+    }
+
+    [Fact]
     public void AddingADriveWritesItsIdFileAndGivesItsEntry()
     {
         Apply();

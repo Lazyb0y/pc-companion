@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.DriveActions.AddDriveDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
+    xmlns:local="using:PCCompanion.App.Features.DriveActions"
+    CloseButtonText="{app:Localized Key=DriveActionsCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind List.CanAdd, Mode=OneWay}"
+    PrimaryButtonClick="OnAddClick"
+    PrimaryButtonText="{app:Localized Key=DriveActionsAdd}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{app:Localized Key=DriveActionsAddDrive}">
+
+    <StackPanel MinWidth="440" Spacing="8">
+        <TextBlock
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            Text="{app:Localized Key=DriveActionsAddDescription}"
+            TextWrapping="Wrap" />
+        <ScrollViewer MaxHeight="400" HorizontalScrollMode="Disabled">
+            <ItemsControl IsTabStop="False" ItemsSource="{x:Bind List.Choices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:AddDriveChoice">
+                        <RadioButton
+                            Padding="8,6,0,6"
+                            AutomationProperties.HelpText="{x:Bind Details}"
+                            AutomationProperties.Name="{x:Bind Name}"
+                            Checked="OnChoiceChecked"
+                            GroupName="Drives"
+                            IsEnabled="{x:Bind CanAdd}"
+                            Tag="{x:Bind Index}">
+                            <StackPanel>
+                                <TextBlock Text="{x:Bind Name}" TextWrapping="Wrap" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="{x:Bind Details}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </RadioButton>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <TextBlock
+            controls:Announcement.IsLive="True"
+            Text="{x:Bind List.Status, Mode=OneWay}"
+            TextWrapping="Wrap"
+            Visibility="{x:Bind List.HasStatus, Mode=OneWay}" />
+    </StackPanel>
+</ContentDialog>

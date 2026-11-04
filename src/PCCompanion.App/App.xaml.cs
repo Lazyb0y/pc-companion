@@ -14,6 +14,7 @@ using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
+using PCCompanion.App.Features.DriveActions;
 using PCCompanion.App.Features.DropDownApps;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
@@ -187,6 +188,7 @@ public partial class App : Application
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()
             .AddTransient<FolderRulesViewModel>()
+            .AddTransient<DriveActionsViewModel>()
             .AddTransient<DisplayProfilesViewModel>()
             .BuildServiceProvider();
     }

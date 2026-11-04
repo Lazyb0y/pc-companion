@@ -6,6 +6,7 @@ using PCCompanion.App.Features.AppWindows;
 using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
+using PCCompanion.App.Features.DriveActions;
 using PCCompanion.App.Features.DropDownApps;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
@@ -23,6 +24,7 @@ using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Display;
 using PCCompanion.Modules.Display.DisplayProfiles;
 using PCCompanion.Modules.Files;
+using PCCompanion.Modules.Files.DriveActions;
 using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
@@ -86,6 +88,7 @@ public static class FeatureCatalog
         new(FilesModule.Id, "ModuleFilesName",
         [
             new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage)),
+            new(DriveActionsFeature.Definition, DriveActionsFeature.CurrentSupport, typeof(DriveActionsPage)),
         ]),
         new(DisplayModule.Id, "ModuleDisplayName",
         [

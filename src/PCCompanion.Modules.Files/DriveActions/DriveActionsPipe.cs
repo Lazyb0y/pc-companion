@@ -121,8 +121,15 @@ public sealed record ConnectedDriveInfo
 
     public RecognitionOutcome Outcome { get; set; }
 
-    /// <summary>Its number in the list, for a drive that's recognized, a look-alike or Camera cards; -1 otherwise.</summary>
+    /// <summary>
+    /// Its number in the list: for a drive that's recognized, a look-alike or Camera cards; for one
+    /// that isn't recognized, the list's drive with its serial numbers, as when its ID file was
+    /// deleted; for a locked one, the list's drive with its hardware serial number; -1 otherwise.
+    /// </summary>
     public int Drive { get; set; } = -1;
+
+    /// <summary>The key of the list's drive <see cref="Drive"/> names, or an empty string.</summary>
+    public string Key { get; set; } = string.Empty;
 
     /// <summary>Why it can't be added to the list, or <see cref="DriveActions.AddProblem.None"/>.</summary>
     public AddProblem AddProblem { get; set; }
