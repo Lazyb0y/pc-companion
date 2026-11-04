@@ -71,6 +71,21 @@ public static class FileTransfer
         }
     }
 
+    /// <summary>
+    /// Puts <paramref name="newCopy"/> in the place of <paramref name="file"/>, which it replaces in
+    /// one step, so that either the old file or the new one is there, also when the drive is ejected
+    /// or pulled out meanwhile. A read-only file isn't replaced. Returns 0, or Windows' error code.
+    /// </summary>
+    public static int Replace(string newCopy, string file)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(newCopy);
+        ArgumentException.ThrowIfNullOrEmpty(file);
+
+        return PInvoke.MoveFileEx(newCopy, file, MOVE_FILE_FLAGS.MOVEFILE_REPLACE_EXISTING | MOVE_FILE_FLAGS.MOVEFILE_WRITE_THROUGH)
+            ? 0
+            : Marshal.GetLastPInvokeError();
+    }
+
     // The Windows error code inside an HRESULT, or the HRESULT itself when it holds none.
     private static int ErrorCode(HRESULT result) =>
         ((uint)result.Value & 0xFFFF0000) == 0x80070000 ? result.Value & 0xFFFF : result.Value;
