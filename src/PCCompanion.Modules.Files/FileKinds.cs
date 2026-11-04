@@ -12,6 +12,9 @@ public enum FileKind
     Music,
     Archives,
     Installers,
+
+    /// <summary>What cameras and phones save: photos, raw photos and videos.</summary>
+    CameraFiles,
 }
 
 /// <summary>
@@ -28,6 +31,7 @@ public static class FileKinds
         FileKind.Music => ["mp3", "wav", "flac", "aac", "m4a", "ogg", "opus", "wma"],
         FileKind.Archives => ["zip", "7z", "rar", "tar", "gz", "bz2", "xz", "zst", "cab"],
         FileKind.Installers => ["exe", "msi", "msix", "msixbundle", "appx", "appxbundle"],
+        FileKind.CameraFiles => ["jpg", "jpeg", "heic", "heif", "png", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2", "raf", "orf", "rw2", "pef", "srw", "x3f", "3fr", "iiq", "mp4", "mov", "m4v", "avi", "mts", "m2ts", "3gp", "mpg"],
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "Unknown file kind."),
     };
 }
