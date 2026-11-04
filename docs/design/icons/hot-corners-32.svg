@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#3940D6"/>
+        </linearGradient>
+        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F3F7FF"/>
+            <stop offset="1" stop-color="#CBD9FF"/>
+        </linearGradient>
+        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFD25E"/>
+            <stop offset="1" stop-color="#FF8A3C"/>
+        </linearGradient>
+        <clipPath id="gap">
+            <path clip-rule="evenodd" d="M0 0H32V32H0ZM16.958 12.853L25.598 20.503A2.2 2.2 0 0 1 24.14 24.35L23.764 24.35L24.324 25.519A2.2 2.2 0 0 1 23.25 28.473L21.27 29.373A2.2 2.2 0 0 1 18.368 28.305L17.561 26.583L16.975 27.113A2.2 2.2 0 0 1 13.3 25.48L13.3 14.5A2.2 2.2 0 0 1 16.958 12.853Z"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#gap)">
+        <rect x="2" y="5" width="28" height="22" rx="4" fill="url(#frame)"/>
+        <rect x="2" y="5" width="28" height="22" rx="4" fill="url(#highlight)"/>
+        <rect x="4.5" y="7.5" width="23" height="17" rx="2" fill="url(#glass)"/>
+        <path fill="url(#accent)" d="M4.5 9.5A2 2 0 0 1 6.5 7.5H14A9.5 9.5 0 0 1 4.5 17Z"/>
+    </g>
+    <path fill="#FFFFFF" stroke="#2B2FA8" stroke-width="1.4" stroke-linejoin="round" d="M15.5 14.5L15.5 25.48L18.29 22.96L20.36 27.37L22.34 26.47L20.27 22.15L24.14 22.15Z"/>
+</svg>

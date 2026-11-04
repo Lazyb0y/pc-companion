@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#3940D6"/>
+        </linearGradient>
+        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F3F7FF"/>
+            <stop offset="1" stop-color="#CBD9FF"/>
+        </linearGradient>
+        <linearGradient id="deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3F55D9"/>
+            <stop offset="1" stop-color="#2B2FA8"/>
+        </linearGradient>
+        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFD25E"/>
+            <stop offset="1" stop-color="#FF8A3C"/>
+        </linearGradient>
+        <clipPath id="gap">
+            <path clip-rule="evenodd" d="M0 0H20V20H0ZM18.052 9.388L17.549 11.4L18.5 11.4A1.6 1.6 0 0 1 19.768 13.976L14.768 20.476A1.6 1.6 0 0 1 11.948 19.112L12.451 17.1L11.5 17.1A1.6 1.6 0 0 1 10.232 14.524L15.232 8.024A1.6 1.6 0 0 1 18.052 9.388Z"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#gap)">
+        <rect x="2" y="2" width="14" height="17" rx="2.5" fill="url(#frame)"/>
+        <rect x="2" y="2" width="14" height="17" rx="2.5" fill="url(#highlight)"/>
+        <rect x="4" y="5" width="10" height="12" rx="1" fill="url(#glass)"/>
+        <rect x="6" y="7" width="6" height="1" rx="0" fill="#9DB0F5"/>
+        <rect x="6" y="10" width="4" height="1" rx="0" fill="#9DB0F5"/>
+        <rect x="6" y="1" width="6" height="3.5" rx="1" fill="url(#deep)"/>
+    </g>
+    <path fill="url(#accent)" stroke="url(#accent)" stroke-width="0.8" stroke-linejoin="round" d="M16.5 9L11.5 15.5L14.5 15.5L13.5 19.5L18.5 13L15.5 13Z"/>
+</svg>
