@@ -24,11 +24,13 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 
 - Two rounded squares: a large blue one at the bottom left, the PC, and a smaller amber one at the top right, the companion that adds to it. The amber square is tilted 10° clockwise and lies over the blue one's top-right corner, and where they overlap the icon is light cream.
 - Abstract: no object, letters or text.
-- Drawn on a 48-pixel grid, and by hand at 32, 24, 20 and 16 pixels, with the blue square's edges on whole pixels. Larger sizes scale the 48-pixel drawing.
+- Drawn on a 48-pixel grid, and by hand at 64, 40, 32, 24, 20 and 16 pixels, with the blue square's edges on whole pixels. Other sizes, such as 256 pixels, scale the 48-pixel drawing.
 
 | Size | Blue square: x, y, side, corner radius | Amber square: center, side, corner radius |
 |---|---|---|
+| 64 | 4, 17, 43, 12 | (45, 19), 29.5, 8.75 |
 | 48 | 3, 13, 32, 9 | (33.5, 14.5), 22, 6.5 |
+| 40 | 2, 11, 27, 7.5 | (27.75, 12.25), 18.5, 5.5 |
 | 32 | 2, 9, 21, 6 | (22, 10), 14.5, 4.25 |
 | 24 | 1, 7, 16, 4.5 | (16.5, 7.5), 11, 3.25 |
 | 20 | 1, 5, 14, 4 | (14, 6), 9, 2.7 |
