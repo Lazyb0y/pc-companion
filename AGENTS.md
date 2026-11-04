@@ -57,6 +57,7 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 
 - WinUI 3 (Windows App SDK). Navigation must be easy, with clear labels and descriptions.
 - Use our own icon; no Microsoft logos or look-alike branding.
+- Draw the app icon and feature icons as [Icons](docs/design/icons.md) says.
 - Support light and dark themes, keyboard navigation, accessibility, high DPI, multiple monitors and right-to-left layouts.
 
 ## Localization
