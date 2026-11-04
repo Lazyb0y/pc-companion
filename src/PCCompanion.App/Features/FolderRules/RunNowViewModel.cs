@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 
 namespace PCCompanion.App.Features.FolderRules;

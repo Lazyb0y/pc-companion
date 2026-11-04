@@ -1,7 +1,7 @@
 using System;
 using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>
 /// Moves files to the Recycle Bin on a thread of its own, one at a time, so that while Windows

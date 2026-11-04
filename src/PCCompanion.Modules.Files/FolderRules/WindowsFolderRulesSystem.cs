@@ -90,15 +90,6 @@ internal sealed class WindowsFolderRulesSystem : IFolderRulesSystem
         }
     }
 
-    private sealed class WindowsRecycleBin : IRecycleBin
-    {
-        private readonly RecycleBin _bin = new();
-
-        public void Recycle(string path, Action asking, Action<RecycleResult> done) => _bin.Recycle(path, asking, done);
-
-        public void Dispose() => _bin.Dispose();
-    }
-
     // On the host's UI thread, with a hidden window of its own for Windows' messages.
     private sealed class WindowsDeviceWatch : IDeviceWatch
     {

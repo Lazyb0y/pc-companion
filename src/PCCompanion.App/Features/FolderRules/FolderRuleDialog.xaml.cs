@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Platform.Windows;
 using WinRT.Interop;

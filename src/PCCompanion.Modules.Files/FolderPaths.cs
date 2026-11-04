@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>
 /// The paths of folders as the settings give them, read without the disk.

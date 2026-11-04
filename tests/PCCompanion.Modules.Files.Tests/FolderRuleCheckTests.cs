@@ -33,7 +33,7 @@ public sealed class FolderRuleCheckTests
     [InlineData(@"C:\Users\Ana\AppData\Roaming\App")]
     public void TheseFoldersCanBeWatched(string path)
     {
-        Assert.Equal(FolderProblem.None, FolderRuleCheck.CheckFolder(path, Places));
+        Assert.Equal(FolderProblem.None, FolderChecks.CheckFolder(path, Places));
     }
 
     [Theory]
@@ -58,7 +58,7 @@ public sealed class FolderRuleCheckTests
     [InlineData(@"C:\Users\Ana\AppData\Local\PCCompanion\Logs", FolderProblem.DataFolder)]
     public void TheseFoldersCantBeWatched(string path, FolderProblem problem)
     {
-        Assert.Equal(problem, FolderRuleCheck.CheckFolder(path, Places));
+        Assert.Equal(problem, FolderChecks.CheckFolder(path, Places));
     }
 
     [Theory]
@@ -69,7 +69,7 @@ public sealed class FolderRuleCheckTests
     [InlineData(@"C:\ProgramDataBackup", false)]
     public void FoldersWhereProgramsKeepTheirFilesGetAWarning(string path, bool warning)
     {
-        Assert.Equal(warning, FolderRuleCheck.IsProgramData(path, Places));
+        Assert.Equal(warning, FolderChecks.IsProgramData(path, Places));
     }
 
     [Theory]
@@ -86,7 +86,7 @@ public sealed class FolderRuleCheckTests
     [InlineData(@"D:\Invoices\{year}\..", FolderProblem.InvalidPart)]
     public void ADestinationIsCheckedByTheFolderItStartsWith(string destination, FolderProblem problem)
     {
-        Assert.Equal(problem, FolderRuleCheck.CheckDestination(destination, Places));
+        Assert.Equal(problem, FolderChecks.CheckDestination(destination, Places));
     }
 
     [Fact]
@@ -347,10 +347,10 @@ public sealed class FolderRuleCheckTests
         var dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\PCCompanion";
         var places = SpecialFolders.ForCurrentUser(dataFolder);
 
-        Assert.Equal(FolderProblem.WindowsFolder, FolderRuleCheck.CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.System), places));
-        Assert.Equal(FolderProblem.ProgramFiles, FolderRuleCheck.CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), places));
-        Assert.Equal(FolderProblem.DataFolder, FolderRuleCheck.CheckFolder(dataFolder, places));
-        Assert.True(FolderRuleCheck.IsProgramData(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), places));
-        Assert.False(FolderRuleCheck.IsProgramData(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), places));
+        Assert.Equal(FolderProblem.WindowsFolder, FolderChecks.CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.System), places));
+        Assert.Equal(FolderProblem.ProgramFiles, FolderChecks.CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), places));
+        Assert.Equal(FolderProblem.DataFolder, FolderChecks.CheckFolder(dataFolder, places));
+        Assert.True(FolderChecks.IsProgramData(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), places));
+        Assert.False(FolderChecks.IsProgramData(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), places));
     }
 }

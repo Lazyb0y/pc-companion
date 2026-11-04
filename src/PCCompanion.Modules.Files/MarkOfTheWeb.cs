@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using PCCompanion.Core;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>
 /// The Mark of the Web that Windows and browsers give downloaded files, in the file's
