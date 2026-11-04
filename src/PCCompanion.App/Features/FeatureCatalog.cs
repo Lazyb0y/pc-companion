@@ -66,8 +66,8 @@ public static class FeatureCatalog
         new(InputModule.Id, "ModuleInputName",
         [
             new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage), DrawnIcon: "hot-corners"),
-            new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage)),
-            new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage)),
+            new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage), DrawnIcon: "lock-keys"),
+            new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage), DrawnIcon: "input-language-per-app"),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [

@@ -17,7 +17,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | A feature page's header | Feature icon | 32 |
 | Setting cards, buttons and menus inside a page | Segoe Fluent Icons glyph; see [Inside pages](#inside-pages) | 16 to 20 |
 
-- In the navigation pane, on Home and in the header, the settings app shows a feature's drawing when its entry in `FeatureCatalog` names one (`DrawnIcon`), and otherwise its Segoe Fluent Icons glyph, `FeatureInfo.Glyph`. Hot Corners, Clipboard Actions and System Meters have drawings.
+- In the navigation pane, on Home and in the header, the settings app shows a feature's drawing when its entry in `FeatureCatalog` names one (`DrawnIcon`), and otherwise its Segoe Fluent Icons glyph, `FeatureInfo.Glyph`.
 - `website/icon.png` and the website's screenshots show the app icon of the latest release; see [Website](../development/website.md).
 
 ## App icon

@@ -98,6 +98,12 @@ function Get-PolygonPath([object[]] $Points) {
     'M' + (($Points | ForEach-Object { "$(F $_[0]) $(F $_[1])" }) -join 'L') + 'Z'
 }
 
+# An ellipse as path data.
+function Get-EllipsePath([double] $CenterX, [double] $CenterY, [double] $RadiusX, [double] $RadiusY) {
+    "M$(F ($CenterX - $RadiusX)) $(F $CenterY)A$(F $RadiusX) $(F $RadiusY) 0 1 0 $(F ($CenterX + $RadiusX)) $(F $CenterY)" +
+    "A$(F $RadiusX) $(F $RadiusY) 0 1 0 $(F ($CenterX - $RadiusX)) $(F $CenterY)Z"
+}
+
 # The outline of a polygon grown by $Distance with round corners, which is what its fill and a
 # round-joined stroke twice $Distance wide cover: convex corners become arcs, and inward corners
 # the point where the two moved edges meet.
@@ -291,6 +297,64 @@ foreach ($icon in $systemMeters) {
             "V$(F ($level + $r))A$(F $r) $(F $r) 0 0 0 $(F $c) $(F ($level + $r))Z"
     }
     Write-Drawing "system-meters-$($icon.Size)-mono" $icon.Size @() @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$outlines`"/>")
+}
+
+# Lock Keys: a keycap (frame) and its face (glass), with the Caps Lock arrow and bar in amber.
+$lockKeys = @(
+    @{ Size = 32; Frame = 3, 3, 26, 26, 4.5; Face = 5.5, 5.5, 21, 17, 2.5; Bar = 13, 18.5, 6, 2, 0.5; Stroke = 1
+        Arrow = @(@(16, 8), @(21.5, 13.5), @(18.5, 13.5), @(18.5, 16.5), @(13.5, 16.5), @(13.5, 13.5), @(10.5, 13.5)) }
+    @{ Size = 20; Frame = 2, 2, 16, 16, 3; Face = 4, 4, 12, 10, 1.5; Bar = 8, 11, 4, 1.5, 0; Stroke = 0.8
+        Arrow = @(@(10, 5), @(13.5, 8.5), @(11.5, 8.5), @(11.5, 10), @(8.5, 10), @(8.5, 8.5), @(6.5, 8.5)) }
+    @{ Size = 16; Frame = 1, 1, 14, 14, 2; Face = 2, 2, 12, 8, 1; Bar = 6, 8, 4, 1, 0; Stroke = 0.6
+        Arrow = @(@(8, 2.5), @(11, 5.5), @(9.5, 5.5), @(9.5, 7), @(6.5, 7), @(6.5, 5.5), @(5, 5.5)) }
+)
+foreach ($icon in $lockKeys) {
+    $stroke = " stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`""
+    $arrow = Get-PolygonPath $icon.Arrow
+    $defs = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent')
+    $body = @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Face ' fill="url(#glass)"'),
+        "<path fill=`"url(#accent)`" stroke=`"url(#accent)`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="url(#accent)"'))
+    Write-Drawing "lock-keys-$($icon.Size)" $icon.Size $defs $body
+    $mono = @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Face)`"/>",
+        "<path fill=`"currentColor`" stroke=`"currentColor`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="currentColor"'))
+    Write-Drawing "lock-keys-$($icon.Size)-mono" $icon.Size @() $mono
+}
+
+# Input Language per App: a keyboard (board, glass and keys) with an amber globe at its bottom
+# right. The globe's lines are glass, so the one-color version cuts them out: a meridian ring,
+# Ring's width, height and thickness, and the equator, Line thick, both Rim short of its edge.
+$inputLanguagePerApp = @(
+    @{ Size = 32; Board = 2, 3, 28, 19, 4; Glass = 4.5, 5.5, 23, 14, 2; Globe = 24.5, 22.5, 6.5; Ring = 3.4, 5.4, 1; Line = 1; Rim = 1.2; Gap = 1.5
+        Keys = @(@(7, 8, 3, 2.5, 0.75), @(11.5, 8, 3, 2.5, 0.75), @(16, 8, 3, 2.5, 0.75), @(20.5, 8, 3, 2.5, 0.75), @(7, 12, 3, 2.5, 0.75), @(11.5, 12, 3, 2.5, 0.75), @(9, 16, 7.5, 2, 0.75)) }
+    @{ Size = 20; Board = 1, 2, 18, 12, 2.5; Glass = 3, 4, 14, 8, 1; Globe = 15, 14, 4.5; Ring = 2.4, 3.6, 0.9; Line = 0.9; Rim = 0.9; Gap = 1
+        Keys = @(@(5, 6, 2, 1.5, 0), @(8, 6, 2, 1.5, 0), @(11, 6, 2, 1.5, 0), @(5, 9, 5, 1, 0)) }
+    @{ Size = 16; Board = 1, 2, 14, 10, 2; Glass = 2, 3, 12, 8, 1; Globe = 12, 12, 3.5; Ring = 1.9, 2.7, 0.8; Line = 0.8; Rim = 0.8; Gap = 1
+        Keys = @(@(4, 5, 1, 1, 0), @(6, 5, 1, 1, 0), @(8, 5, 1, 1, 0), @(4, 8, 4, 1, 0)) }
+)
+foreach ($icon in $inputLanguagePerApp) {
+    $cx, $cy, $r = $icon.Globe
+    $rx, $ry, $t = $icon.Ring
+    $lw = $icon.Line
+    $rim = $icon.Rim
+    $clip = @(Get-GapClip $icon.Size (Get-EllipsePath $cx $cy ($r + $icon.Gap) ($r + $icon.Gap)))
+    # The equator in three pieces, which meet the ring instead of crossing it.
+    $equator = @(@(
+            @(($cx - $r + $rim), ($cy - $lw / 2), (($cx - $rx) - ($cx - $r + $rim)), $lw, 0),
+            @(($cx - $rx + $t), ($cy - $lw / 2), (2 * ($rx - $t)), $lw, 0),
+            @(($cx + $rx), ($cy - $lw / 2), (($cx + $r - $rim) - ($cx + $rx)), $lw, 0)) | Where-Object { $_[2] -gt 0 })
+    $ring = (Get-EllipsePath $cx $cy $rx $ry) + (Get-EllipsePath $cx $cy ($rx - $t) ($ry - $t))
+    $defs = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent') + $clip
+    $items = @((Get-Rect $icon.Board ' fill="url(#frame)"'), (Get-Rect $icon.Board ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"')) +
+        @($icon.Keys | ForEach-Object { Get-Rect $_ " fill=`"$detail`"" })
+    $body = @(Get-Group 'clip-path="url(#gap)"' $items) +
+        @("<path fill=`"url(#accent)`" d=`"$(Get-EllipsePath $cx $cy $r $r)`"/>", "<path fill=`"url(#glass)`" fill-rule=`"evenodd`" d=`"$ring`"/>") +
+        @($equator | ForEach-Object { Get-Rect $_ ' fill="url(#glass)"' })
+    Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size $defs $body
+    $keys = ($icon.Keys | ForEach-Object { Get-RectPath $_ }) -join ''
+    $holes = $ring + (($equator | ForEach-Object { Get-RectPath $_ }) -join '')
+    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Board)$(Get-RectPath $icon.Glass)$keys`"/>")) +
+        @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-EllipsePath $cx $cy $r $r)$holes`"/>")
+    Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size $clip $mono
 }
 
 Write-Host "Wrote the drawings in $folder"
