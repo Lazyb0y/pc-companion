@@ -71,11 +71,11 @@ public static class FeatureCatalog
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [
-            new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage)),
-            new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage)),
-            new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage)),
-            new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage)),
-            new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage)),
+            new(AppWindowsFeature.Definition, AppWindowsFeature.CurrentSupport, typeof(AppWindowsPage), DrawnIcon: "app-windows"),
+            new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage), DrawnIcon: "minimize-to-tray"),
+            new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps"),
+            new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps"),
+            new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [

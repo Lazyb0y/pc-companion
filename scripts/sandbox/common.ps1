@@ -388,7 +388,8 @@ function Get-AmberPixels([System.Windows.Rect] $Area) {
 }
 
 # Checks that the header of page $Title, and the navigation pane's item $Name, show the feature's
-# drawing when $Drawn is true, and its glyph otherwise.
+# drawing when $Drawn is true, and its glyph otherwise. A glyph has no amber; the smallest accent,
+# Title Bar Actions' mouse wheel, has about 12 amber pixels in the header and 6 in the item.
 function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
     $kind = if ($Drawn) { 'drawing' } else { 'glyph' }
     $layout = Get-PageLayout $Title
@@ -396,7 +397,7 @@ function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
         # The 32-pixel icon left of the title, as in Test-HeaderAlignment.
         $box = $layout.Title
         $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList ($box.Left - 100), ($box.Top - 24), 92, ($box.Height + 48))
-        Test-Check "${Name}: the header shows the feature's $kind" ($Drawn -eq ($amber -ge 20)) "amber pixels: $amber"
+        Test-Check "${Name}: the header shows the feature's $kind" ($Drawn -eq ($amber -ge 8)) "amber pixels: $amber"
     }
     else {
         Test-Check "${Name}: the header shows the feature's $kind" $false 'the page''s title isn''t shown'
@@ -410,7 +411,7 @@ function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
         # The 16-pixel icon in the item's left 48 pixels.
         $bounds = $item.Current.BoundingRectangle
         $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList $bounds.Left, $bounds.Top, 48, $bounds.Height)
-        Test-Check "${Name}: the navigation item shows the feature's $kind" ($Drawn -eq ($amber -ge 5)) "amber pixels: $amber"
+        Test-Check "${Name}: the navigation item shows the feature's $kind" ($Drawn -eq ($amber -ge 3)) "amber pixels: $amber"
     }
     else {
         Test-Check "${Name}: the navigation item shows the feature's $kind" $false 'the item isn''t shown'
