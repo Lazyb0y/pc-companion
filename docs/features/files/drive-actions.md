@@ -82,7 +82,7 @@ A drive's actions run in their order, one at a time. A drive with no action can 
 - **When a file with that name is there:** **Add a number**, the default, or **Skip**, as in Folder Rules. A file is never replaced.
 - **Each file is imported once:** PC Companion remembers, for each drive in the list, the name, size and last modified time of each file it imported, and a file with the same name and size and a time less than an hour apart counts as imported before. FAT and exFAT drives, which most cards use, keep local times, which Windows reads an hour apart after a change to or from daylight saving time. A file imported before isn't imported again, also from another card, unless the user checks it in **Run now**.
 - **Copies only:** nothing on the drive is moved, deleted or changed, so the card stays as it was until the camera formats it. A file's Mark of the Web, on a drive that keeps it, is copied with it.
-- **Skipped:** links, hidden and system files, and empty files.
+- **Skipped:** links, hidden and system files and folders, and empty files.
 - **Folders that Windows protects:** with Controlled folder access on, a copy into Pictures that Windows blocks is an entry in the history that says so, and the page explains how to allow PC Companion, as for Folder Rules.
 - **Run now** lists the files the import would copy, with the destination of each, those imported before unchecked, as Folder Rules' Run now does.
 
@@ -94,9 +94,10 @@ A drive's actions run in their order, one at a time. A drive with no action can 
   - A changed file replaces only a copy that PC Companion made and that's still as it left it, with the size and last modified time it recorded.
   - The new copy is written under a temporary name, `<name>.pccompanion-new`, hidden, and takes the old copy's place only once it's complete (`MoveFileEx` with `MOVEFILE_REPLACE_EXISTING`), so a drive ejected or pulled out meanwhile keeps the old copy.
   - A copy changed on the drive, a file PC Companion didn't put there, and a read-only copy, which Windows doesn't replace, stay as they are, with an entry in the history.
+  - A file on the drive that's the same as the PC's, with the same size and last modified time, counts as PC Companion's own copy, so backups go on after PC Companion's records are lost, as when it's uninstalled and installed again.
 - **Nothing is deleted on the drive:** files deleted or renamed on the PC keep their copies there. Drives have no Recycle Bin, and a mistake would delete for good.
 - **Skipped,** each counted in the result with why:
-  - links, hidden and system files;
+  - links, hidden and system files and folders;
   - files kept online only by a cloud storage app, which reading would download;
   - files with a Mark of the Web, on a drive that can't keep it, such as an exFAT or FAT32 drive, as in Folder Rules: Windows would drop the mark without an error, and a file restored from the drive would open without Windows' warning. The page suggests formatting the drive as NTFS to back them up;
   - files over 4 GB, on a FAT32 drive, which can't hold them;
