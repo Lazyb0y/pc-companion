@@ -4,9 +4,9 @@ Makes the app icon file from the app icon's drawings.
 
 .DESCRIPTION
 Writes src\PCCompanion.App\Assets\PCCompanion.ico from docs\design\icons\app-<size>.svg, which
-Microsoft Edge draws without opening a window. The 16, 20, 24, 32 and 48-pixel images come from
-their own drawings, and the 40, 64 and 256-pixel ones from the 48-pixel drawing. Images up to 64
-pixels are stored as 32-bit bitmaps, which System.Drawing reads, and the 256-pixel image as PNG.
+Microsoft Edge draws without opening a window. The 256-pixel image comes from the 48-pixel
+drawing, and the others from their own drawings. Images up to 64 pixels are stored as 32-bit
+bitmaps, which System.Drawing reads, and the 256-pixel image as PNG.
 Run it when the drawings change, then installer-images.ps1, and commit the files.
 
 .EXAMPLE
@@ -25,8 +25,8 @@ $iconPath = Join-Path $root 'src\PCCompanion.App\Assets\PCCompanion.ico'
 # Each image in the icon file, and the size of the drawing it comes from.
 $images = @(
     @{ Size = 16; Drawing = 16 }, @{ Size = 20; Drawing = 20 }, @{ Size = 24; Drawing = 24 },
-    @{ Size = 32; Drawing = 32 }, @{ Size = 40; Drawing = 48 }, @{ Size = 48; Drawing = 48 },
-    @{ Size = 64; Drawing = 48 }, @{ Size = 256; Drawing = 48 })
+    @{ Size = 32; Drawing = 32 }, @{ Size = 40; Drawing = 40 }, @{ Size = 48; Drawing = 48 },
+    @{ Size = 64; Drawing = 64 }, @{ Size = 256; Drawing = 48 })
 
 function Get-Edge {
     $key = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe'

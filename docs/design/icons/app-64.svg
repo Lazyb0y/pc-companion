@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#3940D6"/>
+        </linearGradient>
+        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFD25E"/>
+            <stop offset="1" stop-color="#FF8A3C"/>
+        </linearGradient>
+        <linearGradient id="overlap" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFF6E6"/>
+            <stop offset="1" stop-color="#FFD9B0"/>
+        </linearGradient>
+        <clipPath id="blue">
+            <rect x="4" y="17" width="43" height="43" rx="12"/>
+        </clipPath>
+    </defs>
+    <rect x="4" y="17" width="43" height="43" rx="12" fill="url(#frame)"/>
+    <rect x="4" y="17" width="43" height="43" rx="12" fill="url(#highlight)"/>
+    <rect x="30.25" y="4.25" width="29.5" height="29.5" rx="8.75" fill="url(#accent)" transform="rotate(10 45 19)"/>
+    <g clip-path="url(#blue)">
+        <rect x="30.25" y="4.25" width="29.5" height="29.5" rx="8.75" fill="url(#overlap)" transform="rotate(10 45 19)"/>
+    </g>
+</svg>
