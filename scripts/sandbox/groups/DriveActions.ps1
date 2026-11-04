@@ -12,8 +12,8 @@
 # starts is asked about too. Through the pipe, as the settings app asks, the host lists the
 # drives, Run now lists the card's photos and copies only the one chosen, Undo sends its copy to
 # the Recycle Bin, and Add a drive writes a new disk's ID file and gives its entry. The history
-# file has the runs, and the logs hold no drive names or folders. Detailed logging is on for the
-# Debug entries.
+# file has the runs, and the logs hold no drive names or folders. The page shows the drives, their
+# actions and status, and its changes save at once. Detailed logging is on for the Debug entries.
 
 $root = Join-Path $env:USERPROFILE 'DriveActionsTest'
 $documents = Join-Path $root 'Documents'
@@ -294,6 +294,149 @@ Test-Check 'the history file has the runs' (@($history.runs).Count -ge 4) "$(@($
 Test-Check 'with the photos the card''s first run imported' (@($history.runs)[0].actions[0].copied -eq 2)
 $hostLog = Get-HostLog
 Test-Check 'the logs hold no drive names, labels or folders' (($hostLog -notmatch 'Backup drive') -and ($hostLog -notmatch 'EOS_DIGITAL') -and ($hostLog -notmatch [regex]::Escape($documents)) -and ($hostLog -notmatch [regex]::Escape($driveId)))
+
+# The page lists the drives with their actions, notes and status. Use this drive takes a
+# look-alike's serial number after asking; Add a drive adds a connected disk with the ID file it
+# has; renaming, When connected, Eject when done, moving and removing an action, and removing a
+# drive save at once, with focus near what changed. Without the host, the page says so.
+function Get-DriveActionsSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.driveActions }
+function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
+
+# An element of the settings app with the name and the control type, such as a menu item or a
+# radio button, since the page has texts with the same names. The condition's name isn't
+# $condition, which in Wait-Until's script block would be Wait-Until's own.
+function Find-AppTyped([string] $Name, [System.Windows.Automation.ControlType] $Type) {
+    $typed = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, $Type)))
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $typed)
+}
+function Invoke-AppMenuItem([string] $Name) {
+    $script:item = $null
+    if (-not (Wait-Until { ($script:item = Find-AppTyped $Name ([System.Windows.Automation.ControlType]::MenuItem)) -ne $null } 5)) { return $false }
+    $script:item.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+function Invoke-DialogButton([string] $Dialog, [string] $Name) {
+    $found = Find-AppDialog $Dialog
+    if (-not $found) { return $false }
+    $button = $found.FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)))
+    if (-not $button) { return $false }
+    $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+# A window on the desktop whose title starts with $Name.
+function Find-TopWindow([string] $Name) {
+    @([System.Windows.Automation.AutomationElement]::RootElement.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition)) |
+        Where-Object { $_.Current.Name -like "$Name*" } | Select-Object -First 1
+}
+# A button of the settings app by its name: a button's tooltip, shown while it has focus, has the same name.
+function Invoke-AppButton([string] $Name) {
+    $script:button = $null
+    if (-not (Wait-Until { ($script:button = Find-AppTyped $Name ([System.Windows.Automation.ControlType]::Button)) -ne $null } 5)) { return $false }
+    $script:button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+# The page's scrolling area: the nearest one around its title, the tallest text with that name.
+function Get-PageScroller([string] $Title) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $titleText = @($window.FindAll([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Title)))) |
+        Sort-Object { $_.Current.BoundingRectangle.Height } -Descending | Select-Object -First 1
+    $walker = [System.Windows.Automation.TreeWalker]::RawViewWalker
+    $area = if ($titleText) { $walker.GetParent($titleText) } else { $null }
+    while ($area -and -not [bool] $area.GetCurrentPropertyValue([System.Windows.Automation.AutomationElement]::IsScrollPatternAvailableProperty)) { $area = $walker.GetParent($area) }
+    $area
+}
+function Get-ActionKinds([int] $Drive) { (@(@((Get-DriveActionsSettings).drives)[$Drive].actions) | ForEach-Object { $_.action }) -join ',' }
+
+# As a hand edit could, Camera cards gets a second action, to move and remove.
+$edited = Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json
+$cardsEntry = @($edited.features.driveActions.drives)[0]
+$cardsEntry.actions = @($cardsEntry.actions) + @([pscustomobject] @{ action = 'OpenFolder'; folder = 'DCIM' })
+Write-Settings ($edited | ConvertTo-Json -Depth 8)
+Mount-TestDisk 'newdrive' 'T'
+Start-Process $hostExe
+[void] (Wait-Until { (Get-HostLog) -match 'Drive Actions applied its settings: 2 drives and 3 actions can be used\.' } 15)
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Drive Actions' (Show-Page 'Drive Actions')
+Start-Sleep -Seconds 2
+$text = Get-WindowText
+Test-Check 'the page lists the drives and their actions' (
+    ($text -contains 'Camera cards') -and ($text -contains 'Backup drive') -and ($text -contains "Imports from DCIM to $pictures\{year}\{month}") -and
+    ($text -contains 'Opens DCIM on the drive') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+# A drive's actions are made as they come into view, so the page is scrolled to the backup drive's first.
+$scroller = Get-PageScroller 'Drive Actions'
+if ($scroller) { $scroller.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern).SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100) }
+Test-Check 'and the backup drive''s, once in view' (Wait-Until { Find-AppText 'Backs up Documents to Backup on the drive' } 5)
+if ($scroller) { $scroller.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern).SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 0) }
+Test-Check 'with UAC off, the page doesn''t say Drive Actions is paused' ($text -notcontains 'While PC Companion runs as administrator after a UAC prompt, Drive Actions is paused: it never touches files with administrator rights.')
+Test-Check 'it has the note about AutoPlay' ($text -contains 'Windows'' AutoPlay may also ask what to do when a drive is connected. To stop it asking, set removable drives and memory cards to Take no action.')
+Test-Check 'and the backup drive the note about BitLocker' ($text -contains 'Anyone who has this drive can read its backups. Turn on BitLocker To Go to protect them.')
+Test-Check 'the card shows as connected' (Wait-Until { Find-AppText 'Connected as P:' } 10)
+Test-Check 'and the backup drive as not connected' ($null -ne (Find-AppText 'Not connected'))
+Save-Screenshot '15i-drive-actions-page'
+
+Mount-TestDisk 'lookalike' 'R'
+Test-Check 'a look-alike shows on the backup drive' (Wait-Until { Find-AppText 'A drive with this drive''s ID but other serial numbers is connected as R:, so nothing is copied to or from it.' } 15)
+Test-Check 'Use this drive asks first' ((Invoke-AppElement 'Use this drive') -and (Wait-Until { Find-AppDialog 'Use this drive for Backup drive?' } 5))
+Start-Sleep -Seconds 1
+$lookAlikeSerial = Get-SerialHash (Get-VolumeSerial 'R')
+Test-Check 'and records its serial number' ((Invoke-DialogButton 'Use this drive for Backup drive?' 'Use this drive') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[1].volumeSerial -eq $lookAlikeSerial } 10))
+Test-Check 'which the host then recognizes as the backup drive' (Wait-Until { Find-AppText 'Connected as R:' } 15)
+Dismount-TestDisk 'lookalike' 'R'
+
+Test-Check 'Add a drive lists the connected disks' ((Invoke-AppElement 'Add a drive') -and (Wait-Until { Find-AppTyped 'NEWDRIVE (T:)' ([System.Windows.Automation.ControlType]::RadioButton) } 15))
+$cardsChoice = Find-AppTyped 'Camera cards' ([System.Windows.Automation.ControlType]::RadioButton)
+Test-Check 'with Camera cards first, which is in the list already' (($null -ne $cardsChoice) -and -not $cardsChoice.Current.IsEnabled -and ($null -ne (Find-AppText 'Camera cards is in the list already.')))
+Save-Screenshot '15j-drive-actions-add'
+Test-Check 'Add adds the chosen disk' ((Invoke-AppElement 'NEWDRIVE (T:)') -and (Invoke-DialogButton 'Add a drive' 'Add') -and (Wait-Until { @((Get-DriveActionsSettings).drives).Count -eq 3 } 10))
+$added = @((Get-DriveActionsSettings).drives)[2]
+Test-Check 'with the ID file the disk has, its label and its serial number''s hash' (($added.id -eq [IO.File]::ReadAllText('T:\.pccompanion-drive')) -and ($added.name -eq 'NEWDRIVE') -and ($added.volumeSerial -eq (Get-SerialHash (Get-VolumeSerial 'T')))) ($added | ConvertTo-Json -Compress -Depth 4)
+Test-Check 'and the page shows it connected' (Wait-Until { Find-AppText 'Connected as T:' } 10)
+Test-Check 'focus goes to the new drive' (Wait-Until { (Get-FocusedName) -eq 'More options for NEWDRIVE' } 3) (Get-FocusedName)
+
+[void] (Invoke-AppButton 'More options for NEWDRIVE')
+Start-Sleep -Seconds 1
+Test-Check 'Rename opens its dialog' ((Invoke-AppMenuItem 'Rename') -and (Wait-Until { Find-AppDialog 'Rename NEWDRIVE' } 5))
+Start-Sleep -Seconds 1
+[void] (Set-AppBox 'Name' 'backup DRIVE')
+Test-Check 'a name another drive has is refused' ((Wait-Until { Find-AppText 'Another drive in the list has this name.' } 3) -and -not (Test-AppEnabled 'Rename'))
+[void] (Set-AppBox 'Name' 'Work drive')
+Test-Check 'a new one is saved' ((Invoke-DialogButton 'Rename NEWDRIVE' 'Rename') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].name -eq 'Work drive' } 5))
+Test-Check 'and focus goes back to the drive' (Wait-Until { (Get-FocusedName) -eq 'More options for Work drive' } 3) (Get-FocusedName)
+Test-Check 'When connected saves the choice' ((Select-ListItem 'When Work drive is connected' 'Do nothing') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].whenConnected -eq 'Nothing' } 5))
+Test-Check 'Eject when done saves the switch' ((Set-Toggle 'Eject Work drive when done' $true) -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].ejectWhenDone -eq $true } 5))
+
+[void] (Invoke-AppButton 'More options for action 2 of Camera cards')
+Start-Sleep -Seconds 1
+Test-Check 'Move up moves the action' ((Invoke-AppMenuItem 'Move up') -and (Wait-Until { (Get-ActionKinds 0) -eq 'OpenFolder,Import' } 5)) (Get-ActionKinds 0)
+Test-Check 'focus stays on the action that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for action 1 of Camera cards' } 3) (Get-FocusedName)
+[void] (Invoke-AppButton 'More options for action 1 of Camera cards')
+Start-Sleep -Seconds 1
+Test-Check 'removing an action asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until { Find-AppDialog 'Remove this action?' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'and removes it' ((Invoke-DialogButton 'Remove this action?' 'Remove') -and (Wait-Until { (Get-ActionKinds 0) -eq 'Import' } 5)) (Get-ActionKinds 0)
+
+[void] (Invoke-AppButton 'More options for Work drive')
+Start-Sleep -Seconds 1
+Test-Check 'removing a drive asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until { Find-AppDialog 'Remove Work drive?' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'and removes it' ((Invoke-DialogButton 'Remove Work drive?' 'Remove') -and (Wait-Until { @((Get-DriveActionsSettings).drives).Count -eq 2 } 5))
+Test-Check 'leaving its ID file on the disk' ([IO.File]::Exists('T:\.pccompanion-drive'))
+
+Test-Check 'Open AutoPlay settings opens Settings' ((Invoke-AppElement 'Open AutoPlay settings') -and (Wait-Until { Find-TopWindow 'Settings' } 20))
+$settingsWindow = Find-TopWindow 'Settings'
+if ($settingsWindow) { $settingsWindow.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() }
+
+Get-Process -Name 'PCCompanion.Host' -ErrorAction SilentlyContinue | Stop-Process -Force
+Test-Check 'without the host, the page says it isn''t answering' (Wait-Until { Find-AppText 'PC Companion isn''t answering, so the page can''t show which drives are connected or add one. Make sure PC Companion is running.' } 30)
+Test-Check 'and shows no drive as connected' ($null -eq (Find-AppText 'Connected as P:'))
+Stop-All
 
 foreach ($disk in @(@('card', 'P'), @('backup', 'Q'), @('lookalike', 'R'), @('lockedcard', 'S'), @('newdrive', 'T'))) {
     if (Test-Path "$($disk[1]):\") { Dismount-TestDisk $disk[0] $disk[1] }

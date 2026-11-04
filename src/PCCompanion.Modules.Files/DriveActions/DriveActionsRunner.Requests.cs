@@ -63,21 +63,59 @@ public sealed partial class DriveActionsRunner
         }
     }
 
-    private ConnectedDriveInfo Describe(char letter, Connected connected) => new()
+    private ConnectedDriveInfo Describe(char letter, Connected connected)
     {
-        Letter = letter.ToString(),
-        Volume = connected.Drive.Volume,
-        Label = connected.Drive.Label,
-        FileSystem = connected.Drive.FileSystem,
-        Size = connected.Drive.Size,
-        Free = connected.Drive.Free,
-        Kind = connected.Drive.Kind,
-        IsLocked = connected.Drive.IsLocked,
-        KeepsStreams = connected.Drive.KeepsStreams,
-        Outcome = connected.Recognition.Outcome,
-        Drive = connected.Recognition.Drive,
-        AddProblem = DriveRecognizer.CheckAdd(connected.Drive, _settings.Drives, _reviews),
-    };
+        var drive = connected.Recognition.Drive >= 0 ? connected.Recognition.Drive : SameSerials(connected.Drive);
+        return new()
+        {
+            Letter = letter.ToString(),
+            Volume = connected.Drive.Volume,
+            Label = connected.Drive.Label,
+            FileSystem = connected.Drive.FileSystem,
+            Size = connected.Drive.Size,
+            Free = connected.Drive.Free,
+            Kind = connected.Drive.Kind,
+            IsLocked = connected.Drive.IsLocked,
+            KeepsStreams = connected.Drive.KeepsStreams,
+            Outcome = connected.Recognition.Outcome,
+            Drive = drive,
+            Key = drive >= 0 ? DriveRecordsStore.KeyOf(_settings.Drives[drive]) : string.Empty,
+            AddProblem = DriveRecognizer.CheckAdd(connected.Drive, _settings.Drives, _reviews),
+        };
+    }
+
+    // The list's drive with the serial numbers of a drive that isn't recognized, as when its ID
+    // file was deleted, or with the hardware serial number of a locked drive, whose volume can't be
+    // read, so that the page can say what became of it; -1 for none. Nothing is copied to or from
+    // the drive for this.
+    private int SameSerials(ConnectedDrive connected)
+    {
+        if (connected.Kind is null || !(connected.IsLocked || DriveIdentity.ReadId(connected.IdFileText ?? string.Empty) is null))
+        {
+            return -1;
+        }
+
+        var hardwareSerial = DriveIdentity.HashHardwareSerial(connected.HardwareSerial);
+        var volumeSerial = DriveIdentity.HashVolumeSerial(connected.VolumeSerial);
+        for (var index = 0; index < _settings.Drives.Count && index < _reviews.Count; index++)
+        {
+            var drive = _settings.Drives[index];
+            if (_reviews[index].Problem != DriveProblem.None || drive.KnownKind != DriveEntryKind.Drive)
+            {
+                continue;
+            }
+
+            var same = connected.IsLocked
+                ? hardwareSerial.Length > 0 && drive.HardwareSerial == hardwareSerial
+                : drive.VolumeSerial == volumeSerial && drive.HardwareSerial == hardwareSerial;
+            if (same)
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
 
     private DriveActionsAnswer AddDrive(DriveActionsRequest request)
     {

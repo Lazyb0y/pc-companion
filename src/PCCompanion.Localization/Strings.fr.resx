@@ -3228,4 +3228,448 @@
     <value>Windows n'a pas éjecté le lecteur. Un programme l'utilise peut-être.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsAdministratorInfo" xml:space="preserve">
+    <value>Tant que PC Companion s’exécute en tant qu’administrateur après une invite de contrôle de compte d’utilisateur, Actions des lecteurs est en pause : il ne touche jamais aux fichiers avec des droits d’administrateur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotAnsweringInfo" xml:space="preserve">
+    <value>PC Companion ne répond pas, la page ne peut donc pas afficher les lecteurs connectés ni en ajouter un. Vérifiez que PC Companion est en cours d’exécution.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAutoPlayInfo" xml:space="preserve">
+    <value>L’exécution automatique de Windows peut aussi demander quoi faire quand un lecteur est connecté. Pour qu’elle ne demande plus, choisissez Ne rien faire pour les lecteurs amovibles et les cartes mémoire.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenAutoPlaySettings" xml:space="preserve">
+    <value>Ouvrir les paramètres d’exécution automatique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDrivesHeader" xml:space="preserve">
+    <value>Lecteurs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDrivesDescription" xml:space="preserve">
+    <value>Ce que fait PC Companion quand chaque lecteur est connecté. Il reconnaît un lecteur à un identifiant qu’il y écrit et aux numéros de série du lecteur, jamais à son nom.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDrive" xml:space="preserve">
+    <value>Ajouter un lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNoDrives" xml:space="preserve">
+    <value>Aucun lecteur pour l’instant. Connectez un lecteur ou la carte mémoire d’un appareil photo, puis sélectionnez Ajouter un lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoreName" xml:space="preserve">
+    <value>Plus d’options pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRename" xml:space="preserve">
+    <value>Renommer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemove" xml:space="preserve">
+    <value>Supprimer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveTitle" xml:space="preserve">
+    <value>Supprimer {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveText" xml:space="preserve">
+    <value>PC Companion oublie ce lecteur et ce qu’il en a importé et y a sauvegardé. Le fichier d’identifiant et les sauvegardes restent sur le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoveUp" xml:space="preserve">
+    <value>Monter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMoveDown" xml:space="preserve">
+    <value>Descendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRemoveActionTitle" xml:space="preserve">
+    <value>Supprimer cette action ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenConnectedHeader" xml:space="preserve">
+    <value>À la connexion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenAsk" xml:space="preserve">
+    <value>Demander d’abord</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenAct" xml:space="preserve">
+    <value>Agir immédiatement</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenNothing" xml:space="preserve">
+    <value>Ne rien faire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenUnknown" xml:space="preserve">
+    <value>Choisissez ce qui se passe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsWhenConnectedName" xml:space="preserve">
+    <value>Quand {0} est connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectHeader" xml:space="preserve">
+    <value>Éjecter une fois terminé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectDescription" xml:space="preserve">
+    <value>Une fois les actions terminées, PC Companion demande à Windows d’éjecter le lecteur, afin qu’il puisse être retiré.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsEjectName" xml:space="preserve">
+    <value>Éjecter {0} une fois terminé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionsHeader" xml:space="preserve">
+    <value>Actions</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionsDescription" xml:space="preserve">
+    <value>Elles s’exécutent dans cet ordre, une à la fois. Rien sur le lecteur n’est jamais exécuté.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNoActions" xml:space="preserve">
+    <value>Aucune action pour l’instant.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionMoreName" xml:space="preserve">
+    <value>Plus d’options pour l’action {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionImport" xml:space="preserve">
+    <value>Importer depuis le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionBackUp" xml:space="preserve">
+    <value>Sauvegarder sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionOpenFolder" xml:space="preserve">
+    <value>Ouvrir un dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionOther" xml:space="preserve">
+    <value>Action d’une version plus récente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryImport" xml:space="preserve">
+    <value>Importe depuis {0} vers {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryImportDrive" xml:space="preserve">
+    <value>Importe depuis le lecteur vers {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryBackUp" xml:space="preserve">
+    <value>Sauvegarde {0} dans {1} sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenDrive" xml:space="preserve">
+    <value>Ouvre le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenDriveFolder" xml:space="preserve">
+    <value>Ouvre {0} sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryOpenFolder" xml:space="preserve">
+    <value>Ouvre {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSummaryProblem" xml:space="preserve">
+    <value>Non utilisée. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBitLockerInfo" xml:space="preserve">
+    <value>Toute personne qui a ce lecteur peut lire ses sauvegardes. Activez BitLocker To Go pour les protéger.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDrive" xml:space="preserve">
+    <value>Utiliser ce lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDriveTitle" xml:space="preserve">
+    <value>Utiliser ce lecteur pour {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUseThisDriveText" xml:space="preserve">
+    <value>Il a le fichier d’identifiant de ce lecteur mais d’autres numéros de série, comme une copie du lecteur ou la même carte dans un autre lecteur de cartes. Ne l’utilisez que s’il vous appartient : il recevra les sauvegardes de ce lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeInfo" xml:space="preserve">
+    <value>Un lecteur avec l’identifiant de ce lecteur mais d’autres numéros de série est connecté en tant que {0}, donc rien n’y est copié ni n’en est copié.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotRecognizedInfo" xml:space="preserve">
+    <value>Un lecteur avec les numéros de série de ce lecteur mais sans son fichier d’identifiant est connecté en tant que {0}, il n’est donc pas reconnu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddAgain" xml:space="preserve">
+    <value>Ajouter à nouveau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusConnected" xml:space="preserve">
+    <value>Connecté en tant que {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusLocked" xml:space="preserve">
+    <value>Connecté en tant que {0}, verrouillé par BitLocker</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusNotConnected" xml:space="preserve">
+    <value>Non connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStatusRunning" xml:space="preserve">
+    <value>Exécution de ses actions</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsPermissions" xml:space="preserve">
+    <value>Lit les lecteurs que vous ajoutez : leur fichier d’identifiant, leurs numéros de série et les fichiers que leurs actions copient, qu’il n’ouvre ni n’exécute jamais. Écrit le fichier d’identifiant et les sauvegardes sur ces lecteurs, et copie les fichiers importés dans les dossiers que vous choisissez. Conserve l’historique, avec les noms de fichiers, sur ce PC pendant 30 jours, et ce qu’il a importé et sauvegardé jusqu’à ce que le lecteur soit supprimé de la liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCameraCards" xml:space="preserve">
+    <value>Cartes d’appareil photo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAdd" xml:space="preserve">
+    <value>Ajouter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDescription" xml:space="preserve">
+    <value>L’ajout d’un lecteur écrit un petit fichier masqué, .pccompanion-drive, à sa racine. PC Companion reconnaît le lecteur grâce à ce fichier et à ses numéros de série.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddCameraCardsDetails" xml:space="preserve">
+    <value>Toute carte mémoire ou tout lecteur avec un dossier DCIM, où les appareils photo enregistrent leurs photos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddCameraCardsThere" xml:space="preserve">
+    <value>Cartes d’appareil photo est déjà dans la liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDriveName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddDriveDetails" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLooking" xml:space="preserve">
+    <value>Recherche des lecteurs connectés…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNone" xml:space="preserve">
+    <value>Aucun lecteur utilisable par PC Companion n’est connecté, comme un lecteur USB, une carte mémoire ou un disque externe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNotAnswering" xml:space="preserve">
+    <value>PC Companion ne répond pas et ne peut donc pas lister les lecteurs connectés. Activez Actions des lecteurs, et vérifiez que PC Companion est en cours d’exécution.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLocked" xml:space="preserve">
+    <value>Verrouillé par BitLocker. Déverrouillez-le d’abord.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddReadOnly" xml:space="preserve">
+    <value>PC Companion ne peut pas y écrire, comme quand le verrou d’une carte est activé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddAlreadyAdded" xml:space="preserve">
+    <value>Il est déjà dans la liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddLookAlike" xml:space="preserve">
+    <value>Il a le fichier d’identifiant d’un lecteur de la liste, avec d’autres numéros de série. Utiliser ce lecteur, sur ce lecteur-là, peut l’utiliser à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddNotCounted" xml:space="preserve">
+    <value>PC Companion n’utilise pas ce type de lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddFailed" xml:space="preserve">
+    <value>Windows n’a pas laissé PC Companion écrire sur le lecteur (erreur {0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAddGone" xml:space="preserve">
+    <value>Le lecteur n’est plus connecté, ou un autre lecteur a pris sa lettre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotAnswering" xml:space="preserve">
+    <value>PC Companion n’a pas répondu. Réessayez dans un instant.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindUsbDrive" xml:space="preserve">
+    <value>Lecteur USB</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindMemoryCard" xml:space="preserve">
+    <value>Carte mémoire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindExternalDisk" xml:space="preserve">
+    <value>Disque externe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsKindVirtualDisk" xml:space="preserve">
+    <value>Disque virtuel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNumberedName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRenameTitle" xml:space="preserve">
+    <value>Renommer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameHeader" xml:space="preserve">
+    <value>Nom</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameEmpty" xml:space="preserve">
+    <value>Entrez un nom.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameTooLong" xml:space="preserve">
+    <value>Un nom peut comporter jusqu’à {0} caractères.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNameTaken" xml:space="preserve">
+    <value>Un autre lecteur de la liste porte ce nom.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNoName" xml:space="preserve">
+    <value>Ce lecteur n’a pas de nom, il n’est donc pas utilisé. Renommez-le.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNameTooLong" xml:space="preserve">
+    <value>Le nom de ce lecteur est trop long, il n’est donc pas utilisé. Renommez-le.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveSameName" xml:space="preserve">
+    <value>Un lecteur plus haut dans la liste porte le même nom, celui-ci n’est donc pas utilisé. Renommez-le.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveUnknownKind" xml:space="preserve">
+    <value>Ce lecteur provient d’une version plus récente de PC Companion, cette version ne l’utilise donc pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveUnknownWhenConnected" xml:space="preserve">
+    <value>À la connexion a un choix d’une version plus récente de PC Companion, cette version n’utilise donc pas le lecteur. Choisissez-en un ci-dessous.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveNotAdded" xml:space="preserve">
+    <value>Ce lecteur n’a pas d’identifiant, PC Companion ne peut donc pas le reconnaître. Supprimez-le et ajoutez à nouveau le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveSecondCameraCards" xml:space="preserve">
+    <value>Cartes d’appareil photo est déjà dans la liste, celle-ci n’est donc pas utilisée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDriveTooMany" xml:space="preserve">
+    <value>Actions des lecteurs n’utilise que les {0} premiers lecteurs.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionUnknown" xml:space="preserve">
+    <value>Elle provient d’une version plus récente de PC Companion, avec une action que cette version ne connaît pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidDriveFolder" xml:space="preserve">
+    <value>Son dossier sur le lecteur n’est pas valide. Entrez-le sans la lettre du lecteur, par exemple DCIM.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNoTypes" xml:space="preserve">
+    <value>Elle n’a aucun type de fichier, elle n’importerait donc rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidType" xml:space="preserve">
+    <value>Une extension est vide, contient un point ou des caractères qu’un nom de fichier ne peut pas contenir.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionDestinationNotAllowed" xml:space="preserve">
+    <value>Ses fichiers ne peuvent pas aller dans ce dossier. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionUnknownIfExists" xml:space="preserve">
+    <value>Elle provient d’une version plus récente de PC Companion, avec un choix pour les noms déjà pris que cette version ne connaît pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNotForCameraCards" xml:space="preserve">
+    <value>Les cartes d’appareil photo ne font qu’apporter des fichiers au PC, elles ne peuvent donc pas recevoir de sauvegardes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionNoFolders" xml:space="preserve">
+    <value>Elle n’a aucun dossier à sauvegarder.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionTooManyFolders" xml:space="preserve">
+    <value>Une sauvegarde peut comporter jusqu’à {0} dossiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionFolderNotAllowed" xml:space="preserve">
+    <value>Un dossier ne peut pas être sauvegardé. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionSameFolderName" xml:space="preserve">
+    <value>Deux de ses dossiers portent le même nom, ils partageraient donc un dossier sur le lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionInvalidFolder" xml:space="preserve">
+    <value>Le dossier à ouvrir n’est ni un dossier du lecteur ni un chemin complet sur le PC.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsActionTooMany" xml:space="preserve">
+    <value>Actions des lecteurs n’utilise que les {0} premières actions d’un lecteur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNoPath" xml:space="preserve">
+    <value>Choisissez un dossier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderInvalidPath" xml:space="preserve">
+    <value>Le chemin contient des caractères qu’un dossier ne peut pas avoir.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderNotFullPath" xml:space="preserve">
+    <value>Entrez un chemin complet, commençant par un lecteur, comme C:\, ou par un dossier partagé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderWindows" xml:space="preserve">
+    <value>Il se trouve dans le dossier Windows, que seuls les administrateurs peuvent modifier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderProgramFiles" xml:space="preserve">
+    <value>Il se trouve dans Program Files, que seuls les administrateurs peuvent modifier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderDataFolder" xml:space="preserve">
+    <value>Il se trouve dans le dossier de données de PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderSystem" xml:space="preserve">
+    <value>Il s’agit d’un dossier système masqué, que seul Windows utilise.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderInvalidPart" xml:space="preserve">
+    <value>Une partie entre accolades n’est pas connue de PC Companion, ou le nom d’un dossier contient des caractères qu’il ne peut pas avoir.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFolderRoot" xml:space="preserve">
+    <value>Un lecteur entier ne peut pas être sauvegardé. Choisissez des dossiers qui s’y trouvent.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
