@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using PCCompanion.App.Controls;
 using PCCompanion.App.Features;
 using PCCompanion.App.Pages;
 using PCCompanion.Core.Settings;
@@ -210,12 +211,9 @@ public sealed partial class MainWindow : Window
             Navigation.MenuItems.Add(new NavigationViewItemHeader { Content = Localized.GetString(module.NameKey) });
             foreach (var feature in module.Features)
             {
-                Navigation.MenuItems.Add(new NavigationViewItem
-                {
-                    Content = Localized.GetString(feature.Info.NameKey),
-                    Icon = new FontIcon { Glyph = feature.Info.Glyph },
-                    Tag = feature,
-                });
+                var item = new NavigationViewItem { Content = Localized.GetString(feature.Info.NameKey), Tag = feature };
+                FeatureIcon.Show(item, icon => item.Icon = icon, feature.DrawnIcon, feature.Info.Glyph, 16);
+                Navigation.MenuItems.Add(item);
             }
         }
     }

@@ -50,7 +50,11 @@ public sealed record CatalogModule(string Id, string NameKey, IReadOnlyList<Cata
 /// read from Windows; null for its defaults. It runs on the settings app's UI thread as the switch
 /// changes, so it does only quick work.
 /// </param>
-public sealed record CatalogFeature(FeatureInfo Info, FeatureSupport Support, Type PageType, Func<JsonElement>? FirstSettings = null);
+/// <param name="DrawnIcon">
+/// The name of the feature's drawing in <c>docs/design/icons</c>, such as <c>hot-corners</c>, whose
+/// images <c>scripts/feature-icons.ps1</c> makes in <c>Assets/Icons</c>; null to show its glyph.
+/// </param>
+public sealed record CatalogFeature(FeatureInfo Info, FeatureSupport Support, Type PageType, Func<JsonElement>? FirstSettings = null, string? DrawnIcon = null);
 
 /// <summary>
 /// Every module and feature, in the order the navigation pane and Home show them.
@@ -61,7 +65,7 @@ public static class FeatureCatalog
     [
         new(InputModule.Id, "ModuleInputName",
         [
-            new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage)),
+            new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage), DrawnIcon: "hot-corners"),
             new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage)),
             new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage)),
         ]),
@@ -75,11 +79,11 @@ public static class FeatureCatalog
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [
-            new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage)),
+            new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage), DrawnIcon: "system-meters"),
         ]),
         new(ClipboardModule.Id, "ModuleClipboardName",
         [
-            new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage)),
+            new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage), DrawnIcon: "clipboard-actions"),
         ]),
         new(NetworkModule.Id, "ModuleNetworkName",
         [

@@ -30,6 +30,9 @@ public abstract class FeatureViewModel<TSettings> : ObservableObject
     /// <summary>The feature's icon, a glyph of the icon font.</summary>
     public string Glyph => _feature.Glyph;
 
+    /// <summary>The name of the feature's drawing, which its page shows instead of the glyph, or null.</summary>
+    public string? DrawnIcon => FeatureCatalog.Find(_feature.Id)?.DrawnIcon;
+
     public bool IsOn
     {
         get => Settings.Enabled;

@@ -10,7 +10,10 @@ namespace PCCompanion.App.Controls;
 public sealed partial class FeatureHeader : UserControl
 {
     public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register(
-        nameof(Glyph), typeof(string), typeof(FeatureHeader), new PropertyMetadata(string.Empty));
+        nameof(Glyph), typeof(string), typeof(FeatureHeader), new PropertyMetadata(string.Empty, (sender, _) => ((FeatureHeader)sender).ShowIcon()));
+
+    public static readonly DependencyProperty DrawnIconProperty = DependencyProperty.Register(
+        nameof(DrawnIcon), typeof(string), typeof(FeatureHeader), new PropertyMetadata(null, (sender, _) => ((FeatureHeader)sender).ShowIcon()));
 
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title), typeof(string), typeof(FeatureHeader), new PropertyMetadata(string.Empty));
@@ -34,6 +37,16 @@ public sealed partial class FeatureHeader : UserControl
     {
         get => (string)GetValue(GlyphProperty);
         set => SetValue(GlyphProperty, value);
+    }
+
+    /// <summary>
+    /// The name of the feature's drawing, such as <c>hot-corners</c>, which the header shows instead
+    /// of <see cref="Glyph"/>; see <see cref="FeatureIcon"/>.
+    /// </summary>
+    public string? DrawnIcon
+    {
+        get => (string?)GetValue(DrawnIconProperty);
+        set => SetValue(DrawnIconProperty, value);
     }
 
     /// <summary>The feature's name, which is also the name screen readers give the switch.</summary>
@@ -63,4 +76,7 @@ public sealed partial class FeatureHeader : UserControl
         get => (bool)GetValue(SaveFailedProperty);
         set => SetValue(SaveFailedProperty, value);
     }
+
+    // The header's icon is 32 pixels high.
+    private void ShowIcon() => FeatureIcon.Show(this, icon => IconHost.Child = icon, DrawnIcon, Glyph, 32);
 }
