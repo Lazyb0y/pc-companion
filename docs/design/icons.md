@@ -95,7 +95,8 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 ## Files
 
 - [`icons/`](icons/) has the approved drawings as SVG: `<name>-<size>.svg`, and `<name>-<size>-mono.svg` for the one-color version, such as `hot-corners-16.svg` and `hot-corners-16-mono.svg`. `<name>` is the feature's name in lowercase with hyphens, or `app`.
-- `scripts/icon-drawings.ps1` writes them from each icon's shapes at each size, and works out the gaps and the one-color versions. To change an icon or add one, change or add its shapes there, run it, and look at the result.
+- `scripts/icon-drawings.ps1` writes them from each icon's shapes at each size, and works out the gaps and the one-color versions. To change an icon or add one, change or add its shapes there, run it, then `app-icon.ps1` or `feature-icons.ps1`, and look at the result.
+- `scripts/feature-icons.ps1` makes the settings app's images of the feature icons in `src/PCCompanion.App/Assets/Icons`: a PNG of the color and the one-color version for each size an icon is shown at, 16, 20 and 32 pixels, at 100%, 125%, 150% and 200% display scale, from the drawing closest in size. It records the drawings it used in `drawings.txt`, and `PCCompanion.Architecture.Tests` fails when a drawing has changed since.
 - `scripts/app-icon.ps1` makes `PCCompanion.ico` from the `app-<size>.svg` drawings; see [Packaging](../development/packaging.md).
 - They use only what Windows' SVG renderer, Direct2D, [supports](https://learn.microsoft.com/en-us/windows/win32/direct2d/svg-support), which WinUI's `SvgImageSource` uses: `svg`, `defs`, `g`, `rect`, `path`, `linearGradient`, `stop` and `clipPath`, with attributes rather than `style` or CSS. Direct2D ignores `mask`, `symbol`, `use`, `filter` and `text`.
 - Coordinates are in pixels, with a `viewBox` the size of the icon.
