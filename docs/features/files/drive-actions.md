@@ -192,7 +192,8 @@ A drive's actions run in their order, one at a time. A drive with no action can 
 
 - The page needs what only the host knows, the connected drives, the runs and the history, and asks the host to act, so only the host writes on drives and knows what it wrote. The host serves it through a named pipe that only the user's own account and the system can open, and that rejects remote clients, as Folder Rules' pipe does. The requests: the drives connected now and what they are, **Add a drive** (which writes the ID file and gives back the ID and the hashed serials), **Use this drive**, the history, **Clear history**, the files an import would copy, **Run now**, **Stop** and **Undo**.
 - The host checks every request: a drive must be connected, count, and be the one the request names; a run must be for a drive in its settings; an entry to undo must be in its history.
-- **Notifications:** the host shows them from its icon, with `Shell_NotifyIcon`, as it shows the update notification, and tells the feature which one was selected. Features show notifications through a new host command in Core, so that each feature doesn't need its own icon.
+- The page asks for the connected drives every 2 seconds while it's open. The host gives each with the list's drive it is; a drive with a list drive's serial numbers but without its ID file, and a locked drive with a list drive's hardware serial number, are given with that drive, so that the page shows it as not recognized, with **Add again**, or as locked. Nothing is copied to or from such a drive.
+- **Notifications:** the host shows them from its icon, with `Shell_NotifyIcon`, as it shows the update notification, and tells the feature which one was selected. Features show notifications through `IHostNotifications` in Core, so that each feature doesn't need its own icon. Selecting the notification that a run is done, or the warning about a look-alike, opens the page.
 
 ## Threads
 
@@ -235,7 +236,7 @@ A spike in Windows Sandbox (Windows 11 24H2, build 26100), with a .NET 10 helper
 - **Feature page:**
   - the on/off switch;
   - **Drives,** a list with **Add a drive**; for each drive its name and kind, whether it's connected, not connected, locked, not recognized or running, its problem, if any, **Run now**, **When connected**, its **Actions** with **Add action**, and for each action what it does, **Edit** and **More options** with **Move up**, **Move down** and **Remove**, **Eject when done**, and **More options** with **Rename** and **Remove**;
-  - for a drive that receives backups and isn't known to be encrypted, a note: "Anyone who has this drive can read its backups. Turn on BitLocker To Go to protect them.";
+  - for a drive that receives backups, a note: "Anyone who has this drive can read its backups. Turn on BitLocker To Go to protect them."; PC Companion doesn't read whether a drive is encrypted;
   - a note about AutoPlay, with **Open AutoPlay settings**;
   - **History,** 50 runs at a time with **Show more**, with **Undo** on imports and their files, **Refresh**, **Open Recycle Bin** and **Clear history**;
   - a **Permissions & data** card.

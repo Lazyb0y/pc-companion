@@ -8,7 +8,7 @@
 - **Exit** asks the settings app to close through a named event in the user session, `Local\PCCompanion.App.Exit`. Nothing else sends it, so the settings app stays open when the host stops any other way.
 - Windows starts the host at every sign-in. It keeps running only for users who turned on **Start with Windows**.
 - Only the settings app saves settings. The host watches the settings file and loads it again after each save: it reads the file off its UI thread and applies it there, and a read that ends after a later one isn't applied.
-- The host gives the settings app what only it knows, such as Hot Corners' recent results and Folder Rules' history, through named pipes for the user's own account, never through files: a host running as administrator mustn't write where programs without admin rights can redirect it. Hot Corners' pipe only gives its results; Folder Rules' pipe reads a request and checks it before it acts. See [Hot Corners](../features/input/hot-corners.md#recent-results) and [Folder Rules](../features/files/folder-rules.md#the-settings-app-and-the-host).
+- The host gives the settings app what only it knows, such as Hot Corners' recent results, Folder Rules' history and the drives Drive Actions sees, through named pipes for the user's own account, never through files: a host running as administrator mustn't write where programs without admin rights can redirect it. Hot Corners' pipe only gives its results; Folder Rules' and Drive Actions' pipes read a request and check it before they act. See [Hot Corners](../features/input/hot-corners.md#recent-results), [Folder Rules](../features/files/folder-rules.md#the-settings-app-and-the-host) and [Drive Actions](../features/files/drive-actions.md#the-settings-app-and-the-host).
 - Both are self-contained and install into one folder; see [Packaging](../development/packaging.md).
 
 ## UI
@@ -69,7 +69,7 @@
 | `PCCompanion.Modules.Clipboard` | Clipboard & Text: [Clipboard Actions](../features/clipboard/clipboard-actions.md) |
 | `PCCompanion.Modules.Desktop` | Desktop: [System Meters](../features/desktop/system-meters.md) |
 | `PCCompanion.Modules.Display` | Display: [Display Profiles](../features/display/display-profiles.md) |
-| `PCCompanion.Modules.Files` | Files: [Folder Rules](../features/files/folder-rules.md) |
+| `PCCompanion.Modules.Files` | Files: [Folder Rules](../features/files/folder-rules.md), [Drive Actions](../features/files/drive-actions.md) |
 | `PCCompanion.Modules.Input` | Input & Triggers: [Hot Corners](../features/input/hot-corners.md), [Lock Keys](../features/input/lock-keys.md), [Input Language per App](../features/input/input-language-per-app.md) |
 | `PCCompanion.Modules.Network` | Network: [Network Profiles](../features/network/network-profiles.md) |
 | `PCCompanion.Modules.Windows` | Window Management: [App Windows](../features/windows/app-windows.md), [Minimize to Tray](../features/windows/minimize-to-tray.md), [Hide Apps](../features/windows/hide-apps.md), [Drop-down Apps](../features/windows/drop-down-apps.md), [Title Bar Actions](../features/windows/title-bar-actions.md) |
