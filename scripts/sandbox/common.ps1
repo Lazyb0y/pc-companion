@@ -366,6 +366,57 @@ function Test-HeaderAlignment([string] $Name, [string] $Title, [string] $When = 
     return $letterHeight
 }
 
+# The number of pixels in $Area of the screen that are amber, the color the feature icons' drawings
+# have and glyphs never do.
+function Get-AmberPixels([System.Windows.Rect] $Area) {
+    $width = [int] $Area.Width
+    $height = [int] $Area.Height
+    if ($width -le 0 -or $height -le 0) { return 0 }
+    $bitmap = New-Object System.Drawing.Bitmap $width, $height
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen([int] $Area.Left, [int] $Area.Top, 0, 0, $bitmap.Size)
+    $count = 0
+    for ($y = 0; $y -lt $height; $y++) {
+        for ($x = 0; $x -lt $width; $x++) {
+            $pixel = $bitmap.GetPixel($x, $y)
+            if ($pixel.R -ge 200 -and $pixel.G -ge 100 -and $pixel.R - $pixel.B -ge 100) { $count++ }
+        }
+    }
+    $graphics.Dispose()
+    $bitmap.Dispose()
+    return $count
+}
+
+# Checks that the header of page $Title, and the navigation pane's item $Name, show the feature's
+# drawing when $Drawn is true, and its glyph otherwise.
+function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
+    $kind = if ($Drawn) { 'drawing' } else { 'glyph' }
+    $layout = Get-PageLayout $Title
+    if ($layout) {
+        # The 32-pixel icon left of the title, as in Test-HeaderAlignment.
+        $box = $layout.Title
+        $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList ($box.Left - 100), ($box.Top - 24), 92, ($box.Height + 48))
+        Test-Check "${Name}: the header shows the feature's $kind" ($Drawn -eq ($amber -ge 20)) "amber pixels: $amber"
+    }
+    else {
+        Test-Check "${Name}: the header shows the feature's $kind" $false 'the page''s title isn''t shown'
+    }
+
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
+    $item = (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if ($item) {
+        # The 16-pixel icon in the item's left 48 pixels.
+        $bounds = $item.Current.BoundingRectangle
+        $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList $bounds.Left, $bounds.Top, 48, $bounds.Height)
+        Test-Check "${Name}: the navigation item shows the feature's $kind" ($Drawn -eq ($amber -ge 5)) "amber pixels: $amber"
+    }
+    else {
+        Test-Check "${Name}: the navigation item shows the feature's $kind" $false 'the item isn''t shown'
+    }
+}
+
 # Shows the page of navigation item $Name. In a narrow window the pane folds away, so if the item
 # can't be selected, this opens the pane with its button first.
 function Show-Page([string] $Name) {
