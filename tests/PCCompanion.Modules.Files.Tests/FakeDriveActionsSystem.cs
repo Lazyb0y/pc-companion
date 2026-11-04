@@ -264,6 +264,9 @@ internal sealed class FakeDriveActionsHost : IDriveActionsHost
 
     public List<string> Opened { get; } = [];
 
+    /// <summary>How many times the runner opened the page.</summary>
+    public int PagesOpened { get; private set; }
+
     public DriveActionsState State { get; private set; } = DriveActionsState.Empty;
 
     public void Notify(string title, string text, Action? selected) => Notifications.Add((title, text, selected));
@@ -273,6 +276,8 @@ internal sealed class FakeDriveActionsHost : IDriveActionsHost
     public void Unwatch(char letter) => Watched.Remove(letter);
 
     public void OpenFolder(string path) => Opened.Add(path);
+
+    public void OpenPage() => PagesOpened++;
 
     public void Publish(DriveActionsState state) => State = state;
 

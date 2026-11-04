@@ -456,6 +456,43 @@ Start-Sleep -Seconds 1
 Test-Check 'and removes it' ((Invoke-DialogButton 'Remove Work drive?' 'Remove') -and (Wait-Until { @((Get-DriveActionsSettings).drives).Count -eq 2 } 5))
 Test-Check 'leaving its ID file on the disk' ([IO.File]::Exists('T:\.pccompanion-drive'))
 
+# Run now lists what the card's import would copy, those imported before unchecked, and runs it with
+# the files left checked; the history shows the runs, Undo of a run asks first and sends its copies
+# to the Recycle Bin, Open Recycle Bin opens it, and Clear history asks first.
+function Find-AppByAutomationId([string] $Id) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, $Id)))
+}
+function Get-UndoRunCount {
+    $window = Get-AppWindow
+    if (-not $window) { return 0 }
+    @($window.FindAll([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'UndoRun')))).Count
+}
+$importedTo = Join-Path $pictures '2026'
+$undoable = Get-UndoRunCount
+Test-Check 'Run now lists the card''s photos' ((Invoke-AppButton 'Run now for Camera cards') -and (Wait-Until { Find-AppTyped '100TEST\IMG_0001.JPG' ([System.Windows.Automation.ControlType]::CheckBox) } 15))
+$photoBox = Find-AppTyped '100TEST\IMG_0001.JPG' ([System.Windows.Automation.ControlType]::CheckBox)
+$photoToggle = $photoBox.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
+Test-Check 'a photo imported before is unchecked' ($photoToggle.Current.ToggleState -eq [System.Windows.Automation.ToggleState]::Off)
+$photoToggle.Toggle()
+Save-Screenshot '15l-drive-actions-run-now'
+Test-Check 'Run imports the photo checked again' ((Invoke-DialogButton 'Run now: Camera cards' 'Run') -and (Wait-Until { Test-Path "$importedTo\IMG_0001.JPG" } 20))
+Test-Check 'the history shows the run, with Undo' ((Invoke-AppElement 'Refresh') -and (Wait-Until { (Get-UndoRunCount) -gt $undoable } 15)) "$(Get-UndoRunCount) runs with Undo, $undoable before"
+Save-Screenshot '15m-drive-actions-history'
+$undoRun = Find-AppByAutomationId 'UndoRun'
+if ($undoRun) { $undoRun.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke() }
+Test-Check 'Undo of a run asks first' (($null -ne $undoRun) -and (Wait-Until { Find-AppDialog 'Undo the import?' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'and sends the copy to the Recycle Bin' ((Invoke-DialogButton 'Undo the import?' 'Undo') -and (Wait-Until { -not (Test-Path "$importedTo\IMG_0001.JPG") } 15))
+Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-FocusedName) -eq 'Refresh' } 3) (Get-FocusedName)
+Test-Check 'Open Recycle Bin opens it' ((Invoke-AppElement 'Open Recycle Bin') -and (Wait-Until { Find-TopWindow 'Recycle Bin' } 15))
+$recycleBin = Find-TopWindow 'Recycle Bin'
+if ($recycleBin) { $recycleBin.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() }
+Test-Check 'Clear history asks first' ((Invoke-AppElement 'Clear history') -and (Wait-Until { Find-AppDialog 'Clear the history?' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'and empties it' ((Invoke-DialogButton 'Clear the history?' 'Clear history') -and (Wait-Until { Find-AppText 'No drive''s actions have run yet.' } 10))
+
 Test-Check 'Open AutoPlay settings opens Settings' ((Invoke-AppElement 'Open AutoPlay settings') -and (Wait-Until { Find-TopWindow 'Settings' } 20))
 $settingsWindow = Find-TopWindow 'Settings'
 if ($settingsWindow) { $settingsWindow.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() }

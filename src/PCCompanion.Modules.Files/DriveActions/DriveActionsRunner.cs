@@ -25,6 +25,9 @@ public interface IDriveActionsHost
     /// <summary>Opens a folder in File Explorer, with the user's rights, without waiting.</summary>
     void OpenFolder(string path);
 
+    /// <summary>Opens Drive Actions' page in the settings app, as when the user selects the notification that a run is done.</summary>
+    void OpenPage();
+
     /// <summary>Gives the PC Companion icon's menu what it shows.</summary>
     void Publish(DriveActionsState state);
 
@@ -411,7 +414,7 @@ public sealed partial class DriveActionsRunner
             case RecognitionOutcome.LookAlike:
                 var name = _settings.Drives[connected.Recognition.Drive].Name;
                 LogLookAlike(_logger, letter, connected.Recognition.Drive + 1);
-                _host.Notify(Format(Strings.DriveActionsLookAlikeTitle, name), Strings.DriveActionsLookAlikeText, null);
+                _host.Notify(Format(Strings.DriveActionsLookAlikeTitle, name), Strings.DriveActionsLookAlikeText, _host.OpenPage);
                 return;
             case RecognitionOutcome.Recognized or RecognitionOutcome.CameraCards:
                 break;
@@ -949,7 +952,7 @@ public sealed partial class DriveActionsRunner
         var copied = run.Results.Sum(result => result.Copied);
         var skipped = run.Results.Sum(result => result.Skipped);
         LogRunEnded(_logger, run.Letter, run.Outcome, copied, skipped);
-        _host.Notify(run.Entry.Name, DoneText(run), null);
+        _host.Notify(run.Entry.Name, DoneText(run), _host.OpenPage);
         Publish();
     }
 

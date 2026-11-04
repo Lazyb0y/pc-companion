@@ -91,33 +91,49 @@
                                 Header="{x:Bind Name}"
                                 IsExpanded="True"
                                 ItemsSource="{x:Bind Actions}">
-                                <Button
-                                    AutomationProperties.AutomationId="DriveMore"
-                                    AutomationProperties.Name="{x:Bind MoreName}"
-                                    Tag="{x:Bind Index}"
-                                    ToolTipService.ToolTip="{x:Bind MoreName}">
-                                    <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
-                                    <Button.Flyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem
-                                                Click="OnRenameClick"
-                                                Tag="{x:Bind Index}"
-                                                Text="{app:Localized Key=DriveActionsRename}">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE8AC;" />
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem
-                                                Click="OnRemoveDriveClick"
-                                                Tag="{x:Bind Index}"
-                                                Text="{app:Localized Key=DriveActionsRemove}">
-                                                <MenuFlyoutItem.Icon>
-                                                    <FontIcon Glyph="&#xE74D;" />
-                                                </MenuFlyoutItem.Icon>
-                                            </MenuFlyoutItem>
-                                        </MenuFlyout>
-                                    </Button.Flyout>
-                                </Button>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button
+                                        AutomationProperties.AutomationId="RunNow"
+                                        AutomationProperties.Name="{x:Bind RunNowName}"
+                                        Click="OnRunNowClick"
+                                        Content="{app:Localized Key=DriveActionsRunNow}"
+                                        IsEnabled="{x:Bind CanRunNow, Mode=OneWay}"
+                                        Tag="{x:Bind Index}"
+                                        Visibility="{x:Bind IsNotRunning, Mode=OneWay}" />
+                                    <Button
+                                        AutomationProperties.AutomationId="Stop"
+                                        AutomationProperties.Name="{x:Bind StopName}"
+                                        Click="OnStopClick"
+                                        Content="{app:Localized Key=DriveActionsStop}"
+                                        Visibility="{x:Bind IsRunning, Mode=OneWay}" />
+                                    <Button
+                                        AutomationProperties.AutomationId="DriveMore"
+                                        AutomationProperties.Name="{x:Bind MoreName}"
+                                        Tag="{x:Bind Index}"
+                                        ToolTipService.ToolTip="{x:Bind MoreName}">
+                                        <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
+                                        <Button.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem
+                                                    Click="OnRenameClick"
+                                                    Tag="{x:Bind Index}"
+                                                    Text="{app:Localized Key=DriveActionsRename}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE8AC;" />
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    Click="OnRemoveDriveClick"
+                                                    Tag="{x:Bind Index}"
+                                                    Text="{app:Localized Key=DriveActionsRemove}">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE74D;" />
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                </StackPanel>
                                 <controls:IconExpander.ItemsHeader>
                                     <StackPanel>
                                         <InfoBar
@@ -244,6 +260,98 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
+                <Grid Margin="0,24,0,4" ColumnSpacing="16" RowSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="2">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=DriveActionsHistoryHeader}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{app:Localized Key=DriveActionsHistoryDescription}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button
+                            x:Name="RefreshHistoryButton"
+                            Click="OnRefreshHistoryClick"
+                            Content="{app:Localized Key=DriveActionsHistoryRefresh}" />
+                        <Button Click="OnOpenRecycleBinClick" Content="{app:Localized Key=DriveActionsOpenRecycleBin}" />
+                        <Button
+                            Click="OnClearHistoryClick"
+                            Content="{app:Localized Key=DriveActionsClearHistory}"
+                            IsEnabled="{x:Bind ViewModel.History.CanClear, Mode=OneWay}" />
+                    </StackPanel>
+                </Grid>
+
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.History.HasNote, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.History.Note, Mode=OneWay}"
+                    Severity="Informational" />
+
+                <TextBlock
+                    Margin="0,8"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind ViewModel.History.Status, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind ViewModel.History.HasStatus, Mode=OneWay}" />
+
+                <ItemsControl
+                    x:Name="HistoryList"
+                    IsTabStop="False"
+                    ItemsSource="{x:Bind ViewModel.History.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="local:RunItem">
+                            <controls:IconExpander
+                                Description="{x:Bind Description}"
+                                Glyph="&#xE81C;"
+                                Header="{x:Bind Name}"
+                                ItemsSource="{x:Bind Files}">
+                                <Button
+                                    AutomationProperties.AutomationId="UndoRun"
+                                    AutomationProperties.Name="{x:Bind UndoName}"
+                                    Click="OnUndoRunClick"
+                                    Content="{app:Localized Key=DriveActionsUndo}"
+                                    Tag="{x:Bind Index}"
+                                    Visibility="{x:Bind CanUndo}" />
+                                <controls:IconExpander.ItemTemplate>
+                                    <DataTemplate x:DataType="local:RunFileItem">
+                                        <toolkit:SettingsCard Description="{x:Bind What}">
+                                            <toolkit:SettingsCard.Header>
+                                                <TextBlock FlowDirection="LeftToRight" Text="{x:Bind Path}" TextWrapping="Wrap" />
+                                            </toolkit:SettingsCard.Header>
+                                            <Button
+                                                AutomationProperties.AutomationId="UndoFile"
+                                                AutomationProperties.Name="{x:Bind UndoName}"
+                                                Click="OnUndoFileClick"
+                                                Content="{app:Localized Key=DriveActionsUndo}"
+                                                Tag="{x:Bind Tag}"
+                                                Visibility="{x:Bind CanUndo}" />
+                                        </toolkit:SettingsCard>
+                                    </DataTemplate>
+                                </controls:IconExpander.ItemTemplate>
+                            </controls:IconExpander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Button
+                    Margin="0,8,0,0"
+                    Click="OnShowMoreClick"
+                    Content="{app:Localized Key=DriveActionsHistoryShowMore}"
+                    Visibility="{x:Bind ViewModel.History.HasMore, Mode=OneWay}" />
 
                 <controls:PermissionsCard Margin="0,24,0,0" Description="{app:Localized Key=DriveActionsPermissions}" />
             </StackPanel>

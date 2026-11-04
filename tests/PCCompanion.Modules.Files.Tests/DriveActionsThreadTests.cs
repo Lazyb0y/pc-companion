@@ -129,6 +129,10 @@ public sealed class DriveActionsThreadTests : IDisposable
         {
         }
 
+        public void OpenPage()
+        {
+        }
+
         public void Publish(DriveActionsState state)
         {
         }
