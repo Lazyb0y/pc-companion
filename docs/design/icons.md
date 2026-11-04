@@ -93,6 +93,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 ## Files
 
 - [`icons/`](icons/) has the approved drawings as SVG: `<name>-<size>.svg`, and `<name>-<size>-mono.svg` for the one-color version, such as `hot-corners-16.svg` and `hot-corners-16-mono.svg`. `<name>` is the feature's name in lowercase with hyphens, or `app`.
+- `scripts/app-icon.ps1` makes `PCCompanion.ico` from the `app-<size>.svg` drawings; see [Packaging](../development/packaging.md).
 - They use only what Windows' SVG renderer, Direct2D, [supports](https://learn.microsoft.com/en-us/windows/win32/direct2d/svg-support), which WinUI's `SvgImageSource` uses: `svg`, `defs`, `g`, `rect`, `path`, `linearGradient`, `stop` and `clipPath`, with attributes rather than `style` or CSS. Direct2D ignores `mask`, `symbol`, `use`, `filter` and `text`.
 - Coordinates are in pixels, with a `viewBox` the size of the icon.
 - A gap is a `clipPath` on the shapes under it: the whole icon minus the gap's outline, as one path with `clip-rule="evenodd"`. The outline is the shape grown by half its stroke plus the gap, with round corners.
