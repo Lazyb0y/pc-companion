@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 
 namespace PCCompanion.App.Features.FolderRules;
@@ -57,7 +58,7 @@ public static class FolderRulesText
         RuleProblem.InvalidSitePattern => Strings.FolderRulesRuleInvalidSitePattern,
         RuleProblem.UnknownAction => Strings.FolderRulesRuleUnknownAction,
         RuleProblem.NoDestination => Strings.FolderRulesRuleNoDestination,
-        RuleProblem.DestinationNotAllowed => string.Format(CultureInfo.CurrentCulture, DestinationFormat, Of(FolderRuleCheck.CheckDestination(rule.Destination, places))),
+        RuleProblem.DestinationNotAllowed => string.Format(CultureInfo.CurrentCulture, DestinationFormat, Of(FolderChecks.CheckDestination(rule.Destination, places))),
         RuleProblem.DestinationIsOwnFolder => Strings.FolderRulesRuleDestinationIsOwnFolder,
         RuleProblem.NoNewName => Strings.FolderRulesRuleNoNewName,
         RuleProblem.InvalidNewName => Strings.FolderRulesRuleInvalidNewName,

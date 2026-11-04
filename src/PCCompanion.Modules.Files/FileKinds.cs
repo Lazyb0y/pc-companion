@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>A preset that fills in the Type condition's extensions.</summary>
 public enum FileKind

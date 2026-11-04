@@ -5,52 +5,6 @@ using System.Linq;
 
 namespace PCCompanion.Modules.Files.FolderRules;
 
-/// <summary>What keeps a folder from being watched, or from being a rule's destination.</summary>
-public enum FolderProblem
-{
-    None,
-    NoPath,
-
-    /// <summary>
-    /// The path holds characters Windows doesn't allow or wildcards, names a stream of a file, or
-    /// reaches a device directly, such as <c>\\?\C:\</c>.
-    /// </summary>
-    InvalidPath,
-
-    /// <summary>
-    /// The path doesn't start with a drive or a server and a folder it shares, such as <c>D:\</c>
-    /// or <c>\\server\share</c>.
-    /// </summary>
-    NotFullPath,
-
-    /// <summary>The Windows folder or a folder in it, which only administrators can change.</summary>
-    WindowsFolder,
-
-    /// <summary>A Program Files folder or a folder in one, which only administrators can change.</summary>
-    ProgramFiles,
-
-    /// <summary>PC Companion's data folder or a folder in it, where a rule could move its settings.</summary>
-    DataFolder,
-
-    /// <summary>
-    /// A hidden system folder or a folder in one, such as the Recycle Bin's own folders, which only
-    /// Windows uses. Only the host and the page, which read the disk, find it.
-    /// </summary>
-    SystemFolder,
-
-    /// <summary>
-    /// A destination's subfolder made from the file has a part in braces that isn't known or
-    /// closed, a character a folder name can't have, or is <c>.</c> or <c>..</c>.
-    /// </summary>
-    InvalidPart,
-
-    /// <summary>A folder earlier in the list is the same folder.</summary>
-    AlreadyWatched,
-
-    /// <summary>It comes after the first <see cref="FolderRulesSettings.MaximumFolders"/> folders.</summary>
-    TooMany,
-}
-
 /// <summary>What keeps a rule from being used.</summary>
 public enum RuleProblem
 {
@@ -88,7 +42,7 @@ public enum RuleProblem
     UnknownAction,
     NoDestination,
 
-    /// <summary>The destination can't be used; <see cref="FolderRuleCheck.CheckDestination"/> says why.</summary>
+    /// <summary>The destination can't be used; <see cref="FolderChecks.CheckDestination"/> says why.</summary>
     DestinationNotAllowed,
 
     /// <summary>A Move or Copy to the rule's own folder, which Rename does.</summary>
@@ -154,7 +108,7 @@ public static class FolderRuleCheck
                 continue;
             }
 
-            var problem = CheckFolder(folder.Path, places);
+            var problem = FolderChecks.CheckFolder(folder.Path, places);
             if (problem == FolderProblem.None)
             {
                 FolderPaths.Normalize(folder.Path, out var fullPath);
@@ -177,50 +131,6 @@ public static class FolderRuleCheck
         }
 
         return reviews;
-    }
-
-    /// <summary>Checks a folder to watch, by its path alone.</summary>
-    public static FolderProblem CheckFolder(string path, SpecialFolders places)
-    {
-        ArgumentNullException.ThrowIfNull(places);
-
-        var problem = FolderPaths.Normalize(path, out var fullPath);
-        return problem == FolderProblem.None ? CheckPlace(fullPath, places) : problem;
-    }
-
-    /// <summary>
-    /// Checks a Move or Copy destination by the folder it starts with, before any subfolder made
-    /// from the file, such as <c>D:\Invoices</c> for <c>D:\Invoices\{year}</c>.
-    /// </summary>
-    public static FolderProblem CheckDestination(string destination, SpecialFolders places)
-    {
-        ArgumentNullException.ThrowIfNull(destination);
-
-        if (destination.Trim().Length == 0)
-        {
-            return FolderProblem.NoPath;
-        }
-
-        var fixedPart = FolderPaths.FixedPart(destination);
-        if (fixedPart.Length == 0)
-        {
-            return FolderProblem.NotFullPath;
-        }
-
-        var problem = CheckFolder(fixedPart, places);
-        return problem == FolderProblem.None && !FileNaming.IsDestinationPattern(destination) ? FolderProblem.InvalidPart : problem;
-    }
-
-    /// <summary>
-    /// Whether <paramref name="path"/> is in <c>AppData</c> or <c>ProgramData</c>, where programs
-    /// keep their own files, which the page warns about.
-    /// </summary>
-    public static bool IsProgramData(string path, SpecialFolders places)
-    {
-        ArgumentNullException.ThrowIfNull(places);
-
-        return FolderPaths.Normalize(path, out var fullPath) == FolderProblem.None
-            && places.ProgramData.Any(folder => FolderPaths.IsInside(fullPath, folder));
     }
 
     /// <summary>The first problem of a rule of the folder <paramref name="folder"/>, or <see cref="RuleProblem.None"/>.</summary>
@@ -369,7 +279,7 @@ public static class FolderRuleCheck
 
     private static RuleProblem CheckMoveOrCopy(FolderRule rule, string folder, SpecialFolders places)
     {
-        switch (CheckDestination(rule.Destination, places))
+        switch (FolderChecks.CheckDestination(rule.Destination, places))
         {
             case FolderProblem.None:
                 break;
@@ -398,18 +308,4 @@ public static class FolderRuleCheck
     }
 
     // The places a folder can't be in, for a folder whose path is full.
-    private static FolderProblem CheckPlace(string fullPath, SpecialFolders places)
-    {
-        if (FolderPaths.IsInside(fullPath, places.DataFolder))
-        {
-            return FolderProblem.DataFolder;
-        }
-
-        if (FolderPaths.IsInside(fullPath, places.Windows))
-        {
-            return FolderProblem.WindowsFolder;
-        }
-
-        return places.ProgramFiles.Any(folder => FolderPaths.IsInside(fullPath, folder)) ? FolderProblem.ProgramFiles : FolderProblem.None;
-    }
 }

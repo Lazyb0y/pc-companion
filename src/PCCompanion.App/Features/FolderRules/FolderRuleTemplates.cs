@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 
 namespace PCCompanion.App.Features.FolderRules;

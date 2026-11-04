@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>
 /// The folders that rules can't watch or move files to, and the folders where programs keep

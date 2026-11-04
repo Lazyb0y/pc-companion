@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace PCCompanion.Modules.Files.FolderRules;
+namespace PCCompanion.Modules.Files;
 
 /// <summary>Why a file gets no new name or destination from its rule.</summary>
 public enum NamingProblem
@@ -140,7 +140,7 @@ public static class FileNaming
             path = Path.Join(path, name);
         }
 
-        if (FolderRuleCheck.CheckFolder(path, places) != FolderProblem.None)
+        if (FolderChecks.CheckFolder(path, places) != FolderProblem.None)
         {
             return Naming.Failed(NamingProblem.DestinationNotAllowed);
         }

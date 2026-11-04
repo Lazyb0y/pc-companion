@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Core.Settings;
 using PCCompanion.Infrastructure;
 using PCCompanion.Localization;
+using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.FolderRules;
 
 namespace PCCompanion.App.Features.FolderRules;
@@ -135,7 +136,7 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
     {
         ArgumentNullException.ThrowIfNull(path);
 
-        var problem = FolderRuleCheck.CheckFolder(path, Places);
+        var problem = FolderChecks.CheckFolder(path, Places);
         if (problem == FolderProblem.None && FolderPaths.Normalize(path, out var full) == FolderProblem.None)
         {
             if (Settings.Folders.Any(folder => FolderPaths.Normalize(folder.Path, out var watched) == FolderProblem.None && string.Equals(watched, full, StringComparison.OrdinalIgnoreCase)))
@@ -250,7 +251,7 @@ public sealed partial class FolderRulesViewModel : FeatureViewModel<FolderRulesS
             {
                 FolderState.SystemFolder => (FolderRulesText.Of(FolderProblem.SystemFolder), InfoBarSeverity.Error),
                 FolderState.NotFound => (Strings.FolderRulesFolderNotFound, InfoBarSeverity.Warning),
-                _ when FolderRuleCheck.IsProgramData(folder.Path, Places) => (Strings.FolderRulesProgramDataWarning, InfoBarSeverity.Warning),
+                _ when FolderChecks.IsProgramData(folder.Path, Places) => (Strings.FolderRulesProgramDataWarning, InfoBarSeverity.Warning),
                 _ => (string.Empty, InfoBarSeverity.Informational),
             };
 
