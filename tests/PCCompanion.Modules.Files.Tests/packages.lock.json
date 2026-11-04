@@ -132,13 +132,17 @@
       "pccompanion.core": {
         "type": "Project"
       },
+      "pccompanion.localization": {
+        "type": "Project"
+      },
       "pccompanion.modules.files": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.platform.windows": {
@@ -148,7 +152,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {

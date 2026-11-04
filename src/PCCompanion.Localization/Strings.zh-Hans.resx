@@ -3112,4 +3112,72 @@
     <value>指针位于窗口顶部附近时，读取指针下方是哪个窗口、窗口的位置和样式，并询问窗口其标题栏的位置；列出了应用时，读取窗口所属的应用；从不读取标题或内容。指针停留在标题栏上时，鼠标挂钩会阻止应用收到具有操作的中键单击和滚轮转动，并比较其位置而不存储。最小化和排列其他应用的窗口，更改其不透明度并标记已更改的窗口，以便它们在崩溃后恢复不透明度，并将窗口传递给“最小化到通知区域”和“隐藏应用”；不在其他应用中运行代码。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>驱动器操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>连接驱动器时执行有用的操作，例如导入相机存储卡中的照片，或将文件夹备份到 U 盘。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>已连接 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>选择以运行其操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>正在运行其操作。请勿移除驱动器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>已导入 {0} 个文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>已备份 {0} 个文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>已跳过 {0} 个文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>现在可以移除驱动器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>已停止。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>已停止：驱动器已被移除。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>空间不足：需要 {0}，可用 {1}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}：不是同一个驱动器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>连接了带有此驱动器 ID 的驱动器，但它不是同一个驱动器。未复制任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>运行 {0} 的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}：第 {1} 个，共 {2} 个</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>停止</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

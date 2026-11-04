@@ -145,7 +145,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )"
         }
       },
       "pccompanion.localization": {
@@ -164,9 +164,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.desktop": {
@@ -174,9 +174,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.display": {
@@ -184,9 +184,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.files": {
@@ -194,8 +194,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.input": {
@@ -203,9 +204,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.network": {
@@ -213,9 +214,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.modules.windows": {
@@ -223,9 +224,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.3.0, )",
-          "PCCompanion.Localization": "[0.3.0, )",
-          "PCCompanion.Platform.Windows": "[0.3.0, )"
+          "PCCompanion.Core": "[0.4.0, )",
+          "PCCompanion.Localization": "[0.4.0, )",
+          "PCCompanion.Platform.Windows": "[0.4.0, )"
         }
       },
       "pccompanion.platform.windows": {

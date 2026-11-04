@@ -3140,4 +3140,84 @@
     <value>পয়েন্টার কোনো উইন্ডোর উপরের দিকে থাকলে, এর নিচে কোন উইন্ডো আছে, সেটির অবস্থান ও ধরন পড়ে, এবং সেটিকে জিজ্ঞাসা করে টাইটেল বার কোথায়; তালিকায় অ্যাপ থাকলে, সেটি কোন অ্যাপের তা পড়ে; কখনো শিরোনাম বা বিষয়বস্তু পড়ে না। পয়েন্টার টাইটেল বারে স্থির থাকলে, একটি মাউস হুক অ্যাকশন থাকা মাঝের ক্লিক ও চাকা ঘোরানো অ্যাপের কাছে যেতে দেয় না, এবং সেগুলোর অবস্থান সংরক্ষণ না করে তুলনা করে। অন্য অ্যাপের উইন্ডো ছোট করে ও সাজায়, সেগুলোর অস্বচ্ছতা বদলায় এবং বদলানো উইন্ডোগুলো চিহ্নিত করে যাতে ক্র্যাশের পরে সেগুলো অস্বচ্ছতা ফিরে পায়, এবং বিজ্ঞপ্তি এলাকায় ছোট করুন ও অ্যাপ লুকানকে উইন্ডো দেয়; অন্য অ্যাপে কোনো কোড চালায় না। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>ড্রাইভ অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>কোনো ড্রাইভ সংযুক্ত হলে কাজের কিছু করুন, যেমন ক্যামেরা কার্ডের ছবি ইমপোর্ট করা বা ফোল্ডার USB ড্রাইভে ব্যাকআপ করা।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} সংযুক্ত হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>এর অ্যাকশনগুলো চালাতে নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>এর অ্যাকশনগুলো চলছে। ড্রাইভটি সরাবেন না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>{0}টি ফাইল ইমপোর্ট করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>{0}টি ফাইল ইমপোর্ট করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>{0}টি ফাইল ব্যাকআপ করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>{0}টি ফাইল ব্যাকআপ করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>{0}টি ফাইল বাদ দেওয়া হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>{0}টি ফাইল বাদ দেওয়া হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>আপনি ড্রাইভটি সরাতে পারেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>থামানো হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>থেমে গেছে: ড্রাইভটি সরানো হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>যথেষ্ট জায়গা নেই: {0} দরকার, {1} খালি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}: একই ড্রাইভ নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>এই ড্রাইভের আইডিসহ একটি ড্রাইভ সংযুক্ত হয়েছে, কিন্তু এটি একই ড্রাইভ নয়। কিছুই কপি করা হয়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>{0}-এর অ্যাকশন চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}: {2}টির মধ্যে {1}টি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>থামান</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

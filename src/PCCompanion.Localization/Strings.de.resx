@@ -3140,4 +3140,84 @@
     <value>Liest, solange der Mauszeiger oben in einem Fenster ist, welches Fenster darunter liegt, seine Position und seine Stile, und fragt das Fenster, wo seine Titelleiste ist; mit aufgeführten Apps liest es, zu welcher App das Fenster gehört; liest nie Titel oder Inhalte. Solange der Mauszeiger auf einer Titelleiste ruht, hält ein Maus-Hook die Mittelklicks und Mausraddrehungen mit einer Aktion von der App fern und vergleicht ihre Positionen, ohne sie zu speichern. Minimiert und ordnet Fenster anderer Apps, ändert ihre Deckkraft und markiert die geänderten, damit sie nach einem Absturz ihre Deckkraft zurückerhalten, und übergibt Fenster an „In den Infobereich minimieren“ und „Apps ausblenden“; führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>Laufwerksaktionen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>Etwas Nützliches tun, wenn ein Laufwerk angeschlossen wird, etwa die Fotos einer Kamerakarte importieren oder Ordner auf einem USB-Laufwerk sichern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} ist angeschlossen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>Auswählen, um seine Aktionen auszuführen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>Seine Aktionen werden ausgeführt. Entfernen Sie das Laufwerk nicht.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>{0} Datei importiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>{0} Dateien importiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>{0} Datei gesichert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>{0} Dateien gesichert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>{0} Datei übersprungen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>{0} Dateien übersprungen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>Sie können das Laufwerk entfernen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>Angehalten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>Angehalten: Das Laufwerk wurde entfernt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>Nicht genug Speicherplatz: {0} nötig, {1} frei.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}: nicht dasselbe Laufwerk</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>Ein Laufwerk mit der ID dieses Laufwerks wurde angeschlossen, aber es ist nicht dasselbe Laufwerk. Es wurde nichts kopiert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>Aktionen für {0} ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}: {1} von {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>Anhalten</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

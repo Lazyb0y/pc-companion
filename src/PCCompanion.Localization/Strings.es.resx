@@ -3140,4 +3140,84 @@
     <value>Mientras el puntero está en la parte superior de una ventana, lee qué ventana hay debajo, su posición y sus estilos, y le pregunta dónde está su barra de título; con aplicaciones en la lista, lee a qué aplicación pertenece; nunca lee títulos ni contenido. Mientras el puntero está sobre una barra de título, un enlace de mouse impide que la aplicación reciba los clics centrales y los giros de la rueda que tienen una acción, y compara sus posiciones sin guardarlas. Minimiza y ordena las ventanas de otras aplicaciones, cambia su opacidad y marca las que cambió para que recuperen su opacidad después de un bloqueo, y pasa ventanas a Minimizar en el área de notificación y Ocultar aplicaciones; no ejecuta código en otras aplicaciones. No establece conexiones de red ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsName" xml:space="preserve">
+    <value>Acciones de unidades</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsDescription" xml:space="preserve">
+    <value>Haz algo útil cuando se conecta una unidad, como importar las fotos de una tarjeta de cámara o hacer una copia de seguridad de carpetas en una unidad USB.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskTitle" xml:space="preserve">
+    <value>{0} está conectada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsAskText" xml:space="preserve">
+    <value>Selecciona para ejecutar sus acciones.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunningText" xml:space="preserve">
+    <value>Ejecutando sus acciones. No quites la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_one" xml:space="preserve">
+    <value>Se importó {0} archivo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsImported_other" xml:space="preserve">
+    <value>Se importaron {0} archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_one" xml:space="preserve">
+    <value>Se hizo copia de seguridad de {0} archivo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsBackedUp_other" xml:space="preserve">
+    <value>Se hizo copia de seguridad de {0} archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_one" xml:space="preserve">
+    <value>Se omitió {0} archivo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsSkipped_other" xml:space="preserve">
+    <value>Se omitieron {0} archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsCanRemove" xml:space="preserve">
+    <value>Puedes quitar la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopped" xml:space="preserve">
+    <value>Detenido.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStoppedRemoved" xml:space="preserve">
+    <value>Detenido: se quitó la unidad.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEnoughSpace" xml:space="preserve">
+    <value>No hay espacio suficiente: se necesitan {0} y hay {1} libres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeTitle" xml:space="preserve">
+    <value>{0}: no es la misma unidad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsLookAlikeText" xml:space="preserve">
+    <value>Se conectó una unidad con el identificador de esta unidad, pero no es la misma unidad. No se copió nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRun" xml:space="preserve">
+    <value>Ejecutar las acciones de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuRunning" xml:space="preserve">
+    <value>{0}: {1} de {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsMenuStop" xml:space="preserve">
+    <value>Detener</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

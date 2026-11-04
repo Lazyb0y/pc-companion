@@ -57,6 +57,7 @@ $startStates = [ordered] @{
     ClipboardActions = 'Installed'
     NetworkProfiles = 'Installed'
     FolderRules = 'Installed'
+    DriveActions = 'Installed'
     DisplayProfiles = 'Installed'
     Logging = 'Installed'
     Updates = 'Installed'
