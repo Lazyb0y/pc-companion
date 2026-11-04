@@ -18,7 +18,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Setting cards, buttons and menus inside a page | Segoe Fluent Icons glyph; see [Inside pages](#inside-pages) | 16 to 20 |
 
 - The settings app shows each feature's Segoe Fluent Icons glyph, `FeatureInfo.Glyph`, in the navigation pane, on Home and in the header.
-- `PCCompanion.ico`, the installer images and `website/icon.png` show an earlier app icon.
+- `website/icon.png` and the website's screenshots show the app icon of the latest release; see [Website](../development/website.md).
 
 ## App icon
 

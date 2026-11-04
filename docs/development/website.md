@@ -8,7 +8,7 @@ The project website, [lazyb0y.github.io/pc-companion](https://lazyb0y.github.io/
 - It describes the latest release. When a release adds or changes features, update the page, with screenshots of the new or changed pages; see [Releasing](releasing.md).
 - The download buttons link to `releases/latest`, so a release needs no change to the site unless its features change.
 - In English.
-- `website/icon.png` is the 256-pixel image of the app icon, `src/PCCompanion.App/Assets/PCCompanion.ico`. Replace it when the icon changes.
+- `website/icon.png` is the 256-pixel image of the app icon, `src/PCCompanion.App/Assets/PCCompanion.ico`. When a release changes the icon, replace it with the release's update of the page, and take Home's screenshot again, whose title bar shows the icon.
 - Each feature is a row of two equal columns, its text and its screenshot, which swap sides from row to row (`feature-reverse`), so every feature's screenshot is the same width.
 - Screenshots are `website/images/<page>-light.png` and `<page>-dark.png`, at 100% scaling with the features turned on. The page shows the ones of its theme; the other one is never downloaded.
   - Home's, at the top, is the settings app's whole window at 1,086 × 736 pixels, without its borders.
