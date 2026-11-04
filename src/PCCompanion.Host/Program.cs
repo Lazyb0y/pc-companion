@@ -113,6 +113,8 @@ internal static partial class Program
             .AddSingleton<FeatureRunner>()
             .AddSingleton<HostCommands>()
             .AddSingleton<IHostCommands>(provider => provider.GetRequiredService<HostCommands>())
+            .AddSingleton<HostNotifications>()
+            .AddSingleton<IHostNotifications>(provider => provider.GetRequiredService<HostNotifications>())
             .AddSingleton<UpdateCheckStore>()
             .AddSingleton<GitHubReleaseSource>()
             .AddSingleton<UpdateChecker>()
@@ -144,7 +146,10 @@ internal static partial class Program
         using var window = new MessageWindow(HostProcess.WindowClassName);
         using var tray = ActivatorUtilities.CreateInstance<TrayController>(services);
         tray.Show(window);
-        updates.Attach(window, tray);
+        var notifications = services.GetRequiredService<HostNotifications>();
+        notifications.Attach(tray.ShowNotification);
+        tray.NotificationSelected += (_, _) => notifications.Selected();
+        updates.Attach(window);
 
         // Features started before the window existed; their Settings and Exit work from now on.
         services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open, ProgramCommand.Start, AppCommand.Start);
