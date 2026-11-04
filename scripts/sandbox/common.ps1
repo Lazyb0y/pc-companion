@@ -312,9 +312,14 @@ function Test-HeaderAlignment([string] $Name, [string] $Title, [string] $When = 
     $bitmap = New-Object System.Drawing.Bitmap 160, ([int] [math]::Max($box.Bottom, $switch.Bottom) + 24 - $top)
     $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
     $graphics.CopyFromScreen($left, $top, 0, 0, $bitmap.Size)
-    # Ink is what differs clearly from the background, taken from the gap between the icon and the title.
-    $background = $bitmap.GetPixel(92, [int] ($box.Top + $box.Height / 2) - $top).GetBrightness()
-    $isInk = { param($x, $y) [math]::Abs($bitmap.GetPixel($x, $y).GetBrightness() - $background) -gt 0.3 }
+    # Ink is what differs clearly from the background, taken from the gap between the icon and the
+    # title: by 30% in a color channel, so the light blue of a feature's drawing counts too.
+    $background = $bitmap.GetPixel(92, [int] ($box.Top + $box.Height / 2) - $top)
+    $isInk = {
+        param($x, $y)
+        $pixel = $bitmap.GetPixel($x, $y)
+        [math]::Max([math]::Abs($pixel.R - $background.R), [math]::Max([math]::Abs($pixel.G - $background.G), [math]::Abs($pixel.B - $background.B))) -gt 76
+    }
     $rowsWithInk = {
         param($fromX, $toX, $fromY, $toY)
         @(for ($y = $fromY; $y -le $toY; $y++) {

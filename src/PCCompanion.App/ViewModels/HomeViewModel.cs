@@ -58,6 +58,7 @@ public sealed partial class FeatureCardViewModel : ObservableObject
         Id = feature.Info.Id;
         Name = Localized.GetString(feature.Info.NameKey);
         Glyph = feature.Info.Glyph;
+        DrawnIcon = feature.DrawnIcon;
         IsSupported = feature.Support.IsSupported;
         Description = IsSupported ? Localized.GetString(feature.Info.DescriptionKey) : Strings.FeatureNotAvailable;
         _isOn = IsSupported && editor.IsEnabled(Id);
@@ -70,6 +71,9 @@ public sealed partial class FeatureCardViewModel : ObservableObject
     public string Description { get; }
 
     public string Glyph { get; }
+
+    /// <summary>The name of the feature's drawing, which the card shows instead of the glyph, or null.</summary>
+    public string? DrawnIcon { get; }
 
     public bool IsSupported { get; }
 

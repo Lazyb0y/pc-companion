@@ -25,11 +25,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <FontIcon
-                VerticalAlignment="Center"
-                AutomationProperties.AccessibilityView="Raw"
-                FontSize="32"
-                Glyph="{x:Bind Glyph, Mode=OneWay}" />
+            <Border x:Name="IconHost" VerticalAlignment="Center" />
             <TextBlock
                 Grid.Column="1"
                 Padding="0,8"

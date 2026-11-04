@@ -27,6 +27,10 @@
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
     <Content Include="Assets\PCCompanion.ico" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The feature icons' images, which scripts/feature-icons.ps1 makes from their drawings; its
+         drawings.txt is for the test of the images, not for the app. -->
+    <Content Include="Assets\Icons\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Remove="Assets\Icons\drawings.txt" />
     <!-- Installed next to the executables, with the license texts of the third-party components. -->
     <Content Include="..\..\ThirdPartyNotices.txt" Link="ThirdPartyNotices.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

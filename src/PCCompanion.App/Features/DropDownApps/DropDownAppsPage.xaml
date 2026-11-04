@@ -14,6 +14,7 @@
             <StackPanel Style="{StaticResource PageColumnStyle}">
                 <controls:FeatureHeader
                     Description="{app:Localized Key=DropDownAppsDescription}"
+                    DrawnIcon="{x:Bind ViewModel.DrawnIcon}"
                     Glyph="{x:Bind ViewModel.Glyph}"
                     IsOn="{x:Bind ViewModel.IsOn, Mode=TwoWay}"
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
