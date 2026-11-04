@@ -56,6 +56,15 @@ public interface IDriveActionsSystem
     /// <summary>Deletes a file for good, as PC Companion does only with its own unfinished copies. Returns 0, or Windows' error code.</summary>
     int Delete(string path);
 
+    /// <summary>
+    /// Writes the ID file at the drive's root, with <paramref name="id"/>, hidden and system,
+    /// replacing one that holds no ID. Returns 0, or Windows' error code.
+    /// </summary>
+    int WriteIdFile(string root, string id);
+
+    /// <summary>Starts the Recycle Bin's own thread, for Undo.</summary>
+    IRecycleBin CreateRecycleBin();
+
     /// <summary>Whether a file has a Mark of the Web.</summary>
     bool HasMark(string path);
 

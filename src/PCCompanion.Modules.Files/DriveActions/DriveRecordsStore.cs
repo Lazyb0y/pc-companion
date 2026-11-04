@@ -118,10 +118,40 @@ public sealed class DriveRecordsStore(string folder)
         }
     }
 
-    /// <summary>Deletes the records saved under <paramref name="key"/>, as when the drive is removed from the list.</summary>
-    /// <exception cref="IOException">The file couldn't be deleted.</exception>
-    /// <exception cref="UnauthorizedAccessException">The file couldn't be deleted.</exception>
-    public void Delete(string key) => File.Delete(PathOf(key));
+    /// <summary>
+    /// Deletes the records of every drive whose key isn't in <paramref name="keys"/>, as when drives
+    /// are removed from the list. A file that can't be deleted stays until the next time.
+    /// </summary>
+    public void DeleteOthers(IReadOnlyCollection<string> keys)
+    {
+        ArgumentNullException.ThrowIfNull(keys);
+
+        string[] files;
+        try
+        {
+            files = Directory.Exists(FolderPath) ? Directory.GetFiles(FolderPath, "*.json") : [];
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        foreach (var file in files)
+        {
+            var key = Path.GetFileNameWithoutExtension(file);
+            if ((key == CameraCardsKey || DriveIdentity.IsId(key)) && !keys.Contains(key, StringComparer.Ordinal))
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+                {
+                    // Tried again the next time the settings change.
+                }
+            }
+        }
+    }
 
     // A key is an ID of 32 hexadecimal digits or Camera cards' key, so it can't leave the folder.
     private string PathOf(string key)

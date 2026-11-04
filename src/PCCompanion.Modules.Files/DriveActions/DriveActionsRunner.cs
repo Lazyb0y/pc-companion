@@ -123,6 +123,9 @@ public sealed partial class DriveActionsRunner
 
         _settings = settings;
         _reviews = DriveActionsCheck.Review(settings, _places);
+
+        // What PC Companion recorded about a drive goes with the drive, when it's removed from the list.
+        _records.DeleteOthers([.. settings.Drives.Select(DriveRecordsStore.KeyOf)]);
         var usableDrives = _reviews.Count(review => review.Problem == DriveProblem.None);
         var usableActions = _reviews.Sum(review => review.Actions.Count(problem => problem == ActionProblem.None));
         LogApplied(_logger, usableDrives, usableActions);
@@ -337,6 +340,9 @@ public sealed partial class DriveActionsRunner
         }
 
         _queue.Clear();
+        _chosen.Clear();
+        _recycleBin?.Dispose();
+        _recycleBin = null;
         foreach (var letter in _watched.ToArray())
         {
             _host.Unwatch(letter);
@@ -464,6 +470,7 @@ public sealed partial class DriveActionsRunner
     {
         while (_running is null && _queue.TryDequeue(out var letter))
         {
+            _chosen.Remove(letter, out var chosen);
             if (!_connected.TryGetValue(letter, out var connected) || connected.Recognition.Outcome is not (RecognitionOutcome.Recognized or RecognitionOutcome.CameraCards))
             {
                 continue;
@@ -471,10 +478,10 @@ public sealed partial class DriveActionsRunner
 
             var index = connected.Recognition.Drive;
             var drive = _settings.Drives[index];
-            var actions = drive.Actions.Where((_, action) => action < _reviews[index].Actions.Count && _reviews[index].Actions[action] == ActionProblem.None).ToArray();
-            var run = new Run(letter, index, drive, connected.Drive, actions, _time.GetUtcNow());
+            var numbers = Enumerable.Range(0, drive.Actions.Count).Where(action => action < _reviews[index].Actions.Count && _reviews[index].Actions[action] == ActionProblem.None).ToArray();
+            var run = new Run(letter, index, drive, connected.Drive, [.. numbers.Select(action => drive.Actions[action])], _time.GetUtcNow()) { Numbers = numbers, Chosen = chosen };
             _running = run;
-            LogRunStarted(_logger, letter, index + 1, actions.Length);
+            LogRunStarted(_logger, letter, index + 1, numbers.Length);
             if (drive.KnownWhenConnected == WhenConnectedChoice.Act)
             {
                 _host.Notify(drive.Name, Strings.DriveActionsRunningText, null);
@@ -550,22 +557,13 @@ public sealed partial class DriveActionsRunner
 
     private IEnumerable<bool> Import(Run run, DriveAction action, RunAction result, DriveRecords records)
     {
-        var from = Path.Join(run.Root, action.From);
-        IReadOnlyList<ListedFile> files;
-        try
-        {
-            files = _system.Read(from) is { IsFolder: true, IsLink: false } ? _system.List(from) : [];
-        }
-        catch (Win32Exception exception)
-        {
-            LogNotListed(_logger, run.Drive + 1, exception.NativeErrorCode);
-            files = [];
-        }
-
-        var plan = ImportPlanner.Plan(action, from, files, records, _zone, _places);
-        var copies = plan.New;
+        var plan = PlanImport(run.Root, action, records);
+        var chosen = run.Chosen?.FirstOrDefault(item => item.Action == run.Numbers[run.Action]);
+        var copies = chosen is null
+            ? plan.New
+            : [.. plan.Files.Where(file => chosen.Files.Contains(file.RelativePath, StringComparer.OrdinalIgnoreCase))];
         run.Files = copies.Count;
-        if (!Fits(run, FolderPaths.FixedPart(action.Destination), plan.Bytes))
+        if (!Fits(run, FolderPaths.FixedPart(action.Destination), copies.Sum(file => file.File.Size)))
         {
             yield break;
         }
@@ -599,6 +597,25 @@ public sealed partial class DriveActionsRunner
         }
     }
 
+    // What an import of the drive with the root would copy: the files of its types in its folder
+    // and the subfolders, those imported before marked.
+    private ImportPlan PlanImport(string root, DriveAction action, DriveRecords records)
+    {
+        var from = Path.Join(root, action.From);
+        IReadOnlyList<ListedFile> files;
+        try
+        {
+            files = _system.Read(from) is { IsFolder: true, IsLink: false } ? _system.List(from) : [];
+        }
+        catch (Win32Exception exception)
+        {
+            LogNotListed(_logger, exception.NativeErrorCode);
+            files = [];
+        }
+
+        return ImportPlanner.Plan(action, from, files, records, _zone, _places);
+    }
+
     private RunFile ImportFile(Run run, PlannedImport file, string start, NameConflict ifExists, RunFile entry)
     {
         var problem = PrepareFolder(start, file.Destination);
@@ -628,26 +645,7 @@ public sealed partial class DriveActionsRunner
     private IEnumerable<bool> BackUp(Run run, DriveAction action, RunAction result, DriveRecords records)
     {
         var destination = Path.Join(run.Root, action.Destination);
-        var sources = new List<BackupSource>();
-        var copies = new Dictionary<string, IReadOnlyList<ListedFile>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var folder in action.Folders)
-        {
-            FolderPaths.Normalize(folder, out var path);
-            var name = Path.GetFileName(path);
-            try
-            {
-                sources.Add(new BackupSource(name, path, _system.List(path)));
-            }
-            catch (Win32Exception exception)
-            {
-                LogNotListed(_logger, run.Drive + 1, exception.NativeErrorCode);
-                continue;
-            }
-
-            copies[name] = ListCopies(Path.Join(destination, name));
-        }
-
-        var plan = BackupPlanner.Plan(sources, copies, run.Connected, records, _system.HasMark);
+        var plan = PlanBackUp(run.Connected, action, records, deleteUnfinished: true);
         var toCopy = plan.ToCopy;
         run.Files = toCopy.Count;
         if (!Fits(run, run.Root, plan.Bytes))
@@ -751,9 +749,36 @@ public sealed partial class DriveActionsRunner
         return entry with { Outcome = file.Step == BackupStep.Replace ? FileOutcome.Replaced : FileOutcome.Copied };
     }
 
-    // The copies in a folder of the backup's destination, after deleting PC Companion's own
-    // unfinished copies, as a drive pulled out during a copy leaves them.
-    private IReadOnlyList<ListedFile> ListCopies(string folder)
+    // What a backup to the drive would do with each file of its folders, after deleting PC
+    // Companion's own unfinished copies on the drive, when it's about to run.
+    private BackupPlan PlanBackUp(ConnectedDrive drive, DriveAction action, DriveRecords records, bool deleteUnfinished)
+    {
+        var destination = Path.Join(drive.Root, action.Destination);
+        var sources = new List<BackupSource>();
+        var copies = new Dictionary<string, IReadOnlyList<ListedFile>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var folder in action.Folders)
+        {
+            FolderPaths.Normalize(folder, out var path);
+            var name = Path.GetFileName(path);
+            try
+            {
+                sources.Add(new BackupSource(name, path, _system.List(path)));
+            }
+            catch (Win32Exception exception)
+            {
+                LogNotListed(_logger, exception.NativeErrorCode);
+                continue;
+            }
+
+            copies[name] = ListCopies(Path.Join(destination, name), deleteUnfinished);
+        }
+
+        return BackupPlanner.Plan(sources, copies, drive, records, _system.HasMark);
+    }
+
+    // The copies in a folder of the backup's destination, and PC Companion's own unfinished copies
+    // there, as a drive pulled out during a copy leaves them, deleted when asked.
+    private IReadOnlyList<ListedFile> ListCopies(string folder, bool deleteUnfinished)
     {
         IReadOnlyList<ListedFile> copies;
         try
@@ -766,7 +791,7 @@ public sealed partial class DriveActionsRunner
         }
 
         var unfinished = copies.Where(copy => copy.Details.Name.EndsWith(DriveFiles.TemporarySuffix, StringComparison.OrdinalIgnoreCase)).ToArray();
-        foreach (var copy in unfinished)
+        foreach (var copy in deleteUnfinished ? unfinished : [])
         {
             _system.Delete(Path.Join(folder, copy.RelativePath));
         }
@@ -919,20 +944,25 @@ public sealed partial class DriveActionsRunner
         };
         _history ??= _historyStore.Load(out _);
         _history.Add(entry, _time.GetUtcNow());
-        try
-        {
-            _historyStore.Save(_history);
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            LogHistoryNotSaved(_logger, exception.HResult);
-        }
+        SaveHistory();
 
         var copied = run.Results.Sum(result => result.Copied);
         var skipped = run.Results.Sum(result => result.Skipped);
         LogRunEnded(_logger, run.Letter, run.Outcome, copied, skipped);
         _host.Notify(run.Entry.Name, DoneText(run), null);
         Publish();
+    }
+
+    private void SaveHistory()
+    {
+        try
+        {
+            _historyStore.Save(_history!);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            LogHistoryNotSaved(_logger, exception.HResult);
+        }
     }
 
     private static string DoneText(Run run)
@@ -1029,6 +1059,12 @@ public sealed partial class DriveActionsRunner
 
         internal bool? Ejected { get; set; }
 
+        /// <summary>The number of each of <see cref="Actions"/> among the drive's actions, which leave out those with a problem.</summary>
+        internal IReadOnlyList<int> Numbers { get; init; } = [];
+
+        /// <summary>For Run now: the files chosen for imports, by their number among the drive's actions.</summary>
+        internal IReadOnlyList<ChosenImport>? Chosen { get; init; }
+
         // Runs a copy, during which the run isn't idle.
         internal int Copy(Func<int> copy)
         {
@@ -1097,8 +1133,8 @@ public sealed partial class DriveActionsRunner
     [LoggerMessage(Level = LogLevel.Information, Message = "An action of drive {Drive} in the list didn't fit on its destination's drive, so the run stopped.")]
     private static partial void LogNotEnoughSpace(ILogger logger, int drive);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "A folder of an action of drive {Drive} in the list couldn't be read (error {ErrorCode}).")]
-    private static partial void LogNotListed(ILogger logger, int drive, int errorCode);
+    [LoggerMessage(Level = LogLevel.Warning, Message = "A folder of a drive's action couldn't be read (error {ErrorCode}).")]
+    private static partial void LogNotListed(ILogger logger, int errorCode);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "What drive {Drive} in the list imported and backed up couldn't be read, so it starts again.")]
     private static partial void LogRecordsUnreadable(ILogger logger, int drive);
