@@ -3856,4 +3856,228 @@
     <value>Choisissez le dossier à ouvrir</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>Exécuter maintenant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>Exécuter maintenant pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>Arrêter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>Arrêter les actions de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>Historique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>Ce qu’ont fait les actions des lecteurs au cours des 30 derniers jours. Annuler envoie dans la Corbeille les copies faites par une importation.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>Actualiser</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>Ouvrir la Corbeille</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>Effacer l’historique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>Effacer l’historique ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>Ses exécutions ne pourront plus être annulées. Ce qui a été importé et sauvegardé reste enregistré, et n’est donc pas copié à nouveau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>Chargement de l’historique…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>Activez Actions des lecteurs, avec PC Companion en cours d’exécution, pour voir l’historique.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>Aucune action de lecteur ne s’est encore exécutée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>Afficher plus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>Annuler l’exécution de {0} à {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>Annuler {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>Annuler l’importation ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>Les copies importées par cette exécution vont dans la Corbeille, sauf si elles ont changé depuis. Les fichiers du lecteur restent, et comptent toujours comme importés.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>Copies envoyées dans la Corbeille : {0}. Copies laissées, parce qu’elles ont changé depuis ou que Windows les a conservées : {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>Il n’y a plus rien à annuler dans cette exécution.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>Les actions s’exécutent. L’historique affiche l’exécution une fois terminée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>Dossier ouvert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>Dossier introuvable non ouvert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>Le lecteur a été éjecté.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>Terminé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>Importé vers {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>Sauvegardé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>Copie plus ancienne remplacée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>Ignoré : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}. Envoyé dans la Corbeille avec Annuler.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>un fichier portant ce nom existe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>un autre programme l’a ouvert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>Windows l’a bloqué, comme le fait l’accès contrôlé aux dossiers. Dans Sécurité Windows, autorisez PC Companion dans l’accès contrôlé aux dossiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>son dossier de destination ne peut pas être utilisé, par exemple s’il s’agit d’un lien</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>l’exécution s’est arrêtée pendant sa copie</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>il a changé ou disparu entre-temps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>il provient d’internet, ce que ce lecteur ne peut pas enregistrer ; formatez le lecteur en NTFS pour le sauvegarder</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>il est trop volumineux pour le système de fichiers du lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>sa copie a été modifiée sur le lecteur, elle reste donc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>le lecteur contient un fichier portant ce nom que PC Companion n’y a pas mis</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>sa copie sur le lecteur est en lecture seule</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>le dossier de la sauvegarde n’était plus sur le lecteur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>Windows a refusé (erreur {0})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>Exécuter maintenant : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>Les fichiers que les importations copieraient, chacun avec sa case ; ceux importés auparavant sont décochés. Les sauvegardes copient leurs fichiers nouveaux et modifiés.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>Exécuter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>Examen de ce que les actions copieraient…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>Les actions n’ont rien à copier pour l’instant. Exécuter les exécute quand même, par exemple pour Ouvrir un dossier ou Éjecter une fois terminé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>Les actions du lecteur ne peuvent pas s’exécuter pour l’instant, par exemple quand elles s’exécutent déjà ou que le PC est verrouillé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>Vers {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}, déjà importé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>Sauvegarde {0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_one" xml:space="preserve">
+    <value>{0} fichier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0} fichiers</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

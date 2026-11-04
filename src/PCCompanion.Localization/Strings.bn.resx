@@ -3856,4 +3856,228 @@
     <value>যে ফোল্ডারটি খুলবেন সেটি বেছে নিন</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>এখনই চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>{0}-এর জন্য এখনই চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>থামান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>{0}-এর অ্যাকশনগুলো থামান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>ইতিহাস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>গত 30 দিনে ড্রাইভগুলোর অ্যাকশন যা করেছে। পূর্বাবস্থায় ফেরান আমদানির তৈরি কপিগুলো রিসাইকেল বিনে পাঠায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>রিফ্রেশ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>রিসাইকেল বিন খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>ইতিহাস মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>ইতিহাস মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>এরপর এর রানগুলো পূর্বাবস্থায় ফেরানো যাবে না। যা আমদানি ও ব্যাকআপ করা হয়েছে তা রেকর্ডে থাকে, তাই আবার কপি হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>ইতিহাস লোড হচ্ছে…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>ইতিহাস দেখতে PC Companion চালু রেখে ড্রাইভ অ্যাকশন চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>এখনো কোনো ড্রাইভের অ্যাকশন চলেনি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>আরও দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>পূর্বাবস্থায় ফেরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>{1}-এ {0}-এর রান পূর্বাবস্থায় ফেরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>{0} পূর্বাবস্থায় ফেরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>আমদানি পূর্বাবস্থায় ফেরাবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>এই রানে আমদানি করা কপিগুলো রিসাইকেল বিনে যায়, যদি না এর মধ্যে সেগুলো বদলে থাকে। ড্রাইভের ফাইলগুলো থেকে যায়, এবং আমদানি করা হিসেবেই গণ্য হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>রিসাইকেল বিনে পাঠানো কপি: {0}। যে কপিগুলো রয়ে গেছে, কারণ সেগুলো এর মধ্যে বদলেছে বা Windows রেখে দিয়েছে: {1}।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>এই রানে পূর্বাবস্থায় ফেরানোর মতো আর কিছু নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>অ্যাকশনগুলো চলছে। রান শেষ হলে ইতিহাসে দেখা যাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>একটি ফোল্ডার খুলেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>নেই এমন একটি ফোল্ডার খোলেনি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>ড্রাইভটি ইজেক্ট করা হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>সম্পন্ন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>{0}-এ আমদানি করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>ব্যাকআপ নেওয়া হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>এর পুরোনো কপি প্রতিস্থাপন করা হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>এড়িয়ে যাওয়া হয়েছে: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}। পূর্বাবস্থায় ফেরান দিয়ে রিসাইকেল বিনে পাঠানো হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>সেই নামের একটি ফাইল আছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>অন্য একটি প্রোগ্রাম এটি খুলে রেখেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>Windows এটি ব্লক করেছে, যেমন নিয়ন্ত্রিত ফোল্ডার অ্যাক্সেস করে। Windows নিরাপত্তায় নিয়ন্ত্রিত ফোল্ডার অ্যাক্সেসে PC Companion-কে অনুমতি দিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>এর গন্তব্য ফোল্ডার ব্যবহার করা যায় না, যেমন এটি একটি লিংক হলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>এটি কপি হওয়ার সময় রান থেমে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>এর মধ্যে এটি বদলেছে বা সরে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>এটি ইন্টারনেট থেকে এসেছে, যা এই ড্রাইভ রেকর্ড করতে পারে না; এর ব্যাকআপ নিতে ড্রাইভটি NTFS হিসেবে ফরম্যাট করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>এটি ড্রাইভের ফাইল সিস্টেমের জন্য অনেক বড়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>ড্রাইভে এর কপিটি সেখানে বদলানো হয়েছে, তাই সেটি থেকে যায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>ড্রাইভে সেই নামের একটি ফাইল আছে যা PC Companion রাখেনি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>ড্রাইভে এর কপিটি শুধু পড়ার জন্য</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>ব্যাকআপের ফোল্ডারটি আর ড্রাইভে ছিল না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>Windows প্রত্যাখ্যান করেছে (ত্রুটি {0})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>এখনই চালান: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>আমদানিগুলো যে ফাইল কপি করবে, প্রতিটির নিজস্ব বাক্সসহ; আগে আমদানি করা ফাইলগুলো চিহ্নিত নয়। ব্যাকআপগুলো এদের নতুন ও বদলানো ফাইল কপি করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>চালান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>অ্যাকশনগুলো কী কপি করবে তা দেখা হচ্ছে…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>অ্যাকশনগুলোর এখন কপি করার কিছু নেই। চালান তবুও এগুলো চালায়, যেমন একটি ফোল্ডার খুলুন বা শেষ হলে ইজেক্ট করুন-এর জন্য।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>ড্রাইভের অ্যাকশনগুলো এখন চলতে পারে না, যেমন সেগুলো ইতিমধ্যে চলার সময় বা পিসি লক থাকলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>{0}-এ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}, আগে আমদানি করা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>{0}-এর ব্যাকআপ নেয়, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_one" xml:space="preserve">
+    <value>{0}টি ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0}টি ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

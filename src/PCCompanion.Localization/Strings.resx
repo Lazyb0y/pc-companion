@@ -3856,4 +3856,228 @@
     <value>Choose the folder to open</value>
     <comment>Drive Actions: title of the folder picker for the folder an Open a folder action opens.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>Run now</value>
+    <comment>Drive Actions page: button on a connected drive that lists what its actions would do now and runs them.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>Run now for {0}</value>
+    <comment>Drive Actions page: accessible name of a drive's Run now button. {0} is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>Stop</value>
+    <comment>Drive Actions page: button on a drive whose actions are running, which stops the run after the file it's copying.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>Stop the actions of {0}</value>
+    <comment>Drive Actions page: accessible name of a drive's Stop button. {0} is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>History</value>
+    <comment>Drive Actions page: header of the history.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>What the drives' actions did in the last 30 days. Undo sends the copies an import made to the Recycle Bin.</value>
+    <comment>Drive Actions page: description under the History header.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>Refresh</value>
+    <comment>Drive Actions page: button that asks the host for the history again.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>Open Recycle Bin</value>
+    <comment>Drive Actions page: button that opens the Recycle Bin in File Explorer.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>Clear history</value>
+    <comment>Drive Actions page: button that empties the history, and its dialog's button.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>Clear the history?</value>
+    <comment>Drive Actions page: title of the dialog that asks before emptying the history.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>Its runs can't be undone after this. What was imported and backed up stays recorded, so it isn't copied again.</value>
+    <comment>Drive Actions page: text of the dialog that asks before emptying the history.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>Loading the history…</value>
+    <comment>Drive Actions page: shown while the page asks the host for the history.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>Turn on Drive Actions, with PC Companion running, to see the history.</value>
+    <comment>Drive Actions page: shown when the host doesn't give the history, as while Drive Actions is off.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>No drive's actions have run yet.</value>
+    <comment>Drive Actions page: shown when the history has no runs.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>Show more</value>
+    <comment>Drive Actions page: button that shows more runs of the history.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>Undo</value>
+    <comment>Drive Actions page: button on a run, or a file of a run, that sends the imported copies to the Recycle Bin.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>Undo the run of {0} at {1}</value>
+    <comment>Drive Actions page: accessible name of a run's Undo button. {0} is the drive's name, {1} when the run started.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>Undo {0}</value>
+    <comment>Drive Actions page: accessible name of a file's Undo button. {0} is the file's path in the folder on the drive.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>Undo the import?</value>
+    <comment>Drive Actions page: title of the dialog that asks before undoing a whole run.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>The copies this run imported go to the Recycle Bin, unless they changed since. The files on the drive stay, and still count as imported.</value>
+    <comment>Drive Actions page: text of the dialog that asks before undoing a whole run.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>Copies sent to the Recycle Bin: {0}. Copies left, because they changed since or Windows kept them: {1}.</value>
+    <comment>Drive Actions page: shown after Undo when some copies stayed. {0} is how many went to the Recycle Bin, {1} how many stayed.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>There's nothing to undo in this run any more.</value>
+    <comment>Drive Actions page: shown when Undo found nothing it can undo, as after Clear history.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>The actions are running. The history shows the run once it's done.</value>
+    <comment>Drive Actions page: shown after Run now started the drive's actions.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>Opened a folder</value>
+    <comment>Drive Actions page: what an Open a folder action did in a run.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>Didn't open a folder that isn't there</value>
+    <comment>Drive Actions page: what an Open a folder action did in a run when its folder wasn't there.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>The drive was ejected.</value>
+    <comment>Drive Actions page: how a run ended, with Eject when done on, when Windows ejected the drive.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>Done.</value>
+    <comment>Drive Actions page: how a run ended when its actions ran to the end.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>Imported to {0}</value>
+    <comment>Drive Actions page: what happened to a file of a run: an import copied it. {0} is its path on the PC.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>Backed up</value>
+    <comment>Drive Actions page: what happened to a file of a run: a backup copied it to the drive.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>Replaced its older copy</value>
+    <comment>Drive Actions page: what happened to a file of a run: a backup replaced its older copy on the drive.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>Skipped: {0}</value>
+    <comment>Drive Actions page: what happened to a file of a run: it was skipped. {0} says why, starting in lowercase where the language has case.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}. Sent to the Recycle Bin with Undo.</value>
+    <comment>Drive Actions page: a file of a run whose copy Undo sent to the Recycle Bin. {0} is what happened to it first.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>a file with that name is there</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>another program has it open</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>Windows blocked it, as Controlled folder access does. In Windows Security, allow PC Companion through Controlled folder access.</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '. Controlled folder access is a Windows Security feature.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>its destination folder can't be used, as when it's a link</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>the run stopped while it was copied</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>it changed or went away meanwhile</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>it came from the internet, which this drive can't record; format the drive as NTFS to back it up</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '. The Mark of the Web says a file came from the internet; NTFS is a file system name.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>it's too large for the drive's file system</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '. FAT32 can't hold files of 4 GB or more.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>its copy on the drive was changed there, so it stays</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>the drive has a file with that name that PC Companion didn't put there</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>its copy on the drive is read-only</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>the backup's folder wasn't on the drive any more</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>Windows refused (error {0})</value>
+    <comment>Drive Actions page: why a file was skipped. Follows 'Skipped: '. {0} is Windows' error code.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>Run now: {0}</value>
+    <comment>Drive Actions page: title of the Run now dialog. {0} is the drive's name.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>The files the imports would copy, each with its box; those imported before are unchecked. Backups copy their new and changed files.</value>
+    <comment>Drive Actions page: text at the top of the Run now dialog.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>Run</value>
+    <comment>Drive Actions page: the Run now dialog's button that runs the drive's actions.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>Looking at what the actions would copy…</value>
+    <comment>Drive Actions page: shown in Run now while it looks at what the actions would copy.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>The actions have nothing to copy now. Run still runs them, as for Open a folder or Eject when done.</value>
+    <comment>Drive Actions page: shown in Run now when the actions have nothing to copy.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>The drive's actions can't run now, as while they're running already or the PC is locked.</value>
+    <comment>Drive Actions page: shown in Run now when the host refuses to run the actions.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>To {0}</value>
+    <comment>Drive Actions page: where a file in Run now would go. {0} is the folder on the PC.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}, imported before</value>
+    <comment>Drive Actions page: a file in Run now that was imported before. {0} is where it would go.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>Backs up {0}, {1}</value>
+    <comment>Drive Actions page: what a backup would copy, in Run now. {0} is how many files, such as '12 files', {1} their size, such as 340 MB.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_one" xml:space="preserve">
+    <value>{0} file</value>
+    <comment>Plural form "one". Drive Actions page: how many files a backup would copy, in Run now. {0} is the number.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0} files</value>
+    <comment>Plural form "other". Drive Actions page: how many files a backup would copy, in Run now. {0} is the number.</comment>
+  </data>
 </root>

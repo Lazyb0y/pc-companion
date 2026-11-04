@@ -16,6 +16,12 @@ public static class DriveActionsHost
     /// </summary>
     public static readonly TimeSpan QuickTimeout = TimeSpan.FromSeconds(5);
 
+    /// <summary>How long Run now's list may take, for backups of large folders.</summary>
+    public static readonly TimeSpan ListTimeout = TimeSpan.FromSeconds(60);
+
+    /// <summary>How long Undo may take: a copy too big for the Recycle Bin waits for Windows' question.</summary>
+    public static readonly TimeSpan UndoTimeout = TimeSpan.FromMinutes(10);
+
     /// <summary>The host's answer, or <see langword="null"/> when it doesn't answer, as while Drive Actions is off.</summary>
     public static Task<DriveActionsAnswer?> AskAsync(DriveActionsRequest request, TimeSpan timeout) =>
         Task.Run(() => DriveActionsPipe.AskAsync(DriveActionsPipe.Name, request, timeout));

@@ -260,6 +260,8 @@ public sealed partial class DriveActionsFeature(
             });
         }
 
+        public void OpenPage() => feature._commands.OpenFeatureSettings(Definition.Id);
+
         public void Publish(DriveActionsState state) => feature._state = state;
 
         public void Later(Action work) => thread.Later(work);

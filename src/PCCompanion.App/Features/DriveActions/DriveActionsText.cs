@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.DriveActions;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.DriveActions;
 
@@ -22,6 +24,11 @@ public static class DriveActionsText
     private static readonly CompositeFormat OpenDriveFolderFormat = CompositeFormat.Parse(Strings.DriveActionsSummaryOpenDriveFolder);
     private static readonly CompositeFormat OpenFolderFormat = CompositeFormat.Parse(Strings.DriveActionsSummaryOpenFolder);
     private static readonly CompositeFormat ProblemFormat = CompositeFormat.Parse(Strings.DriveActionsSummaryProblem);
+    private static readonly CompositeFormat NotEnoughSpaceFormat = CompositeFormat.Parse(Strings.DriveActionsNotEnoughSpace);
+    private static readonly CompositeFormat FileImportedFormat = CompositeFormat.Parse(Strings.DriveActionsFileImported);
+    private static readonly CompositeFormat FileSkippedFormat = CompositeFormat.Parse(Strings.DriveActionsFileSkipped);
+    private static readonly CompositeFormat FileUndoneFormat = CompositeFormat.Parse(Strings.DriveActionsFileUndone);
+    private static readonly CompositeFormat ReasonFailedFormat = CompositeFormat.Parse(Strings.DriveActionsReasonFailed);
 
     /// <summary>What keeps a drive from being used, or an empty string.</summary>
     public static string Of(DriveProblem problem) => problem switch
@@ -135,6 +142,83 @@ public static class DriveActionsText
             _ => string.Format(CultureInfo.CurrentCulture, OpenFolderFormat, action.Folder),
         };
     }
+
+    /// <summary>What a run's actions did, and how it ended.</summary>
+    public static string Of(RunEntry run)
+    {
+        ArgumentNullException.ThrowIfNull(run);
+
+        var lines = new List<string>();
+        foreach (var action in run.Actions)
+        {
+            var kind = new DriveAction { Action = action.Action }.KnownAction;
+            if (kind == DriveActionKind.Import)
+            {
+                lines.Add(PluralStrings.Format("DriveActionsImported", action.Copied));
+            }
+            else if (kind == DriveActionKind.BackUp)
+            {
+                lines.Add(PluralStrings.Format("DriveActionsBackedUp", action.Copied));
+            }
+            else if (kind == DriveActionKind.OpenFolder)
+            {
+                lines.Add(action.Opened ? Strings.DriveActionsHistoryOpened : Strings.DriveActionsHistoryNotOpened);
+            }
+        }
+
+        var skipped = run.Actions.Sum(action => action.Skipped);
+        if (skipped > 0)
+        {
+            lines.Add(PluralStrings.Format("DriveActionsSkipped", skipped));
+        }
+
+        lines.Add(run.Outcome switch
+        {
+            RunOutcome.Done => run.Ejected switch
+            {
+                true => Strings.DriveActionsHistoryEjected,
+                false => Strings.DriveActionsNotEjected,
+                null => Strings.DriveActionsHistoryDone,
+            },
+            RunOutcome.NotEnoughSpace => string.Format(CultureInfo.CurrentCulture, NotEnoughSpaceFormat, ByteSizes.Format(run.Needed), ByteSizes.Format(run.Free)),
+            RunOutcome.Ejected or RunOutcome.Removed => Strings.DriveActionsStoppedRemoved,
+            _ => Strings.DriveActionsStopped,
+        });
+        return string.Join(Environment.NewLine, lines);
+    }
+
+    /// <summary>What happened to a file of a run, and whether Undo put it back.</summary>
+    public static string Of(RunFile file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        var what = file.Outcome switch
+        {
+            FileOutcome.Imported => string.Format(CultureInfo.CurrentCulture, FileImportedFormat, file.NewPath),
+            FileOutcome.Copied => Strings.DriveActionsFileCopied,
+            FileOutcome.Replaced => Strings.DriveActionsFileReplaced,
+            _ => string.Format(CultureInfo.CurrentCulture, FileSkippedFormat, Of(file.Reason, file.ErrorCode)),
+        };
+
+        return file.Undone ? string.Format(CultureInfo.CurrentCulture, FileUndoneFormat, what) : what;
+    }
+
+    private static string Of(FileSkip reason, int errorCode) => reason switch
+    {
+        FileSkip.NameTaken => Strings.DriveActionsReasonNameTaken,
+        FileSkip.InUse => Strings.DriveActionsReasonInUse,
+        FileSkip.Blocked => Strings.DriveActionsReasonBlocked,
+        FileSkip.DestinationNotAllowed => Strings.DriveActionsReasonDestinationNotAllowed,
+        FileSkip.Interrupted => Strings.DriveActionsReasonInterrupted,
+        FileSkip.Changed => Strings.DriveActionsReasonChanged,
+        FileSkip.MarkWouldBeLost => Strings.DriveActionsReasonMarkWouldBeLost,
+        FileSkip.TooLarge => Strings.DriveActionsReasonTooLarge,
+        FileSkip.ChangedOnDrive => Strings.DriveActionsReasonChangedOnDrive,
+        FileSkip.NotOurs => Strings.DriveActionsReasonNotOurs,
+        FileSkip.ReadOnly => Strings.DriveActionsReasonReadOnly,
+        FileSkip.WrongDrive => Strings.DriveActionsReasonWrongDrive,
+        _ => string.Format(CultureInfo.CurrentCulture, ReasonFailedFormat, errorCode),
+    };
 
     /// <summary>A drive's letter as the page shows it, such as <c>E:</c>.</summary>
     public static string Letter(string letter) => letter + ":";

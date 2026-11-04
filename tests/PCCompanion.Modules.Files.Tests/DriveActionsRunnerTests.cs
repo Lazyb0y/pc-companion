@@ -177,8 +177,27 @@ public sealed class DriveActionsRunnerTests : IDisposable
 
         Assert.Empty(_system.Copies);
         var warning = Assert.Single(_host.Notifications);
-        Assert.Null(warning.Selected);
         Assert.Contains("Backup drive", warning.Title, StringComparison.Ordinal);
+
+        // Selecting it opens the page, where Use this drive is.
+        warning.Selected!();
+        _host.RunAll();
+
+        Assert.Empty(_system.Copies);
+        Assert.Equal(1, _host.PagesOpened);
+    }
+
+    [Fact]
+    public void SelectingTheNotificationThatARunIsDoneOpensThePage()
+    {
+        Apply(Cards());
+        AddCard('F');
+        _runner.Arrived('F', connectedBefore: false);
+        _host.RunAll();
+
+        _host.Notifications[^1].Selected!();
+
+        Assert.Equal(1, _host.PagesOpened);
     }
 
     [Fact]

@@ -37,6 +37,8 @@ public sealed partial class DriveItem : ObservableObject
     private string _status = string.Empty;
     private string _lookAlike = string.Empty;
     private string _notRecognized = string.Empty;
+    private bool _isRunning;
+    private bool _canRunNow;
 
     public DriveItem(int index, DriveEntry drive, string problem, bool receivesBackups, IReadOnlyList<DriveActionItem> actions)
     {
@@ -60,6 +62,8 @@ public sealed partial class DriveItem : ObservableObject
         Actions = actions;
         MoreName = Format(DriveActionsViewModel.MoreFormat, Name);
         AddActionName = Format(DriveActionsViewModel.AddActionFormat, Name);
+        RunNowName = Format(DriveActionsViewModel.RunNowFormat, Name);
+        StopName = Format(DriveActionsViewModel.StopFormat, Name);
         CanAddAction = drive.KnownKind is not null && drive.Actions.Count < DriveActionsSettings.MaximumActions;
         WhenConnectedName = Format(DriveActionsViewModel.WhenConnectedFormat, Name);
         EjectName = Format(DriveActionsViewModel.EjectFormat, Name);
@@ -104,6 +108,10 @@ public sealed partial class DriveItem : ObservableObject
 
     public string WhenConnectedName { get; }
 
+    public string RunNowName { get; }
+
+    public string StopName { get; }
+
     public string EjectName { get; }
 
     /// <summary>Whether it's connected, running or locked; empty while the host doesn't answer.</summary>
@@ -143,6 +151,31 @@ public sealed partial class DriveItem : ObservableObject
 
     public bool HasNotRecognized => NotRecognized.Length > 0;
 
+    /// <summary>The drive's actions are running, which Stop stops.</summary>
+    public bool IsRunning
+    {
+        get => _isRunning;
+        private set
+        {
+            if (SetProperty(ref _isRunning, value))
+            {
+                OnPropertyChanged(nameof(IsNotRunning));
+            }
+        }
+    }
+
+    public bool IsNotRunning => !IsRunning;
+
+    /// <summary>The drive is connected and recognized, and can be used, so Run now can run its actions.</summary>
+    public bool CanRunNow
+    {
+        get => _canRunNow;
+        private set => SetProperty(ref _canRunNow, value);
+    }
+
+    /// <summary>The drive connected and recognized as this one, for Run now; or <see langword="null"/>.</summary>
+    internal ConnectedDriveInfo? Recognized { get; private set; }
+
     /// <summary>The look-alike or the drive without its ID file, for Use this drive and Add again.</summary>
     internal ConnectedDriveInfo? Other { get; private set; }
 
@@ -154,7 +187,8 @@ public sealed partial class DriveItem : ObservableObject
     {
         if (answer is null)
         {
-            (Status, LookAlike, NotRecognized, Other, Root) = (string.Empty, string.Empty, string.Empty, null, null);
+            (Status, LookAlike, NotRecognized, Other, Root, Recognized) = (string.Empty, string.Empty, string.Empty, null, null, null);
+            (IsRunning, CanRunNow) = (false, false);
             return;
         }
 
@@ -163,7 +197,10 @@ public sealed partial class DriveItem : ObservableObject
         var letters = string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", recognized.Select(drive => DriveActionsText.Letter(drive.Letter)));
         var locked = drives.FirstOrDefault(drive => drive.Outcome == RecognitionOutcome.Locked);
         Root = recognized.Length > 0 ? DriveActionsText.Letter(recognized[0].Letter) + "\\" : null;
-        Status = answer.Running is { } running && recognized.Any(drive => drive.Letter == running.Letter.ToString())
+        Recognized = recognized.FirstOrDefault();
+        IsRunning = answer.Running is { } running && recognized.Any(drive => drive.Letter == running.Letter.ToString());
+        CanRunNow = !HasProblem && Recognized is not null && !IsRunning;
+        Status = IsRunning
             ? Strings.DriveActionsStatusRunning
             : recognized.Length > 0 ? Format(DriveActionsViewModel.ConnectedFormat, letters)
             : locked is not null ? Format(DriveActionsViewModel.LockedFormat, DriveActionsText.Letter(locked.Letter))
@@ -187,6 +224,8 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
 {
     internal static readonly CompositeFormat MoreFormat = CompositeFormat.Parse(Strings.DriveActionsMoreName);
     internal static readonly CompositeFormat AddActionFormat = CompositeFormat.Parse(Strings.DriveActionsAddActionName);
+    internal static readonly CompositeFormat RunNowFormat = CompositeFormat.Parse(Strings.DriveActionsRunNowName);
+    internal static readonly CompositeFormat StopFormat = CompositeFormat.Parse(Strings.DriveActionsStopName);
     internal static readonly CompositeFormat WhenConnectedFormat = CompositeFormat.Parse(Strings.DriveActionsWhenConnectedName);
     internal static readonly CompositeFormat EjectFormat = CompositeFormat.Parse(Strings.DriveActionsEjectName);
     internal static readonly CompositeFormat ConnectedFormat = CompositeFormat.Parse(Strings.DriveActionsStatusConnected);
@@ -224,6 +263,9 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
     public SpecialFolders Places { get; }
 
     public ObservableCollection<DriveItem> Drives { get; } = [];
+
+    /// <summary>What the drives' actions did, which the host gives while Drive Actions is on.</summary>
+    public DriveActionsHistoryViewModel History { get; } = new();
 
     public bool HasNoDrives => Drives.Count == 0;
 
@@ -455,6 +497,21 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
     /// <summary>The action editor for an action in the list, as saved.</summary>
     public DriveActionEditor EditorFor(int drive, int index) =>
         new(Settings.Drives[drive].Actions[index], isNew: false, Drives[drive].Kind, Places, Drives[drive].Root);
+
+    /// <summary>Run now for the drive, while it's connected and recognized; or <see langword="null"/>.</summary>
+    public DriveRunNowViewModel? RunNowFor(int index) =>
+        index >= 0 && index < Drives.Count && Drives[index].Recognized is { } drive
+            ? new DriveRunNowViewModel(drive, Drives[index].Key, Drives[index].Name, Settings.Drives[index].Actions)
+            : null;
+
+    /// <summary>Stops the run that's going after the file it's copying.</summary>
+    public async Task StopAsync()
+    {
+        Note = await DriveActionsHost.AskAsync(new DriveActionsRequest { Kind = DriveActionsRequestKind.Stop }, DriveActionsHost.QuickTimeout).ConfigureAwait(true) is null
+            ? Strings.DriveActionsNotAnswering
+            : string.Empty;
+        await RefreshConnectedAsync().ConfigureAwait(true);
+    }
 
     public void AddAction(int drive, DriveAction action) => ChangeActions(drive, actions => [.. actions, action]);
 

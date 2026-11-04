@@ -4016,4 +4016,244 @@
     <value>اختر المجلد المراد فتحه</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>تشغيل الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>تشغيل الآن لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>إيقاف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>إيقاف إجراءات {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>السجل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>ما فعلته إجراءات محركات الأقراص خلال آخر 30 يومًا. يرسل التراجع النسخ التي أنشأها الاستيراد إلى سلة المحذوفات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>تحديث</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>فتح سلة المحذوفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>مسح السجل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>هل تريد مسح السجل؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>لن يمكن التراجع عن عمليات التشغيل بعد ذلك. يبقى ما تم استيراده ونسخه احتياطيًا مسجلاً، لذا لن يُنسخ مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>جارٍ تحميل السجل…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>شغّل إجراءات محركات الأقراص، مع تشغيل PC Companion، لرؤية السجل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>لم يتم تشغيل إجراءات أي محرك أقراص بعد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>إظهار المزيد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>تراجع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>التراجع عن تشغيل {0} في {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>التراجع عن {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>هل تريد التراجع عن الاستيراد؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>تذهب النسخ التي استوردها هذا التشغيل إلى سلة المحذوفات، ما لم تتغير منذ ذلك الحين. تبقى الملفات على محرك الأقراص، وتظل محسوبة كمستوردة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>النسخ المرسلة إلى سلة المحذوفات: {0}. النسخ المتبقية، لأنها تغيرت منذ ذلك الحين أو احتفظ بها Windows: {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>لم يعد هناك ما يمكن التراجع عنه في هذا التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>يتم تشغيل الإجراءات. يُظهر السجل التشغيل بعد انتهائه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>تم فتح مجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>لم يتم فتح مجلد غير موجود</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>تم إخراج محرك الأقراص.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>تم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>تم الاستيراد إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>تم النسخ الاحتياطي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>تم استبدال نسخته الأقدم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>تم التخطي: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}. تم إرساله إلى سلة المحذوفات بالتراجع.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>يوجد ملف بهذا الاسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>يفتحه برنامج آخر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>حظره Windows، كما يفعل الوصول المتحكم به إلى المجلدات. في أمن Windows، اسمح لـ PC Companion عبر الوصول المتحكم به إلى المجلدات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>لا يمكن استخدام مجلد الوجهة الخاص به، كما في حالة كونه ارتباطًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>توقف التشغيل أثناء نسخه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>تغيّر أو اختفى في الأثناء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>جاء من الإنترنت، وهو ما لا يمكن لمحرك الأقراص هذا تسجيله؛ قم بتهيئة محرك الأقراص بنظام NTFS لنسخه احتياطيًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>حجمه كبير جدًا بالنسبة لنظام ملفات محرك الأقراص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>تم تغيير نسخته على محرك الأقراص هناك، لذا تبقى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>يحتوي محرك الأقراص على ملف بهذا الاسم لم يضعه PC Companion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>نسخته على محرك الأقراص للقراءة فقط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>لم يعد مجلد النسخ الاحتياطي على محرك الأقراص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>رفض Windows (الخطأ {0})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>تشغيل الآن: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>الملفات التي ستنسخها عمليات الاستيراد، ولكل منها مربع خاص بها؛ الملفات المستوردة من قبل غير محددة. تنسخ النسخ الاحتياطية ملفاتها الجديدة والمتغيرة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>تشغيل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>جارٍ التحقق مما ستنسخه الإجراءات…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>لا يوجد لدى الإجراءات ما تنسخه الآن. لا يزال التشغيل يشغّلها، كما في فتح مجلد أو الإخراج عند الانتهاء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>لا يمكن تشغيل إجراءات محرك الأقراص الآن، كما يحدث أثناء تشغيلها بالفعل أو عند قفل الكمبيوتر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}، مستورد من قبل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>ينسخ احتياطيًا {0}، {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_zero" xml:space="preserve">
+    <value>{0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_one" xml:space="preserve">
+    <value>ملف واحد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_two" xml:space="preserve">
+    <value>ملفين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_few" xml:space="preserve">
+    <value>{0} ملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_many" xml:space="preserve">
+    <value>{0} ملفًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0} ملف</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

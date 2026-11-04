@@ -26,6 +26,9 @@ public sealed partial class DriveActionsPage : Page
     // How often the page asks the host which drives are connected while it's open.
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(2);
 
+    // How long the host gets to start the run Run now asked for, before the history is shown again.
+    private static readonly TimeSpan RunNowWait = TimeSpan.FromSeconds(3);
+
     private readonly DispatcherQueueTimer _refresh;
 
     public DriveActionsPage()
@@ -39,6 +42,7 @@ public sealed partial class DriveActionsPage : Page
         {
             _refresh.Start();
             await ViewModel.RefreshConnectedAsync();
+            await ViewModel.History.LoadAsync();
         };
         Unloaded += (_, _) => _refresh.Stop();
     }
@@ -256,6 +260,87 @@ public sealed partial class DriveActionsPage : Page
             Focus(DriveMoreId, drive);
         }
     }
+
+    private async void OnRunNowClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: int index } || index >= ViewModel.Drives.Count || ViewModel.RunNowFor(index) is not { } list)
+        {
+            return;
+        }
+
+        if (await ShowAsync(new DriveRunNowDialog(list)) == ContentDialogResult.Primary)
+        {
+            await ViewModel.RefreshConnectedAsync();
+            await Task.Delay(RunNowWait);
+            await ViewModel.History.RanAsync();
+        }
+    }
+
+    private async void OnStopClick(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.StopAsync();
+        AddDriveButton.Focus(FocusState.Programmatic);
+    }
+
+    private async void OnRefreshHistoryClick(object sender, RoutedEventArgs e) => await ViewModel.History.LoadAsync();
+
+    private void OnOpenRecycleBinClick(object sender, RoutedEventArgs e) => DriveActionsHistoryViewModel.OpenRecycleBin();
+
+    private async void OnClearHistoryClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = Strings.DriveActionsClearHistoryTitle,
+            Content = Strings.DriveActionsClearHistoryText,
+            PrimaryButtonText = Strings.DriveActionsClearHistory,
+            CloseButtonText = Strings.DriveActionsCancel,
+            DefaultButton = ContentDialogButton.Close,
+            Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+        };
+
+        if (await ShowAsync(dialog) == ContentDialogResult.Primary)
+        {
+            await ViewModel.History.ClearAsync();
+        }
+    }
+
+    // Undo of a whole run asks first; Undo can wait for Windows' question about a copy too big for
+    // the Recycle Bin. The run's Undo is gone once the history is shown again, so focus goes to Refresh.
+    private async void OnUndoRunClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: int index } || ViewModel.History.RunAt(index) is null)
+        {
+            return;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = Strings.DriveActionsUndoRunTitle,
+            Content = Strings.DriveActionsUndoRunText,
+            PrimaryButtonText = Strings.DriveActionsUndo,
+            CloseButtonText = Strings.DriveActionsCancel,
+            DefaultButton = ContentDialogButton.Close,
+            Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+        };
+
+        if (await ShowAsync(dialog) == ContentDialogResult.Primary)
+        {
+            await ViewModel.History.UndoAsync(index);
+            RefreshHistoryButton.Focus(FocusState.Programmatic);
+        }
+    }
+
+    private async void OnUndoFileClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string tag } && tag.Split(':', 2) is [var run, var path]
+            && int.TryParse(run, NumberStyles.None, CultureInfo.InvariantCulture, out var index))
+        {
+            await ViewModel.History.UndoAsync(index, path);
+            RefreshHistoryButton.Focus(FocusState.Programmatic);
+        }
+    }
+
+    private void OnShowMoreClick(object sender, RoutedEventArgs e) => ViewModel.History.ShowMore();
 
     // The list is built again after a change, so focus goes to the button given in the new one, or
     // to Add a drive when it's gone. It moves once the dialog or menu that made the change has put

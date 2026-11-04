@@ -3816,4 +3816,224 @@
     <value>选择要打开的文件夹</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>立即运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>立即为 {0} 运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>停止</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>停止 {0} 的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>历史记录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>驱动器操作在过去 30 天内执行的内容。撤消会将导入创建的副本移到回收站。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>刷新</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>打开回收站</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>清除历史记录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>清除历史记录?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>此后将无法撤消其中的运行。已导入和备份的内容仍会记录，因此不会再次复制。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>正在加载历史记录…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>请在 PC Companion 运行时打开驱动器操作，以查看历史记录。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>还没有运行过任何驱动器操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>显示更多</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>撤消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>撤消 {0} 在 {1} 的运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>撤消 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>撤消导入?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>此次运行导入的副本将移到回收站，除非它们之后已更改。驱动器上的文件会保留，并仍视为已导入。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>已移到回收站的副本：{0}。因之后已更改或被 Windows 保留而留下的副本：{1}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>此次运行中已没有可撤消的内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>操作正在运行。运行完成后会显示在历史记录中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>已打开文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>未打开不存在的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>驱动器已弹出。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>已完成。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>已导入到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>已备份</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>已替换其较旧的副本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>已跳过：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}。已通过撤消移到回收站。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>已有同名文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>另一个程序已打开它</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>Windows 阻止了它，就像受控制文件夹的访问一样。请在 Windows 安全中心允许 PC Companion 通过受控制文件夹的访问。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>无法使用其目标文件夹，例如该文件夹是链接时</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>复制时运行已停止</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>它在此期间已更改或不存在</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>它来自 Internet，而此驱动器无法记录这一点；请将驱动器格式化为 NTFS 以备份它</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>它对于驱动器的文件系统来说太大</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>其在驱动器上的副本已在那里更改，因此会保留</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>驱动器上有一个并非由 PC Companion 放置的同名文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>其在驱动器上的副本为只读</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>备份的文件夹已不在驱动器上</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>Windows 拒绝了(错误 {0})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>立即运行：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>导入将复制的文件，每个文件都有复选框；以前导入过的文件未选中。备份会复制其新文件和已更改的文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>正在查看操作将复制的内容…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>操作现在没有要复制的内容。“运行”仍会运行它们，例如“打开文件夹”或“完成后弹出”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>驱动器的操作现在无法运行，例如它们已在运行或电脑已锁定时。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>到 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}，以前导入过</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>备份 {0}，{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0} 个文件</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

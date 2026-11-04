@@ -3856,4 +3856,228 @@
     <value>Zu öffnenden Ordner auswählen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsRunNow" xml:space="preserve">
+    <value>Jetzt ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowName" xml:space="preserve">
+    <value>Jetzt für {0} ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStop" xml:space="preserve">
+    <value>Beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsStopName" xml:space="preserve">
+    <value>Aktionen von {0} beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryHeader" xml:space="preserve">
+    <value>Verlauf</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDescription" xml:space="preserve">
+    <value>Was die Aktionen der Laufwerke in den letzten 30 Tagen getan haben. „Rückgängig“ verschiebt die Kopien eines Imports in den Papierkorb.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryRefresh" xml:space="preserve">
+    <value>Aktualisieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsOpenRecycleBin" xml:space="preserve">
+    <value>Papierkorb öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistory" xml:space="preserve">
+    <value>Verlauf löschen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryTitle" xml:space="preserve">
+    <value>Verlauf löschen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsClearHistoryText" xml:space="preserve">
+    <value>Seine Ausführungen können danach nicht mehr rückgängig gemacht werden. Was importiert und gesichert wurde, bleibt vermerkt und wird daher nicht erneut kopiert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryLoading" xml:space="preserve">
+    <value>Verlauf wird geladen…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotRunning" xml:space="preserve">
+    <value>Aktivieren Sie Laufwerksaktionen bei laufendem PC Companion, um den Verlauf zu sehen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEmpty" xml:space="preserve">
+    <value>Es wurden noch keine Laufwerksaktionen ausgeführt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryShowMore" xml:space="preserve">
+    <value>Mehr anzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndo" xml:space="preserve">
+    <value>Rückgängig</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunName" xml:space="preserve">
+    <value>Ausführung von {0} um {1} rückgängig machen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoFileName" xml:space="preserve">
+    <value>{0} rückgängig machen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunTitle" xml:space="preserve">
+    <value>Import rückgängig machen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRunText" xml:space="preserve">
+    <value>Die von dieser Ausführung importierten Kopien werden in den Papierkorb verschoben, sofern sie sich seitdem nicht geändert haben. Die Dateien auf dem Laufwerk bleiben und gelten weiterhin als importiert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoneNote" xml:space="preserve">
+    <value>In den Papierkorb verschobene Kopien: {0}. Verbliebene Kopien, weil sie sich seitdem geändert haben oder Windows sie behalten hat: {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsUndoRefused" xml:space="preserve">
+    <value>In dieser Ausführung gibt es nichts mehr rückgängig zu machen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowStarted" xml:space="preserve">
+    <value>Die Aktionen werden ausgeführt. Der Verlauf zeigt die Ausführung, sobald sie abgeschlossen ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryOpened" xml:space="preserve">
+    <value>Ordner geöffnet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryNotOpened" xml:space="preserve">
+    <value>Nicht vorhandenen Ordner nicht geöffnet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryEjected" xml:space="preserve">
+    <value>Das Laufwerk wurde ausgeworfen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsHistoryDone" xml:space="preserve">
+    <value>Abgeschlossen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileImported" xml:space="preserve">
+    <value>Importiert nach {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileCopied" xml:space="preserve">
+    <value>Gesichert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileReplaced" xml:space="preserve">
+    <value>Ältere Kopie ersetzt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileSkipped" xml:space="preserve">
+    <value>Übersprungen: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsFileUndone" xml:space="preserve">
+    <value>{0}. Mit „Rückgängig“ in den Papierkorb verschoben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNameTaken" xml:space="preserve">
+    <value>dort ist eine Datei mit diesem Namen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInUse" xml:space="preserve">
+    <value>ein anderes Programm hat sie geöffnet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonBlocked" xml:space="preserve">
+    <value>Windows hat sie blockiert, wie es der überwachte Ordnerzugriff tut. Lassen Sie PC Companion in der Windows-Sicherheit durch den überwachten Ordnerzugriff zu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonDestinationNotAllowed" xml:space="preserve">
+    <value>ihr Zielordner kann nicht verwendet werden, etwa weil er eine Verknüpfung ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonInterrupted" xml:space="preserve">
+    <value>die Ausführung wurde beim Kopieren beendet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChanged" xml:space="preserve">
+    <value>sie wurde inzwischen geändert oder entfernt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonMarkWouldBeLost" xml:space="preserve">
+    <value>sie stammt aus dem Internet, was dieses Laufwerk nicht festhalten kann; formatieren Sie das Laufwerk als NTFS, um sie zu sichern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonTooLarge" xml:space="preserve">
+    <value>sie ist zu groß für das Dateisystem des Laufwerks</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonChangedOnDrive" xml:space="preserve">
+    <value>ihre Kopie wurde auf dem Laufwerk geändert und bleibt daher</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonNotOurs" xml:space="preserve">
+    <value>auf dem Laufwerk ist eine Datei mit diesem Namen, die nicht von PC Companion stammt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonReadOnly" xml:space="preserve">
+    <value>ihre Kopie auf dem Laufwerk ist schreibgeschützt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonWrongDrive" xml:space="preserve">
+    <value>der Ordner der Sicherung war nicht mehr auf dem Laufwerk</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsReasonFailed" xml:space="preserve">
+    <value>Windows hat abgelehnt (Fehler {0})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowTitle" xml:space="preserve">
+    <value>Jetzt ausführen: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowDescription" xml:space="preserve">
+    <value>Die Dateien, die die Importe kopieren würden, jeweils mit Kontrollkästchen; bereits importierte sind nicht aktiviert. Sicherungen kopieren ihre neuen und geänderten Dateien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRun" xml:space="preserve">
+    <value>Ausführen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowLoading" xml:space="preserve">
+    <value>Es wird geprüft, was die Aktionen kopieren würden…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowNothing" xml:space="preserve">
+    <value>Die Aktionen haben gerade nichts zu kopieren. „Ausführen“ führt sie trotzdem aus, etwa für „Ordner öffnen“ oder „Nach Abschluss auswerfen“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowRefused" xml:space="preserve">
+    <value>Die Aktionen des Laufwerks können gerade nicht ausgeführt werden, etwa weil sie bereits laufen oder der PC gesperrt ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowGoesTo" xml:space="preserve">
+    <value>Nach {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowImportedBefore" xml:space="preserve">
+    <value>{0}, bereits importiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowBackUp" xml:space="preserve">
+    <value>Sichert {0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_one" xml:space="preserve">
+    <value>{0} Datei</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
+    <value>{0} Dateien</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
