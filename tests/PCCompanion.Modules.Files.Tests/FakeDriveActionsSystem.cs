@@ -33,6 +33,9 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
 
     public List<char> Ejected { get; } = [];
 
+    /// <summary>What <see cref="Eject"/> answers.</summary>
+    public EjectResult EjectAnswer { get; set; } = new(Ejected: true, Vetoed: false, 0);
+
     public void EnterBackgroundMode()
     {
     }
@@ -70,6 +73,8 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
         _folders.RemoveWhere(folder => folder.StartsWith(root, StringComparison.OrdinalIgnoreCase));
     }
 
+    public void SetLocked(char letter, bool locked) => _drives[letter] = _drives[letter] with { IsLocked = locked };
+
     public void SetFree(string root, long free) => _free[char.ToUpperInvariant(root[0])] = free;
 
     public void AddFolder(string path)
@@ -93,7 +98,10 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
     public IEnumerable<string> FilesIn(string folder) =>
         _files.Keys.Where(path => path.StartsWith(Path.TrimEndingDirectorySeparator(folder) + "\\", StringComparison.OrdinalIgnoreCase)).Order(StringComparer.OrdinalIgnoreCase);
 
-    public DriveReading? ReadDrive(char letter) => _drives.GetValueOrDefault(letter);
+    /// <summary>Drives Windows still has that can't be read now, as a locked drive while Windows tries to mount it.</summary>
+    public HashSet<char> Unreadable { get; } = [];
+
+    public DriveReading? ReadDrive(char letter) => Unreadable.Contains(letter) ? null : _drives.GetValueOrDefault(letter);
 
     public string? ReadIdFile(string root) => _files.GetValueOrDefault(Path.Join(root, DriveIdentity.IdFileName))?.Text;
 
@@ -191,7 +199,7 @@ internal sealed class FakeDriveActionsSystem : IDriveActionsSystem
     public EjectResult Eject(char letter)
     {
         Ejected.Add(letter);
-        return new EjectResult(Ejected: true, Vetoed: false, 0);
+        return EjectAnswer;
     }
 
     public IDriveActionsDevices WatchDevices() => throw new NotSupportedException("The runner's tests have no host UI thread.");

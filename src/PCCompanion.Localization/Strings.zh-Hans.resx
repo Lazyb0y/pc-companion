@@ -3180,4 +3180,12 @@
     <value>停止</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>驱动器已弹出。现在可以移除它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows 未弹出驱动器。可能有程序正在使用它。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

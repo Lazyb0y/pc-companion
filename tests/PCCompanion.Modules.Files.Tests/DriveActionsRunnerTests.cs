@@ -411,6 +411,144 @@ public sealed class DriveActionsRunnerTests : IDisposable
         Assert.Equal(1000, _system.FileAt(@"E:\Backup\Documents\notes.txt")!.Size);
     }
 
+    [Fact]
+    public void EjectWhenDoneEjectsTheDriveAfterItsActions()
+    {
+        Apply(Cards() with { EjectWhenDone = true });
+        AddCard('F');
+
+        _runner.Arrived('F', connectedBefore: false);
+        _host.RunAll();
+
+        Assert.Equal(['F'], _system.Ejected);
+        Assert.Contains("ejected", _host.Notifications[^1].Text, StringComparison.OrdinalIgnoreCase);
+        var history = new DriveActionsHistoryStore(Path.Join(_data.FullPath, DriveActionsHistoryStore.FileName)).Load(out _);
+        Assert.True(Assert.Single(history.Runs).Ejected);
+    }
+
+    [Fact]
+    public void ADriveWindowsDoesntEjectSaysSo()
+    {
+        Apply(Cards() with { EjectWhenDone = true });
+        AddCard('F');
+        _system.EjectAnswer = new Platform.Windows.EjectResult(Ejected: false, Vetoed: true, 23);
+
+        _runner.Arrived('F', connectedBefore: false);
+        _host.RunAll();
+
+        Assert.Contains("didn't eject", _host.Notifications[^1].Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ARunThatStoppedDoesntEject()
+    {
+        Apply(Cards() with { EjectWhenDone = true });
+        AddCard('F');
+        _runner.Arrived('F', connectedBefore: false);
+        Assert.True(_host.RunOne());
+
+        _runner.StopRun();
+        _host.RunAll();
+
+        Assert.Empty(_system.Ejected);
+    }
+
+    [Fact]
+    public void ADriveWithoutEjectWhenDoneStays()
+    {
+        Apply(Cards());
+        AddCard('F');
+
+        _runner.Arrived('F', connectedBefore: false);
+        _host.RunAll();
+
+        Assert.Empty(_system.Ejected);
+        Assert.Contains("remove the drive", _host.Notifications[^1].Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ALockedDriveIsWatchedAndHandledOnceItsUnlocked()
+    {
+        Apply(Cards());
+        AddCard('F');
+        _system.SetLocked('F', true);
+
+        _runner.Arrived('F', connectedBefore: false);
+        _host.RunAll();
+
+        Assert.Contains('F', _host.Watched);
+        Assert.Empty(_system.Copies);
+        Assert.Empty(_host.Notifications);
+
+        _system.SetLocked('F', false);
+        _runner.VolumeChanged('F', Platform.Windows.VolumeChange.EncryptionChanged);
+        _host.RunAll();
+
+        Assert.Equal(2, _system.Copies.Count);
+    }
+
+    [Fact]
+    public void ALockedDriveThatCantBeReadForAMomentStaysWatched()
+    {
+        Apply(Cards());
+        AddCard('F');
+        _system.SetLocked('F', true);
+        _runner.Arrived('F', connectedBefore: false);
+
+        _system.Unreadable.Add('F');
+        _runner.VolumeChanged('F', Platform.Windows.VolumeChange.Mounted);
+
+        Assert.Contains('F', _host.Watched);
+
+        _system.Unreadable.Clear();
+        _system.SetLocked('F', false);
+        _runner.VolumeChanged('F', Platform.Windows.VolumeChange.EncryptionChanged);
+        _host.RunAll();
+
+        Assert.Equal(2, _system.Copies.Count);
+    }
+
+    [Fact]
+    public void ARunIsntIdleWhileItCopies()
+    {
+        Apply(Cards());
+        AddCard('F');
+        var idleWhileCopying = true;
+        _system.BeforeCopy = (_, _) => idleWhileCopying &= _runner.Running!.Idle.IsSet;
+        _runner.Arrived('F', connectedBefore: false);
+        var run = _runner.Running!;
+
+        _host.RunAll();
+
+        Assert.False(idleWhileCopying);
+        Assert.True(run.Idle.IsSet);
+    }
+
+    [Fact]
+    public void AnEjectedDrivesRunStops()
+    {
+        Apply(Backup("Act"));
+        AddBackupDrive('E');
+        _system.AddFile(Documents + @"\a.txt");
+        _system.AddFile(Documents + @"\b.txt");
+        _system.BeforeCopy = (_, _) =>
+        {
+            if (_system.Copies.Count == 1)
+            {
+                // As the host's UI thread does when Windows asks to eject the drive.
+                _runner.Running!.Stop(RunOutcome.Ejected);
+                _runner.Ejecting('E');
+            }
+        };
+
+        _runner.Arrived('E', connectedBefore: false);
+        _host.RunAll();
+
+        var history = new DriveActionsHistoryStore(Path.Join(_data.FullPath, DriveActionsHistoryStore.FileName)).Load(out _);
+        Assert.Equal(RunOutcome.Ejected, Assert.Single(history.Runs).Outcome);
+        Assert.Contains("removed", _host.Notifications[^1].Text, StringComparison.Ordinal);
+    }
+
     public void Dispose() => _data.Dispose();
 
     private void Apply(params DriveEntry[] drives) => _runner.Apply(new DriveActionsSettings { Enabled = true, Drives = drives });

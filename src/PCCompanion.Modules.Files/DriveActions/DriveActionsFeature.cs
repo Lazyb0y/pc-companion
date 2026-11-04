@@ -32,6 +32,10 @@ public sealed partial class DriveActionsFeature(
     // new volume a letter and take it back within milliseconds, as when a tool gives it its own.
     private static readonly TimeSpan SettleTime = TimeSpan.FromSeconds(1);
 
+    // How long the host's UI thread waits, when Windows asks to eject a drive during a copy, for
+    // the copy to let go of its file, so that it doesn't keep Windows from ejecting the drive.
+    private static readonly TimeSpan EjectWait = TimeSpan.FromMilliseconds(200);
+
     // How long the host waits as it exits for the thread to finish the file it's copying.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
 
@@ -280,8 +284,9 @@ public sealed partial class DriveActionsFeature(
                 letter,
                 () =>
                 {
-                    // At once, on this thread: the copy lets go of the drive so Windows can eject it.
-                    thread.CancelRunOn(letter);
+                    // At once, on this thread, which Windows waits for: the copy lets go of the
+                    // drive, so Windows can eject it.
+                    thread.CancelRunOn(letter)?.Wait(EjectWait);
                     _watches.Remove(letter);
                     thread.Send(runner => runner.Ejecting(letter));
                 },

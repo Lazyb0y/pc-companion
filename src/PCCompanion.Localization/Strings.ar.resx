@@ -3380,4 +3380,12 @@
     <value>إيقاف</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>تم إخراج محرك الأقراص. يمكنك إزالته.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>لم يُخرج Windows محرك الأقراص. ربما يستخدمه أحد البرامج.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

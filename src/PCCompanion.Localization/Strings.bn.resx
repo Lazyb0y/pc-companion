@@ -3220,4 +3220,12 @@
     <value>থামান</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>ড্রাইভটি ইজেক্ট করা হয়েছে। আপনি এটি সরাতে পারেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows ড্রাইভটি ইজেক্ট করেনি। কোনো প্রোগ্রাম হয়তো এটি ব্যবহার করছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

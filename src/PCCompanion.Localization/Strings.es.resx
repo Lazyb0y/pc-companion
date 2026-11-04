@@ -3220,4 +3220,12 @@
     <value>Detener</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>Se expulsó la unidad. Puedes quitarla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows no expulsó la unidad. Puede que un programa la esté usando.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

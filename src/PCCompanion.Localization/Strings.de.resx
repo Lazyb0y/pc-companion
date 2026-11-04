@@ -3220,4 +3220,12 @@
     <value>Anhalten</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>Das Laufwerk wurde ausgeworfen. Sie können es entfernen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows hat das Laufwerk nicht ausgeworfen. Möglicherweise wird es von einem Programm verwendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
