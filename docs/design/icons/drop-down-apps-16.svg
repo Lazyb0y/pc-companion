@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs>
+        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#3940D6"/>
+        </linearGradient>
+        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F3F7FF"/>
+            <stop offset="1" stop-color="#CBD9FF"/>
+        </linearGradient>
+        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFD25E"/>
+            <stop offset="1" stop-color="#FF8A3C"/>
+        </linearGradient>
+    </defs>
+    <rect x="1" y="3" width="14" height="11" rx="2" fill="url(#frame)"/>
+    <rect x="1" y="3" width="14" height="11" rx="2" fill="url(#highlight)"/>
+    <rect x="2" y="4" width="12" height="9" rx="1" fill="url(#glass)"/>
+    <path fill="url(#accent)" d="M4 4H12V7.5A1 1 0 0 1 11 8.5H5A1 1 0 0 1 4 7.5Z"/>
+    <path fill="none" stroke="#9DB0F5" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M6 10L8 11.5L10 10"/>
+</svg>

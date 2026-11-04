@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <clipPath id="gap">
+            <path clip-rule="evenodd" d="M0 0H32V32H0ZM20 16L20 12A2 2 0 0 1 22 10L26 10A2 2 0 0 1 28 12L28 16L29.5 16A2 2 0 0 1 30.914 19.414L25.414 24.914A2 2 0 0 1 22.586 24.914L17.086 19.414A2 2 0 0 1 18.5 16L20 16ZM19.75 26.5H28.25A2.75 2.75 0 0 1 31 29.25A2.75 2.75 0 0 1 28.25 32H19.75A2.75 2.75 0 0 1 17 29.25A2.75 2.75 0 0 1 19.75 26.5Z"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#gap)">
+        <path fill="currentColor" fill-rule="evenodd" d="M5.5 2H21.5A3.5 3.5 0 0 1 25 5.5V17.5A3.5 3.5 0 0 1 21.5 21H5.5A3.5 3.5 0 0 1 2 17.5V5.5A3.5 3.5 0 0 1 5.5 2ZM6 4.5H21A1.5 1.5 0 0 1 22.5 6V17A1.5 1.5 0 0 1 21 18.5H6A1.5 1.5 0 0 1 4.5 17V6A1.5 1.5 0 0 1 6 4.5Z"/>
+    </g>
+    <path fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round" d="M22 12L26 12L26 18L29.5 18L24 23.5L18.5 18L22 18Z"/>
+    <rect x="18.5" y="28" width="11" height="2.5" rx="1.25" fill="currentColor"/>
+</svg>
