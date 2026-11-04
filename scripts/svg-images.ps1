@@ -4,7 +4,9 @@ Draws SVG files as images, for the scripts that make the app's icon images.
 
 .DESCRIPTION
 Dot-source it and call Get-SvgImages. Microsoft Edge, which comes with Windows, draws every image
-side by side on one transparent page without opening a window, and the page is then cut up.
+side by side on one transparent page without opening a window, and the page is then cut up. Each
+image is drawn on a canvas of its own, which the page then shows as it is: drawn straight on the
+page, a drawing's pixels change slightly with where it is, so adding an image would change others.
 #>
 
 Add-Type -AssemblyName System.Drawing
@@ -39,14 +41,16 @@ function Get-SvgImages([object[]] $Images) {
         $height = 0
         $tags = foreach ($image in $Images) {
             if (-not (Test-Path $image.Path)) { throw "$($image.Path) is missing." }
-            "<img src=`"$(([Uri]$image.Path).AbsoluteUri)`" width=`"$($image.Size)`" height=`"$($image.Size)`" style=`"left:$($x)px`">"
+            "<canvas width=`"$($image.Size)`" height=`"$($image.Size)`" data-src=`"$(([Uri]$image.Path).AbsoluteUri)`" style=`"left:$($x)px`"></canvas>"
             $image.X = $x
             $x += $image.Size + 8
             $height = [math]::Max($height, $image.Size)
         }
 
         $page = Join-Path $work 'images.html'
-        [IO.File]::WriteAllText($page, '<!doctype html><html><head><style>html,body{margin:0;background:transparent}img{position:absolute;top:0}</style></head><body>' + ($tags -join '') + '</body></html>')
+        $draw = '<script>for (const canvas of document.querySelectorAll("canvas")) { const image = new Image(); ' +
+            'image.onload = () => canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height); image.src = canvas.dataset.src; }</script>'
+        [IO.File]::WriteAllText($page, '<!doctype html><html><head><style>html,body{margin:0;background:transparent}canvas{position:absolute;top:0}</style></head><body>' + ($tags -join '') + $draw + '</body></html>')
         $shot = Join-Path $work 'images.png'
         $arguments = @(
             '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1', '--force-color-profile=srgb',
