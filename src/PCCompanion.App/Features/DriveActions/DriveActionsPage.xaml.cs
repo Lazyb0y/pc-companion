@@ -17,6 +17,7 @@ public sealed partial class DriveActionsPage : Page
 {
     private const string DriveMoreId = "DriveMore";
     private const string ActionMoreId = "ActionMore";
+    private const string ActionEditId = "ActionEdit";
 
     private static readonly CompositeFormat RemoveTitleFormat = CompositeFormat.Parse(Strings.DriveActionsRemoveTitle);
     private static readonly CompositeFormat RenameTitleFormat = CompositeFormat.Parse(Strings.DriveActionsRenameTitle);
@@ -187,6 +188,38 @@ public sealed partial class DriveActionsPage : Page
         }
     }
 
+    private async void OnAddActionClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: int drive } || drive >= ViewModel.Drives.Count)
+        {
+            return;
+        }
+
+        var editor = ViewModel.NewEditor(drive);
+        if (await ShowAsync(new DriveActionDialog(editor)) == ContentDialogResult.Primary)
+        {
+            // Focus goes to the new action, at the end of the drive's list.
+            ViewModel.AddAction(drive, editor.ToAction());
+            FocusAction(drive, ViewModel.Drives[drive].Actions.Count - 1, ActionEditId);
+        }
+    }
+
+    private async void OnEditActionClick(object sender, RoutedEventArgs e)
+    {
+        var (drive, action) = ActionOf(sender);
+        if (drive < 0 || drive >= ViewModel.Drives.Count || action >= ViewModel.Drives[drive].Actions.Count)
+        {
+            return;
+        }
+
+        var editor = ViewModel.EditorFor(drive, action);
+        if (await ShowAsync(new DriveActionDialog(editor)) == ContentDialogResult.Primary)
+        {
+            ViewModel.ReplaceAction(drive, action, editor.ToAction());
+            FocusAction(drive, action, ActionEditId);
+        }
+    }
+
     private void OnMoveUpClick(object sender, RoutedEventArgs e) => Move(sender, -1);
 
     private void OnMoveDownClick(object sender, RoutedEventArgs e) => Move(sender, 1);
@@ -196,7 +229,7 @@ public sealed partial class DriveActionsPage : Page
     {
         var (drive, action) = ActionOf(sender);
         ViewModel.MoveAction(drive, action, offset);
-        FocusAction(drive, action + offset);
+        FocusAction(drive, action + offset, ActionMoreId);
     }
 
     private async void OnRemoveActionClick(object sender, RoutedEventArgs e)
@@ -237,7 +270,7 @@ public sealed partial class DriveActionsPage : Page
 
     // A drive's actions are made as they come into view, by the list in its expander, so the
     // action's is made first, wherever the page is scrolled.
-    private void FocusAction(int drive, int action) =>
+    private void FocusAction(int drive, int action, string id) =>
         DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
         {
             DriveList.UpdateLayout();
@@ -246,7 +279,7 @@ public sealed partial class DriveActionsPage : Page
                     ? actions.GetOrCreateElement(action)
                     : null;
             element?.UpdateLayout();
-            Control target = element is not null && FindButton(element, ActionMoreId, FormattableString.Invariant($"{drive}:{action}")) is { } button ? button : AddDriveButton;
+            Control target = element is not null && FindButton(element, id, FormattableString.Invariant($"{drive}:{action}")) is { } button ? button : AddDriveButton;
             target.Focus(FocusState.Programmatic);
         });
 

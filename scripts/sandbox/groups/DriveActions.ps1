@@ -412,6 +412,33 @@ Test-Check 'and focus goes back to the drive' (Wait-Until { (Get-FocusedName) -e
 Test-Check 'When connected saves the choice' ((Select-ListItem 'When Work drive is connected' 'Do nothing') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].whenConnected -eq 'Nothing' } 5))
 Test-Check 'Eject when done saves the switch' ((Set-Toggle 'Eject Work drive when done' $true) -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].ejectWhenDone -eq $true } 5))
 
+# The action editor says what's wrong below its boxes, Save is available only for an action that
+# can be used, and it saves the action; Edit opens one again.
+$myDocuments = [Environment]::GetFolderPath('MyDocuments')
+Test-Check 'Add action opens the action editor' ((Invoke-AppButton 'Add an action to Work drive') -and (Wait-Until { Find-AppDialog 'Add an action' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'a new backup has no folders, so it can''t be saved' ((Wait-Until { Find-AppText 'It has no folders to back up.' } 3) -and -not (Test-AppEnabled 'Save'))
+Test-Check 'Add folder adds Documents' ((Invoke-AppElement 'Add folder') -and (Invoke-AppMenuItem 'Documents') -and (Wait-Until { Find-AppText $myDocuments } 3))
+[void] (Set-AppBox 'Destination on the drive' '..\Backup')
+Test-Check 'a destination outside the drive''s folders is refused' ((Wait-Until { Find-AppText 'Its folder on the drive isn''t valid. Enter it without the drive''s letter, such as DCIM.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Destination on the drive' 'Laptop')
+Save-Screenshot '15k-drive-actions-editor'
+$newAction = { @(@((Get-DriveActionsSettings).drives)[2].actions)[0] }
+Test-Check 'Save adds the backup' ((Test-AppEnabled 'Save') -and (Invoke-DialogButton 'Add an action' 'Save') -and (Wait-Until { $a = & $newAction; ($a.action -eq 'BackUp') -and ($a.destination -eq 'Laptop') -and (@($a.folders)[0] -eq $myDocuments) } 5)) ((& $newAction) | ConvertTo-Json -Compress -Depth 4)
+Test-Check 'focus goes to the new action' (Wait-Until { (Get-FocusedName) -eq 'Edit action 1 of Work drive' } 3) (Get-FocusedName)
+
+Test-Check 'Edit opens an action' ((Invoke-AppButton 'Edit action 1 of Camera cards') -and (Wait-Until { Find-AppDialog 'Edit the action' } 5) -and ((Get-AppBox 'From') -eq 'DCIM')) (Get-AppBox 'From')
+Start-Sleep -Seconds 1
+[void] (Set-AppBox 'Types' 'p/df')
+Test-Check 'an extension a file name can''t have is refused' ((Wait-Until { Find-AppText 'An extension is empty, has a dot inside it, or has characters a file name can''t have.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'Types' 'jpg')
+[void] (Set-AppBox 'To' $env:windir)
+Test-Check 'and the Windows folder' ((Wait-Until { Find-AppText 'It''s in the Windows folder, which only administrators can change.' } 3) -and -not (Test-AppEnabled 'Save'))
+[void] (Set-AppBox 'To' "$pictures\{year}")
+$cardsImport = { @(@((Get-DriveActionsSettings).drives)[0].actions)[0] }
+Test-Check 'Save saves the import' ((Invoke-DialogButton 'Edit the action' 'Save') -and (Wait-Until { $a = & $cardsImport; ((@($a.extensions) -join ',') -eq 'jpg') -and ($a.destination -eq "$pictures\{year}") } 5)) ((& $cardsImport) | ConvertTo-Json -Compress -Depth 4)
+Test-Check 'and focus goes back to it' (Wait-Until { (Get-FocusedName) -eq 'Edit action 1 of Camera cards' } 3) (Get-FocusedName)
+
 [void] (Invoke-AppButton 'More options for action 2 of Camera cards')
 Start-Sleep -Seconds 1
 Test-Check 'Move up moves the action' ((Invoke-AppMenuItem 'Move up') -and (Wait-Until { (Get-ActionKinds 0) -eq 'OpenFolder,Import' } 5)) (Get-ActionKinds 0)

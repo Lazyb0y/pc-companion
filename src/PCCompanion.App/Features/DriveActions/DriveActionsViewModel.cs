@@ -21,7 +21,8 @@ namespace PCCompanion.App.Features.DriveActions;
 /// <param name="DriveIndex">The drive's place in the list, from 0.</param>
 /// <param name="Index">The action's place in the drive's list, from 0.</param>
 /// <param name="Summary">What the action does, or why it isn't used.</param>
-public sealed record DriveActionItem(int DriveIndex, int Index, string Name, string Summary, string MoreName, bool CanMoveUp, bool CanMoveDown)
+/// <param name="CanEdit">The action is one this version knows, so the editor can open it.</param>
+public sealed record DriveActionItem(int DriveIndex, int Index, string Name, string Summary, string EditName, string MoreName, bool CanEdit, bool CanMoveUp, bool CanMoveDown)
 {
     /// <summary>The drive's and the action's places, for the action's buttons.</summary>
     public string Tag => FormattableString.Invariant($"{DriveIndex}:{Index}");
@@ -44,6 +45,7 @@ public sealed partial class DriveItem : ObservableObject
         Index = index;
         Name = drive.Name.Trim();
         Key = DriveRecordsStore.KeyOf(drive);
+        Kind = drive.KnownKind ?? DriveEntryKind.Drive;
         Glyph = drive.KnownKind == DriveEntryKind.CameraCards ? "\uE722" : "\uE88E";
         Problem = problem;
         ReceivesBackups = receivesBackups;
@@ -57,6 +59,8 @@ public sealed partial class DriveItem : ObservableObject
         EjectWhenDone = drive.EjectWhenDone;
         Actions = actions;
         MoreName = Format(DriveActionsViewModel.MoreFormat, Name);
+        AddActionName = Format(DriveActionsViewModel.AddActionFormat, Name);
+        CanAddAction = drive.KnownKind is not null && drive.Actions.Count < DriveActionsSettings.MaximumActions;
         WhenConnectedName = Format(DriveActionsViewModel.WhenConnectedFormat, Name);
         EjectName = Format(DriveActionsViewModel.EjectFormat, Name);
     }
@@ -67,6 +71,8 @@ public sealed partial class DriveItem : ObservableObject
 
     /// <summary>The key the host knows the drive by: its ID, or Camera cards' key.</summary>
     public string Key { get; }
+
+    public DriveEntryKind Kind { get; }
 
     public string Glyph { get; }
 
@@ -89,6 +95,10 @@ public sealed partial class DriveItem : ObservableObject
     public IReadOnlyList<DriveActionItem> Actions { get; }
 
     public bool HasNoActions => Actions.Count == 0;
+
+    public bool CanAddAction { get; }
+
+    public string AddActionName { get; }
 
     public string MoreName { get; }
 
@@ -136,12 +146,15 @@ public sealed partial class DriveItem : ObservableObject
     /// <summary>The look-alike or the drive without its ID file, for Use this drive and Add again.</summary>
     internal ConnectedDriveInfo? Other { get; private set; }
 
+    /// <summary>The root of the drive while it's connected and recognized, such as <c>E:\</c>, for Browse in the action editor; or <see langword="null"/>.</summary>
+    internal string? Root { get; private set; }
+
     /// <summary>Shows what the host said about the connected drives, or nothing when it didn't answer.</summary>
     internal void Show(DriveActionsAnswer? answer)
     {
         if (answer is null)
         {
-            (Status, LookAlike, NotRecognized, Other) = (string.Empty, string.Empty, string.Empty, null);
+            (Status, LookAlike, NotRecognized, Other, Root) = (string.Empty, string.Empty, string.Empty, null, null);
             return;
         }
 
@@ -149,6 +162,7 @@ public sealed partial class DriveItem : ObservableObject
         var recognized = drives.Where(drive => drive.Outcome is RecognitionOutcome.Recognized or RecognitionOutcome.CameraCards).ToArray();
         var letters = string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", recognized.Select(drive => DriveActionsText.Letter(drive.Letter)));
         var locked = drives.FirstOrDefault(drive => drive.Outcome == RecognitionOutcome.Locked);
+        Root = recognized.Length > 0 ? DriveActionsText.Letter(recognized[0].Letter) + "\\" : null;
         Status = answer.Running is { } running && recognized.Any(drive => drive.Letter == running.Letter.ToString())
             ? Strings.DriveActionsStatusRunning
             : recognized.Length > 0 ? Format(DriveActionsViewModel.ConnectedFormat, letters)
@@ -172,6 +186,7 @@ public sealed partial class DriveItem : ObservableObject
 public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveActionsSettings>
 {
     internal static readonly CompositeFormat MoreFormat = CompositeFormat.Parse(Strings.DriveActionsMoreName);
+    internal static readonly CompositeFormat AddActionFormat = CompositeFormat.Parse(Strings.DriveActionsAddActionName);
     internal static readonly CompositeFormat WhenConnectedFormat = CompositeFormat.Parse(Strings.DriveActionsWhenConnectedName);
     internal static readonly CompositeFormat EjectFormat = CompositeFormat.Parse(Strings.DriveActionsEjectName);
     internal static readonly CompositeFormat ConnectedFormat = CompositeFormat.Parse(Strings.DriveActionsStatusConnected);
@@ -179,6 +194,7 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
     internal static readonly CompositeFormat LookAlikeFormat = CompositeFormat.Parse(Strings.DriveActionsLookAlikeInfo);
     internal static readonly CompositeFormat NotRecognizedFormat = CompositeFormat.Parse(Strings.DriveActionsNotRecognizedInfo);
     private static readonly CompositeFormat ActionMoreFormat = CompositeFormat.Parse(Strings.DriveActionsActionMoreName);
+    private static readonly CompositeFormat ActionEditFormat = CompositeFormat.Parse(Strings.DriveActionsEditName);
     private static readonly CompositeFormat AddFailedFormat = CompositeFormat.Parse(Strings.DriveActionsAddFailed);
     private static readonly CompositeFormat NumberedNameFormat = CompositeFormat.Parse(Strings.DriveActionsNumberedName);
     private static readonly CompositeFormat DrivesTooManyFormat = CompositeFormat.Parse(Strings.DriveActionsDriveTooMany);
@@ -418,6 +434,33 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
         }
     }
 
+    /// <summary>
+    /// The action editor for a new action: an import with the defaults for Camera cards, which only
+    /// bring files to the PC, and a backup for a drive.
+    /// </summary>
+    public DriveActionEditor NewEditor(int drive)
+    {
+        var kind = Drives[drive].Kind;
+        var action = kind == DriveEntryKind.CameraCards
+            ? new DriveAction
+            {
+                Action = nameof(DriveActionKind.Import),
+                Extensions = FileKinds.Extensions(FileKind.CameraFiles),
+                Destination = System.IO.Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "{year}", "{month}"),
+            }
+            : new DriveAction { Action = nameof(DriveActionKind.BackUp), Destination = DriveAction.DefaultBackupDestination };
+        return new DriveActionEditor(action, isNew: true, kind, Places, Drives[drive].Root);
+    }
+
+    /// <summary>The action editor for an action in the list, as saved.</summary>
+    public DriveActionEditor EditorFor(int drive, int index) =>
+        new(Settings.Drives[drive].Actions[index], isNew: false, Drives[drive].Kind, Places, Drives[drive].Root);
+
+    public void AddAction(int drive, DriveAction action) => ChangeActions(drive, actions => [.. actions, action]);
+
+    public void ReplaceAction(int drive, int index, DriveAction action) =>
+        ChangeActions(drive, actions => [.. actions.Select((existing, at) => at == index ? action : existing)]);
+
     public void RemoveAction(int drive, int index) => ChangeActions(drive, actions => [.. actions.Where((_, at) => at != index)]);
 
     /// <summary>Moves an action one place up, with an offset of -1, or down, with 1.</summary>
@@ -548,7 +591,9 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
             at,
             DriveActionsText.NameOf(action),
             DriveActionsText.Summary(action, DriveActionsText.Of(review.Actions[at], action, Places)),
+            string.Format(CultureInfo.CurrentCulture, ActionEditFormat, at + 1, drive.Name.Trim()),
             string.Format(CultureInfo.CurrentCulture, ActionMoreFormat, at + 1, drive.Name.Trim()),
+            action.KnownAction is not null && drive.KnownKind is not null,
             at > 0,
             at < drive.Actions.Count - 1)).ToList();
 

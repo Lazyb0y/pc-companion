@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.DriveActions.DriveActionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
+    xmlns:local="using:PCCompanion.App.Features.DriveActions"
+    CloseButtonText="{app:Localized Key=DriveActionsCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=DriveActionsSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <!-- Folders, extensions and paths read left to right in every language. -->
+    <StackPanel MinWidth="440" Spacing="16">
+        <ComboBox
+            x:Name="ActionBox"
+            HorizontalAlignment="Stretch"
+            Header="{app:Localized Key=DriveActionsActionHeader}"
+            ItemsSource="{x:Bind Editor.ActionChoices}"
+            SelectedIndex="{x:Bind Editor.ActionIndex, Mode=TwoWay}" />
+
+        <StackPanel Spacing="16" Visibility="{x:Bind Editor.IsImport, Mode=OneWay}">
+            <StackPanel Spacing="4">
+                <TextBlock Text="{app:Localized Key=DriveActionsFromHeader}" />
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        AutomationProperties.HelpText="{x:Bind Editor.FromProblem, Mode=OneWay}"
+                        AutomationProperties.Name="{app:Localized Key=DriveActionsFromHeader}"
+                        FlowDirection="LeftToRight"
+                        IsSpellCheckEnabled="False"
+                        PlaceholderText="DCIM"
+                        Text="{x:Bind Editor.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Column="1"
+                        AutomationProperties.Name="{app:Localized Key=DriveActionsBrowseFromName}"
+                        Click="OnBrowseFromClick"
+                        Content="{app:Localized Key=DriveActionsBrowse}"
+                        IsEnabled="{x:Bind Editor.CanBrowseDrive}" />
+                </Grid>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.FromProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasFromProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=DriveActionsFromNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="{app:Localized Key=DriveActionsTypesHeader}" />
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        AutomationProperties.HelpText="{x:Bind Editor.ExtensionsProblem, Mode=OneWay}"
+                        AutomationProperties.Name="{app:Localized Key=DriveActionsTypesHeader}"
+                        FlowDirection="LeftToRight"
+                        IsSpellCheckEnabled="False"
+                        PlaceholderText="jpg; cr3"
+                        Text="{x:Bind Editor.Extensions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <DropDownButton Grid.Column="1" Content="{app:Localized Key=DriveActionsAddKind}">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                <MenuFlyoutItem Click="OnAddKindClick" Tag="CameraFiles" Text="{app:Localized Key=DriveActionsKindCameraFiles}" />
+                                <MenuFlyoutItem Click="OnAddKindClick" Tag="Pictures" Text="{app:Localized Key=DriveActionsKindPictures}" />
+                                <MenuFlyoutItem Click="OnAddKindClick" Tag="Videos" Text="{app:Localized Key=DriveActionsKindVideos}" />
+                                <MenuFlyoutItem Click="OnAddKindClick" Tag="Music" Text="{app:Localized Key=DriveActionsKindMusic}" />
+                                <MenuFlyoutItem Click="OnAddKindClick" Tag="Documents" Text="{app:Localized Key=DriveActionsKindDocuments}" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </Grid>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.ExtensionsProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasExtensionsProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=DriveActionsTypesNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="{app:Localized Key=DriveActionsToHeader}" />
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        AutomationProperties.HelpText="{x:Bind Editor.DestinationProblem, Mode=OneWay}"
+                        AutomationProperties.Name="{app:Localized Key=DriveActionsToHeader}"
+                        FlowDirection="LeftToRight"
+                        IsSpellCheckEnabled="False"
+                        Text="{x:Bind Editor.Destination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Column="1"
+                        AutomationProperties.Name="{app:Localized Key=DriveActionsBrowseToName}"
+                        Click="OnBrowseToClick"
+                        Content="{app:Localized Key=DriveActionsBrowse}" />
+                </Grid>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.DestinationProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasDestinationProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=DriveActionsToNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <ComboBox
+                HorizontalAlignment="Stretch"
+                Header="{app:Localized Key=DriveActionsIfExistsHeader}"
+                ItemsSource="{x:Bind IfExistsChoices}"
+                SelectedIndex="{x:Bind Editor.IfExistsIndex, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="16" Visibility="{x:Bind Editor.IsBackUp, Mode=OneWay}">
+            <StackPanel Spacing="4">
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="{app:Localized Key=DriveActionsFoldersHeader}" />
+                    <DropDownButton
+                        Grid.Column="1"
+                        Content="{app:Localized Key=DriveActionsAddFolder}"
+                        IsEnabled="{x:Bind Editor.CanAddFolder, Mode=OneWay}">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                <MenuFlyoutItem Click="OnAddKnownFolderClick" Tag="Documents" Text="{app:Localized Key=DriveActionsKnownDocuments}" />
+                                <MenuFlyoutItem Click="OnAddKnownFolderClick" Tag="Pictures" Text="{app:Localized Key=DriveActionsKnownPictures}" />
+                                <MenuFlyoutItem Click="OnAddKnownFolderClick" Tag="Desktop" Text="{app:Localized Key=DriveActionsKnownDesktop}" />
+                                <MenuFlyoutItem Click="OnAddKnownFolderClick" Tag="Music" Text="{app:Localized Key=DriveActionsKnownMusic}" />
+                                <MenuFlyoutItem Click="OnAddKnownFolderClick" Tag="Videos" Text="{app:Localized Key=DriveActionsKnownVideos}" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Click="OnBrowseFolderClick" Text="{app:Localized Key=DriveActionsBrowseEllipsis}" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </Grid>
+                <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Editor.Folders}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="local:BackupFolderItem">
+                            <Grid Padding="0,4" ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FlowDirection="LeftToRight"
+                                    Text="{x:Bind Path}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTipService.ToolTip="{x:Bind Path}" />
+                                <Button
+                                    Grid.Column="1"
+                                    AutomationProperties.Name="{x:Bind RemoveName}"
+                                    Click="OnRemoveFolderClick"
+                                    Tag="{x:Bind Index}"
+                                    ToolTipService.ToolTip="{x:Bind RemoveName}">
+                                    <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="14" Glyph="&#xE74D;" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.FoldersProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasFoldersProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=DriveActionsFoldersNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBox
+                    AutomationProperties.HelpText="{x:Bind Editor.BackupDestinationProblem, Mode=OneWay}"
+                    FlowDirection="LeftToRight"
+                    Header="{app:Localized Key=DriveActionsBackupDestinationHeader}"
+                    IsSpellCheckEnabled="False"
+                    PlaceholderText="Backup"
+                    Text="{x:Bind Editor.BackupDestination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.BackupDestinationProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasBackupDestinationProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=DriveActionsBackupDestinationNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="4" Visibility="{x:Bind Editor.IsOpenFolder, Mode=OneWay}">
+            <TextBlock Text="{app:Localized Key=DriveActionsFolderHeader}" />
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    AutomationProperties.HelpText="{x:Bind Editor.OpenFolderProblem, Mode=OneWay}"
+                    AutomationProperties.Name="{app:Localized Key=DriveActionsFolderHeader}"
+                    FlowDirection="LeftToRight"
+                    IsSpellCheckEnabled="False"
+                    PlaceholderText="DCIM"
+                    Text="{x:Bind Editor.Folder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Button
+                    Grid.Column="1"
+                    AutomationProperties.Name="{app:Localized Key=DriveActionsBrowseFolderName}"
+                    Click="OnBrowseOpenFolderClick"
+                    Content="{app:Localized Key=DriveActionsBrowse}" />
+            </Grid>
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.OpenFolderProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasOpenFolderProblem, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=DriveActionsFolderNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>

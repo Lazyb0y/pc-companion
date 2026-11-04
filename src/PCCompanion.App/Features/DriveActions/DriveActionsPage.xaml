@@ -175,51 +175,68 @@
                                                 Tag="{x:Bind Index}"
                                                 Toggled="OnEjectToggled" />
                                         </toolkit:SettingsCard>
-                                        <toolkit:SettingsCard Description="{app:Localized Key=DriveActionsActionsDescription}" Header="{app:Localized Key=DriveActionsActionsHeader}" />
+                                        <toolkit:SettingsCard Description="{app:Localized Key=DriveActionsActionsDescription}" Header="{app:Localized Key=DriveActionsActionsHeader}">
+                                            <Button
+                                                AutomationProperties.AutomationId="AddAction"
+                                                AutomationProperties.Name="{x:Bind AddActionName}"
+                                                Click="OnAddActionClick"
+                                                Content="{app:Localized Key=DriveActionsAddAction}"
+                                                IsEnabled="{x:Bind CanAddAction}"
+                                                Tag="{x:Bind Index}" />
+                                        </toolkit:SettingsCard>
                                         <toolkit:SettingsCard Header="{app:Localized Key=DriveActionsNoActions}" Visibility="{x:Bind HasNoActions}" />
                                     </StackPanel>
                                 </controls:IconExpander.ItemsHeader>
                                 <controls:IconExpander.ItemTemplate>
                                     <DataTemplate x:DataType="local:DriveActionItem">
                                         <toolkit:SettingsCard Description="{x:Bind Summary}" Header="{x:Bind Name}">
-                                            <Button
-                                                AutomationProperties.AutomationId="ActionMore"
-                                                AutomationProperties.Name="{x:Bind MoreName}"
-                                                Tag="{x:Bind Tag}"
-                                                ToolTipService.ToolTip="{x:Bind MoreName}">
-                                                <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
-                                                <Button.Flyout>
-                                                    <MenuFlyout>
-                                                        <MenuFlyoutItem
-                                                            Click="OnMoveUpClick"
-                                                            IsEnabled="{x:Bind CanMoveUp}"
-                                                            Tag="{x:Bind Tag}"
-                                                            Text="{app:Localized Key=DriveActionsMoveUp}">
-                                                            <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="&#xE74A;" />
-                                                            </MenuFlyoutItem.Icon>
-                                                        </MenuFlyoutItem>
-                                                        <MenuFlyoutItem
-                                                            Click="OnMoveDownClick"
-                                                            IsEnabled="{x:Bind CanMoveDown}"
-                                                            Tag="{x:Bind Tag}"
-                                                            Text="{app:Localized Key=DriveActionsMoveDown}">
-                                                            <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="&#xE74B;" />
-                                                            </MenuFlyoutItem.Icon>
-                                                        </MenuFlyoutItem>
-                                                        <MenuFlyoutSeparator />
-                                                        <MenuFlyoutItem
-                                                            Click="OnRemoveActionClick"
-                                                            Tag="{x:Bind Tag}"
-                                                            Text="{app:Localized Key=DriveActionsRemove}">
-                                                            <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="&#xE74D;" />
-                                                            </MenuFlyoutItem.Icon>
-                                                        </MenuFlyoutItem>
-                                                    </MenuFlyout>
-                                                </Button.Flyout>
-                                            </Button>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Button
+                                                    AutomationProperties.AutomationId="ActionEdit"
+                                                    AutomationProperties.Name="{x:Bind EditName}"
+                                                    Click="OnEditActionClick"
+                                                    Content="{app:Localized Key=DriveActionsEdit}"
+                                                    IsEnabled="{x:Bind CanEdit}"
+                                                    Tag="{x:Bind Tag}" />
+                                                <Button
+                                                    AutomationProperties.AutomationId="ActionMore"
+                                                    AutomationProperties.Name="{x:Bind MoreName}"
+                                                    Tag="{x:Bind Tag}"
+                                                    ToolTipService.ToolTip="{x:Bind MoreName}">
+                                                    <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
+                                                    <Button.Flyout>
+                                                        <MenuFlyout>
+                                                            <MenuFlyoutItem
+                                                                Click="OnMoveUpClick"
+                                                                IsEnabled="{x:Bind CanMoveUp}"
+                                                                Tag="{x:Bind Tag}"
+                                                                Text="{app:Localized Key=DriveActionsMoveUp}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE74A;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem
+                                                                Click="OnMoveDownClick"
+                                                                IsEnabled="{x:Bind CanMoveDown}"
+                                                                Tag="{x:Bind Tag}"
+                                                                Text="{app:Localized Key=DriveActionsMoveDown}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE74B;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutSeparator />
+                                                            <MenuFlyoutItem
+                                                                Click="OnRemoveActionClick"
+                                                                Tag="{x:Bind Tag}"
+                                                                Text="{app:Localized Key=DriveActionsRemove}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE74D;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyout>
+                                                    </Button.Flyout>
+                                                </Button>
+                                            </StackPanel>
                                         </toolkit:SettingsCard>
                                     </DataTemplate>
                                 </controls:IconExpander.ItemTemplate>
