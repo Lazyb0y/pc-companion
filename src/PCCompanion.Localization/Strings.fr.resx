@@ -3220,4 +3220,12 @@
     <value>Arrêter</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>Le lecteur a été éjecté. Vous pouvez le retirer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows n'a pas éjecté le lecteur. Un programme l'utilise peut-être.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

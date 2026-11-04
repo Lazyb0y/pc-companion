@@ -152,7 +152,7 @@ A drive's actions run in their order, one at a time. A drive with no action can 
 
 - PC Companion keeps a handle open on each recognized drive while it's connected, opened without access, so that Windows tells it when the drive is about to be ejected, is unlocked or is formatted. A drive formatted while connected is recognized again.
 - **When Windows asks to eject a drive,** PC Companion closes its handles on the drive at once, stops the copy to or from it, and lets Windows eject it. It waits up to 200 ms for the copy to let go before it answers, so that its copy doesn't keep the drive from ejecting; in the spike, a copy let go within 60 ms. The run stops, and the history says the drive was ejected.
-- **When a drive is pulled out** without ejecting, the copy fails, and the run stops the same way. A copy to the drive leaves its unfinished copy there, at its full size, under its temporary name; PC Companion deletes it the next time the drive arrives, before anything else. The old copy, if any, is untouched. An unfinished copy on the PC is deleted.
+- **When a drive is pulled out** without ejecting, the copy fails, and the run stops the same way. A copy to the drive leaves its unfinished copy there, at its full size, under its temporary name; PC Companion deletes it the next time it backs up to the drive, before anything else. The old copy, if any, is untouched. An unfinished copy on the PC is deleted.
 - A run that stopped isn't started again on its own. When the drive comes back, it's handled like any arrival, and a new run picks up where the last one stopped, since imports and backups skip what's done.
 
 ### A full drive

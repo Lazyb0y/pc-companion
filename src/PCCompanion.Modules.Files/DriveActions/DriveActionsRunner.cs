@@ -168,6 +168,14 @@ public sealed partial class DriveActionsRunner
         var reading = _system.ReadDrive(letter);
         if (reading is null)
         {
+            // A drive Windows still has, such as a locked BitLocker drive while Windows tries to
+            // mount it, keeps what it was until it can be read again or goes.
+            if (_connected.ContainsKey(letter) && (_system.Letters & (1u << (char.ToUpperInvariant(letter) - 'A'))) != 0)
+            {
+                LogNotReadable(_logger, letter);
+                return;
+            }
+
             Removed(letter);
             return;
         }
@@ -230,6 +238,7 @@ public sealed partial class DriveActionsRunner
     /// <summary>Windows reported a change of a watched volume.</summary>
     public void VolumeChanged(char letter, VolumeChange change)
     {
+        LogVolumeChanged(_logger, letter, change);
         switch (change)
         {
             case VolumeChange.Mounted or VolumeChange.EncryptionChanged:
@@ -531,6 +540,12 @@ public sealed partial class DriveActionsRunner
         }
 
         SaveRecords(key, records);
+        if (run.Outcome == RunOutcome.Done && run.Entry.EjectWhenDone)
+        {
+            var ejected = _system.Eject(run.Letter);
+            run.Ejected = ejected.Ejected;
+            LogEjected(_logger, run.Letter, ejected.Ejected, ejected.ErrorCode);
+        }
     }
 
     private IEnumerable<bool> Import(Run run, DriveAction action, RunAction result, DriveRecords records)
@@ -595,7 +610,7 @@ public sealed partial class DriveActionsRunner
         foreach (var candidate in FileNaming.Candidates(file.File.Name, ifExists))
         {
             var path = Path.Join(file.Destination, candidate);
-            var error = _system.Copy(file.Source, path, run.Cancel.Token);
+            var error = run.Copy(() => _system.Copy(file.Source, path, run.Cancel.Token));
             switch (error)
             {
                 case 0:
@@ -693,12 +708,12 @@ public sealed partial class DriveActionsRunner
         }
 
         var temporary = final + DriveFiles.TemporarySuffix;
-        var error = _system.Copy(file.Source, temporary, run.Cancel.Token);
+        var error = run.Copy(() => _system.Copy(file.Source, temporary, run.Cancel.Token));
         if (error == FileExists)
         {
             // An unfinished copy from before: it goes, and the copy starts again.
             _system.Delete(temporary);
-            error = _system.Copy(file.Source, temporary, run.Cancel.Token);
+            error = run.Copy(() => _system.Copy(file.Source, temporary, run.Cancel.Token));
         }
 
         if (error != 0)
@@ -900,6 +915,7 @@ public sealed partial class DriveActionsRunner
             Needed = run.Needed,
             Free = run.Free,
             Actions = run.Results,
+            Ejected = run.Ejected,
         };
         _history ??= _historyStore.Load(out _);
         _history.Add(entry, _time.GetUtcNow());
@@ -942,7 +958,12 @@ public sealed partial class DriveActionsRunner
 
         lines.Add(run.Outcome switch
         {
-            RunOutcome.Done => Strings.DriveActionsCanRemove,
+            RunOutcome.Done => run.Ejected switch
+            {
+                true => Strings.DriveActionsEjected,
+                false => Strings.DriveActionsNotEjected,
+                null => Strings.DriveActionsCanRemove,
+            },
             RunOutcome.NotEnoughSpace => Format(Strings.DriveActionsNotEnoughSpace, ByteSizes.Format(run.Needed), ByteSizes.Format(run.Free)),
             RunOutcome.Ejected or RunOutcome.Removed => Strings.DriveActionsStoppedRemoved,
             _ => Strings.DriveActionsStopped,
@@ -987,6 +1008,9 @@ public sealed partial class DriveActionsRunner
         /// <summary>Cancelled when the run stops, which stops the copy that's going, from any thread.</summary>
         public CancellationTokenSource Cancel { get; } = new();
 
+        /// <summary>Set while no copy of the run has a file open, which the host's UI thread waits for briefly when Windows asks to eject the drive.</summary>
+        public ManualResetEventSlim Idle { get; } = new(initialState: true);
+
         public RunOutcome Outcome => (RunOutcome)_outcome;
 
         internal List<RunAction> Results { get; } = [];
@@ -1002,6 +1026,22 @@ public sealed partial class DriveActionsRunner
         internal long Needed { get; set; }
 
         internal long Free { get; set; }
+
+        internal bool? Ejected { get; set; }
+
+        // Runs a copy, during which the run isn't idle.
+        internal int Copy(Func<int> copy)
+        {
+            Idle.Reset();
+            try
+            {
+                return copy();
+            }
+            finally
+            {
+                Idle.Set();
+            }
+        }
 
         /// <summary>Stops the run, from any thread, for <paramref name="outcome"/>, unless it stopped already.</summary>
         public void Stop(RunOutcome outcome)
@@ -1024,6 +1064,12 @@ public sealed partial class DriveActionsRunner
     [LoggerMessage(Level = LogLevel.Debug, Message = "A drive arrived as {Letter}: {Outcome}, drive {Drive} in the list.")]
     private static partial void LogArrived(ILogger logger, char letter, RecognitionOutcome outcome, int drive);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The drive {Letter} can't be read now, so it stays as it was.")]
+    private static partial void LogNotReadable(ILogger logger, char letter);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Windows reported a change of the drive {Letter}: {Change}.")]
+    private static partial void LogVolumeChanged(ILogger logger, char letter, VolumeChange change);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "The drive {Letter} went.")]
     private static partial void LogRemoved(ILogger logger, char letter);
 
@@ -1044,6 +1090,9 @@ public sealed partial class DriveActionsRunner
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The run for the drive {Letter} ended: {Outcome}, {Copied} files copied, {Skipped} skipped.")]
     private static partial void LogRunEnded(ILogger logger, char letter, RunOutcome outcome, int copied, int skipped);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Asked Windows to eject the drive {Letter} after its actions: ejected {Ejected} (CONFIGRET {ErrorCode}).")]
+    private static partial void LogEjected(ILogger logger, char letter, bool ejected, int errorCode);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "An action of drive {Drive} in the list didn't fit on its destination's drive, so the run stopped.")]
     private static partial void LogNotEnoughSpace(ILogger logger, int drive);

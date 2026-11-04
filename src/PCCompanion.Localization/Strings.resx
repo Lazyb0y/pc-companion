@@ -3220,4 +3220,12 @@
     <value>Stop</value>
     <comment>Drive Actions: item of its submenu that stops the run that's going.</comment>
   </data>
+  <data name="DriveActionsEjected" xml:space="preserve">
+    <value>The drive was ejected. You can remove it.</value>
+    <comment>Drive Actions: last line of the notification when a drive's actions are done and Windows ejected it, with Eject when done on.</comment>
+  </data>
+  <data name="DriveActionsNotEjected" xml:space="preserve">
+    <value>Windows didn't eject the drive. A program may be using it.</value>
+    <comment>Drive Actions: last line of the notification when a drive's actions are done but Windows didn't eject it, with Eject when done on.</comment>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 
@@ -61,14 +62,18 @@ public sealed partial class DriveActionsThread : MessageLoopThread<DriveActionsS
     /// <summary>
     /// Stops the copy of the run on the drive with <paramref name="letter"/>, from the host's UI
     /// thread, as Windows asks to eject the drive, which a request to the thread would reach only
-    /// once the copy is done.
+    /// once the copy is done. Returns what's set once the copy has let go of its file, or
+    /// <see langword="null"/> when no run is on the drive.
     /// </summary>
-    public void CancelRunOn(char letter)
+    public ManualResetEventSlim? CancelRunOn(char letter)
     {
         if (_runner?.Running is { } run && run.Letter == letter)
         {
             run.Stop(RunOutcome.Ejected);
+            return run.Idle;
         }
+
+        return null;
     }
 
     /// <summary>Runs <paramref name="action"/> with the runner on the thread, from any thread, without waiting.</summary>
