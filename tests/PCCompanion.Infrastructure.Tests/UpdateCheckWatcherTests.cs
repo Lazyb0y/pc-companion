@@ -84,6 +84,29 @@ public sealed class UpdateCheckWatcherTests : IDisposable
     }
 
     [Fact]
+    public void TheTrayIconsDotGoesOnceSeenAndItsItemStaysUntilInstalled()
+    {
+        _store.Save(_saved);
+        using var watcher = CreateWatcher();
+
+        Assert.Equal((Newer, Newer), watcher.ForTrayIcon(checkAutomatically: true, Current));
+
+        watcher.MarkSeen(Newer, save: false);
+
+        Assert.Equal((Newer, null), watcher.ForTrayIcon(checkAutomatically: true, Current));
+        Assert.Equal((null, null), watcher.ForTrayIcon(checkAutomatically: true, Newer));
+    }
+
+    [Fact]
+    public void TheTrayIconShowsNoUpdateWithTheCheckOff()
+    {
+        _store.Save(_saved);
+        using var watcher = CreateWatcher();
+
+        Assert.Equal((null, null), watcher.ForTrayIcon(checkAutomatically: false, Current));
+    }
+
+    [Fact]
     public void MarkSeenClearsTheBadgeAndSavesTheVersion()
     {
         _store.Save(_saved);
