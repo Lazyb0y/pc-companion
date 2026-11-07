@@ -103,6 +103,13 @@ public sealed class TrayIcon : IDisposable
     public event EventHandler? AddedAgain;
 
     /// <summary>
+    /// Raised when a Windows setting or the system colors changed, such as the Windows mode, the
+    /// accent color or high contrast, or a display or its scale changed: a picture drawn for the
+    /// icon may need drawing again.
+    /// </summary>
+    public event EventHandler? AppearanceChanged;
+
+    /// <summary>
     /// False when Windows couldn't add the icon, for example because the taskbar isn't running yet.
     /// The icon is added when the taskbar starts.
     /// </summary>
@@ -131,6 +138,55 @@ public sealed class TrayIcon : IDisposable
         }
 
         return IsShown;
+    }
+
+    /// <summary>
+    /// Shows the executable's icon again, with <paramref name="toolTip"/>, after
+    /// <see cref="Update"/> showed a picture on the app's own icon; the picture is destroyed. When
+    /// the taskbar lost the icon, it's added again. Returns false when Windows refused.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">This isn't the app's own icon.</exception>
+    public bool ShowApplicationIcon(string toolTip)
+    {
+        ArgumentNullException.ThrowIfNull(toolTip);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (_applicationIcon is null)
+        {
+            throw new InvalidOperationException("Only the app's own icon has the executable's picture.");
+        }
+
+        var previous = _image;
+        (_image, _toolTip) = (null, toolTip);
+        IsShown = Modify() || Add();
+        previous?.Dispose();
+        return IsShown;
+    }
+
+    /// <summary>
+    /// Draws the executable's icon at <paramref name="size"/> pixels square and returns its
+    /// premultiplied 32-bit pixels, as <see cref="IconImage.FromPixels"/> takes them, to draw on,
+    /// or <see langword="null"/> when Windows couldn't load or draw it.
+    /// </summary>
+    public static unsafe uint[]? ApplicationIconPixels(int size)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
+
+        // Scaled down from the closest larger image in the icon, as LoadIconMetric does.
+        var module = PInvoke.GetModuleHandle((string?)null);
+        HICON icon;
+        if (PInvoke.LoadIconWithScaleDown((HINSTANCE)module.DangerousGetHandle(), (PCWSTR)(char*)ApplicationIconResourceId, size, size, &icon).Failed)
+        {
+            return null;
+        }
+
+        try
+        {
+            return WindowIcon.Pixels(icon, size);
+        }
+        finally
+        {
+            PInvoke.DestroyIcon(icon);
+        }
     }
 
     /// <summary>
@@ -239,6 +295,12 @@ public sealed class TrayIcon : IDisposable
                 AddedAgain?.Invoke(this, EventArgs.Empty);
             }
 
+            return;
+        }
+
+        if (WindowsTheme.IsChangeMessage(e.Message) || Displays.IsChangeMessage(e.Message) || e.Message == PInvoke.WM_DPICHANGED)
+        {
+            AppearanceChanged?.Invoke(this, EventArgs.Empty);
             return;
         }
 
