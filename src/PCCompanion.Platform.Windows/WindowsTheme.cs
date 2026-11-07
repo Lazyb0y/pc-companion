@@ -1,4 +1,7 @@
+using System;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using Windows.UI.ViewManagement;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -8,14 +11,18 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// The Windows mode, dark or light, which the taskbar and Start use, high contrast, animation
-/// effects and the text size. Each call reads the current setting, so a change shows at the
-/// caller's next look.
+/// The Windows mode, dark or light, which the taskbar and Start use, the accent color, high
+/// contrast, animation effects and the text size. Each call reads the current setting, so a change
+/// shows at the caller's next look.
 /// </summary>
 public static class WindowsTheme
 {
     private const int DefaultTextScalePercent = 100;
     private const int MaximumTextScalePercent = 225;
+
+    // Gives the current colors at each call.
+    private static readonly Lazy<UISettings> ColorSettings = new(() => new UISettings());
+
     /// <summary>Whether the Windows mode is dark.</summary>
     public static bool IsDark()
     {
@@ -42,6 +49,26 @@ public static class WindowsTheme
     public static uint WindowColor() => SystemColor(SYS_COLOR_INDEX.COLOR_WINDOW);
 
     /// <summary>
+    /// The accent color (Personalization > Colors), as 0xRRGGBB: WinUI's <c>SystemAccentColor</c>.
+    /// </summary>
+    /// <exception cref="COMException">Windows couldn't give the color.</exception>
+    public static uint AccentColor() => ToRgb(ColorSettings.Value.GetColorValue(UIColorType.Accent));
+
+    /// <summary>
+    /// The lighter shade of the accent color that WinUI uses on dark backgrounds, as 0xRRGGBB:
+    /// <c>SystemAccentColorLight2</c>.
+    /// </summary>
+    /// <exception cref="COMException">Windows couldn't give the color.</exception>
+    public static uint LightAccentColor() => ToRgb(ColorSettings.Value.GetColorValue(UIColorType.AccentLight2));
+
+    /// <summary>
+    /// Whether a message, which every top-level window receives, says that a Windows setting
+    /// changed, such as the Windows mode, the accent color or high contrast, or that the system
+    /// colors changed.
+    /// </summary>
+    public static bool IsChangeMessage(uint message) => message is PInvoke.WM_SETTINGCHANGE or PInvoke.WM_SYSCOLORCHANGE;
+
+    /// <summary>
     /// Whether Windows' animation effects are on (Accessibility > Visual effects); on when the
     /// setting can't be read.
     /// </summary>
@@ -62,6 +89,8 @@ public static class WindowsTheme
             ? percent / (double)DefaultTextScalePercent
             : 1;
     }
+
+    private static uint ToRgb(global::Windows.UI.Color color) => ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
 
     private static uint SystemColor(SYS_COLOR_INDEX index)
     {
