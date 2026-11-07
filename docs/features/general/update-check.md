@@ -130,7 +130,7 @@ Once a day, PC Companion asks GitHub whether a newer version is out, and **Check
 
 - **Debug:** a check starting, when the next one is due, and that this version is up to date.
 - **Information:** a newer version found, the notification shown and selected, the dot on the PC Companion icon shown for a version and gone, its menu's update item chosen, and the first time in a run that GitHub can't be reached. Later ones are Debug, so an offline PC doesn't log every hour. In the settings app's log, **Check now** selected, and getting no answer.
-- **Warning:** an answer with an error status, such as a rate limit, with its status code; an answer that can't be read; a result that can't be saved; a dot that can't be drawn, which leaves the icon without it; and a check that fails in another way.
+- **Warning:** an answer with an error status, such as a rate limit, with its status code; an answer that can't be read; a result that can't be saved; a result the host can't watch, which leaves the tray without the update; a dot that can't be drawn, which leaves the icon without it; and a check that fails in another way.
 - **Never logged:** the answer's body (the release notes) and headers, cookies, the user's IP address and proxy credentials. Versions are logged as the parsed numbers, never as the raw tag.
 - Nothing is logged as an error: a failed check changes nothing else.
 

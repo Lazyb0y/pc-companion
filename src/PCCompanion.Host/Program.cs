@@ -149,7 +149,7 @@ internal static partial class Program
         var notifications = services.GetRequiredService<HostNotifications>();
         notifications.Attach(tray.ShowNotification);
         tray.NotificationSelected += (_, _) => notifications.Selected();
-        updates.Attach(window);
+        updates.Attach(window, tray);
 
         // Features started before the window existed; their Settings and Exit work from now on.
         services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open, ProgramCommand.Start, AppCommand.Start);
