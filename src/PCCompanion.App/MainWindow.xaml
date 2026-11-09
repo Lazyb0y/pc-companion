@@ -17,6 +17,10 @@
         IsSettingsVisible="False"
         PaneDisplayMode="Auto"
         SelectionChanged="OnNavigationSelectionChanged">
+        <NavigationView.Resources>
+            <!-- The items' icons are 20 pixels high instead of 16, so the feature icons' drawings read clearly. -->
+            <x:Double x:Key="NavigationViewItemOnLeftIconBoxHeight">20</x:Double>
+        </NavigationView.Resources>
         <NavigationView.MenuItems>
             <NavigationViewItem x:Name="HomeItem" Content="{app:Localized Key=NavigationHome}">
                 <NavigationViewItem.Icon>

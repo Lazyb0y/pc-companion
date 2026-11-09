@@ -19,7 +19,7 @@ public sealed partial class FeatureIconImagesTests
     private const string Images = "src/PCCompanion.App/Assets/Icons";
 
     // The sizes feature-icons.ps1 makes each image at, which the settings app's FeatureIcon picks from.
-    private static readonly int[] PixelSizes = [16, 20, 24, 25, 30, 32, 40, 48, 64];
+    private static readonly int[] PixelSizes = [20, 25, 30, 32, 40, 48, 64];
 
     private readonly string _root = RepositoryProjects.FindRoot();
 

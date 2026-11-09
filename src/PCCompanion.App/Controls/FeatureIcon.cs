@@ -19,9 +19,9 @@ namespace PCCompanion.App.Controls;
 /// </summary>
 internal static class FeatureIcon
 {
-    // The sizes feature-icons.ps1 makes each image at: 16, 20 and 32 pixels at 100%, 125%, 150%
-    // and 200% display scale.
-    private static readonly int[] PixelSizes = [16, 20, 24, 25, 30, 32, 40, 48, 64];
+    // The sizes feature-icons.ps1 makes each image at: 20 and 32 pixels at 100%, 125%, 150% and
+    // 200% display scale.
+    private static readonly int[] PixelSizes = [20, 25, 30, 32, 40, 48, 64];
 
     // Says whether high contrast is on. Its own event can't be subscribed to in a desktop app.
     private static readonly AccessibilitySettings Accessibility = new();
