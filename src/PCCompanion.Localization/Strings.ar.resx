@@ -1265,7 +1265,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>يقرأ نص الحافظة فقط عند الضغط على الاختصار، ولا يقرأه أبدًا في الخلفية، ولا يقرأ أبدًا النص الذي وضع عليه التطبيق الذي نسخه علامة خاص. لا يخزن النص أو يسجله أو يرسله. يفتح الارتباطات وعناوين الويب في المستعرض، الذي يرسل النص إلى الموقع الذي تحدده القاعدة، ولا يبدأ إلا البرامج التي تحددها قواعدك.</value>
+    <value>يقرأ نص الحافظة فقط عند الضغط على مفتاح شعار Windows + Alt + V، والنص المحدد فقط عند الضغط على مفتاح شعار Windows + Alt + S، ولا يقرأ أبدًا في الخلفية، ولا من مربع كلمة مرور، ولا النص الذي وضع عليه التطبيق الذي نسخه علامة خاص. لا يخزن النص أو يسجله أو يرسله. يؤدي طلب النص المحدد من مستعرض إلى تشغيل دعم إمكانية الوصول فيه حتى يتم إغلاقه، ما يستهلك ذاكرة أكبر في الصفحات الطويلة جدًا. يفتح الارتباطات وعناوين الويب في المستعرض، الذي يرسل النص إلى الموقع الذي تحدده القاعدة، ولا يبدأ إلا البرامج التي تحددها قواعدك.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4298,6 +4298,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>النص المحدد طويل جدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>النص المحدد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>يعرض مفتاح شعار Windows + Alt + S الإجراءات الخاصة بالنص المحدد في التطبيق الموجود في المقدمة، أسفله، دون نسخه. بعض التطبيقات لا تشارك النص المحدد فيها، ولا تتم قراءة مربعات كلمات المرور أبدًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>يستخدم برنامج آخر مفتاح شعار Windows + Alt + V، لذا لا يفتح هذا الاختصار القائمة. يحاول PC Companion مرة أخرى عند تغيير إعداد هنا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>يستخدم برنامج آخر مفتاح شعار Windows + Alt + S، لذا لا يفتح هذا الاختصار القائمة. يحاول PC Companion مرة أخرى عند تغيير إعداد هنا.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

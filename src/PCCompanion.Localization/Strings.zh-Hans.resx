@@ -1185,7 +1185,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>仅在你按下快捷键时读取剪贴板中的文本，从不在后台读取，也从不读取复制它的应用标记为私密的文本。不会存储、记录或发送该文本。在你的浏览器中打开链接和网址，浏览器会将文本发送到规则指定的网站；只启动你的规则指定的程序。</value>
+    <value>仅在你按下 Windows 徽标键 + Alt + V 时读取剪贴板中的文本，仅在你按下 Windows 徽标键 + Alt + S 时读取所选文本；从不在后台读取，从不读取密码框，也从不读取复制它的应用标记为私密的文本。不会存储、记录或发送该文本。向浏览器请求其所选文本会开启该浏览器的辅助功能支持，直到浏览器关闭，这在很长的页面上会占用更多内存。在你的浏览器中打开链接和网址，浏览器会将文本发送到规则指定的网站；只启动你的规则指定的程序。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4078,6 +4078,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>所选文本太长</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>所选文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>按 Windows 徽标键 + Alt + S 可在前台应用中所选文本的下方显示针对该文本的操作，无需复制。某些应用不共享其所选文本，且从不读取密码框。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>另一个程序正在使用 Windows 徽标键 + Alt + V，因此此快捷键不会打开菜单。在此处更改设置时，PC Companion 会重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>另一个程序正在使用 Windows 徽标键 + Alt + S，因此此快捷键不会打开菜单。在此处更改设置时，PC Companion 会重试。</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

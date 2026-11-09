@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>শুধু আপনি শর্টকাট চাপলে ক্লিপবোর্ডের টেক্সট পড়ে, কখনো ব্যাকগ্রাউন্ডে নয়, এবং কপি করা অ্যাপ যে টেক্সটকে ব্যক্তিগত হিসেবে চিহ্নিত করেছে তা কখনো নয়। টেক্সট সংরক্ষণ, লগ বা প্রেরণ করে না। লিংক ও ওয়েব ঠিকানা আপনার ব্রাউজারে খোলে, যা টেক্সটটি নিয়মে উল্লেখ করা সাইটে পাঠায়, এবং শুধু আপনার নিয়মে উল্লেখ করা প্রোগ্রাম চালু করে।</value>
+    <value>শুধু আপনি Windows লোগো কী + Alt + V চাপলে ক্লিপবোর্ডের টেক্সট পড়ে, এবং শুধু Windows লোগো কী + Alt + S চাপলে নির্বাচিত টেক্সট পড়ে; কখনো ব্যাকগ্রাউন্ডে নয়, কখনো পাসওয়ার্ড বক্স থেকে নয়, এবং কপি করা অ্যাপ যে টেক্সটকে ব্যক্তিগত হিসেবে চিহ্নিত করেছে তা কখনো নয়। টেক্সট সংরক্ষণ, লগ বা প্রেরণ করে না। কোনো ব্রাউজারের কাছে নির্বাচিত টেক্সট চাইলে ব্রাউজারটি বন্ধ না হওয়া পর্যন্ত তার অ্যাক্সেসিবিলিটি সাপোর্ট চালু থাকে, যা খুব দীর্ঘ পৃষ্ঠায় বেশি মেমরি ব্যবহার করে। লিংক ও ওয়েব ঠিকানা আপনার ব্রাউজারে খোলে, যা টেক্সটটি নিয়মে উল্লেখ করা সাইটে পাঠায়, এবং শুধু আপনার নিয়মে উল্লেখ করা প্রোগ্রাম চালু করে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4122,6 +4122,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>নির্বাচিত টেক্সটটি খুব দীর্ঘ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>নির্বাচিত টেক্সট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>Windows লোগো কী + Alt + S সামনের অ্যাপে নির্বাচিত টেক্সটের অ্যাকশনগুলো, টেক্সটটি কপি না করেই, এর নিচে দেখায়। কিছু অ্যাপ তাদের নির্বাচিত টেক্সট শেয়ার করে না, এবং পাসওয়ার্ড বক্স কখনো পড়া হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>অন্য একটি প্রোগ্রাম Windows লোগো কী + Alt + V ব্যবহার করে, তাই এই শর্টকাট মেনু খোলে না। এখানে কোনো সেটিং বদলালে PC Companion আবার চেষ্টা করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>অন্য একটি প্রোগ্রাম Windows লোগো কী + Alt + S ব্যবহার করে, তাই এই শর্টকাট মেনু খোলে না। এখানে কোনো সেটিং বদলালে PC Companion আবার চেষ্টা করে।</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

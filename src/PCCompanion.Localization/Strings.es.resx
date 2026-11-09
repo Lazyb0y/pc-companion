@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Lee el texto del Portapapeles solo cuando presionas el método abreviado, nunca en segundo plano, y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
+    <value>Lee el texto del Portapapeles solo cuando presionas la tecla del logotipo de Windows + Alt + V, y el texto seleccionado solo cuando presionas la tecla del logotipo de Windows + Alt + S, nunca en segundo plano, nunca de un cuadro de contraseña y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Al pedir a un explorador su texto seleccionado, este activa su compatibilidad con accesibilidad hasta que se cierra, lo que usa más memoria en páginas muy largas. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4122,6 +4122,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>El texto seleccionado es demasiado largo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>Texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>La tecla del logotipo de Windows + Alt + S muestra las acciones para el texto seleccionado en la aplicación en primer plano, debajo de él, sin copiarlo. Algunas aplicaciones no comparten su texto seleccionado, y nunca se leen los cuadros de contraseña.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>Otro programa usa la tecla del logotipo de Windows + Alt + V, así que este método abreviado no abre el menú. PC Companion vuelve a intentarlo cuando cambias una configuración aquí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>Otro programa usa la tecla del logotipo de Windows + Alt + S, así que este método abreviado no abre el menú. PC Companion vuelve a intentarlo cuando cambias una configuración aquí.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

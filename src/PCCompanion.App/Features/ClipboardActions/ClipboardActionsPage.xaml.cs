@@ -17,6 +17,10 @@ public sealed partial class ClipboardActionsPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<ClipboardActionsViewModel>();
         InitializeComponent();
+
+        // Which shortcuts Windows refused is read only while the page is shown.
+        Loaded += (_, _) => ViewModel.StartShortcutStatus();
+        Unloaded += (_, _) => ViewModel.StopShortcutStatus();
     }
 
     public ClipboardActionsViewModel ViewModel { get; }

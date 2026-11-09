@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Liest den Text der Zwischenablage nur, wenn Sie die Tastenkombination drücken, nie im Hintergrund, und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
+    <value>Liest den Text der Zwischenablage nur, wenn Sie die Windows-Logo-Taste + Alt + V drücken, und den markierten Text nur, wenn Sie die Windows-Logo-Taste + Alt + S drücken, nie im Hintergrund, nie aus einem Kennwortfeld und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Wird ein Browser nach seinem markierten Text gefragt, schaltet er seine Barrierefreiheitsunterstützung ein, bis er geschlossen wird, was auf sehr langen Seiten mehr Arbeitsspeicher belegt. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4122,6 +4122,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>Der markierte Text ist zu lang</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>Markierter Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>Mit der Windows-Logo-Taste + Alt + S werden die Aktionen für den in der App im Vordergrund markierten Text darunter angezeigt, ohne ihn zu kopieren. Manche Apps geben ihren markierten Text nicht weiter, und Kennwortfelder werden nie gelesen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>Ein anderes Programm verwendet die Windows-Logo-Taste + Alt + V, daher öffnet diese Tastenkombination das Menü nicht. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>Ein anderes Programm verwendet die Windows-Logo-Taste + Alt + S, daher öffnet diese Tastenkombination das Menü nicht. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
