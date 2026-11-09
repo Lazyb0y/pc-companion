@@ -72,8 +72,17 @@ public static class Elevation
     /// level: both without admin rights, or both as administrator. It's false for a process in an
     /// AppContainer, such as a Store app, and when the level can't be read.
     /// </summary>
-    public static bool HasSameIntegrityLevel(uint processId) =>
-        IntegrityLevel(PInvoke.GetCurrentProcess_SafeHandle()) is { } own && IntegrityLevel(processId) == own;
+    public static bool HasSameIntegrityLevel(uint processId) => CompareIntegrityLevel(processId) == 0;
+
+    /// <summary>
+    /// How the integrity level of the process with ID <paramref name="processId"/> compares with
+    /// this process's: negative when it's lower, as for a process without admin rights while this
+    /// one runs as administrator, or one in an AppContainer; 0 when it's the same; positive when
+    /// it's higher, as for a process running as administrator while this one doesn't; or
+    /// <see langword="null"/> when a level can't be read.
+    /// </summary>
+    public static int? CompareIntegrityLevel(uint processId) =>
+        IntegrityLevel(PInvoke.GetCurrentProcess_SafeHandle()) is { } own && IntegrityLevel(processId) is { } other ? other.CompareTo(own) : null;
 
     // The integrity level, the last part of the token's mandatory label, such as 0x2000 for medium.
     private static uint? IntegrityLevel(uint processId)

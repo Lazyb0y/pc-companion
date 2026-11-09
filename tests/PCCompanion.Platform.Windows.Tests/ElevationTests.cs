@@ -61,6 +61,18 @@ public sealed class ElevationTests
         Assert.False(Elevation.HasSameIntegrityLevel(0));
     }
 
+    [Fact]
+    public void AProcessComparesEqualWithItsOwnIntegrityLevel()
+    {
+        Assert.Equal(0, Elevation.CompareIntegrityLevel((uint)Environment.ProcessId));
+    }
+
+    [Fact]
+    public void AProcessThatCantBeOpenedHasNoIntegrityLevelToCompare()
+    {
+        Assert.Null(Elevation.CompareIntegrityLevel(0));
+    }
+
     [Theory]
     [InlineData("S-1-5-21-1111111111-2222222222-3333333333-1001", true)]
     [InlineData("S-1-5-32-544", false)]
