@@ -434,3 +434,6 @@ DEVPKEY_Device_InstanceId
 DEV_BROADCAST_VOLUME
 MoveFileEx
 StrFormatByteSizeEx
+TerminateProcess
+GetProcessTimes
+IsProcessCritical
