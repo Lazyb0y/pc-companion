@@ -4244,4 +4244,44 @@
     <value>Couldn't end {0}.</value>
     <comment>End App notification, when an app is still running 5 seconds after End App ended it; {0} is the app's name. The notification's title is EndAppName.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>Shortcut</value>
+    <comment>End App page: setting name, and the screen reader name of its list.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>Starts choosing an app to end. End an app… in the PC Companion icon's menu does the same.</value>
+    <comment>End App page: below EndAppShortcutHeader. End an app… is EndAppMenuItem.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Esc</value>
+    <comment>End App page: a shortcut in the list. Use the language's names for Ctrl, Alt and Esc, as in the other shortcuts.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Windows logo key + Ctrl + Esc</value>
+    <comment>End App page: a shortcut in the list. Use the language's names for the Windows logo key, Ctrl and Esc, as in the other shortcuts.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>None</value>
+    <comment>End App page: the item of the shortcut list that turns the shortcut off.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>Choosing an app</value>
+    <comment>End App page: card name, above how to choose an app.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>Click a window, or press Enter for the framed one. Tab moves the frame to the next window. Esc or a right-click cancels. A red frame means the app can be ended; a gray one means it can't.</value>
+    <comment>End App page: below EndAppChoosingHeader. The frame is drawn around the window under the pointer.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>Some apps can't be ended here: File Explorer, which also runs the desktop and the taskbar, Windows' own processes, and apps running as administrator. Choosing one says why and offers Task Manager. You're always asked before an app ends, and anything not saved in it is lost.</value>
+    <comment>End App page: the apps it can't end, shown while PC Companion runs without admin rights.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>Some apps can't be ended here: File Explorer, which also runs the desktop and the taskbar, and Windows' own processes. Choosing one says why and offers Task Manager. PC Companion runs as administrator, so apps running as administrator can be ended like any other. You're always asked before an app ends, and anything not saved in it is lost.</value>
+    <comment>End App page: shown instead of EndAppCantEndInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>While you choose an app, reads which windows are open, where they are, whether they respond and which program and process they belong to, never their titles or contents. Your clicks and keys go to PC Companion's own window, with no keyboard or mouse hook. After you confirm, ends the chosen app's process and its helper processes of the same program, and never Windows' own processes. Makes no network connections and sends nothing.</value>
+    <comment>End App page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

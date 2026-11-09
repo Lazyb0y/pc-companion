@@ -4244,4 +4244,44 @@
     <value>Impossible d’arrêter {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>Raccourci</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>Commence le choix d’une application à arrêter. « Arrêter une application… » dans le menu de l’icône PC Companion fait de même.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Échap</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + Échap</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>Choisir une application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>Cliquez sur une fenêtre, ou appuyez sur Entrée pour celle qui est encadrée. Tab déplace le cadre vers la fenêtre suivante. Échap ou un clic droit annule. Un cadre rouge signifie que l’application peut être arrêtée ; un cadre gris, qu’elle ne le peut pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>Certaines applications ne peuvent pas être arrêtées ici : l’Explorateur de fichiers, qui exécute aussi le bureau et la barre des tâches, les processus propres à Windows et les applications exécutées en tant qu’administrateur. En choisir une explique pourquoi et propose le Gestionnaire des tâches. Une confirmation vous est toujours demandée avant d’arrêter une application, et tout ce qui n’y est pas enregistré est perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>Certaines applications ne peuvent pas être arrêtées ici : l’Explorateur de fichiers, qui exécute aussi le bureau et la barre des tâches, et les processus propres à Windows. En choisir une explique pourquoi et propose le Gestionnaire des tâches. PC Companion s’exécute en tant qu’administrateur, les applications exécutées en tant qu’administrateur peuvent donc être arrêtées comme les autres. Une confirmation vous est toujours demandée avant d’arrêter une application, et tout ce qui n’y est pas enregistré est perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>Pendant que vous choisissez une application, lit quelles fenêtres sont ouvertes, où elles se trouvent, si elles répondent et à quels programme et processus elles appartiennent, jamais leurs titres ni leur contenu. Vos clics et vos touches vont à la fenêtre de PC Companion, sans crochet de clavier ni de souris. Après votre confirmation, arrête le processus de l’application choisie et ses processus auxiliaires du même programme, et jamais les processus propres à Windows. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

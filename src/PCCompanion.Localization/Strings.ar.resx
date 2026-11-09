@@ -4436,4 +4436,44 @@
     <value>تعذر إنهاء {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>الاختصار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>يبدأ اختيار تطبيق لإنهائه. يؤدي «إنهاء تطبيق…» في قائمة أيقونة PC Companion الأمر نفسه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>مفتاح شعار Windows + Ctrl + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>اختيار تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>انقر فوق نافذة، أو اضغط Enter للنافذة المؤطرة. ينقل Tab الإطار إلى النافذة التالية. يلغي Esc أو النقر بزر الماوس الأيمن. الإطار الأحمر يعني أنه يمكن إنهاء التطبيق، والرمادي يعني أنه لا يمكن.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>لا يمكن إنهاء بعض التطبيقات هنا: مستكشف الملفات، الذي يشغّل أيضًا سطح المكتب وشريط المهام، وعمليات Windows الخاصة، والتطبيقات التي تعمل كمسؤول. يوضح اختيار أحدها السبب ويعرض إدارة المهام. يُطلب منك التأكيد دائمًا قبل إنهاء أي تطبيق، ويُفقد كل ما لم يُحفظ فيه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>لا يمكن إنهاء بعض التطبيقات هنا: مستكشف الملفات، الذي يشغّل أيضًا سطح المكتب وشريط المهام، وعمليات Windows الخاصة. يوضح اختيار أحدها السبب ويعرض إدارة المهام. يعمل PC Companion كمسؤول، لذا يمكن إنهاء التطبيقات التي تعمل كمسؤول مثل أي تطبيق آخر. يُطلب منك التأكيد دائمًا قبل إنهاء أي تطبيق، ويُفقد كل ما لم يُحفظ فيه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>أثناء اختيارك لتطبيق، يقرأ النوافذ المفتوحة ومواضعها وما إذا كانت تستجيب والبرنامج والعملية اللذين تنتمي إليهما، ولا يقرأ عناوينها أو محتوياتها أبدًا. تذهب نقراتك ومفاتيحك إلى نافذة PC Companion نفسه، دون أي خطاف للوحة المفاتيح أو الماوس. بعد تأكيدك، ينهي عملية التطبيق المختار وعملياته المساعدة من البرنامج نفسه، ولا ينهي عمليات Windows الخاصة أبدًا. لا ينشئ أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

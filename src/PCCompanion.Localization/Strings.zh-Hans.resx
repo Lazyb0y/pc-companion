@@ -4196,4 +4196,44 @@
     <value>无法结束 {0}。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>开始选择要结束的应用。PC Companion 图标菜单中的“结束应用…”也一样。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Windows 徽标键 + Ctrl + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>选择应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>单击一个窗口，或按 Enter 选择带框的窗口。按 Tab 将框移到下一个窗口。按 Esc 或右键单击可取消。红框表示可以结束该应用，灰框表示不能。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>有些应用不能在这里结束：文件资源管理器（它还运行桌面和任务栏）、Windows 自身的进程，以及以管理员身份运行的应用。选择其中一个会说明原因并提供任务管理器。结束应用前总会先询问你，其中所有未保存的内容都会丢失。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>有些应用不能在这里结束：文件资源管理器（它还运行桌面和任务栏）和 Windows 自身的进程。选择其中一个会说明原因并提供任务管理器。PC Companion 以管理员身份运行，因此以管理员身份运行的应用可以像其他应用一样结束。结束应用前总会先询问你，其中所有未保存的内容都会丢失。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>在你选择应用时，读取打开了哪些窗口、它们的位置、是否响应以及所属的程序和进程，从不读取其标题或内容。你的单击和按键会发送到 PC Companion 自己的窗口，不使用键盘或鼠标钩子。你确认后，结束所选应用的进程及其同一程序的辅助进程，从不结束 Windows 自身的进程。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

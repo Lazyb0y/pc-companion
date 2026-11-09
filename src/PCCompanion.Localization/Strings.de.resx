@@ -4244,4 +4244,44 @@
     <value>{0} konnte nicht beendet werden.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>Startet die Auswahl einer App, die beendet werden soll. „App beenden…“ im Menü des PC Companion-Symbols tut dasselbe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Strg + Alt + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Windows-Logo-Taste + Strg + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>App auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>Klicken Sie auf ein Fenster, oder drücken Sie die Eingabetaste für das umrahmte. Die Tabulatortaste verschiebt den Rahmen zum nächsten Fenster. Esc oder ein Rechtsklick bricht ab. Ein roter Rahmen bedeutet, dass die App beendet werden kann, ein grauer, dass sie es nicht kann.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>Einige Apps können hier nicht beendet werden: der Explorer, der auch den Desktop und die Taskleiste ausführt, Prozesse von Windows selbst und Apps, die als Administrator ausgeführt werden. Wenn Sie eine davon auswählen, erfahren Sie den Grund, und der Task-Manager wird angeboten. Sie werden immer gefragt, bevor eine App beendet wird, und alles, was darin nicht gespeichert ist, geht verloren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>Einige Apps können hier nicht beendet werden: der Explorer, der auch den Desktop und die Taskleiste ausführt, und Prozesse von Windows selbst. Wenn Sie eine davon auswählen, erfahren Sie den Grund, und der Task-Manager wird angeboten. PC Companion wird als Administrator ausgeführt, daher können Apps, die als Administrator ausgeführt werden, wie jede andere beendet werden. Sie werden immer gefragt, bevor eine App beendet wird, und alles, was darin nicht gespeichert ist, geht verloren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>Während Sie eine App auswählen, liest es, welche Fenster geöffnet sind, wo sie sind, ob sie reagieren und zu welchem Programm und Prozess sie gehören, nie ihre Titel oder Inhalte. Ihre Klicks und Tasten gehen an das eigene Fenster von PC Companion, ohne Tastatur- oder Maus-Hook. Nach Ihrer Bestätigung beendet es den Prozess der ausgewählten App und ihre Hilfsprozesse desselben Programms, nie aber Prozesse von Windows selbst. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
