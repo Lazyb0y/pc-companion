@@ -1201,7 +1201,7 @@
     <comment>Clipboard Actions page: note.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Reads the clipboard's text only when you press the shortcut, never in the background, and never text that the app that copied it marked private. Doesn't store, log or send the text. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
+    <value>Reads the clipboard's text only when you press Windows logo key + Alt + V, and the selected text only when you press Windows logo key + Alt + S, never in the background, never from a password box and never text that the app that copied it marked private. Doesn't store, log or send the text. Asking a browser for its selected text turns on its accessibility support until it closes, which uses more memory on very long pages. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
     <comment>Clipboard Actions page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4123,5 +4123,21 @@
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>The selected text is too long</value>
     <comment>Clipboard Actions menu for the selected text: dimmed note when the selected text is longer than 4,096 characters.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>Selected text</value>
+    <comment>Clipboard Actions page: header of the switch that turns on Windows + Alt + S, which shows actions for the text selected in the app in front.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>Windows logo key + Alt + S shows the actions for the text selected in the app in front, below it, without copying it. Some apps don't share their selected text, and password boxes are never read.</value>
+    <comment>Clipboard Actions page: description of the Selected text switch. Name the keys as in ClipboardActionsShortcut; keep S. Apps share their selected text through Windows' accessibility support, which some apps don't have.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>Another program uses Windows logo key + Alt + V, so this shortcut doesn't open the menu. PC Companion tries again when a setting here changes.</value>
+    <comment>Clipboard Actions page: warning below the shortcut card when Windows refused Windows + Alt + V because another program already has it. Name the keys as in ClipboardActionsShortcut.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>Another program uses Windows logo key + Alt + S, so this shortcut doesn't open the menu. PC Companion tries again when a setting here changes.</value>
+    <comment>Clipboard Actions page: warning below the Selected text switch when Windows refused Windows + Alt + S because another program already has it. Name the keys as in ClipboardActionsShortcut.</comment>
   </data>
 </root>

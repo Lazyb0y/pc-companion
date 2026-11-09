@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur le raccourci, jamais en arrière-plan, et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
+    <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + V, et le texte sélectionné uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + S, jamais en arrière-plan, jamais dans une zone de mot de passe et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Demander son texte sélectionné à un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4122,6 +4122,22 @@
   </data>
   <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
     <value>Le texte sélectionné est trop long</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>Texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>La touche du logo Windows + Alt + S affiche les actions pour le texte sélectionné dans l’application au premier plan, sous celui-ci, sans le copier. Certaines applications ne partagent pas leur texte sélectionné, et les zones de mot de passe ne sont jamais lues.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise la touche du logo Windows + Alt + V, ce raccourci n’ouvre donc pas le menu. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise la touche du logo Windows + Alt + S, ce raccourci n’ouvre donc pas le menu. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

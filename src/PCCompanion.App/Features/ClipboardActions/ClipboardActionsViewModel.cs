@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -5,8 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.UI.Dispatching;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.ClipboardActions;
 
@@ -28,6 +31,14 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
     private static readonly CompositeFormat ProblemFormat = CompositeFormat.Parse(Strings.ClipboardActionsSummaryProblem);
     private static readonly CompositeFormat BeyondMaximumFormat = CompositeFormat.Parse(Strings.ClipboardActionsBeyondMaximum);
 
+    // How long the page waits for the host to say which shortcuts Windows refused.
+    private static readonly TimeSpan StatusTimeout = TimeSpan.FromMilliseconds(500);
+    private static readonly ClipboardShortcutRefusals NoneRefused = new(false, false);
+
+    private DispatcherQueueTimer? _statusTimer;
+    private bool _readingStatus;
+    private ClipboardShortcutRefusals _refused = NoneRefused;
+
     public ClipboardActionsViewModel(FeatureSettingsEditor editor)
         : base(editor, ClipboardActionsFeature.Definition)
     {
@@ -39,6 +50,18 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
         get => Settings.OpenLinks;
         set => Change(Settings.OpenLinks, value, () => Settings with { OpenLinks = value });
     }
+
+    public bool SelectedText
+    {
+        get => Settings.SelectedText;
+        set => Change(Settings.SelectedText, value, () => Settings with { SelectedText = value });
+    }
+
+    /// <summary>Whether Windows refused Windows + Alt + V, as the running feature last said.</summary>
+    public bool CopiedShortcutRefused => _refused.CopiedText;
+
+    /// <summary>Whether Windows refused Windows + Alt + S, as the running feature last said.</summary>
+    public bool SelectedShortcutRefused => _refused.SelectedText;
 
     public ObservableCollection<ClipboardRuleItem> Rules { get; } = [];
 
@@ -74,6 +97,30 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
         return problem;
     }
 
+    /// <summary>
+    /// Reads which shortcuts Windows refused from the host now and every 2 seconds, until
+    /// <see cref="StopShortcutStatus"/>. Call it on the page's thread.
+    /// </summary>
+    public void StartShortcutStatus()
+    {
+        if (_statusTimer is not null)
+        {
+            return;
+        }
+
+        _statusTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+        _statusTimer.Interval = TimeSpan.FromSeconds(2);
+        _statusTimer.Tick += (_, _) => _ = RefreshShortcutStatusAsync();
+        _statusTimer.Start();
+        _ = RefreshShortcutStatusAsync();
+    }
+
+    public void StopShortcutStatus()
+    {
+        _statusTimer?.Stop();
+        _statusTimer = null;
+    }
+
     public void Add(ClipboardRule rule) => SaveRules([.. Settings.Rules, rule]);
 
     public void Replace(int index, ClipboardRule rule) =>
@@ -104,6 +151,35 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
         return rule.KnownAction == ClipboardRuleAction.RunProgram
             ? string.Format(CultureInfo.CurrentCulture, ProgramFormat, Path.GetFileName(rule.Program))
             : string.Format(CultureInfo.CurrentCulture, AddressFormat, ClipboardRuleCheck.BuildAddress(rule.Address, "text")?.Host);
+    }
+
+    // The pipe is read off the UI thread; a read still going when the next tick comes is let finish.
+    // While the feature is off, or the host doesn't answer, no shortcut is shown as refused.
+    private async Task RefreshShortcutStatusAsync()
+    {
+        if (_readingStatus)
+        {
+            return;
+        }
+
+        _readingStatus = true;
+        try
+        {
+            var snapshot = IsOn
+                ? await Task.Run(() => SnapshotPipe.ReadAsync(ClipboardShortcutStatus.PipeName, StatusTimeout, ClipboardShortcutStatus.MaximumSnapshotLength)).ConfigureAwait(true)
+                : null;
+            var refused = (snapshot is null ? null : ClipboardShortcutStatus.FromJson(snapshot)) ?? NoneRefused;
+            if (refused != _refused)
+            {
+                _refused = refused;
+                OnPropertyChanged(nameof(CopiedShortcutRefused));
+                OnPropertyChanged(nameof(SelectedShortcutRefused));
+            }
+        }
+        finally
+        {
+            _readingStatus = false;
+        }
     }
 
     private void SaveRules(IReadOnlyList<ClipboardRule> rules)

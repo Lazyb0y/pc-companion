@@ -26,6 +26,22 @@
                     Header="{app:Localized Key=ClipboardActionsShortcutHeader}"
                     Text="{app:Localized Key=ClipboardActionsShortcut}" />
 
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.CopiedShortcutRefused, Mode=OneWay}"
+                    Message="{app:Localized Key=ClipboardActionsCopiedShortcutRefused}"
+                    Severity="Warning" />
+
+                <controls:SwitchCard
+                    Description="{app:Localized Key=ClipboardActionsSelectedTextDescription}"
+                    Glyph="&#xE8B3;"
+                    Header="{app:Localized Key=ClipboardActionsSelectedTextHeader}"
+                    IsOn="{x:Bind ViewModel.SelectedText, Mode=TwoWay}" />
+
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.SelectedShortcutRefused, Mode=OneWay}"
+                    Message="{app:Localized Key=ClipboardActionsSelectedShortcutRefused}"
+                    Severity="Warning" />
+
                 <controls:SwitchCard
                     Description="{app:Localized Key=ClipboardActionsOpenLinksDescription}"
                     Glyph="&#xE71B;"
