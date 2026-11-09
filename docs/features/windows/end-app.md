@@ -191,7 +191,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale on on
 - **When the feature is first turned on,** the shortcut is Ctrl + Alt + Esc.
 - **The switch on Home** changes only `enabled` and keeps the other settings.
 - **A section that can't be read,** for example after a hand edit, turns the feature off with a warning in the log. An unknown shortcut registers none, with a warning.
-- **The icon** is drawn as [Icons](../../design/icons.md) says and proposed with the page: an app window with an amber stop sign at its bottom right.
+- **The icon** is drawn as [Icons](../../design/icons.md) says: a violet app window with a red stop sign at its bottom right.
 
 ```json
 "features": {

@@ -316,6 +316,29 @@ function Get-LetterWen([double] $CenterX, [double] $CenterY, [double] $Height, [
     "M$(F ($CenterX - $s * 0.55)) $(F $start)Q$(F ($CenterX - $s * 0.2)) $(F ($CenterY + $s * 0.55)) $(F ($CenterX + $s)) $(F ($CenterY + $s))"
 }
 
+# A window's title bar, $Height high, with the window's top corners. $Window is the window's x, y,
+# width, height and corner radius.
+function Get-TitleBarPath([double[]] $Window, [double] $Height) {
+    $x, $y, $w, $h, $r = $Window
+    "M$(F ($x + $r)) $(F $y)H$(F ($x + $w - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F ($y + $Height))H$(F $x)V$(F ($y + $r))" +
+    "A$(F $r) $(F $r) 0 0 1 $(F ($x + $r)) $(F $y)Z"
+}
+
+# The strip a cut $Width wide takes out across a window under its title bar, $Height high.
+function Get-TitleBarCut([double[]] $Window, [double] $Height, [double] $Width) {
+    $x, $y, $w, $h, $r = $Window
+    Get-StrokeArea "M$(F ($x - 2)) $(F ($y + $Height))H$(F ($x + $w + 2))" $Width
+}
+
+# A stop sign's octagon round x, y, $Half from its middle to each side, as points.
+function Get-OctagonPoints([double] $CenterX, [double] $CenterY, [double] $Half) {
+    $cx = $CenterX
+    $cy = $CenterY
+    $corner = $Half * [Math]::Tan([Math]::PI / 8)
+    @(@(($cx - $corner), ($cy - $Half)), @(($cx + $corner), ($cy - $Half)), @(($cx + $Half), ($cy - $corner)), @(($cx + $Half), ($cy + $corner)),
+        @(($cx + $corner), ($cy + $Half)), @(($cx - $corner), ($cy + $Half)), @(($cx - $Half), ($cy + $corner)), @(($cx - $Half), ($cy - $corner)))
+}
+
 function Write-Drawing([string] $Name, [int] $Size, [string[]] $Defs, [string[]] $Body) {
     $lines = New-Object Collections.Generic.List[string]
     $lines.Add("<svg xmlns=`"http://www.w3.org/2000/svg`" width=`"$Size`" height=`"$Size`" viewBox=`"0 0 $Size $Size`">")
@@ -468,10 +491,7 @@ $inputLanguagePerApp = @(
         Letter = 1.6, 1.4; Cut = 1 }
 )
 foreach ($icon in $inputLanguagePerApp) {
-    $x, $y, $w, $h, $r = $icon.Window
-    $bar = $y + $icon.TitleBar
-    $titleBar = "M$(F ($x + $r)) $(F $y)H$(F ($x + $w - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F $bar)H$(F $x)V$(F ($y + $r))" +
-        "A$(F $r) $(F $r) 0 0 1 $(F ($x + $r)) $(F $y)Z"
+    $titleBar = Get-TitleBarPath $icon.Window $icon.TitleBar
     $ax, $ay, $aHeight, $aBar = $icon.A
     $letterA = Get-LetterA $ax $ay $aHeight $aBar
     $wx, $wy, $wenHeight, $wenBar = $icon.Wen
@@ -482,7 +502,7 @@ foreach ($icon in $inputLanguagePerApp) {
     Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size (@(Get-Gradient 'blue-main') + @(Get-Gradient 'blue-deep') + @(Get-Gradient 'orange')) $body
     $badge = Get-RectPath $icon.Badge
     $window = ConvertTo-Shape (Get-RectPath $icon.Window)
-    foreach ($cut in (Get-StrokeArea "M$(F ($x - 2)) $(F $bar)H$(F ($x + $w + 2))" $icon.Cut), (Get-StrokeArea $letterA $aWidth), (Get-GrownShape $badge (2 * $icon.Cut))) {
+    foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), (Get-StrokeArea $letterA $aWidth), (Get-GrownShape $badge (2 * $icon.Cut))) {
         $window = Remove-Shape $window $cut
     }
     $sign = Remove-Shape (ConvertTo-Shape $badge) (Get-StrokeArea $wen $wenWidth)
@@ -492,103 +512,110 @@ foreach ($icon in $inputLanguagePerApp) {
 # The gradients most icons use.
 $base = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent')
 
-# App Windows: a window switcher (frame) with three window tiles (glass). The selected tile, in
-# the middle, is larger and holds amber.
+# App Windows, in sky: three of an app's windows stacked, Windows' boxes from the back to the
+# front, in the deepest, deep and light tones, the front one with a title bar TitleBar high in the
+# main tone. The one-color version keeps them apart with cuts Cut wide.
 $appWindows = @(
-    @{ Size = 32; Panel = 2, 6, 28, 20, 4; Tiles = @(@(5, 9.5, 6, 13, 1.5), @(12.5, 8.5, 7, 15, 1.5), @(21, 9.5, 6, 13, 1.5)); Selected = 14, 10, 4, 12, 1 }
-    @{ Size = 20; Panel = 1, 4, 18, 12, 2.5; Tiles = @(@(3, 6, 4, 8, 1), @(8, 5, 4, 10, 1), @(13, 6, 4, 8, 1)); Selected = 9, 6, 2, 8, 0.5 }
-    @{ Size = 16; Panel = 1, 3, 14, 10, 2; Tiles = @(@(2, 5, 3, 6, 0.5), @(6, 4, 4, 8, 0.5), @(11, 5, 3, 6, 0.5)); Selected = 7, 5, 2, 6, 0 }
+    @{ Size = 32; Windows = @(@(11, 1, 20, 16, 2), @(6, 8, 20, 16, 2), @(1, 15, 20, 16, 2)); TitleBar = 4; Cut = 1.2 }
+    @{ Size = 20; Windows = @(@(7, 1, 12, 10, 1.5), @(4, 5, 12, 10, 1.5), @(1, 9, 12, 10, 1.5)); TitleBar = 3; Cut = 1 }
 )
 foreach ($icon in $appWindows) {
-    $body = @((Get-Rect $icon.Panel ' fill="url(#frame)"'), (Get-Rect $icon.Panel ' fill="url(#highlight)"')) +
-        @($icon.Tiles | ForEach-Object { Get-Rect $_ ' fill="url(#glass)"' }) + @(Get-Rect $icon.Selected ' fill="url(#accent)"')
-    Write-Drawing "app-windows-$($icon.Size)" $icon.Size $base $body
-    $outlines = (Get-RectPath $icon.Panel) + (($icon.Tiles | ForEach-Object { Get-RectPath $_ }) -join '') + (Get-RectPath $icon.Selected)
-    Write-Drawing "app-windows-$($icon.Size)-mono" $icon.Size @() @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$outlines`"/>")
+    $back, $middle, $front = $icon.Windows
+    $body = @((Get-Rect $back ' fill="url(#sky-deepest)"'), (Get-Rect $middle ' fill="url(#sky-deep)"'), (Get-Rect $front ' fill="url(#sky-light)"'),
+        "<path fill=`"url(#sky-main)`" d=`"$(Get-TitleBarPath $front $icon.TitleBar)`"/>")
+    Write-Drawing "app-windows-$($icon.Size)" $icon.Size (@('deepest', 'deep', 'light', 'main') | ForEach-Object { Get-Gradient "sky-$_" }) $body
+    $shape = Remove-Shape (ConvertTo-Shape (Get-RectPath $back)) (Get-GrownShape (Get-RectPath $middle) (2 * $icon.Cut))
+    $shape = Join-Shape $shape (ConvertTo-Shape (Get-RectPath $middle))
+    $shape = Remove-Shape $shape (Get-GrownShape (Get-RectPath $front) (2 * $icon.Cut))
+    $shape = Join-Shape $shape (Remove-Shape (ConvertTo-Shape (Get-RectPath $front)) (Get-TitleBarCut $front $icon.TitleBar $icon.Cut))
+    Write-Drawing "app-windows-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
-# Minimize to Tray: a window with an amber arrow down to a bar, the notification area, at its
-# bottom right.
+# Minimize to Tray, in green: a window, its title bar TitleBar high in the deep tone, with a white
+# arrow down to the taskbar in the deepest tone, and a tray icon in the light tone on the taskbar.
+# The one-color version cuts the arrow and the tray icon out, and Cut wide under the title bar.
 $minimizeToTray = @(
-    @{ Size = 32; Frame = 2, 2, 23, 19, 3.5; Glass = 4.5, 4.5, 18, 14, 1.5; Bar = 18.5, 28, 11, 2.5, 1.25; Stroke = 1; Gap = 1.5
-        Arrow = @(@(22, 12), @(26, 12), @(26, 18), @(29.5, 18), @(24, 23.5), @(18.5, 18), @(22, 18)) }
-    @{ Size = 20; Frame = 1, 2, 15, 12, 2.5; Glass = 3, 4, 11, 8, 1; Bar = 11, 18.5, 8, 1.5, 0.75; Stroke = 0.8; Gap = 1
-        Arrow = @(@(13.5, 7.5), @(16.5, 7.5), @(16.5, 11.5), @(19, 11.5), @(15, 15.5), @(11, 11.5), @(13.5, 11.5)) }
-    @{ Size = 16; Frame = 1, 1, 12, 10, 2; Glass = 2, 2, 10, 8, 1; Bar = 9, 14.5, 6, 1, 0.5; Stroke = 0.6; Gap = 1
-        Arrow = @(@(11, 6), @(13, 6), @(13, 9), @(15, 9), @(12, 12), @(9, 9), @(11, 9)) }
+    @{ Size = 32; Window = 2, 1, 28, 20, 2; TitleBar = 4; Taskbar = 1, 24, 30, 7, 1.5; Tray = 24, 26, 4, 3, 0.5; Stroke = 1; Cut = 1.2
+        Arrow = @(@(14.5, 7.5), @(17.5, 7.5), @(17.5, 12.5), @(21.5, 12.5), @(16, 18.5), @(10.5, 12.5), @(14.5, 12.5)) }
+    @{ Size = 20; Window = 1, 1, 18, 12, 1.5; TitleBar = 2; Taskbar = 1, 15, 18, 4, 1; Tray = 14, 16, 3, 2, 0.5; Stroke = 0.8; Cut = 1
+        Arrow = @(@(9.4, 4.4), @(10.6, 4.4), @(10.6, 7.6), @(13.4, 7.6), @(10, 11.2), @(6.6, 7.6), @(9.4, 7.6)) }
 )
 foreach ($icon in $minimizeToTray) {
-    $bx, $by, $bw, $bh, $br = $icon.Bar
-    $g = $icon.Gap
-    $outline = (Get-GrownPath $icon.Arrow ($icon.Stroke / 2 + $g)) + (Get-RectPath @(($bx - $g), ($by - $g), ($bw + 2 * $g), ($bh + 2 * $g), ($br + $g)))
-    $clip = @(Get-GapClip $icon.Size $outline)
-    $stroke = " stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`""
     $arrow = Get-PolygonPath $icon.Arrow
-    $body = @(Get-Group 'clip-path="url(#gap)"' @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"'))) +
-        @("<path fill=`"url(#accent)`" stroke=`"url(#accent)`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="url(#accent)"'))
-    Write-Drawing "minimize-to-tray-$($icon.Size)" $icon.Size ($base + $clip) $body
-    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Glass)`"/>")) +
-        @("<path fill=`"currentColor`" stroke=`"currentColor`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="currentColor"'))
-    Write-Drawing "minimize-to-tray-$($icon.Size)-mono" $icon.Size $clip $mono
+    $body = @((Get-Rect $icon.Window ' fill="url(#green-main)"'), "<path fill=`"url(#green-deep)`" d=`"$(Get-TitleBarPath $icon.Window $icon.TitleBar)`"/>",
+        "<path fill=`"$white`" stroke=`"$white`" stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`" d=`"$arrow`"/>",
+        (Get-Rect $icon.Taskbar ' fill="url(#green-deepest)"'), (Get-Rect $icon.Tray ' fill="url(#green-light)"'))
+    Write-Drawing "minimize-to-tray-$($icon.Size)" $icon.Size (@('main', 'deep', 'deepest', 'light') | ForEach-Object { Get-Gradient "green-$_" }) $body
+    $window = Remove-Shape (Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Window)) (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut)) (Get-GrownShape $arrow $icon.Stroke)
+    $taskbar = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Taskbar)) (ConvertTo-Shape (Get-RectPath $icon.Tray))
+    Write-Drawing "minimize-to-tray-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $taskbar))
 }
 
-# Hide Apps: a blue eye (frame) with a glass iris and a deep pupil, and an amber slash through it,
-# which a gap separates from the eye. Eye is its middle, width and the height of its curves.
+# Hide Apps, in violet: a window, its title bar TitleBar high in the deep tone, with a white eye,
+# its outline Line wide round a pupil, crossed out by a white slash Slash wide, which a cut Gap wide
+# keeps apart from the eye. Eye is the eye's middle, half its width and half its height. The
+# one-color version cuts the eye and the slash out, and Cut wide under the title bar.
 $hideApps = @(
-    @{ Size = 32; Eye = 16, 16, 29, 18; Iris = 5.5; Pupil = 2.4; Slash = 6.5, 26.5, 25.5, 5.5; Width = 2.6; Gap = 1.5 }
-    @{ Size = 20; Eye = 10, 10, 18.5, 11.5; Iris = 3.5; Pupil = 1.5; Slash = 4, 16.5, 16, 3.5; Width = 1.8; Gap = 1 }
-    @{ Size = 16; Eye = 8, 8, 15, 9.5; Iris = 2.8; Pupil = 1.1; Slash = 3.2, 13.3, 12.8, 2.7; Width = 1.5; Gap = 1 }
+    @{ Size = 32; Window = 1, 3, 30, 26, 2.5; TitleBar = 5; Eye = 16, 18.5, 10, 6.1; Line = 2; Pupil = 3; SlashLine = 8.5, 26, 23.5, 11; Slash = 2.2; Gap = 1.4; Cut = 1.2 }
+    @{ Size = 20; Window = 1, 2, 18, 16, 1.5; TitleBar = 3; Eye = 10, 11.5, 6, 3.7; Line = 1.4; Pupil = 1.8; SlashLine = 5.5, 16, 14.5, 7; Slash = 1.4; Gap = 1; Cut = 1 }
 )
 foreach ($icon in $hideApps) {
-    $cx, $cy, $w, $h = $icon.Eye
-    $x1, $y1, $x2, $y2 = $icon.Slash
-    $clip = @(Get-GapClip $icon.Size (Get-CapsulePath $icon.Slash ($icon.Width / 2 + $icon.Gap)))
-    $eye = Get-LensPath $cx $cy $w $h
-    $iris = Get-EllipsePath $cx $cy $icon.Iris $icon.Iris
+    $cx, $cy, $half, $tall = $icon.Eye
+    # Two curves through the eye's corners, each drawn as a pair of cubic curves that meet at its top or bottom.
+    $eye = "M$(F ($cx - $half)) $(F $cy)C$(F ($cx - $half * 0.75)) $(F ($cy - $tall * 0.69)) $(F ($cx - $half * 0.4)) $(F ($cy - $tall)) $(F $cx) $(F ($cy - $tall))" +
+        "S$(F ($cx + $half * 0.75)) $(F ($cy - $tall * 0.69)) $(F ($cx + $half)) $(F $cy)" +
+        "C$(F ($cx + $half * 0.75)) $(F ($cy + $tall * 0.69)) $(F ($cx + $half * 0.4)) $(F ($cy + $tall)) $(F $cx) $(F ($cy + $tall))" +
+        "S$(F ($cx - $half * 0.75)) $(F ($cy + $tall * 0.69)) $(F ($cx - $half)) $(F $cy)Z"
     $pupil = Get-EllipsePath $cx $cy $icon.Pupil $icon.Pupil
-    $slash = "<path fill=`"none`" stroke=`"{0}`" stroke-width=`"$(F $icon.Width)`" stroke-linecap=`"round`" d=`"M$(F $x1) $(F $y1)L$(F $x2) $(F $y2)`"/>"
-    $body = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"url(#frame)`" d=`"$eye`"/>", "<path fill=`"url(#highlight)`" d=`"$eye`"/>",
-            "<path fill=`"url(#glass)`" d=`"$iris`"/>", "<path fill=`"url(#deep)`" d=`"$pupil`"/>")) + @($slash -f 'url(#accent)')
-    Write-Drawing "hide-apps-$($icon.Size)" $icon.Size ($base + @(Get-Gradient 'deep') + $clip) $body
-    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$eye$iris$pupil`"/>")) + @($slash -f 'currentColor')
-    Write-Drawing "hide-apps-$($icon.Size)-mono" $icon.Size $clip $mono
+    $x1, $y1, $x2, $y2 = $icon.SlashLine
+    $slash = "M$(F $x1) $(F $y1)L$(F $x2) $(F $y2)"
+    $clip = @(Get-GapClip $icon.Size (Get-CapsulePath $icon.SlashLine ($icon.Slash / 2 + $icon.Gap)))
+    $body = @((Get-Rect $icon.Window ' fill="url(#violet-main)"'), "<path fill=`"url(#violet-deep)`" d=`"$(Get-TitleBarPath $icon.Window $icon.TitleBar)`"/>") +
+        @(Get-Group 'clip-path="url(#gap)"' @((Get-SymbolPath $eye $icon.Line), "<path fill=`"$white`" d=`"$pupil`"/>")) + @(Get-SymbolPath $slash $icon.Slash)
+    Write-Drawing "hide-apps-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-main') + @(Get-Gradient 'violet-deep') + $clip) $body
+    $marks = Remove-Shape (Join-Shape (Get-StrokeArea $eye $icon.Line) (ConvertTo-Shape $pupil)) (Get-StrokeArea $slash ($icon.Slash + 2 * $icon.Gap))
+    $shape = ConvertTo-Shape (Get-RectPath $icon.Window)
+    foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), $marks, (Get-StrokeArea $slash $icon.Slash)) { $shape = Remove-Shape $shape $cut }
+    Write-Drawing "hide-apps-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
-# Drop-down Apps: a screen with an amber panel hanging from the top of its glass, and a chevron
-# (detail) below it, pointing down.
+# Drop-down Apps, in the app icon's blue: a screen in the light tone with a panel in the deep tone
+# hanging from its top edge, Panel's x, y, width, height and the radius of its bottom corners, and
+# a white chevron on the panel, pointing down, Line wide. The one-color version cuts the chevron
+# out, and Cut wide round the panel.
 $dropDownApps = @(
-    @{ Size = 32; Frame = 2, 5, 28, 22, 4; Glass = 4.5, 7.5, 23, 17, 2; Panel = 'M8 7.5H24V15A2 2 0 0 1 22 17H10A2 2 0 0 1 8 15Z'
-        Chevron = @(@(12.5, 19.5), @(16, 22.5), @(19.5, 19.5)); Width = 1.8 }
-    @{ Size = 20; Frame = 1, 3, 18, 14, 2.5; Glass = 3, 5, 14, 10, 1; Panel = 'M5 5H15V9A1 1 0 0 1 14 10H6A1 1 0 0 1 5 9Z'
-        Chevron = @(@(7.5, 11.5), @(10, 13.5), @(12.5, 11.5)); Width = 1.2 }
-    @{ Size = 16; Frame = 1, 3, 14, 11, 2; Glass = 2, 4, 12, 9, 1; Panel = 'M4 4H12V7.5A1 1 0 0 1 11 8.5H5A1 1 0 0 1 4 7.5Z'
-        Chevron = @(@(6, 10), @(8, 11.5), @(10, 10)); Width = 1 }
+    @{ Size = 32; Screen = 1, 3, 30, 26, 2.5; Panel = 4, 3, 24, 16, 2; Chevron = @(@(12, 10), @(16, 14), @(20, 10)); Line = 2.4; Cut = 1.2 }
+    @{ Size = 20; Screen = 1, 2, 18, 16, 1.5; Panel = 3, 2, 14, 10, 1.5; Chevron = @(@(7.5, 5.8), @(10, 8.3), @(12.5, 5.8)); Line = 1.6; Cut = 1 }
 )
 foreach ($icon in $dropDownApps) {
+    $x, $y, $w, $h, $r = $icon.Panel
+    $panel = "M$(F $x) $(F $y)H$(F ($x + $w))V$(F ($y + $h - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w - $r)) $(F ($y + $h))H$(F ($x + $r))" +
+        "A$(F $r) $(F $r) 0 0 1 $(F $x) $(F ($y + $h - $r))Z"
     $chevron = 'M' + (($icon.Chevron | ForEach-Object { "$(F $_[0]) $(F $_[1])" }) -join 'L')
-    $line = " stroke-width=`"$(F $icon.Width)`" stroke-linecap=`"round`" stroke-linejoin=`"round`""
-    $body = @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"'),
-        "<path fill=`"url(#accent)`" d=`"$($icon.Panel)`"/>", "<path fill=`"none`" stroke=`"$detail`"$line d=`"$chevron`"/>")
-    Write-Drawing "drop-down-apps-$($icon.Size)" $icon.Size $base $body
-    $mono = @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Glass)`"/>",
-        "<path fill=`"currentColor`" d=`"$($icon.Panel)`"/>", "<path fill=`"none`" stroke=`"currentColor`"$line d=`"$chevron`"/>")
-    Write-Drawing "drop-down-apps-$($icon.Size)-mono" $icon.Size @() $mono
+    $body = @((Get-Rect $icon.Screen ' fill="url(#blue-light)"'), "<path fill=`"url(#blue-deep)`" d=`"$panel`"/>", (Get-SymbolPath $chevron $icon.Line))
+    Write-Drawing "drop-down-apps-$($icon.Size)" $icon.Size (@(Get-Gradient 'blue-light') + @(Get-Gradient 'blue-deep')) $body
+    $screen = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Screen)) (Get-GrownShape $panel (2 * $icon.Cut))
+    $hanging = Remove-Shape (ConvertTo-Shape $panel) (Get-StrokeArea $chevron $icon.Line)
+    Write-Drawing "drop-down-apps-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $screen $hanging))
 }
 
-# Title Bar Actions: a mouse (frame and glass) with a line under its buttons (frame) and an amber
-# wheel, for the middle click and the wheel the feature uses.
+# Title Bar Actions, in sky: a window in the main tone, its title bar above paper, and a mouse at
+# its bottom right in the app icon's deep blue with an orange wheel, for the middle click and the
+# wheel the feature uses on title bars. The one-color version cuts the paper out, and Cut wide
+# round the mouse and round its wheel.
 $titleBarActions = @(
-    @{ Size = 32; Body = 8, 2, 16, 28, 7.5; Glass = 10.5, 4.5, 11, 23, 5.5; Divider = 10.5, 15, 11, 1.5, 0; Wheel = 14.5, 7, 3, 6, 1.5 }
-    @{ Size = 20; Body = 5, 1, 10, 18, 5; Glass = 6.5, 2.5, 7, 15, 3.5; Divider = 6.5, 9.5, 7, 1, 0; Wheel = 9, 4, 2, 4, 1 }
-    @{ Size = 16; Body = 4, 1, 8, 14, 4; Glass = 5, 2, 6, 12, 3; Divider = 5, 7.5, 6, 1, 0; Wheel = 7, 3, 2, 3.5, 1 }
+    @{ Size = 32; Window = 1, 2, 26, 23, 2; Paper = 3, 9, 22, 14, 1; Mouse = 19, 14, 12, 17, 6; Wheel = 23.75, 16.5, 2.5, 5, 1.25; Cut = 1.2 }
+    @{ Size = 20; Window = 1, 1, 16, 14, 1.5; Paper = 2, 5, 14, 9, 0.5; Mouse = 11, 9, 8, 10, 4; Wheel = 14, 11, 2, 3, 1; Cut = 1 }
 )
 foreach ($icon in $titleBarActions) {
-    $body = @((Get-Rect $icon.Body ' fill="url(#frame)"'), (Get-Rect $icon.Body ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"'),
-        (Get-Rect $icon.Divider ' fill="url(#frame)"'), (Get-Rect $icon.Wheel ' fill="url(#accent)"'))
-    Write-Drawing "title-bar-actions-$($icon.Size)" $icon.Size $base $body
-    $mono = @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Body)$(Get-RectPath $icon.Glass)$(Get-RectPath $icon.Wheel)`"/>",
-        (Get-Rect $icon.Divider ' fill="currentColor"'))
-    Write-Drawing "title-bar-actions-$($icon.Size)-mono" $icon.Size @() $mono
+    $body = @((Get-Rect $icon.Window ' fill="url(#sky-main)"'), (Get-Rect $icon.Paper ' fill="url(#paper)"'), (Get-Rect $icon.Mouse ' fill="url(#blue-deep)"'),
+        (Get-Rect $icon.Wheel ' fill="url(#orange)"'))
+    Write-Drawing "title-bar-actions-$($icon.Size)" $icon.Size (@(Get-Gradient 'sky-main') + @(Get-Gradient 'paper') + @(Get-Gradient 'blue-deep') + @(Get-Gradient 'orange')) $body
+    $mouse = Get-RectPath $icon.Mouse
+    $wheel = Get-RectPath $icon.Wheel
+    $window = Remove-Shape (Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Window)) (ConvertTo-Shape (Get-RectPath $icon.Paper))) (Get-GrownShape $mouse (2 * $icon.Cut))
+    $device = Join-Shape (Remove-Shape (ConvertTo-Shape $mouse) (Get-GrownShape $wheel (2 * $icon.Cut))) (ConvertTo-Shape $wheel)
+    Write-Drawing "title-bar-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $device))
 }
 
 # An amber polygon at an icon's bottom right: its path, its stroke and the clip that cuts its gap
@@ -691,25 +718,24 @@ foreach ($icon in $driveActions) {
     Write-Drawing "drive-actions-$($icon.Size)-mono" $icon.Size $bolt.Clip $mono
 }
 
-# End App: an app window (frame and glass) with an amber stop sign, an octagon with a white bar
-# (neutral), at its bottom right. Sign is the octagon's middle and half its width.
+# End App, in violet: an app window, its title bar TitleBar high in the deep tone, with a red stop
+# sign at its bottom right, an octagon whose middle and half width are Sign, its corners rounded by
+# a stroke Stroke wide, with a white bar. The one-color version cuts the bar out, and Cut wide
+# under the title bar and round the sign.
 $endApp = @(
-    @{ Size = 32; Frame = 2, 2, 24, 20, 3.5; Glass = 4.5, 4.5, 19, 15, 1.5; Sign = 23.5, 23.5, 7.5; Bar = 19.5, 22.25, 8, 2.5, 0.5; Stroke = 1; Gap = 1.5 }
-    @{ Size = 20; Frame = 1, 2, 15, 12, 2.5; Glass = 3, 4, 11, 8, 1; Sign = 14.5, 14.5, 5; Bar = 12, 14, 5, 1, 0; Stroke = 0.8; Gap = 1 }
-    @{ Size = 16; Frame = 1, 1, 12, 10, 2; Glass = 2, 2, 10, 8, 1; Sign = 11.5, 11.5, 4.5; Bar = 9, 11, 5, 1, 0; Stroke = 0.6; Gap = 1 }
+    @{ Size = 32; Window = 1, 2, 25, 22, 2; TitleBar = 5; Sign = 23.5, 23.5, 7.1; Bar = 18, 22, 11, 3, 0.75; Stroke = 0.8; Cut = 1.2 }
+    @{ Size = 20; Window = 1, 1, 16, 14, 1.5; TitleBar = 3; Sign = 14.5, 15, 4.4; Bar = 11, 14, 7, 2, 0.5; Stroke = 0.8; Cut = 1 }
 )
 foreach ($icon in $endApp) {
     $cx, $cy, $half = $icon.Sign
-    $corner = $half * [Math]::Tan([Math]::PI / 8)
-    $octagon = @(@(($cx - $corner), ($cy - $half)), @(($cx + $corner), ($cy - $half)), @(($cx + $half), ($cy - $corner)), @(($cx + $half), ($cy + $corner)),
-        @(($cx + $corner), ($cy + $half)), @(($cx - $corner), ($cy + $half)), @(($cx - $half), ($cy + $corner)), @(($cx - $half), ($cy - $corner)))
-    $sign = Get-Badge $octagon $icon.Stroke $icon.Gap $icon.Size
-    $items = @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"'))
-    $body = @(Get-Group 'clip-path="url(#gap)"' $items) + @((Get-BadgePath $sign 'url(#accent)'), (Get-Rect $icon.Bar ' fill="#FFFFFF"'))
-    Write-Drawing "end-app-$($icon.Size)" $icon.Size ($base + $sign.Clip) $body
-    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Glass)`"/>")) +
-        @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-GrownPath $octagon ($icon.Stroke / 2))$(Get-RectPath $icon.Bar)`"/>")
-    Write-Drawing "end-app-$($icon.Size)-mono" $icon.Size $sign.Clip $mono
+    $octagon = Get-PolygonPath (Get-OctagonPoints $cx $cy $half)
+    $body = @((Get-Rect $icon.Window ' fill="url(#violet-main)"'), "<path fill=`"url(#violet-deep)`" d=`"$(Get-TitleBarPath $icon.Window $icon.TitleBar)`"/>",
+        "<path fill=`"url(#red)`" stroke=`"url(#red)`" stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`" d=`"$octagon`"/>", (Get-Rect $icon.Bar " fill=`"$white`""))
+    Write-Drawing "end-app-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-main') + @(Get-Gradient 'violet-deep') + @(Get-Gradient 'red')) $body
+    $window = ConvertTo-Shape (Get-RectPath $icon.Window)
+    foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), (Get-GrownShape $octagon ($icon.Stroke + 2 * $icon.Cut))) { $window = Remove-Shape $window $cut }
+    $sign = Remove-Shape (Get-GrownShape $octagon $icon.Stroke) (ConvertTo-Shape (Get-RectPath $icon.Bar))
+    Write-Drawing "end-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $sign))
 }
 
 Write-Host "Wrote the drawings in $folder"
