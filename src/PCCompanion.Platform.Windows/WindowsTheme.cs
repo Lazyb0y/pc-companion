@@ -48,6 +48,12 @@ public static class WindowsTheme
     /// </summary>
     public static uint WindowColor() => SystemColor(SYS_COLOR_INDEX.COLOR_WINDOW);
 
+    /// <summary>The theme's color for selected items (Highlight), as 0xRRGGBB, for high contrast.</summary>
+    public static uint HighlightColor() => SystemColor(SYS_COLOR_INDEX.COLOR_HIGHLIGHT);
+
+    /// <summary>The theme's color for unavailable text (Gray Text), as 0xRRGGBB, for high contrast.</summary>
+    public static uint GrayTextColor() => SystemColor(SYS_COLOR_INDEX.COLOR_GRAYTEXT);
+
     /// <summary>
     /// The accent color (Personalization > Colors), as 0xRRGGBB: WinUI's <c>SystemAccentColor</c>.
     /// </summary>
