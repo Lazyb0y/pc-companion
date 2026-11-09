@@ -7,12 +7,13 @@ namespace PCCompanion.Modules.Clipboard.Tests;
 public sealed class ClipboardActionsSettingsTests
 {
     [Fact]
-    public void WithoutASectionTheFeatureIsOffWithOpenCopiedLinksOnAndNoRules()
+    public void WithoutASectionTheFeatureIsOffWithOpenCopiedLinksOnSelectedTextOffAndNoRules()
     {
         var settings = ClipboardActionsSettings.Read(null);
 
         Assert.False(settings.Enabled);
         Assert.True(settings.OpenLinks);
+        Assert.False(settings.SelectedText);
         Assert.Empty(settings.Rules);
     }
 
@@ -23,6 +24,7 @@ public sealed class ClipboardActionsSettingsTests
         {
             Enabled = true,
             OpenLinks = false,
+            SelectedText = true,
             Rules =
             [
                 new ClipboardRule { Name = "Track the parcel", Pattern = "1Z[0-9A-Z]{16}", Address = "https://tracking.example.com/?number={text}" },
@@ -45,8 +47,16 @@ public sealed class ClipboardActionsSettingsTests
         }.Write());
 
         Assert.Equal(
-            """{"enabled":true,"openLinks":true,"rules":[{"name":"Track","pattern":"1Z.*","matchCase":false,"action":"OpenAddress","address":"https://example.com/?n={text}","program":"","arguments":""}]}""",
+            """{"enabled":true,"openLinks":true,"selectedText":false,"rules":[{"name":"Track","pattern":"1Z.*","matchCase":false,"action":"OpenAddress","address":"https://example.com/?n={text}","program":"","arguments":""}]}""",
             json);
+    }
+
+    [Fact]
+    public void SelectedTextCountsInTheSettingsEquality()
+    {
+        var settings = new ClipboardActionsSettings { Enabled = true };
+
+        Assert.NotEqual(settings, settings with { SelectedText = true });
     }
 
     [Fact]

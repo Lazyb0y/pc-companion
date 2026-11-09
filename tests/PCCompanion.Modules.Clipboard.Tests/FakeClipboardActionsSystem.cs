@@ -13,15 +13,25 @@ namespace PCCompanion.Modules.Clipboard.Tests;
 /// Clipboard Actions' Windows parts, recorded instead of used: no shortcut is registered, the
 /// clipboard isn't read and no menu opens. It may be used from the feature's
 /// thread while a test waits for it. Its events are what happened, such as "register", "read",
-/// "ask" for the app's text cursor, "menu", "allow front", "type" or "dispose shortcut".
+/// "ask" for the app's text cursor, "menu", "allow front", "type" or "dispose shortcut", and for
+/// the selected text "register selected", "read selection" or "dispose reader".
 /// </summary>
 internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardActionsSystem>, IClipboardActionsSystem
 {
     private readonly List<IReadOnlyList<PopupMenuItem>> _menus = [];
     private (MessageWindow Window, Action Typed)? _typing;
 
-    /// <summary>Whether Windows refuses the shortcut.</summary>
+    /// <summary>Whether Windows refuses Windows + Alt + V.</summary>
     public bool RefusesShortcut { get; set; }
+
+    /// <summary>Whether Windows refuses Windows + Alt + S.</summary>
+    public bool RefusesSelectionShortcut { get; set; }
+
+    /// <summary>Whether the app in front may be asked for its selected text.</summary>
+    public SelectedTextApp SelectionApp { get; set; } = SelectedTextApp.Readable;
+
+    /// <summary>What reading the selected text gives; it never comes while it's a task that doesn't end.</summary>
+    public Task<SelectedTextResult> Selection { get; set; } = Task.FromResult(new SelectedTextResult(SelectedTextStatus.NothingSelected));
 
     /// <summary>What the clipboard holds.</summary>
     public ClipboardTextResult Clipboard { get; set; } = new(ClipboardTextStatus.NoText);
@@ -35,8 +45,11 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
     /// <summary>Chooses an item of the menu shown, by its text; null closes the menu without a choice.</summary>
     public string? Choice { get; set; }
 
-    /// <summary>The shortcut registered last.</summary>
+    /// <summary>Windows + Alt + V, registered last.</summary>
     public FakeShortcut? Shortcut { get; private set; }
+
+    /// <summary>Windows + Alt + S, registered last.</summary>
+    public FakeShortcut? SelectionShortcut { get; private set; }
 
     /// <summary>The items of each menu shown.</summary>
     public IReadOnlyList<IReadOnlyList<PopupMenuItem>> Menus
@@ -50,19 +63,30 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         }
     }
 
-    public IShortcut? RegisterShortcut(MessageWindow window)
+    public IShortcut? RegisterShortcut(MessageWindow window, ClipboardShortcut shortcut)
     {
-        Record(RefusesShortcut ? "refused" : "register");
-        if (RefusesShortcut)
+        var selected = shortcut == ClipboardShortcut.SelectedText;
+        var refused = selected ? RefusesSelectionShortcut : RefusesShortcut;
+        Record((refused ? "refused" : "register") + (selected ? " selected" : string.Empty));
+        if (refused)
         {
             return null;
         }
 
         lock (Gate)
         {
-            Shortcut = new FakeShortcut(this, window);
+            var registered = new FakeShortcut(this, window, selected ? "dispose selected shortcut" : "dispose shortcut");
+            if (selected)
+            {
+                SelectionShortcut = registered;
+            }
+            else
+            {
+                Shortcut = registered;
+            }
+
             Changed();
-            return Shortcut;
+            return registered;
         }
     }
 
@@ -86,6 +110,14 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
     public ForegroundTextCursor ReadTextCursor() => Front;
 
     public bool CanAskTextCursor(nint window) => SameIntegrityLevel;
+
+    public SelectedTextApp CheckSelectionApp(nint window) => SelectionApp;
+
+    public ISelectionReader CreateSelectionReader()
+    {
+        Record("create reader");
+        return new FakeSelectionReader(this);
+    }
 
     public Task<Rectangle?> AskTextCursor(nint window)
     {
@@ -153,8 +185,8 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         Record("background");
     }
 
-    /// <summary>The shortcut, pressed by the test on the feature's thread, as Windows would report it.</summary>
-    public sealed class FakeShortcut(FakeClipboardActionsSystem system, MessageWindow window) : IShortcut
+    /// <summary>A shortcut, pressed by the test on the feature's thread, as Windows would report it.</summary>
+    public sealed class FakeShortcut(FakeClipboardActionsSystem system, MessageWindow window, string disposed) : IShortcut
     {
         public event EventHandler? Pressed;
 
@@ -163,7 +195,18 @@ internal sealed class FakeClipboardActionsSystem : RecordingFake<FakeClipboardAc
         public void Dispose()
         {
             system.DisposeGate?.Wait();
-            system.Record("dispose shortcut");
+            system.Record(disposed);
         }
+    }
+
+    private sealed class FakeSelectionReader(FakeClipboardActionsSystem system) : ISelectionReader
+    {
+        public Task<SelectedTextResult> ReadAsync(TimeSpan retryFor)
+        {
+            system.Record("read selection");
+            return system.Selection;
+        }
+
+        public void Dispose() => system.Record("dispose reader");
     }
 }
