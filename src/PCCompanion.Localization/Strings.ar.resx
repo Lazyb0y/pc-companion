@@ -4316,4 +4316,124 @@
     <value>يستخدم برنامج آخر مفتاح شعار Windows + Alt + S، لذا لا يفتح هذا الاختصار القائمة. يحاول PC Companion مرة أخرى عند تغيير إعداد هنا.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>إنهاء التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>انقر فوق نافذة تطبيق توقف عن الاستجابة، ثم أكّد، وسينهي PC Companion هذا التطبيق.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>إنهاء تطبيق…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>إنهاء التطبيق: اختر التطبيق المراد إنهاؤه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}، لا يستجيب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}، يستجيب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}، لا يمكن إنهاؤه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>هل تريد إنهاء {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} لا يستجيب. سيُفقد كل ما لم يُحفظ فيه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} يستجيب. للاحتفاظ بعملك، أغلقه كالمعتاد. يؤدي إنهاؤه إلى فقدان كل ما لم يُحفظ.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>البرنامج: {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_zero" xml:space="preserve">
+    <value>ينهي {0} عملية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>ينهي عملية واحدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_two" xml:space="preserve">
+    <value>ينهي عمليتين.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_few" xml:space="preserve">
+    <value>ينهي {0} عمليات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_many" xml:space="preserve">
+    <value>ينهي {0} عملية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>ينهي {0} عملية.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>إنهاء التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>إلغاء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>لا يمكن لـ PC Companion إنهاء {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>لا يمكن لـ PC Companion إنهاء تطبيق هذه النافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>يعمل {0} كمسؤول، لذا لا يمكن لـ PC Companion إنهاؤه. يمكن لإدارة المهام ذلك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} جزء من Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>يشغّل مستكشف الملفات أيضًا سطح المكتب وشريط المهام. لإعادة تشغيله، حدد مستكشف Windows في إدارة المهام واختر إعادة التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>لا يسمح Windows لـ PC Companion بإنهاء {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>لا يمكن لـ PC Companion معرفة التطبيق الذي تنتمي إليه هذه النافذة، كما يحدث عندما تكون نافذتان توقفتا عن الاستجابة في المكان نفسه. تعرض إدارة المهام كل التطبيقات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>هذا جزء من PC Companion. لإيقاف PC Companion، اختر خروج من قائمة أيقونة PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>فتح إدارة المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>إغلاق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>تعذر إنهاء {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

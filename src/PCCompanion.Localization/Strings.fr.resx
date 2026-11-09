@@ -4140,4 +4140,108 @@
     <value>Un autre programme utilise la touche du logo Windows + Alt + S, ce raccourci n’ouvre donc pas le menu. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>Arrêter une application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>Cliquez sur la fenêtre d’une application qui ne répond plus, confirmez, et PC Companion arrête cette application.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>Arrêter une application…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>Arrêter une application : choisissez l’application à arrêter.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}, ne répond pas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}, répond</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}, ne peut pas être arrêtée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>Arrêter {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} ne répond pas. Tout ce qui n’y est pas enregistré sera perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} répond. Pour conserver votre travail, fermez-la comme d’habitude. L’arrêter fait perdre tout ce qui n’est pas enregistré.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>Programme : {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>Arrête {0} processus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>Arrête {0} processus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>Arrêter l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion ne peut pas arrêter {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion ne peut pas arrêter l’application de cette fenêtre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} s’exécute en tant qu’administrateur, PC Companion ne peut donc pas l’arrêter. Le Gestionnaire des tâches le peut.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} fait partie de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>L’Explorateur de fichiers exécute aussi le bureau et la barre des tâches. Pour le redémarrer, sélectionnez Explorateur Windows dans le Gestionnaire des tâches, puis choisissez Redémarrer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows ne permet pas à PC Companion d’arrêter {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion ne peut pas savoir à quelle application appartient cette fenêtre, par exemple quand deux fenêtres qui ne répondent plus sont au même endroit. Le Gestionnaire des tâches liste toutes les applications.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>Ceci fait partie de PC Companion. Pour arrêter PC Companion, choisissez Quitter dans le menu de l’icône PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>Ouvrir le Gestionnaire des tâches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>Impossible d’arrêter {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

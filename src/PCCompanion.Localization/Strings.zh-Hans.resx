@@ -4096,4 +4096,104 @@
     <value>另一个程序正在使用 Windows 徽标键 + Alt + S，因此此快捷键不会打开菜单。在此处更改设置时，PC Companion 会重试。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>结束应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>单击已停止响应的应用的窗口并确认，PC Companion 就会结束该应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>结束应用…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>结束应用：选择要结束的应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}，未响应</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}，正在响应</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}，无法结束</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>结束 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} 未响应。其中所有未保存的内容都将丢失。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} 正在响应。若要保留你的工作，请照常关闭它。结束它会丢失所有未保存的内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>程序：{0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>结束 {0} 个进程。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>结束应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion 无法结束 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion 无法结束此窗口的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} 以管理员身份运行，因此 PC Companion 无法结束它。任务管理器可以。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} 是 Windows 的一部分。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>文件资源管理器还运行桌面和任务栏。若要重启它，请在任务管理器中选择“Windows 资源管理器”，然后选择“重新启动”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows 不允许 PC Companion 结束 {0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion 无法判断此窗口属于哪个应用，例如两个已停止响应的窗口位于同一位置时。任务管理器会列出所有应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>这是 PC Companion 的一部分。若要停止 PC Companion，请在 PC Companion 图标的菜单中选择“退出”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>打开任务管理器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>关闭</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>无法结束 {0}。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

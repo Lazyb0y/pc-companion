@@ -4140,4 +4140,108 @@
     <value>Ein anderes Programm verwendet die Windows-Logo-Taste + Alt + S, daher öffnet diese Tastenkombination das Menü nicht. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>App beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>Klicken Sie auf das Fenster einer App, die nicht mehr reagiert, bestätigen Sie, und PC Companion beendet diese App.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>App beenden…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>App beenden: Wählen Sie die zu beendende App aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}, reagiert nicht</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}, reagiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}, kann nicht beendet werden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>{0} beenden?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} reagiert nicht. Alles, was darin nicht gespeichert ist, geht verloren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} reagiert. Um Ihre Arbeit zu behalten, schließen Sie die App wie gewohnt. Beim Beenden geht alles verloren, was nicht gespeichert ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>Programm: {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>Beendet {0} Prozess.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>Beendet {0} Prozesse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>App beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion kann {0} nicht beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion kann die App dieses Fensters nicht beenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} wird als Administrator ausgeführt, daher kann PC Companion die App nicht beenden. Der Task-Manager kann es.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} ist Teil von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>Der Explorer führt auch den Desktop und die Taskleiste aus. Um ihn neu zu starten, wählen Sie im Task-Manager „Windows-Explorer“ und dann „Neu starten“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows erlaubt PC Companion nicht, {0} zu beenden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion kann nicht erkennen, zu welcher App dieses Fenster gehört, etwa wenn zwei Fenster, die nicht mehr reagieren, an derselben Stelle sind. Der Task-Manager listet alle Apps auf.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>Dies ist Teil von PC Companion. Um PC Companion zu beenden, wählen Sie im Menü des PC Companion-Symbols „Beenden“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>Task-Manager öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>{0} konnte nicht beendet werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

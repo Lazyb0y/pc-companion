@@ -4140,4 +4140,108 @@
     <value>অন্য একটি প্রোগ্রাম Windows লোগো কী + Alt + S ব্যবহার করে, তাই এই শর্টকাট মেনু খোলে না। এখানে কোনো সেটিং বদলালে PC Companion আবার চেষ্টা করে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>অ্যাপ শেষ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>যে অ্যাপ সাড়া দেওয়া বন্ধ করেছে তার উইন্ডোতে ক্লিক করুন, নিশ্চিত করুন, আর PC Companion সেই অ্যাপটি শেষ করবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>একটি অ্যাপ শেষ করুন…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>অ্যাপ শেষ করুন: কোন অ্যাপ শেষ করবেন তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}, সাড়া দিচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}, সাড়া দিচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}, শেষ করা যাবে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>{0} শেষ করবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} সাড়া দিচ্ছে না। এতে যা সংরক্ষণ করা হয়নি তা হারিয়ে যাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} সাড়া দিচ্ছে। আপনার কাজ রাখতে স্বাভাবিকভাবে এটি বন্ধ করুন। শেষ করলে যা সংরক্ষণ করা হয়নি তা হারিয়ে যাবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>প্রোগ্রাম: {0}।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>{0}টি প্রক্রিয়া শেষ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>{0}টি প্রক্রিয়া শেষ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>অ্যাপ শেষ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion {0} শেষ করতে পারে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion এই উইন্ডোর অ্যাপ শেষ করতে পারে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} প্রশাসক হিসেবে চলছে, তাই PC Companion এটি শেষ করতে পারে না। টাস্ক ম্যানেজার পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} Windows-এর অংশ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>ফাইল এক্সপ্লোরার ডেস্কটপ ও টাস্কবারও চালায়। এটি আবার চালু করতে টাস্ক ম্যানেজারে Windows Explorer নির্বাচন করে রিস্টার্ট বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows PC Companion-কে {0} শেষ করতে দেয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion বুঝতে পারছে না এই উইন্ডোটি কোন অ্যাপের, যেমন যখন সাড়া দেওয়া বন্ধ করা দুটি উইন্ডো একই জায়গায় থাকে। টাস্ক ম্যানেজার সব অ্যাপের তালিকা দেখায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>এটি PC Companion-এর অংশ। PC Companion বন্ধ করতে PC Companion আইকনের মেনুতে প্রস্থান বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>টাস্ক ম্যানেজার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>{0} শেষ করা যায়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
