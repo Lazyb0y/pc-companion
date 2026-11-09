@@ -13,6 +13,9 @@ internal sealed class WindowsEndAppSystem : IEndAppSystem
     private const string StandInClass = "Ghost";
     private const string CoreWindowClass = "Windows.UI.Core.CoreWindow";
 
+    // The taskbars, which Tab skips, as it does the desktop.
+    private static readonly string[] TaskbarClasses = ["Shell_TrayWnd", "Shell_SecondaryTrayWnd"];
+
     // The dialog's icon, at 100% scale.
     private const int IconSize = 32;
 
@@ -28,6 +31,7 @@ internal sealed class WindowsEndAppSystem : IEndAppSystem
         TopLevelWindows.List().Select(window =>
         {
             var bounds = TopLevelWindows.Bounds(window.Handle) ?? Rectangle.Empty;
+            var className = TopLevelWindows.ClassName(window.Handle);
             return new EndAppWindow(
                 window.Handle,
                 window.ProcessId,
@@ -35,8 +39,8 @@ internal sealed class WindowsEndAppSystem : IEndAppSystem
                 TopLevelWindows.VisibleBounds(window.Handle) ?? bounds,
                 window.IsCloaked,
                 TopLevelWindows.LetsClicksThrough(window.Handle),
-                TopLevelWindows.MayHaveTaskbarButton(window.Handle),
-                TopLevelWindows.ClassName(window.Handle) == StandInClass);
+                TopLevelWindows.MayHaveTaskbarButton(window.Handle) && !window.IsDesktop && !TaskbarClasses.Contains(className),
+                className == StandInClass);
         }).ToList();
 
     public nint RootOwner(nint window) => TopLevelWindows.RootOwner(window) is var owner && owner != 0 ? owner : window;
