@@ -107,7 +107,7 @@ Press a shortcut, click the window of an app that stopped responding, confirm, a
 - **Esc, Cancel or closing it** ends nothing.
 - **There's no setting to skip it.**
 - **An app that can't be ended:** the same kind of dialog says "PC Companion can't end Notepad" and why: it runs as administrator; it's part of Windows; it's File Explorer, which also runs the desktop and the taskbar, so restart it in Task Manager; Windows doesn't let PC Companion end it; or two windows that stopped responding are at the same place. **Open Task Manager** and **Close**, the default.
-- **Open Task Manager** starts Task Manager through the shell, so that Windows gives it admin rights for an administrator's account as it does for Ctrl + Shift + Esc. It's a new `IHostCommands.OpenTaskManager`, since `StartProgram` starts programs without the shell; as for the other commands, a host running as administrator has its copy without them start it. To be checked by hand with UAC on.
+- **Open Task Manager** opens Task Manager as System Meters does (`ShellActions.OpenTaskManager`): through the shell and without arguments, so that Windows gives it admin rights for an administrator's account without asking, as it does from the taskbar. To be checked by hand with UAC on.
 
 ## Ending
 
