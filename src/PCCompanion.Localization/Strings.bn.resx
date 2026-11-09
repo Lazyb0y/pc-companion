@@ -4080,4 +4080,48 @@
     <value>{0}টি ফাইল</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটের জন্য কোনো অ্যাকশন নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>কপি করা টেক্সটের অ্যাকশন দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>কোনো টেক্সট নির্বাচন করা নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>এই অ্যাপটি এর নির্বাচিত টেক্সট শেয়ার করে না; এর বদলে টেক্সটটি কপি করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>PC Companion পাসওয়ার্ড বক্স পড়ে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>এই অ্যাপটি অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই এর নির্বাচিত টেক্সট পড়া যায় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই এটি এই অ্যাপ পড়ে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>এই অ্যাপটি কম অধিকার নিয়ে চলছে, তাই এর নির্বাচিত টেক্সট পড়া হয় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>এই অ্যাপটি সাড়া দিচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>এই অ্যাপটি সময়মতো সাড়া দেয়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটটি খুব দীর্ঘ</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
