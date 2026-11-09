@@ -41,7 +41,7 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems
         _notifications = notifications;
     }
 
-    public static FeatureInfo Definition { get; } = new("endApp", WindowsModule.Id, "EndAppName", "EndAppDescription", "\uE711");
+    public static FeatureInfo Definition { get; } = new("endApp", WindowsModule.Id, "EndAppName", "EndAppDescription", "");
 
     /// <summary>Whether this PC can run End App, for the settings app, which doesn't create the feature.</summary>
     public static FeatureSupport CurrentSupport => FeatureSupport.Supported;
