@@ -38,6 +38,34 @@ $gradients = @{
 $detail = '#9DB0F5'
 $outline = '#2B2FA8'
 
+# The feature icons' color families in docs\design\icons.md, each from its light tone to its
+# deepest, and their other colors. A family's tones are named <family>-<tone>, such as green-main.
+$families = [ordered]@{
+    sky    = @('#9DEAFF', '#58AAFE'), @('#29C3FF', '#2764E7'), @('#0094F0', '#2052CB'), @('#0067BF', '#003580')
+    blue   = @('#97B3FF', '#7799FF'), @('#5A86FF', '#4A6BF0'), @('#4A5FE8', '#3940D6'), @('#3940D6', '#2B2FA8')
+    violet = @('#BD96FF', '#9C6CFE'), @('#9C6CFE', '#7A41DC'), @('#885EDB', '#5B2AB5'), @('#6D37CD', '#3B148A')
+    green  = @('#B0F098', '#64DE89'), @('#52D17C', '#22918B'), @('#20AC9D', '#1A7F7C'), @('#1A7F7C', '#0E5C5A')
+}
+$tones = 'light', 'main', 'deep', 'deepest'
+foreach ($family in $families.Keys) {
+    for ($i = 0; $i -lt $tones.Count; $i++) {
+        $from, $to = $families[$family][$i]
+        $gradients["$family-$($tones[$i])"] = @{ End = '1'; Stops = "stop-color=`"$from`"", "stop-color=`"$to`"" }
+    }
+}
+$gradients['paper'] = @{ End = '1'; Stops = 'stop-color="#F8FAFF"', 'stop-color="#DCE6FF"' }
+$gradients['orange'] = @{ End = '1'; Stops = 'stop-color="#FFD25E"', 'stop-color="#FF8A3C"' }
+$gradients['yellow'] = @{ End = '1'; Stops = 'stop-color="#FFE06B"', 'stop-color="#FAB500"' }
+$gradients['yellow-back'] = @{ End = '1'; Stops = 'stop-color="#FFA43D"', 'stop-color="#E67505"' }
+$gradients['red'] = @{ End = '1'; Stops = 'stop-color="#F83F54"', 'stop-color="#CA2134"' }
+$white = '#FFFFFF'
+
+# Shape arithmetic for the one-color versions, which cut white symbols, paper, the cuts between
+# planes and the cut around a second object out of the shapes: the geometry of WPF, which comes
+# with Windows.
+Add-Type -AssemblyName PresentationCore
+$tolerance = 0.001
+
 # A number as the drawings write it: at most three decimals, without trailing zeros.
 function F([double] $Value) {
     $text = [math]::Round($Value, 3).ToString('0.###', $culture)
@@ -209,6 +237,85 @@ function Get-Group([string] $Attributes, [string[]] $Items) {
     '</g>'
 }
 
+function ConvertTo-Shape([string] $Data) {
+    [Windows.Media.Geometry]::Parse($Data)
+}
+
+# The area a line $Width wide covers along $Data, with round ends and corners: the area of a white
+# symbol drawn as a stroke, or the strip a cut takes out.
+function Get-StrokeArea([string] $Data, [double] $Width) {
+    $pen = New-Object Windows.Media.Pen -ArgumentList ([Windows.Media.Brushes]::Black), $Width
+    $pen.StartLineCap = 'Round'
+    $pen.EndLineCap = 'Round'
+    $pen.LineJoin = 'Round'
+    (ConvertTo-Shape $Data).GetWidenedPathGeometry($pen, $tolerance, 'Absolute')
+}
+
+function Join-Shape($Shape, $Other) {
+    [Windows.Media.Geometry]::Combine($Shape, $Other, 'Union', $null, $tolerance, 'Absolute')
+}
+
+function Remove-Shape($Shape, $Other) {
+    [Windows.Media.Geometry]::Combine($Shape, $Other, 'Exclude', $null, $tolerance, 'Absolute')
+}
+
+# A filled shape with the stroke drawn round it, or grown by half of $Width: what a polygon drawn
+# with round-joined stroke covers, or what a cut round a second object takes out.
+function Get-GrownShape([string] $Data, [double] $Width) {
+    Join-Shape (ConvertTo-Shape $Data) (Get-StrokeArea $Data $Width)
+}
+
+# A shape as a path in the text color, for a one-color version: its path data in the drawings'
+# number format, and its fill rule.
+function Get-MonoPath($Shape) {
+    $geometry = [Windows.Media.PathGeometry]::CreateFromGeometry($Shape)
+    $point = { param($p) "$(F $p.X) $(F $p.Y)" }
+    $data = foreach ($figure in $geometry.Figures) {
+        "M$(& $point $figure.StartPoint)"
+        foreach ($segment in $figure.Segments) {
+            switch ($segment.GetType().Name) {
+                'LineSegment' { "L$(& $point $segment.Point)" }
+                'PolyLineSegment' { 'L' + (($segment.Points | ForEach-Object { & $point $_ }) -join ' ') }
+                'BezierSegment' { "C$(& $point $segment.Point1) $(& $point $segment.Point2) $(& $point $segment.Point3)" }
+                'PolyBezierSegment' { 'C' + (($segment.Points | ForEach-Object { & $point $_ }) -join ' ') }
+                'QuadraticBezierSegment' { "Q$(& $point $segment.Point1) $(& $point $segment.Point2)" }
+                'PolyQuadraticBezierSegment' { 'Q' + (($segment.Points | ForEach-Object { & $point $_ }) -join ' ') }
+                default { throw "A shape has a $_, which the drawings don't write." }
+            }
+        }
+        if ($figure.IsClosed) { 'Z' }
+    }
+    $rule = if ($geometry.FillRule -eq 'EvenOdd') { ' fill-rule="evenodd"' } else { '' }
+    return "<path fill=`"currentColor`"$rule d=`"$($data -join '')`"/>"
+}
+
+# A white symbol drawn as a stroke along $Data, $Width wide.
+function Get-SymbolPath([string] $Data, [double] $Width, [string] $Paint = $white) {
+    "<path fill=`"none`" stroke=`"$Paint`" stroke-width=`"$(F $Width)`" stroke-linecap=`"round`" stroke-linejoin=`"round`" d=`"$Data`"/>"
+}
+
+# The letter A, $Height high, centered on x, y, as strokes: its two legs and its bar.
+function Get-LetterA([double] $CenterX, [double] $CenterY, [double] $Height, [double] $BarY) {
+    $half = $Height * 0.46
+    $top = $CenterY - $Height / 2
+    $bottom = $CenterY + $Height / 2
+    $bar = $half * 0.52
+    "M$(F ($CenterX - $half)) $(F $bottom)L$(F $CenterX) $(F $top)L$(F ($CenterX + $half)) $(F $bottom)" +
+    "M$(F ($CenterX - $bar)) $(F $BarY)H$(F ($CenterX + $bar))"
+}
+
+# The character 文, $Height high, centered on x, y, as strokes: a dot, a bar at $BarY, and two
+# strokes that cross below it.
+function Get-LetterWen([double] $CenterX, [double] $CenterY, [double] $Height, [double] $BarY) {
+    $s = $Height / 2
+    $top = $CenterY - $s
+    $start = $BarY + $Height * 0.08
+    "M$(F $CenterX) $(F $top)V$(F ($top + $Height * 0.12))" +
+    "M$(F ($CenterX - $s)) $(F $BarY)H$(F ($CenterX + $s))" +
+    "M$(F ($CenterX + $s * 0.55)) $(F $start)Q$(F ($CenterX + $s * 0.2)) $(F ($CenterY + $s * 0.55)) $(F ($CenterX - $s)) $(F ($CenterY + $s))" +
+    "M$(F ($CenterX - $s * 0.55)) $(F $start)Q$(F ($CenterX - $s * 0.2)) $(F ($CenterY + $s * 0.55)) $(F ($CenterX + $s)) $(F ($CenterY + $s))"
+}
+
 function Write-Drawing([string] $Name, [int] $Size, [string[]] $Defs, [string[]] $Body) {
     $lines = New-Object Collections.Generic.List[string]
     $lines.Add("<svg xmlns=`"http://www.w3.org/2000/svg`" width=`"$Size`" height=`"$Size`" viewBox=`"0 0 $Size $Size`">")
@@ -248,35 +355,29 @@ foreach ($icon in $app) {
     Write-Drawing "app-$($icon.Size)-mono" $icon.Size @() @($mono)
 }
 
-# Hot Corners: a screen (frame and glass) with its top-left corner in amber, and a pointer whose
-# tip is at Pointer's x, y, drawn at Pointer's scale. Hole is the glass without the corner, which
-# the one-color version cuts out.
-$pointer = @(@(0, 0), @(0, 12.2), @(3.1, 9.4), @(5.4, 14.3), @(7.6, 13.3), @(5.3, 8.5), @(9.6, 8.5))
+# Hot Corners, in green: a screen with its top-left corner lit, a light plane up to the line
+# x + y = Lit, with a white spot, Spot in radius, in the corner itself, and a white pointer whose
+# tip is at Pointer's x, y, drawn at Pointer's scale. The one-color version cuts the spot and the
+# pointer out, and Cut wide along the edge of the lit plane.
+$pointer = @(@(0, 0), @(0, 13), @(3.2, 10), @(5.6, 15.2), @(8, 14.1), @(5.6, 9), @(10, 9))
 $hotCorners = @(
-    @{ Size = 32; Frame = 2, 5, 28, 22, 4; Glass = 4.5, 7.5, 23, 17, 2; Pointer = 15.5, 14.5, 0.9; Stroke = 1.4; Gap = 1.5
-        Corner = 'M4.5 9.5A2 2 0 0 1 6.5 7.5H14A9.5 9.5 0 0 1 4.5 17Z'
-        Hole = 'M14 7.5H25.5A2 2 0 0 1 27.5 9.5V22.5A2 2 0 0 1 25.5 24.5H6.5A2 2 0 0 1 4.5 22.5V17A9.5 9.5 0 0 0 14 7.5Z' }
-    @{ Size = 20; Frame = 1, 3, 18, 14, 2.5; Glass = 3, 5, 14, 10, 1; Pointer = 9.5, 8.5, 0.56; Stroke = 1; Gap = 1
-        Corner = 'M3 6A1 1 0 0 1 4 5H9A6 6 0 0 1 3 11Z'
-        Hole = 'M9 5H16A1 1 0 0 1 17 6V14A1 1 0 0 1 16 15H4A1 1 0 0 1 3 14V11A6 6 0 0 0 9 5Z' }
-    @{ Size = 16; Frame = 1, 3, 14, 11, 2; Glass = 2, 4, 12, 9, 1; Pointer = 8, 6, 0.6; Stroke = 1; Gap = 1
-        Corner = 'M2 5A1 1 0 0 1 3 4H7A5 5 0 0 1 2 9Z'
-        Hole = 'M7 4H13A1 1 0 0 1 14 5V12A1 1 0 0 1 13 13H3A1 1 0 0 1 2 12V9A5 5 0 0 0 7 4Z' }
+    @{ Size = 32; Screen = 1, 4, 30, 24, 2.5; Lit = 19; Spot = 6.5; Pointer = 12, 11.5, 1.05; Stroke = 1; Cut = 1.2 }
+    @{ Size = 20; Screen = 1, 2, 18, 16, 1.5; Lit = 12; Spot = 4; Pointer = 7.5, 7, 0.66; Stroke = 0.8; Cut = 1 }
 )
 foreach ($icon in $hotCorners) {
+    $x, $y, $w, $h, $r = $icon.Screen
     $tipX, $tipY, $scale = $icon.Pointer
-    $points = @($pointer | ForEach-Object { , @(($tipX + $_[0] * $scale), ($tipY + $_[1] * $scale)) })
-    $shape = Get-PolygonPath $points
-    $clip = @(Get-GapClip $icon.Size (Get-GrownPath $points ($icon.Stroke / 2 + $icon.Gap)))
-    $stroke = " stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`""
-    $defs = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent') + $clip
-    $body = @(Get-Group 'clip-path="url(#gap)"' @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'),
-            (Get-Rect $icon.Glass ' fill="url(#glass)"'), "<path fill=`"url(#accent)`" d=`"$($icon.Corner)`"/>")) +
-        @("<path fill=`"#FFFFFF`" stroke=`"$outline`"$stroke d=`"$shape`"/>")
-    Write-Drawing "hot-corners-$($icon.Size)" $icon.Size $defs $body
-    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$($icon.Hole)`"/>")) +
-        @("<path fill=`"currentColor`" stroke=`"currentColor`"$stroke d=`"$shape`"/>")
-    Write-Drawing "hot-corners-$($icon.Size)-mono" $icon.Size $clip $mono
+    $corner = "M$(F $x) $(F ($y + $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $r)) $(F $y)"
+    $plane = "$($corner)H$(F ($icon.Lit - $y))L$(F $x) $(F ($icon.Lit - $x))Z"
+    $spot = "$($corner)H$(F ($x + $icon.Spot))A$(F $icon.Spot) $(F $icon.Spot) 0 0 1 $(F $x) $(F ($y + $icon.Spot))Z"
+    $arrow = Get-PolygonPath @($pointer | ForEach-Object { , @(($tipX + $_[0] * $scale), ($tipY + $_[1] * $scale)) })
+    $body = @((Get-Rect $icon.Screen ' fill="url(#green-main)"'), "<path fill=`"url(#green-light)`" d=`"$plane`"/>", "<path fill=`"$white`" d=`"$spot`"/>",
+        "<path fill=`"$white`" stroke=`"$white`" stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`" d=`"$arrow`"/>")
+    Write-Drawing "hot-corners-$($icon.Size)" $icon.Size (@(Get-Gradient 'green-main') + @(Get-Gradient 'green-light')) $body
+    $line = "M$(F ($x - 2)) $(F ($icon.Lit - $x + 2))L$(F ($icon.Lit - $y + 2)) $(F ($y - 2))"
+    $shape = ConvertTo-Shape (Get-RectPath $icon.Screen)
+    foreach ($cut in (Get-StrokeArea $line $icon.Cut), (ConvertTo-Shape $spot), (Get-GrownShape $arrow $icon.Stroke)) { $shape = Remove-Shape $shape $cut }
+    Write-Drawing "hot-corners-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
 # Clipboard Actions: a clipboard (board, paper, lines of text and its clip) with an amber bolt.
@@ -335,56 +436,57 @@ foreach ($icon in $systemMeters) {
     Write-Drawing "system-meters-$($icon.Size)-mono" $icon.Size @() @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$outlines`"/>")
 }
 
-# Lock Keys: a keycap (frame) and its face (glass), with the Caps Lock arrow and bar in amber.
+# Lock Keys, in violet: a keycap, its sides in the deepest tone and its face in the main one, with
+# the white Caps Lock arrow and bar. The one-color version cuts the arrow and bar out, and Cut wide
+# round the face.
 $lockKeys = @(
-    @{ Size = 32; Frame = 3, 3, 26, 26, 4.5; Face = 5.5, 5.5, 21, 17, 2.5; Bar = 13, 18.5, 6, 2, 0.5; Stroke = 1
-        Arrow = @(@(16, 8), @(21.5, 13.5), @(18.5, 13.5), @(18.5, 16.5), @(13.5, 16.5), @(13.5, 13.5), @(10.5, 13.5)) }
-    @{ Size = 20; Frame = 2, 2, 16, 16, 3; Face = 4, 4, 12, 10, 1.5; Bar = 8, 11, 4, 1.5, 0; Stroke = 0.8
-        Arrow = @(@(10, 5), @(13.5, 8.5), @(11.5, 8.5), @(11.5, 10), @(8.5, 10), @(8.5, 8.5), @(6.5, 8.5)) }
-    @{ Size = 16; Frame = 1, 1, 14, 14, 2; Face = 2, 2, 12, 8, 1; Bar = 6, 8, 4, 1, 0; Stroke = 0.6
-        Arrow = @(@(8, 2.5), @(11, 5.5), @(9.5, 5.5), @(9.5, 7), @(6.5, 7), @(6.5, 5.5), @(5, 5.5)) }
+    @{ Size = 32; Cap = 1, 1, 30, 30, 3; Face = 4, 3, 24, 23, 2; Bar = 12, 20, 8, 3, 0.75; Stroke = 1; Cut = 1.2
+        Arrow = @(@(16, 7.5), @(22.5, 14.5), @(18.5, 14.5), @(18.5, 18.5), @(13.5, 18.5), @(13.5, 14.5), @(9.5, 14.5)) }
+    @{ Size = 20; Cap = 1, 1, 18, 18, 2; Face = 3, 2, 14, 13, 1.5; Bar = 8, 12, 4, 2, 0.5; Stroke = 0.8; Cut = 1
+        Arrow = @(@(10, 4.6), @(14.2, 8.6), @(11.6, 8.6), @(11.6, 10.6), @(8.4, 10.6), @(8.4, 8.6), @(5.8, 8.6)) }
 )
 foreach ($icon in $lockKeys) {
-    $stroke = " stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`""
     $arrow = Get-PolygonPath $icon.Arrow
-    $defs = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent')
-    $body = @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Face ' fill="url(#glass)"'),
-        "<path fill=`"url(#accent)`" stroke=`"url(#accent)`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="url(#accent)"'))
-    Write-Drawing "lock-keys-$($icon.Size)" $icon.Size $defs $body
-    $mono = @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Face)`"/>",
-        "<path fill=`"currentColor`" stroke=`"currentColor`"$stroke d=`"$arrow`"/>", (Get-Rect $icon.Bar ' fill="currentColor"'))
-    Write-Drawing "lock-keys-$($icon.Size)-mono" $icon.Size @() $mono
+    $body = @((Get-Rect $icon.Cap ' fill="url(#violet-deepest)"'), (Get-Rect $icon.Face ' fill="url(#violet-main)"'),
+        "<path fill=`"$white`" stroke=`"$white`" stroke-width=`"$(F $icon.Stroke)`" stroke-linejoin=`"round`" d=`"$arrow`"/>", (Get-Rect $icon.Bar " fill=`"$white`""))
+    Write-Drawing "lock-keys-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-deepest') + @(Get-Gradient 'violet-main')) $body
+    $face = Get-RectPath $icon.Face
+    $sides = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Cap)) (Get-GrownShape $face (2 * $icon.Cut))
+    $top = Remove-Shape (Remove-Shape (ConvertTo-Shape $face) (Get-GrownShape $arrow $icon.Stroke)) (ConvertTo-Shape (Get-RectPath $icon.Bar))
+    Write-Drawing "lock-keys-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $sides $top))
 }
 
-# Input Language per App: a keyboard (board, glass and keys) with an amber globe at its bottom
-# right. The globe's lines are glass, so the one-color version cuts them out: a meridian ring,
-# Ring's width, height and thickness, and the equator, Line thick, both Rim short of its edge.
+# Input Language per App, in the app icon's blue: an app window, its title bar TitleBar high in the
+# deep tone, with a white A, and an orange badge with a white 文 at its bottom right, the language
+# the app keeps. A and Wen are each letter's middle, height and the y of its bar, and Letter their
+# strokes' width. The one-color version cuts the letters out, and Cut wide under the title bar and
+# round the badge.
 $inputLanguagePerApp = @(
-    @{ Size = 32; Board = 2, 3, 28, 19, 4; Glass = 4.5, 5.5, 23, 14, 2; Globe = 24.5, 22.5, 6.5; Ring = 3.4, 5.4, 1; Line = 1; Rim = 1.2; Gap = 1.5
-        Keys = @(@(7, 8, 3, 2.5, 0.75), @(11.5, 8, 3, 2.5, 0.75), @(16, 8, 3, 2.5, 0.75), @(20.5, 8, 3, 2.5, 0.75), @(7, 12, 3, 2.5, 0.75), @(11.5, 12, 3, 2.5, 0.75), @(9, 16, 7.5, 2, 0.75)) }
-    @{ Size = 20; Board = 1, 2, 18, 12, 2.5; Glass = 3, 4, 14, 8, 1; Globe = 15, 14, 4.5; Ring = 2.4, 3.6, 0.9; Line = 0.9; Rim = 0.9; Gap = 1
-        Keys = @(@(5, 6, 2, 1.5, 0), @(8, 6, 2, 1.5, 0), @(11, 6, 2, 1.5, 0), @(5, 9, 5, 1, 0)) }
-    @{ Size = 16; Board = 1, 2, 14, 10, 2; Glass = 2, 3, 12, 8, 1; Globe = 12, 12, 3.5; Ring = 1.9, 2.7, 0.8; Line = 0.8; Rim = 0.8; Gap = 1
-        Keys = @(@(4, 5, 1, 1, 0), @(6, 5, 1, 1, 0), @(8, 5, 1, 1, 0), @(4, 8, 4, 1, 0)) }
+    @{ Size = 32; Window = 1, 2, 25, 22, 2; TitleBar = 5; Badge = 16, 16, 15, 15, 2.5; A = 10.2, 15.8, 9.6, 17.3; Wen = 23.5, 23.5, 8.4, 21.82
+        Letter = 2.4, 2.1; Cut = 1.2 }
+    @{ Size = 20; Window = 1, 2, 15, 13, 1.5; TitleBar = 3; Badge = 10, 10, 9, 9, 1.5; A = 6.3, 10, 6, 11.2; Wen = 14.5, 14.5, 6, 13.3
+        Letter = 1.6, 1.4; Cut = 1 }
 )
 foreach ($icon in $inputLanguagePerApp) {
-    $cx, $cy, $r = $icon.Globe
-    $clip = @(Get-GapClip $icon.Size (Get-EllipsePath $cx $cy ($r + $icon.Gap) ($r + $icon.Gap)))
-    $lines = Get-GlobeLines $cx $cy $r $icon.Ring $icon.Line $icon.Rim
-    $ring = $lines.Ring
-    $equator = $lines.Equator
-    $defs = @(Get-Gradient 'frame') + @(Get-Gradient 'highlight') + @(Get-Gradient 'glass') + @(Get-Gradient 'accent') + $clip
-    $items = @((Get-Rect $icon.Board ' fill="url(#frame)"'), (Get-Rect $icon.Board ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"')) +
-        @($icon.Keys | ForEach-Object { Get-Rect $_ " fill=`"$detail`"" })
-    $body = @(Get-Group 'clip-path="url(#gap)"' $items) +
-        @("<path fill=`"url(#accent)`" d=`"$(Get-EllipsePath $cx $cy $r $r)`"/>", "<path fill=`"url(#glass)`" fill-rule=`"evenodd`" d=`"$ring`"/>") +
-        @($equator | ForEach-Object { Get-Rect $_ ' fill="url(#glass)"' })
-    Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size $defs $body
-    $keys = ($icon.Keys | ForEach-Object { Get-RectPath $_ }) -join ''
-    $holes = $ring + (($equator | ForEach-Object { Get-RectPath $_ }) -join '')
-    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Board)$(Get-RectPath $icon.Glass)$keys`"/>")) +
-        @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-EllipsePath $cx $cy $r $r)$holes`"/>")
-    Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size $clip $mono
+    $x, $y, $w, $h, $r = $icon.Window
+    $bar = $y + $icon.TitleBar
+    $titleBar = "M$(F ($x + $r)) $(F $y)H$(F ($x + $w - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F $bar)H$(F $x)V$(F ($y + $r))" +
+        "A$(F $r) $(F $r) 0 0 1 $(F ($x + $r)) $(F $y)Z"
+    $ax, $ay, $aHeight, $aBar = $icon.A
+    $letterA = Get-LetterA $ax $ay $aHeight $aBar
+    $wx, $wy, $wenHeight, $wenBar = $icon.Wen
+    $wen = Get-LetterWen $wx $wy $wenHeight $wenBar
+    $aWidth, $wenWidth = $icon.Letter
+    $body = @((Get-Rect $icon.Window ' fill="url(#blue-main)"'), "<path fill=`"url(#blue-deep)`" d=`"$titleBar`"/>", (Get-SymbolPath $letterA $aWidth),
+        (Get-Rect $icon.Badge ' fill="url(#orange)"'), (Get-SymbolPath $wen $wenWidth))
+    Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size (@(Get-Gradient 'blue-main') + @(Get-Gradient 'blue-deep') + @(Get-Gradient 'orange')) $body
+    $badge = Get-RectPath $icon.Badge
+    $window = ConvertTo-Shape (Get-RectPath $icon.Window)
+    foreach ($cut in (Get-StrokeArea "M$(F ($x - 2)) $(F $bar)H$(F ($x + $w + 2))" $icon.Cut), (Get-StrokeArea $letterA $aWidth), (Get-GrownShape $badge (2 * $icon.Cut))) {
+        $window = Remove-Shape $window $cut
+    }
+    $sign = Remove-Shape (ConvertTo-Shape $badge) (Get-StrokeArea $wen $wenWidth)
+    Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $sign))
 }
 
 # The gradients most icons use.

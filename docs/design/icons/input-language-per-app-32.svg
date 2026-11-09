@@ -1,40 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="blue-main" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#4A6BF0"/>
+        </linearGradient>
+        <linearGradient id="blue-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4A5FE8"/>
             <stop offset="1" stop-color="#3940D6"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#FFD25E"/>
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
-        <clipPath id="gap">
-            <path clip-rule="evenodd" d="M0 0H32V32H0ZM16.5 22.5A8 8 0 1 0 32.5 22.5A8 8 0 1 0 16.5 22.5Z"/>
-        </clipPath>
     </defs>
-    <g clip-path="url(#gap)">
-        <rect x="2" y="3" width="28" height="19" rx="4" fill="url(#frame)"/>
-        <rect x="2" y="3" width="28" height="19" rx="4" fill="url(#highlight)"/>
-        <rect x="4.5" y="5.5" width="23" height="14" rx="2" fill="url(#glass)"/>
-        <rect x="7" y="8" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="11.5" y="8" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="16" y="8" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="20.5" y="8" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="7" y="12" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="11.5" y="12" width="3" height="2.5" rx="0.75" fill="#9DB0F5"/>
-        <rect x="9" y="16" width="7.5" height="2" rx="0.75" fill="#9DB0F5"/>
-    </g>
-    <path fill="url(#accent)" d="M18 22.5A6.5 6.5 0 1 0 31 22.5A6.5 6.5 0 1 0 18 22.5Z"/>
-    <path fill="url(#glass)" fill-rule="evenodd" d="M21.1 22.5A3.4 5.4 0 1 0 27.9 22.5A3.4 5.4 0 1 0 21.1 22.5ZM22.1 22.5A2.4 4.4 0 1 0 26.9 22.5A2.4 4.4 0 1 0 22.1 22.5Z"/>
-    <rect x="19.2" y="22" width="1.9" height="1" rx="0" fill="url(#glass)"/>
-    <rect x="22.1" y="22" width="4.8" height="1" rx="0" fill="url(#glass)"/>
-    <rect x="27.9" y="22" width="1.9" height="1" rx="0" fill="url(#glass)"/>
+    <rect x="1" y="2" width="25" height="22" rx="2" fill="url(#blue-main)"/>
+    <path fill="url(#blue-deep)" d="M3 2H24A2 2 0 0 1 26 4V7H1V4A2 2 0 0 1 3 2Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5.784 20.6L10.2 11L14.616 20.6M7.904 17.3H12.496"/>
+    <rect x="16" y="16" width="15" height="15" rx="2.5" fill="url(#orange)"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" d="M23.5 19.3V20.308M19.3 21.82H27.7M25.81 22.492Q24.34 25.81 19.3 27.7M21.19 22.492Q22.66 25.81 27.7 27.7"/>
 </svg>
