@@ -4140,4 +4140,108 @@
     <value>Another program uses Windows logo key + Alt + S, so this shortcut doesn't open the menu. PC Companion tries again when a setting here changes.</value>
     <comment>Clipboard Actions page: warning below the Selected text switch when Windows refused Windows + Alt + S because another program already has it. Name the keys as in ClipboardActionsShortcut.</comment>
   </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>End App</value>
+    <comment>Feature name: navigation pane, Home, the End App page and the title of its dialogs. It ends an app that stopped responding, as Task Manager's End task does.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>Click the window of an app that stopped responding, confirm, and PC Companion ends that app.</value>
+    <comment>End App: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>End an app…</value>
+    <comment>PC Companion icon's menu, while End App is on: starts choosing an app to end. The ellipsis says that more follows before anything ends.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>End App: choose an app to end.</value>
+    <comment>End App: what screen readers read while the user chooses an app to end, as the name of PC Companion's invisible window over the screen. A sentence about the framed app may follow.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}, not responding</value>
+    <comment>End App: read by screen readers after EndAppChoosing for the framed app; {0} is the app's name, such as Notepad.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}, responding</value>
+    <comment>End App: read by screen readers after EndAppChoosing for the framed app; {0} is the app's name, such as Notepad.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}, can't be ended</value>
+    <comment>End App: read by screen readers after EndAppChoosing for a framed app that PC Companion can't end, such as File Explorer; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>End {0}?</value>
+    <comment>End App dialog: the question; {0} is the app's name, such as Notepad.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} isn't responding. Anything not saved in it will be lost.</value>
+    <comment>End App dialog: below the question for an app that isn't responding; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} is responding. To keep your work, close it as usual. Ending it loses anything not saved.</value>
+    <comment>End App dialog: below the question for an app that responds, where Cancel is the default; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>Program: {0}.</value>
+    <comment>End App dialog: at the bottom, before EndAppQuestionProcesses; {0} is the app's program file, such as msedge.exe.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>Ends {0} process.</value>
+    <comment>Plural form "one". End App dialog: at the bottom, after EndAppQuestionProgram; {0} is how many processes end: the app's and its helpers'.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>Ends {0} processes.</value>
+    <comment>Plural form "other". End App dialog: at the bottom, after EndAppQuestionProgram; {0} is how many processes end: the app's and its helpers'.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>End app</value>
+    <comment>End App dialog button: ends the app. Use the wording of Task Manager's End task for an app.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>End App dialog button: ends nothing.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion can't end {0}</value>
+    <comment>End App dialog, for an app it can't end: the heading; {0} is the app's name, such as File Explorer.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion can't end this window's app</value>
+    <comment>End App dialog, for a window whose app it can't tell: the heading.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} runs as administrator, so PC Companion can't end it. Task Manager can.</value>
+    <comment>End App dialog, for an app running as administrator: why it can't end it; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} is part of Windows.</value>
+    <comment>End App dialog, for one of Windows' own processes: why it can't end it; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>File Explorer also runs the desktop and the taskbar. To restart it, select Windows Explorer in Task Manager and choose Restart.</value>
+    <comment>End App dialog, for File Explorer: why it can't end it. Windows Explorer and Restart are Task Manager's names for the process and its button.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows doesn't let PC Companion end {0}.</value>
+    <comment>End App dialog, for a process Windows doesn't let PC Companion end, such as another user's: why; {0} is the app's name.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion can't tell which app this window belongs to, as when two windows that stopped responding are at the same place. Task Manager lists every app.</value>
+    <comment>End App dialog, below EndAppCantEndThisApp: why.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>This is part of PC Companion. To stop PC Companion, choose Exit in the PC Companion icon's menu.</value>
+    <comment>End App dialog, for PC Companion's own background process: why it can't end it. Exit is the item in the PC Companion icon's menu.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>Open Task Manager</value>
+    <comment>End App dialog button, for an app it can't end: opens Task Manager.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>End App dialog button, for an app it can't end: closes the dialog.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>Couldn't end {0}.</value>
+    <comment>End App notification, when an app is still running 5 seconds after End App ended it; {0} is the app's name. The notification's title is EndAppName.</comment>
+  </data>
 </root>

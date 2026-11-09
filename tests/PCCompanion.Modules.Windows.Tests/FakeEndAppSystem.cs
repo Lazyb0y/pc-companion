@@ -95,6 +95,8 @@ internal sealed class FakeEndAppSystem : IEndAppSystem
 
     public int DpiOf(nint window) => Dpi;
 
+    public Rectangle? WorkAreaOf(nint window) => new Rectangle(0, 0, 1920, 1040);
+
     public string? ProgramPath(uint processId) => Processes.TryGetValue(processId, out var process) && !process.HasExited ? process.ProgramPath : null;
 
     public bool? IsElevated(uint processId) => Processes.ContainsKey(processId) ? Elevated.Contains(processId) : null;

@@ -52,6 +52,9 @@ public interface IEndAppSystem
     /// <summary>The DPI the window is drawn at: 96 at 100% scale.</summary>
     int DpiOf(nint window);
 
+    /// <summary>The work area of the display the window is mostly on, or <see langword="null"/>.</summary>
+    Rectangle? WorkAreaOf(nint window);
+
     /// <summary>The full path of the process's program file, or <see langword="null"/> when it can't be read.</summary>
     string? ProgramPath(uint processId);
 

@@ -456,6 +456,41 @@ public static class TopLevelWindows
             || ((style & WINDOW_EX_STYLE.WS_EX_TOOLWINDOW) == 0 && PInvoke.GetWindow(handle, GET_WINDOW_CMD.GW_OWNER).IsNull);
     }
 
+    /// <summary>
+    /// Whether all of <paramref name="window"/> lets clicks and the pointer through to what's
+    /// below it, as notices and overlays do (<c>WS_EX_LAYERED</c> with <c>WS_EX_TRANSPARENT</c>).
+    /// </summary>
+    public static bool LetsClicksThrough(nint window)
+    {
+        var style = ExtendedStyle(new HWND(window));
+        return (style & WINDOW_EX_STYLE.WS_EX_LAYERED) != 0 && (style & WINDOW_EX_STYLE.WS_EX_TRANSPARENT) != 0;
+    }
+
+    /// <summary>Every top-level window, shown or hidden, front to back.</summary>
+    public static IReadOnlyList<nint> ListAll()
+    {
+        var windows = new List<nint>();
+        PInvoke.EnumWindows((window, _) =>
+        {
+            windows.Add(window);
+            return true;
+        }, 0);
+
+        return windows;
+    }
+
+    /// <summary>
+    /// The first child window of <paramref name="parent"/> with the class name
+    /// <paramref name="className"/>, such as a Store app's core window in Windows' shared frame;
+    /// 0 when it has none.
+    /// </summary>
+    public static nint FindChild(nint parent, string className)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(className);
+
+        return PInvoke.FindWindowEx(new HWND(parent), HWND.Null, className, null);
+    }
+
     private static bool PostSystemCommand(nint window, uint command) => PInvoke.PostMessage(new HWND(window), PInvoke.WM_SYSCOMMAND, command, 0);
 
     // Windows keeps a window's normal rectangle in workspace coordinates, which start at the top-left

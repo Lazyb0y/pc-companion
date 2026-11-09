@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Modules.Windows.DropDownApps;
+using PCCompanion.Modules.Windows.EndApp;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
@@ -28,6 +29,7 @@ public static class WindowsModule
         services.AddSingleton<IFeature, HideAppsFeature>();
         services.AddSingleton<IFeature, DropDownAppsFeature>();
         services.AddSingleton<IFeature, TitleBarActionsFeature>();
+        services.AddSingleton<IFeature, EndAppFeature>();
         return services;
     }
 }
