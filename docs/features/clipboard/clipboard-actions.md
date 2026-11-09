@@ -1,14 +1,15 @@
 # Clipboard Actions
 
-Press Windows + Alt + V to see actions for the copied text, such as opening a copied link or looking up a copied parcel number on the carrier's website.
+Press Windows + Alt + V to see actions for the copied text, such as opening a copied link or looking up a copied parcel number on the carrier's website. With **Selected text** on, Windows + Alt + S shows the same actions for the text selected in the app in front, without copying it first.
 
 - Module: Clipboard & Text (`PCCompanion.Modules.Clipboard`). Settings section: `features.clipboardActions`.
-- Inspired by the actions of Klipper, the KDE Plasma clipboard tool, which offers commands for copied text that matches a pattern, and by the suggested actions that Windows 11 offered for copied phone numbers and dates until Microsoft deprecated them.
-- Off until the user turns it on.
+- Inspired by the actions of Klipper, the KDE Plasma clipboard tool, which offers commands for copied text that matches a pattern, and by the suggested actions that Windows 11 offered for copied phone numbers and dates until Microsoft deprecated them. Selected text is inspired by macOS Services, which give the text selected in an app to other apps' commands.
+- Off until the user turns it on. Selected text is off until the user turns it on too.
 
 ## Behavior
 
 - **Windows + Alt + V** shows a menu with the actions for the text on the clipboard, at the text cursor of the app in front, or at the pointer when the app doesn't report one; see [Where the menu opens](#where-the-menu-opens). Choosing an action runs it; Esc or a click elsewhere closes the menu.
+- **Windows + Alt + S**, with Selected text on, shows the same menu for the text selected in the app in front, below the selection; see [Selected text](#selected-text). Each shortcut has one source, so the user always knows which text an action gets.
 - The menu shows, in this order:
   - the start of the copied text, dimmed, so the user sees what the action gets: its first line, up to 50 characters, cut between whole characters so that an emoji or a letter with its accents isn't split, with an ellipsis when there's more;
   - **Open in browser**, when the text is a web link and **Open copied links** is on;
@@ -21,7 +22,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - another app keeps the clipboard open, even after a few tries;
   - the app that copied the text didn't provide it when asked, such as one that stopped responding; see [Reading the clipboard](#reading-the-clipboard).
 - Spaces and line breaks at the ends of the text are removed before matching, such as the line break a terminal adds when copying a line. The actions get the same trimmed text.
-- Nothing happens when text is copied: PC Companion reads the clipboard only when the shortcut is pressed.
+- Nothing happens when text is copied or selected: PC Companion reads the clipboard only when Windows + Alt + V is pressed, and the selected text only when Windows + Alt + S is.
 - The menu opens as the shortcut is pressed. Releasing Alt and the Windows key keeps it open and opens neither Start nor a menu bar.
 - Pressing the shortcut again closes the menu.
 - A letter chooses the item that starts with it, when only one does, as in other Windows menus.
@@ -40,6 +41,49 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - PC Companion asks only an app that runs with the same rights as itself, at the same integrity level (`GetTokenInformation` with `TokenIntegrityLevel`): without admin rights while PC Companion runs without them, and as administrator while it runs as administrator. The answer is an object from the app, which a program shouldn't take in from a less trusted one, such as PC Companion running as administrator from an app without admin rights, or from an app in an AppContainer; Windows' text cursor is still used for them. Windows already blocks the request to an app with more rights.
 - An app that isn't aware of each display's scale reports the text cursor in its own pixels, which Windows scales. PC Companion reads Windows' text cursor as that app sees it, with the app window's DPI awareness (`GetWindowDpiAwarenessContext` and `SetThreadDpiAwarenessContext`), and converts both kinds to the display's pixels with `LogicalToPhysicalPointForPerMonitorDPI`.
 - Compared with other systems: KDE Plasma's clipboard tool and clipboard tools on macOS open at the pointer. Windows' emoji panel and clipboard history open at the text cursor, which apps tell Windows' text input. Clipboard tools for Windows that open at the text cursor find it in the same two ways, and some open over the middle of the app's window when there's none; PC Companion opens at the pointer then, as it always did.
+
+## Selected text
+
+- With **Selected text** on, Windows + Alt + S shows the actions for the text selected in the app in front, such as a parcel number on a web page, without the user copying it. The text can be selected with the mouse or the keyboard.
+- The menu is the one for copied text: the start of the selected text, dimmed; **Open in browser** for a web link; the rules that match; and **Settings**. Open copied links, the rules, the trimming and the 4,096-character limit are the same, and so are the keys. When nothing matches, the menu says "No actions for the selected text".
+- The clipboard isn't read or changed, so clipboard history, the cloud clipboard and clipboard tools never see the selected text.
+- When an app gives the selection in several parts, as some apps can, the parts are joined with line breaks, in the app's order.
+- Only text is read: not its formatting, pictures or anything else in the selection.
+- Windows + Alt + V stays for the copied text and doesn't read the selection, so it stays as quick as before.
+- **Below the selection:** the menu opens below the last line of the selection, or above it when there isn't room below, and never covers it, as at the text cursor. The app gives the selection's lines as rectangles on screen (`IUIAutomationTextRange::GetBoundingRectangles`), and the last rectangle of the last part is the line kept clear. A rectangle is used by the same rules as a text cursor. When the app gives none, as Edge did for a selection on a long page, or none that can be used, the menu opens at the text cursor or the pointer, as for copied text; see [Where the menu opens](#where-the-menu-opens).
+- Compared with other tools:
+  - macOS Services pass an app's selected text to other apps without the clipboard, but only in apps that support them, and with no rules of the user's own.
+  - Selection tools, such as PopClip on macOS and similar tools for Windows, show a toolbar after every selection made with the mouse, which many users find intrusive; KDE Plasma's clipboard tool turned its own pop-up off by default for that reason. When an app doesn't share its selected text, they copy it, which fills clipboard history and can stop a program in a terminal.
+  - Windows' Click to Do works only on Copilot+ PCs, reads the screen rather than the selection, and some of its text actions need English and a Microsoft account.
+  - PC Companion shows actions only when the shortcut is pressed, also for text selected with the keyboard. It never copies, has no hooks and makes no connections, runs the user's own rules on Windows 10 and 11, and says why when it can't read an app's selected text.
+
+## Reading the selected text
+
+- The text is read with UI Automation, the interface that screen readers such as Narrator use, and only when Windows + Alt + S is pressed. PC Companion checks, in this order, and stops at the first check that gives a note; see [When the selected text can't be read](#when-the-selected-text-cant-be-read):
+  - **The window in front:** when it's the window that Windows shows in place of an app that stopped responding (class `Ghost`), the app isn't asked.
+  - **Its rights:** only an app that runs at the same integrity level as PC Companion is asked, as for [the accessibility text cursor](#where-the-menu-opens): the app whose window has the keyboard focus (`GetGUIThreadInfo`), else the app of the window in front. Windows blocks UI Automation from reading an app with more rights, and the blocked answer looks like that of an app that shares nothing, so this is checked first to say why. An app with fewer rights isn't asked either, such as one in an AppContainer, or one without admin rights while PC Companion runs as administrator: its answer comes as objects from the app, which a program shouldn't take in from a less trusted one.
+  - **The focused element** (`IUIAutomation::GetFocusedElement`): when it's a password box (`IsPassword`), nothing more is read.
+  - **Its text** (the text pattern, `IUIAutomationTextPattern`), from the focused element or the nearest element around it that has one, up to 10 levels up. Edge's PDF viewer has its text one level above the focus. That element can't be a password box either.
+  - **The selection** (`GetSelection`) and its text (`GetText`), at most 4,097 characters in all, and the last part's rectangles.
+- Nothing else is read: never the document's whole text (`DocumentRange`), formatting or other parts of the app. Such calls can keep a browser busy for seconds on a long page.
+- **Browsers built on Chromium**, such as Edge, Chrome and apps built on Electron, turn their accessibility support on when a program first asks for it. Until it's on, the focus is the browser window's own pane (framework `Chrome`), with no text, and PC Companion asks again every 100 ms while it is, within the time limit. In the spike, the first read worked after about 0.3 seconds on a short page and 1.3 seconds on a page with 20,000 paragraphs, and later reads in under 60 ms. Once on, it stays on while the browser runs.
+- **Time limits:** a call that an app doesn't answer fails with `UIA_E_TIMEOUT` after 0.5 seconds for connecting to the app and 1 second for each request (`IUIAutomation2::ConnectionTimeout` and `TransactionTimeout`; Windows' defaults are 2 and 20 seconds). The feature's thread waits for the whole read at most 1.5 seconds, so an app that stopped responding delays the menu by at most that.
+- While an earlier read still waits for its app, a press doesn't ask again, and the menu says the app didn't answer in time.
+- The menu opens when the text has been read: usually in under 0.1 seconds, and at most 1.5 seconds after the press. The text is read before the feature's window comes to the front for the menu, which would move the keyboard focus away from the selection.
+- The selected text stays in memory only until the menu closes and the chosen action has started, as copied text does.
+
+## When the selected text can't be read
+
+- Instead of the preview, the menu says why no text was read, and offers **Show actions for the copied text**, which opens the Windows + Alt + V menu in its place, and **Settings**. It says:
+  - that no text is selected;
+  - that the app doesn't share its selected text, so the user can copy it and press Windows + Alt + V: when no element around the focus has text, or the app answers with an error. Examples are Java apps without the Java Access Bridge, which Java has off by default, Visual Studio Code's editor unless its screen reader mode is on, some PDF readers and games;
+  - that the text is in a password box, which PC Companion never reads;
+  - that the app runs as administrator, so PC Companion can't read its selected text while it runs without admin rights;
+  - that PC Companion runs as administrator, so it doesn't read the selected text of apps without admin rights;
+  - that the app runs with fewer rights, such as some Store apps, so PC Companion doesn't read its selected text;
+  - that the app isn't responding, for the window Windows shows in its place, or didn't answer in time;
+  - that the selected text is longer than 4,096 characters.
+- The log gets the reason, never the text.
 
 ## Web links
 
@@ -71,6 +115,13 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - A browser started by a program running as administrator runs as administrator too. So while PC Companion runs as administrator, a copy of the host without admin rights opens links and web addresses, as the update check opens the release page, and another starts the programs of rules.
 - While an app running as administrator is in front, Windows may not pass the shortcut to PC Companion; this is tested by hand.
+- Selected text is read only from apps at PC Companion's integrity level. While PC Companion runs as administrator, it reads only apps that run as administrator too, and the menu says so for the others; see [Reading the selected text](#reading-the-selected-text).
+
+## A shortcut another program has
+
+- When another program already has Windows + Alt + V or Windows + Alt + S, Windows refuses it (error 1409): that shortcut does nothing and a warning is logged. The other shortcut still works.
+- The page then shows a warning note at that shortcut, such as "Another program uses Windows + Alt + S, so this shortcut does nothing here." The feature's thread tries again after any change to the settings, and the note goes away once Windows takes the shortcut.
+- The host passes only which shortcuts Windows refused, through a named pipe that only the user's own account and the system can open, named `PCCompanion.ClipboardActions.Status.<session ID>`, which rejects remote clients and reads nothing (`SnapshotPipe`), as Drop-down Apps passes its recent results. The page reads it while it's shown. PC Companion never learns which program has a shortcut.
 
 ## Private text
 
@@ -99,11 +150,13 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 
 - Clipboard Actions runs on a thread of its own, as [Threads and processes](../../architecture/features.md#threads-and-processes) requires: an STA thread with its own hidden window and message loop. Reading the clipboard can wait for the app that copied the text, and the menu runs its own message loop while it's open. On their own thread, neither delays the other features.
 - **The host's UI thread** runs only `Apply`: it reads the section, then starts the feature's thread, passes it the new settings with `MessageWindow.BeginInvoke` on its window, or asks it to stop. It never waits for the feature's thread.
-- **The feature's thread** registers the shortcut, compiles the patterns when the settings change, and at each press reads the text cursor, reads the clipboard, matches the rules and shows the menu. It gets its own copy of the settings, so the two threads share no state.
+- **The feature's thread** registers the shortcuts, Windows + Alt + S only while Selected text is on, and compiles the patterns when the settings change. At each press of Windows + Alt + V it reads the text cursor, reads the clipboard, matches the rules and shows the menu. At each press of Windows + Alt + S it checks the window in front and its rights, has the selected text read, matches the rules and shows the menu. It gets its own copy of the settings, so the two threads share no state.
 - **Asking an app for its text cursor** runs on a thread of its own, in COM's multithreaded apartment, since the app's object needs COM and the call waits for the app. The feature's thread waits for it at most 100 ms, and a press during that wait is left out. A request that an app doesn't answer in time ends when the app answers or ends.
+- **Reading the selected text** runs on another thread of its own, in COM's multithreaded apartment and with no windows, as a UI Automation client should be, since its calls wait for the app. The thread starts at the first press and keeps its UI Automation object, which takes about 8 ms to create, until Selected text is turned off or the feature stops. The feature's thread waits for a read at most 1.5 seconds, and a press during a read that still waits isn't asked again. A read that its app doesn't answer ends within UI Automation's time limits. Everything on it runs inside the feature's error boundary, as on the feature's thread.
+- **The shortcut status pipe** runs on the thread pool, as Drop-down Apps' results pipe does. The feature's thread copies the status for it after each registration.
 - **The chosen action** starts on the thread pool: Windows can take a while to start a program or the browser, for example while antivirus software checks it.
 - **Settings** in the menu goes through `IHostCommands` to the host's UI thread, which starts the settings app on the thread pool, as selecting the PC Companion icon does.
-- **Stopping:** the feature's thread closes an open menu, removes the shortcut and its window, and ends. When the feature is turned on again before the old thread has ended, the new thread waits for it before registering the shortcut, which Windows would otherwise refuse. It's a background thread, so one that doesn't end doesn't keep the host running.
+- **Stopping:** the feature's thread closes an open menu, removes the shortcuts and its window, stops the reading thread and the pipe, and ends. When the feature is turned on again before the old thread has ended, the new thread waits for it before registering the shortcuts, which Windows would otherwise refuse. It's a background thread, so one that doesn't end doesn't keep the host running.
 - **Failures:** an unhandled exception on the feature's thread would end the host, so everything there runs inside the feature's error boundary. A failure is logged, ends the thread and keeps the feature off until the host restarts, like a failing `Apply`.
 
 ## Spike results
@@ -134,9 +187,25 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 - With the line kept clear, the menu opened below it, and above it when the line was less than the menu's height from the bottom of the screen, also for a line that ended at the screen's bottom edge. At the right edge, it moved left and stayed below the line. Without keeping the line clear, at the bottom, the menu covered it.
 - Windows Sandbox has one display, and its scale can't be changed there, so other scales and several displays are tested by hand.
 
+A spike for [Selected text](#selected-text), in Windows Sandbox on Windows 11 build 26100 with Edge 157, read the selection from a process of its own, as the host would, and found:
+
+- The selected text was read in Edge from a paragraph with Arabic, Chinese and an emoji, a text area, editable text, a frame, the address bar, and its PDF viewer, where the text is one level above the focus; from Windows' own text boxes and rich text boxes; WinForms text boxes and rich text boxes; a WPF text box; Character Map's Characters to copy box; the Run dialog's box; and the console, whose selection is a block padded with spaces.
+- Password boxes in Edge, Windows' own boxes, WinForms and WPF were each marked as one on the focused element, and nothing was read from them.
+- With nothing selected, the selection was empty or had no parts. With 50,000 characters selected, 4,097 were read.
+- A read took 50 to 110 ms the first time in a process, and 5 to 40 ms after that. Creating the UI Automation object took about 8 ms, and reading the selection's rectangles 1 to 5 ms. Edge gave no rectangles for a selection on a page with 20,000 paragraphs.
+- The clipboard's sequence number never changed, and the clipboard kept its text.
+- In a browser that no program had asked before, the focus was the window's own pane, with no text, until about 0.3 seconds after the first request on a short page and about 1 second on the long page, whose first read then took 0.3 seconds. After 2 minutes without a read, the next one worked at once.
+- Edge's memory didn't grow on the short page. On the long page it grew by about 250 MB and was still about 190 MB higher 2 minutes later.
+- From a copy labeled to run without admin rights, an app running as administrator gave the window's pane, with no text and no error, in under 60 ms.
+- An app whose thread stopped responding made the request for the focus fail with `UIA_E_TIMEOUT` after the connection time limit: 0.55 seconds with 0.5 seconds, 2.05 seconds with Windows' default of 2 seconds. Once Windows had put its window in the app's place, after about 5 seconds, the window in front was that window (class `Ghost`, of the Desktop Window Manager), and reads gave no text at once.
+- The process ID of the focused element was 0 for most apps, so the process is taken from the window, not from UI Automation.
+- Windows + Alt + S registered on Windows 11 build 26300, where Windows' own shortcuts, such as Windows + Alt + T, K, D, F and W, were refused.
+
 ## Settings
 
-- **Feature page:** the on/off switch; the shortcut, Windows + Alt + V; **Open copied links**, on by default; **Rules**, a list with **Add rule**, and for each rule **Edit** and **More options**, which has **Move up**, **Move down** and **Delete**; a note that programs start with the user's rights, and links and web addresses open in the browser without admin rights, also while PC Companion runs as administrator; and a **Permissions & data** card.
+- **Feature page:** the on/off switch; the shortcut, Windows + Alt + V; **Selected text**, off by default, with its shortcut, Windows + Alt + S, and a note that apps share their selected text through Windows' accessibility support, which some apps don't have, and that PC Companion never reads password boxes; **Open copied links**, on by default; **Rules**, a list with **Add rule**, and for each rule **Edit** and **More options**, which has **Move up**, **Move down** and **Delete**; a note that programs start with the user's rights, and links and web addresses open in the browser without admin rights, also while PC Companion runs as administrator; and a **Permissions & data** card.
+- A shortcut that another program has gets a warning note at it; see [A shortcut another program has](#a-shortcut-another-program-has).
+- **Permissions & data** says that the clipboard is read only when Windows + Alt + V is pressed, and the selected text only when Windows + Alt + S is, never from a password box; that neither is stored, logged or sent; and that asking a browser for its selected text turns on its accessibility support, which uses more memory on very long pages, until the browser closes.
 - **The rule editor** is a dialog with:
   - **Name**, the text shown in the menu;
   - **Pattern**, with **Match case** and a link to Microsoft's regular expression reference;
@@ -144,8 +213,8 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
   - **Action**, Open a web address or Run a program, then the address, or the program with **Browse** and its arguments, with notes on `{text}`, options and running as administrator.
 - Problems show below their box, as in Hot Corners, and **Save** is available only when the rule has none. **Delete** asks first.
 - Whether a program exists is read off the settings app's UI thread, since a program on a network share that's offline can take seconds to find: in the rule editor when the program box changes, and **Save** waits for it; in the list after it shows, which then adds that a rule's program wasn't found.
-- When the feature is first turned on, Open copied links is on and there are no rules.
-- The switch on Home changes only `enabled` and keeps the other settings.
+- When the feature is first turned on, Open copied links is on, Selected text is off and there are no rules.
+- The switch on Home changes only `enabled` and keeps the other settings, also Selected text.
 - A rule keeps its address, program and arguments when its action changes, so choosing the other action again brings them back.
 - A rule whose action this version doesn't know, such as one from a newer version, opens in the rule editor with neither action chosen and a note that its action needs a newer version. It keeps that action, and **Save** stays off, until the user chooses one.
 - A section that can't be read, for example after a hand edit, turns Clipboard Actions off with a warning in the log.
@@ -155,6 +224,7 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
   "clipboardActions": {
     "enabled": true,
     "openLinks": true,
+    "selectedText": true,
     "rules": [
       {
         "name": "Track the parcel",
@@ -176,6 +246,7 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 }
 ```
 
+- `selectedText`: whether Windows + Alt + S shows actions for the selected text; `false` by default.
 - `action`: `OpenAddress` or `RunProgram`.
 
 ## Not included
@@ -188,36 +259,47 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
 - Built-in patterns other than web links, such as email addresses, phone numbers and file paths, and links without `http://` or `https://`, such as `www.example.com`.
 - Importing and exporting rules.
 - Choosing between the text cursor and the pointer: the menu opens at the text cursor whenever the app reports one.
-- Finding the text cursor through UI Automation, for WinUI apps and Windows Terminal. It makes several calls into the app, each of which can wait up to 2 seconds, and browsers build their whole accessibility tree when it asks them.
+- Finding the text cursor for copied text through UI Automation, for WinUI apps and Windows Terminal. It makes several calls into the app at every press of Windows + Alt + V, and browsers turn on their accessibility support when it asks them, which takes up to a second the first time and uses more memory on long pages.
+- Showing actions on their own when text is selected, as selection tools do.
+- Copying the selection when an app doesn't share it, by sending Ctrl+C and putting the clipboard back. The copy would reach clipboard history and the cloud clipboard, which only the copying app can keep it out of; putting the clipboard back loses some formats; Ctrl+C stops a program in a terminal; and Windows drops the keys for an app running as administrator. The note says to copy the text instead.
+- Other ways to read a selection: the older accessibility interfaces that browsers also offer (IAccessible2), which need a component registered with Windows, and asking Windows' own text boxes directly, which UI Automation already does for them.
+- Reading the selected text of an app with other rights, such as through a copy of PC Companion that runs with that app's rights.
+- Replacing the selected text, and rules for only copied or only selected text.
 
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11.
 - Every API is documented and in every supported version, except the one that draws the menu dark: `RegisterHotKey`, the clipboard functions, `RegisterClipboardFormat` for the private marks, `TrackPopupMenuEx`, and for the text cursor `GetGUIThreadInfo`, `SendMessageTimeout` with `WM_GETOBJECT`, `ObjectFromLresult` and `IAccessible`, `GetWindowDpiAwarenessContext`, `SetThreadDpiAwarenessContext` and `LogicalToPhysicalPointForPerMonitorDPI`, the last three since Windows 10 version 1607. `RegexOptions.NonBacktracking` is part of .NET.
 - The menu is dark in the dark Windows mode through `MenuTheme`, as the PC Companion icon's menu is, which calls two undocumented uxtheme.dll functions, only on the Windows builds they were tested on; on other builds, the menu stays light. See [Windows support](../../compatibility/windows-support.md).
-- Windows doesn't use Windows + Alt + V, according to Microsoft's list of keyboard shortcuts, and registering it succeeded where Windows' own shortcuts were refused. When another program already has it, Windows refuses it: the shortcut then does nothing, and a warning is logged.
+- Selected text uses UI Automation's client interfaces (`CUIAutomation8`, `IUIAutomation2` and the text pattern), documented and in Windows since Windows 8. What an app shares depends on the app; see [When the selected text can't be read](#when-the-selected-text-cant-be-read).
+- Windows doesn't use Windows + Alt + V or Windows + Alt + S, according to Microsoft's list of keyboard shortcuts, and registering them succeeded where Windows' own shortcuts were refused. When another program already has one, Windows refuses it; see [A shortcut another program has](#a-shortcut-another-program-has).
 
 ## Security and privacy
 
 - **Reads:** the clipboard's text, only when the shortcut is pressed; no clipboard listener and no hook. First the private marks, and the text only when there are none, at most 4,097 characters. The text stays in memory until the menu closes and the action has started; it's never stored, logged or sent.
 - **The text cursor:** where the app in front has its text cursor, only when the shortcut is pressed, to place the menu; never anything typed, and the position is never stored or logged. Windows' text cursor is read from Windows, without rights and without asking the app. The accessibility text cursor asks the app for only the cursor's place and whether it's shown; the answer is checked like any untrusted input, as a place on a display, and a slow app can't delay the menu by more than 100 ms. Only apps with the same integrity level as PC Companion are asked, so no less trusted program hands it an object, also while it runs as administrator.
-- **On screen:** the menu shows the start of the copied text, only after the user pressed the shortcut. For a link, it shows where the link goes before it opens.
-- **Untrusted text:** the copied text can come from any app or web page, so it's treated as untrusted. Patterns run in time that grows only with the text's length, with a time limit. Addresses get the text encoded and open only as `http` or `https`. Programs get it inside one argument, without a shell, and command interpreters don't run from a rule.
-- **Network:** PC Companion makes no connections. Choosing an action that opens a link or web address has the browser open it, and a rule's address sends the copied text to the site the user named. `PRIVACY.md` gets a line on Clipboard Actions.
-- **Logs:** Debug entries when the settings are applied, with how many rules can be used; when the shortcut is pressed, with how many actions the menu offers, whether it opened at Windows' text cursor, the app's accessibility text cursor or the pointer, without where, whether the app didn't answer in time, and why the menu had no actions, such as private text; when a rule matched but its address with the text isn't a web address; which rule's action ran, by number; and when a key gave the front back after an action. Warnings when Windows refuses the shortcut, there are more than 50 rules, a rule can't be used, a program doesn't start (with its file name only, as in Hot Corners) or the browser doesn't open. Errors when an action or the feature's thread fails. Never the copied text, addresses, patterns or rule names, which can hold personal data.
+- **The selected text:** only while Selected text is on, which is off by default, and only when Windows + Alt + S is pressed; no hook, no UI Automation event handler, and nothing between presses. Only the selection of the element that has the keyboard focus, or of the nearest element around it with text, at most 4,097 characters, and the place of its last line; never a password box, the document's other text or the clipboard. It stays in memory until the menu closes and the action has started; it's never stored, logged or sent. Only apps at PC Companion's integrity level are asked, so PC Companion never reads an app with more rights and never takes in objects from one with fewer. The selection's rectangles are checked like any untrusted input, as places on a display. PC Companion doesn't use UI Automation's access for assistive technology (`uiAccess`), which would let it read apps running as administrator.
+- **Other apps:** asking a browser built on Chromium for its selected text turns its accessibility support on until the browser closes, as a screen reader does. It uses more memory on long pages: in the spike, about 250 MB on a page with 20,000 paragraphs and none on a short one. Permissions & data says so.
+- **On screen:** the menu shows the start of the copied or selected text, only after the user pressed the shortcut. For a link, it shows where the link goes before it opens.
+- **Untrusted text:** the copied and selected text can come from any app or web page, so it's treated as untrusted. Patterns run in time that grows only with the text's length, with a time limit. Addresses get the text encoded and open only as `http` or `https`. Programs get it inside one argument, without a shell, and command interpreters don't run from a rule.
+- **Network:** PC Companion makes no connections. Choosing an action that opens a link or web address has the browser open it, and a rule's address sends the copied or selected text to the site the user named. `PRIVACY.md`'s line on Clipboard Actions adds the selected text.
+- **Shortcut status:** the pipe gives only which of the two shortcuts Windows refused, to programs of the user's own account on this PC; it reads nothing.
+- **Logs:** Debug entries when the settings are applied, with how many rules can be used and whether Selected text is on; when a shortcut is pressed, with which one, how many actions the menu offers, whether it opened below the selection, at Windows' text cursor, the app's accessibility text cursor or the pointer, without where, whether the app didn't answer in time, how long reading the selected text took, and why the menu had no actions or no selected text, such as private text or a password box; when a rule matched but its address with the text isn't a web address; which rule's action ran, by number; and when a key gave the front back after an action. Warnings when Windows refuses a shortcut, there are more than 50 rules, a rule can't be used, a program doesn't start (with its file name only, as in Hot Corners) or the browser doesn't open. Errors when an action, the reading thread or the feature's thread fails. Never the copied or selected text, the app it came from, addresses, patterns or rule names, which can hold personal data.
 - **Settings:** the rules are in `settings.json`. Any program running as the user can change that file, but it could also open the same addresses and start the same programs itself, so this crosses no boundary while PC Companion runs as the user. Running as administrator it would, so programs and links still start without admin rights then.
-- **Rights:** runs without admin rights, and never starts a program or the browser with them. Turning the feature off removes the shortcut.
-- **Failures:** everything on the feature's thread runs inside the feature's error boundary, and the other features keep running.
+- **Rights:** runs without admin rights, and never starts a program or the browser with them. Turning the feature off removes the shortcuts, and turning Selected text off removes Windows + Alt + S and ends the reading thread.
+- **Failures:** everything on the feature's thread and the reading thread runs inside the feature's error boundary, and the other features keep running. An app's error while its text is read gives the note that it doesn't share its selected text.
 
 ## Performance
 
-- Between presses nothing runs: no clipboard listener, no timer and no hook. The feature's thread waits in its message loop.
+- Between presses nothing runs: no clipboard listener, no timer and no hook. The feature's thread waits in its message loop, and the reading thread waits for the next press.
+- Windows + Alt + S reads the selected text in 5 to 110 ms in the spike, about 1.3 seconds at most for a browser asked for the first time, and gives up after 1.5 seconds.
 - Patterns compile only when the settings change, on the feature's thread: about 0.1 seconds for 50 rules. A press reads the text cursor in well under a millisecond from Windows, or in a few milliseconds from the app, at most 100 ms, reads at most 4,097 characters, in well under a millisecond unless the copying app provides its data on request, and matches up to 50 patterns, each in time that grows only with the length of the text: under 20 ms for 50 patterns and 4,096 characters, and under 1 ms once each pattern has matched once.
 
 ## Accessibility and localization
 
 - The menu is a Windows menu: it works with the keyboard (arrow keys, Enter, Esc and first letters), with screen readers and in high contrast, follows dark mode as the PC Companion icon's menu does, and is laid out right to left in right-to-left languages.
-- The preview of the copied text is wrapped in a left-to-right or right-to-left embedding (U+202A or U+202B, ended by U+202C), by its first letter's direction, so text in the other direction keeps its own order. Windows menus draw the newer isolate characters as boxes.
+- Selected text works with text selected with the keyboard, and the notes are menu items that screen readers read.
+- The preview of the copied or selected text is wrapped in a left-to-right or right-to-left embedding (U+202A or U+202B, ended by U+202C), by its first letter's direction, so text in the other direction keeps its own order. Windows menus draw the newer isolate characters as boxes.
 - A `&` in a rule's name shows as written, not as an access key.
 - The page and the rule editor work with the keyboard alone. Their boxes, lists and buttons have labels for screen readers, the rule buttons carry the rule's name, such as "Edit Track the parcel", and problems below a box are announced.
 - `{text}` is the same in every language; the page explains it in the user's language.
@@ -234,8 +316,12 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
   - the menu: its order, each reason for no actions, the preview's length, ellipsis and embedding, cutting the preview and names between whole characters, and `&` in names;
   - where the menu opens: at Windows' text cursor with its line kept clear, at the app's accessibility text cursor when Windows has none, and at the pointer when there's neither, when the app doesn't answer within 100 ms or its answer fails, while an earlier request still waits, and for an app with another integrity level, which isn't asked;
   - settings: unknown actions, missing fields and unusable rules are left out with a warning;
-  - a second `Dispose`, as the host's exit makes, doesn't wait for the feature's thread again.
+  - a second `Dispose`, as the host's exit makes, doesn't wait for the feature's thread again;
+  - selected text, with a fake reader: each note and its order, the window Windows shows for an app that isn't responding before the rights, an app with more or fewer rights, which isn't asked, a password box on the focused element and on the element with the text, the search for text stopping 10 levels up, several parts joined with line breaks, the 4,096-character limit, asking a browser again until its text is there or the time limit, the 1.5-second wait, a press during a read that still waits, and an app's error;
+  - the menu for selected text: below the last rectangle with that line kept clear, at the text cursor or the pointer when there are no rectangles or none that can be used, its preview and "No actions for the selected text", and Show actions for the copied text opening the copied text's menu;
+  - the shortcuts: Windows + Alt + V never reads the selected text; Windows + Alt + S is registered only while Selected text is on; a refused shortcut is tried again after a change to the settings, and the status the pipe gives.
 - **Sandbox checks** (`scripts/sandbox/groups/ClipboardActions.ps1`): the Home switch turns the feature on; the page adds, edits, moves and deletes rules and saves them, and the rule editor refuses a pattern with a lookahead, one that repeats a part too many times, an address that isn't a web address, a command interpreter and a program that doesn't exist, and takes one that exists right after it; a rule whose program exists says what it starts, and one whose program doesn't exist shows why in the list; with 51 rules, the 51st says it isn't in the menu; a rule from a newer version says why it isn't in the menu, and the rule editor chooses neither action for it, says why and keeps Save off. With text the checks put on the clipboard, Windows + Alt + V, sent with `SendInput`, opens the menu with the expected items, read with UI Automation: at the pointer while Character Map's character grid has the focus, below the text cursor of its Characters to copy box, and above it with the window at the bottom of the screen; in Edge, below the text cursor of a local page's text area, and at the pointer with the page's plain text clicked, whose text cursor Edge marks hidden. Open in browser and an address rule start the default browser with the address; a rule that runs a program starts Character Map, and the host logs it by its file name; a rule whose program was removed starts nothing and gives the front back; after a rule starts a program without a window, a key gives the front back; text marked private by each of the three marks, text that's too long and an empty clipboard show only their note. Esc and the shortcut again give the front back to the window that had it. Turning the feature off while its menu is open closes the menu and ends its thread. Turned off, the shortcut opens no menu. The host's `--open-web-page` opens a long web address it reads from its pipe, and only web addresses.
+- **Sandbox checks for Selected text**, in the same group: the page's Selected text switch saves `selectedText`, and Home keeps it. With text the checks select in local Edge pages, Windows + Alt + S opens the menu with the expected preview and items, below the selection: in a paragraph with Arabic and Chinese text, a text area, editable text, a frame and a PDF; and in Character Map's box and the Run dialog's box. A password field in Edge and a password box in a test window give only their note; nothing selected and a test window that stops responding give their note with Show actions for the copied text, the second within the time limit; with the host's file labeled to run without admin rights, a test window running as administrator gives the note for an app running as administrator. Show actions for the copied text opens the copied text's menu. The clipboard's sequence number is the same before and after, and the host's log never holds the selected text. Windows + Alt + V still shows the copied text's actions. With Selected text off, Windows + Alt + S opens no menu. With a test program holding Windows + Alt + S, the page shows its note, and the note goes away once the program lets it go and the settings change.
 - **By hand:**
   - that the menu and the browser come to the front on a PC, where Windows' foreground lock applies;
   - a rule that runs a program, without admin rights, getting the text as one argument;
@@ -247,5 +333,6 @@ A later spike, for [Where the menu opens](#where-the-menu-opens), in a process t
   - a rule whose program is on a network share that's offline: the page with the rule, and typing in the rule editor, keep the settings window responsive, and the rule's problem shows once the program has been looked for;
   - text copied from a browser, Office and a terminal, and from a password manager that marks it private;
   - a screen reader reading the menu, and a right-to-left language;
-  - the menu at the text cursor in Notepad, Word, Chrome and Visual Studio Code, at 125% and 150% scale, in an app that isn't DPI aware, with Magnifier, and on a second display with another scale; and at the pointer in a browser while PC Companion runs as administrator.
+  - the menu at the text cursor in Notepad, Word, Chrome and Visual Studio Code, at 125% and 150% scale, in an app that isn't DPI aware, with Magnifier, and on a second display with another scale; and at the pointer in a browser while PC Companion runs as administrator;
+  - selected text in Word, Excel while a cell is edited, Outlook, Chrome, Firefox, Visual Studio Code with and without its screen reader mode, Windows Terminal, Notepad, a WinUI app, a Store app in an AppContainer, a Java app, Acrobat and another PDF reader; with text selected with the keyboard; with Narrator reading the notes; below a selection on a second display with another scale; with the foreground lock on a PC; with the shortcut's keys released before the menu opens, in a browser asked for the first time, which opens neither Start nor the app's menu bar; and with Always run as administrator and UAC on, where apps without admin rights give their note.
 - **Not checked:** that a text cursor with no height, or one outside its window, isn't used.
