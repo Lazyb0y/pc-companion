@@ -78,7 +78,7 @@ public static class FeatureCatalog
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps"),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps"),
             new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
-            new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage)),
+            new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage), DrawnIcon: "end-app"),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [

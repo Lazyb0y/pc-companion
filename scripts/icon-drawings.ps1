@@ -589,4 +589,25 @@ foreach ($icon in $driveActions) {
     Write-Drawing "drive-actions-$($icon.Size)-mono" $icon.Size $bolt.Clip $mono
 }
 
+# End App: an app window (frame and glass) with an amber stop sign, an octagon with a white bar
+# (neutral), at its bottom right. Sign is the octagon's middle and half its width.
+$endApp = @(
+    @{ Size = 32; Frame = 2, 2, 24, 20, 3.5; Glass = 4.5, 4.5, 19, 15, 1.5; Sign = 23.5, 23.5, 7.5; Bar = 19.5, 22.25, 8, 2.5, 0.5; Stroke = 1; Gap = 1.5 }
+    @{ Size = 20; Frame = 1, 2, 15, 12, 2.5; Glass = 3, 4, 11, 8, 1; Sign = 14.5, 14.5, 5; Bar = 12, 14, 5, 1, 0; Stroke = 0.8; Gap = 1 }
+    @{ Size = 16; Frame = 1, 1, 12, 10, 2; Glass = 2, 2, 10, 8, 1; Sign = 11.5, 11.5, 4.5; Bar = 9, 11, 5, 1, 0; Stroke = 0.6; Gap = 1 }
+)
+foreach ($icon in $endApp) {
+    $cx, $cy, $half = $icon.Sign
+    $corner = $half * [Math]::Tan([Math]::PI / 8)
+    $octagon = @(@(($cx - $corner), ($cy - $half)), @(($cx + $corner), ($cy - $half)), @(($cx + $half), ($cy - $corner)), @(($cx + $half), ($cy + $corner)),
+        @(($cx + $corner), ($cy + $half)), @(($cx - $corner), ($cy + $half)), @(($cx - $half), ($cy + $corner)), @(($cx - $half), ($cy - $corner)))
+    $sign = Get-Badge $octagon $icon.Stroke $icon.Gap $icon.Size
+    $items = @((Get-Rect $icon.Frame ' fill="url(#frame)"'), (Get-Rect $icon.Frame ' fill="url(#highlight)"'), (Get-Rect $icon.Glass ' fill="url(#glass)"'))
+    $body = @(Get-Group 'clip-path="url(#gap)"' $items) + @((Get-BadgePath $sign 'url(#accent)'), (Get-Rect $icon.Bar ' fill="#FFFFFF"'))
+    Write-Drawing "end-app-$($icon.Size)" $icon.Size ($base + $sign.Clip) $body
+    $mono = @(Get-Group 'clip-path="url(#gap)"' @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-RectPath $icon.Frame)$(Get-RectPath $icon.Glass)`"/>")) +
+        @("<path fill=`"currentColor`" fill-rule=`"evenodd`" d=`"$(Get-GrownPath $octagon ($icon.Stroke / 2))$(Get-RectPath $icon.Bar)`"/>")
+    Write-Drawing "end-app-$($icon.Size)-mono" $icon.Size $sign.Clip $mono
+}
+
 Write-Host "Wrote the drawings in $folder"
