@@ -105,6 +105,7 @@ public interface IEndAppProcess : IDisposable
 /// <param name="Bounds">Its rectangle with its invisible borders, as Windows' stand-ins copy it.</param>
 /// <param name="VisibleBounds">The part of it that shows (<c>DWMWA_EXTENDED_FRAME_BOUNDS</c>).</param>
 /// <param name="IsClickThrough">Whether it lets clicks through (<c>WS_EX_LAYERED</c> with <c>WS_EX_TRANSPARENT</c>).</param>
+/// <param name="MayHaveTaskbarButton">Whether Tab visits it: a window the taskbar may show, other than the desktop and the taskbar.</param>
 /// <param name="IsStandIn">Whether it's Windows' stand-in for a window that stopped responding (class <c>Ghost</c>).</param>
 public sealed record EndAppWindow(
     nint Handle,

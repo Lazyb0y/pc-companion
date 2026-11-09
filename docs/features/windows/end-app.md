@@ -53,7 +53,7 @@ Press a shortcut, click the window of an app that stopped responding, confirm, a
 ### Keys and clicks
 
 - **A click, Enter or Space** chooses the framed window's app.
-- **Tab and Shift + Tab** move the frame to the next and previous window that the taskbar shows (`TopLevelWindows.MayHaveTaskbarButton`), front to back, on every display. Moving the pointer frames the window under it again.
+- **Tab and Shift + Tab** move the frame to the next and previous window that the taskbar shows (`TopLevelWindows.MayHaveTaskbarButton`), other than the desktop and the taskbar, front to back, on every display. Moving the pointer frames the window under it again.
 - **Esc, a right-click or the shortcut** cancels.
 - **The frame starts on the window in front.** After the shortcut, that's usually the app that stopped responding, so Ctrl + Alt + Esc, Enter, Enter ends it. From the menu, it starts on the first window Alt + Tab would show.
 
