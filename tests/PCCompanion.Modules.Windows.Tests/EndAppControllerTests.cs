@@ -46,6 +46,37 @@ public sealed class EndAppControllerTests : IDisposable
     }
 
     [Fact]
+    public void AMoveWhereThePointerRestsAsTheCoveringWindowShowsKeepsTheFrameOnTheWindowInFront()
+    {
+        _system.AddWindow(1, 10, Left);
+        _system.AddWindow(2, 20, Right);
+        _system.ForegroundWindow = 1;
+        _system.PointerPosition = InRight;
+        _endApp.Start(EndAppSource.Shortcut);
+
+        _endApp.OnPointerMoved(InRight);
+        Assert.Equal(1, _endApp.Framed.Window);
+
+        _endApp.OnPointerMoved(InRight with { X = InRight.X + 1 });
+        Assert.Equal(2, _endApp.Framed.Window);
+    }
+
+    [Fact]
+    public void AMoveWhereThePointerRestsAfterTabKeepsTheWindowTabReached()
+    {
+        _system.AddWindow(1, 10, Left);
+        _system.AddWindow(2, 20, Right);
+        _system.ForegroundWindow = 1;
+        _endApp.Start(EndAppSource.Shortcut);
+        _endApp.OnPointerMoved(InLeft);
+
+        _endApp.OnKey(Tab, shift: false);
+        _endApp.OnPointerMoved(InLeft);
+
+        Assert.Equal(2, _endApp.Framed.Window);
+    }
+
+    [Fact]
     public void TheMenuStartsOnTheFirstWindowTheTaskbarShows()
     {
         _system.AddWindow(1, 10, Left, taskbar: false);

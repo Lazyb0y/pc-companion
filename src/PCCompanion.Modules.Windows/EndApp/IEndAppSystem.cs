@@ -22,6 +22,9 @@ public interface IEndAppSystem
     /// <summary>The window in front, or 0 when there is none.</summary>
     nint ForegroundWindow { get; }
 
+    /// <summary>Where the pointer is, in physical pixels, or <see langword="null"/> when that can't be read.</summary>
+    Point? PointerPosition { get; }
+
     /// <summary>The visible top-level windows, front to back.</summary>
     IReadOnlyList<EndAppWindow> ListWindows();
 
