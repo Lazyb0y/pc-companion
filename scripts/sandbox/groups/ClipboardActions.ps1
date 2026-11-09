@@ -11,10 +11,11 @@
 # the shortcut again closes the menu, turning the feature off closes its open menu, and turned off
 # the shortcut opens no menu. The host's --open-web-page opens a long web address it reads from a
 # pipe, and only web addresses. Selected text: the page's switch saves it and Home keeps it, and
-# Windows + Alt + S shows the actions for text selected in Edge, Character Map and the Run dialog,
-# below the selection, and a note for a password box, nothing selected, an app that stops
-# responding and one with admin rights, without changing the clipboard; with another program
-# holding the shortcut, the page says so. Detailed logging is on for the host's Debug entries.
+# Windows + Alt + S shows the actions for text selected in Edge, its PDF viewer, Character Map, the
+# Run dialog and a WPF window, below the selection, and a note for a password box, nothing
+# selected, an app that stops responding and one with admin rights, without changing the
+# clipboard; with another program holding the shortcut, the page says so. Detailed logging is on
+# for the host's Debug entries.
 [void] (Close-SettingsApp)
 $detailedUntil = [DateTimeOffset]::Now.AddHours(1).ToString('o')
 Start-Sleep -Seconds 2
@@ -556,6 +557,43 @@ foreach ($case in $selectionCases.Keys) {
         }
         default { Close-Menu }
     }
+}
+# A PDF in Edge's viewer, whose text is one element above the focus: Ctrl + A selects it.
+$pdfContent = 'BT /F1 24 Tf 72 700 Td (1Z999AA10123456784) Tj ET'
+$pdfObjects = @(
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+    "<< /Length $($pdfContent.Length) >>`nstream`n$pdfContent`nendstream",
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'
+)
+$pdf = New-Object Text.StringBuilder
+[void] $pdf.Append("%PDF-1.4`n")
+$pdfOffsets = @()
+for ($index = 0; $index -lt $pdfObjects.Count; $index++) {
+    $pdfOffsets += $pdf.Length
+    [void] $pdf.Append("$($index + 1) 0 obj`n$($pdfObjects[$index])`nendobj`n")
+}
+$pdfTable = $pdf.Length
+[void] $pdf.Append("xref`n0 $($pdfObjects.Count + 1)`n0000000000 65535 f `n")
+foreach ($offset in $pdfOffsets) { [void] $pdf.Append(("{0:D10} 00000 n `n" -f $offset)) }
+[void] $pdf.Append("trailer`n<< /Size $($pdfObjects.Count + 1) /Root 1 0 R >>`nstartxref`n$pdfTable`n%%EOF`n")
+$selectionPdf = Join-Path $env:TEMP 'selection.pdf'
+[IO.File]::WriteAllText($selectionPdf, $pdf.ToString(), [Text.Encoding]::ASCII)
+Start-Process $edgeExe -ArgumentList @('--no-first-run', '--no-default-browser-check', ([Uri] $selectionPdf).AbsoluteUri)
+$script:pdfWindow = [IntPtr]::Zero
+if (Wait-Until { $script:pdfWindow = [Win32]::TopLevelWindows() | Where-Object { [Win32]::IsWindowVisible($_) -and ([Win32]::WindowClass($_) -eq 'Chrome_WidgetWin_1') -and ([Win32]::WindowTitle($_) -like 'selection.pdf*') } | Select-Object -First 1; $null -ne $script:pdfWindow } 30) {
+    [void] [Win32]::SetForegroundWindow($script:pdfWindow)
+    Start-Sleep -Seconds 4
+    [void] [Win32]::ScanKey(0x1D, $false, $false); [void] [Win32]::ScanKey(0x1E, $false, $false)
+    [void] [Win32]::ScanKey(0x1E, $true, $false); [void] [Win32]::ScanKey(0x1D, $true, $false)
+    Start-Sleep -Seconds 1
+    Test-Check 'Windows + Alt + S opens the menu in Edge''s PDF viewer' (Open-SelectionMenu)
+    $items = Get-MenuItems
+    Test-Check 'the menu is the one for the PDF''s selected text' ($items -eq $parcelMenu) $items
+    Close-Menu
+} else {
+    Test-Check 'Edge opens the PDF' $false
 }
 Get-Processes 'msedge' | ForEach-Object { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 2
