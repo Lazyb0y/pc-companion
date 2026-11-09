@@ -6,11 +6,12 @@ using PCCompanion.Core.Features;
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
 /// <summary>
-/// Shows actions for the copied text with Windows + Alt + V. See docs/features/clipboard/clipboard-actions.md.
+/// Shows actions for the copied text with Windows + Alt + V, and for the selected text with
+/// Windows + Alt + S. See docs/features/clipboard/clipboard-actions.md.
 /// </summary>
 public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem system, IHostCommands commands, ILogger<ClipboardActionsFeature> logger) : IFeature
 {
-    // How long the host waits as it exits for the thread to remove the shortcut.
+    // How long the host waits as it exits for the thread to remove the shortcuts.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
 
     private ClipboardActionsThread? _thread;
@@ -90,7 +91,7 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
         _stopped = null;
     }
 
-    // Doesn't wait: a new thread waits for this one before it registers the shortcut.
+    // Doesn't wait: a new thread waits for this one before it registers the shortcuts.
     private void Stop()
     {
         if (_thread is null)

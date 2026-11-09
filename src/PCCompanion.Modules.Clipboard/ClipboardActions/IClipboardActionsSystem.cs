@@ -10,10 +10,10 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 public interface IClipboardActionsSystem
 {
     /// <summary>
-    /// Registers Windows + Alt + V on the thread's window, or returns <see langword="null"/> when
-    /// Windows refused, for example because another program has it.
+    /// Registers <paramref name="shortcut"/> on the thread's window, or returns <see langword="null"/>
+    /// when Windows refused, for example because another program has it.
     /// </summary>
-    IShortcut? RegisterShortcut(MessageWindow window);
+    IShortcut? RegisterShortcut(MessageWindow window, ClipboardShortcut shortcut);
 
     /// <summary>Reads the clipboard's text with the thread's window; it may wait for the app that copied it.</summary>
     ClipboardTextResult ReadClipboard(MessageWindow window);
@@ -26,6 +26,15 @@ public interface IClipboardActionsSystem
 
     /// <summary>Whether the app of <paramref name="window"/> runs at PC Companion's integrity level, so it may be asked.</summary>
     bool CanAskTextCursor(nint window);
+
+    /// <summary>
+    /// Whether the app of <paramref name="window"/>, the window with the keyboard focus or else the
+    /// window in front, may be asked for its selected text, and if not, why.
+    /// </summary>
+    SelectedTextApp CheckSelectionApp(nint window);
+
+    /// <summary>Creates a reader of the selected text, with a thread of its own until it's disposed.</summary>
+    ISelectionReader CreateSelectionReader();
 
     /// <summary>
     /// Asks the app of <paramref name="window"/> for its accessibility text cursor, off the thread;
@@ -63,9 +72,29 @@ public interface IClipboardActionsSystem
     void RunInBackground(Action action);
 }
 
-/// <summary>Windows + Alt + V, registered with Windows. Use it on the thread that registered it.</summary>
+/// <summary>Clipboard Actions' shortcuts.</summary>
+public enum ClipboardShortcut
+{
+    /// <summary>Windows + Alt + V, for the copied text.</summary>
+    CopiedText,
+
+    /// <summary>Windows + Alt + S, for the selected text.</summary>
+    SelectedText,
+}
+
+/// <summary>A shortcut, registered with Windows. Use it on the thread that registered it.</summary>
 public interface IShortcut : IDisposable
 {
     /// <summary>Raised on the registering thread each time the shortcut is pressed.</summary>
     event EventHandler? Pressed;
+}
+
+/// <summary>Reads the text selected in the app in front, off the feature's thread; see <see cref="SelectedTextReader"/>.</summary>
+public interface ISelectionReader : IDisposable
+{
+    /// <summary>
+    /// Reads the selected text after any earlier read, asking a browser that is turning on its
+    /// accessibility support again until <paramref name="retryFor"/> has passed. The task never fails.
+    /// </summary>
+    Task<SelectedTextResult> ReadAsync(TimeSpan retryFor);
 }

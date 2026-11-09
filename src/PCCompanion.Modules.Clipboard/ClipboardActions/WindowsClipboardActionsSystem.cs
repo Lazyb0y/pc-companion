@@ -10,16 +10,19 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
 /// <summary>
-/// The shortcut, the clipboard and the menu, from Windows.
+/// The shortcuts, the clipboard, the selected text and the menu, from Windows.
 /// </summary>
 internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
 {
     private const uint VirtualKeyV = 0x56;
+    private const uint VirtualKeyS = 0x53;
     private const uint KeyDownMessage = 0x0100; // WM_KEYDOWN
     private const uint SystemKeyDownMessage = 0x0104; // WM_SYSKEYDOWN
 
-    public IShortcut? RegisterShortcut(MessageWindow window) =>
-        HotKey.Register(window, HotKeyModifiers.Windows | HotKeyModifiers.Alt, VirtualKeyV) is { } hotKey ? new Shortcut(hotKey) : null;
+    public IShortcut? RegisterShortcut(MessageWindow window, ClipboardShortcut shortcut) =>
+        HotKey.Register(window, HotKeyModifiers.Windows | HotKeyModifiers.Alt, shortcut == ClipboardShortcut.SelectedText ? VirtualKeyS : VirtualKeyV) is { } hotKey
+            ? new Shortcut(hotKey)
+            : null;
 
     public ClipboardTextResult ReadClipboard(MessageWindow window) => ClipboardText.Read(window);
 
@@ -28,6 +31,10 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
     public ForegroundTextCursor ReadTextCursor() => TextCursor.Read();
 
     public bool CanAskTextCursor(nint window) => TextCursor.CanAsk(window);
+
+    public SelectedTextApp CheckSelectionApp(nint window) => SelectedText.CheckWindow(window);
+
+    public ISelectionReader CreateSelectionReader() => new SelectionReader();
 
     // The app gets as long to answer the message as the press waits for it.
     public Task<Rectangle?> AskTextCursor(nint window) => TextCursor.AskAsync(window, MenuPlacer.AnswerLimit);
@@ -68,6 +75,15 @@ internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
     public bool FileExists(string path) => File.Exists(path);
 
     public void RunInBackground(Action action) => Task.Run(action);
+
+    private sealed class SelectionReader : ISelectionReader
+    {
+        private readonly SelectedTextReader _reader = new();
+
+        public Task<SelectedTextResult> ReadAsync(TimeSpan retryFor) => _reader.ReadAsync(retryFor);
+
+        public void Dispose() => _reader.Dispose();
+    }
 
     private sealed class Shortcut : IShortcut
     {

@@ -21,10 +21,13 @@ public enum MenuPlace
 
     /// <summary>At the pointer: an earlier request still waits for its app, so the app wasn't asked.</summary>
     AtPointerStillAsking,
+
+    /// <summary>Below the last line of the selected text, which the app gave.</summary>
+    BelowSelection,
 }
 
 /// <param name="Point">Where the menu starts, in screen pixels.</param>
-/// <param name="KeepClear">The text cursor's line, which the menu doesn't cover; null at the pointer.</param>
+/// <param name="KeepClear">The text cursor's or the selection's line, which the menu doesn't cover; null at the pointer.</param>
 public readonly record struct MenuPosition(Point Point, Rectangle? KeepClear, MenuPlace Place);
 
 /// <summary>
