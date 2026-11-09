@@ -1,25 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
+        <linearGradient id="sky-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#29C3FF"/>
+            <stop offset="1" stop-color="#2764E7"/>
+        </linearGradient>
+        <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F8FAFF"/>
+            <stop offset="1" stop-color="#DCE6FF"/>
+        </linearGradient>
+        <linearGradient id="blue-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4A5FE8"/>
             <stop offset="1" stop-color="#3940D6"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#FFD25E"/>
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
     </defs>
-    <rect x="8" y="2" width="16" height="28" rx="7.5" fill="url(#frame)"/>
-    <rect x="8" y="2" width="16" height="28" rx="7.5" fill="url(#highlight)"/>
-    <rect x="10.5" y="4.5" width="11" height="23" rx="5.5" fill="url(#glass)"/>
-    <rect x="10.5" y="15" width="11" height="1.5" rx="0" fill="url(#frame)"/>
-    <rect x="14.5" y="7" width="3" height="6" rx="1.5" fill="url(#accent)"/>
+    <rect x="1" y="2" width="26" height="23" rx="2" fill="url(#sky-main)"/>
+    <rect x="3" y="9" width="22" height="14" rx="1" fill="url(#paper)"/>
+    <rect x="19" y="14" width="12" height="17" rx="6" fill="url(#blue-deep)"/>
+    <rect x="23.75" y="16.5" width="2.5" height="5" rx="1.25" fill="url(#orange)"/>
 </svg>
