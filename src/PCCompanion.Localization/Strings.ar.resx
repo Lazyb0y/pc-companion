@@ -4256,4 +4256,48 @@
     <value>{0} ملف</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>لا توجد إجراءات للنص المحدد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>إظهار الإجراءات للنص المنسوخ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>لا يوجد نص محدد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>لا يشارك هذا التطبيق النص المحدد فيه، لذا انسخه بدلاً من ذلك</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>لا يقرأ PC Companion مربعات كلمات المرور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>يعمل هذا التطبيق كمسؤول، لذا تتعذر قراءة النص المحدد فيه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا لا يقرأ هذا التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>يعمل هذا التطبيق بصلاحيات أقل، لذا لا تتم قراءة النص المحدد فيه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>هذا التطبيق لا يستجيب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>لم يستجب هذا التطبيق في الوقت المناسب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>النص المحدد طويل جدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

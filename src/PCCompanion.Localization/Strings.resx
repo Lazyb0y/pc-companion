@@ -4080,4 +4080,48 @@
     <value>{0} files</value>
     <comment>Plural form "other". Drive Actions page: how many files a backup would copy, in Run now. {0} is the number.</comment>
   </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>No actions for the selected text</value>
+    <comment>Clipboard Actions menu for the selected text (Windows + Alt + S): dimmed note when no rule matches the selected text.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>Show actions for the copied text</value>
+    <comment>Clipboard Actions menu for the selected text: item below a note on why no selected text was read; it opens the menu for the copied text instead.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>No text is selected</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front has no text selected.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>This app doesn't share its selected text; copy it instead</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front doesn't give its selected text to accessibility tools; the user can copy the text and use the copied text's actions.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>PC Companion doesn't read password boxes</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the keyboard focus is in a password box, which PC Companion never reads.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>This app runs as administrator, so its selected text can't be read</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front runs as administrator while PC Companion doesn't, so Windows doesn't let PC Companion read it.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>PC Companion runs as administrator, so it doesn't read this app</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when PC Companion runs as administrator and the app in front doesn't, so PC Companion doesn't read it.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>This app runs with fewer rights, so its selected text isn't read</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front runs with fewer rights than PC Companion, such as some Store apps, so PC Companion doesn't read it.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>This app isn't responding</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front stopped responding and Windows shows a window in its place.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>This app didn't answer in time</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the app in front didn't give its selected text within 1.5 seconds.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>The selected text is too long</value>
+    <comment>Clipboard Actions menu for the selected text: dimmed note when the selected text is longer than 4,096 characters.</comment>
+  </data>
 </root>

@@ -4036,4 +4036,48 @@
     <value>{0} 个文件</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>没有适用于所选文本的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>显示适用于所复制文本的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>未选择任何文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>此应用不共享其所选文本；请改为复制该文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>PC Companion 不会读取密码框</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>此应用以管理员身份运行，因此无法读取其所选文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此不会读取此应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>此应用以较低权限运行，因此不会读取其所选文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>此应用没有响应</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>此应用未及时响应</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>所选文本太长</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

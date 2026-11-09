@@ -4080,4 +4080,48 @@
     <value>{0} archivos</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>No hay acciones para el texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>Mostrar acciones para el texto copiado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>No hay texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>Esta aplicación no comparte su texto seleccionado; cópialo en su lugar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>PC Companion no lee cuadros de contraseña</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>Esta aplicación se ejecuta como administrador, así que no se puede leer su texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que no lee esta aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>Esta aplicación se ejecuta con menos permisos, así que no se lee su texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>Esta aplicación no responde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>Esta aplicación no respondió a tiempo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>El texto seleccionado es demasiado largo</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

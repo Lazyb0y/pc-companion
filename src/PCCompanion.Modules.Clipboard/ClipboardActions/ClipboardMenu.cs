@@ -17,6 +17,12 @@ public static class ClipboardMenu
     /// <summary>The ID of Settings, which opens PC Companion's settings.</summary>
     public const uint SettingsCommand = 1;
 
+    /// <summary>
+    /// The ID of Show actions for the copied text, below a note on why no selected text was read,
+    /// which opens the copied text's menu instead.
+    /// </summary>
+    public const uint ShowCopiedCommand = 3;
+
     /// <summary>How much of the copied text's first line the menu shows.</summary>
     public const int PreviewLength = 50;
 
@@ -57,29 +63,79 @@ public static class ClipboardMenu
         }
         else
         {
-            items.Add(Note(Preview(text)));
-            items.Add(PopupMenuItem.Separator);
-            if (offers.Count == 0)
-            {
-                items.Add(Note(Strings.ClipboardActionsNoActions));
-            }
-
-            for (var index = 0; index < offers.Count; index++)
-            {
-                var offer = offers[index];
-                var id = FirstOffer + (uint)index;
-                actions[id] = offer;
-                items.Add(new PopupMenuItem(id, Label(offer)));
-            }
+            AddOffers(items, actions, text, offers, Strings.ClipboardActionsNoActions);
         }
 
-        items.Add(PopupMenuItem.Separator);
-        items.Add(new PopupMenuItem(SettingsCommand, Strings.TraySettings));
+        AddSettings(items);
         return new ClipboardMenuPlan(items, actions);
     }
 
     /// <summary>
-    /// The start of the copied text as the menu shows it: its first line, up to
+    /// The menu for the selected text, which Windows + Alt + S shows: as for copied text, the start
+    /// of the text, dimmed, the actions or a note that there are none, then Settings. Without text,
+    /// a note says why, followed by Show actions for the copied text. See "When the selected text
+    /// can't be read" in docs/features/clipboard/clipboard-actions.md.
+    /// </summary>
+    /// <param name="text">The selected text, when <paramref name="status"/> is <see cref="SelectionStatus.Read"/>.</param>
+    public static ClipboardMenuPlan BuildForSelection(SelectionStatus status, string? text, IReadOnlyList<ClipboardOffer> offers)
+    {
+        ArgumentNullException.ThrowIfNull(offers);
+
+        var items = new List<PopupMenuItem>();
+        var actions = new Dictionary<uint, ClipboardOffer>();
+        var selected = status == SelectionStatus.Read ? text?.Trim() : null;
+        if (string.IsNullOrEmpty(selected))
+        {
+            items.Add(Note(status switch
+            {
+                SelectionStatus.NotShared => Strings.ClipboardActionsSelectionNotShared,
+                SelectionStatus.Password => Strings.ClipboardActionsSelectionPassword,
+                SelectionStatus.AppRunsAsAdministrator => Strings.ClipboardActionsSelectionAppAdministrator,
+                SelectionStatus.RunsAsAdministrator => Strings.ClipboardActionsSelectionOwnAdministrator,
+                SelectionStatus.AppHasFewerRights => Strings.ClipboardActionsSelectionFewerRights,
+                SelectionStatus.NotResponding => Strings.ClipboardActionsSelectionNotResponding,
+                SelectionStatus.NoAnswer => Strings.ClipboardActionsSelectionNoAnswer,
+                SelectionStatus.TooLong => Strings.ClipboardActionsSelectionTooLong,
+                _ => Strings.ClipboardActionsSelectionNone,
+            }));
+            items.Add(new PopupMenuItem(ShowCopiedCommand, Strings.ClipboardActionsShowCopied));
+        }
+        else
+        {
+            AddOffers(items, actions, selected, offers, Strings.ClipboardActionsNoSelectionActions);
+        }
+
+        AddSettings(items);
+        return new ClipboardMenuPlan(items, actions);
+    }
+
+    // The start of the text, then the actions, or a note that there are none.
+    private static void AddOffers(List<PopupMenuItem> items, Dictionary<uint, ClipboardOffer> actions, string text, IReadOnlyList<ClipboardOffer> offers, string noActions)
+    {
+        items.Add(Note(Preview(text)));
+        items.Add(PopupMenuItem.Separator);
+        if (offers.Count == 0)
+        {
+            items.Add(Note(noActions));
+        }
+
+        for (var index = 0; index < offers.Count; index++)
+        {
+            var offer = offers[index];
+            var id = FirstOffer + (uint)index;
+            actions[id] = offer;
+            items.Add(new PopupMenuItem(id, Label(offer)));
+        }
+    }
+
+    private static void AddSettings(List<PopupMenuItem> items)
+    {
+        items.Add(PopupMenuItem.Separator);
+        items.Add(new PopupMenuItem(SettingsCommand, Strings.TraySettings));
+    }
+
+    /// <summary>
+    /// The start of the copied or selected text as the menu shows it: its first line, up to
     /// <see cref="PreviewLength"/> characters and an ellipsis, with control characters as spaces,
     /// and in the direction of its first letter, so it keeps its order in a menu laid out the other way.
     /// </summary>
