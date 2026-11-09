@@ -52,6 +52,11 @@ public sealed partial class EndAppController : IDisposable
     private int _session;
     private IReadOnlyList<EndAppWindow> _windows = [];
     private nint _pointed = -1;
+
+    // Where the pointer was last. Windows also reports a move when windows change under a pointer
+    // that rests, as when the covering window appears or the frame moves for Tab, and such a move
+    // mustn't take the frame from the window in front or the one Tab reached.
+    private Point? _pointer;
     private ChosenApp _framed = ChosenApp.Nothing;
     private readonly Dictionary<uint, string> _names = [];
     private readonly HashSet<uint> _nameRequests = [];
@@ -117,6 +122,7 @@ public sealed partial class EndAppController : IDisposable
         _pointed = -1;
 
         var front = source == EndAppSource.Shortcut ? _system.ForegroundWindow : 0;
+        _pointer = _system.PointerPosition;
         if (!_view.ShowCovering())
         {
             _view.HideCovering();
@@ -136,11 +142,12 @@ public sealed partial class EndAppController : IDisposable
 
     public void OnPointerMoved(Point point)
     {
-        if (Stage != EndAppStage.Choosing)
+        if (Stage != EndAppStage.Choosing || point == _pointer)
         {
             return;
         }
 
+        _pointer = point;
         StillActive();
         _windows = _system.ListWindows();
         var window = _chooser.WindowAt(point, _windows);

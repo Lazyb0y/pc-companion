@@ -22,6 +22,8 @@ internal sealed class WindowsEndAppSystem : IEndAppSystem
 
     public nint ForegroundWindow => Foreground.Window;
 
+    public Point? PointerPosition => InputState.PointerPosition;
+
     public IReadOnlyList<EndAppWindow> ListWindows() =>
         TopLevelWindows.List().Select(window =>
         {

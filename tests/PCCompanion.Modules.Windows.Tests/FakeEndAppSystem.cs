@@ -48,6 +48,8 @@ internal sealed class FakeEndAppSystem : IEndAppSystem
 
     public nint ForegroundWindow { get; set; }
 
+    public Point? PointerPosition { get; set; }
+
     public int Dpi { get; set; } = 96;
 
     /// <summary>Adds a window behind the others, of a process that's added with it when it's new.</summary>
