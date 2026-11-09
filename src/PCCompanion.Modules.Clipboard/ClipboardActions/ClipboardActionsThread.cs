@@ -33,6 +33,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     private readonly ILogger _logger;
     private readonly ClipboardActionRunner _runner;
     private readonly MenuPlacer _placer;
+    private readonly ClipboardShortcutStatus? _status;
 
     // The thread's own, while its message loop runs.
     private MessageWindow? _window;
@@ -54,7 +55,8 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     /// A thread that was asked to stop, which this one waits for before it registers the shortcuts,
     /// which Windows would refuse while the old thread has them.
     /// </param>
-    public ClipboardActionsThread(ClipboardActionsSettings settings, IClipboardActionsSystem system, IHostCommands commands, ILogger logger, ClipboardActionsThread? previous = null)
+    /// <param name="status">Where the thread notes which shortcuts Windows refused, for the settings app.</param>
+    public ClipboardActionsThread(ClipboardActionsSettings settings, IClipboardActionsSystem system, IHostCommands commands, ILogger logger, ClipboardActionsThread? previous = null, ClipboardShortcutStatus? status = null)
         : base("Clipboard Actions", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(system);
@@ -66,30 +68,29 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         _logger = logger;
         _runner = new ClipboardActionRunner(commands, system.FileExists, logger);
         _placer = new MenuPlacer(system);
+        _status = status;
         Start();
     }
 
+    // The shortcuts are registered as the settings are applied, which follows at once.
     protected override IDisposable? Open(MessageWindow window)
     {
         _window = window;
         _system.WatchTyping(window, () => Guard(() => Typed(window)));
-        _copiedShortcut = _system.RegisterShortcut(window, ClipboardShortcut.CopiedText);
-        if (_copiedShortcut is null)
-        {
-            LogShortcutRefused(_logger);
-        }
-        else
-        {
-            _copiedShortcut.Pressed += (_, _) => Guard(() => Pressed(window));
-        }
-
         return new Opened(this);
     }
 
+    // A shortcut that Windows refused is tried again after each change to the settings.
     protected override void Apply(ClipboardActionsSettings settings)
     {
         _rules = ClipboardRules.Compile(settings, _logger);
+        RegisterCopiedShortcut();
         UpdateSelectionShortcut(settings.SelectedText);
+        if (_status is not null)
+        {
+            _status.Refused = new ClipboardShortcutRefusals(_copiedShortcut is null, settings.SelectedText && _selectionShortcut is null);
+        }
+
         LogApplied(_logger, _rules.Count, settings.Rules.Count, settings.OpenLinks, settings.SelectedText);
     }
 
@@ -106,6 +107,24 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     protected override void OnStopped() => LogStopped(_logger);
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
+
+    private void RegisterCopiedShortcut()
+    {
+        if (_copiedShortcut is not null || _window is not { } window)
+        {
+            return;
+        }
+
+        _copiedShortcut = _system.RegisterShortcut(window, ClipboardShortcut.CopiedText);
+        if (_copiedShortcut is null)
+        {
+            LogShortcutRefused(_logger);
+        }
+        else
+        {
+            _copiedShortcut.Pressed += (_, _) => Guard(() => Pressed(window));
+        }
+    }
 
     // Windows + Alt + S is registered only while Selected text is on, and turning it off also ends
     // the reader's thread.

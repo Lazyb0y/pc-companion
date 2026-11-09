@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 
@@ -14,8 +16,10 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
     // How long the host waits as it exits for the thread to remove the shortcuts.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
 
+    private readonly ClipboardShortcutStatus _status = new();
     private ClipboardActionsThread? _thread;
     private ClipboardActionsThread? _stopped;
+    private SnapshotPipe? _statusPipe;
     private bool _failed;
 
     public ClipboardActionsFeature(IHostCommands commands, ILogger<ClipboardActionsFeature> logger)
@@ -70,8 +74,9 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
 
         if (_thread is null)
         {
-            _thread = new ClipboardActionsThread(read, system, commands, logger, _stopped);
+            _thread = new ClipboardActionsThread(read, system, commands, logger, _stopped, _status);
             _stopped = null;
+            _statusPipe = ServeStatus();
         }
         else
         {
@@ -101,10 +106,30 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
 
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
+        _statusPipe?.Dispose();
+        _statusPipe = null;
+        _status.Refused = new ClipboardShortcutRefusals(false, false);
+    }
+
+    // The settings app shows which shortcuts Windows refused; without the pipe, the shortcuts still work.
+    private SnapshotPipe? ServeStatus()
+    {
+        try
+        {
+            return SnapshotPipe.Serve(ClipboardShortcutStatus.PipeName, _status.ToJson, exception => LogStatusFailed(logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogStatusFailed(logger, exception);
+            return null;
+        }
     }
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The Clipboard Actions settings can't be read, so Clipboard Actions is off.")]
     private static partial void LogUnreadableSettings(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Clipboard Actions can't tell the settings app which shortcuts Windows refused.")]
+    private static partial void LogStatusFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Clipboard Actions didn't stop within {Seconds} s, for example while it waited for the app that copied the text.")]
     private static partial void LogNotStoppedInTime(ILogger logger, double seconds);
