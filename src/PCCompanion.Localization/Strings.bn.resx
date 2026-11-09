@@ -4244,4 +4244,44 @@
     <value>{0} শেষ করা যায়নি।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>শেষ করার জন্য একটি অ্যাপ বাছাই শুরু করে। PC Companion আইকনের মেনুতে «একটি অ্যাপ শেষ করুন…» একই কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Windows লোগো কী + Ctrl + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>অ্যাপ বাছাই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>একটি উইন্ডোতে ক্লিক করুন, বা ফ্রেম করা উইন্ডোর জন্য Enter চাপুন। Tab ফ্রেমটিকে পরের উইন্ডোতে নেয়। Esc বা ডান-ক্লিক বাতিল করে। লাল ফ্রেম মানে অ্যাপটি শেষ করা যায়; ধূসর মানে যায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>কিছু অ্যাপ এখানে শেষ করা যায় না: ফাইল এক্সপ্লোরার, যা ডেস্কটপ ও টাস্কবারও চালায়, Windows-এর নিজস্ব প্রক্রিয়া, এবং প্রশাসক হিসেবে চলা অ্যাপ। এগুলোর একটি বাছলে কারণ জানানো হয় এবং টাস্ক ম্যানেজার দেওয়া হয়। কোনো অ্যাপ শেষ হওয়ার আগে সবসময় আপনাকে জিজ্ঞাসা করা হয়, আর এতে যা সংরক্ষণ করা হয়নি তা হারিয়ে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>কিছু অ্যাপ এখানে শেষ করা যায় না: ফাইল এক্সপ্লোরার, যা ডেস্কটপ ও টাস্কবারও চালায়, এবং Windows-এর নিজস্ব প্রক্রিয়া। এগুলোর একটি বাছলে কারণ জানানো হয় এবং টাস্ক ম্যানেজার দেওয়া হয়। PC Companion প্রশাসক হিসেবে চলছে, তাই প্রশাসক হিসেবে চলা অ্যাপও অন্য যেকোনো অ্যাপের মতো শেষ করা যায়। কোনো অ্যাপ শেষ হওয়ার আগে সবসময় আপনাকে জিজ্ঞাসা করা হয়, আর এতে যা সংরক্ষণ করা হয়নি তা হারিয়ে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>আপনি অ্যাপ বাছাই করার সময় কোন উইন্ডোগুলো খোলা, সেগুলো কোথায়, সাড়া দিচ্ছে কি না এবং কোন প্রোগ্রাম ও প্রক্রিয়ার অংশ তা পড়ে, কখনো সেগুলোর শিরোনাম বা বিষয়বস্তু নয়। আপনার ক্লিক ও কী PC Companion-এর নিজের উইন্ডোতে যায়, কোনো কীবোর্ড বা মাউস হুক ছাড়াই। আপনি নিশ্চিত করার পরে বাছাই করা অ্যাপের প্রক্রিয়া এবং একই প্রোগ্রামের সহায়ক প্রক্রিয়াগুলো শেষ করে, আর কখনো Windows-এর নিজস্ব প্রক্রিয়া নয়। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

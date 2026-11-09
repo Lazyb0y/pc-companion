@@ -4244,4 +4244,44 @@
     <value>No se pudo finalizar {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>Método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>Empieza a elegir una aplicación para finalizar. «Finalizar una aplicación…» en el menú del icono de PC Companion hace lo mismo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Ctrl + Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>Elegir una aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>Haz clic en una ventana o presiona Entrar para la que tiene el marco. Tab mueve el marco a la siguiente ventana. Esc o un clic con el botón derecho cancela. Un marco rojo significa que la aplicación se puede finalizar; uno gris, que no.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>Algunas aplicaciones no se pueden finalizar aquí: el Explorador de archivos, que también ejecuta el escritorio y la barra de tareas, los procesos propios de Windows y las aplicaciones que se ejecutan como administrador. Si eliges una, se explica el motivo y se ofrece el Administrador de tareas. Siempre se te pregunta antes de finalizar una aplicación, y se pierde todo lo que no se haya guardado en ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>Algunas aplicaciones no se pueden finalizar aquí: el Explorador de archivos, que también ejecuta el escritorio y la barra de tareas, y los procesos propios de Windows. Si eliges una, se explica el motivo y se ofrece el Administrador de tareas. PC Companion se ejecuta como administrador, así que las aplicaciones que se ejecutan como administrador se pueden finalizar como cualquier otra. Siempre se te pregunta antes de finalizar una aplicación, y se pierde todo lo que no se haya guardado en ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>Mientras eliges una aplicación, lee qué ventanas están abiertas, dónde están, si responden y a qué programa y proceso pertenecen, nunca sus títulos ni su contenido. Tus clics y teclas van a la ventana propia de PC Companion, sin ningún enlace de teclado ni de mouse. Después de que confirmes, finaliza el proceso de la aplicación elegida y sus procesos auxiliares del mismo programa, y nunca los procesos propios de Windows. No establece conexiones de red ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

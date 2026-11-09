@@ -16,6 +16,7 @@ using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.DriveActions;
 using PCCompanion.App.Features.DropDownApps;
+using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
@@ -184,6 +185,7 @@ public partial class App : Application
             .AddTransient<HideAppsViewModel>()
             .AddTransient<DropDownAppsViewModel>()
             .AddTransient<TitleBarActionsViewModel>()
+            .AddTransient<EndAppViewModel>()
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()
