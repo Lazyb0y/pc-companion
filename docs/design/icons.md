@@ -130,8 +130,8 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 - `scripts/app-icon.ps1` makes `PCCompanion.ico` from the `app-<size>.svg` drawings; see [Packaging](../development/packaging.md).
 - They use only what Windows' SVG renderer, Direct2D, [supports](https://learn.microsoft.com/en-us/windows/win32/direct2d/svg-support), which WinUI's `SvgImageSource` uses: `svg`, `defs`, `g`, `rect`, `path`, `linearGradient`, `stop` and `clipPath`, with attributes rather than `style` or CSS. Direct2D ignores `mask`, `symbol`, `use`, `filter` and `text`.
 - Coordinates are in pixels, with a `viewBox` the size of the icon.
-- A cut is a `clipPath` on the shapes under it: the whole icon minus the cut's outline, as one path with `clip-rule="evenodd"`. The outline is the shape grown by half its stroke plus the cut, with round corners.
-- One-color versions use `fill="currentColor"`, and cutouts are holes in a path with `fill-rule="evenodd"`.
+- A cut in a color drawing, such as the one round the slash of Hide Apps, is a `clipPath` on the shapes under it: the whole icon minus the cut's outline, as one path with `clip-rule="evenodd"`. The outline is the shape grown by half its stroke plus the cut, with round corners.
+- A one-color version is one path with `fill="currentColor"`, with the cutouts as holes. The script works it out with the shape geometry of WPF, which comes with Windows: it takes the white symbols, the paper and the cuts out of the shapes.
 
 ## Checklist
 

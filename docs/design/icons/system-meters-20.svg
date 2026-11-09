@@ -1,32 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
-            <stop offset="1" stop-color="#3940D6"/>
+        <linearGradient id="green-light" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#B0F098"/>
+            <stop offset="1" stop-color="#64DE89"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        <linearGradient id="green-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#52D17C"/>
+            <stop offset="1" stop-color="#22918B"/>
         </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#FFD25E"/>
-            <stop offset="1" stop-color="#FF8A3C"/>
+        <linearGradient id="green-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#20AC9D"/>
+            <stop offset="1" stop-color="#1A7F7C"/>
         </linearGradient>
     </defs>
-    <rect x="1" y="2" width="4" height="16" rx="2" fill="url(#frame)"/>
-    <rect x="8" y="2" width="4" height="16" rx="2" fill="url(#frame)"/>
-    <rect x="15" y="2" width="4" height="16" rx="2" fill="url(#frame)"/>
-    <rect x="1" y="2" width="4" height="16" rx="2" fill="url(#highlight)"/>
-    <rect x="8" y="2" width="4" height="16" rx="2" fill="url(#highlight)"/>
-    <rect x="15" y="2" width="4" height="16" rx="2" fill="url(#highlight)"/>
-    <rect x="2" y="3" width="2" height="14" rx="1" fill="url(#glass)"/>
-    <rect x="9" y="3" width="2" height="14" rx="1" fill="url(#glass)"/>
-    <rect x="16" y="3" width="2" height="14" rx="1" fill="url(#glass)"/>
-    <rect x="2" y="10" width="2" height="7" rx="1" fill="url(#accent)"/>
-    <rect x="9" y="6" width="2" height="11" rx="1" fill="url(#accent)"/>
-    <rect x="16" y="13" width="2" height="4" rx="1" fill="url(#accent)"/>
+    <rect x="1" y="12" width="4" height="7" rx="1" fill="url(#green-light)"/>
+    <rect x="8" y="7" width="4" height="12" rx="1" fill="url(#green-main)"/>
+    <rect x="15" y="1" width="4" height="18" rx="1" fill="url(#green-deep)"/>
 </svg>
