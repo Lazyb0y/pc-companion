@@ -242,7 +242,6 @@ A spike in Windows Sandbox on Windows 11 build 26100 used Edge, test windows wit
   - the spike's window got no press while such an app was in front.
 - **Not checked yet:**
   - whether a 60,000-character drop arrives whole in Edge: reading it back gave about 7,200 characters;
-  - placing the text cursor in a rich edit box with UI Automation, and giving a box the focus after `EM_REPLACESEL`;
   - Office, Visual Studio Code, Firefox, Chrome, Windows Terminal, Windows 11's Notepad, Java apps and WinUI 3 apps;
   - a real mouse and touchpad, the foreground lock, swapped buttons, UAC on, other scales and Windows 10.
 
@@ -339,7 +338,8 @@ A spike in Windows Sandbox on Windows 11 build 26100 used Edge, test windows wit
 - **Logs:**
   - **Debug entries:**
     - when a text box is claimed and the claim removed;
-    - for each kept click: how long reading took, whether the text went in by message or drop, and why nothing was pasted, such as a password box, a listed app, an app with other rights or a box that didn't take it.
+    - why the place under the pointer was left alone, such as a read-only or password box, a listed app or an app with other rights;
+    - for each kept click: how long the paste took, whether the text went in by message or drop, and why nothing was pasted, such as a selection in a password box, an app with other rights or a box that didn't take it.
   - **Never:** the text, titles, element names, app IDs, paths or pointer positions.
   - **Warnings** when Windows removed the hook, or the settings section can't be read.
   - **Errors** when a failure stops the feature.
