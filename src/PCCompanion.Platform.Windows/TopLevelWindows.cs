@@ -181,6 +181,14 @@ public static class TopLevelWindows
     public static bool IsNotResponding(nint window) => PInvoke.IsHungAppWindow(new HWND(window));
 
     /// <summary>
+    /// Whether <paramref name="window"/>'s program handles a message within
+    /// <paramref name="timeout"/> (<c>WM_NULL</c>, sent with <c>SendMessageTimeout</c> and
+    /// <c>SMTO_ABORTIFHUNG</c>). It waits for the program, so call it off the host's UI thread.
+    /// </summary>
+    public static bool Answers(nint window, TimeSpan timeout) =>
+        PInvoke.SendMessageTimeout(new HWND(window), PInvoke.WM_NULL, 0, 0, SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_ABORTIFHUNG, (uint)timeout.TotalMilliseconds, out _) != 0;
+
+    /// <summary>
     /// Shows another program's <paramref name="window"/>, hidden or minimized, as it was before it
     /// was minimized, maximized again if it was, and activates it. Returns false when Windows
     /// refused. It doesn't wait; bring the window's dialog to the front with <see cref="Activate"/>
