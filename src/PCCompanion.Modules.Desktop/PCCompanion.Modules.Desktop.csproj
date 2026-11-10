@@ -14,4 +14,8 @@
     <ProjectReference Include="..\PCCompanion.Localization\PCCompanion.Localization.csproj" />
     <ProjectReference Include="..\PCCompanion.Platform.Windows\PCCompanion.Platform.Windows.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DynamicWallpaper\TimeZonePlaces.txt" LogicalName="PCCompanion.Modules.Desktop.DynamicWallpaper.TimeZonePlaces.txt" />
+  </ItemGroup>
 </Project>
