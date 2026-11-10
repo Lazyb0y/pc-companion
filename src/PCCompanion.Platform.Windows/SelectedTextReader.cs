@@ -384,14 +384,16 @@ public sealed class SelectedTextReader : IDisposable
         }
 
         var value = held.Add(element.GetCurrentPattern(UIA_PATTERN_ID.UIA_ValuePatternId)) as IUIAutomationValuePattern;
+        var window = (nint)element.CurrentNativeWindowHandle;
         var facts = new FocusableElement(
             element.CurrentIsEnabled,
             element.CurrentIsPassword,
             element.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_DocumentControlTypeId,
             held.Add(element.GetCurrentPattern(UIA_PATTERN_ID.UIA_TextPatternId)) is IUIAutomationTextPattern,
-            value is null ? null : (bool)value.CurrentIsReadOnly);
+            value is null ? null : (bool)value.CurrentIsReadOnly,
+            EditBoxes.KindOf(window) == EditBoxKind.Plain);
         var status = TextBoxes.Classify(facts);
-        return new TextBoxAnswer(status, status == TextBoxStatus.TextBox ? (nint)element.CurrentNativeWindowHandle : 0);
+        return new TextBoxAnswer(status, status == TextBoxStatus.TextBox ? window : 0);
     }
 
     private static IUIAutomationElement? FocusableAt(IUIAutomation2 automation, Point point, HeldObjects held) =>
