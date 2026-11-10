@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -14,16 +15,18 @@ using Windows.Win32.UI.Accessibility;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Reads the text selected in the element that has the keyboard focus, with UI Automation, the
-/// interface screen readers use. It runs on a thread of its own, in COM's multithreaded apartment
-/// and with no windows, since its calls wait for the app, and keeps its UI Automation object
-/// between reads. Check the app with <see cref="SelectedText.CheckWindow"/> first. Create, use and
-/// dispose it on one thread.
+/// Reads the text selected in the element that has the keyboard focus, and tells whether the
+/// element under a point is a text box, with UI Automation, the interface screen readers use. It
+/// runs on a thread of its own, in COM's multithreaded apartment and with no windows, since its
+/// calls wait for the app, and keeps its UI Automation object between requests. Requests run one at
+/// a time, reads before questions about a point. Check the app with
+/// <see cref="SelectedText.CheckWindow"/> first. Create, use and dispose it on one thread.
 /// </summary>
 /// <remarks>
 /// Only the focused element, or the nearest element around it with text, is asked: whether it's a
 /// password box, its selection and the selection's text, and its last line's place. Never the
-/// document's whole text or anything else, which can keep a browser busy for seconds.
+/// document's whole text or anything else, which can keep a browser busy for seconds. A question
+/// about a point reads only what kind of element is there, never its text.
 /// </remarks>
 public sealed class SelectedTextReader : IDisposable
 {
@@ -42,7 +45,10 @@ public sealed class SelectedTextReader : IDisposable
     // Browsers built on Chromium give this framework.
     private const string ChromiumFramework = "Chrome";
 
-    private readonly Channel<Request> _requests = Channel.CreateUnbounded<Request>(new UnboundedChannelOptions { SingleReader = true, SingleWriter = true });
+    private readonly ConcurrentQueue<ReadRequest> _reads = new();
+    private readonly ConcurrentQueue<PointRequest> _questions = new();
+    private readonly SemaphoreSlim _waiting = new(0);
+    private volatile bool _ending;
     private bool _disposed;
 
     public SelectedTextReader()
@@ -59,16 +65,39 @@ public sealed class SelectedTextReader : IDisposable
     /// until <paramref name="retryFor"/> has passed. The task never fails: an error of the app's
     /// gives <see cref="SelectedTextStatus.NotShared"/>.
     /// </summary>
-    public Task<SelectedTextResult> ReadAsync(TimeSpan retryFor)
+    /// <param name="maxLength">The most characters read; more gives <see cref="SelectedTextStatus.TooLong"/>.</param>
+    /// <param name="clickedAt">
+    /// Where the text will be pasted, if anywhere. When the selection is all of the text of the box
+    /// there, the read gives <see cref="SelectedTextStatus.WholeBoxSelected"/>.
+    /// </param>
+    public Task<SelectedTextResult> ReadAsync(TimeSpan retryFor, int maxLength = SelectedText.MaxLength, Point? clickedAt = null)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxLength);
 
-        var request = new Request(retryFor);
-        _requests.Writer.TryWrite(request);
+        var request = new ReadRequest(retryFor, maxLength, clickedAt);
+        _reads.Enqueue(request);
+        _waiting.Release();
         return request.Answer.Task;
     }
 
-    /// <summary>Ends the reader's thread after the read it's doing, without waiting for it.</summary>
+    /// <summary>
+    /// Tells whether the element under <paramref name="point"/>, in physical pixels, is a text box,
+    /// on the reader's thread, after any waiting read; see <see cref="TextBoxes"/>. A browser that
+    /// hasn't turned on its accessibility support yet is asked again, as for a read, until
+    /// <paramref name="retryFor"/> has passed. The task never fails.
+    /// </summary>
+    public Task<TextBoxAnswer> AskAsync(Point point, TimeSpan retryFor)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        var request = new PointRequest(point, retryFor);
+        _questions.Enqueue(request);
+        _waiting.Release();
+        return request.Answer.Task;
+    }
+
+    /// <summary>Ends the reader's thread after the requests it has, without waiting for it.</summary>
     public void Dispose()
     {
         if (_disposed)
@@ -77,7 +106,8 @@ public sealed class SelectedTextReader : IDisposable
         }
 
         _disposed = true;
-        _requests.Writer.TryComplete();
+        _ending = true;
+        _waiting.Release();
     }
 
     private void Work()
@@ -85,11 +115,20 @@ public sealed class SelectedTextReader : IDisposable
         IUIAutomation2? automation = null;
         try
         {
-            while (_requests.Reader.WaitToReadAsync().AsTask().GetAwaiter().GetResult())
+            while (true)
             {
-                while (_requests.Reader.TryRead(out var request))
+                _waiting.Wait();
+                if (_reads.TryDequeue(out var read))
                 {
-                    request.Answer.SetResult(Read(ref automation, request.RetryFor));
+                    read.Answer.SetResult(Read(ref automation, read));
+                }
+                else if (_questions.TryDequeue(out var question))
+                {
+                    question.Answer.SetResult(Ask(ref automation, question));
+                }
+                else if (_ending)
+                {
+                    break;
                 }
             }
         }
@@ -99,10 +138,12 @@ public sealed class SelectedTextReader : IDisposable
             {
                 Marshal.ReleaseComObject(automation);
             }
+
+            _waiting.Dispose();
         }
     }
 
-    private static SelectedTextResult Read(ref IUIAutomation2? automation, TimeSpan retryFor)
+    private static SelectedTextResult Read(ref IUIAutomation2? automation, ReadRequest request)
     {
         var clock = Stopwatch.StartNew();
         try
@@ -110,8 +151,8 @@ public sealed class SelectedTextReader : IDisposable
             automation ??= Create();
             while (true)
             {
-                var result = ReadOnce(automation, out var browserNotReady);
-                if (!browserNotReady || clock.Elapsed + RetryInterval > retryFor)
+                var result = ReadOnce(automation, request, out var browserNotReady);
+                if (!browserNotReady || clock.Elapsed + RetryInterval > request.RetryFor)
                 {
                     return result;
                 }
@@ -131,6 +172,33 @@ public sealed class SelectedTextReader : IDisposable
         }
     }
 
+    private static TextBoxAnswer Ask(ref IUIAutomation2? automation, PointRequest request)
+    {
+        var clock = Stopwatch.StartNew();
+        try
+        {
+            automation ??= Create();
+            while (true)
+            {
+                var answer = AskOnce(automation, request.Point, out var browserNotReady);
+                if (!browserNotReady || clock.Elapsed + RetryInterval > request.RetryFor)
+                {
+                    return answer;
+                }
+
+                Thread.Sleep(RetryInterval);
+            }
+        }
+        catch (COMException exception) when (exception.HResult == unchecked((int)PInvoke.UIA_E_TIMEOUT))
+        {
+            return new TextBoxAnswer(TextBoxStatus.TimedOut);
+        }
+        catch (Exception exception)
+        {
+            return new TextBoxAnswer(TextBoxStatus.NotShared, ErrorCode: exception.HResult);
+        }
+    }
+
     private static IUIAutomation2 Create()
     {
         var automation = (IUIAutomation2)new CUIAutomation8();
@@ -139,7 +207,7 @@ public sealed class SelectedTextReader : IDisposable
         return automation;
     }
 
-    private static SelectedTextResult ReadOnce(IUIAutomation2 automation, out bool browserNotReady)
+    private static SelectedTextResult ReadOnce(IUIAutomation2 automation, ReadRequest request, out bool browserNotReady)
     {
         browserNotReady = false;
         using var held = new HeldObjects();
@@ -175,19 +243,24 @@ public sealed class SelectedTextReader : IDisposable
             return new SelectedTextResult(SelectedTextStatus.Password);
         }
 
-        return ReadSelection(pattern, held);
+        var result = ReadSelection(pattern, request.MaxLength, held, out var only);
+        return result.Status == SelectedTextStatus.Read && request.ClickedAt is { } point && only is not null
+            && IsWholeBox(automation, element, pattern, only, point, held)
+            ? new SelectedTextResult(SelectedTextStatus.WholeBoxSelected)
+            : result;
     }
 
-    private static SelectedTextResult ReadSelection(IUIAutomationTextPattern pattern, HeldObjects held)
+    // `only` is the selection's one part, or null when it has several.
+    private static SelectedTextResult ReadSelection(IUIAutomationTextPattern pattern, int maxLength, HeldObjects held, out IUIAutomationTextRange? only)
     {
         var ranges = held.Add(pattern.GetSelection());
         var count = ranges.Length;
         var text = new StringBuilder();
         IUIAutomationTextRange? last = null;
-        for (var index = 0; index < count && text.Length <= SelectedText.MaxLength; index++)
+        for (var index = 0; index < count && text.Length <= maxLength; index++)
         {
             last = held.Add(ranges.GetElement(index));
-            var part = Take(last.GetText(SelectedText.MaxLength + 1 - text.Length));
+            var part = Take(last.GetText(maxLength + 1 - text.Length));
             if (part.Length == 0)
             {
                 continue;
@@ -201,20 +274,94 @@ public sealed class SelectedTextReader : IDisposable
             text.Append(part);
         }
 
+        only = count == 1 ? last : null;
         if (text.Length == 0)
         {
             return new SelectedTextResult(SelectedTextStatus.NothingSelected);
         }
 
-        return text.Length > SelectedText.MaxLength
+        return text.Length > maxLength
             ? new SelectedTextResult(SelectedTextStatus.TooLong)
             : new SelectedTextResult(SelectedTextStatus.Read, text.ToString(), LastLine(last!));
     }
 
-    // Until a browser built on Chromium has turned on its accessibility support, the focus is its
-    // window's own pane, with no text.
-    private static bool IsBrowserWithoutText(IUIAutomationElement focused) =>
-        focused.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_PaneControlTypeId && Take(focused.CurrentFrameworkId) == ChromiumFramework;
+    // Whether the selection is all of the text of the box at the clicked point. Only boxes are
+    // checked, never documents, whose whole range can be long; the ends are compared without reading
+    // any more text.
+    private static bool IsWholeBox(IUIAutomation2 automation, IUIAutomationElement textElement, IUIAutomationTextPattern pattern, IUIAutomationTextRange selection, Point point, HeldObjects held)
+    {
+        try
+        {
+            if (textElement.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_DocumentControlTypeId
+                || FocusableAt(automation, point, held) is not { } box
+                || !automation.CompareElements(box, textElement))
+            {
+                return false;
+            }
+
+            var whole = held.Add(pattern.DocumentRange);
+            return selection.CompareEndpoints(TextPatternRangeEndpoint.TextPatternRangeEndpoint_Start, whole, TextPatternRangeEndpoint.TextPatternRangeEndpoint_Start) == 0
+                && selection.CompareEndpoints(TextPatternRangeEndpoint.TextPatternRangeEndpoint_End, whole, TextPatternRangeEndpoint.TextPatternRangeEndpoint_End) == 0;
+        }
+        catch (Exception)
+        {
+            // The check only keeps a box's own text from being pasted into it; the text stays usable.
+            return false;
+        }
+    }
+
+    private static TextBoxAnswer AskOnce(IUIAutomation2 automation, Point point, out bool browserNotReady)
+    {
+        browserNotReady = false;
+        using var held = new HeldObjects();
+        var atPoint = held.Add(automation.ElementFromPoint(point));
+        if (IsBrowserWithoutText(atPoint))
+        {
+            browserNotReady = true;
+            return new TextBoxAnswer(TextBoxStatus.NotTextBox);
+        }
+
+        if (Focusable(automation, atPoint, held) is not { } element)
+        {
+            return new TextBoxAnswer(TextBoxStatus.NotTextBox);
+        }
+
+        var value = held.Add(element.GetCurrentPattern(UIA_PATTERN_ID.UIA_ValuePatternId)) as IUIAutomationValuePattern;
+        var facts = new FocusableElement(
+            element.CurrentIsEnabled,
+            element.CurrentIsPassword,
+            element.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_DocumentControlTypeId,
+            held.Add(element.GetCurrentPattern(UIA_PATTERN_ID.UIA_TextPatternId)) is IUIAutomationTextPattern,
+            value is null ? null : (bool)value.CurrentIsReadOnly);
+        var status = TextBoxes.Classify(facts);
+        return new TextBoxAnswer(status, status == TextBoxStatus.TextBox ? (nint)element.CurrentNativeWindowHandle : 0);
+    }
+
+    private static IUIAutomationElement? FocusableAt(IUIAutomation2 automation, Point point, HeldObjects held) =>
+        Focusable(automation, held.Add(automation.ElementFromPoint(point)), held);
+
+    // The element, or the nearest element above it that takes the keyboard focus.
+    private static IUIAutomationElement? Focusable(IUIAutomation2 automation, IUIAutomationElement atPoint, HeldObjects held)
+    {
+        var walker = held.Add(automation.ControlViewWalker);
+        IUIAutomationElement? element = atPoint;
+        for (var level = 0; element is not null && level <= TextBoxes.Levels; level++)
+        {
+            if (element.CurrentIsKeyboardFocusable)
+            {
+                return element;
+            }
+
+            element = held.Add(walker.GetParentElement(element));
+        }
+
+        return null;
+    }
+
+    // Until a browser built on Chromium has turned on its accessibility support, the focus, or what's
+    // under the pointer, is its window's own pane, with no text.
+    private static bool IsBrowserWithoutText(IUIAutomationElement element) =>
+        element.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_PaneControlTypeId && Take(element.CurrentFrameworkId) == ChromiumFramework;
 
     // Where the menu opens is only a nicety, so an app that can't give it still has its text read.
     private static unsafe System.Drawing.Rectangle? LastLine(IUIAutomationTextRange range)
@@ -272,12 +419,17 @@ public sealed class SelectedTextReader : IDisposable
         }
     }
 
-    private sealed record Request(TimeSpan RetryFor)
+    private sealed record ReadRequest(TimeSpan RetryFor, int MaxLength, Point? ClickedAt)
     {
         public TaskCompletionSource<SelectedTextResult> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
-    // The app's objects a read holds, released when it ends, so the app can free them.
+    private sealed record PointRequest(Point Point, TimeSpan RetryFor)
+    {
+        public TaskCompletionSource<TextBoxAnswer> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    // The app's objects a request holds, released when it ends, so the app can free them.
     private sealed class HeldObjects : IDisposable
     {
         private readonly HashSet<object> _objects = new(ReferenceEqualityComparer.Instance);

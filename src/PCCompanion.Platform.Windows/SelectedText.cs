@@ -47,8 +47,14 @@ public enum SelectedTextStatus
     /// <summary>The keyboard focus is in a password box, which isn't read.</summary>
     Password,
 
-    /// <summary>The selected text is longer than <see cref="SelectedText.MaxLength"/>.</summary>
+    /// <summary>The selected text is longer than the limit the read was given.</summary>
     TooLong,
+
+    /// <summary>
+    /// The selection is all of the text of the box that was clicked, as after a click in a browser's
+    /// address bar, so it doesn't count as text to paste there.
+    /// </summary>
+    WholeBoxSelected,
 
     /// <summary>The app didn't answer within UI Automation's time limits.</summary>
     TimedOut,
