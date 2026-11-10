@@ -184,7 +184,6 @@ UIA_PATTERN_ID
 UIA_CONTROLTYPE_ID
 UIA_E_TIMEOUT
 IUIAutomationValuePattern
-TextPatternRangeEndpoint
 SafeArrayGetLBound
 SafeArrayGetUBound
 SafeArrayAccessData
