@@ -4684,4 +4684,52 @@
     <value>যেকোনো অ্যাপে টেক্সট নির্বাচন করুন, তারপর কোনো টেক্সট বক্সে মিডল-ক্লিক করুন, পয়েন্টার যেখানে আছে সেখানে তা পেস্ট হবে, ক্লিপবোর্ড ছাড়াই।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteNoticeNothingSelected" xml:space="preserve">
+    <value>প্রথমে টেক্সট নির্বাচন করুন, তারপর যেখানে বসাতে চান সেখানে মিডল-ক্লিক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeNotShared" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটসহ অ্যাপটি এটি শেয়ার করে না; এটি কপি করে Ctrl+V চাপুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePassword" xml:space="preserve">
+    <value>PC Companion পাসওয়ার্ড বক্স পড়ে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppAdministrator" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটসহ অ্যাপটি অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই এর টেক্সট পড়া যায় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeOwnAdministrator" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই এটি নির্বাচিত টেক্সটসহ অ্যাপটি পড়ে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeFewerRights" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটসহ অ্যাপটি কম অধিকার নিয়ে চলছে, তাই এর টেক্সট পড়া হয় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppNoAnswer" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটসহ অ্যাপটি সময়মতো সাড়া দেয়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeTooLong" xml:space="preserve">
+    <value>নির্বাচিত টেক্সটটি {0} অক্ষরের চেয়ে দীর্ঘ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxRefused" xml:space="preserve">
+    <value>এই বক্সটি পেস্ট করা টেক্সট নেয় না; টেক্সটটি কপি করে Ctrl+V চাপুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxNotResponding" xml:space="preserve">
+    <value>এই বক্সের অ্যাপটি সাড়া দিচ্ছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePointerMoved" xml:space="preserve">
+    <value>টেক্সট পেস্ট হওয়ার আগেই পয়েন্টার সরে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBusy" xml:space="preserve">
+    <value>শেষ মিডল-ক্লিকটি এখনও পেস্ট হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -21,6 +21,7 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
     private SelectedTextReader? _reader;
     private WindowsMiddleClickPasteSystem? _system;
     private MiddleClickPasteController? _controller;
+    private PasteNotice? _notice;
     private bool _failed;
 
     public static FeatureInfo Definition { get; } = new("middleClickPaste", ClipboardModule.Id, "MiddleClickPasteName", "MiddleClickPasteDescription", "");
@@ -101,8 +102,24 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
         void Post(Action action) => window.BeginInvoke(() => Guard(action));
         var controller = new MiddleClickPasteController(_system, time, Post, logger);
         _controller = controller;
-        monitor.InputReceived += (_, input) => Guard(() => controller.OnPointerInput(input));
+        var notice = new PasteNotice(time);
+        _notice = notice;
+        monitor.InputReceived += (_, input) => Guard(() =>
+        {
+            controller.OnPointerInput(input);
+            if (notice.IsShown && InputState.PointerPosition is { } point)
+            {
+                notice.PointerMoved(point);
+            }
+        });
         hook.Kept += (_, input) => Guard(() => controller.OnKept(input));
+        controller.Finished += (_, paste) =>
+        {
+            if (PasteNotices.TextOf(paste.Outcome) is { } text)
+            {
+                notice.Show(text, paste.Point, Post);
+            }
+        };
         hook.Failed += (_, failure) => Guard(() => throw new InvalidOperationException("The pointer hook failed.", failure.Exception));
         LogStarted(logger);
     }
@@ -115,12 +132,13 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
         }
 
         _controller?.Dispose();
+        _notice?.Dispose();
         _hook?.Dispose();
         _monitor?.Dispose();
         _system?.Dispose();
         _reader?.Dispose();
         _window.Dispose();
-        (_controller, _hook, _monitor, _system, _reader, _window) = (null, null, null, null, null, null);
+        (_controller, _notice, _hook, _monitor, _system, _reader, _window) = (null, null, null, null, null, null, null);
         LogStopped(logger);
     }
 

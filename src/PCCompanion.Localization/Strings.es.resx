@@ -4684,4 +4684,52 @@
     <value>Selecciona texto en cualquier aplicación y haz clic con el botón central en un cuadro de texto para pegarlo donde está el puntero, sin usar el portapapeles.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteNoticeNothingSelected" xml:space="preserve">
+    <value>Selecciona primero el texto y luego haz clic con el botón central donde va</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeNotShared" xml:space="preserve">
+    <value>La aplicación con el texto seleccionado no lo comparte; cópialo y luego presiona Ctrl+V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePassword" xml:space="preserve">
+    <value>PC Companion no lee cuadros de contraseña</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppAdministrator" xml:space="preserve">
+    <value>La aplicación con el texto seleccionado se ejecuta como administrador, así que no se puede leer su texto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeOwnAdministrator" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que no lee la aplicación con el texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeFewerRights" xml:space="preserve">
+    <value>La aplicación con el texto seleccionado se ejecuta con menos permisos, así que no se lee su texto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppNoAnswer" xml:space="preserve">
+    <value>La aplicación con el texto seleccionado no respondió a tiempo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeTooLong" xml:space="preserve">
+    <value>El texto seleccionado tiene más de {0} caracteres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxRefused" xml:space="preserve">
+    <value>Este cuadro no acepta texto pegado; copia el texto y luego presiona Ctrl+V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxNotResponding" xml:space="preserve">
+    <value>La aplicación de este cuadro no responde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePointerMoved" xml:space="preserve">
+    <value>El puntero se movió antes de poder pegar el texto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBusy" xml:space="preserve">
+    <value>El último clic central aún se está pegando</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
