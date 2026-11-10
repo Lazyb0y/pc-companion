@@ -90,7 +90,7 @@ public sealed class WindowsDisplayProfilesSystem(string windowClassName = Window
         string serial;
         try
         {
-            serial = CurrentSetup.HashSerial(DisplayEdid.ReadSerialNumberAsync(devicePath).GetAwaiter().GetResult());
+            serial = DisplayRecognition.HashSerial(DisplayEdid.ReadSerialNumberAsync(devicePath).GetAwaiter().GetResult());
         }
         catch (Exception exception) when (exception is COMException or ArgumentException)
         {
