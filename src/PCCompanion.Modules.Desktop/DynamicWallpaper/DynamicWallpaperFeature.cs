@@ -36,6 +36,9 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
     // The latest look the UI thread asked for; the wallpaper thread skips older ones.
     private int _look;
 
+    // The latest plan the UI thread asked for; it uses no older one. Only the UI thread reads it.
+    private int _planning;
+
     public DynamicWallpaperFeature(DataFolder dataFolder, TimeProvider time, ILogger<DynamicWallpaperFeature> logger)
         : this(new WindowsDynamicWallpaperSystem(dataFolder), time, logger)
     {
@@ -173,21 +176,17 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
             var applier = new WallpaperApplier(system, logger);
             IWallpaperWindow? window = null;
             window = system.CreateWindow(new WallpaperWindowEvents(
-                ClockChanged: () => Guard(() =>
-                {
-                    system.TimeZone(readAgain: true);
-                    Look();
-                }),
-                SettingChanged: () => Guard(Look),
+                ClockChanged: () => Guard(() => Look(readZoneAgain: true)),
+                SettingChanged: () => Guard(() => Look()),
                 DisplaysChanged: () => Guard(Set),
-                Resumed: () => Guard(Look),
+                Resumed: () => Guard(() => Look()),
                 TaskbarCreated: () => Guard(() =>
                 {
                     Post(applier.Reconnect);
                     Set();
                 }),
                 Unlocked: () => Guard(Set)));
-            var timer = system.CreateTimer(() => window.Post(() => Guard(Look)));
+            var timer = system.CreateTimer(() => window.Post(() => Guard(() => Look())));
             IDisposable? watch = null;
             try
             {
@@ -283,18 +282,37 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
         });
     }
 
-    // Works out the period now and when to look again, then has the wallpaper thread set it.
-    private void Look()
+    // Works out the period now and when to look again, then has the wallpaper thread set it. The
+    // wallpaper thread reads the time zone, its city and the Windows mode, which wait for the
+    // registry and Windows' time zone data, and works out the plan; the UI thread then uses it.
+    private void Look(bool readZoneAgain = false)
     {
         if (_session is not { } session)
         {
             return;
         }
 
-        var zone = system.TimeZone(readAgain: false);
-        var place = WallpaperPlanner.PlaceOf(_settings, () => system.TimeZoneCity(zone));
-        var dark = _settings.ChangeWith == ChangeWith.WindowsMode && system.IsWindowsModeDark();
-        var plan = WallpaperPlanner.Plan(_settings, time.GetUtcNow(), zone, place, dark);
+        var settings = _settings;
+        var planning = ++_planning;
+        Post(() =>
+        {
+            var zone = system.TimeZone(readZoneAgain);
+            var place = WallpaperPlanner.PlaceOf(settings, () => system.TimeZoneCity(zone));
+            var dark = settings.ChangeWith == ChangeWith.WindowsMode && system.IsWindowsModeDark();
+            var plan = WallpaperPlanner.Plan(settings, time.GetUtcNow(), zone, place, dark);
+            session.Window.Post(() => Guard(() => UsePlan(session, planning, plan)));
+        });
+    }
+
+    // On the UI thread: sets the timer for the next look and has the wallpaper thread set the plan's
+    // pictures, unless the feature stopped or a newer look was asked for meanwhile.
+    private void UsePlan(Session session, int planning, WallpaperPlan plan)
+    {
+        if (_session != session || planning != _planning)
+        {
+            return;
+        }
+
         if (plan.NextLook is { } next)
         {
             session.Timer.CallAt(next);
