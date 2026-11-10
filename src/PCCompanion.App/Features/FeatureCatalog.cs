@@ -7,6 +7,7 @@ using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.DriveActions;
+using PCCompanion.App.Features.DynamicWallpaper;
 using PCCompanion.App.Features.DropDownApps;
 using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
@@ -21,6 +22,7 @@ using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Modules.Desktop;
+using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Display;
 using PCCompanion.Modules.Display.DisplayProfiles;
@@ -83,6 +85,7 @@ public static class FeatureCatalog
         new(DesktopModule.Id, "ModuleDesktopName",
         [
             new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage), DrawnIcon: "system-meters"),
+            new(DynamicWallpaperFeature.Definition, DynamicWallpaperFeature.CurrentSupport, typeof(DynamicWallpaperPage), DynamicWallpaperFirstSettings.Create),
         ]),
         new(ClipboardModule.Id, "ModuleClipboardName",
         [

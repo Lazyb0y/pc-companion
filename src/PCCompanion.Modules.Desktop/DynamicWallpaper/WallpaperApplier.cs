@@ -267,16 +267,6 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
         }
     }
 
-    private static WallpaperPosition PositionOf(WallpaperFit fit) => fit switch
-    {
-        WallpaperFit.Fit => WallpaperPosition.Fit,
-        WallpaperFit.Stretch => WallpaperPosition.Stretch,
-        WallpaperFit.Tile => WallpaperPosition.Tile,
-        WallpaperFit.Center => WallpaperPosition.Center,
-        WallpaperFit.Span => WallpaperPosition.Span,
-        _ => WallpaperPosition.Fill,
-    };
-
     private static bool Same(string? shown, string picture) => string.Equals(shown, picture, StringComparison.OrdinalIgnoreCase);
 
     // Whether a picture is one of the settings' pictures, or in one of their folders.
@@ -397,7 +387,7 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
         }
 
         var advance = _state.Period != period;
-        var position = PositionOf(settings.Fit);
+        var position = WallpaperFits.PositionOf(settings.Fit);
         if (wallpaper.Position() != position)
         {
             wallpaper.SetPosition(position);

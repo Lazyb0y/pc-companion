@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.Shell.Common;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace PCCompanion.Platform.Windows;
 
@@ -95,6 +97,9 @@ public interface IWindowsWallpaper : IDisposable
 public sealed class WindowsWallpaper : IWindowsWallpaper
 {
     private const int Ok = 0;
+
+    // The longest path SystemParametersInfo gives, with its end.
+    private const int MaximumPathLength = 260;
     private const int ServerUnavailable = unchecked((int)0x800706BA); // RPC_S_SERVER_UNAVAILABLE
     private const int CallFailed = unchecked((int)0x800706BE); // RPC_S_CALL_FAILED
     private const int Disconnected = unchecked((int)0x80010108); // RPC_E_DISCONNECTED
@@ -124,6 +129,40 @@ public sealed class WindowsWallpaper : IWindowsWallpaper
             throw new WallpaperException("Windows' wallpaper function couldn't be reached.", exception);
         }
     }
+
+    /// <summary>
+    /// The picture of every display as Windows' own setting has it, read without Explorer, so it's
+    /// quick enough for the UI thread; <see langword="null"/> without a picture.
+    /// </summary>
+    public static unsafe string? SavedPicture()
+    {
+        var path = stackalloc char[MaximumPathLength];
+        return PInvoke.SystemParametersInfo(SYSTEM_PARAMETERS_INFO_ACTION.SPI_GETDESKWALLPAPER, MaximumPathLength, path, 0)
+            && new string(path) is { Length: > 0 } picture
+            ? picture
+            : null;
+    }
+
+    /// <summary>
+    /// The fit as Windows' own setting has it (<c>WallpaperStyle</c> and <c>TileWallpaper</c> in
+    /// <c>Control Panel\Desktop</c>), read without Explorer; Fill when it's not one Windows sets.
+    /// </summary>
+    public static WallpaperPosition SavedPosition()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
+        return PositionOf(key?.GetValue("WallpaperStyle") as string, key?.GetValue("TileWallpaper") as string);
+    }
+
+    /// <summary>The fit that Windows' <c>WallpaperStyle</c> and <c>TileWallpaper</c> values stand for.</summary>
+    public static WallpaperPosition PositionOf(string? style, string? tile) => (style?.Trim(), tile?.Trim()) switch
+    {
+        ("0", "1") => WallpaperPosition.Tile,
+        ("0", _) => WallpaperPosition.Center,
+        ("2", _) => WallpaperPosition.Stretch,
+        ("6", _) => WallpaperPosition.Fit,
+        ("22", _) => WallpaperPosition.Span,
+        _ => WallpaperPosition.Fill,
+    };
 
     /// <summary>
     /// Whether a failure means that Explorer ended, or isn't running, as while it restarts: then
