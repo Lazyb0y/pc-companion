@@ -55,6 +55,7 @@ $startStates = [ordered] @{
     TitleBarActions = 'Installed'
     EndApp = 'Installed'
     SystemMeters = 'Installed'
+    DynamicWallpaper = 'Installed'
     ClipboardActions = 'Installed'
     NetworkProfiles = 'Installed'
     FolderRules = 'Installed'
