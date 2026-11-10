@@ -449,3 +449,15 @@ WA_INACTIVE
 WM_ERASEBKGND
 WM_LBUTTONDOWN
 WM_RBUTTONDOWN
+CoCancelCall
+CoEnableCallCancellation
+DESKTOP_SLIDESHOW_OPTIONS
+DESKTOP_SLIDESHOW_STATE
+DESKTOP_WALLPAPER_POSITION
+DesktopWallpaper
+IDesktopWallpaper
+ILFree
+IShellItemArray
+SHCreateShellItemArrayFromIDLists
+SHCreateShellItemArrayFromShellItem
+SHParseDisplayName
