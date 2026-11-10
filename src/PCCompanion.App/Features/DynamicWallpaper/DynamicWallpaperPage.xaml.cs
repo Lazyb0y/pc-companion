@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Platform.Windows;
+using Windows.Globalization.NumberFormatting;
 using WinRT.Interop;
 
 namespace PCCompanion.App.Features.DynamicWallpaper;
@@ -22,6 +23,8 @@ public sealed partial class DynamicWallpaperPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<DynamicWallpaperViewModel>();
         InitializeComponent();
+        LatitudeBox.NumberFormatter = CoordinateFormatter();
+        LongitudeBox.NumberFormatter = CoordinateFormatter();
         _refresh = DispatcherQueue.CreateTimer();
         _refresh.Interval = RefreshInterval;
         _refresh.Tick += async (_, _) => await ViewModel.RefreshHostAsync();
@@ -36,6 +39,14 @@ public sealed partial class DynamicWallpaperPage : Page
     public DynamicWallpaperViewModel ViewModel { get; }
 
     private static PeriodItem? ItemOf(object sender) => (sender as FrameworkElement)?.Tag as PeriodItem;
+
+    // Coordinates with one decimal, in the user's regional format.
+    private static DecimalFormatter CoordinateFormatter() => new()
+    {
+        IntegerDigits = 1,
+        FractionDigits = 1,
+        NumberRounder = new IncrementNumberRounder { Increment = 0.1, RoundingAlgorithm = RoundingAlgorithm.RoundHalfAwayFromZero },
+    };
 
     private static nint Owner() => App.Current.MainWindow is { } window ? WindowNative.GetWindowHandle(window) : 0;
 
@@ -65,6 +76,14 @@ public sealed partial class DynamicWallpaperPage : Page
         }
     }
 
+    private void OnChooseSameClick(object sender, RoutedEventArgs e)
+    {
+        if (ItemOf(sender) is { } item)
+        {
+            ViewModel.ChooseSame(item);
+        }
+    }
+
     private void OnAddTimeClick(object sender, RoutedEventArgs e) => ViewModel.AddTime();
 
     private void OnRemoveClick(object sender, RoutedEventArgs e)
@@ -72,6 +91,14 @@ public sealed partial class DynamicWallpaperPage : Page
         if (ItemOf(sender) is { } item)
         {
             ViewModel.RemoveTime(item);
+        }
+    }
+
+    private void OnRemoveDisplayClick(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is DisplayGroup group)
+        {
+            ViewModel.RemoveDisplay(group);
         }
     }
 }

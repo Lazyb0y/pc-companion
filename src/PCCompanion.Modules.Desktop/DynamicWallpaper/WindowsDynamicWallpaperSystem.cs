@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
@@ -15,9 +11,7 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
 {
     private const string WindowClassName = "PCCompanion.DynamicWallpaper";
 
-    // The serial number hash of each device path read so far: a display's EDID is read once.
-    private readonly Lock _serialsGate = new();
-    private readonly Dictionary<string, string> _serials = new(StringComparer.OrdinalIgnoreCase);
+    private readonly WallpaperDisplayReader _displays = new();
 
     public IPictureFiles Files { get; } = new WindowsPictureFiles();
 
@@ -56,58 +50,9 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
 
     public bool? IsSpotlightOn() => ShellRecords.IsSpotlightOn();
 
-    public WallpaperDisplays ReadDisplays()
-    {
-        DisplaySetup setup;
-        try
-        {
-            setup = DisplayConfiguration.Read();
-        }
-        catch (Win32Exception)
-        {
-            return WallpaperDisplays.None;
-        }
-
-        var serials = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var display in setup.Displays)
-        {
-            serials[display.DevicePath] = SerialOf(display.DevicePath);
-        }
-
-        return new WallpaperDisplays(setup.Displays, serials);
-    }
+    public WallpaperDisplays ReadDisplays() => _displays.Read();
 
     public int NewSeed() => Random.Shared.Next();
-
-    // A display whose EDID Windows can't give now has no serial number this time, and its EDID is
-    // read again the next time.
-    private string SerialOf(string devicePath)
-    {
-        lock (_serialsGate)
-        {
-            if (_serials.TryGetValue(devicePath, out var known))
-            {
-                return known;
-            }
-        }
-
-        string serial;
-        try
-        {
-            serial = DisplayRecognition.HashSerial(DisplayEdid.ReadSerialNumberAsync(devicePath).GetAwaiter().GetResult());
-        }
-        catch (Exception exception) when (exception is COMException or ArgumentException)
-        {
-            return string.Empty;
-        }
-
-        lock (_serialsGate)
-        {
-            _serials[devicePath] = serial;
-        }
-
-        return serial;
-    }
 
     private sealed class MomentTimer(AbsoluteTimer timer) : IMomentTimer
     {

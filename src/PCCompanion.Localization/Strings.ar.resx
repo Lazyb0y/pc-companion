@@ -4724,4 +4724,148 @@
     <value>تغيّر خلفية سطح المكتب عبر Windows، وتعيد الخلفية التي كانت لديك عند إيقاف تشغيلها. لا تقرأ إلا أسماء صورك ومجلداتك وسماتها؛ يقرأ Windows الصور. مع شروق الشمس وغروبها، تستخدم منطقتك الزمنية أو الإحداثيات التي تختارها، والتي تبقى على هذا الكمبيوتر. لا تُجري أي اتصالات بالشبكة.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperLocationHeader" xml:space="preserve">
+    <value>الموقع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDescription" xml:space="preserve">
+    <value>المكان الذي يتبع فيه «شروق الشمس وغروبها» الشمس.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationTimeZone" xml:space="preserve">
+    <value>من منطقتك الزمنية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationCoordinates" xml:space="preserve">
+    <value>الإحداثيات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneHeader" xml:space="preserve">
+    <value>المنطقة الزمنية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneDescription" xml:space="preserve">
+    <value>أوقات الشروق والغروب تقريبية: بعيدًا عن المدينة الرئيسية للمنطقة الزمنية، قد تختلف بعشرات الدقائق.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitude" xml:space="preserve">
+    <value>خط العرض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitudeDescription" xml:space="preserve">
+    <value>بالدرجات شمال خط الاستواء؛ الجنوب سالب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitude" xml:space="preserve">
+    <value>خط الطول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitudeDescription" xml:space="preserve">
+    <value>بالدرجات شرق غرينتش؛ الغرب سالب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationHeader" xml:space="preserve">
+    <value>موقع هذا الكمبيوتر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationDescription" xml:space="preserve">
+    <value>يحدده Windows مرة واحدة، وقد يستخدم شبكات Wi-Fi القريبة وخدمة الموقع من Microsoft. لا يُحتفظ إلا بالإحداثيات بعد تقريبها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUseMyLocation" xml:space="preserve">
+    <value>استخدام موقعي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDeniedInfo" xml:space="preserve">
+    <value>لم يقدّم Windows الموقع. شغّل «خدمات الموقع» و«السماح لتطبيقات سطح المكتب بالوصول إلى موقعك»، ثم حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenLocationSettings" xml:space="preserve">
+    <value>فتح إعدادات الموقع</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationFailedInfo" xml:space="preserve">
+    <value>تعذّر على Windows تحديد موقع هذا الكمبيوتر. حاول مرة أخرى لاحقًا، أو أدخل الإحداثيات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPlaceInfo" xml:space="preserve">
+    <value>لا يوجد مكان لمنطقتك الزمنية يمكن تتبع الشمس منه، لذا يبدأ النهار في {0} والليل في {1}. اختر «الإحداثيات» لتتبع الشمس.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoCoordinatesInfo" xml:space="preserve">
+    <value>إلى أن تُدخل خط العرض وخط الطول، يبدأ النهار في {0} والليل في {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayHeader" xml:space="preserve">
+    <value>اليوم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayDescription" xml:space="preserve">
+    <value>متى تبدأ كل فترة وتنتهي اليوم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeRange" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntRise" xml:space="preserve">
+    <value>لا تشرق الشمس اليوم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntSet" xml:space="preserve">
+    <value>لا تغرب الشمس اليوم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayHeader" xml:space="preserve">
+    <value>صورة لكل شاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayDescription" xml:space="preserve">
+    <value>تعرض كل شاشة صورها الخاصة. غير متاح مع «امتداد».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysHeader" xml:space="preserve">
+    <value>الشاشات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysDescription" xml:space="preserve">
+    <value>تعرض الشاشات التي ليست لها صور خاصة هذه الصور.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperBuiltInDisplay" xml:space="preserve">
+    <value>الشاشة المضمنة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUnnamedDisplay" xml:space="preserve">
+    <value>الشاشة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTwinDisplay" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayConnected" xml:space="preserve">
+    <value>متصلة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayNotConnected" xml:space="preserve">
+    <value>غير متصلة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplay" xml:space="preserve">
+    <value>إزالة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplayName" xml:space="preserve">
+    <value>إزالة {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSameAsOthers" xml:space="preserve">
+    <value>مثل الشاشات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseSame" xml:space="preserve">
+    <value>مثل الشاشات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4532,4 +4532,148 @@
     <value>Changes the desktop background through Windows, and puts back the one you had when you turn it off. Reads only the names and attributes of your pictures and folders; Windows reads the pictures. With Sunrise and sunset, uses your time zone or the coordinates you choose, which stay on this PC. Makes no network connections.</value>
     <comment>Below FeaturePermissionsHeader</comment>
   </data>
+  <data name="DynamicWallpaperLocationHeader" xml:space="preserve">
+    <value>Location</value>
+    <comment>Page: setting group name, and the screen reader name of its list</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDescription" xml:space="preserve">
+    <value>Where Sunrise and sunset follows the sun.</value>
+    <comment>Below DynamicWallpaperLocationHeader</comment>
+  </data>
+  <data name="DynamicWallpaperLocationTimeZone" xml:space="preserve">
+    <value>From your time zone</value>
+    <comment>Page: a choice of DynamicWallpaperLocationHeader</comment>
+  </data>
+  <data name="DynamicWallpaperLocationCoordinates" xml:space="preserve">
+    <value>Coordinates</value>
+    <comment>Page: a choice of DynamicWallpaperLocationHeader</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneHeader" xml:space="preserve">
+    <value>Time zone</value>
+    <comment>Page: the time zone Sunrise and sunset uses; Windows' name of the time zone follows</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneDescription" xml:space="preserve">
+    <value>Sunrise and sunset are approximate: far from the time zone's main city, they can be off by tens of minutes.</value>
+    <comment>Below DynamicWallpaperTimeZoneHeader</comment>
+  </data>
+  <data name="DynamicWallpaperLatitude" xml:space="preserve">
+    <value>Latitude</value>
+    <comment>Page: setting name, and the screen reader name of its number box</comment>
+  </data>
+  <data name="DynamicWallpaperLatitudeDescription" xml:space="preserve">
+    <value>Degrees north of the equator; south is negative.</value>
+    <comment>Below DynamicWallpaperLatitude</comment>
+  </data>
+  <data name="DynamicWallpaperLongitude" xml:space="preserve">
+    <value>Longitude</value>
+    <comment>Page: setting name, and the screen reader name of its number box</comment>
+  </data>
+  <data name="DynamicWallpaperLongitudeDescription" xml:space="preserve">
+    <value>Degrees east of Greenwich; west is negative.</value>
+    <comment>Below DynamicWallpaperLongitude</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationHeader" xml:space="preserve">
+    <value>This PC's location</value>
+    <comment>Page: a setting whose button fills in the coordinates from Windows' location</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationDescription" xml:space="preserve">
+    <value>Windows finds it once, and may use nearby Wi-Fi networks and Microsoft's location service. Only the coordinates, rounded, are kept.</value>
+    <comment>Below DynamicWallpaperMyLocationHeader</comment>
+  </data>
+  <data name="DynamicWallpaperUseMyLocation" xml:space="preserve">
+    <value>Use my location</value>
+    <comment>Page: button of DynamicWallpaperMyLocationHeader</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDeniedInfo" xml:space="preserve">
+    <value>Windows didn't give the location. Turn on Location services and Let desktop apps access your location, then try again.</value>
+    <comment>Page: note after Use my location when Windows refuses; the names in quotes are Windows Settings' own</comment>
+  </data>
+  <data name="DynamicWallpaperOpenLocationSettings" xml:space="preserve">
+    <value>Open location settings</value>
+    <comment>Page: button of DynamicWallpaperLocationDeniedInfo, which opens Windows Settings' Location page</comment>
+  </data>
+  <data name="DynamicWallpaperLocationFailedInfo" xml:space="preserve">
+    <value>Windows couldn't find this PC's location. Try again later, or enter the coordinates.</value>
+    <comment>Page: note after Use my location when Windows can't find the location</comment>
+  </data>
+  <data name="DynamicWallpaperNoPlaceInfo" xml:space="preserve">
+    <value>Your time zone has no place to follow the sun from, so Day starts at {0} and Night at {1}. Choose Coordinates to follow the sun.</value>
+    <comment>Page: note for a time zone with no place, such as UTC; {0} and {1} are times, such as 6:00 AM and 6:00 PM</comment>
+  </data>
+  <data name="DynamicWallpaperNoCoordinatesInfo" xml:space="preserve">
+    <value>Until you enter a latitude and a longitude, Day starts at {0} and Night at {1}.</value>
+    <comment>Page: note while Coordinates has none; {0} and {1} are times, such as 6:00 AM and 6:00 PM</comment>
+  </data>
+  <data name="DynamicWallpaperTodayHeader" xml:space="preserve">
+    <value>Today</value>
+    <comment>Page: the group of today's periods</comment>
+  </data>
+  <data name="DynamicWallpaperTodayDescription" xml:space="preserve">
+    <value>When each period starts and ends today.</value>
+    <comment>Below DynamicWallpaperTodayHeader</comment>
+  </data>
+  <data name="DynamicWallpaperTimeRange" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Page: when a period starts and ends today; {0} and {1} are times, such as 6:12 AM</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntRise" xml:space="preserve">
+    <value>The sun doesn't rise today.</value>
+    <comment>Page: note in Today near the poles</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntSet" xml:space="preserve">
+    <value>The sun doesn't set today.</value>
+    <comment>Page: note in Today near the poles</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayHeader" xml:space="preserve">
+    <value>A picture for each display</value>
+    <comment>Page: setting name, and the screen reader name of its switch</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayDescription" xml:space="preserve">
+    <value>Each display shows its own pictures. Not available with Span.</value>
+    <comment>Below DynamicWallpaperEachDisplayHeader; Span is DynamicWallpaperFitSpan</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysHeader" xml:space="preserve">
+    <value>Other displays</value>
+    <comment>Page: the group of periods for displays without their own pictures, instead of DynamicWallpaperPicturesHeader</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysDescription" xml:space="preserve">
+    <value>Displays without their own pictures show these.</value>
+    <comment>Below DynamicWallpaperOtherDisplaysHeader</comment>
+  </data>
+  <data name="DynamicWallpaperBuiltInDisplay" xml:space="preserve">
+    <value>Built-in display</value>
+    <comment>Page: name of a laptop's or tablet's own screen</comment>
+  </data>
+  <data name="DynamicWallpaperUnnamedDisplay" xml:space="preserve">
+    <value>Display {0}</value>
+    <comment>Page: name of a display that reports none; {0} is its place in the list</comment>
+  </data>
+  <data name="DynamicWallpaperTwinDisplay" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Page: name of one of several identical displays; {0} is their name, {1} its number, such as DELL E2420H (2)</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayConnected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>Page: below a display's name</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+    <comment>Page: below a display's name</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplay" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Page: button that removes a display that's not connected, with its pictures</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplayName" xml:space="preserve">
+    <value>Remove {0}</value>
+    <comment>Screen reader name of a display's Remove button; {0} is the display's name</comment>
+  </data>
+  <data name="DynamicWallpaperSameAsOthers" xml:space="preserve">
+    <value>Same as other displays</value>
+    <comment>Page: a display's picture in a period when it shows the one other displays show</comment>
+  </data>
+  <data name="DynamicWallpaperChooseSame" xml:space="preserve">
+    <value>Same as other displays</value>
+    <comment>Page: menu item of Choose for a display, which gives it the picture other displays show</comment>
+  </data>
 </root>
