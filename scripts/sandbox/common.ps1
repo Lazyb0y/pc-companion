@@ -366,9 +366,10 @@ function Test-HeaderAlignment([string] $Name, [string] $Title, [string] $When = 
     return $letterHeight
 }
 
-# The number of pixels in $Area of the screen that are amber, the color the feature icons' drawings
-# have and glyphs never do.
-function Get-AmberPixels([System.Windows.Rect] $Area) {
+# The number of pixels in $Area of the screen with a strong color, which the feature icons' drawings
+# have and glyphs, drawn in the text color, never do: their brightest and darkest channels are at
+# least 60 apart, which grays, the theme's text and paper never are.
+function Get-ColoredPixels([System.Windows.Rect] $Area) {
     $width = [int] $Area.Width
     $height = [int] $Area.Height
     if ($width -le 0 -or $height -le 0) { return 0 }
@@ -379,7 +380,9 @@ function Get-AmberPixels([System.Windows.Rect] $Area) {
     for ($y = 0; $y -lt $height; $y++) {
         for ($x = 0; $x -lt $width; $x++) {
             $pixel = $bitmap.GetPixel($x, $y)
-            if ($pixel.R -ge 200 -and $pixel.G -ge 100 -and $pixel.R - $pixel.B -ge 100) { $count++ }
+            $brightest = [math]::Max($pixel.R, [math]::Max($pixel.G, $pixel.B))
+            $darkest = [math]::Min($pixel.R, [math]::Min($pixel.G, $pixel.B))
+            if ($brightest - $darkest -ge 60) { $count++ }
         }
     }
     $graphics.Dispose()
@@ -388,16 +391,16 @@ function Get-AmberPixels([System.Windows.Rect] $Area) {
 }
 
 # Checks that the header of page $Title, and the navigation pane's item $Name, show the feature's
-# drawing when $Drawn is true, and its glyph otherwise. A glyph has no amber; the smallest accent,
-# Title Bar Actions' mouse wheel, has about 12 amber pixels in the header and 6 in the item.
+# drawing when $Drawn is true, and its glyph otherwise. A glyph has no colored pixels; at 100%
+# display scale the drawings with the fewest have about 330 in the header and 90 in the item.
 function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
     $kind = if ($Drawn) { 'drawing' } else { 'glyph' }
     $layout = Get-PageLayout $Title
     if ($layout) {
         # The 32-pixel icon left of the title, as in Test-HeaderAlignment.
         $box = $layout.Title
-        $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList ($box.Left - 100), ($box.Top - 24), 92, ($box.Height + 48))
-        Test-Check "${Name}: the header shows the feature's $kind" ($Drawn -eq ($amber -ge 8)) "amber pixels: $amber"
+        $headerColored = Get-ColoredPixels (New-Object System.Windows.Rect -ArgumentList ($box.Left - 100), ($box.Top - 24), 92, ($box.Height + 48))
+        Test-Check "${Name}: the header shows the feature's $kind" ($Drawn -eq ($headerColored -ge 100)) "colored pixels: $headerColored"
     }
     else {
         Test-Check "${Name}: the header shows the feature's $kind" $false 'the page''s title isn''t shown'
@@ -407,11 +410,15 @@ function Test-FeatureIcon([string] $Name, [string] $Title, [bool] $Drawn) {
         (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
         (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))
     $item = (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
-    if ($item) {
-        # The 16-pixel icon in the item's left 48 pixels.
+    if ($item -and (-not (Show-PaneItem $item) -or $item.Current.BoundingRectangle.IsEmpty)) {
+        Test-Check "${Name}: the navigation item shows the feature's $kind" $false 'the item isn''t on the screen'
+    }
+    elseif ($item) {
+        # The 20-pixel icon, from 8 pixels into the item, past the selected item's indicator in the
+        # accent color at its left edge. The label further right is in the text color.
         $bounds = $item.Current.BoundingRectangle
-        $amber = Get-AmberPixels (New-Object System.Windows.Rect -ArgumentList $bounds.Left, $bounds.Top, 48, $bounds.Height)
-        Test-Check "${Name}: the navigation item shows the feature's $kind" ($Drawn -eq ($amber -ge 3)) "amber pixels: $amber"
+        $itemColored = Get-ColoredPixels (New-Object System.Windows.Rect -ArgumentList ($bounds.Left + 8), $bounds.Top, 48, $bounds.Height)
+        Test-Check "${Name}: the navigation item shows the feature's $kind" ($Drawn -eq ($itemColored -ge 40)) "colored pixels: $itemColored"
     }
     else {
         Test-Check "${Name}: the navigation item shows the feature's $kind" $false 'the item isn''t shown'
@@ -435,6 +442,30 @@ function Show-Page([string] $Name) {
 
 # Selects the navigation pane's item $Name, and only that: a page can have text or a card with the
 # same name, such as Home's Hot Corners card.
+# Scrolls the navigation pane until its item $Item is on the screen, which an item below the end of
+# the pane isn't, and says whether it is: the item scrolls itself into view if it can, and otherwise
+# the nearest container that scrolls up and down scrolls down to it.
+function Show-PaneItem([System.Windows.Automation.AutomationElement] $Item) {
+    if (-not $Item.Current.IsOffscreen) { return $true }
+    $pattern = $null
+    if ($Item.TryGetCurrentPattern([System.Windows.Automation.ScrollItemPattern]::Pattern, [ref] $pattern)) {
+        $pattern.ScrollIntoView()
+        Start-Sleep -Milliseconds 500
+        if (-not $Item.Current.IsOffscreen) { return $true }
+    }
+    $walker = [System.Windows.Automation.TreeWalker]::ControlViewWalker
+    $scroller = $walker.GetParent($Item)
+    while ($scroller -and -not ($scroller.TryGetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern, [ref] $pattern) -and $pattern.Current.VerticallyScrollable)) {
+        $scroller = $walker.GetParent($scroller)
+    }
+    if (-not $scroller) { return $false }
+    for ($step = 0; $step -lt 20 -and $Item.Current.IsOffscreen -and $pattern.Current.VerticalScrollPercent -lt 100; $step++) {
+        $pattern.Scroll([System.Windows.Automation.ScrollAmount]::NoAmount, [System.Windows.Automation.ScrollAmount]::SmallIncrement)
+        Start-Sleep -Milliseconds 300
+    }
+    return -not $Item.Current.IsOffscreen
+}
+
 function Select-PaneItem([string] $Name) {
     $window = Get-AppWindow
     if (-not $window) { return $false }
