@@ -10,6 +10,7 @@ terms, shown here, not under PC Companion's MIT License.
 5. Windows Community Toolkit
 6. .NET Community Toolkit
 7. Serilog
+8. Time zone database
 
 ==============================================================================
 1. .NET runtime and Microsoft.Extensions
@@ -428,3 +429,12 @@ https://github.com/serilog
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+==============================================================================
+8. Time zone database
+Dynamic Wallpaper's table of time zones and their main cities, made by
+scripts\time-zone-places.ps1 from zone.tab, zone1970.tab and tzdata.zi
+https://www.iana.org/time-zones
+==============================================================================
+
+These files are in the public domain.
