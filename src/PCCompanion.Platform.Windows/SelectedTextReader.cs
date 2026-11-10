@@ -300,7 +300,7 @@ public sealed class SelectedTextReader : IDisposable
 
         var result = ReadSelection(pattern, request.MaxLength, held, out var only);
         return result.Status == SelectedTextStatus.Read && request.ClickedAt is { } point && only is not null
-            && IsWholeBox(automation, element, pattern, only, point, held)
+            && IsWholeBox(element, pattern, result.Text!.Length, point, held)
             ? new SelectedTextResult(SelectedTextStatus.WholeBoxSelected)
             : result;
     }
@@ -340,23 +340,25 @@ public sealed class SelectedTextReader : IDisposable
             : new SelectedTextResult(SelectedTextStatus.Read, text.ToString(), LastLine(last!));
     }
 
-    // Whether the selection is all of the text of the box at the clicked point. Only boxes are
-    // checked, never documents, whose whole range can be long; the ends are compared without reading
-    // any more text.
-    private static bool IsWholeBox(IUIAutomation2 automation, IUIAutomationElement textElement, IUIAutomationTextPattern pattern, IUIAutomationTextRange selection, Point point, HeldObjects held)
+    // Whether the selection is all of the text of the box that was clicked: the box with the
+    // selection is under the click, and its text is no longer than the selection. Only boxes are
+    // checked, never documents, whose text can be long, and the box's text is read up to one
+    // character more than the selection. Edge's address bar puts another element under the
+    // pointer once clicked, and Edge's boxes put the selection's end after the text's, so neither
+    // the element under the point nor the ranges' ends can tell.
+    private static bool IsWholeBox(IUIAutomationElement textElement, IUIAutomationTextPattern pattern, int selectedLength, Point point, HeldObjects held)
     {
         try
         {
+            var bounds = textElement.CurrentBoundingRectangle;
             if (textElement.CurrentControlType == UIA_CONTROLTYPE_ID.UIA_DocumentControlTypeId
-                || FocusableAt(automation, point, held) is not { } box
-                || !automation.CompareElements(box, textElement))
+                || !Rectangle.FromLTRB(bounds.left, bounds.top, bounds.right, bounds.bottom).Contains(point))
             {
                 return false;
             }
 
             var whole = held.Add(pattern.DocumentRange);
-            return selection.CompareEndpoints(TextPatternRangeEndpoint.TextPatternRangeEndpoint_Start, whole, TextPatternRangeEndpoint.TextPatternRangeEndpoint_Start) == 0
-                && selection.CompareEndpoints(TextPatternRangeEndpoint.TextPatternRangeEndpoint_End, whole, TextPatternRangeEndpoint.TextPatternRangeEndpoint_End) == 0;
+            return Take(whole.GetText(selectedLength + 1)).Length <= selectedLength;
         }
         catch (Exception)
         {

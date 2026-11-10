@@ -71,7 +71,10 @@ Select text in any app, then middle-click in a text box: the text goes in where 
 - **Only text** is read, exactly as selected, with no trimming.
 - **At most 65,536 characters.** One more is read to tell when there are more; longer text isn't pasted.
 - **No time limit of its own:** the selection can be pasted for as long as the app still has it selected. Nothing is kept between clicks.
-- **A box's own selection of all its text doesn't count.** When the selection is in the box being clicked and covers all of its text, as after a click in a browser's address bar, nothing is pasted. The selection's ends are compared with the box's (`CompareEndpoints`) without reading its other text. This is checked for boxes only, not documents, where the whole text can be long.
+- **A box's own selection of all its text doesn't count.** When the selection is in the box being clicked and covers all of its text, as after a click in a browser's address bar, nothing is pasted.
+  - The box with the selection counts as the clicked one when the click is inside its rectangle. After a click, Edge's address bar puts another element under the pointer.
+  - Its text is read up to one character more than the selection, to tell whether the selection is all of it. Edge's boxes report the selection's end after the text's, so the ends can't be compared.
+  - This is checked for boxes only, not documents, where the whole text can be long.
 - **The text stays in memory** only until it's pasted. It's never stored, logged or sent.
 
 ## Recognizing a text box
@@ -305,7 +308,7 @@ A spike in Windows Sandbox on Windows 11 build 26100 used Edge, test windows wit
 - **The APIs are documented** and in every supported version:
   - **the pointer:** `GetCursorInfo`, `LoadCursor`, `RegisterRawInputDevices`, `GetRawInputData`, `SetWindowsHookEx` with `WH_MOUSE_LL` (through `PointerHook`), `GetSystemMetrics` with `SM_SWAPBUTTON`, and `SendInput`;
   - **windows:** `WindowFromPoint`, `SendMessageTimeout` with `WM_NULL`, `EM_CHARFROMPOS`, `EM_SETSEL` and `EM_REPLACESEL`, `SetForegroundWindow`, `PhysicalToLogicalPointForPerMonitorDPI` and `UpdateLayeredWindow`;
-  - **UI Automation's client interfaces:** `CUIAutomation8`, `IUIAutomation2`, `ElementFromPoint`, `CompareElements`, and the text pattern, with `RangeFromPoint`, `Select` and `CompareEndpoints`, and the value pattern, in Windows since Windows 8;
+  - **UI Automation's client interfaces:** `CUIAutomation8`, `IUIAutomation2`, `ElementFromPoint`, `SetFocus`, and the text pattern, with `RangeFromPoint` and `Select`, and the value pattern, in Windows since Windows 8;
   - **OLE drag and drop:** `OleInitialize`, `DoDragDrop`, `IDropSource` and `IDataObject`.
 - **What an app takes depends on the app:** whether it shares its selection, accepts dropped text, or shows Windows' I-beam; see [When nothing is pasted](#when-nothing-is-pasted).
 - The spike ran on Windows 11 only, so Windows 10 is tested by hand.
