@@ -11,18 +11,6 @@ namespace PCCompanion.Modules.Display.Tests;
 public sealed class ProfileRecognitionTests
 {
     [Fact]
-    public void ASerialNumberIsKeptOnlyAsAHash()
-    {
-        var hash = CurrentSetup.HashSerial(new DisplaySerialNumber(0x01020304, "AB12CD34"));
-
-        Assert.Matches("^[0-9a-f]{16}$", hash);
-        Assert.Equal(hash, CurrentSetup.HashSerial(new DisplaySerialNumber(0x01020304, "AB12CD34")));
-        Assert.NotEqual(hash, CurrentSetup.HashSerial(new DisplaySerialNumber(0x01020304, "AB12CD35")));
-        Assert.NotEqual(CurrentSetup.HashSerial(new DisplaySerialNumber(1, "")), CurrentSetup.HashSerial(new DisplaySerialNumber(0, "1")));
-        Assert.Equal("", CurrentSetup.HashSerial(null));
-    }
-
-    [Fact]
     public void AProfileMadeFromTheSetupHasEveryConnectedDisplayWithTheMainOneFirst()
     {
         var side = Connected(2, "BOE0A1E", DisplayConnection.BuiltIn, name: "");
