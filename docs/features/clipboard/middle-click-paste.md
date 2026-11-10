@@ -124,6 +124,8 @@ Select text in any app, then middle-click in a text box: the text goes in where 
 - **The text goes in** with `EM_REPLACESEL`, marked so it can be undone. Windows copies the text into the app's process, as it does for every message below `WM_USER`.
 - **No waiting:** each message is sent with `SendMessageTimeout` and `SMTO_ABORTIFHUNG`, at most 500 ms each, so an app that stopped responding gets nothing, now or later.
 - **Then the window comes to the front,** and the box gets the keyboard focus (`SetForegroundWindow`, then UI Automation's `SetFocus`).
+  - UI Automation focuses a box that has a window of its own by making that window, a child window, the foreground window, a moment later (Sandbox checks).
+  - So for 300 ms the front is watched, and when it's the box's window, the top-level window is brought to the front again. The box keeps the focus.
 
 ### Dropping the text
 
@@ -137,7 +139,7 @@ Select text in any app, then middle-click in a text box: the text goes in where 
 - **Before the drop,** the box's app must answer `WM_NULL` within 200 ms (`SendMessageTimeout` with `SMTO_ABORTIFHUNG`).
 - **The drag is cancelled** when the app doesn't say within half a second that it would take the text. A drop is also cancelled if the app answers only after 1 second, as one that stopped responding can (spike), so text never arrives late.
 - **Where it drops:** at the point of the middle-click. When the pointer has moved more than 4 pixels from it before the text was read, nothing is pasted, and the notice says so, rather than moving the pointer under the user's hand.
-- **Afterwards,** the app comes to the front with the focus in the box. Windows' drag pointer may show for the moment the drop takes.
+- **Afterwards,** the window comes to the front and the box gets the keyboard focus, as for Windows' own boxes, whether or not the app does that itself after a drop. Windows' drag pointer may show for the moment the drop takes.
 - **Apps handle the text as they handle drops:**
   - text areas keep line breaks;
   - Edge's single-line boxes turn them into spaces;
@@ -191,7 +193,7 @@ Select text in any app, then middle-click in a text box: the text goes in where 
 - **`PointerHook`'s thread** runs the hook and nothing else.
 - **The UI Automation thread:** the feature's own, in COM's multithreaded apartment and with no windows, as a UI Automation client should be. It asks for the element under the pointer and reads the selection, one request at a time; a read comes before a waiting question about the pointer. It starts with the feature and keeps its UI Automation object until the feature stops.
 - **The drop thread:** the feature's own, in a single-threaded apartment with OLE started, as drag and drop needs, and its own message loop for the drop window. It starts at the first drop and lives until the feature stops.
-- **The thread pool** sends the window messages to Windows' own boxes, since each can wait for the box's app.
+- **The thread pool** sends the window messages to Windows' own boxes, since each can wait for the box's app, and watches the front after such a box gets the focus.
 - **Stopping:** the claims are removed, a waiting drop is cancelled, and both threads end without the UI thread waiting for them. They're background threads, so one held by an app doesn't keep the host running.
 - **Failures:** everything on these threads runs inside the feature's error boundary. A failure is logged and keeps the feature off until the host restarts, like a failing `Apply`; the other features keep running.
 

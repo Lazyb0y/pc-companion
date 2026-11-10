@@ -340,7 +340,19 @@ public sealed partial class MiddleClickPasteController(IMiddleClickPasteSystem s
                     return;
                 }
 
-                Then(system.DropAsync(paste.Point, paste.Text), dropped => Finish(paste, OutcomeOf(dropped), PasteWay.Drop));
+                Then(system.DropAsync(paste.Point, paste.Text), dropped =>
+                {
+                    // Apps take a drop without always putting the keyboard focus in the box, so
+                    // it's put there, as after a paste by messages.
+                    if (dropped == TextDropResult.Dropped)
+                    {
+                        Then(system.FocusAsync(paste.Box.Root, paste.Box.Window, paste.Point), _ => Finish(paste, PasteOutcome.Pasted, PasteWay.Drop));
+                    }
+                    else
+                    {
+                        Finish(paste, OutcomeOf(dropped), PasteWay.Drop);
+                    }
+                });
                 break;
         }
     }
@@ -366,7 +378,7 @@ public sealed partial class MiddleClickPasteController(IMiddleClickPasteSystem s
             return;
         }
 
-        Then(system.FocusAsync(paste.Box.Root, paste.Point), _ => Finish(paste, PasteOutcome.Pasted, PasteWay.Message));
+        Then(system.FocusAsync(paste.Box.Root, paste.Box.Window, paste.Point), _ => Finish(paste, PasteOutcome.Pasted, PasteWay.Message));
     }
 
     private void Finish(Paste paste, PasteOutcome outcome, PasteWay way)

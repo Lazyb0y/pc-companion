@@ -31,14 +31,14 @@ public sealed class MiddleClickPastePasteTests : IDisposable
     public void Dispose() => _controller.Dispose();
 
     [Fact]
-    public void TheSelectedTextIsDroppedWhereTheClickWas()
+    public void TheSelectedTextIsDroppedWhereTheClickWasAndThenTheBoxGetsTheFocus()
     {
         Claim(window: 0);
         Click();
         _system.GiveRead(SelectedTextStatus.Read, "text");
 
         Assert.Equal([Here], _system.Reads);
-        Assert.Equal(["drop at 100,100: text"], _system.Steps);
+        Assert.Equal(["drop at 100,100: text", "focus 10, box 0, at 100,100"], _system.Steps);
         Assert.Equal([PasteOutcome.Pasted], _outcomes);
         Assert.False(_controller.IsPasting);
     }
@@ -51,7 +51,7 @@ public sealed class MiddleClickPastePasteTests : IDisposable
         Click();
         _system.GiveRead(SelectedTextStatus.Read, "text");
 
-        Assert.Equal(["insert 55 at 100,100: text", "focus 10 at 100,100"], _system.Steps);
+        Assert.Equal(["insert 55 at 100,100: text", "focus 10, box 55, at 100,100"], _system.Steps);
         Assert.Equal([PasteOutcome.Pasted], _outcomes);
     }
 
@@ -63,7 +63,7 @@ public sealed class MiddleClickPastePasteTests : IDisposable
         Click();
         _system.GiveRead(SelectedTextStatus.Read, "text");
 
-        Assert.Equal(["place at 100,100", "insert 55 at the cursor: text", "focus 10 at 100,100"], _system.Steps);
+        Assert.Equal(["place at 100,100", "insert 55 at the cursor: text", "focus 10, box 55, at 100,100"], _system.Steps);
         Assert.Equal([PasteOutcome.Pasted], _outcomes);
     }
 
@@ -76,7 +76,7 @@ public sealed class MiddleClickPastePasteTests : IDisposable
         Click();
         _system.GiveRead(SelectedTextStatus.Read, "text");
 
-        Assert.Equal(["insert 55 at 100,100: text", "place at 100,100", "insert 55 at the cursor: text", "focus 10 at 100,100"], _system.Steps);
+        Assert.Equal(["insert 55 at 100,100: text", "place at 100,100", "insert 55 at the cursor: text", "focus 10, box 55, at 100,100"], _system.Steps);
         Assert.Equal([PasteOutcome.Pasted], _outcomes);
     }
 
@@ -85,13 +85,14 @@ public sealed class MiddleClickPastePasteTests : IDisposable
     [InlineData(TextDropResult.NotUnderPointer, PasteOutcome.BoxRefused)]
     [InlineData(TextDropResult.NotResponding, PasteOutcome.BoxNotResponding)]
     [InlineData(TextDropResult.Busy, PasteOutcome.Busy)]
-    public void ADropTheBoxDidntTakeSaysWhy(TextDropResult result, PasteOutcome outcome)
+    public void ADropTheBoxDidntTakeSaysWhyAndGivesNoFocus(TextDropResult result, PasteOutcome outcome)
     {
         _system.DropResult = result;
         Claim(window: 0);
         Click();
         _system.GiveRead(SelectedTextStatus.Read, "text");
 
+        Assert.Equal(["drop at 100,100: text"], _system.Steps);
         Assert.Equal([outcome], _outcomes);
     }
 
