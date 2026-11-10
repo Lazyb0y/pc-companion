@@ -88,6 +88,9 @@ public sealed record WallpaperState
     /// <summary>The background before Dynamic Wallpaper changed it; <see langword="null"/> before its first change.</summary>
     public RememberedBackground? Remembered { get; set; }
 
+    /// <summary>The period whose pictures were set last, such as <c>Sun.Day</c>; a folder shows its next picture when another starts.</summary>
+    public string? Period { get; set; }
+
     /// <summary>The pictures Dynamic Wallpaper set last, by display, to tell its own changes from others'.</summary>
     public IReadOnlyList<DisplayPicture> SetLast { get; set; } = [];
 
@@ -101,6 +104,7 @@ public sealed record WallpaperState
         other is not null
         && Version == other.Version
         && Remembered == other.Remembered
+        && Period == other.Period
         && SetLast.SequenceEqual(other.SetLast)
         && SteppedAside == other.SteppedAside
         && Folders.SequenceEqual(other.Folders);

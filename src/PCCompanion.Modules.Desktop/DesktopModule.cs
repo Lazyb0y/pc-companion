@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
+using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Modules.Desktop.SystemMeters;
 
 namespace PCCompanion.Modules.Desktop;
@@ -17,6 +18,7 @@ public static class DesktopModule
     public static IServiceCollection AddDesktopModule(this IServiceCollection services)
     {
         services.AddSingleton<IFeature, SystemMetersFeature>();
+        services.AddSingleton<IFeature, DynamicWallpaperFeature>();
         return services;
     }
 }
