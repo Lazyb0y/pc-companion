@@ -73,8 +73,27 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
         return new Timer(this);
     }
 
+    public Action? BackgroundChanged { get; private set; }
+
+    public Guid? Desktop { get; set; }
+
+    public bool? Spotlight { get; set; }
+
+    public int Workers { get; private set; }
+
+    public IDisposable WatchBackground(Action changed)
+    {
+        BackgroundChanged = changed;
+        return new Watch(this);
+    }
+
+    public Guid? CurrentVirtualDesktop() => Desktop;
+
+    public bool? IsSpotlightOn() => Spotlight;
+
     public IWallpaperWorker StartWorker(Action slow)
     {
+        Workers++;
         WorkerRunning = true;
         return new Worker(this);
     }
@@ -116,6 +135,11 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
 
     public void Dispose() => _folder.Dispose();
 
+    private sealed class Watch(FakeDynamicWallpaperSystem system) : IDisposable
+    {
+        public void Dispose() => system.BackgroundChanged = null;
+    }
+
     private sealed class Window(FakeDynamicWallpaperSystem system) : IWallpaperWindow
     {
         public void Post(Action action)
@@ -140,9 +164,11 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
 
     private sealed class Worker(FakeDynamicWallpaperSystem system) : IWallpaperWorker
     {
+        private bool _disposed;
+
         public void Post(Action job)
         {
-            if (system.WorkerRunning)
+            if (!_disposed)
             {
                 job();
             }
@@ -150,7 +176,11 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
 
         public bool Finish(TimeSpan timeout) => true;
 
-        public void Dispose() => system.WorkerRunning = false;
+        public void Dispose()
+        {
+            _disposed = true;
+            system.WorkerRunning = false;
+        }
     }
 }
 
@@ -261,9 +291,17 @@ internal sealed class FakeWallpaper : IWindowsWallpaper
         Fit = position;
     }
 
-    public uint BackgroundColor() => Color;
+    public uint BackgroundColor()
+    {
+        Fail();
+        return Color;
+    }
 
-    public void SetBackgroundColor(uint rgb) => Color = rgb;
+    public void SetBackgroundColor(uint rgb)
+    {
+        Fail();
+        Color = rgb;
+    }
 
     public WallpaperStatus Status()
     {
@@ -271,11 +309,23 @@ internal sealed class FakeWallpaper : IWindowsWallpaper
         return State;
     }
 
-    public void TurnOff() => State = WallpaperStatus.None;
+    public void TurnOff()
+    {
+        Fail();
+        State = WallpaperStatus.None;
+    }
 
-    public WallpaperSlideshow? Slideshow() => null;
+    /// <summary>The slideshow, while one runs.</summary>
+    public WallpaperSlideshow? Show { get; set; }
 
-    public void SetSlideshow(WallpaperSlideshow slideshow) => State = WallpaperStatus.On | WallpaperStatus.Slideshow;
+    public WallpaperSlideshow? Slideshow() => State.HasFlag(WallpaperStatus.Slideshow) ? Show : null;
+
+    public void SetSlideshow(WallpaperSlideshow slideshow)
+    {
+        Fail();
+        Show = slideshow;
+        State = WallpaperStatus.On | WallpaperStatus.Slideshow;
+    }
 
     public void Dispose() => Connected = false;
 
