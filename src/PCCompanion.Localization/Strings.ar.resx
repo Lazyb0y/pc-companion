@@ -4868,4 +4868,12 @@
     <value>مثل الشاشات الأخرى</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>اللصق بالنقر الأوسط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>حدد نصًا في أي تطبيق، ثم انقر بالزر الأوسط في مربع نص للصقه حيث يوجد المؤشر، دون استخدام الحافظة.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Modules.Clipboard.MiddleClickPaste;
 
 namespace PCCompanion.Modules.Clipboard;
 
@@ -17,6 +18,7 @@ public static class ClipboardModule
     public static IServiceCollection AddClipboardModule(this IServiceCollection services)
     {
         services.AddSingleton<IFeature, ClipboardActionsFeature>();
+        services.AddSingleton<IFeature, MiddleClickPasteFeature>();
         return services;
     }
 }
