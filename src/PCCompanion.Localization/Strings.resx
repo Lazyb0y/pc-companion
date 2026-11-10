@@ -4732,4 +4732,40 @@
     <value>The last middle-click is still being pasted</value>
     <comment>Middle-Click Paste: notice when the user middle-clicks again while the last middle-click is still being pasted.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>How it works</value>
+    <comment>Middle-Click Paste page: header of the card that says how the feature works.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>Select text in an app, then middle-click in a text box in the same app or another one. The text goes in where the pointer is, and Ctrl+Z takes it out again. Links, tabs, page text and title bars keep their own middle-click, and the clipboard isn't used.</value>
+    <comment>Middle-Click Paste page: description of the card that says how the feature works.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>Apps that keep their middle-click</value>
+    <comment>Middle-Click Paste page: header of the list of apps that keep their middle-click.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>Nothing is pasted in their windows, and their middle-clicks reach them as usual. For apps that use a middle-click in their text themselves.</value>
+    <comment>Middle-Click Paste page: description of the list of apps that keep their middle-click.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>Apps share their selected text, and say which of their parts are text boxes, through Windows' accessibility support, which some apps don't have. Password boxes and terminals are left alone. When nothing is pasted, a short note next to the pointer says why.</value>
+    <comment>Middle-Click Paste page: note on which apps can share their selected text and which places are left alone.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>Apps running as administrator keep their middle-click, and their selected text isn't read, while PC Companion runs without admin rights.</value>
+    <comment>Middle-Click Paste page: note on apps running as administrator, while PC Companion runs without admin rights.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so it pastes only between apps that also run as administrator, and apps without admin rights keep their middle-click.</value>
+    <comment>Middle-Click Paste page: note on apps' rights while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>Middle-Click Paste is for the mouse. With the keyboard, copy with Ctrl+C and paste with Ctrl+V.</value>
+    <comment>Middle-Click Paste page: note that the feature is a mouse action, with the keyboard way to do the same.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>While it's on, watches the pointer, and when it rests on text, asks the app what's under it, never its text; with apps listed, reads which app a window belongs to. Reads the selected text only at a middle-click on a text box, never from a password box, and doesn't store, log or send it. Puts the text only into the box you clicked, and doesn't use the clipboard. Asking a browser turns on its accessibility support until it closes, which uses more memory on very long pages. Makes no network connections.</value>
+    <comment>Middle-Click Paste page: what the feature reads and changes, in the Permissions &amp; data card.</comment>
+  </data>
 </root>

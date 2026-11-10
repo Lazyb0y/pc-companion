@@ -22,6 +22,7 @@ using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
 using PCCompanion.App.Features.LockKeys;
+using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
@@ -190,6 +191,7 @@ public partial class App : Application
             .AddTransient<SystemMetersViewModel>()
             .AddTransient<DynamicWallpaperViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
+            .AddTransient<MiddleClickPasteViewModel>()
             .AddTransient<NetworkProfilesViewModel>()
             .AddTransient<FolderRulesViewModel>()
             .AddTransient<DriveActionsViewModel>()

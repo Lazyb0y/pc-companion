@@ -4732,4 +4732,40 @@
     <value>Le dernier clic central est encore en cours de collage</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>Fonctionnement</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>Sélectionnez du texte dans une application, puis cliquez avec le bouton central dans une zone de texte de la même application ou d’une autre. Le texte est inséré à l’emplacement du pointeur, et Ctrl+Z le retire. Les liens, les onglets, le texte des pages et les barres de titre gardent leur propre clic central, et le Presse-papiers n’est pas utilisé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>Applications qui gardent leur clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>Rien n’est collé dans leurs fenêtres, et leurs clics centraux leur parviennent comme d’habitude. Pour les applications qui utilisent elles-mêmes un clic central dans leur texte.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>Les applications partagent leur texte sélectionné, et indiquent lesquelles de leurs parties sont des zones de texte, grâce à la prise en charge de l’accessibilité de Windows, que certaines applications n’ont pas. Les zones de mot de passe et les terminaux ne sont pas touchés. Quand rien n’est collé, une courte note à côté du pointeur explique pourquoi.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>Les applications exécutées en tant qu’administrateur gardent leur clic central, et leur texte sélectionné n’est pas lu, tant que PC Companion s’exécute sans droits d’administrateur.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion s’exécute en tant qu’administrateur : il ne colle donc qu’entre des applications qui s’exécutent aussi en tant qu’administrateur, et les applications sans droits d’administrateur gardent leur clic central.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>Coller par clic central est conçu pour la souris. Au clavier, copiez avec Ctrl+C et collez avec Ctrl+V.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>Tant qu’il est activé, il suit le pointeur et, quand celui-ci s’arrête sur du texte, demande à l’application ce qui se trouve dessous, jamais son texte ; avec des applications dans la liste, il lit à quelle application appartient une fenêtre. Il lit le texte sélectionné uniquement lors d’un clic central dans une zone de texte, jamais dans une zone de mot de passe, et ne le stocke, ne l’enregistre ni ne l’envoie. Il insère le texte uniquement dans la zone sur laquelle vous avez cliqué et n’utilise pas le Presse-papiers. Interroger un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Il n’établit aucune connexion réseau.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
