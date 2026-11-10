@@ -64,6 +64,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Title Bar Actions | A window with a blue title bar | A blue mouse with an orange wheel | Sky |
 | End App | An app window | A red stop sign with a white bar | Violet |
 | System Meters | Three bars, from light and short to deep and tall | | Green |
+| Dynamic Wallpaper | A picture of mountains, its sky split into day with a white sun and night with a white moon | | Sky |
 | Clipboard Actions | A clipboard | An orange bolt | App blue |
 | Network Profiles | A Wi-Fi symbol | An orange bookmark | Sky |
 | Folder Rules | A yellow folder | A blue funnel | Yellow, with an app blue funnel |

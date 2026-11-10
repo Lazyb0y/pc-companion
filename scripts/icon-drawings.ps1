@@ -129,6 +129,24 @@ function Get-EllipsePath([double] $CenterX, [double] $CenterY, [double] $RadiusX
     "A$(F $RadiusX) $(F $RadiusY) 0 1 0 $(F ($CenterX - $RadiusX)) $(F $CenterY)Z"
 }
 
+# A crescent as path data: $Moon is the middle and radius of a circle, then the middle and radius of
+# the bite taken out of it. The path runs the long way round the circle, then back along the bite.
+function Get-CrescentPath([double[]] $Moon) {
+    $cx, $cy, $r, $bx, $by, $br = $Moon
+    $d = [math]::Sqrt(($bx - $cx) * ($bx - $cx) + ($by - $cy) * ($by - $cy))
+    $along = ($r * $r - $br * $br + $d * $d) / (2 * $d)
+    $across = [math]::Sqrt($r * $r - $along * $along)
+    $ux = ($bx - $cx) / $d
+    $uy = ($by - $cy) / $d
+    $mx = $cx + $along * $ux
+    $my = $cy + $along * $uy
+    $x1 = $mx + $across * $uy
+    $y1 = $my - $across * $ux
+    $x2 = $mx - $across * $uy
+    $y2 = $my + $across * $ux
+    "M$(F $x1) $(F $y1)A$(F $r) $(F $r) 0 1 0 $(F $x2) $(F $y2)A$(F $br) $(F $br) 0 0 1 $(F $x1) $(F $y1)Z"
+}
+
 # The line from x1, y1 to x2, y2 grown by $Radius with round ends, as path data.
 function Get-CapsulePath([double[]] $Line, [double] $Radius) {
     $x1, $y1, $x2, $y2 = $Line
@@ -658,6 +676,36 @@ foreach ($icon in $endApp) {
     foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), (Get-GrownShape $octagon ($icon.Stroke + 2 * $icon.Cut))) { $window = Remove-Shape $window $cut }
     $sign = Remove-Shape (Get-GrownShape $octagon $icon.Stroke) (ConvertTo-Shape (Get-RectPath $icon.Bar))
     Write-Drawing "end-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $sign))
+}
+
+# Dynamic Wallpaper, in sky: a picture of mountains by day and by night, its sky split along the
+# line Split, in the main tone with a white sun on the left and in the deepest tone with a white
+# moon on the right, above mountains in the light tone below the line Mountains. Sun is the sun's
+# middle and radius, and Moon the moon's middle and radius and the middle and radius of the bite
+# that makes it a crescent. The one-color version cuts the sun and the moon out, and Cut wide along
+# the split, down to the mountains, and along the mountains.
+$dynamicWallpaper = @(
+    @{ Size = 32; Picture = 1, 4, 30, 24, 2; Split = 19, 4, 13, 28; Mountains = 'M1 22L8 16.5L13 20L21 14L31 21.5'; Sun = 7, 10, 3.5; Moon = 25, 9.5, 3.2, 26.8, 8.1, 2.7; Cut = 1.2 }
+    @{ Size = 20; Picture = 2, 4, 16, 12, 1.5; Split = 12, 4, 8, 16; Mountains = 'M2 13.2L5.8 10.6L8.4 12.2L12.6 9.4L18 13'; Sun = 5.5, 7.2, 1.9; Moon = 14.8, 7, 2, 15.9, 6.1, 1.7; Cut = 1 }
+)
+foreach ($icon in $dynamicWallpaper) {
+    $px, $py, $pw, $ph, $pr = $icon.Picture
+    $tx, $ty, $sx, $sy = $icon.Split
+    $daySky = Get-PolygonPath @(@($px, $py), @($tx, $ty), @($sx, $sy), @($px, ($py + $ph)))
+    $nightSky = Get-PolygonPath @(@($tx, $ty), @(($px + $pw), $py), @(($px + $pw), ($py + $ph)), @($sx, $sy))
+    $mountains = "$($icon.Mountains)V$(F ($py + $ph))H$(F $px)Z"
+    $cx, $cy, $radius = $icon.Sun
+    $sun = Get-EllipsePath $cx $cy $radius $radius
+    $moon = Get-CrescentPath $icon.Moon
+    $defs = @(Get-Gradient 'sky-main') + @(Get-Gradient 'sky-deepest') + @(Get-Gradient 'sky-light') +
+        @('<clipPath id="picture">', "$indent$(Get-Rect $icon.Picture)", '</clipPath>')
+    $landscape = "<path fill=`"url(#sky-main)`" d=`"$daySky`"/>", "<path fill=`"url(#sky-deepest)`" d=`"$nightSky`"/>", "<path fill=`"url(#sky-light)`" d=`"$mountains`"/>"
+    $body = @(Get-Group 'clip-path="url(#picture)"' $landscape) + @("<path fill=`"$white`" d=`"$sun`"/>", "<path fill=`"$white`" d=`"$moon`"/>")
+    Write-Drawing "dynamic-wallpaper-$($icon.Size)" $icon.Size $defs $body
+    $split = Remove-Shape (Get-StrokeArea "M$(F $tx) $(F $ty)L$(F $sx) $(F $sy)" $icon.Cut) (ConvertTo-Shape $mountains)
+    $shape = ConvertTo-Shape (Get-RectPath $icon.Picture)
+    foreach ($cut in $split, (Get-StrokeArea $icon.Mountains $icon.Cut), (ConvertTo-Shape $sun), (ConvertTo-Shape $moon)) { $shape = Remove-Shape $shape $cut }
+    Write-Drawing "dynamic-wallpaper-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
 Write-Host "Wrote the drawings in $folder"
