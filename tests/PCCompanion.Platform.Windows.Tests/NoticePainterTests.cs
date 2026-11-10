@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
-using PCCompanion.Modules.Input.Notice;
 using Xunit;
 
-namespace PCCompanion.Modules.Input.Tests;
+namespace PCCompanion.Platform.Windows.Tests;
 
 // Draws into memory only; nothing is shown.
 public sealed class NoticePainterTests

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.Notice;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// A line of the notice, such as "Caps Lock on", and its icon from <see cref="NoticeIcons"/>. A line
