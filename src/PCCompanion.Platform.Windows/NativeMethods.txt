@@ -461,3 +461,7 @@ IShellItemArray
 SHCreateShellItemArrayFromIDLists
 SHCreateShellItemArrayFromShellItem
 SHParseDisplayName
+CancelWaitableTimer
+CreateWaitableTimerEx
+SetWaitableTimer
+WM_TIMECHANGE
