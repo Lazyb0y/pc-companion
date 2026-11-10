@@ -48,6 +48,43 @@ public sealed record WallpaperMonitor(string Id, Rectangle? Area);
 /// <param name="Items">The full paths of the slideshow's folder, or of its pictures, all in one folder.</param>
 public sealed record WallpaperSlideshow(IReadOnlyList<string> Items, bool Shuffle, TimeSpan Interval);
 
+/// <summary>Windows' wallpaper function, which <see cref="WindowsWallpaper"/> is; tests use fakes.</summary>
+public interface IWindowsWallpaper : IDisposable
+{
+    /// <inheritdoc cref="WindowsWallpaper.Displays"/>
+    IReadOnlyList<WallpaperMonitor> Displays();
+
+    /// <inheritdoc cref="WindowsWallpaper.PictureOf"/>
+    string? PictureOf(string? displayId);
+
+    /// <inheritdoc cref="WindowsWallpaper.SetPicture"/>
+    bool SetPicture(string? displayId, string picture);
+
+    /// <inheritdoc cref="WindowsWallpaper.Position"/>
+    WallpaperPosition Position();
+
+    /// <inheritdoc cref="WindowsWallpaper.SetPosition"/>
+    void SetPosition(WallpaperPosition position);
+
+    /// <inheritdoc cref="WindowsWallpaper.BackgroundColor"/>
+    uint BackgroundColor();
+
+    /// <inheritdoc cref="WindowsWallpaper.SetBackgroundColor"/>
+    void SetBackgroundColor(uint rgb);
+
+    /// <inheritdoc cref="WindowsWallpaper.Status"/>
+    WallpaperStatus Status();
+
+    /// <inheritdoc cref="WindowsWallpaper.TurnOff"/>
+    void TurnOff();
+
+    /// <inheritdoc cref="WindowsWallpaper.Slideshow"/>
+    WallpaperSlideshow? Slideshow();
+
+    /// <inheritdoc cref="WindowsWallpaper.SetSlideshow"/>
+    void SetSlideshow(WallpaperSlideshow slideshow);
+}
+
 /// <summary>
 /// Windows' wallpaper function (<c>IDesktopWallpaper</c>), the one Windows Settings uses, which
 /// Explorer serves. Every call goes to Explorer and waits for it without a time limit, so use it on
@@ -55,7 +92,7 @@ public sealed record WallpaperSlideshow(IReadOnlyList<string> Items, bool Shuffl
 /// (<see cref="CallCancellation"/>). Create, use and dispose it on that thread, an MTA thread.
 /// Each method throws <see cref="WallpaperException"/> when Windows fails; see <see cref="IsExplorerGone"/>.
 /// </summary>
-public sealed class WindowsWallpaper : IDisposable
+public sealed class WindowsWallpaper : IWindowsWallpaper
 {
     private const int Ok = 0;
     private const int ServerUnavailable = unchecked((int)0x800706BA); // RPC_S_SERVER_UNAVAILABLE
