@@ -76,6 +76,9 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
     private IWindowsWallpaper? _wallpaper;
     private WallpaperState _state = new();
 
+    // Connections with a call Explorer didn't answer, released once it answers a new connection.
+    private readonly List<IWindowsWallpaper> _unanswered = [];
+
     // The virtual desktop in use when the pictures were set last, where Windows records it.
     private Guid? _desktop;
     private bool _loaded;
@@ -561,18 +564,39 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
 
         try
         {
-            return _wallpaper = system.Connect();
+            _wallpaper = system.Connect();
         }
         catch (WallpaperException exception)
         {
             LogNotConnected(logger, exception.HResult);
             return null;
         }
+
+        // Explorer answered, so releasing the connections it didn't answer doesn't wait.
+        foreach (var unanswered in _unanswered)
+        {
+            unanswered.Dispose();
+        }
+
+        _unanswered.Clear();
+        return _wallpaper;
     }
 
     private void Failed(WallpaperException exception, string? period)
     {
-        if (WindowsWallpaper.IsExplorerGone(exception.HResult) || CallCancellation.IsCancelled(exception.HResult))
+        if (CallCancellation.IsCancelled(exception.HResult))
+        {
+            // Releasing the connection is a call to Explorer too, which would wait as long as the
+            // call that was cancelled, without a limit: it's released once Explorer answers again.
+            if (_wallpaper is { } unanswered)
+            {
+                _unanswered.Add(unanswered);
+                _wallpaper = null;
+            }
+
+            Block(period ?? _report.Period ?? "", WallpaperBlock.ExplorerNotAnswering);
+        }
+        else if (WindowsWallpaper.IsExplorerGone(exception.HResult))
         {
             Disconnect();
             Block(period ?? _report.Period ?? "", WallpaperBlock.ExplorerNotAnswering);

@@ -38,6 +38,18 @@ public sealed class WindowsWallpaperTests
     }
 
     [Fact]
+    public void ReleasingOneConnectionLeavesAnotherWorking()
+    {
+        SkipWithoutExplorer();
+        var first = WindowsWallpaper.Connect();
+        using var second = WindowsWallpaper.Connect();
+
+        first.Dispose();
+
+        Assert.InRange(second.BackgroundColor(), 0u, 0xFFFFFFu);
+    }
+
+    [Fact]
     public void TheWallpaperFunctionsFailuresWhenExplorerIsGoneAreKnown()
     {
         Assert.True(WindowsWallpaper.IsExplorerGone(unchecked((int)0x800706BA)));

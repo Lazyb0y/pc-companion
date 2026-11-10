@@ -342,7 +342,14 @@ internal sealed class FakeWallpaper : IWindowsWallpaper
         State = WallpaperStatus.On | WallpaperStatus.Slideshow;
     }
 
-    public void Dispose() => Connected = false;
+    /// <summary>How many times a connection was released.</summary>
+    public int Releases { get; private set; }
+
+    public void Dispose()
+    {
+        Connected = false;
+        Releases++;
+    }
 
     private void Fail()
     {

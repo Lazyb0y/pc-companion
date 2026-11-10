@@ -279,6 +279,26 @@ public sealed class DynamicWallpaperFeatureTests : IDisposable
     }
 
     [Fact]
+    public void AConnectionExplorerDidntAnswerIsReleasedOnceItAnswersAgain()
+    {
+        _feature.Apply(On());
+        _system.Wallpaper.Failure = new WallpaperException("Cancelled.", unchecked((int)0x80010002));
+
+        _system.Events!.DisplaysChanged();
+
+        // Releasing it would wait for Explorer, as the cancelled call did.
+        Assert.Equal(WallpaperBlock.ExplorerNotAnswering, _feature.Report!.Block);
+        Assert.Equal(0, _system.Wallpaper.Releases);
+
+        _system.Wallpaper.Failure = null;
+        _system.Events.DisplaysChanged();
+
+        Assert.Equal(2, _system.Connections);
+        Assert.Equal(1, _system.Wallpaper.Releases);
+        Assert.Equal(WallpaperBlock.None, _feature.Report.Block);
+    }
+
+    [Fact]
     public void AFailureOnTheWallpaperThreadTurnsTheFeatureOff()
     {
         _system.Wallpaper.Failure = new InvalidOperationException("A bug.");

@@ -360,7 +360,10 @@ public sealed class WindowsWallpaper : IWindowsWallpaper
         }
 
         _disposed = true;
-        Marshal.FinalReleaseComObject(_wallpaper);
+
+        // Explorer gives each connection the same object while it runs, so .NET wraps them in one
+        // object: each connection releases only its own reference, and the last one Explorer's.
+        Marshal.ReleaseComObject(_wallpaper);
     }
 
     // A COLORREF is 0x00BBGGRR; swapping red and blue goes both ways.
