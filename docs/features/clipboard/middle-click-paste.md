@@ -189,7 +189,8 @@ Select text in any app, then middle-click in a text box: the text goes in where 
   It never waits for another app: answers come back with `MessageWindow.BeginInvoke`.
 - **`PointerHook`'s thread** runs the hook and nothing else.
 - **The UI Automation thread:** the feature's own, in COM's multithreaded apartment and with no windows, as a UI Automation client should be. It asks for the element under the pointer and reads the selection, one request at a time; a read comes before a waiting question about the pointer. It starts with the feature and keeps its UI Automation object until the feature stops.
-- **The paste thread:** the feature's own, in a single-threaded apartment with OLE started, as drag and drop needs, and its own message loop for the drop window. It sends the window messages to Windows' own boxes and runs the drop. It starts at the first paste and lives until the feature stops.
+- **The drop thread:** the feature's own, in a single-threaded apartment with OLE started, as drag and drop needs, and its own message loop for the drop window. It starts at the first drop and lives until the feature stops.
+- **The thread pool** sends the window messages to Windows' own boxes, since each can wait for the box's app.
 - **Stopping:** the claims are removed, a waiting drop is cancelled, and both threads end without the UI thread waiting for them. They're background threads, so one held by an app doesn't keep the host running.
 - **Failures:** everything on these threads runs inside the feature's error boundary. A failure is logged and keeps the feature off until the host restarts, like a failing `Apply`; the other features keep running.
 

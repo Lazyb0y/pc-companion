@@ -31,7 +31,10 @@ internal sealed class FakeMiddleClickPasteSystem : IMiddleClickPasteSystem
 
     public nint RootAt(Point point) => Root;
 
-    public SelectedTextApp CheckWindow(nint window) => App;
+    // Each window's rights; windows not given here have App's.
+    public Dictionary<nint, SelectedTextApp> WindowApps { get; } = [];
+
+    public SelectedTextApp CheckWindow(nint window) => WindowApps.GetValueOrDefault(window, App);
 
     public Task<TextBoxAnswer> AskAsync(Point point)
     {
@@ -42,6 +45,76 @@ internal sealed class FakeMiddleClickPasteSystem : IMiddleClickPasteSystem
     }
 
     void IMiddleClickPasteSystem.Claim(PointerClaim? claim) => Claims.Add(claim);
+
+    public Dictionary<uint, PointerInputOutcome> Outcomes { get; } = [];
+
+    public int HookSetAgain { get; private set; }
+
+    public nint FocusWindow { get; set; } = 20;
+
+    public List<Point> Reads { get; } = [];
+
+    public List<TaskCompletionSource<SelectedTextResult>> PendingReads { get; } = [];
+
+    public Dictionary<nint, EditBoxKind> Kinds { get; } = [];
+
+    public EditBoxResult InsertResult { get; set; } = EditBoxResult.Inserted;
+
+    public EditBoxResult CursorInsertResult { get; set; } = EditBoxResult.Inserted;
+
+    public bool Placed { get; set; } = true;
+
+    public TextDropResult DropResult { get; set; } = TextDropResult.Dropped;
+
+    // Each step in the order the controller took it, such as "insert 55 at 100,100: text".
+    public List<string> Steps { get; } = [];
+
+    public PointerInputOutcome Outcome(uint time) => Outcomes.GetValueOrDefault(time, PointerInputOutcome.Kept);
+
+    public void SetHookAgain() => HookSetAgain++;
+
+    public Task<SelectedTextResult> ReadAsync(Point clickedAt)
+    {
+        Reads.Add(clickedAt);
+        var read = new TaskCompletionSource<SelectedTextResult>();
+        PendingReads.Add(read);
+        return read.Task;
+    }
+
+    public EditBoxKind KindOf(nint window) => Kinds.GetValueOrDefault(window, EditBoxKind.None);
+
+    public Task<EditBoxResult> InsertAtAsync(nint box, Point point, string text)
+    {
+        Steps.Add($"insert {box} at {point.X},{point.Y}: {text}");
+        return Task.FromResult(InsertResult);
+    }
+
+    public Task<bool> PlaceCursorAsync(Point point)
+    {
+        Steps.Add($"place at {point.X},{point.Y}");
+        return Task.FromResult(Placed);
+    }
+
+    public Task<EditBoxResult> InsertAtCursorAsync(nint box, string text)
+    {
+        Steps.Add($"insert {box} at the cursor: {text}");
+        return Task.FromResult(CursorInsertResult);
+    }
+
+    public Task<bool> FocusAsync(nint root, Point point)
+    {
+        Steps.Add($"focus {root} at {point.X},{point.Y}");
+        return Task.FromResult(true);
+    }
+
+    public Task<TextDropResult> DropAsync(Point point, string text)
+    {
+        Steps.Add($"drop at {point.X},{point.Y}: {text}");
+        return Task.FromResult(DropResult);
+    }
+
+    // Answers the last read.
+    public void GiveRead(SelectedTextStatus status, string? text = null) => PendingReads[^1].SetResult(new SelectedTextResult(status, text));
 
     public AppOfWindow? AppOf(nint root) => Apps.GetValueOrDefault(root) ?? new AppOfWindow(null, null, $@"C:\Apps\{root}.exe", (uint)root);
 
