@@ -6,7 +6,7 @@ Makes the feature icons' images from their drawings.
 Writes src\PCCompanion.App\Assets\Icons\<name>-<pixels>.png and the one-color
 <name>-<pixels>-mono.png for each feature icon in docs\design\icons, which Microsoft Edge draws.
 Each image is drawn from the drawing closest to it in size, at each size the settings app needs
-for an icon of 16, 20 or 32 pixels at 100%, 125%, 150% and 200% display scale. The settings app
+for an icon of 20 or 32 pixels at 100%, 125%, 150% and 200% display scale. The settings app
 shows the one-color images in high contrast, in the theme's text color.
 
 drawings.txt records a fingerprint of each drawing the images were made from. A test compares it
@@ -26,9 +26,9 @@ $root = Split-Path -Parent $PSScriptRoot
 $drawings = Join-Path $root 'docs\design\icons'
 $output = Join-Path $root 'src\PCCompanion.App\Assets\Icons'
 
-# 16, 20 and 32 pixels at 100%, 125%, 150% and 200%. The settings app's FeatureIcon and the test
-# of the images use the same sizes.
-$pixelSizes = 16, 20, 24, 25, 30, 32, 40, 48, 64
+# 20 and 32 pixels at 100%, 125%, 150% and 200%. The settings app's FeatureIcon and the test of
+# the images use the same sizes.
+$pixelSizes = 20, 25, 30, 32, 40, 48, 64
 
 # The feature icons and the sizes each is drawn at.
 $icons = @{}

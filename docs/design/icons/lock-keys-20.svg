@@ -1,25 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
-            <stop offset="1" stop-color="#3940D6"/>
+        <linearGradient id="violet-deepest" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6D37CD"/>
+            <stop offset="1" stop-color="#3B148A"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#FFD25E"/>
-            <stop offset="1" stop-color="#FF8A3C"/>
+        <linearGradient id="violet-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9C6CFE"/>
+            <stop offset="1" stop-color="#7A41DC"/>
         </linearGradient>
     </defs>
-    <rect x="2" y="2" width="16" height="16" rx="3" fill="url(#frame)"/>
-    <rect x="2" y="2" width="16" height="16" rx="3" fill="url(#highlight)"/>
-    <rect x="4" y="4" width="12" height="10" rx="1.5" fill="url(#glass)"/>
-    <path fill="url(#accent)" stroke="url(#accent)" stroke-width="0.8" stroke-linejoin="round" d="M10 5L13.5 8.5L11.5 8.5L11.5 10L8.5 10L8.5 8.5L6.5 8.5Z"/>
-    <rect x="8" y="11" width="4" height="1.5" rx="0" fill="url(#accent)"/>
+    <rect x="2" y="2" width="16" height="16" rx="2" fill="url(#violet-deepest)"/>
+    <rect x="3" y="3" width="14" height="12" rx="1.5" fill="url(#violet-main)"/>
+    <path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.8" stroke-linejoin="round" d="M10 5.2L13.6 8.6L11.6 8.6L11.6 10.6L8.4 10.6L8.4 8.6L6.4 8.6Z"/>
+    <rect x="8" y="12" width="4" height="2" rx="0.5" fill="#FFFFFF"/>
 </svg>

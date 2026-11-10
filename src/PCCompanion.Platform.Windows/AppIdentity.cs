@@ -84,11 +84,15 @@ public static class AppIdentity
     public static string? ProgramPath(uint processId)
     {
         using var process = PInvoke.OpenProcess_SafeHandle(PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
-        if (process.IsInvalid)
-        {
-            return null;
-        }
+        return process.IsInvalid ? null : ProgramPath(process);
+    }
 
+    /// <summary>
+    /// The full path of the program file of a process opened with at least
+    /// <c>PROCESS_QUERY_LIMITED_INFORMATION</c>, or <see langword="null"/> when it can't be read.
+    /// </summary>
+    internal static string? ProgramPath(SafeHandle process)
+    {
         foreach (var size in PathBufferSizes)
         {
             var path = new char[size];

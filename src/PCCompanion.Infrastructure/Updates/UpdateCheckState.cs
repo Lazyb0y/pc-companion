@@ -3,8 +3,9 @@ using System;
 namespace PCCompanion.Infrastructure.Updates;
 
 /// <summary>
-/// The result of the update checks, kept in <c>update-check.json</c>. The host writes it, and the
-/// settings app after Check now and when the General page shows a new version.
+/// The result of the update checks, kept in <c>update-check.json</c>. The host writes it, also when
+/// its tray menu's update item is chosen, and the settings app after Check now and when the General
+/// page shows a new version.
 /// </summary>
 public sealed record UpdateCheckState
 {
@@ -17,7 +18,10 @@ public sealed record UpdateCheckState
     /// <summary>The last version the notification showed.</summary>
     public ReleaseVersion? NotifiedVersion { get; init; }
 
-    /// <summary>The last version the General page showed, which clears the badge on its item.</summary>
+    /// <summary>
+    /// The last version the General page showed or the tray menu's item opened, which clears the
+    /// badge on the General item and the dot on the tray icon.
+    /// </summary>
     public ReleaseVersion? SeenVersion { get; init; }
 
     /// <summary>

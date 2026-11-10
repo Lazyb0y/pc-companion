@@ -1,37 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="blue-main" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#5A86FF"/>
+            <stop offset="1" stop-color="#4A6BF0"/>
+        </linearGradient>
+        <linearGradient id="blue-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4A5FE8"/>
             <stop offset="1" stop-color="#3940D6"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#FFD25E"/>
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
-        <clipPath id="gap">
-            <path clip-rule="evenodd" d="M0 0H20V20H0ZM9.5 14A5.5 5.5 0 1 0 20.5 14A5.5 5.5 0 1 0 9.5 14Z"/>
-        </clipPath>
     </defs>
-    <g clip-path="url(#gap)">
-        <rect x="1" y="2" width="18" height="12" rx="2.5" fill="url(#frame)"/>
-        <rect x="1" y="2" width="18" height="12" rx="2.5" fill="url(#highlight)"/>
-        <rect x="3" y="4" width="14" height="8" rx="1" fill="url(#glass)"/>
-        <rect x="5" y="6" width="2" height="1.5" rx="0" fill="#9DB0F5"/>
-        <rect x="8" y="6" width="2" height="1.5" rx="0" fill="#9DB0F5"/>
-        <rect x="11" y="6" width="2" height="1.5" rx="0" fill="#9DB0F5"/>
-        <rect x="5" y="9" width="5" height="1" rx="0" fill="#9DB0F5"/>
-    </g>
-    <path fill="url(#accent)" d="M10.5 14A4.5 4.5 0 1 0 19.5 14A4.5 4.5 0 1 0 10.5 14Z"/>
-    <path fill="url(#glass)" fill-rule="evenodd" d="M12.6 14A2.4 3.6 0 1 0 17.4 14A2.4 3.6 0 1 0 12.6 14ZM13.5 14A1.5 2.7 0 1 0 16.5 14A1.5 2.7 0 1 0 13.5 14Z"/>
-    <rect x="11.4" y="13.55" width="1.2" height="0.9" rx="0" fill="url(#glass)"/>
-    <rect x="13.5" y="13.55" width="3" height="0.9" rx="0" fill="url(#glass)"/>
-    <rect x="17.4" y="13.55" width="1.2" height="0.9" rx="0" fill="url(#glass)"/>
+    <rect x="2" y="3" width="14" height="12" rx="1.5" fill="url(#blue-main)"/>
+    <path fill="url(#blue-deep)" d="M3.5 3H14.5A1.5 1.5 0 0 1 16 4.5V7H2V4.5A1.5 1.5 0 0 1 3.5 3Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M3.116 13.7L5.6 8.3L8.084 13.7M4.308 11.9H6.892"/>
+    <rect x="9" y="9" width="9" height="9" rx="1.5" fill="url(#orange)"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V11.22M10.5 12.3H16.5M15.15 12.78Q14.1 15.15 10.5 16.5M11.85 12.78Q12.9 15.15 16.5 16.5"/>
 </svg>

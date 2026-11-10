@@ -7,7 +7,9 @@ using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.DriveActions;
+using PCCompanion.App.Features.DynamicWallpaper;
 using PCCompanion.App.Features.DropDownApps;
+using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
@@ -20,6 +22,7 @@ using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Modules.Desktop;
+using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Modules.Desktop.SystemMeters;
 using PCCompanion.Modules.Display;
 using PCCompanion.Modules.Display.DisplayProfiles;
@@ -35,6 +38,7 @@ using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Modules.Windows.DropDownApps;
+using PCCompanion.Modules.Windows.EndApp;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
@@ -76,10 +80,12 @@ public static class FeatureCatalog
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps"),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps"),
             new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
+            new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage), DrawnIcon: "end-app"),
         ]),
         new(DesktopModule.Id, "ModuleDesktopName",
         [
             new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage), DrawnIcon: "system-meters"),
+            new(DynamicWallpaperFeature.Definition, DynamicWallpaperFeature.CurrentSupport, typeof(DynamicWallpaperPage), DynamicWallpaperFirstSettings.Create, DrawnIcon: "dynamic-wallpaper"),
         ]),
         new(ClipboardModule.Id, "ModuleClipboardName",
         [

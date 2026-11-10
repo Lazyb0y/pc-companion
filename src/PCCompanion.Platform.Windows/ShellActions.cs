@@ -161,6 +161,12 @@ public static class ShellActions
     /// <summary>Opens AutoPlay in Settings, where removable drives and memory cards can be set to take no action.</summary>
     public static bool OpenAutoPlaySettings() => OpenSettingsPage("ms-settings:autoplay");
 
+    /// <summary>Opens the Background page of Windows Settings, where Windows spotlight is chosen.</summary>
+    public static bool OpenBackgroundSettings() => OpenSettingsPage("ms-settings:personalization-background");
+
+    /// <summary>Opens the Location page of Windows Settings, where desktop apps are let use the location.</summary>
+    public static bool OpenLocationSettings() => OpenSettingsPage("ms-settings:privacy-location");
+
     /// <summary>Opens the Recycle Bin in File Explorer, where its files can be restored.</summary>
     public static bool OpenRecycleBin()
     {

@@ -69,6 +69,9 @@ public sealed record ClipboardActionsSettings : IFeatureSettings<ClipboardAction
     /// <summary>Whether a copied web link gets Open in browser.</summary>
     public bool OpenLinks { get; set; } = true;
 
+    /// <summary>Whether Windows + Alt + S shows actions for the text selected in the app in front.</summary>
+    public bool SelectedText { get; set; }
+
     public IReadOnlyList<ClipboardRule> Rules { get; set; } = [];
 
     /// <summary>
@@ -84,7 +87,7 @@ public sealed record ClipboardActionsSettings : IFeatureSettings<ClipboardAction
 
     // Compares the rules one by one, not the lists, so the same settings read twice are equal.
     public bool Equals(ClipboardActionsSettings? other) =>
-        other is not null && Enabled == other.Enabled && OpenLinks == other.OpenLinks && Rules.SequenceEqual(other.Rules);
+        other is not null && Enabled == other.Enabled && OpenLinks == other.OpenLinks && SelectedText == other.SelectedText && Rules.SequenceEqual(other.Rules);
 
-    public override int GetHashCode() => HashCode.Combine(Enabled, OpenLinks, Rules.Count);
+    public override int GetHashCode() => HashCode.Combine(Enabled, OpenLinks, SelectedText, Rules.Count);
 }

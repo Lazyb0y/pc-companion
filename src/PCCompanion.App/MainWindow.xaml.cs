@@ -212,7 +212,7 @@ public sealed partial class MainWindow : Window
             foreach (var feature in module.Features)
             {
                 var item = new NavigationViewItem { Content = Localized.GetString(feature.Info.NameKey), Tag = feature };
-                FeatureIcon.Show(item, icon => item.Icon = icon, feature.DrawnIcon, feature.Info.Glyph, 16);
+                FeatureIcon.Show(item, icon => item.Icon = icon, feature.DrawnIcon, feature.Info.Glyph, 20);
                 Navigation.MenuItems.Add(item);
             }
         }

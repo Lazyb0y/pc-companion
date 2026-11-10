@@ -1,26 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
-            <stop offset="1" stop-color="#3940D6"/>
+        <linearGradient id="sky-deepest" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0067BF"/>
+            <stop offset="1" stop-color="#003580"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        <linearGradient id="sky-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0094F0"/>
+            <stop offset="1" stop-color="#2052CB"/>
         </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
+        <linearGradient id="sky-light" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9DEAFF"/>
+            <stop offset="1" stop-color="#58AAFE"/>
         </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#FFD25E"/>
-            <stop offset="1" stop-color="#FF8A3C"/>
+        <linearGradient id="sky-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#29C3FF"/>
+            <stop offset="1" stop-color="#2764E7"/>
         </linearGradient>
     </defs>
-    <rect x="2" y="6" width="28" height="20" rx="4" fill="url(#frame)"/>
-    <rect x="2" y="6" width="28" height="20" rx="4" fill="url(#highlight)"/>
-    <rect x="5" y="9.5" width="6" height="13" rx="1.5" fill="url(#glass)"/>
-    <rect x="12.5" y="8.5" width="7" height="15" rx="1.5" fill="url(#glass)"/>
-    <rect x="21" y="9.5" width="6" height="13" rx="1.5" fill="url(#glass)"/>
-    <rect x="14" y="10" width="4" height="12" rx="1" fill="url(#accent)"/>
+    <rect x="11" y="1" width="20" height="16" rx="2" fill="url(#sky-deepest)"/>
+    <rect x="6" y="8" width="20" height="16" rx="2" fill="url(#sky-deep)"/>
+    <rect x="1" y="15" width="20" height="16" rx="2" fill="url(#sky-light)"/>
+    <path fill="url(#sky-main)" d="M3 15H19A2 2 0 0 1 21 17V19H1V17A2 2 0 0 1 3 15Z"/>
 </svg>

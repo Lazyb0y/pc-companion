@@ -7,9 +7,11 @@ using PCCompanion.Infrastructure.Settings;
 namespace PCCompanion.Infrastructure.Updates;
 
 /// <summary>
-/// The update check's result for the settings app: read when this is created, and again whenever
-/// the host or Check now saves it. It also keeps the version the General page showed, which
-/// clears the badge on its item. See docs/features/general/update-check.md.
+/// The update check's result for the settings app and the host's tray icon: read when this is
+/// created, and again whenever the host or Check now saves it. It also keeps the version that was
+/// seen, as the General page showed it or its item in the tray menu was chosen, which clears the
+/// badge on the General item and the dot on the tray icon. See
+/// docs/features/general/update-check.md.
 /// </summary>
 public sealed partial class UpdateCheckWatcher : IDisposable
 {
@@ -19,7 +21,7 @@ public sealed partial class UpdateCheckWatcher : IDisposable
     private readonly Lock _lock = new();
     private UpdateCheckState _state;
 
-    // The version the General page showed in this run, also when it isn't saved.
+    // The version seen in this run, also when it isn't saved.
     private ReleaseVersion? _seen;
 
     public UpdateCheckWatcher(UpdateCheckStore store, AppDataPaths paths, ILogger<UpdateCheckWatcher> logger)
@@ -56,18 +58,36 @@ public sealed partial class UpdateCheckWatcher : IDisposable
     }
 
     /// <summary>
-    /// The version for the badge on the General item: one newer than <paramref name="current"/>
-    /// that the General page hasn't shown yet, or <see langword="null"/>.
+    /// The version for the badge on the General item and the dot on the tray icon: one newer than
+    /// <paramref name="current"/> that wasn't seen yet, or <see langword="null"/>.
     /// </summary>
     public ReleaseVersion? UnseenVersion(ReleaseVersion current)
     {
         lock (_lock)
         {
-            return _state.NewerThan(current) is { } version && !IsSeenLocked(version) ? version : null;
+            return UnseenLocked(current);
         }
     }
 
-    /// <summary>Whether the General page showed <paramref name="version"/> or a newer one.</summary>
+    /// <summary>
+    /// What the tray icon shows, while the check is on: the version its menu's item names, newer
+    /// than <paramref name="current"/>, as the General page's banner does, and the version its dot
+    /// points to, as the badge on the General item does. Each is <see langword="null"/> for none.
+    /// </summary>
+    public (ReleaseVersion? Item, ReleaseVersion? Dot) ForTrayIcon(bool checkAutomatically, ReleaseVersion current)
+    {
+        if (!checkAutomatically)
+        {
+            return (null, null);
+        }
+
+        lock (_lock)
+        {
+            return (_state.NewerThan(current), UnseenLocked(current));
+        }
+    }
+
+    /// <summary>Whether <paramref name="version"/> or a newer one was seen.</summary>
     public bool IsSeen(ReleaseVersion version)
     {
         lock (_lock)
@@ -77,8 +97,9 @@ public sealed partial class UpdateCheckWatcher : IDisposable
     }
 
     /// <summary>
-    /// Keeps <paramref name="version"/> as the one the General page showed, which clears the
-    /// badge, and saves it when <paramref name="save"/> is true. It stays seen until this app
+    /// Keeps <paramref name="version"/> as seen, as the General page showed it or its item in the
+    /// tray menu was chosen, which clears the badge and the dot, and saves it when
+    /// <paramref name="save"/> is true. It stays seen until this app
     /// exits, also when it isn't or can't be saved. It reads and saves the file, so call it off
     /// the window's thread.
     /// </summary>
@@ -116,6 +137,9 @@ public sealed partial class UpdateCheckWatcher : IDisposable
 
     private bool IsSeenLocked(ReleaseVersion version) => _state.SeenVersion >= version || _seen >= version;
 
+    private ReleaseVersion? UnseenLocked(ReleaseVersion current) =>
+        _state.NewerThan(current) is { } version && !IsSeenLocked(version) ? version : null;
+
     private void OnFileChanged(object? sender, EventArgs e)
     {
         var state = _store.Load();
@@ -127,9 +151,9 @@ public sealed partial class UpdateCheckWatcher : IDisposable
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "The General page showed PC Companion {Version}, so the badge on its item goes away.")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "PC Companion {Version} was seen, so the badge on the General item and the dot on the tray icon go away.")]
     private static partial void LogSeen(ILogger logger, ReleaseVersion version);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't save PC Companion {Version} as the version the General page showed; the badge on its item comes back the next time the settings app starts.")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't save PC Companion {Version} as seen; the badge on the General item and the dot on the tray icon come back the next time the settings app or the host starts.")]
     private static partial void LogCantSave(ILogger logger, Exception exception, ReleaseVersion version);
 }

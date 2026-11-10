@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Display.DisplayProfiles;
@@ -14,29 +11,10 @@ namespace PCCompanion.Modules.Display.DisplayProfiles;
 /// </summary>
 /// <param name="Setup">The connected displays and the setup in use.</param>
 /// <param name="Serials">
-/// The serial number hash of each connected display that has one, by its device path; see <see cref="HashSerial"/>.
+/// The serial number hash of each connected display that has one, by its device path; see <see cref="DisplayRecognition.HashSerial"/>.
 /// </param>
 public sealed record CurrentSetup(DisplaySetup Setup, IReadOnlyDictionary<string, string> Serials)
 {
-    // A hash of 8 bytes tells a few displays apart, and is all that's kept.
-    private const int SerialHashBytes = 8;
-
-    /// <summary>
-    /// A hash of a display's serial number, 16 hexadecimal digits, so the settings keep no serial
-    /// number; empty for a display without one. See "Security and privacy" in
-    /// docs/features/display/display-profiles.md.
-    /// </summary>
-    public static string HashSerial(DisplaySerialNumber? serial)
-    {
-        if (serial is not { } value)
-        {
-            return string.Empty;
-        }
-
-        var text = string.Create(CultureInfo.InvariantCulture, $"{value.Number:X8}:{value.Text}");
-        return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(text)), 0, SerialHashBytes);
-    }
-
     /// <summary>The serial number hash of a connected display; empty when it has none.</summary>
     public string SerialOf(ConnectedDisplay display)
     {

@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur le raccourci, jamais en arrière-plan, et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
+    <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + V, et le texte sélectionné uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + S, jamais en arrière-plan, jamais dans une zone de mot de passe et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Demander son texte sélectionné à un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4078,6 +4078,602 @@
   </data>
   <data name="DriveActionsRunNowFiles_other" xml:space="preserve">
     <value>{0} fichiers</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsNoSelectionActions" xml:space="preserve">
+    <value>Aucune action pour le texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShowCopied" xml:space="preserve">
+    <value>Afficher les actions pour le texte copié</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNone" xml:space="preserve">
+    <value>Aucun texte n’est sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotShared" xml:space="preserve">
+    <value>Cette application ne partage pas son texte sélectionné ; copiez-le plutôt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionPassword" xml:space="preserve">
+    <value>PC Companion ne lit pas les zones de mot de passe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionAppAdministrator" xml:space="preserve">
+    <value>Cette application s’exécute en tant qu’administrateur, son texte sélectionné ne peut donc pas être lu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionOwnAdministrator" xml:space="preserve">
+    <value>PC Companion s’exécute en tant qu’administrateur et ne lit donc pas cette application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionFewerRights" xml:space="preserve">
+    <value>Cette application s’exécute avec moins de droits, son texte sélectionné n’est donc pas lu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNotResponding" xml:space="preserve">
+    <value>Cette application ne répond pas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionNoAnswer" xml:space="preserve">
+    <value>Cette application n’a pas répondu à temps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectionTooLong" xml:space="preserve">
+    <value>Le texte sélectionné est trop long</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextHeader" xml:space="preserve">
+    <value>Texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedTextDescription" xml:space="preserve">
+    <value>La touche du logo Windows + Alt + S affiche les actions pour le texte sélectionné dans l’application au premier plan, sous celui-ci, sans le copier. Certaines applications ne partagent pas leur texte sélectionné, et les zones de mot de passe ne sont jamais lues.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsCopiedShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise la touche du logo Windows + Alt + V, ce raccourci n’ouvre donc pas le menu. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise la touche du logo Windows + Alt + S, ce raccourci n’ouvre donc pas le menu. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppName" xml:space="preserve">
+    <value>Arrêter une application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppDescription" xml:space="preserve">
+    <value>Cliquez sur la fenêtre d’une application qui ne répond plus, confirmez, et PC Companion arrête cette application.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppMenuItem" xml:space="preserve">
+    <value>Arrêter une application…</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosing" xml:space="preserve">
+    <value>Arrêter une application : choisissez l’application à arrêter.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedNotResponding" xml:space="preserve">
+    <value>{0}, ne répond pas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedResponding" xml:space="preserve">
+    <value>{0}, répond</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppFramedCantEnd" xml:space="preserve">
+    <value>{0}, ne peut pas être arrêtée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionHeading" xml:space="preserve">
+    <value>Arrêter {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionNotResponding" xml:space="preserve">
+    <value>{0} ne répond pas. Tout ce qui n’y est pas enregistré sera perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionResponding" xml:space="preserve">
+    <value>{0} répond. Pour conserver votre travail, fermez-la comme d’habitude. L’arrêter fait perdre tout ce qui n’est pas enregistré.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProgram" xml:space="preserve">
+    <value>Programme : {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_one" xml:space="preserve">
+    <value>Arrête {0} processus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionProcesses_other" xml:space="preserve">
+    <value>Arrête {0} processus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionEnd" xml:space="preserve">
+    <value>Arrêter l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppQuestionCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndHeading" xml:space="preserve">
+    <value>PC Companion ne peut pas arrêter {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndThisApp" xml:space="preserve">
+    <value>PC Companion ne peut pas arrêter l’application de cette fenêtre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndAdministrator" xml:space="preserve">
+    <value>{0} s’exécute en tant qu’administrateur, PC Companion ne peut donc pas l’arrêter. Le Gestionnaire des tâches le peut.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndWindows" xml:space="preserve">
+    <value>{0} fait partie de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndFileExplorer" xml:space="preserve">
+    <value>L’Explorateur de fichiers exécute aussi le bureau et la barre des tâches. Pour le redémarrer, sélectionnez Explorateur Windows dans le Gestionnaire des tâches, puis choisissez Redémarrer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndNotAllowed" xml:space="preserve">
+    <value>Windows ne permet pas à PC Companion d’arrêter {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndCantTell" xml:space="preserve">
+    <value>PC Companion ne peut pas savoir à quelle application appartient cette fenêtre, par exemple quand deux fenêtres qui ne répondent plus sont au même endroit. Le Gestionnaire des tâches liste toutes les applications.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndPcCompanion" xml:space="preserve">
+    <value>Ceci fait partie de PC Companion. Pour arrêter PC Companion, choisissez Quitter dans le menu de l’icône PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppOpenTaskManager" xml:space="preserve">
+    <value>Ouvrir le Gestionnaire des tâches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppClose" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppNotEnded" xml:space="preserve">
+    <value>Impossible d’arrêter {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutHeader" xml:space="preserve">
+    <value>Raccourci</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutDescription" xml:space="preserve">
+    <value>Commence le choix d’une application à arrêter. « Arrêter une application… » dans le menu de l’icône PC Companion fait de même.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutControlAltEscape" xml:space="preserve">
+    <value>Ctrl + Alt + Échap</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutWindowsControlEscape" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + Échap</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppShortcutNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingHeader" xml:space="preserve">
+    <value>Choisir une application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppChoosingDescription" xml:space="preserve">
+    <value>Cliquez sur une fenêtre, ou appuyez sur Entrée pour celle qui est encadrée. Tab déplace le cadre vers la fenêtre suivante. Échap ou un clic droit annule. Un cadre rouge signifie que l’application peut être arrêtée ; un cadre gris, qu’elle ne le peut pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfo" xml:space="preserve">
+    <value>Certaines applications ne peuvent pas être arrêtées ici : l’Explorateur de fichiers, qui exécute aussi le bureau et la barre des tâches, les processus propres à Windows et les applications exécutées en tant qu’administrateur. En choisir une explique pourquoi et propose le Gestionnaire des tâches. Une confirmation vous est toujours demandée avant d’arrêter une application, et tout ce qui n’y est pas enregistré est perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppCantEndInfoOn" xml:space="preserve">
+    <value>Certaines applications ne peuvent pas être arrêtées ici : l’Explorateur de fichiers, qui exécute aussi le bureau et la barre des tâches, et les processus propres à Windows. En choisir une explique pourquoi et propose le Gestionnaire des tâches. PC Companion s’exécute en tant qu’administrateur, les applications exécutées en tant qu’administrateur peuvent donc être arrêtées comme les autres. Une confirmation vous est toujours demandée avant d’arrêter une application, et tout ce qui n’y est pas enregistré est perdu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppPermissions" xml:space="preserve">
+    <value>Pendant que vous choisissez une application, lit quelles fenêtres sont ouvertes, où elles se trouvent, si elles répondent et à quels programme et processus elles appartiennent, jamais leurs titres ni leur contenu. Vos clics et vos touches vont à la fenêtre de PC Companion, sans crochet de clavier ni de souris. Après votre confirmation, arrête le processus de l’application choisie et ses processus auxiliaires du même programme, et jamais les processus propres à Windows. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperName" xml:space="preserve">
+    <value>Fond d’écran dynamique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDescription" xml:space="preserve">
+    <value>Changez l’image du bureau au lever et au coucher du soleil, aux heures que vous choisissez, ou avec le mode Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithHeader" xml:space="preserve">
+    <value>Changer selon</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithDescription" xml:space="preserve">
+    <value>Quand l’image change.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithSun" xml:space="preserve">
+    <value>Lever et coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithTimes" xml:space="preserve">
+    <value>Heures de la journée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithWindowsMode" xml:space="preserve">
+    <value>Mode Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperWindowsModeInfo" xml:space="preserve">
+    <value>Windows ne change le mode que lorsque vous ou une autre application le changez, dans Personnalisation &gt; Couleurs.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesHeader" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesDescription" xml:space="preserve">
+    <value>Chaque période affiche une image, ou l’image suivante d’un dossier chaque fois qu’elle commence.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunrise" xml:space="preserve">
+    <value>Lever du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDay" xml:space="preserve">
+    <value>Jour</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunset" xml:space="preserve">
+    <value>Coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodNight" xml:space="preserve">
+    <value>Nuit</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodLight" xml:space="preserve">
+    <value>Clair</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDark" xml:space="preserve">
+    <value>Sombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodTime" xml:space="preserve">
+    <value>À partir de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunriseNone" xml:space="preserve">
+    <value>Aucune : la nuit dure jusqu’au lever du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunsetNone" xml:space="preserve">
+    <value>Aucune : le jour dure jusqu’au coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPicture" xml:space="preserve">
+    <value>Aucune image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolder" xml:space="preserve">
+    <value>{0} (dossier)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureProblem" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperInUse" xml:space="preserve">
+    <value>En cours</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowNameInUse" xml:space="preserve">
+    <value>{0}, {1}, en cours</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoose" xml:space="preserve">
+    <value>Choisir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseName" xml:space="preserve">
+    <value>Choisir pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoosePicture" xml:space="preserve">
+    <value>Image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseFolder" xml:space="preserve">
+    <value>Dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseNone" xml:space="preserve">
+    <value>Aucune</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogTitle" xml:space="preserve">
+    <value>Choisir une image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogFilter" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolderDialogTitle" xml:space="preserve">
+    <value>Choisir un dossier d’images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperAddTime" xml:space="preserve">
+    <value>Ajouter une heure</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveName" xml:space="preserve">
+    <value>Supprimer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeName" xml:space="preserve">
+    <value>Heure de début, {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSamePictureInfo" xml:space="preserve">
+    <value>Toutes les périodes ont la même image. Choisissez une image pour chacune.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPicture" xml:space="preserve">
+    <value>Choisissez une image ou un dossier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemMissing" xml:space="preserve">
+    <value>Il n’est plus là.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnNetwork" xml:space="preserve">
+    <value>Il se trouve sur un emplacement réseau, que Fond d’écran dynamique n’utilise pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnlineOnly" xml:space="preserve">
+    <value>Il est disponible en ligne uniquement. Pour l’utiliser, conservez-le sur cet appareil.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPictures" xml:space="preserve">
+    <value>Le dossier ne contient aucune image JPEG, PNG, BMP ou TIFF.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemRefused" xml:space="preserve">
+    <value>Windows ne peut pas afficher cette image.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemFormat" xml:space="preserve">
+    <value>Choisissez une image JPEG, PNG, BMP ou TIFF.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemPath" xml:space="preserve">
+    <value>Ce chemin ne peut pas être utilisé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemSameTime" xml:space="preserve">
+    <value>Une autre heure est identique.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitHeader" xml:space="preserve">
+    <value>Ajustement</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitDescription" xml:space="preserve">
+    <value>Comment les images s’ajustent aux écrans. Windows utilise le même ajustement sur chaque écran.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFill" xml:space="preserve">
+    <value>Remplir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFit" xml:space="preserve">
+    <value>Ajuster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitStretch" xml:space="preserve">
+    <value>Étirer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitTile" xml:space="preserve">
+    <value>Vignette</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitCenter" xml:space="preserve">
+    <value>Centrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitSpan" xml:space="preserve">
+    <value>Étendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSteppedAsideInfo" xml:space="preserve">
+    <value>Vous avez choisi un autre arrière-plan dans Windows, donc Fond d’écran dynamique a cessé de le changer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperResume" xml:space="preserve">
+    <value>Reprendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperManagedInfo" xml:space="preserve">
+    <value>Votre organisation gère l’arrière-plan du bureau, donc Fond d’écran dynamique ne peut pas le changer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperExplorerInfo" xml:space="preserve">
+    <value>L’Explorateur Windows n’a pas répondu, donc l’image n’a pas changé. Fond d’écran dynamique réessaie.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoteInfo" xml:space="preserve">
+    <value>Cette session à distance n’affiche aucune image de bureau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSpotlightInfo" xml:space="preserve">
+    <value>Pour utiliser à nouveau Windows à la une, choisissez-le dans les paramètres d’arrière-plan de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenBackgroundSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres d’arrière-plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPermissions" xml:space="preserve">
+    <value>Change l’arrière-plan du bureau via Windows, et remet celui que vous aviez quand vous le désactivez. Lit uniquement les noms et attributs de vos images et dossiers ; Windows lit les images. Avec Lever et coucher du soleil, utilise votre fuseau horaire ou les coordonnées que vous choisissez, qui restent sur ce PC. N’établit aucune connexion réseau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationHeader" xml:space="preserve">
+    <value>Emplacement</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDescription" xml:space="preserve">
+    <value>Où Lever et coucher du soleil suit le soleil.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationTimeZone" xml:space="preserve">
+    <value>D’après votre fuseau horaire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationCoordinates" xml:space="preserve">
+    <value>Coordonnées</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneHeader" xml:space="preserve">
+    <value>Fuseau horaire</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneDescription" xml:space="preserve">
+    <value>Le lever et le coucher du soleil sont approximatifs : loin de la ville principale du fuseau horaire, ils peuvent varier de plusieurs dizaines de minutes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitude" xml:space="preserve">
+    <value>Latitude</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitudeDescription" xml:space="preserve">
+    <value>Degrés au nord de l’équateur ; le sud est négatif.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitude" xml:space="preserve">
+    <value>Longitude</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitudeDescription" xml:space="preserve">
+    <value>Degrés à l’est de Greenwich ; l’ouest est négatif.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationHeader" xml:space="preserve">
+    <value>Emplacement de ce PC</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationDescription" xml:space="preserve">
+    <value>Windows le détermine une fois et peut utiliser les réseaux Wi-Fi proches et le service de localisation de Microsoft. Seules les coordonnées, arrondies, sont conservées.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUseMyLocation" xml:space="preserve">
+    <value>Utiliser ma position</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDeniedInfo" xml:space="preserve">
+    <value>Windows n’a pas fourni la position. Activez Services de localisation et Autoriser les applications de bureau à accéder à votre position, puis réessayez.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenLocationSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres de localisation</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationFailedInfo" xml:space="preserve">
+    <value>Windows n’a pas pu déterminer l’emplacement de ce PC. Réessayez plus tard ou saisissez les coordonnées.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPlaceInfo" xml:space="preserve">
+    <value>Votre fuseau horaire n’a pas de lieu d’où suivre le soleil : le Jour commence donc à {0} et la Nuit à {1}. Choisissez Coordonnées pour suivre le soleil.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoCoordinatesInfo" xml:space="preserve">
+    <value>Tant que vous n’avez pas saisi de latitude et de longitude, le Jour commence à {0} et la Nuit à {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayHeader" xml:space="preserve">
+    <value>Aujourd’hui</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayDescription" xml:space="preserve">
+    <value>Quand chaque période commence et se termine aujourd’hui.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeRange" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntRise" xml:space="preserve">
+    <value>Le soleil ne se lève pas aujourd’hui.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntSet" xml:space="preserve">
+    <value>Le soleil ne se couche pas aujourd’hui.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayHeader" xml:space="preserve">
+    <value>Une image pour chaque écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayDescription" xml:space="preserve">
+    <value>Chaque écran affiche ses propres images. Non disponible avec Étendre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysHeader" xml:space="preserve">
+    <value>Autres écrans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysDescription" xml:space="preserve">
+    <value>Les écrans sans images propres affichent celles-ci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperBuiltInDisplay" xml:space="preserve">
+    <value>Écran intégré</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUnnamedDisplay" xml:space="preserve">
+    <value>Écran {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTwinDisplay" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayConnected" xml:space="preserve">
+    <value>Connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayNotConnected" xml:space="preserve">
+    <value>Non connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplay" xml:space="preserve">
+    <value>Supprimer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplayName" xml:space="preserve">
+    <value>Supprimer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSameAsOthers" xml:space="preserve">
+    <value>Comme les autres écrans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseSame" xml:space="preserve">
+    <value>Comme les autres écrans</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

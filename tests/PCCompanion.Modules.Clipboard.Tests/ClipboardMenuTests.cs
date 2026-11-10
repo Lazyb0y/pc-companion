@@ -119,6 +119,86 @@ public sealed class ClipboardMenuTests
         Assert.Equal(new string('n', 59) + "\u2026", ClipboardMenu.Label(Track with { Name = new string('n', 59) + emoji + "n" }));
     }
 
+    [Fact]
+    public void TheSelectedTextsMenuShowsTheTextTheActionsAndSettings()
+    {
+        var plan = ClipboardMenu.BuildForSelection(SelectionStatus.Read, " https://example.com/clip.mp4\r\n", [Link, Play]);
+
+        Assert.Equal(
+            [
+                (Lre + "https://example.com/clip.mp4" + Pdf, false),
+                ("-", false),
+                (Strings.ClipboardActionsOpenInBrowser, true),
+                ("Play", true),
+                ("-", false),
+                (Strings.TraySettings, true),
+            ],
+            plan.Items.Select(Describe));
+        Assert.Equal(Link, plan.Offers[plan.Items[2].Id]);
+        Assert.Equal(Play, plan.Offers[plan.Items[3].Id]);
+    }
+
+    [Fact]
+    public void WithoutActionsTheSelectedTextsMenuSaysSo()
+    {
+        var plan = ClipboardMenu.BuildForSelection(SelectionStatus.Read, "PC-12", []);
+
+        Assert.Equal([(Lre + "PC-12" + Pdf, false), ("-", false), (Strings.ClipboardActionsNoSelectionActions, false), ("-", false), (Strings.TraySettings, true)], plan.Items.Select(Describe));
+        Assert.Empty(plan.Offers);
+    }
+
+    [Theory]
+    [InlineData(SelectionStatus.NothingSelected)]
+    [InlineData(SelectionStatus.NotShared)]
+    [InlineData(SelectionStatus.Password)]
+    [InlineData(SelectionStatus.AppRunsAsAdministrator)]
+    [InlineData(SelectionStatus.RunsAsAdministrator)]
+    [InlineData(SelectionStatus.AppHasFewerRights)]
+    [InlineData(SelectionStatus.NotResponding)]
+    [InlineData(SelectionStatus.NoAnswer)]
+    [InlineData(SelectionStatus.TooLong)]
+    public void WithoutSelectedTextANoteSaysWhyAndOffersTheCopiedText(SelectionStatus status)
+    {
+        var expected = status switch
+        {
+            SelectionStatus.NotShared => Strings.ClipboardActionsSelectionNotShared,
+            SelectionStatus.Password => Strings.ClipboardActionsSelectionPassword,
+            SelectionStatus.AppRunsAsAdministrator => Strings.ClipboardActionsSelectionAppAdministrator,
+            SelectionStatus.RunsAsAdministrator => Strings.ClipboardActionsSelectionOwnAdministrator,
+            SelectionStatus.AppHasFewerRights => Strings.ClipboardActionsSelectionFewerRights,
+            SelectionStatus.NotResponding => Strings.ClipboardActionsSelectionNotResponding,
+            SelectionStatus.NoAnswer => Strings.ClipboardActionsSelectionNoAnswer,
+            SelectionStatus.TooLong => Strings.ClipboardActionsSelectionTooLong,
+            _ => Strings.ClipboardActionsSelectionNone,
+        };
+
+        // Text that came with a status other than Read isn't shown.
+        var plan = ClipboardMenu.BuildForSelection(status, "1Z999AA10123456784", [Track]);
+
+        Assert.Equal([(expected, false), (Strings.ClipboardActionsShowCopied, true), ("-", false), (Strings.TraySettings, true)], plan.Items.Select(Describe));
+        Assert.Equal(ClipboardMenu.ShowCopiedCommand, plan.Items[1].Id);
+        Assert.Empty(plan.Offers);
+    }
+
+    [Fact]
+    public void OnlySpacesSelectedCountAsNothingSelected()
+    {
+        var plan = ClipboardMenu.BuildForSelection(SelectionStatus.Read, " \r\n\t", [Track]);
+
+        Assert.Equal(Strings.ClipboardActionsSelectionNone, plan.Items[0].Text);
+        Assert.Equal(ClipboardMenu.ShowCopiedCommand, plan.Items[1].Id);
+    }
+
+    [Fact]
+    public void TheMenuCommandsDontShareIds()
+    {
+        var plan = ClipboardMenu.BuildForSelection(SelectionStatus.Read, "PC-12", [Link, Play, Track]);
+
+        Assert.DoesNotContain(ClipboardMenu.ShowCopiedCommand, plan.Offers.Keys);
+        Assert.DoesNotContain(ClipboardMenu.SettingsCommand, plan.Offers.Keys);
+        Assert.NotEqual(ClipboardMenu.SettingsCommand, ClipboardMenu.ShowCopiedCommand);
+    }
+
     private static ClipboardTextResult Text(string text) => new(ClipboardTextStatus.Text, text);
 
     private static (string Text, bool Enabled) Describe(PopupMenuItem item) => item.IsSeparator ? ("-", false) : (item.Text, item.IsEnabled);

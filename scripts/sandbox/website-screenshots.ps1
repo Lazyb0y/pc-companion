@@ -23,9 +23,10 @@ New-Item -ItemType Directory -Force -Path $results | Out-Null
 Set-Content -Path $report -Value "PC Companion website screenshots - $(Get-Date -Format o)" -Encoding utf8
 
 # The pages, by their names in the navigation pane, and the features' settings: an action for each
-# corner, and a key for one, apps with a language, a shortcut or the tray, rules and profiles, so
-# the pages show what the features can do. %USERPROFILE% stands for the user's folder.
-$pages = 'Home', 'Hot Corners', 'Lock Keys', 'Input Language per App', 'App Windows', 'Minimize to Tray', 'Hide Apps', 'Drop-down Apps', 'System Meters', 'Clipboard Actions', 'Network Profiles', 'Folder Rules', 'General'
+# corner, and a key for one, apps with a language, a shortcut or the tray, title-bar clicks, rules,
+# profiles and drives, so the pages show what the features can do. %USERPROFILE% stands for the
+# user's folder.
+$pages = 'Home', 'Hot Corners', 'Lock Keys', 'Input Language per App', 'App Windows', 'Minimize to Tray', 'Hide Apps', 'Drop-down Apps', 'Title Bar Actions', 'System Meters', 'Clipboard Actions', 'Network Profiles', 'Folder Rules', 'Drive Actions', 'General'
 $features = @'
 "hotCorners": {
     "enabled": true,
@@ -57,6 +58,15 @@ $features = @'
         { "name": "Microsoft Edge", "program": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "shortcut": "WindowsControlAlt1" }
     ]
 },
+"titleBarActions": {
+    "enabled": true,
+    "middleClick": "Minimize",
+    "shiftMiddleClick": "MinimizeToTray",
+    "controlMiddleClick": "SendToBack",
+    "wheel": "None",
+    "controlWheel": "Opacity",
+    "excludedApps": [ { "name": "Firefox", "program": "C:\\Program Files\\Mozilla Firefox\\firefox.exe" } ]
+},
 "systemMeters": { "enabled": true },
 "clipboardActions": {
     "enabled": true,
@@ -85,6 +95,32 @@ $features = @'
             ]
         }
     ]
+},
+"driveActions": {
+    "enabled": true,
+    "drives": [
+        {
+            "name": "Camera cards",
+            "kind": "CameraCards",
+            "whenConnected": "Act",
+            "ejectWhenDone": true,
+            "actions": [
+                { "action": "Import", "from": "DCIM", "extensions": ["jpg", "jpeg", "heic", "heif", "png", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2", "raf", "orf", "rw2", "pef", "srw", "x3f", "3fr", "iiq", "mp4", "mov", "m4v", "avi", "mts", "m2ts", "3gp", "mpg"], "destination": "%USERPROFILE%\\Pictures\\{year}\\{month}", "ifExists": "AddNumber" }
+            ]
+        },
+        {
+            "name": "Backup drive",
+            "kind": "Drive",
+            "id": "5f0c9a0e3b1d4c7e9a2f6b8d1c3e5a7f",
+            "volumeSerial": "3f9a1c0e7b2d4a6c",
+            "hardwareSerial": "a1b2c3d4e5f60718",
+            "whenConnected": "Ask",
+            "ejectWhenDone": true,
+            "actions": [
+                { "action": "BackUp", "folders": ["%USERPROFILE%\\Documents", "%USERPROFILE%\\Pictures"], "destination": "Backup" }
+            ]
+        }
+    ]
 }
 '@
 $features = $features.Replace('%USERPROFILE%', $env:USERPROFILE.Replace('\', '\\'))
@@ -98,9 +134,12 @@ $desktopGray = 128
 # margin, so it ends between parts rather than cutting one off.
 $pageMargin = 24
 
-# The size of the window without its invisible resize borders, as on the website.
+# The size of the window without its invisible resize borders, as on the website, and how far from
+# the screen's top and left it goes, so that the taskbar doesn't cover its bottom.
 $width = 1086
 $height = 736
+$windowTop = 20
+$windowLeft = 40
 
 Add-Type -TypeDefinition @'
 using System;
@@ -139,7 +178,7 @@ function Set-WindowSize {
     $outerWidth = $width
     $outerHeight = $height
     for ($attempt = 0; $attempt -lt 2; $attempt++) {
-        [void] [Win32]::MoveWindow($handle, 40, 40, $outerWidth, $outerHeight, $true)
+        [void] [Win32]::MoveWindow($handle, $windowLeft, $windowTop, $outerWidth, $outerHeight, $true)
         Start-Sleep -Milliseconds 800
         $frame = [Frame]::Bounds($handle)
         $outerWidth += $width - ($frame.Right - $frame.Left)
@@ -177,11 +216,14 @@ function Save-Page([string] $Name) {
         Test-Check "$Name`: the page is found" $false
         return
     }
+    # The page as far as it's on screen: its scroll viewer can reach below the window, and the
+    # taskbar covers the bottom of the screen.
     $area = $viewer.Current.BoundingRectangle
+    $frame = [Frame]::Bounds([IntPtr] $window.Current.NativeWindowHandle)
     $left = [int] $area.Left
     $top = [int] $area.Top
     $right = [int] $area.Right
-    $bottom = [int] $area.Bottom
+    $bottom = [int] (@($area.Bottom, $frame.Bottom, $workArea.Bottom) | Measure-Object -Minimum).Minimum
 
     $parts = @()
     $walker = [System.Windows.Automation.TreeWalker]::ControlViewWalker
@@ -193,7 +235,9 @@ function Save-Page([string] $Name) {
         }
         $child = $walker.GetNextSibling($child)
     }
-    $whole = @($parts | Where-Object { $_[1] -lt $bottom } | ForEach-Object { $_[1] })
+    # A part that goes on below the page's view reports only what's in view, so it seems to end at
+    # the view's last row: only a part that ends above that is whole.
+    $whole = @($parts | Where-Object { $_[1] -lt $bottom - 1 } | ForEach-Object { $_[1] })
     if ($whole.Count -eq 0) {
         Test-Check "$Name`: a part of the page is in view whole" $false "$($parts.Count) parts"
         return
@@ -238,7 +282,8 @@ $graphics = [System.Drawing.Graphics]::FromHwnd([IntPtr]::Zero)
 $scale = $graphics.DpiX / 96
 $graphics.Dispose()
 Test-Check 'the display is at 100% scaling' ($scale -eq 1) "$($screen.Width) x $($screen.Height) at $($scale * 100)%"
-Test-Check 'the window fits on the display' (($screen.Width -ge $width + 80) -and ($screen.Height -ge $height + 80)) "$($screen.Width) x $($screen.Height)"
+$workArea = [System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea
+Test-Check 'the window fits on the display, above the taskbar' (($workArea.Right -ge $windowLeft + $width + 40) -and ($workArea.Bottom -ge $windowTop + $height)) "$($screen.Width) x $($screen.Height), the taskbar from $($workArea.Bottom)"
 
 Set-PlainDesktop
 

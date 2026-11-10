@@ -2,8 +2,9 @@
 # The hosts file points api.github.com at an HTTPS server in the Sandbox, whose certificate's root
 # is trusted only here. Turning the check on runs it at once; it finds version 9.9.9, shows the
 # notification and the banner, and selecting the notification opens the release page. Then, with
-# the check off, Check now asks each time it's selected. Last, the badge on the General item points
-# to a newer version until General shows it.
+# the check off, Check now asks each time it's selected. Last, the badge on the General item and the
+# dot on the PC Companion icon point to a newer version until General shows it or the icon's menu
+# item opens it.
 
 $serverFolder = Join-Path $results 'fake-github'
 New-Item -ItemType Directory -Force -Path $serverFolder | Out-Null
@@ -78,6 +79,39 @@ function Get-GeneralItemStatus {
     $item = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
     if (-not $item) { return $null }
     return $item.Current.ItemStatus
+}
+
+# The names of the open tray menu's items, joined by commas.
+function Get-MenuItemNames {
+    $menuCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, '#32768')
+    $script:menu = $null
+    [void] (Wait-Until { $script:menu = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $menuCondition); $null -ne $script:menu } 10)
+    if (-not $script:menu) { return '' }
+    $itemCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::MenuItem)
+    (@($script:menu.FindAll([System.Windows.Automation.TreeScope]::Descendants, $itemCondition)) | ForEach-Object { $_.Current.Name }) -join ', '
+}
+
+# The PC Companion icon's name and tooltip, as Explorer gives them to screen readers, from the
+# taskbar and the hidden icons menu, which this opens, takes a screenshot of when given a name, and
+# closes. The settings app's taskbar button, "PC Companion - 1 running window", is left out.
+function Get-TrayIconName([string] $Screenshot = '') {
+    $root = [System.Windows.Automation.AutomationElement]::RootElement
+    $buttonCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Button)
+    $taskbar = $root.FindFirst([System.Windows.Automation.TreeScope]::Children, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, 'Shell_TrayWnd')))
+    $chevron = if ($taskbar) { $taskbar.FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, 'Show Hidden Icons'))) }
+    if ($chevron) {
+        $chevron.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+        Start-Sleep -Seconds 2
+        if ($Screenshot) { Save-Screenshot $Screenshot }
+    }
+    $areas = @($taskbar) + @($root.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition) | Where-Object { $_.Current.ClassName -like '*Overflow*' })
+    $names = @($areas | Where-Object { $_ } | ForEach-Object { $_.FindAll([System.Windows.Automation.TreeScope]::Descendants, $buttonCondition) } |
+        ForEach-Object { $_.Current.Name -replace "`r?`n", ' / ' } | Where-Object { ($_ -like 'PC Companion*') -and ($_ -notlike '* running window*') })
+    if ($chevron) {
+        Send-Key 0x1B
+        Start-Sleep -Seconds 1
+    }
+    return ($names -join ' | ')
 }
 
 # Saves a newer version, as the host does after a check.
@@ -206,12 +240,31 @@ Save-NewerVersion '9.9.11'
 Test-Check 'the General item shows the badge for a newer version' (Wait-Until { (Get-GeneralItemStatus) -eq 'PC Companion 9.9.11 is available' } 10) "status: $(Get-GeneralItemStatus)"
 Save-Screenshot '12-update-badge'
 
-# General shows the version in its banner, which clears the badge and saves the version as seen.
+# The PC Companion icon gets the dot too, its tooltip names the version, and its menu starts with it.
+Test-Check 'the host shows the dot on the tray icon' (Wait-Until { (Get-HostLog) -match 'The tray icon shows the update dot for PC Companion 9\.9\.11\.' } 10)
+Test-Check 'the host draws the dot' (-not ((Get-HostLog) -match 'Can''t draw the update dot'))
+$iconName = Get-TrayIconName '12-update-dot'
+Test-Check 'the tray icon''s tooltip names the version' ($iconName -like '*PC Companion 9.9.11 is available*') $iconName
+Test-Check 'the tray menu requested with an update' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+$items = Get-MenuItemNames
+Test-Check 'the tray menu starts with the update' ($items -like 'PC Companion 9.9.11 is available, *') $items
+Save-Screenshot '12-update-tray-menu'
+Test-Check 'the tray menu closes' (Close-TrayMenu)
+
+# General shows the version in its banner, which clears the badge and the dot and saves the version
+# as seen. The menu's item stays. The dot went away before too, once General showed 9.9.9.
+$dotGone = 'The update dot on the tray icon went away\.'
+$dotsGone = Get-MatchCount (Get-HostLog) $dotGone
 Test-Check 'show General' (Select-NavigationItem 'General')
 $badgeBannerPattern = '^PC Companion 9\.9\.11 is available\. You have version \d+\.\d+\.\d+\.$'
 Test-Check 'General shows the banner for the newer version' (Wait-Until { @(Get-WindowText | Where-Object { $_ -match $badgeBannerPattern }).Count -eq 1 } 10) ((Get-WindowText) -join ' | ')
 Test-Check 'the badge goes away once General shows the version' (Wait-Until { (Get-GeneralItemStatus) -eq '' } 10) "status: $(Get-GeneralItemStatus)"
 Test-Check 'the version is saved as seen' (Wait-Until { (Get-Content $resultFile -Raw | ConvertFrom-Json).seenVersion -eq '9.9.11' } 10) (Get-Content $resultFile -Raw)
+Test-Check 'the dot goes away once General shows the version' (Wait-Until { (Get-MatchCount (Get-HostLog) $dotGone) -gt $dotsGone } 10)
+[void] (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+$items = Get-MenuItemNames
+Test-Check 'the tray menu keeps the update once it''s seen' ($items -like 'PC Companion 9.9.11 is available, *') $items
+Test-Check 'the tray menu closes once more' (Close-TrayMenu)
 
 # It stays away after the settings app starts again.
 Test-Check 'close the settings app' (Close-SettingsApp)
@@ -220,14 +273,42 @@ Start-Process $appExe
 Start-Sleep -Seconds 3
 Test-Check 'the badge stays away after the settings app starts again' ((Get-GeneralItemStatus) -eq '') "status: $(Get-GeneralItemStatus)"
 
-# With the check off, a newer version shows no badge.
+# The next version brings the dot and the badge back. Choosing the tray menu's item opens the
+# release page and saves the version as seen, which clears both.
+[void] (Select-NavigationItem 'Home')
+Save-NewerVersion '9.9.12'
+Test-Check 'the dot comes back for the next version' (Wait-Until { (Get-HostLog) -match 'The tray icon shows the update dot for PC Companion 9\.9\.12\.' } 10)
+Test-Check 'the badge comes back for the next version' (Wait-Until { (Get-GeneralItemStatus) -eq 'PC Companion 9.9.12 is available' } 10) "status: $(Get-GeneralItemStatus)"
+$dotsGone = Get-MatchCount (Get-HostLog) $dotGone
+$browsersBefore = @(Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe'" | ForEach-Object { $_.ProcessId })
+Test-Check 'the tray menu requested for the next version' (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+Test-Check 'choose the update in the tray menu' (Select-TrayMenuItem 'PC Companion 9.9.12 is available')
+$opened = Wait-Until {
+    @(Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe'" | Where-Object {
+        ($browsersBefore -notcontains $_.ProcessId) -and ($_.CommandLine -like '*https://github.com/Lazyb0y/pc-companion/releases/latest*') }).Count -ge 1
+} 20
+Test-Check 'the tray menu''s item opens the release page' $opened
+Test-Check 'the host logs that the item was chosen' ((Get-HostLog) -match 'The tray menu''s item for PC Companion 9\.9\.12 was chosen; opening the release page\.')
+Get-Process msedge -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Test-Check 'choosing the item saves the version as seen' (Wait-Until { (Get-Content $resultFile -Raw | ConvertFrom-Json).seenVersion -eq '9.9.12' } 10) (Get-Content $resultFile -Raw)
+Test-Check 'the dot goes away once the item is chosen' (Wait-Until { (Get-MatchCount (Get-HostLog) $dotGone) -gt $dotsGone } 10)
+Test-Check 'the badge goes away once the item is chosen' (Wait-Until { (Get-GeneralItemStatus) -eq '' } 10) "status: $(Get-GeneralItemStatus)"
+
+# With the check off, a newer version shows no badge, no dot and no menu item.
 [void] (Select-NavigationItem 'General')
 Start-Sleep -Seconds 2
 Test-Check 'turn off Check for updates for the badge' (Set-Toggle 'Check for updates' $false)
 Test-Check 'show Home again' (Select-NavigationItem 'Home')
-Save-NewerVersion '9.9.12'
+Save-NewerVersion '9.9.13'
 Start-Sleep -Seconds 2
 Test-Check 'the General item has no badge with the check off' ((Get-GeneralItemStatus) -eq '') "status: $(Get-GeneralItemStatus)"
+Test-Check 'the tray icon has no dot with the check off' (-not ((Get-HostLog) -match 'update dot for PC Companion 9\.9\.13'))
+$iconName = Get-TrayIconName
+Test-Check 'the tray icon''s tooltip names no version with the check off' ($iconName -eq 'PC Companion') $iconName
+[void] (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
+$items = Get-MenuItemNames
+Test-Check 'the tray menu has no update with the check off' (($items -ne '') -and ($items -notlike '*is available*')) $items
+Test-Check 'the tray menu closes with the check off' (Close-TrayMenu)
 
 # Leaves the Sandbox as it found it for the next groups.
 [void] (Close-SettingsApp)

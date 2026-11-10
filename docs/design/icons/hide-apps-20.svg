@@ -1,34 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
-            <stop offset="1" stop-color="#3940D6"/>
+        <linearGradient id="violet-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9C6CFE"/>
+            <stop offset="1" stop-color="#7A41DC"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#FFD25E"/>
-            <stop offset="1" stop-color="#FF8A3C"/>
-        </linearGradient>
-        <linearGradient id="deep" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#3F55D9"/>
-            <stop offset="1" stop-color="#2B2FA8"/>
+        <linearGradient id="violet-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#885EDB"/>
+            <stop offset="1" stop-color="#5B2AB5"/>
         </linearGradient>
         <clipPath id="gap">
-            <path clip-rule="evenodd" d="M0 0H20V20H0ZM5.396 17.789L17.396 4.789A1.9 1.9 0 0 0 14.604 2.211L2.604 15.211A1.9 1.9 0 0 0 5.396 17.789Z"/>
+            <path clip-rule="evenodd" d="M0 0H20V20H0ZM7.061 16.561L15.061 8.561A1.5 1.5 0 0 0 12.939 6.439L4.939 14.439A1.5 1.5 0 0 0 7.061 16.561Z"/>
         </clipPath>
     </defs>
+    <rect x="2" y="3" width="16" height="14" rx="1.5" fill="url(#violet-main)"/>
+    <path fill="url(#violet-deep)" d="M3.5 3H16.5A1.5 1.5 0 0 1 18 4.5V6H2V4.5A1.5 1.5 0 0 1 3.5 3Z"/>
     <g clip-path="url(#gap)">
-        <path fill="url(#frame)" d="M0.75 10Q10 -1.5 19.25 10Q10 21.5 0.75 10Z"/>
-        <path fill="url(#highlight)" d="M0.75 10Q10 -1.5 19.25 10Q10 21.5 0.75 10Z"/>
-        <path fill="url(#glass)" d="M6.5 10A3.5 3.5 0 1 0 13.5 10A3.5 3.5 0 1 0 6.5 10Z"/>
-        <path fill="url(#deep)" d="M8.5 10A1.5 1.5 0 1 0 11.5 10A1.5 1.5 0 1 0 8.5 10Z"/>
+        <path fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" d="M4.6 11.5C5.95 9.223 7.84 8.2 10 8.2S14.05 9.223 15.4 11.5C14.05 13.777 12.16 14.8 10 14.8S5.95 13.777 4.6 11.5Z"/>
+        <path fill="#FFFFFF" d="M8.4 11.5A1.6 1.6 0 1 0 11.6 11.5A1.6 1.6 0 1 0 8.4 11.5Z"/>
     </g>
-    <path fill="none" stroke="url(#accent)" stroke-width="1.8" stroke-linecap="round" d="M4 16.5L16 3.5"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" d="M6 15.5L14 7.5"/>
 </svg>

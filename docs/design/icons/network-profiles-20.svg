@@ -1,32 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
     <defs>
-        <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#5A86FF"/>
-            <stop offset="1" stop-color="#3940D6"/>
+        <linearGradient id="sky-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#29C3FF"/>
+            <stop offset="1" stop-color="#2764E7"/>
         </linearGradient>
-        <linearGradient id="highlight" x1="0" y1="0" x2=".6" y2=".6">
-            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".28"/>
-            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+        <linearGradient id="sky-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0094F0"/>
+            <stop offset="1" stop-color="#2052CB"/>
         </linearGradient>
-        <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3F7FF"/>
-            <stop offset="1" stop-color="#CBD9FF"/>
+        <linearGradient id="sky-deepest" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0067BF"/>
+            <stop offset="1" stop-color="#003580"/>
         </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#FFD25E"/>
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
-        <clipPath id="gap">
-            <path clip-rule="evenodd" d="M0 0H20V20H0ZM11.6 19.5L11.6 11A1.4 1.4 0 0 1 13 9.6L19 9.6A1.4 1.4 0 0 1 20.4 11L20.4 19.5A1.4 1.4 0 0 1 18.223 20.665L16 19.183L13.777 20.665A1.4 1.4 0 0 1 11.6 19.5Z"/>
-        </clipPath>
     </defs>
-    <g clip-path="url(#gap)">
-        <path fill="url(#frame)" d="M1.5 9.5A8 8 0 1 0 17.5 9.5A8 8 0 1 0 1.5 9.5Z"/>
-        <path fill="url(#highlight)" d="M1.5 9.5A8 8 0 1 0 17.5 9.5A8 8 0 1 0 1.5 9.5Z"/>
-        <path fill="url(#glass)" fill-rule="evenodd" d="M6 9.5A3.5 6.8 0 1 0 13 9.5A3.5 6.8 0 1 0 6 9.5ZM7 9.5A2.5 5.8 0 1 0 12 9.5A2.5 5.8 0 1 0 7 9.5Z"/>
-        <rect x="2.7" y="9" width="3.3" height="1" rx="0" fill="url(#glass)"/>
-        <rect x="7" y="9" width="5" height="1" rx="0" fill="url(#glass)"/>
-        <rect x="13" y="9" width="3.3" height="1" rx="0" fill="url(#glass)"/>
-    </g>
-    <path fill="url(#accent)" stroke="url(#accent)" stroke-width="0.8" stroke-linejoin="round" d="M13 11L19 11L19 19.5L16 17.5L13 19.5Z"/>
+    <path fill="none" stroke="url(#sky-main)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M3.282 6.782A9.5 9.5 0 0 1 16.718 6.782"/>
+    <path fill="none" stroke="url(#sky-deep)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M5.757 9.257A6 6 0 0 1 14.243 9.257"/>
+    <path fill="url(#sky-deepest)" d="M7.9 13A2.1 2.1 0 1 0 12.1 13A2.1 2.1 0 1 0 7.9 13Z"/>
+    <path fill="url(#orange)" d="M13 9H18V17L15.5 15.2L13 17Z"/>
 </svg>

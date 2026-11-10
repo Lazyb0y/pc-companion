@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -47,6 +49,21 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
         Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
         gate.Set();
         Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "Clipboard Actions' thread ended."))));
+    }
+
+    // The pipe is this session's, and only these tests, one at a time, serve it.
+    [Fact]
+    public async Task TheSettingsAppCanReadWhichShortcutsWindowsRefused()
+    {
+        _system.RefusesShortcut = true;
+        _feature.Apply(Section("""{ "enabled": true, "selectedText": true }"""));
+        // The status is set before the settings are logged as applied, after both shortcuts.
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
+
+        var snapshot = await SnapshotPipe.ReadAsync(ClipboardShortcutStatus.PipeName, TimeSpan.FromSeconds(5), ClipboardShortcutStatus.MaximumSnapshotLength, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(snapshot);
+        Assert.Equal(new ClipboardShortcutRefusals(true, false), ClipboardShortcutStatus.FromJson(snapshot));
     }
 
     [Fact]

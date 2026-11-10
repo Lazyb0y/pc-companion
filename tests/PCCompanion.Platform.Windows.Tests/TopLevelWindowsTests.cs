@@ -652,6 +652,35 @@ public sealed class TopLevelWindowsTests
         Assert.NotEqual(window.Handle, Foreground.Window);
     }
 
+    [Fact]
+    public void OnlyALayeredWindowThatLetsClicksThroughDoesSo()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var notice = new LayeredWindow(UniqueClassName(), "Notice", clickThrough: true);
+        using var strip = new LayeredWindow(UniqueClassName(), "Strip");
+
+        Assert.False(TopLevelWindows.LetsClicksThrough(window.Handle));
+        Assert.True(TopLevelWindows.LetsClicksThrough(notice.Handle));
+        Assert.False(TopLevelWindows.LetsClicksThrough(strip.Handle));
+    }
+
+    [Fact]
+    public void ListAllHasHiddenWindowsToo()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.Contains(window.Handle, TopLevelWindows.ListAll());
+        Assert.DoesNotContain(TopLevelWindows.List(), listed => listed.Handle == window.Handle);
+    }
+
+    [Fact]
+    public void AWindowWithoutChildrenHasNoneOfAClass()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+
+        Assert.Equal(0, TopLevelWindows.FindChild(window.Handle, "Windows.UI.Core.CoreWindow"));
+    }
+
     // Cloaked first, so it never appears.
     private static void Show(nint window)
     {

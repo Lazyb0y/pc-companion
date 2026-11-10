@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
 using PCCompanion.Core.Features;
 using PCCompanion.Infrastructure.Features;
+using PCCompanion.Infrastructure.Updates;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
@@ -12,13 +18,15 @@ namespace PCCompanion.Host;
 
 /// <summary>
 /// The host's tray icon: selecting it opens the settings, and its menu has the running features'
-/// items, then Settings and Exit. The menu follows the Windows mode, as the taskbar does. Use it on
-/// the thread that runs the message loop.
+/// items, then Settings and Exit. While an update is available, the menu starts with an item for
+/// it, and the icon can have a dot. The menu follows the Windows mode, as the taskbar does. Use it
+/// on the thread that runs the message loop.
 /// </summary>
 internal sealed partial class TrayController(SettingsAppLauncher settingsApp, FeatureRunner features, ILogger<TrayController> logger) : IDisposable
 {
     private const uint SettingsCommand = 1;
     private const uint ExitCommand = 2;
+    private const uint UpdateCommand = 3;
 
     // The features' items get menu IDs from here on.
     private const int FirstFeatureCommand = 100;
@@ -26,6 +34,18 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
     private MessageWindow? _window;
     private TrayIcon? _icon;
     private MenuMode? _menuMode;
+    private bool _disposed;
+
+    // The update the menu's item names and whether the icon has the dot; then what the icon shows:
+    // its tooltip, and the size and color of its dot, or null while it shows the executable's icon.
+    private ReleaseVersion? _update;
+    private bool _dot;
+    private string _toolTip = Strings.AppDisplayName;
+    private DotLooks? _shownDot;
+
+    // Counts the dots asked for, so a drawing that finishes after a later request, or after the
+    // dot went away, isn't shown.
+    private int _dotRequests;
 
     /// <summary>Asks the running host to open the settings, for example from a second host launch.</summary>
     public static uint OpenSettingsMessage { get; } = MessageWindow.RegisterMessage("PCCompanion.Host.OpenSettings");
@@ -35,6 +55,9 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
 
     /// <summary>Raised when the user selects the notification <see cref="ShowNotification"/> showed.</summary>
     public event EventHandler? NotificationSelected;
+
+    /// <summary>Raised when the user chooses the update item that <see cref="ShowUpdate"/> put in the menu.</summary>
+    public event EventHandler<UpdateChosenEventArgs>? UpdateChosen;
 
     /// <summary>Shows a notification from the tray icon. Returns false when Windows refused.</summary>
     public bool ShowNotification(string title, string text) => _icon?.ShowNotification(title, text) ?? false;
@@ -61,6 +84,10 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
         _icon.MenuRequested += (_, e) => ShowMenu(e.X, e.Y);
         _icon.NotificationSelected += (_, _) => NotificationSelected?.Invoke(this, EventArgs.Empty);
 
+        // When the taskbar restarts, the display's scale may have changed too.
+        _icon.AddedAgain += (_, _) => RedrawDot();
+        _icon.AppearanceChanged += (_, _) => RedrawDot();
+
         if (!_icon.IsShown)
         {
             LogIconNotShown(logger);
@@ -70,6 +97,40 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
         {
             LogMenuModeNotSupported(logger, Environment.OSVersion.Version.Build);
         }
+    }
+
+    /// <summary>
+    /// Shows <paramref name="update"/> in the menu's first item and in the icon's tooltip, or
+    /// neither when it's <see langword="null"/>, and the dot on the icon when <paramref name="dot"/>
+    /// is true. Call it on the UI thread, and again after the host's language changes. See
+    /// docs/features/general/update-check.md#tray-icon.
+    /// </summary>
+    public void ShowUpdate(ReleaseVersion? update, bool dot)
+    {
+        if (_icon is null || _disposed)
+        {
+            return;
+        }
+
+        (_update, _dot) = (update, dot);
+        var request = ++_dotRequests;
+        if (!dot)
+        {
+            ShowWithoutDot(UpdateToolTip());
+            return;
+        }
+
+        // Drawn off the UI thread: the first drawing reads the accent color from Windows and the
+        // icon from the executable, which takes tens of milliseconds.
+        var window = _window!;
+        _ = Task.Run(() =>
+        {
+            var drawn = DrawDot();
+            if (!window.BeginInvoke(() => ShowDot(request, drawn)))
+            {
+                drawn.Picture?.Dispose();
+            }
+        });
     }
 
     /// <summary>
@@ -92,6 +153,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
 
     public void Dispose()
     {
+        _disposed = true;
         _icon?.Dispose();
         if (_window is not null)
         {
@@ -125,8 +187,13 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
     private void ShowMenu(int x, int y)
     {
         var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
-        var items = features.GetMenuItems(FirstFeatureCommand).Select(ToPopupMenuItem).ToList();
-        if (items.Count > 0)
+
+        // Kept, since the update can change while the menu is open.
+        var update = _update;
+        var items = update is { } version ? [new(UpdateCommand, PopupMenu.Escape(UpdateText(version))), PopupMenuItem.Separator] : new List<PopupMenuItem>();
+        var featureItems = features.GetMenuItems(FirstFeatureCommand).Select(ToPopupMenuItem).ToList();
+        items.AddRange(featureItems);
+        if (featureItems.Count > 0)
         {
             items.Add(PopupMenuItem.Separator);
         }
@@ -137,7 +204,7 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
         FollowWindowsMode();
         LogMenuOpened(logger, rightToLeft);
         var command = PopupMenu.Show(_window!, items, x, y, rightToLeft);
-        LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", 0 => "nothing", _ => "a feature's item" });
+        LogMenuClosed(logger, command switch { SettingsCommand => "Settings", ExitCommand => "Exit", UpdateCommand => "the update", 0 => "nothing", _ => "a feature's item" });
 
         switch (command)
         {
@@ -149,9 +216,86 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
             case ExitCommand:
                 Exit();
                 break;
+            case UpdateCommand when update is { } chosen:
+                UpdateChosen?.Invoke(this, new UpdateChosenEventArgs(chosen));
+                break;
             default:
                 features.ChooseMenuItem((int)command);
                 break;
+        }
+    }
+
+    // "PC Companion 0.6.0 is available", parsed each time: the host's language can change while it runs.
+    private static string UpdateText(ReleaseVersion update) =>
+        string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.GeneralUpdateStatusAvailable), update);
+
+    // On the thread pool, with the size and color, since the first read of the accent color is
+    // slow. A size or color that changes later is drawn again when Windows says so.
+    private static DrawnDot DrawDot()
+    {
+        try
+        {
+            var looks = new DotLooks(Displays.SmallIconSize(Displays.MainDisplayDpi()), AttentionDot.TaskbarColor());
+            if (TrayIcon.ApplicationIconPixels(looks.Size) is not { } pixels)
+            {
+                return new DrawnDot(null, null, null);
+            }
+
+            AttentionDot.Draw(pixels, looks.Size, looks.Color);
+            return new DrawnDot(looks, IconImage.FromPixels(pixels, looks.Size), null);
+        }
+        catch (Exception exception) when (exception is Win32Exception or COMException)
+        {
+            return new DrawnDot(null, null, exception);
+        }
+    }
+
+    private string UpdateToolTip() => _update is { } update ? UpdateText(update) : Strings.AppDisplayName;
+
+    // Draws the dot again when the taskbar restarts or Windows' settings, colors or display scale
+    // change. It's shown only when its size or color changed.
+    private void RedrawDot()
+    {
+        if (_dot)
+        {
+            ShowUpdate(_update, _dot);
+        }
+    }
+
+    // On the UI thread, unless a later request or the dot going away replaced this one.
+    private void ShowDot(int request, DrawnDot drawn)
+    {
+        if (request != _dotRequests || _disposed)
+        {
+            drawn.Picture?.Dispose();
+            return;
+        }
+
+        var toolTip = UpdateToolTip();
+        if (drawn is not { Looks: { } looks, Picture: { } picture })
+        {
+            LogDotNotDrawn(logger, drawn.Error);
+            ShowWithoutDot(toolTip);
+            return;
+        }
+
+        if (looks == _shownDot && toolTip == _toolTip)
+        {
+            picture.Dispose();
+            return;
+        }
+
+        _icon!.Update(picture, toolTip);
+        (_shownDot, _toolTip) = (looks, toolTip);
+        LogDotShown(logger, looks.Size);
+    }
+
+    private void ShowWithoutDot(string toolTip)
+    {
+        if (_shownDot is not null || toolTip != _toolTip)
+        {
+            _icon!.ShowApplicationIcon(toolTip);
+            (_shownDot, _toolTip) = (null, toolTip);
         }
     }
 
@@ -189,6 +333,12 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
         _menuMode = mode;
     }
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon shows the update dot, {Size} pixels wide.")]
+    private static partial void LogDotShown(ILogger logger, int size);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Can't draw the update dot on the tray icon, so it shows without it.")]
+    private static partial void LogDotNotDrawn(ILogger logger, Exception? exception);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "The tray icon was selected.")]
     private static partial void LogIconSelected(ILogger logger);
 
@@ -221,4 +371,16 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Couldn't draw the tray menu in the Windows mode ({Mode}): uxtheme.dll doesn't have the functions.")]
     private static partial void LogMenuModeNotSet(ILogger logger, MenuMode mode);
+
+    // The size and color a dot was drawn in.
+    private sealed record DotLooks(int Size, uint Color);
+
+    // A dot drawn on the icon, or why it couldn't be drawn.
+    private sealed record DrawnDot(DotLooks? Looks, IconImage? Picture, Exception? Error);
+}
+
+/// <summary>The update whose item in the tray menu the user chose.</summary>
+internal sealed class UpdateChosenEventArgs(ReleaseVersion version) : EventArgs
+{
+    public ReleaseVersion Version { get; } = version;
 }
