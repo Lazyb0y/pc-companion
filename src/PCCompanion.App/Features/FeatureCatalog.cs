@@ -85,7 +85,7 @@ public static class FeatureCatalog
         new(DesktopModule.Id, "ModuleDesktopName",
         [
             new(SystemMetersFeature.Definition, SystemMetersFeature.CurrentSupport, typeof(SystemMetersPage), DrawnIcon: "system-meters"),
-            new(DynamicWallpaperFeature.Definition, DynamicWallpaperFeature.CurrentSupport, typeof(DynamicWallpaperPage), DynamicWallpaperFirstSettings.Create),
+            new(DynamicWallpaperFeature.Definition, DynamicWallpaperFeature.CurrentSupport, typeof(DynamicWallpaperPage), DynamicWallpaperFirstSettings.Create, DrawnIcon: "dynamic-wallpaper"),
         ]),
         new(ClipboardModule.Id, "ModuleClipboardName",
         [
