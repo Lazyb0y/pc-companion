@@ -57,15 +57,15 @@ Change the desktop's picture with the time of day: at sunrise and sunset, at tim
 Sunrise and sunset need a place. **Location** offers two:
 
 - **From your time zone,** the default, needs no permission and makes no connection:
-  - PC Companion takes the time zone set in Windows and **Country or region** (`GetUserDefaultGeoName`), finds the time zone database's zone for them (`TimeZoneInfo.TryConvertWindowsIdToIanaId`), and takes that zone's main city from a table that ships with PC Companion. The table comes from the time zone database, which is in the public domain: its zones and their main cities (`zone1970.tab`), with the older names its `backward` file lists. It adds about 15 KB.
+  - PC Companion takes the time zone set in Windows and **Country or region** (`GetUserDefaultGeoName`), finds the time zone database's zone for them (`TimeZoneInfo.TryConvertWindowsIdToIanaId`), and takes that zone's main city from a table that ships with PC Companion. The table comes from the time zone database, which is in the public domain: each zone's main city, from `zone.tab`, or `zone1970.tab` for a zone `zone.tab` doesn't list, with the older names that `tzdata.zi` links to them, such as `Asia/Calcutta`, which Windows uses. `scripts/time-zone-places.ps1` makes it. It adds about 17 KB.
   - The page shows the time zone's name, such as "(UTC+06:00) Dhaka", and that the times are approximate: far from the zone's main city they can be off by tens of minutes, as in a time zone as wide as China's.
   - When Windows' time zone changes, as on a trip with **Set time zone automatically**, the place follows it.
   - A time zone with no place, such as UTC, gives 6:00 for sunrise and 18:00 for sunset, and the page asks for a place.
-- **Coordinates:** a latitude and a longitude, in degrees with one decimal, which the user types or fills in with **Use my location**. One decimal is about 11 km, which moves sunrise and sunset by less than a minute, so no more is kept.
+- **Coordinates:** a latitude and a longitude, in degrees with one decimal, north and east positive, which the user types or fills in with **Use my location**. One decimal is about 11 km, which moves sunrise and sunset by less than a minute, so no more is kept. Choosing From your time zone removes them from the settings; the page keeps them while it's open, for choosing Coordinates again.
 - **Use my location** asks Windows for the PC's position once, from the settings app, which Windows requires to be in front for its question (`Geolocator`):
   - Windows 11 version 24H2 and later ask the user the first time a desktop app wants the location, and **Let desktop apps access your location** must be on. When Windows refuses, the page says why, with **Open location settings** (`ms-settings:privacy-location`).
   - Windows' location service may use nearby Wi-Fi networks and Microsoft's online service to find the position. PC Companion itself makes no connection.
-  - The position is rounded to one decimal and saved as the coordinates. PC Companion doesn't ask again unless the user selects the button again.
+  - Windows has up to 30 seconds to answer, and may give a position up to 10 minutes old. The position is rounded to one decimal and saved as the coordinates, and Coordinates is chosen. PC Companion doesn't ask again unless the user selects the button again. A failure is logged with its error code only.
 - The host never asks for the location: Windows can take seconds to answer, and its question needs a window in front.
 - Only the rounded coordinates are kept, in the settings. The place found from the time zone isn't stored, and no location is logged.
 
@@ -82,7 +82,7 @@ Sunrise and sunset need a place. **Location** offers two:
 ## Displays
 
 - **Same picture on every display**, the default, sets each period's picture for all displays at once (`IDesktopWallpaper::SetWallpaper` without a display), which Windows also gives displays that are connected later.
-- **A picture for each display** lists the connected displays in each period, by their names from the EDID, the laptop's own as **Built-in display**, each with a picture or folder, and **Other displays** for any other. Up to 16 displays are kept; a display that's not connected stays in the list, dimmed, with **Remove**.
+- **A picture for each display** gives each display a group on the page, named from its EDID, the laptop's own as **Built-in display**, and numbered when identical displays have the same name, with a row for each period: a picture, a folder, or **Same as other displays**. The periods' own pictures are then for **Other displays**, any display without its own. While it's on, the page adds each connected display the settings don't have yet, up to 16. A display that's not connected stays, marked **Not connected**, with **Remove**, which removes its pictures too.
 - Displays are recognized as [Display Profiles](../display/display-profiles.md#recognizing-displays) recognizes them: by model and serial number on any connection, then by model and connection, then by model alone when only one display of that model is connected. Only a hash of the serial number is kept. So a display keeps its pictures on another port or dock, which Windows' own pictures for each display don't.
 - Each display's picture is set by its device path, which Windows' wallpaper function uses as the display's ID, as the spike confirmed. Windows also lists displays that were disconnected with a picture; PC Companion sets only the connected ones.
 - When a display arrives or leaves (`WM_DISPLAYCHANGE` and `GUID_DEVINTERFACE_MONITOR`), PC Companion reads each connected display's picture and sets those that differ.
@@ -125,7 +125,7 @@ Sunrise and sunset need a place. **Location** offers two:
 
 ### When Windows doesn't allow it
 
-- **Policies:** while the background is managed (`NoChangingWallPaper` under `Software\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop`, or `Wallpaper` under `Software\Microsoft\Windows\CurrentVersion\Policies\System`, in the user's or the machine's key, or `Software\Microsoft\Windows\CurrentVersion\PersonalizationCSP` in the machine's key), PC Companion changes nothing, and the page says "Your organization manages the desktop background." It reads them when the feature starts and when Windows announces a policy change (`WM_SETTINGCHANGE` with `Policy`). Windows refusing a change (`S_FALSE`), or showing another picture than the one set, counts the same, with a warning in the log.
+- **Policies:** while the background is managed (`NoChangingWallPaper` under `Software\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop`, or `Wallpaper` under `Software\Microsoft\Windows\CurrentVersion\Policies\System`, in the user's or the machine's key, or `Software\Microsoft\Windows\CurrentVersion\PersonalizationCSP` in the machine's key), PC Companion changes nothing, and the page says "Your organization manages the desktop background." It reads them before each change, and Windows' announcement of a policy change (`WM_SETTINGCHANGE` with `Policy`) starts one. Windows refusing a change (`S_FALSE`), or showing another picture than the one set, counts the same, with a warning in the log.
 - **Windows that isn't activated** locks the background page in Windows Settings, but not the wallpaper function, as File Explorer's **Set as desktop background** shows. Dynamic Wallpaper works there too.
 
 ## The settings app and the host
@@ -135,10 +135,10 @@ Sunrise and sunset need a place. **Location** offers two:
 
 ## Threads
 
-- **The host's UI thread** runs `Apply`, which reads and checks the section and works out the next change in microseconds, and its hidden window's messages: `WM_TIMECHANGE`, `WM_SETTINGCHANGE`, `WM_DISPLAYCHANGE`, displays that arrive and leave, waking, `TaskbarCreated` and the session's unlock. These only work out the next change again and pass work to the wallpaper thread.
-- **The wallpaper thread,** an MTA thread of its own, does everything that waits for Explorer or the disk: Windows' wallpaper function (`IDesktopWallpaper`), reading and setting pictures, the fit, the color and the slideshow, reading the displays and their EDIDs, checking pictures and listing folders, the policy values, and `dynamic-wallpaper.json`. It does one job at a time, and a new job replaces any that's waiting, since only the latest matters.
+- **The host's UI thread** runs `Apply`, which reads and checks the section, and its hidden window's messages: `WM_TIMECHANGE`, `WM_SETTINGCHANGE`, `WM_DISPLAYCHANGE`, displays that arrive and leave, waking, `TaskbarCreated` and the session's unlock. These only pass work to the wallpaper thread, and set the timer for the next change once the wallpaper thread has worked it out.
+- **The wallpaper thread,** an MTA thread of its own, does everything that waits for Explorer, the registry or the disk: the time zone, its main city, which loads Windows' time zone data the first time, and the Windows mode, and working out the next change from them, in well under a millisecond; Windows' wallpaper function (`IDesktopWallpaper`), reading and setting pictures, the fit, the color and the slideshow, reading the displays and their EDIDs, checking pictures and listing folders, the policy values, and `dynamic-wallpaper.json`. It does one job at a time, and a new job replaces any that's waiting, since only the latest matters.
 - **Explorer:** every call to the wallpaper function goes to Explorer and waits for it, without a time limit.
-  - The wallpaper thread allows its calls to be cancelled (`CoEnableCallCancellation`). When a call takes more than 10 seconds, the UI thread cancels it (`CoCancelCall`), and a warning is logged. The thread tries again when Explorer's taskbar comes back or at the next change.
+  - The wallpaper thread allows its calls to be cancelled (`CoEnableCallCancellation`). When a call takes more than 10 seconds, a thread pool timer cancels it (`CoCancelCall`), and a warning is logged. Releasing the connection is a call to Explorer too, so the thread keeps it until Explorer answers a new connection, and releases it then. The thread tries again when Explorer's taskbar comes back or at the next change.
   - While Explorer isn't running, calls fail at once, and the thread waits for `TaskbarCreated`.
 - **The thread pool** runs the timer and the registry watches, which pass their news to the UI thread, and the pipe, which asks the wallpaper thread.
 - **The settings app** shows the Open dialog, reads Windows' thumbnails of the pictures on its thread pool, and asks for the location on its UI thread.
@@ -147,15 +147,14 @@ Sunrise and sunset need a place. **Location** offers two:
 
 ## Settings
 
-- **Feature page:**
-  - the on/off switch;
-  - **Change with:** Sunrise and sunset, Times of day or Windows mode;
-  - **Pictures:** a row for each period, with its picture's thumbnail, its file or folder name, its time span today, **In use** on the current period, and **Choose** with **Picture** and **Folder**; Sunrise and Sunset also have **None**. With Times of day, each row has its time, and the list has **Add time** and **Remove**. With **A picture for each display**, each row opens into a row for each display and **Other displays**;
-  - **A picture for each display**, a switch, off with Span;
+- **Feature page,** from the top:
+  - the on/off switch, and notes when the feature stepped aside, with **Resume**, when a policy manages the background, when Explorer didn't answer, in a remote session that shows no background, and after turning off when Windows spotlight was on before, with **Open background settings**;
+  - **Change with:** Sunrise and sunset, Times of day or Windows mode, with a note for Windows mode;
+  - **Pictures:** a row for each period, with its picture's thumbnail, its file or folder name, why it can't be used, **In use** on the current period, and **Choose** with **Picture** and **Folder**; Sunrise and Sunset also have **None**. With Times of day, each row has its time and **Remove**, and the group has **Add time**. A note says when every period has the same picture, as Windows 10's first settings do;
+  - **A picture for each display**, a switch, off with Span, and with it a group for each display; see [Displays](#displays);
   - **Fit**;
-  - for Sunrise and sunset, **Location**, with From your time zone or Coordinates, the time zone's name or the latitude and longitude, and **Use my location**;
-  - **Today**: when each period starts and ends today, or that the sun doesn't rise or set;
-  - notes when the feature stepped aside, with **Resume**, when a policy manages the background, after turning off when Windows spotlight was on before, and for Windows mode;
+  - for Sunrise and sunset, **Location**: From your time zone, with the time zone's name, or Coordinates, with the latitude, the longitude and **Use my location**; and notes when Windows refuses the location, with **Open location settings**, can't find it, or there's no place;
+  - **Today**, except with Windows mode: when each period starts and ends today, and that the sun doesn't rise or set;
   - a **Permissions & data** card.
 - **First settings** (`FirstSettings`): Sunrise and sunset, From your time zone, the same picture on every display, the pictures and fit above, and the times 7:00 and 19:00.
 - The switch on Home changes only `enabled` and keeps the other settings.
@@ -247,14 +246,14 @@ Sunrise and sunset need a place. **Location** offers two:
 - **Between changes nothing runs:** one timer, three registry watches and the hidden window's messages; no polling.
 - **A change** costs the host a few milliseconds on the wallpaper thread, and Explorer more: in the spike, 30 to 200 ms of processor time for a 1920 x 1080 picture, about 0.2 seconds for a 3840 x 2160 JPEG, 0.6 seconds for a 7680 x 4320 PNG and 1 second for a 7680 x 4320 JPEG. Sunrise and sunset makes up to four changes a day.
 - Reading the displays takes about 0.1 ms; with **A picture for each display**, each display's EDID is read once for each device path, about 80 ms the first time.
-- Working out the periods takes microseconds.
+- Working out the next change took 0.02 ms for Dhaka and 0.2 ms in a polar night, which looks two days ahead, and Today's periods 0.2 to 0.3 ms, on the PC.
 
 ## Accessibility and localization
 
 - The page works with the keyboard alone, and keyboard focus stays on a period or a time when the list changes. Each row's name says its period, its picture or folder name and whether it's in use, such as "Night, Stars.jpg, in use", and its buttons carry the period's name, such as "Choose for Night".
 - **Thumbnails** are pictures, not controls, so screen readers skip them: the row's name says the same. They're never mirrored in right-to-left languages, have a border in the theme's colors in high contrast, and show a placeholder for a picture that's gone.
 - The page follows the Windows mode, dark or light, and high contrast, and is laid out right to left in right-to-left languages. Paths and coordinates are shown left to right in every language.
-- Times follow the user's regional settings, 12-hour or 24-hour, and so do coordinates, such as 23,8° N in German; N, S, E and W are translated.
+- Times follow the user's regional settings, 12-hour or 24-hour, and so do the coordinates' numbers, such as 23,8 in German; north and east are positive, as the boxes' descriptions say.
 - The time zone's name is Windows' own, in the user's language.
 - The strings are translated like the other pages', marked "Needs native review."
 - The feature's icon is drawn as [Icons](../../design/icons.md) describes, and shown to the maintainer before it's used.
@@ -293,23 +292,21 @@ A spike with a .NET 10 helper, in Windows Sandbox (Windows 11 24H2, build 26100,
   - **Explorer:** calls that fail at once, a call cancelled after 10 seconds, and a new connection after `TaskbarCreated`;
   - **the settings:** first settings on Windows 11 and Windows 10, the spec's example, unknown values, limits and a section that can't be read;
   - **the pipe:** its answers and Resume.
-- **Sandbox checks** (`scripts/sandbox/groups/DynamicWallpaper.ps1`):
-  - the Home switch turns the feature on, and the page shows Sunrise and sunset, From your time zone with the Sandbox's time zone, Windows' light and dark pictures, and Today;
-  - with Times of day set a minute ahead, the picture changes on time, read through the wallpaper function, and only once;
-  - a new time zone, set with `tzutil`, changes the times on the page and the next change;
-  - restarting Explorer keeps the picture, and the host connects again; with Explorer suspended for 15 seconds, the call is cancelled with a warning, and no feature holds the host's UI thread, as every group checks;
-  - **A picture for each display** sets the Sandbox's display by its device path;
-  - another program changing the picture with `SystemParametersInfo` makes the feature step aside, the page shows **Resume**, and **Resume** sets the period's picture again;
-  - a new virtual desktop, made and switched to with the keyboard, gets the period's picture;
-  - turning the feature off puts back a picture, a solid color and a slideshow set before it was turned on, and after Windows spotlight, its last picture and the note;
-  - with `NoChangingWallPaper`, nothing changes and the page shows the note;
-  - a missing picture leaves the picture in place and shows the problem;
-  - the page, in English and Arabic, light and dark, with screenshots; the App and Languages groups check its layout, as for the other pages.
-- **What the Sandbox can't check:** the fade, two or more displays, recognizing displays, sleep, a locked session, Windows' location question, Windows 10 and Narrator.
+- **Sandbox checks** (`scripts/sandbox/groups/DynamicWallpaper.ps1`), with pictures the group makes, reading the background through the wallpaper function:
+  - the Home switch turns the feature on with Sunrise and sunset, From your time zone and Windows' light and dark pictures, remembers the Sandbox's background and sets the period's picture; the page marks the period **In use**, shows the Sandbox's time zone and **Today**, and with **A picture for each display** lists the Sandbox's display as connected;
+  - with Times of day set a minute or two ahead, the picture changes on time; a new time zone, set with `tzutil`, moves the times, and the Sandbox's own brings them back;
+  - with Windows mode, the pictures follow the mode; restarting Explorer keeps the picture, and the next change works; with Explorer suspended for 20 seconds, the call is cancelled with a warning, the wallpaper thread gives up while Explorer is still suspended, and the next change after it answers sets the picture; and no feature holds the host's UI thread, as every group checks;
+  - a folder shows each of its pictures once, and `dynamic-wallpaper.json` keeps its place; a missing picture leaves the picture in place, and the page shows the problem; a display's own picture is set for the Sandbox's display;
+  - turning the feature off on the page puts back the Sandbox's background, deletes `dynamic-wallpaper.json`, and puts back a solid color;
+  - another program changing the picture through the wallpaper function makes the feature step aside, the page shows the note with **Resume**, and **Resume** sets the period's picture again; turned off then, the other program's picture stays;
+  - with `NoChangingWallPaper`, nothing changes and the page shows the note; without it, the picture changes again;
+  - the logs hold no picture names; the page has screenshots, and the App and Languages groups check its layout, also right to left, as for the other pages.
+- **What the Sandbox can't check:** the fade, two or more displays, recognizing displays on other ports, virtual desktops, which need the Windows key, putting back a slideshow and Windows spotlight's last picture, sleep, a locked session, Windows' location question, Windows 10 and Narrator. The unit tests cover putting back a slideshow and Windows spotlight's picture.
 - **By hand:**
   - the fade, with animation effects on and off;
   - two and three displays, each with its own pictures, a display moved to another port and dock, and a laptop's own screen;
-  - two displays with several virtual desktops;
+  - several virtual desktops, with one display and with two;
+  - turning the feature off after a slideshow and after Windows spotlight;
   - sleep and Modern Standby across a change, and a change while locked;
   - **Use my location** with location on and off, and Windows' question;
   - Times of day across a daylight saving time change, by setting the time zone and the clock;
