@@ -14,6 +14,7 @@ using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
 using PCCompanion.App.Features.LockKeys;
+using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
 using PCCompanion.App.Features.SystemMeters;
@@ -21,6 +22,7 @@ using PCCompanion.App.Features.TitleBarActions;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
+using PCCompanion.Modules.Clipboard.MiddleClickPaste;
 using PCCompanion.Modules.Desktop;
 using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Modules.Desktop.SystemMeters;
@@ -90,6 +92,7 @@ public static class FeatureCatalog
         new(ClipboardModule.Id, "ModuleClipboardName",
         [
             new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage), DrawnIcon: "clipboard-actions"),
+            new(MiddleClickPasteFeature.Definition, MiddleClickPasteFeature.CurrentSupport, typeof(MiddleClickPastePage)),
         ]),
         new(NetworkModule.Id, "ModuleNetworkName",
         [

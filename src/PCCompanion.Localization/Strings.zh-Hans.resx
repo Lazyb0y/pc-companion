@@ -4684,4 +4684,40 @@
     <value>上一次中键单击仍在粘贴中</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>工作原理</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>在某个应用中选择文本，然后在同一应用或其他应用的文本框中单击鼠标中键。文本会插入到指针所在位置，按 Ctrl+Z 可再次删除。链接、标签页、页面文本和标题栏会保留各自的中键单击功能，且不会使用剪贴板。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>保留自身中键单击功能的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>不会在这些应用的窗口中粘贴任何内容，其中键单击会照常传给它们。适用于自身会在文本中使用中键单击的应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>应用通过 Windows 的辅助功能支持共享其所选文本，并说明其中哪些部分是文本框；有些应用不支持此功能。密码框和终端不受影响。未粘贴任何内容时，指针旁会显示一条简短说明，告知原因。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>当 PC Companion 在没有管理员权限的情况下运行时，以管理员身份运行的应用会保留其中键单击功能，且不会读取其所选文本。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此只在同样以管理员身份运行的应用之间粘贴，没有管理员权限的应用会保留其中键单击功能。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>中键粘贴用于鼠标。使用键盘时，请按 Ctrl+C 复制，按 Ctrl+V 粘贴。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>开启后，会关注指针；指针停在文本上时，会询问应用其下方是什么，但绝不读取其文本；列出应用后，会读取窗口所属的应用。仅在文本框中单击鼠标中键时读取所选文本，绝不从密码框读取，也不会存储、记录或发送这些文本。只会将文本放入你单击的框中，且不使用剪贴板。询问浏览器会开启其辅助功能支持，直到浏览器关闭，这在很长的页面上会占用更多内存。不会建立任何网络连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

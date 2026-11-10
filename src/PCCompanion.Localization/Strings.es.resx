@@ -4732,4 +4732,40 @@
     <value>El último clic central aún se está pegando</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>Cómo funciona</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>Selecciona texto en una aplicación y luego haz clic con el botón central en un cuadro de texto de la misma aplicación o de otra. El texto se inserta donde está el puntero, y Ctrl+Z lo quita de nuevo. Los vínculos, las pestañas, el texto de las páginas y las barras de título conservan su propio clic central, y no se usa el portapapeles.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>Aplicaciones que conservan su clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>No se pega nada en sus ventanas, y sus clics centrales les llegan como siempre. Para aplicaciones que usan el clic central en su texto.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>Las aplicaciones comparten su texto seleccionado, e indican qué partes son cuadros de texto, mediante la compatibilidad con accesibilidad de Windows, que algunas aplicaciones no tienen. Los cuadros de contraseña y los terminales no se tocan. Cuando no se pega nada, una nota breve junto al puntero explica por qué.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>Las aplicaciones que se ejecutan como administrador conservan su clic central, y no se lee su texto seleccionado, mientras PC Companion se ejecuta sin permisos de administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que solo pega entre aplicaciones que también se ejecutan como administrador, y las aplicaciones sin permisos de administrador conservan su clic central.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>Pegar con clic central es para el mouse. Con el teclado, copia con Ctrl+C y pega con Ctrl+V.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>Mientras está activado, observa el puntero y, cuando se detiene sobre texto, pregunta a la aplicación qué hay debajo, nunca su texto; con aplicaciones en la lista, lee a qué aplicación pertenece una ventana. Lee el texto seleccionado solo con un clic central en un cuadro de texto, nunca de un cuadro de contraseña, y no lo guarda, registra ni envía. Inserta el texto solo en el cuadro en el que hiciste clic y no usa el portapapeles. Preguntar a un navegador activa su compatibilidad con accesibilidad hasta que se cierra, lo que usa más memoria en páginas muy largas. No establece conexiones de red.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

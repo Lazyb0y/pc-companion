@@ -4732,4 +4732,40 @@
     <value>শেষ মিডল-ক্লিকটি এখনও পেস্ট হচ্ছে</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>এটি কীভাবে কাজ করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>কোনো অ্যাপে টেক্সট নির্বাচন করুন, তারপর একই অ্যাপ বা অন্য কোনো অ্যাপের একটি টেক্সট বক্সে মিডল-ক্লিক করুন। পয়েন্টার যেখানে আছে সেখানে টেক্সট বসে, আর Ctrl+Z আবার তা সরিয়ে দেয়। লিংক, ট্যাব, পেজের টেক্সট আর টাইটেল বার নিজেদের মিডল-ক্লিক রাখে, আর ক্লিপবোর্ড ব্যবহার হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>যেসব অ্যাপ নিজেদের মিডল-ক্লিক রাখে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>এদের উইন্ডোতে কিছু পেস্ট হয় না, আর এদের মিডল-ক্লিক আগের মতোই এদের কাছে পৌঁছায়। যেসব অ্যাপ নিজেরাই টেক্সটে মিডল-ক্লিক ব্যবহার করে, সেগুলোর জন্য।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>অ্যাপগুলো Windows-এর অ্যাক্সেসিবিলিটি সাপোর্টের মাধ্যমে নিজেদের নির্বাচিত টেক্সট শেয়ার করে এবং জানায় কোন অংশগুলো টেক্সট বক্স; কিছু অ্যাপে এটি নেই। পাসওয়ার্ড বক্স আর টার্মিনাল এড়িয়ে যাওয়া হয়। কিছু পেস্ট না হলে পয়েন্টারের পাশে একটি ছোট নোট কারণ জানায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>PC Companion অ্যাডমিন অধিকার ছাড়া চললে, অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপগুলো নিজেদের মিডল-ক্লিক রাখে, আর এদের নির্বাচিত টেক্সট পড়া হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই এটি শুধু সেই অ্যাপগুলোর মধ্যে পেস্ট করে যেগুলোও অ্যাডমিনিস্ট্রেটর হিসেবে চলে, আর অ্যাডমিন অধিকারবিহীন অ্যাপগুলো নিজেদের মিডল-ক্লিক রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>মিডল-ক্লিক পেস্ট মাউসের জন্য। কিবোর্ড দিয়ে Ctrl+C চেপে কপি আর Ctrl+V চেপে পেস্ট করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>চালু থাকা অবস্থায় এটি পয়েন্টারের দিকে নজর রাখে, আর পয়েন্টার টেক্সটের ওপর থামলে অ্যাপকে জিজ্ঞাসা করে এর নিচে কী আছে, কখনো এর টেক্সট নয়; অ্যাপ তালিকাভুক্ত থাকলে পড়ে কোন উইন্ডো কোন অ্যাপের। নির্বাচিত টেক্সট শুধু কোনো টেক্সট বক্সে মিডল-ক্লিক করলে পড়ে, কখনো পাসওয়ার্ড বক্স থেকে নয়, আর তা সংরক্ষণ, লগ বা পাঠায় না। টেক্সট শুধু আপনার ক্লিক করা বক্সে বসায়, আর ক্লিপবোর্ড ব্যবহার করে না। কোনো ব্রাউজারকে জিজ্ঞাসা করলে সেটি বন্ধ না হওয়া পর্যন্ত এর অ্যাক্সেসিবিলিটি সাপোর্ট চালু থাকে, যা খুব দীর্ঘ পেজে বেশি মেমরি ব্যবহার করে। কোনো নেটওয়ার্ক সংযোগ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

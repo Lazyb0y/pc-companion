@@ -4924,4 +4924,40 @@
     <value>لا يزال يتم لصق النقرة الوسطى الأخيرة</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>طريقة العمل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>حدد نصًا في تطبيق، ثم انقر بالزر الأوسط في مربع نص في التطبيق نفسه أو في تطبيق آخر. يُدرج النص حيث يوجد المؤشر، ويزيله Ctrl+Z مرة أخرى. تحتفظ الارتباطات وعلامات التبويب ونصوص الصفحات وأشرطة العناوين بالنقر الأوسط الخاص بها، ولا تُستخدم الحافظة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>التطبيقات التي تحتفظ بالنقر الأوسط الخاص بها</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>لا يتم لصق أي شيء في نوافذها، وتصل إليها النقرات الوسطى كالمعتاد. للتطبيقات التي تستخدم النقر الأوسط في نصوصها بنفسها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>تشارك التطبيقات النص المحدد فيها، وتوضح أي أجزائها مربعات نص، من خلال دعم إمكانية الوصول في Windows، وهو غير متوفر في بعض التطبيقات. لا يتم المساس بمربعات كلمات المرور والمحطات الطرفية. عندما لا يتم لصق أي شيء، تشرح ملاحظة قصيرة بجوار المؤشر السبب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>تحتفظ التطبيقات التي تعمل كمسؤول بالنقر الأوسط الخاص بها، ولا تتم قراءة النص المحدد فيها، ما دام PC Companion يعمل دون صلاحيات المسؤول.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا لا يلصق إلا بين التطبيقات التي تعمل كمسؤول أيضًا، وتحتفظ التطبيقات التي لا تملك صلاحيات المسؤول بالنقر الأوسط الخاص بها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>اللصق بالنقر الأوسط مخصص للماوس. باستخدام لوحة المفاتيح، انسخ باستخدام Ctrl+C والصق باستخدام Ctrl+V.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>أثناء تشغيله، يراقب المؤشر، وعندما يستقر على نص، يسأل التطبيق عما تحته، دون نصه أبدًا؛ ومع إدراج تطبيقات، يقرأ التطبيق الذي تنتمي إليه النافذة. يقرأ النص المحدد فقط عند النقر الأوسط على مربع نص، ولا يقرأه أبدًا من مربع كلمة مرور، ولا يخزنه أو يسجله أو يرسله. يضع النص فقط في المربع الذي نقرت عليه، ولا يستخدم الحافظة. يؤدي سؤال المستعرض إلى تشغيل دعم إمكانية الوصول فيه حتى يتم إغلاقه، ما يستهلك ذاكرة أكبر في الصفحات الطويلة جدًا. لا ينشئ أي اتصالات شبكة.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

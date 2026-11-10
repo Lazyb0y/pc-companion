@@ -4732,4 +4732,40 @@
     <value>Der letzte Mittelklick wird noch eingefügt</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteHowHeader" xml:space="preserve">
+    <value>So funktioniert es</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteHowDescription" xml:space="preserve">
+    <value>Markieren Sie Text in einer App und klicken Sie dann mit der mittleren Maustaste in ein Textfeld in derselben oder einer anderen App. Der Text wird an der Zeigerposition eingefügt, und Strg+Z entfernt ihn wieder. Links, Registerkarten, Seitentext und Titelleisten behalten ihren eigenen Mittelklick, und die Zwischenablage wird nicht verwendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsHeader" xml:space="preserve">
+    <value>Apps, die ihren Mittelklick behalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAppsDescription" xml:space="preserve">
+    <value>In ihren Fenstern wird nichts eingefügt, und ihre Mittelklicks erreichen sie wie gewohnt. Für Apps, die in ihrem Text selbst einen Mittelklick verwenden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteSharingInfo" xml:space="preserve">
+    <value>Apps geben ihren markierten Text weiter und teilen mit, welche ihrer Teile Textfelder sind, über die Barrierefreiheitsunterstützung von Windows, die manche Apps nicht haben. Kennwortfelder und Terminals bleiben unberührt. Wenn nichts eingefügt wird, sagt ein kurzer Hinweis neben dem Zeiger, warum.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfo" xml:space="preserve">
+    <value>Als Administrator ausgeführte Apps behalten ihren Mittelklick, und ihr markierter Text wird nicht gelesen, solange PC Companion ohne Administratorrechte ausgeführt wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteAdminInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt und fügt daher nur zwischen Apps ein, die ebenfalls als Administrator ausgeführt werden; Apps ohne Administratorrechte behalten ihren Mittelklick.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteKeyboardInfo" xml:space="preserve">
+    <value>Mittelklick-Einfügen ist für die Maus gedacht. Mit der Tastatur kopieren Sie mit Strg+C und fügen mit Strg+V ein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPastePermissions" xml:space="preserve">
+    <value>Beobachtet, solange es eingeschaltet ist, den Zeiger und fragt die App, wenn er auf Text ruht, was sich darunter befindet, nie nach ihrem Text; bei aufgeführten Apps liest es, zu welcher App ein Fenster gehört. Liest den markierten Text nur bei einem Mittelklick in ein Textfeld, nie aus einem Kennwortfeld, und speichert, protokolliert oder sendet ihn nicht. Fügt den Text nur in das angeklickte Feld ein und verwendet die Zwischenablage nicht. Eine Anfrage an einen Browser schaltet dessen Barrierefreiheitsunterstützung ein, bis er geschlossen wird, was auf sehr langen Seiten mehr Arbeitsspeicher belegt. Stellt keine Netzwerkverbindungen her.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
