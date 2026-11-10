@@ -12,7 +12,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | The settings window's title bar, and the PC Companion icon in the notification area | App icon | 16 |
 | Notifications, which come from the PC Companion icon | App icon | 32 |
 | Installer images and the website | App icon; `scripts/installer-images.ps1` draws the images, and `website/icon.png` is the 256-pixel image | 256 |
-| Navigation pane | Feature icon; Home and General keep their Segoe Fluent Icons glyphs | 20 |
+| Navigation pane | Feature icon; Home and General keep their Segoe Fluent Icons glyphs, 16 pixels high in the same space | 20 |
 | Home cards | Feature icon | 20 |
 | A feature page's header | Feature icon | 32 |
 | Setting cards, buttons and menus inside a page | Segoe Fluent Icons glyph; see [Inside pages](#inside-pages) | 16 to 20 |
@@ -99,15 +99,16 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 ### Shapes and sizes
 
 - Each icon is drawn at 32 and 20 pixels, each on its own: the 20-pixel drawing leaves out details and enlarges what must stay readable, such as a pointer or a letter, instead of scaling the 32-pixel drawing down.
-- At 32 pixels the object reaches to 1 to 1.5 pixels from the edges; a tall or wide one fills the square in its long direction and is centered in the other.
-- At 20 pixels, straight edges are on whole pixels, so they stay sharp.
+- At 32 pixels the object reaches to 1 to 1.5 pixels from the edges. At 20 pixels it leaves 2 pixels round it, so that the rows of the navigation pane, where icons stand one above the other, stay light. A tall or wide object fills the space in its long direction and is centered in the other.
+- At both sizes, straight edges are on whole pixels, so they stay sharp.
 
 | | 32 px | 20 px |
 |---|---|---|
+| Space round the object | 1 to 1.5 | 2 |
 | An object's corner radius | 2 to 2.5 | 1.5 |
 | A small part's corner radius | 1 to 1.5 | 0.5 to 1 |
-| A white symbol's stroke | 2 to 2.6 | 1.5 to 2 |
-| A cut where a white symbol crosses another | 1.2 to 1.5 | 1 |
+| A white symbol's stroke | 2 to 2.6 | 1.2 to 1.6 |
+| A cut where a white symbol crosses another | 1.2 to 1.5 | 0.9 to 1 |
 
 - A second object lies on the first without a gap, since its color sets it apart. Where a white symbol crosses another, such as the slash through the eye of Hide Apps, the one under it is cut, so the two stay apart.
 - Icons aren't mirrored in right-to-left layouts.
