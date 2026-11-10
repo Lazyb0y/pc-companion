@@ -26,6 +26,8 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
 
     public IMomentTimer CreateTimer(Action elapsed) => new MomentTimer(new AbsoluteTimer(elapsed));
 
+    public IDisposable WatchBackground(Action changed) => new BackgroundWatch(changed);
+
     public IWallpaperWorker StartWorker(Action slow) => new WallpaperThread(DynamicWallpaperFeature.CallLimit, slow);
 
     public TimeZoneInfo TimeZone(bool readAgain)
@@ -45,6 +47,10 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
     public IWindowsWallpaper Connect() => WindowsWallpaper.Connect();
 
     public bool PoliciesSet() => WallpaperPolicies.AreSet();
+
+    public Guid? CurrentVirtualDesktop() => ShellRecords.CurrentVirtualDesktop();
+
+    public bool? IsSpotlightOn() => ShellRecords.IsSpotlightOn();
 
     public WallpaperDisplays ReadDisplays()
     {
@@ -106,6 +112,32 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
         public void Cancel() => timer.Cancel();
 
         public void Dispose() => timer.Dispose();
+    }
+
+    private sealed class BackgroundWatch : IDisposable
+    {
+        private readonly RegistryWatch _desktop;
+        private readonly RegistryWatch _colors;
+
+        public BackgroundWatch(Action changed)
+        {
+            _desktop = new RegistryWatch(Microsoft.Win32.Registry.CurrentUser, @"Control Panel\Desktop", changed);
+            try
+            {
+                _colors = new RegistryWatch(Microsoft.Win32.Registry.CurrentUser, @"Control Panel\Colors", changed);
+            }
+            catch
+            {
+                _desktop.Dispose();
+                throw;
+            }
+        }
+
+        public void Dispose()
+        {
+            _desktop.Dispose();
+            _colors.Dispose();
+        }
     }
 
     private sealed class WallpaperWindow : IWallpaperWindow

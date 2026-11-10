@@ -24,6 +24,10 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
     private DynamicWallpaperSettings _settings = new();
     private WallpaperPlan? _plan;
     private bool _failed;
+    private bool _leftoverLooked;
+
+    // Whether a look at a change of the background is waiting on the wallpaper thread.
+    private int _checkWaiting;
 
     // The latest look the UI thread asked for; the wallpaper thread skips older ones.
     private int _look;
@@ -75,7 +79,7 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
 
         if (!read.Enabled)
         {
-            Stop();
+            TurnOff();
             return;
         }
 
@@ -87,6 +91,25 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
 
         LogApplied(logger, read.ChangeWith, read.PicturesForEachDisplay ? read.Displays.Count : 0);
         Look();
+    }
+
+    /// <summary>
+    /// Changes the background again after the feature stepped aside, as <b>Resume</b> on the page
+    /// asks, from any thread.
+    /// </summary>
+    public void Resume()
+    {
+        if (_session is { } session)
+        {
+            session.Window.Post(() => Guard(() =>
+            {
+                if (_plan is { } plan && _session == session)
+                {
+                    var settings = _settings;
+                    Post(() => session.Applier.Resume(settings, plan));
+                }
+            }));
+        }
     }
 
     // The host disposes features twice as it exits, so the thread is waited for only once.
@@ -125,7 +148,19 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
                 }),
                 Unlocked: () => Guard(Set)));
             var timer = system.CreateTimer(() => window.Post(() => Guard(Look)));
-            session = new Session(worker, applier, window, timer);
+            IDisposable watch;
+            try
+            {
+                watch = system.WatchBackground(() => window.Post(() => Guard(CheckOthers)));
+            }
+            catch
+            {
+                timer.Dispose();
+                window.Dispose();
+                throw;
+            }
+
+            session = new Session(worker, applier, window, timer, watch);
         }
         catch
         {
@@ -146,11 +181,64 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
 
         _session = null;
         _plan = null;
+        session.Watch.Dispose();
         session.Timer.Dispose();
         session.Window.Dispose();
         session.Worker.Dispose();
         _stopped = session.Worker;
         LogStopped(logger);
+    }
+
+    // Turned off: puts back the background the user had, then stops. The host may also start with the
+    // feature off and a background left to put back, as when the feature was turned off while
+    // Explorer didn't answer, so the first time it looks with a wallpaper thread of its own.
+    private void TurnOff()
+    {
+        if (_session is { } session)
+        {
+            Post(session.Applier.TurnOff);
+            Stop();
+            return;
+        }
+
+        if (_leftoverLooked)
+        {
+            return;
+        }
+
+        _leftoverLooked = true;
+        var worker = system.StartWorker(() => LogCallCancelled(logger, CallLimit.TotalSeconds));
+        var applier = new WallpaperApplier(system, logger);
+        worker.Post(() =>
+        {
+            try
+            {
+                applier.TurnOff();
+            }
+            catch (Exception exception)
+            {
+                // An exception on the wallpaper thread would end the host.
+                LogFailed(logger, exception);
+            }
+        });
+        worker.Dispose();
+        _stopped = worker;
+    }
+
+    // Has the wallpaper thread look at a change of the background, once for a burst of them.
+    private void CheckOthers()
+    {
+        if (_session is not { } session || _plan is not { } plan || Interlocked.Exchange(ref _checkWaiting, 1) == 1)
+        {
+            return;
+        }
+
+        var settings = _settings;
+        Post(() =>
+        {
+            Volatile.Write(ref _checkWaiting, 0);
+            session.Applier.CheckOthers(settings, plan);
+        });
     }
 
     // Works out the period now and when to look again, then has the wallpaper thread set it.
@@ -217,9 +305,9 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
             {
                 job();
             }
-            // An exception on the wallpaper thread would end the host.
             catch (Exception exception)
             {
+                // An exception on the wallpaper thread would end the host.
                 LogFailed(logger, exception);
                 session.Window.Post(() =>
                 {
@@ -237,9 +325,9 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
         {
             handler();
         }
-        // A handler that throws would end the host.
         catch (Exception exception)
         {
+            // A handler that throws would end the host.
             LogFailed(logger, exception);
             _failed = true;
             Stop();
@@ -273,5 +361,5 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
     [LoggerMessage(Level = LogLevel.Warning, Message = "Dynamic Wallpaper didn't stop within {Seconds} s.")]
     private static partial void LogNotStoppedInTime(ILogger logger, double seconds);
 
-    private sealed record Session(IWallpaperWorker Worker, WallpaperApplier Applier, IWallpaperWindow Window, IMomentTimer Timer);
+    private sealed record Session(IWallpaperWorker Worker, WallpaperApplier Applier, IWallpaperWindow Window, IMomentTimer Timer, IDisposable Watch);
 }

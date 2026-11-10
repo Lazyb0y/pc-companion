@@ -73,6 +73,13 @@ public interface IDynamicWallpaperSystem
     /// <summary>Creates a timer that calls <paramref name="elapsed"/> on the thread pool.</summary>
     IMomentTimer CreateTimer(Action elapsed);
 
+    /// <summary>
+    /// Calls <paramref name="changed"/> on the thread pool when something may have changed the
+    /// background: Windows writes <c>Control Panel\Desktop</c> or <c>Control Panel\Colors</c> under
+    /// the user's key at every change, and at every switch of virtual desktop.
+    /// </summary>
+    IDisposable WatchBackground(Action changed);
+
     /// <summary>Starts the wallpaper thread; <paramref name="slow"/> is called on the thread pool when a job's call to Explorer is cancelled.</summary>
     IWallpaperWorker StartWorker(Action slow);
 
@@ -92,6 +99,12 @@ public interface IDynamicWallpaperSystem
 
     /// <inheritdoc cref="WallpaperPolicies.AreSet()"/>
     bool PoliciesSet();
+
+    /// <inheritdoc cref="ShellRecords.CurrentVirtualDesktop()"/>
+    Guid? CurrentVirtualDesktop();
+
+    /// <inheritdoc cref="ShellRecords.IsSpotlightOn()"/>
+    bool? IsSpotlightOn();
 
     /// <summary>The connected displays and their serial number hashes; an EDID is read once for each device path.</summary>
     WallpaperDisplays ReadDisplays();
