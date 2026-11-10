@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using Windows.Win32;
+using Windows.Win32.Foundation;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
 
@@ -38,6 +39,22 @@ public static class InputState
                 : (info.flags & CURSORINFO_FLAGS.CURSOR_SUPPRESSED) != 0 ? PointerVisibility.Suppressed
                 : (info.flags & CURSORINFO_FLAGS.CURSOR_SHOWING) != 0 ? PointerVisibility.Shown
                 : PointerVisibility.Hidden;
+        }
+    }
+
+    /// <summary>
+    /// Whether the pointer shows Windows' own text pointer, the I-beam, as apps do over text the
+    /// user can select or type in. It's read from Windows, without asking any app; an app that draws
+    /// an I-beam of its own doesn't count.
+    /// </summary>
+    public static unsafe bool IsTextPointer
+    {
+        get
+        {
+            var info = new CURSORINFO { cbSize = (uint)sizeof(CURSORINFO) };
+            return PInvoke.GetCursorInfo(ref info)
+                && (info.flags & CURSORINFO_FLAGS.CURSOR_SHOWING) != 0
+                && info.hCursor == PInvoke.LoadCursor(HINSTANCE.Null, PInvoke.IDC_IBEAM);
         }
     }
 
