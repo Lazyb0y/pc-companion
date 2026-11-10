@@ -1,17 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows.TitleBarActions;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Tells which top-level windows belong to the apps that keep their title-bar clicks, as "Apps that
-/// keep their title-bar clicks" in docs/features/windows/title-bar-actions.md says. Only while the
-/// list has apps, each window's app is read once and kept until the window closes. Use it on one
-/// thread, the one its <see cref="ITitleBarWindows"/> answers on.
+/// What <see cref="ExcludedWindows"/> reads about windows, so tests can supply it instead. None of
+/// it waits for the windows' programs.
 /// </summary>
-public sealed class ExcludedWindows(ITitleBarWindows windows)
+public interface IListedAppWindows
+{
+    /// <summary>The top-level window's app, as the taskbar groups apps, or <see langword="null"/> when it has closed.</summary>
+    AppOfWindow? AppOf(nint root);
+
+    bool Exists(nint window);
+}
+
+/// <summary>
+/// Tells which top-level windows belong to the apps on a feature's list, such as the apps that keep
+/// their title-bar clicks in docs/features/windows/title-bar-actions.md. Only while the list has
+/// apps, each window's app is read once and kept until the window closes. Use it on one thread,
+/// the one its <see cref="IListedAppWindows"/> answers on.
+/// </summary>
+public sealed class ExcludedWindows(IListedAppWindows windows)
 {
     // How many windows are kept before those that closed are dropped; it doubles when most are still open.
     private const int FirstCleanUp = 64;
