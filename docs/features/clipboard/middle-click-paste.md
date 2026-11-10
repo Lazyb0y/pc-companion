@@ -85,9 +85,10 @@ Select text in any app, then middle-click in a text box: the text goes in where 
   - Links show a hand, and tabs, title bars and the taskbar an arrow, so they're never asked. Games and drawing apps show pointers of their own or none.
   - Apps that draw an I-beam of their own aren't recognized.
 - **The window under the pointer** (`WindowFromPoint`) must belong to an app at PC Companion's integrity level, and not to a listed app.
-- **The element** under the pointer is then asked for (`IUIAutomation::ElementFromPoint`), on the feature's UI Automation thread, with the same time limits as reading. From it, the nearest element that takes the keyboard focus is found, up to 10 levels up. It's a text box when it's enabled, isn't a password box, has a text pattern, and either:
+- **The element** under the pointer is then asked for (`IUIAutomation::ElementFromPoint`), on the feature's UI Automation thread, with the same time limits as reading. From it, the nearest element that takes the keyboard focus is found, up to 10 levels up. It's a text box when it's enabled, isn't a password box, has a text pattern or is one of Windows' own plain text boxes (`Edit`), and either:
   - **has a value pattern that isn't read-only:** text boxes, text areas, rich edit boxes and address bars; or
   - **has no value pattern and isn't a document:** editable parts of a web page, such as an email being written.
+- **Windows' own plain text boxes** count without a text pattern, since they get the text by window messages, which don't need one. Windows Forms on .NET Framework gives its text boxes none: in the Sandbox checks, a test program's boxes had only a value pattern, so a selection in them isn't read either.
 - **Not text boxes:**
   - read-only boxes;
   - password boxes;
@@ -378,7 +379,7 @@ A spike in Windows Sandbox on Windows 11 build 26100 used Edge, test windows wit
   - **recognizing a text box:**
     - the I-beam;
     - the window's integrity level and listed apps;
-    - each rule for the element: a value pattern read-only or not, editable parts of a page, documents, password boxes, disabled elements, a link inside editable text, and the 10 levels;
+    - each rule for the element: a value pattern read-only or not, editable parts of a page, documents, password boxes, disabled elements, Windows' own plain boxes without a text pattern, a link inside editable text, and the 10 levels;
     - an app that doesn't answer in time;
   - **claims:**
     - a plain middle-click only, give or take 2 pixels;

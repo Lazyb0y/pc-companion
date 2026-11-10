@@ -39,7 +39,11 @@ public sealed record TextBoxAnswer(TextBoxStatus Status, nint Window = 0, int Er
 /// Whether the element's value pattern says it's read-only, or <see langword="null"/> when it has
 /// no value pattern.
 /// </param>
-public readonly record struct FocusableElement(bool IsEnabled, bool IsPassword, bool IsDocument, bool HasTextPattern, bool? ValueIsReadOnly);
+/// <param name="IsWindowsEditBox">
+/// The element is a window of Windows' own plain text box class, <c>Edit</c>, which gets text by
+/// messages. Windows Forms on .NET Framework gives such boxes no text pattern.
+/// </param>
+public readonly record struct FocusableElement(bool IsEnabled, bool IsPassword, bool IsDocument, bool HasTextPattern, bool? ValueIsReadOnly, bool IsWindowsEditBox);
 
 /// <summary>
 /// Tells text boxes from everything else, as "Recognizing a text box" in
@@ -54,13 +58,14 @@ public static class TextBoxes
 
     /// <summary>
     /// Whether <paramref name="element"/>, the focusable element at or above the point, is a text
-    /// box: enabled, not a password box, giving its text, and either with a value pattern that isn't
-    /// read-only, or without a value pattern and not a document, as the editable parts of a web page.
+    /// box: enabled, not a password box, giving its text or one of Windows' own plain text boxes, and
+    /// either with a value pattern that isn't read-only, or without a value pattern and not a
+    /// document, as the editable parts of a web page.
     /// </summary>
     public static TextBoxStatus Classify(FocusableElement element) =>
         !element.IsEnabled ? TextBoxStatus.NotTextBox
         : element.IsPassword ? TextBoxStatus.Password
-        : !element.HasTextPattern ? TextBoxStatus.NotTextBox
+        : !element.HasTextPattern && !element.IsWindowsEditBox ? TextBoxStatus.NotTextBox
         : element.ValueIsReadOnly == true ? TextBoxStatus.ReadOnly
         : element.ValueIsReadOnly == false ? TextBoxStatus.TextBox
         : element.IsDocument ? TextBoxStatus.NotTextBox
