@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using PCCompanion.Core;
 using PCCompanion.Platform.Windows;
 
@@ -27,6 +28,9 @@ internal sealed class WindowsDynamicWallpaperSystem(DataFolder dataFolder) : IDy
     public IMomentTimer CreateTimer(Action elapsed) => new MomentTimer(new AbsoluteTimer(elapsed));
 
     public IDisposable WatchBackground(Action changed) => new BackgroundWatch(changed);
+
+    public IDisposable ServePipe(Func<byte[], Task<byte[]>> answer, Action<Exception> failed) =>
+        RequestPipe.Serve(DynamicWallpaperPipe.Name, DynamicWallpaperPipe.MaximumRequestLength, answer, failed);
 
     public IWallpaperWorker StartWorker(Action slow) => new WallpaperThread(DynamicWallpaperFeature.CallLimit, slow);
 

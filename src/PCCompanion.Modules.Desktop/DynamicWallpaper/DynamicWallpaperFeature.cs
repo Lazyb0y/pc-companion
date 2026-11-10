@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
 using PCCompanion.Core.Features;
@@ -15,6 +16,9 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
 {
     /// <summary>How long a job's call to Explorer may wait before it's cancelled.</summary>
     public static readonly TimeSpan CallLimit = TimeSpan.FromSeconds(10);
+
+    // How long the settings app's Resume waits for the wallpaper thread, which takes well under a second.
+    private static readonly TimeSpan AnswerTimeout = TimeSpan.FromSeconds(10);
 
     // How long the host waits as it exits for the wallpaper thread to finish its job.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -97,19 +101,55 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
     /// Changes the background again after the feature stepped aside, as <b>Resume</b> on the page
     /// asks, from any thread.
     /// </summary>
-    public void Resume()
+    public void Resume() => _ = ResumeAsync();
+
+    // Resumes, and completes once the wallpaper thread has, or when the feature stops first.
+    private Task ResumeAsync()
     {
-        if (_session is { } session)
+        var done = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (_session is not { } session)
         {
-            session.Window.Post(() => Guard(() =>
-            {
-                if (_plan is { } plan && _session == session)
-                {
-                    var settings = _settings;
-                    Post(() => session.Applier.Resume(settings, plan));
-                }
-            }));
+            done.SetResult();
+            return done.Task;
         }
+
+        session.Window.Post(() => Guard(() =>
+        {
+            if (_plan is { } plan && _session == session)
+            {
+                var settings = _settings;
+                Post(() => session.Applier.Resume(settings, plan));
+            }
+
+            Post(() => done.TrySetResult());
+        }));
+        return done.Task;
+    }
+
+    // On the thread pool: a request from the settings app, answered with the feature's state.
+    private async Task<byte[]> AnswerAsync(WallpaperApplier applier, byte[] request)
+    {
+        if (DynamicWallpaperPipe.ReadRequest(request) is { Kind: DynamicWallpaperRequestKind.Resume })
+        {
+            try
+            {
+                await ResumeAsync().WaitAsync(AnswerTimeout).ConfigureAwait(false);
+            }
+            catch (TimeoutException)
+            {
+                // Turned off meanwhile, or Explorer didn't answer: the state says which.
+            }
+        }
+
+        var report = applier.Report;
+        return DynamicWallpaperPipe.Write(new DynamicWallpaperAnswer
+        {
+            Running = _session?.Applier == applier,
+            Period = report.Period,
+            Block = report.Block,
+            Issues = report.Issues,
+            Spotlight = report.Spotlight,
+        });
     }
 
     // The host disposes features twice as it exits, so the thread is waited for only once.
@@ -148,19 +188,20 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
                 }),
                 Unlocked: () => Guard(Set)));
             var timer = system.CreateTimer(() => window.Post(() => Guard(Look)));
-            IDisposable watch;
+            IDisposable? watch = null;
             try
             {
                 watch = system.WatchBackground(() => window.Post(() => Guard(CheckOthers)));
+                var pipe = system.ServePipe(request => AnswerAsync(applier, request), exception => LogPipeFailed(logger, exception.HResult));
+                session = new Session(worker, applier, window, timer, watch, pipe);
             }
             catch
             {
+                watch?.Dispose();
                 timer.Dispose();
                 window.Dispose();
                 throw;
             }
-
-            session = new Session(worker, applier, window, timer, watch);
         }
         catch
         {
@@ -181,6 +222,7 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
 
         _session = null;
         _plan = null;
+        session.Pipe.Dispose();
         session.Watch.Dispose();
         session.Timer.Dispose();
         session.Window.Dispose();
@@ -334,6 +376,9 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
         }
     }
 
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Dynamic Wallpaper's pipe failed with 0x{Code:X8}.")]
+    private static partial void LogPipeFailed(ILogger logger, int code);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "Dynamic Wallpaper started.")]
     private static partial void LogStarted(ILogger logger);
 
@@ -361,5 +406,5 @@ public sealed partial class DynamicWallpaperFeature(IDynamicWallpaperSystem syst
     [LoggerMessage(Level = LogLevel.Warning, Message = "Dynamic Wallpaper didn't stop within {Seconds} s.")]
     private static partial void LogNotStoppedInTime(ILogger logger, double seconds);
 
-    private sealed record Session(IWallpaperWorker Worker, WallpaperApplier Applier, IWallpaperWindow Window, IMomentTimer Timer, IDisposable Watch);
+    private sealed record Session(IWallpaperWorker Worker, WallpaperApplier Applier, IWallpaperWindow Window, IMomentTimer Timer, IDisposable Watch, IDisposable Pipe);
 }

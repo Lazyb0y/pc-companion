@@ -47,15 +47,16 @@ public enum PictureProblem
 public sealed record PictureIssue(int Display, PictureProblem Problem);
 
 /// <summary>What the page shows about the host's work: the period in use, and what's in the way.</summary>
-public sealed record WallpaperReport(string? Period, WallpaperBlock Block, IReadOnlyList<PictureIssue> Issues)
+/// <param name="Spotlight">Whether Windows spotlight changed the background before Dynamic Wallpaper did.</param>
+public sealed record WallpaperReport(string? Period, WallpaperBlock Block, IReadOnlyList<PictureIssue> Issues, bool Spotlight = false)
 {
     public static WallpaperReport Empty { get; } = new(null, WallpaperBlock.None, []);
 
     // Compares the issues one by one, so the same report made twice is equal.
     public bool Equals(WallpaperReport? other) =>
-        other is not null && Period == other.Period && Block == other.Block && Issues.SequenceEqual(other.Issues);
+        other is not null && Period == other.Period && Block == other.Block && Issues.SequenceEqual(other.Issues) && Spotlight == other.Spotlight;
 
-    public override int GetHashCode() => HashCode.Combine(Period, Block, Issues.Count);
+    public override int GetHashCode() => HashCode.Combine(Period, Block, Issues.Count, Spotlight);
 }
 
 /// <summary>
@@ -115,7 +116,7 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
 
         if (plan.Pictures is not { } pictures)
         {
-            _report = new WallpaperReport(period, WallpaperBlock.None, []);
+            _report = Made(period, WallpaperBlock.None, []);
             return;
         }
 
@@ -447,7 +448,7 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
 
         Save(_state with { Period = period, SetLast = set, Folders = folders });
         _desktop = system.CurrentVirtualDesktop();
-        _report = new WallpaperReport(period, WallpaperBlock.None, issues);
+        _report = Made(period, WallpaperBlock.None, issues);
     }
 
     // Each display to set and its picture or folder: every display at once, or each connected one.
@@ -539,8 +540,12 @@ internal sealed partial class WallpaperApplier(IDynamicWallpaperSystem system, I
             LogBlocked(logger, block);
         }
 
-        _report = new WallpaperReport(period, block, []);
+        _report = Made(period, block, []);
     }
+
+    // A report, with whether the background to put back is Windows spotlight's.
+    private WallpaperReport Made(string? period, WallpaperBlock block, IReadOnlyList<PictureIssue> issues) =>
+        new(period, block, issues, _state.Remembered?.Spotlight == true);
 
     private void Load()
     {
