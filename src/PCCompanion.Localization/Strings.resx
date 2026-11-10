@@ -4684,4 +4684,52 @@
     <value>Select text in any app, then middle-click in a text box to paste it where the pointer is, without the clipboard.</value>
     <comment>Middle-Click Paste: one-sentence description below the feature name.</comment>
   </data>
+  <data name="MiddleClickPasteNoticeNothingSelected" xml:space="preserve">
+    <value>Select text first, then middle-click where it goes</value>
+    <comment>Middle-Click Paste: notice next to the pointer after a middle-click on a text box when nothing is selected in the window in front.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeNotShared" xml:space="preserve">
+    <value>The app with the selected text doesn't share it; copy it, then press Ctrl+V</value>
+    <comment>Middle-Click Paste: notice when the app with the selected text doesn't share it through Windows' accessibility support.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePassword" xml:space="preserve">
+    <value>PC Companion doesn't read password boxes</value>
+    <comment>Middle-Click Paste: notice when the selected text is in a password box.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppAdministrator" xml:space="preserve">
+    <value>The app with the selected text runs as administrator, so its text can't be read</value>
+    <comment>Middle-Click Paste: notice when the app with the selected text runs as administrator and PC Companion doesn't.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeOwnAdministrator" xml:space="preserve">
+    <value>PC Companion runs as administrator, so it doesn't read the app with the selected text</value>
+    <comment>Middle-Click Paste: notice when PC Companion runs as administrator and the app with the selected text doesn't.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeFewerRights" xml:space="preserve">
+    <value>The app with the selected text runs with fewer rights, so its text isn't read</value>
+    <comment>Middle-Click Paste: notice when the app with the selected text runs with fewer rights, such as some Store apps.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppNoAnswer" xml:space="preserve">
+    <value>The app with the selected text didn't answer in time</value>
+    <comment>Middle-Click Paste: notice when the app with the selected text isn't responding or didn't answer in time.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeTooLong" xml:space="preserve">
+    <value>The selected text is longer than {0} characters</value>
+    <comment>Middle-Click Paste: notice when the selected text is too long. {0} is the limit, 65,536, in the user's number format.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxRefused" xml:space="preserve">
+    <value>This box doesn't take pasted text; copy the text, then press Ctrl+V</value>
+    <comment>Middle-Click Paste: notice when the text box under the pointer doesn't take pasted text.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxNotResponding" xml:space="preserve">
+    <value>This box's app isn't responding</value>
+    <comment>Middle-Click Paste: notice when the app of the text box under the pointer isn't responding.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePointerMoved" xml:space="preserve">
+    <value>The pointer moved before the text could be pasted</value>
+    <comment>Middle-Click Paste: notice when the pointer moved away from the middle-click before the text could be dropped there.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBusy" xml:space="preserve">
+    <value>The last middle-click is still being pasted</value>
+    <comment>Middle-Click Paste: notice when the user middle-clicks again while the last middle-click is still being pasted.</comment>
+  </data>
 </root>

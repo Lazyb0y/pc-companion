@@ -57,6 +57,28 @@ public sealed record NoticeFonts(string Text, string Icons)
 /// <param name="Badge">The smaller badge that stays while Caps Lock is on, rather than the notice.</param>
 public sealed record NoticeStyle(double Scale, double TextScale, NoticeColors Colors, NoticeFonts Fonts, bool RoundedCorners, bool RightToLeft, bool Badge = false);
 
+/// <summary>Builds a notice's style from Windows' settings.</summary>
+public static class NoticeStyles
+{
+    private const int Windows11Build = 22000;
+
+    /// <summary>
+    /// How a notice or the badge looks on <paramref name="display"/>. The Windows mode, high
+    /// contrast and the text size are read each time, so a change shows next time.
+    /// </summary>
+    /// <param name="rightToLeft">Whether the user's language is written right to left.</param>
+    public static NoticeStyle For(DisplayDetails display, bool rightToLeft, bool badge = false)
+    {
+        ArgumentNullException.ThrowIfNull(display);
+
+        var colors = WindowsTheme.IsHighContrast() ? NoticeColors.HighContrastTheme(WindowsTheme.WindowColor(), WindowsTheme.TextColor())
+            : WindowsTheme.IsDark() ? NoticeColors.Dark
+            : NoticeColors.Light;
+        var build = Environment.OSVersion.Version.Build;
+        return new NoticeStyle(display.Scale, WindowsTheme.TextScale(), colors, NoticeFonts.For(build), build >= Windows11Build, rightToLeft, badge);
+    }
+}
+
 /// <summary>A drawn notice: premultiplied 32-bit pixels for <see cref="LayeredWindow.Show"/>, row by row from the top.</summary>
 public sealed record NoticeImage(int Width, int Height, uint[] Pixels);
 

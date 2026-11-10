@@ -4684,4 +4684,52 @@
     <value>Sélectionnez du texte dans n’importe quelle application, puis cliquez avec le bouton central dans une zone de texte pour le coller à l’emplacement du pointeur, sans le Presse-papiers.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteNoticeNothingSelected" xml:space="preserve">
+    <value>Sélectionnez d’abord du texte, puis cliquez avec le bouton central là où il doit aller</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeNotShared" xml:space="preserve">
+    <value>L’application avec le texte sélectionné ne le partage pas ; copiez-le, puis appuyez sur Ctrl+V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePassword" xml:space="preserve">
+    <value>PC Companion ne lit pas les zones de mot de passe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppAdministrator" xml:space="preserve">
+    <value>L’application avec le texte sélectionné s’exécute en tant qu’administrateur, son texte ne peut donc pas être lu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeOwnAdministrator" xml:space="preserve">
+    <value>PC Companion s’exécute en tant qu’administrateur et ne lit donc pas l’application avec le texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeFewerRights" xml:space="preserve">
+    <value>L’application avec le texte sélectionné s’exécute avec moins de droits, son texte n’est donc pas lu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeAppNoAnswer" xml:space="preserve">
+    <value>L’application avec le texte sélectionné n’a pas répondu à temps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeTooLong" xml:space="preserve">
+    <value>Le texte sélectionné dépasse {0} caractères</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxRefused" xml:space="preserve">
+    <value>Cette zone n’accepte pas de texte collé ; copiez le texte, puis appuyez sur Ctrl+V</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBoxNotResponding" xml:space="preserve">
+    <value>L’application de cette zone ne répond pas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticePointerMoved" xml:space="preserve">
+    <value>Le pointeur a bougé avant que le texte puisse être collé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteNoticeBusy" xml:space="preserve">
+    <value>Le dernier clic central est encore en cours de collage</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

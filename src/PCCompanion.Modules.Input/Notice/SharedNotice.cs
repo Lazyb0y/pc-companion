@@ -18,7 +18,6 @@ namespace PCCompanion.Modules.Input.Notice;
 public sealed class SharedNotice(TimeProvider time) : IDisposable
 {
     private const string ClassName = "PCCompanion.Notice";
-    private const int Windows11Build = 22000;
 
     // The gap between the badge and a notice next to it, in effective pixels.
     private const int BadgeGap = 8;
@@ -45,17 +44,8 @@ public sealed class SharedNotice(TimeProvider time) : IDisposable
     /// How a notice or the badge looks on <paramref name="display"/>. The Windows mode, high
     /// contrast and the text size are read each time, so a change shows next time.
     /// </summary>
-    public static NoticeStyle StyleFor(DisplayDetails display, bool badge)
-    {
-        ArgumentNullException.ThrowIfNull(display);
-
-        var colors = WindowsTheme.IsHighContrast() ? NoticeColors.HighContrastTheme(WindowsTheme.WindowColor(), WindowsTheme.TextColor())
-            : WindowsTheme.IsDark() ? NoticeColors.Dark
-            : NoticeColors.Light;
-        var build = Environment.OSVersion.Version.Build;
-        var rightToLeft = Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft;
-        return new NoticeStyle(display.Scale, WindowsTheme.TextScale(), colors, NoticeFonts.For(build), build >= Windows11Build, rightToLeft, badge);
-    }
+    public static NoticeStyle StyleFor(DisplayDetails display, bool badge) =>
+        NoticeStyles.For(display, Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft, badge);
 
     /// <summary>Whether <paramref name="owner"/>'s notice shows.</summary>
     public bool IsShownBy(object owner) => _shown is { } shown && shown.Owner == owner;
