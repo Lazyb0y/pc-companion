@@ -45,8 +45,9 @@ public sealed class SelectedTextReader : IDisposable
     // Browsers built on Chromium give this framework.
     private const string ChromiumFramework = "Chrome";
 
-    private readonly ConcurrentQueue<ReadRequest> _reads = new();
-    private readonly ConcurrentQueue<PointRequest> _questions = new();
+    // Reads and the changes that follow a paste come first, then questions about the pointer.
+    private readonly ConcurrentQueue<Request> _first = new();
+    private readonly ConcurrentQueue<Request> _questions = new();
     private readonly SemaphoreSlim _waiting = new(0);
     private volatile bool _ending;
     private bool _disposed;
@@ -76,7 +77,33 @@ public sealed class SelectedTextReader : IDisposable
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxLength);
 
         var request = new ReadRequest(retryFor, maxLength, clickedAt);
-        _reads.Enqueue(request);
+        _first.Enqueue(request);
+        _waiting.Release();
+        return request.Answer.Task;
+    }
+
+    /// <summary>
+    /// Puts the text cursor of the text box under <paramref name="point"/>, in physical pixels,
+    /// where the point is, with the box's text pattern (<c>RangeFromPoint</c> and <c>Select</c>), as
+    /// for a rich edit box, whose own message for it can't be sent from another program. Runs
+    /// before questions about a point. The task gives false when the box couldn't be found or
+    /// refused, and never fails.
+    /// </summary>
+    public Task<bool> PlaceCursorAsync(Point point) => Change(point, focus: false);
+
+    /// <summary>
+    /// Gives the keyboard focus to the text box under <paramref name="point"/>, in physical pixels
+    /// (<c>SetFocus</c>). Runs before questions about a point. The task gives false when the box
+    /// couldn't be found or refused, and never fails.
+    /// </summary>
+    public Task<bool> FocusAsync(Point point) => Change(point, focus: true);
+
+    private Task<bool> Change(Point point, bool focus)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        var request = new ChangeRequest(point, focus);
+        _first.Enqueue(request);
         _waiting.Release();
         return request.Answer.Task;
     }
@@ -118,13 +145,9 @@ public sealed class SelectedTextReader : IDisposable
             while (true)
             {
                 _waiting.Wait();
-                if (_reads.TryDequeue(out var read))
+                if (_first.TryDequeue(out var request) || _questions.TryDequeue(out request))
                 {
-                    read.Answer.SetResult(Read(ref automation, read));
-                }
-                else if (_questions.TryDequeue(out var question))
-                {
-                    question.Answer.SetResult(Ask(ref automation, question));
+                    request.Run(ref automation);
                 }
                 else if (_ending)
                 {
@@ -196,6 +219,38 @@ public sealed class SelectedTextReader : IDisposable
         catch (Exception exception)
         {
             return new TextBoxAnswer(TextBoxStatus.NotShared, ErrorCode: exception.HResult);
+        }
+    }
+
+    private static bool Change(ref IUIAutomation2? automation, ChangeRequest request)
+    {
+        try
+        {
+            automation ??= Create();
+            using var held = new HeldObjects();
+            if (FocusableAt(automation, request.Point, held) is not { } element)
+            {
+                return false;
+            }
+
+            if (request.Focus)
+            {
+                element.SetFocus();
+                return true;
+            }
+
+            if (held.Add(element.GetCurrentPattern(UIA_PATTERN_ID.UIA_TextPatternId)) is not IUIAutomationTextPattern pattern)
+            {
+                return false;
+            }
+
+            held.Add(pattern.RangeFromPoint(request.Point)).Select();
+            return true;
+        }
+        catch (Exception)
+        {
+            // The app ended, refused or didn't answer in time; the caller says nothing was pasted.
+            return false;
         }
     }
 
@@ -419,14 +474,44 @@ public sealed class SelectedTextReader : IDisposable
         }
     }
 
-    private sealed record ReadRequest(TimeSpan RetryFor, int MaxLength, Point? ClickedAt)
+    private abstract class Request
     {
-        public TaskCompletionSource<SelectedTextResult> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public abstract void Run(ref IUIAutomation2? automation);
     }
 
-    private sealed record PointRequest(Point Point, TimeSpan RetryFor)
+    private sealed class ReadRequest(TimeSpan retryFor, int maxLength, Point? clickedAt) : Request
     {
+        public TimeSpan RetryFor { get; } = retryFor;
+
+        public int MaxLength { get; } = maxLength;
+
+        public Point? ClickedAt { get; } = clickedAt;
+
+        public TaskCompletionSource<SelectedTextResult> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public override void Run(ref IUIAutomation2? automation) => Answer.SetResult(Read(ref automation, this));
+    }
+
+    private sealed class PointRequest(Point point, TimeSpan retryFor) : Request
+    {
+        public Point Point { get; } = point;
+
+        public TimeSpan RetryFor { get; } = retryFor;
+
         public TaskCompletionSource<TextBoxAnswer> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public override void Run(ref IUIAutomation2? automation) => Answer.SetResult(Ask(ref automation, this));
+    }
+
+    private sealed class ChangeRequest(Point point, bool focus) : Request
+    {
+        public Point Point { get; } = point;
+
+        public bool Focus { get; } = focus;
+
+        public TaskCompletionSource<bool> Answer { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public override void Run(ref IUIAutomation2? automation) => Answer.SetResult(Change(ref automation, this));
     }
 
     // The app's objects a request holds, released when it ends, so the app can free them.
