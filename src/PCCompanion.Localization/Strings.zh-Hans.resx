@@ -4236,4 +4236,252 @@
     <value>在你选择应用时，读取打开了哪些窗口、它们的位置、是否响应以及所属的程序和进程，从不读取其标题或内容。你的单击和按键会发送到 PC Companion 自己的窗口，不使用键盘或鼠标钩子。你确认后，结束所选应用的进程及其同一程序的辅助进程，从不结束 Windows 自身的进程。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperName" xml:space="preserve">
+    <value>动态壁纸</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDescription" xml:space="preserve">
+    <value>在日出和日落时、在你选择的时间或随 Windows 模式更换桌面图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithHeader" xml:space="preserve">
+    <value>更换依据</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithDescription" xml:space="preserve">
+    <value>图片何时更换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithSun" xml:space="preserve">
+    <value>日出和日落</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithTimes" xml:space="preserve">
+    <value>一天中的时间</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithWindowsMode" xml:space="preserve">
+    <value>Windows 模式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperWindowsModeInfo" xml:space="preserve">
+    <value>只有在你或其他应用更改时，Windows 才会更改模式，位置在“个性化 &gt; 颜色”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesHeader" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesDescription" xml:space="preserve">
+    <value>每个时段显示一张图片，或在每次开始时显示文件夹中的下一张图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunrise" xml:space="preserve">
+    <value>日出</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDay" xml:space="preserve">
+    <value>白天</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunset" xml:space="preserve">
+    <value>日落</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodNight" xml:space="preserve">
+    <value>夜晚</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodLight" xml:space="preserve">
+    <value>浅色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDark" xml:space="preserve">
+    <value>深色</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodTime" xml:space="preserve">
+    <value>{0} 起</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunriseNone" xml:space="preserve">
+    <value>无：夜晚持续到太阳升起</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunsetNone" xml:space="preserve">
+    <value>无：白天持续到太阳落下</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPicture" xml:space="preserve">
+    <value>没有图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolder" xml:space="preserve">
+    <value>{0}（文件夹）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureProblem" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperInUse" xml:space="preserve">
+    <value>正在使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowName" xml:space="preserve">
+    <value>{0}，{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowNameInUse" xml:space="preserve">
+    <value>{0}，{1}，正在使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoose" xml:space="preserve">
+    <value>选择</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseName" xml:space="preserve">
+    <value>为“{0}”选择</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoosePicture" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseFolder" xml:space="preserve">
+    <value>文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogTitle" xml:space="preserve">
+    <value>选择图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogFilter" xml:space="preserve">
+    <value>图片</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolderDialogTitle" xml:space="preserve">
+    <value>选择图片文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperAddTime" xml:space="preserve">
+    <value>添加时间</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveName" xml:space="preserve">
+    <value>删除“{0}”</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeName" xml:space="preserve">
+    <value>开始时间，{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSamePictureInfo" xml:space="preserve">
+    <value>所有时段的图片都相同。请为每个时段选择图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPicture" xml:space="preserve">
+    <value>请选择图片或文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemMissing" xml:space="preserve">
+    <value>它已不存在。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnNetwork" xml:space="preserve">
+    <value>它位于网络位置，动态壁纸不使用网络位置。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnlineOnly" xml:space="preserve">
+    <value>它仅在线保留。若要使用它，请将其保留在此设备上。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPictures" xml:space="preserve">
+    <value>该文件夹中没有 JPEG、PNG、BMP 或 TIFF 图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemRefused" xml:space="preserve">
+    <value>Windows 无法显示此图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemFormat" xml:space="preserve">
+    <value>请选择 JPEG、PNG、BMP 或 TIFF 图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemPath" xml:space="preserve">
+    <value>无法使用此路径。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemSameTime" xml:space="preserve">
+    <value>另一个时间与此相同。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitHeader" xml:space="preserve">
+    <value>契合度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitDescription" xml:space="preserve">
+    <value>图片如何适应显示器。Windows 在每台显示器上使用相同的契合度。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFill" xml:space="preserve">
+    <value>填充</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFit" xml:space="preserve">
+    <value>适应</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitStretch" xml:space="preserve">
+    <value>拉伸</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitTile" xml:space="preserve">
+    <value>平铺</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitCenter" xml:space="preserve">
+    <value>居中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitSpan" xml:space="preserve">
+    <value>跨区</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSteppedAsideInfo" xml:space="preserve">
+    <value>你在 Windows 中选择了其他背景，因此动态壁纸已停止更换背景。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperResume" xml:space="preserve">
+    <value>继续</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperManagedInfo" xml:space="preserve">
+    <value>你的组织管理桌面背景，因此动态壁纸无法更换背景。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperExplorerInfo" xml:space="preserve">
+    <value>Windows 资源管理器没有响应，因此图片没有更换。动态壁纸会再次尝试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoteInfo" xml:space="preserve">
+    <value>此远程会话不显示桌面图片。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSpotlightInfo" xml:space="preserve">
+    <value>若要再次使用 Windows 聚焦，请在 Windows 的背景设置中选择它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenBackgroundSettings" xml:space="preserve">
+    <value>打开背景设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPermissions" xml:space="preserve">
+    <value>通过 Windows 更换桌面背景，并在你关闭此功能时恢复你原来的背景。只读取图片和文件夹的名称和属性；图片由 Windows 读取。使用“日出和日落”时，会使用你的时区或你选择的坐标，这些信息保留在这台电脑上。不进行任何网络连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4284,4 +4284,252 @@
     <value>আপনি অ্যাপ বাছাই করার সময় কোন উইন্ডোগুলো খোলা, সেগুলো কোথায়, সাড়া দিচ্ছে কি না এবং কোন প্রোগ্রাম ও প্রক্রিয়ার অংশ তা পড়ে, কখনো সেগুলোর শিরোনাম বা বিষয়বস্তু নয়। আপনার ক্লিক ও কী PC Companion-এর নিজের উইন্ডোতে যায়, কোনো কীবোর্ড বা মাউস হুক ছাড়াই। আপনি নিশ্চিত করার পরে বাছাই করা অ্যাপের প্রক্রিয়া এবং একই প্রোগ্রামের সহায়ক প্রক্রিয়াগুলো শেষ করে, আর কখনো Windows-এর নিজস্ব প্রক্রিয়া নয়। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperName" xml:space="preserve">
+    <value>ডায়নামিক ওয়ালপেপার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDescription" xml:space="preserve">
+    <value>সূর্যোদয় ও সূর্যাস্তে, আপনার বেছে নেওয়া সময়ে, বা Windows মোডের সাথে ডেস্কটপের ছবি বদলান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithHeader" xml:space="preserve">
+    <value>যার সাথে বদলাবে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithDescription" xml:space="preserve">
+    <value>কখন ছবি বদলায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithSun" xml:space="preserve">
+    <value>সূর্যোদয় ও সূর্যাস্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithTimes" xml:space="preserve">
+    <value>দিনের সময়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithWindowsMode" xml:space="preserve">
+    <value>Windows মোড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperWindowsModeInfo" xml:space="preserve">
+    <value>Windows মোড বদলায় কেবল যখন আপনি বা অন্য কোনো অ্যাপ বদলায়, ব্যক্তিগতকরণ &gt; রং-এ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesHeader" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesDescription" xml:space="preserve">
+    <value>প্রতিটি সময়কাল একটি ছবি দেখায়, বা প্রতিবার শুরু হলে একটি ফোল্ডারের পরের ছবি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunrise" xml:space="preserve">
+    <value>সূর্যোদয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDay" xml:space="preserve">
+    <value>দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunset" xml:space="preserve">
+    <value>সূর্যাস্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodNight" xml:space="preserve">
+    <value>রাত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodLight" xml:space="preserve">
+    <value>হালকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDark" xml:space="preserve">
+    <value>গাঢ়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodTime" xml:space="preserve">
+    <value>{0} থেকে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunriseNone" xml:space="preserve">
+    <value>কোনোটি নয়: সূর্য ওঠা পর্যন্ত রাত চলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunsetNone" xml:space="preserve">
+    <value>কোনোটি নয়: সূর্য ডোবা পর্যন্ত দিন চলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPicture" xml:space="preserve">
+    <value>কোনো ছবি নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolder" xml:space="preserve">
+    <value>{0} (ফোল্ডার)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureProblem" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperInUse" xml:space="preserve">
+    <value>ব্যবহৃত হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowNameInUse" xml:space="preserve">
+    <value>{0}, {1}, ব্যবহৃত হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoose" xml:space="preserve">
+    <value>বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseName" xml:space="preserve">
+    <value>{0}-এর জন্য বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoosePicture" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseFolder" xml:space="preserve">
+    <value>ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogTitle" xml:space="preserve">
+    <value>একটি ছবি বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogFilter" xml:space="preserve">
+    <value>ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolderDialogTitle" xml:space="preserve">
+    <value>ছবির একটি ফোল্ডার বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperAddTime" xml:space="preserve">
+    <value>সময় যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveName" xml:space="preserve">
+    <value>{0} সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeName" xml:space="preserve">
+    <value>শুরুর সময়, {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSamePictureInfo" xml:space="preserve">
+    <value>প্রতিটি সময়কালের একই ছবি। প্রতিটির জন্য একটি ছবি বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPicture" xml:space="preserve">
+    <value>একটি ছবি বা ফোল্ডার বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemMissing" xml:space="preserve">
+    <value>এটি আর সেখানে নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnNetwork" xml:space="preserve">
+    <value>এটি একটি নেটওয়ার্ক অবস্থানে আছে, যা ডায়নামিক ওয়ালপেপার ব্যবহার করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnlineOnly" xml:space="preserve">
+    <value>এটি কেবল অনলাইনে রাখা আছে। এটি ব্যবহার করতে, এই ডিভাইসে রাখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPictures" xml:space="preserve">
+    <value>ফোল্ডারে কোনো JPEG, PNG, BMP বা TIFF ছবি নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemRefused" xml:space="preserve">
+    <value>Windows এই ছবিটি দেখাতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemFormat" xml:space="preserve">
+    <value>একটি JPEG, PNG, BMP বা TIFF ছবি বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemPath" xml:space="preserve">
+    <value>এই পাথটি ব্যবহার করা যায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemSameTime" xml:space="preserve">
+    <value>আরেকটি সময় একই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitHeader" xml:space="preserve">
+    <value>ফিট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitDescription" xml:space="preserve">
+    <value>ছবিগুলো কীভাবে ডিসপ্লেতে ফিট হয়। Windows প্রতিটি ডিসপ্লেতে একই ফিট ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFill" xml:space="preserve">
+    <value>পূরণ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFit" xml:space="preserve">
+    <value>ফিট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitStretch" xml:space="preserve">
+    <value>প্রসারিত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitTile" xml:space="preserve">
+    <value>টাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitCenter" xml:space="preserve">
+    <value>কেন্দ্র</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitSpan" xml:space="preserve">
+    <value>বিস্তৃত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSteppedAsideInfo" xml:space="preserve">
+    <value>আপনি Windows-এ অন্য একটি পটভূমি বেছে নিয়েছেন, তাই ডায়নামিক ওয়ালপেপার এটি বদলানো বন্ধ করেছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperResume" xml:space="preserve">
+    <value>আবার শুরু করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperManagedInfo" xml:space="preserve">
+    <value>আপনার প্রতিষ্ঠান ডেস্কটপের পটভূমি পরিচালনা করে, তাই ডায়নামিক ওয়ালপেপার এটি বদলাতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperExplorerInfo" xml:space="preserve">
+    <value>Windows Explorer সাড়া দেয়নি, তাই ছবি বদলায়নি। ডায়নামিক ওয়ালপেপার আবার চেষ্টা করবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoteInfo" xml:space="preserve">
+    <value>এই দূরবর্তী সেশনে কোনো ডেস্কটপ ছবি দেখায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSpotlightInfo" xml:space="preserve">
+    <value>আবার Windows স্পটলাইট ব্যবহার করতে, Windows-এর পটভূমি সেটিংসে এটি বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenBackgroundSettings" xml:space="preserve">
+    <value>পটভূমি সেটিংস খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPermissions" xml:space="preserve">
+    <value>Windows-এর মাধ্যমে ডেস্কটপের পটভূমি বদলায়, এবং বন্ধ করলে আপনার আগের পটভূমি ফিরিয়ে দেয়। কেবল আপনার ছবি ও ফোল্ডারের নাম ও বৈশিষ্ট্য পড়ে; ছবিগুলো Windows পড়ে। সূর্যোদয় ও সূর্যাস্তে, আপনার সময় অঞ্চল বা আপনার বেছে নেওয়া স্থানাঙ্ক ব্যবহার করে, যা এই পিসিতেই থাকে। কোনো নেটওয়ার্ক সংযোগ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

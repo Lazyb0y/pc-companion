@@ -4284,4 +4284,252 @@
     <value>Pendant que vous choisissez une application, lit quelles fenêtres sont ouvertes, où elles se trouvent, si elles répondent et à quels programme et processus elles appartiennent, jamais leurs titres ni leur contenu. Vos clics et vos touches vont à la fenêtre de PC Companion, sans crochet de clavier ni de souris. Après votre confirmation, arrête le processus de l’application choisie et ses processus auxiliaires du même programme, et jamais les processus propres à Windows. N’établit aucune connexion réseau et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperName" xml:space="preserve">
+    <value>Fond d’écran dynamique</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDescription" xml:space="preserve">
+    <value>Changez l’image du bureau au lever et au coucher du soleil, aux heures que vous choisissez, ou avec le mode Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithHeader" xml:space="preserve">
+    <value>Changer selon</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithDescription" xml:space="preserve">
+    <value>Quand l’image change.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithSun" xml:space="preserve">
+    <value>Lever et coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithTimes" xml:space="preserve">
+    <value>Heures de la journée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChangeWithWindowsMode" xml:space="preserve">
+    <value>Mode Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperWindowsModeInfo" xml:space="preserve">
+    <value>Windows ne change le mode que lorsque vous ou une autre application le changez, dans Personnalisation &gt; Couleurs.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesHeader" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPicturesDescription" xml:space="preserve">
+    <value>Chaque période affiche une image, ou l’image suivante d’un dossier chaque fois qu’elle commence.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunrise" xml:space="preserve">
+    <value>Lever du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDay" xml:space="preserve">
+    <value>Jour</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodSunset" xml:space="preserve">
+    <value>Coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodNight" xml:space="preserve">
+    <value>Nuit</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodLight" xml:space="preserve">
+    <value>Clair</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodDark" xml:space="preserve">
+    <value>Sombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPeriodTime" xml:space="preserve">
+    <value>À partir de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunriseNone" xml:space="preserve">
+    <value>Aucune : la nuit dure jusqu’au lever du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunsetNone" xml:space="preserve">
+    <value>Aucune : le jour dure jusqu’au coucher du soleil</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPicture" xml:space="preserve">
+    <value>Aucune image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolder" xml:space="preserve">
+    <value>{0} (dossier)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureProblem" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperInUse" xml:space="preserve">
+    <value>En cours</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRowNameInUse" xml:space="preserve">
+    <value>{0}, {1}, en cours</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoose" xml:space="preserve">
+    <value>Choisir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseName" xml:space="preserve">
+    <value>Choisir pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChoosePicture" xml:space="preserve">
+    <value>Image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseFolder" xml:space="preserve">
+    <value>Dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseNone" xml:space="preserve">
+    <value>Aucune</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogTitle" xml:space="preserve">
+    <value>Choisir une image</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPictureDialogFilter" xml:space="preserve">
+    <value>Images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFolderDialogTitle" xml:space="preserve">
+    <value>Choisir un dossier d’images</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperAddTime" xml:space="preserve">
+    <value>Ajouter une heure</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveName" xml:space="preserve">
+    <value>Supprimer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeName" xml:space="preserve">
+    <value>Heure de début, {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSamePictureInfo" xml:space="preserve">
+    <value>Toutes les périodes ont la même image. Choisissez une image pour chacune.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPicture" xml:space="preserve">
+    <value>Choisissez une image ou un dossier.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemMissing" xml:space="preserve">
+    <value>Il n’est plus là.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnNetwork" xml:space="preserve">
+    <value>Il se trouve sur un emplacement réseau, que Fond d’écran dynamique n’utilise pas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemOnlineOnly" xml:space="preserve">
+    <value>Il est disponible en ligne uniquement. Pour l’utiliser, conservez-le sur cet appareil.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemNoPictures" xml:space="preserve">
+    <value>Le dossier ne contient aucune image JPEG, PNG, BMP ou TIFF.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemRefused" xml:space="preserve">
+    <value>Windows ne peut pas afficher cette image.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemFormat" xml:space="preserve">
+    <value>Choisissez une image JPEG, PNG, BMP ou TIFF.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemPath" xml:space="preserve">
+    <value>Ce chemin ne peut pas être utilisé.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperProblemSameTime" xml:space="preserve">
+    <value>Une autre heure est identique.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitHeader" xml:space="preserve">
+    <value>Ajustement</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitDescription" xml:space="preserve">
+    <value>Comment les images s’ajustent aux écrans. Windows utilise le même ajustement sur chaque écran.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFill" xml:space="preserve">
+    <value>Remplir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitFit" xml:space="preserve">
+    <value>Ajuster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitStretch" xml:space="preserve">
+    <value>Étirer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitTile" xml:space="preserve">
+    <value>Vignette</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitCenter" xml:space="preserve">
+    <value>Centrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperFitSpan" xml:space="preserve">
+    <value>Étendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSteppedAsideInfo" xml:space="preserve">
+    <value>Vous avez choisi un autre arrière-plan dans Windows, donc Fond d’écran dynamique a cessé de le changer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperResume" xml:space="preserve">
+    <value>Reprendre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperManagedInfo" xml:space="preserve">
+    <value>Votre organisation gère l’arrière-plan du bureau, donc Fond d’écran dynamique ne peut pas le changer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperExplorerInfo" xml:space="preserve">
+    <value>L’Explorateur Windows n’a pas répondu, donc l’image n’a pas changé. Fond d’écran dynamique réessaie.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoteInfo" xml:space="preserve">
+    <value>Cette session à distance n’affiche aucune image de bureau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSpotlightInfo" xml:space="preserve">
+    <value>Pour utiliser à nouveau Windows à la une, choisissez-le dans les paramètres d’arrière-plan de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenBackgroundSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres d’arrière-plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperPermissions" xml:space="preserve">
+    <value>Change l’arrière-plan du bureau via Windows, et remet celui que vous aviez quand vous le désactivez. Lit uniquement les noms et attributs de vos images et dossiers ; Windows lit les images. Avec Lever et coucher du soleil, utilise votre fuseau horaire ou les coordonnées que vous choisissez, qui restent sur ce PC. N’établit aucune connexion réseau.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

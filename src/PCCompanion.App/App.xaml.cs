@@ -15,6 +15,7 @@ using PCCompanion.App.Features.HideApps;
 using PCCompanion.App.Features.ClipboardActions;
 using PCCompanion.App.Features.DisplayProfiles;
 using PCCompanion.App.Features.DriveActions;
+using PCCompanion.App.Features.DynamicWallpaper;
 using PCCompanion.App.Features.DropDownApps;
 using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
@@ -187,6 +188,7 @@ public partial class App : Application
             .AddTransient<TitleBarActionsViewModel>()
             .AddTransient<EndAppViewModel>()
             .AddTransient<SystemMetersViewModel>()
+            .AddTransient<DynamicWallpaperViewModel>()
             .AddTransient<ClipboardActionsViewModel>()
             .AddTransient<NetworkProfilesViewModel>()
             .AddTransient<FolderRulesViewModel>()
