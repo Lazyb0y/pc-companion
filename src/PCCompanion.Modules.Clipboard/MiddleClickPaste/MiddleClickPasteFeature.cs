@@ -19,6 +19,7 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
     private RawPointerMonitor? _monitor;
     private PointerHook? _hook;
     private SelectedTextReader? _reader;
+    private WindowsMiddleClickPasteSystem? _system;
     private MiddleClickPasteController? _controller;
     private bool _failed;
 
@@ -94,12 +95,14 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
         _monitor = monitor;
         _hook = hook;
         _reader = new SelectedTextReader();
+        _system = new WindowsMiddleClickPasteSystem(hook, _reader);
 
-        // The controller's timer and the reader's answers come back to the window's thread.
+        // The controller's timers and the other threads' answers come back to the window's thread.
         void Post(Action action) => window.BeginInvoke(() => Guard(action));
-        var controller = new MiddleClickPasteController(new WindowsMiddleClickPasteSystem(hook, _reader), time, Post, logger);
+        var controller = new MiddleClickPasteController(_system, time, Post, logger);
         _controller = controller;
         monitor.InputReceived += (_, input) => Guard(() => controller.OnPointerInput(input));
+        hook.Kept += (_, input) => Guard(() => controller.OnKept(input));
         hook.Failed += (_, failure) => Guard(() => throw new InvalidOperationException("The pointer hook failed.", failure.Exception));
         LogStarted(logger);
     }
@@ -114,9 +117,10 @@ public sealed partial class MiddleClickPasteFeature(ILogger<MiddleClickPasteFeat
         _controller?.Dispose();
         _hook?.Dispose();
         _monitor?.Dispose();
+        _system?.Dispose();
         _reader?.Dispose();
         _window.Dispose();
-        (_controller, _hook, _monitor, _reader, _window) = (null, null, null, null, null);
+        (_controller, _hook, _monitor, _system, _reader, _window) = (null, null, null, null, null, null);
         LogStopped(logger);
     }
 
