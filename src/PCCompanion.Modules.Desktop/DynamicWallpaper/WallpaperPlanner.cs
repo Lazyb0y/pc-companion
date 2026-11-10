@@ -38,9 +38,11 @@ public sealed record WallpaperPlan(PeriodName Period, WallpaperPeriod? Pictures,
 /// </summary>
 public static class WallpaperPlanner
 {
-    // Sunrise and sunset without a place: Day from 6:00 and Night from 18:00.
-    private static readonly TimeOnly FixedSunrise = new(6, 0);
-    private static readonly TimeOnly FixedSunset = new(18, 0);
+    /// <summary>When Day starts in Sunrise and sunset without a place.</summary>
+    public static readonly TimeOnly FixedSunrise = new(6, 0);
+
+    /// <summary>When Night starts in Sunrise and sunset without a place.</summary>
+    public static readonly TimeOnly FixedSunset = new(18, 0);
 
     /// <summary>The place Sunrise and sunset uses: the coordinates, or the time zone's main city; <see langword="null"/> for none.</summary>
     /// <param name="settings">The settings.</param>
@@ -99,7 +101,77 @@ public static class WallpaperPlanner
         return new WallpaperPlan(PeriodName.Of(current), settings.Sun.Of(current), schedule.NextChange(now)?.At ?? now + Schedule.LookAhead);
     }
 
+    /// <summary>
+    /// The periods of a day on the clock, for Today on the feature's page, as <see cref="Plan"/>
+    /// works them out; none for Windows mode or without a usable time.
+    /// </summary>
+    /// <param name="settings">The settings.</param>
+    /// <param name="date">The day.</param>
+    /// <param name="zone">The time zone of the PC's clock.</param>
+    /// <param name="place">Sunrise and sunset's place; <see langword="null"/> for none, which changes at 6:00 and 18:00.</param>
+    public static IReadOnlyList<PeriodSpan<PeriodName>> Day(DynamicWallpaperSettings settings, DateOnly date, TimeZoneInfo zone, Coordinates? place)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(zone);
+
+        switch (settings.ChangeWith)
+        {
+            case ChangeWith.WindowsMode:
+                return [];
+            case ChangeWith.Times:
+                var usable = UsableTimes(settings);
+                return usable.Count == 0
+                    ? []
+                    : [.. new TimesSchedule([.. usable.Select(time => time.Time)], zone).Day(date)
+                        .Select(span => new PeriodSpan<PeriodName>(new PeriodName(ChangeWith.Times, usable[span.Period].Index), span.Start, span.End))];
+            default:
+                if (place is not { } here)
+                {
+                    return [.. new TimesSchedule([FixedSunrise, FixedSunset], zone).Day(date)
+                        .Select(span => new PeriodSpan<PeriodName>(PeriodName.Of(span.Period == 0 ? SunPeriod.Day : SunPeriod.Night), span.Start, span.End))];
+                }
+
+                return [.. new SunSchedule(here.Latitude, here.Longitude, IsUsable(settings.Sun.Sunrise), IsUsable(settings.Sun.Sunset)).Day(date, zone)
+                    .Select(span => new PeriodSpan<PeriodName>(PeriodName.Of(span.Period), span.Start, span.End))];
+        }
+    }
+
+    /// <summary>Whether the sun rises and sets during a day on the clock, for Today's note near the poles.</summary>
+    public static SunDay SunDayOf(Coordinates place, DateOnly date, TimeZoneInfo zone)
+    {
+        ArgumentNullException.ThrowIfNull(zone);
+
+        var (rises, sets) = new SunSchedule(place.Latitude, place.Longitude, true, true).RisesAndSets(date, zone);
+        if (rises == sets)
+        {
+            if (rises)
+            {
+                return SunDay.RisesAndSets;
+            }
+
+            // Neither: up all day, or down all day.
+            var (start, _) = Schedule.LocalDay(date, zone);
+            return Sun.At(start, place.Latitude, place.Longitude).Elevation >= SunSchedule.Horizon ? SunDay.DoesntSet : SunDay.DoesntRise;
+        }
+
+        return rises ? SunDay.DoesntSet : SunDay.DoesntRise;
+    }
+
     private static WallpaperPlan PlanTimes(DynamicWallpaperSettings settings, DateTimeOffset now, TimeZoneInfo zone)
+    {
+        var usable = UsableTimes(settings);
+        if (usable.Count == 0)
+        {
+            return new WallpaperPlan(new PeriodName(ChangeWith.Times, -1), null, null);
+        }
+
+        var schedule = new TimesSchedule([.. usable.Select(time => time.Time)], zone);
+        var index = usable[schedule.PeriodAt(now)].Index;
+        return new WallpaperPlan(new PeriodName(ChangeWith.Times, index), settings.Times[index], schedule.NextChange(now)?.At ?? now + Schedule.LookAhead);
+    }
+
+    // The times that can be used, each with its place in the settings' times.
+    private static List<(int Index, TimeOnly Time)> UsableTimes(DynamicWallpaperSettings settings)
     {
         var problems = DynamicWallpaperCheck.CheckTimes(settings.Times);
         var usable = new List<(int Index, TimeOnly Time)>();
@@ -111,13 +183,18 @@ public static class WallpaperPlanner
             }
         }
 
-        if (usable.Count == 0)
-        {
-            return new WallpaperPlan(new PeriodName(ChangeWith.Times, -1), null, null);
-        }
-
-        var schedule = new TimesSchedule([.. usable.Select(time => time.Time)], zone);
-        var index = usable[schedule.PeriodAt(now)].Index;
-        return new WallpaperPlan(new PeriodName(ChangeWith.Times, index), settings.Times[index], schedule.NextChange(now)?.At ?? now + Schedule.LookAhead);
+        return usable;
     }
+}
+
+/// <summary>Whether the sun rises and sets during a day.</summary>
+public enum SunDay
+{
+    RisesAndSets,
+
+    /// <summary>The sun stays below the horizon, or sets and doesn't rise again that day.</summary>
+    DoesntRise,
+
+    /// <summary>The sun stays above the horizon, or rises and doesn't set again that day.</summary>
+    DoesntSet,
 }

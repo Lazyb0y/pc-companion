@@ -4532,4 +4532,148 @@
     <value>Windows-এর মাধ্যমে ডেস্কটপের পটভূমি বদলায়, এবং বন্ধ করলে আপনার আগের পটভূমি ফিরিয়ে দেয়। কেবল আপনার ছবি ও ফোল্ডারের নাম ও বৈশিষ্ট্য পড়ে; ছবিগুলো Windows পড়ে। সূর্যোদয় ও সূর্যাস্তে, আপনার সময় অঞ্চল বা আপনার বেছে নেওয়া স্থানাঙ্ক ব্যবহার করে, যা এই পিসিতেই থাকে। কোনো নেটওয়ার্ক সংযোগ করে না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperLocationHeader" xml:space="preserve">
+    <value>অবস্থান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDescription" xml:space="preserve">
+    <value>সূর্যোদয় ও সূর্যাস্ত কোন জায়গার সূর্য অনুসরণ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationTimeZone" xml:space="preserve">
+    <value>আপনার সময় অঞ্চল থেকে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationCoordinates" xml:space="preserve">
+    <value>স্থানাঙ্ক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneHeader" xml:space="preserve">
+    <value>সময় অঞ্চল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneDescription" xml:space="preserve">
+    <value>সূর্যোদয় ও সূর্যাস্তের সময় আনুমানিক: সময় অঞ্চলের প্রধান শহর থেকে দূরে এগুলো কয়েক দশ মিনিট এদিক-ওদিক হতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitude" xml:space="preserve">
+    <value>অক্ষাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitudeDescription" xml:space="preserve">
+    <value>বিষুবরেখার উত্তরে ডিগ্রি; দক্ষিণ ঋণাত্মক।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitude" xml:space="preserve">
+    <value>দ্রাঘিমাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitudeDescription" xml:space="preserve">
+    <value>গ্রিনিচের পূর্বে ডিগ্রি; পশ্চিম ঋণাত্মক।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationHeader" xml:space="preserve">
+    <value>এই পিসির অবস্থান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationDescription" xml:space="preserve">
+    <value>Windows একবার এটি খুঁজে বের করে, এবং কাছের Wi-Fi নেটওয়ার্ক ও Microsoft-এর অবস্থান পরিষেবা ব্যবহার করতে পারে। শুধু রাউন্ড করা স্থানাঙ্ক রাখা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUseMyLocation" xml:space="preserve">
+    <value>আমার অবস্থান ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDeniedInfo" xml:space="preserve">
+    <value>Windows অবস্থান দেয়নি। অবস্থান পরিষেবা এবং ডেস্কটপ অ্যাপগুলিকে আপনার অবস্থান অ্যাক্সেস করতে দিন চালু করুন, তারপর আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenLocationSettings" xml:space="preserve">
+    <value>অবস্থান সেটিংস খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationFailedInfo" xml:space="preserve">
+    <value>Windows এই পিসির অবস্থান খুঁজে পায়নি। পরে আবার চেষ্টা করুন, অথবা স্থানাঙ্ক লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPlaceInfo" xml:space="preserve">
+    <value>আপনার সময় অঞ্চলের এমন কোনো জায়গা নেই যেখান থেকে সূর্য অনুসরণ করা যায়, তাই দিন শুরু হয় {0}-এ এবং রাত {1}-এ। সূর্য অনুসরণ করতে স্থানাঙ্ক বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoCoordinatesInfo" xml:space="preserve">
+    <value>অক্ষাংশ ও দ্রাঘিমাংশ না লেখা পর্যন্ত দিন শুরু হয় {0}-এ এবং রাত {1}-এ।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayHeader" xml:space="preserve">
+    <value>আজ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayDescription" xml:space="preserve">
+    <value>আজ প্রতিটি সময়কাল কখন শুরু ও শেষ হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeRange" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntRise" xml:space="preserve">
+    <value>আজ সূর্য ওঠে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntSet" xml:space="preserve">
+    <value>আজ সূর্য অস্ত যায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayHeader" xml:space="preserve">
+    <value>প্রতিটি ডিসপ্লের জন্য একটি ছবি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayDescription" xml:space="preserve">
+    <value>প্রতিটি ডিসপ্লে নিজের ছবি দেখায়। বিস্তৃত-এর সাথে উপলভ্য নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysHeader" xml:space="preserve">
+    <value>অন্যান্য ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysDescription" xml:space="preserve">
+    <value>যেসব ডিসপ্লের নিজস্ব ছবি নেই, সেগুলো এই ছবিগুলো দেখায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperBuiltInDisplay" xml:space="preserve">
+    <value>অন্তর্নির্মিত ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUnnamedDisplay" xml:space="preserve">
+    <value>ডিসপ্লে {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTwinDisplay" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayConnected" xml:space="preserve">
+    <value>সংযুক্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayNotConnected" xml:space="preserve">
+    <value>সংযুক্ত নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplay" xml:space="preserve">
+    <value>সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplayName" xml:space="preserve">
+    <value>{0} সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSameAsOthers" xml:space="preserve">
+    <value>অন্যান্য ডিসপ্লের মতোই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseSame" xml:space="preserve">
+    <value>অন্যান্য ডিসপ্লের মতোই</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

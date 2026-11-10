@@ -4532,4 +4532,148 @@
     <value>Cambia el fondo de escritorio a través de Windows y vuelve a poner el que tenías cuando lo desactivas. Solo lee los nombres y atributos de tus imágenes y carpetas; Windows lee las imágenes. Con Amanecer y atardecer, usa tu zona horaria o las coordenadas que elijas, que se quedan en este PC. No hace conexiones de red.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DynamicWallpaperLocationHeader" xml:space="preserve">
+    <value>Ubicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDescription" xml:space="preserve">
+    <value>Dónde sigue al sol Amanecer y atardecer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationTimeZone" xml:space="preserve">
+    <value>De tu zona horaria</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationCoordinates" xml:space="preserve">
+    <value>Coordenadas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneHeader" xml:space="preserve">
+    <value>Zona horaria</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeZoneDescription" xml:space="preserve">
+    <value>El amanecer y el atardecer son aproximados: lejos de la ciudad principal de la zona horaria, pueden variar decenas de minutos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitude" xml:space="preserve">
+    <value>Latitud</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLatitudeDescription" xml:space="preserve">
+    <value>Grados al norte del ecuador; el sur es negativo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitude" xml:space="preserve">
+    <value>Longitud</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLongitudeDescription" xml:space="preserve">
+    <value>Grados al este de Greenwich; el oeste es negativo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationHeader" xml:space="preserve">
+    <value>Ubicación de este equipo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperMyLocationDescription" xml:space="preserve">
+    <value>Windows la busca una vez y puede usar redes Wi-Fi cercanas y el servicio de ubicación de Microsoft. Solo se guardan las coordenadas, redondeadas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUseMyLocation" xml:space="preserve">
+    <value>Usar mi ubicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationDeniedInfo" xml:space="preserve">
+    <value>Windows no dio la ubicación. Activa Servicios de ubicación y Permitir que las aplicaciones de escritorio accedan a tu ubicación, y vuelve a intentarlo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOpenLocationSettings" xml:space="preserve">
+    <value>Abrir configuración de ubicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperLocationFailedInfo" xml:space="preserve">
+    <value>Windows no pudo encontrar la ubicación de este equipo. Vuelve a intentarlo más tarde o escribe las coordenadas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoPlaceInfo" xml:space="preserve">
+    <value>Tu zona horaria no tiene un lugar desde el que seguir al sol, así que el Día empieza a las {0} y la Noche a las {1}. Elige Coordenadas para seguir al sol.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperNoCoordinatesInfo" xml:space="preserve">
+    <value>Hasta que escribas una latitud y una longitud, el Día empieza a las {0} y la Noche a las {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayHeader" xml:space="preserve">
+    <value>Hoy</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTodayDescription" xml:space="preserve">
+    <value>Cuándo empieza y termina hoy cada periodo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTimeRange" xml:space="preserve">
+    <value>{0} – {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntRise" xml:space="preserve">
+    <value>Hoy no sale el sol.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSunDoesntSet" xml:space="preserve">
+    <value>Hoy no se pone el sol.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayHeader" xml:space="preserve">
+    <value>Una imagen para cada pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperEachDisplayDescription" xml:space="preserve">
+    <value>Cada pantalla muestra sus propias imágenes. No disponible con Extender.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysHeader" xml:space="preserve">
+    <value>Otras pantallas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperOtherDisplaysDescription" xml:space="preserve">
+    <value>Las pantallas sin imágenes propias muestran estas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperBuiltInDisplay" xml:space="preserve">
+    <value>Pantalla integrada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperUnnamedDisplay" xml:space="preserve">
+    <value>Pantalla {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperTwinDisplay" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayConnected" xml:space="preserve">
+    <value>Conectada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperDisplayNotConnected" xml:space="preserve">
+    <value>No conectada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplay" xml:space="preserve">
+    <value>Quitar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperRemoveDisplayName" xml:space="preserve">
+    <value>Quitar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperSameAsOthers" xml:space="preserve">
+    <value>Igual que otras pantallas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DynamicWallpaperChooseSame" xml:space="preserve">
+    <value>Igual que otras pantallas</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

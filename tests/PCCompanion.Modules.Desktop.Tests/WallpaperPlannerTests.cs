@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using Xunit;
 
@@ -103,6 +104,56 @@ public sealed class WallpaperPlannerTests
         Assert.Null(WallpaperPlanner.PlaceOf(coordinates with { Latitude = 99 }, () => London));
         Assert.Equal(London, WallpaperPlanner.PlaceOf(Settings, () => London));
         Assert.Null(WallpaperPlanner.PlaceOf(Settings, () => null));
+    }
+
+    [Fact]
+    public void TodayCoversTheDayWithTheSunsPeriods()
+    {
+        var withSunset = Settings with { Sun = Settings.Sun with { Sunset = new() { Picture = @"C:\Dusk.jpg" } } };
+
+        var day = WallpaperPlanner.Day(withSunset, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc, London);
+
+        Assert.Equal(
+            [SunPeriod.Night, SunPeriod.Day, SunPeriod.Sunset, SunPeriod.Night],
+            day.Select(span => (SunPeriod)span.Period.Index));
+        Assert.Equal(new DateTimeOffset(2026, 6, 21, 0, 0, 0, TimeSpan.Zero), day[0].Start);
+        Assert.Equal(new DateTimeOffset(2026, 6, 22, 0, 0, 0, TimeSpan.Zero), day[^1].End);
+        Assert.All(day.Skip(1), (span, i) => Assert.Equal(day[i].End, span.Start));
+    }
+
+    [Fact]
+    public void TodayWithoutAPlaceIsSixToEighteen()
+    {
+        var day = WallpaperPlanner.Day(Settings, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc, null);
+
+        Assert.Equal(
+            [(SunPeriod.Night, 0), (SunPeriod.Day, 6), (SunPeriod.Night, 18)],
+            day.Select(span => ((SunPeriod)span.Period.Index, span.Start.Hour)));
+    }
+
+    [Fact]
+    public void TodayLeavesOutTimesThatCantBeUsed()
+    {
+        var times = Settings with
+        {
+            ChangeWith = ChangeWith.Times,
+            Times = [new() { At = "07:00", Picture = @"C:\A.jpg" }, new() { At = "25:00", Picture = @"C:\B.jpg" }, new() { At = "19:00", Picture = @"C:\C.jpg" }],
+        };
+
+        var day = WallpaperPlanner.Day(times, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc, null);
+
+        Assert.Equal([2, 0, 2], day.Select(span => span.Period.Index));
+        Assert.Empty(WallpaperPlanner.Day(Settings with { ChangeWith = ChangeWith.WindowsMode }, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc, null));
+    }
+
+    [Fact]
+    public void TodaySaysWhenTheSunDoesntRiseOrSet()
+    {
+        var svalbard = new Coordinates(78.2, 15.6);
+
+        Assert.Equal(SunDay.RisesAndSets, WallpaperPlanner.SunDayOf(London, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc));
+        Assert.Equal(SunDay.DoesntSet, WallpaperPlanner.SunDayOf(svalbard, new DateOnly(2026, 6, 21), TimeZoneInfo.Utc));
+        Assert.Equal(SunDay.DoesntRise, WallpaperPlanner.SunDayOf(svalbard, new DateOnly(2026, 12, 21), TimeZoneInfo.Utc));
     }
 
     [Fact]
