@@ -57,6 +57,7 @@ $startStates = [ordered] @{
     SystemMeters = 'Installed'
     DynamicWallpaper = 'Installed'
     ClipboardActions = 'Installed'
+    MiddleClickPaste = 'Installed'
     NetworkProfiles = 'Installed'
     FolderRules = 'Installed'
     DriveActions = 'Installed'

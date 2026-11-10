@@ -407,22 +407,23 @@ A spike in Windows Sandbox on Windows 11 build 26100 used Edge, test windows wit
   - **the page:** the Home switch turns the feature on, and the page saves the app list, with Running app and Remove;
   - **pasting:**
     - **into boxes:** text selected in an Edge page goes in at the pointer in a test window's WPF box, Windows' own plain and rich text boxes, Character Map's box and the Run box;
-    - **into Edge:** text selected in a test window goes into Edge's text area, single-line box and editable text;
+    - **into Edge:** text selected in a test window's WPF box goes into Edge's text area, single-line box and editable text;
     - one Ctrl+Z takes each paste out, and the window comes to the front;
   - **left alone:**
-    - in Edge, a middle-click on a link opens a tab, one on a tab closes it, and one on page text starts scrolling;
+    - in Edge, a middle-click on a link opens a tab, one on a tab closes it, and the page gets one on its text, where it starts scrolling;
     - with Title Bar Actions on, one on a title bar minimizes the window;
     - the console, read-only and password boxes get their click, and nothing is pasted;
     - right after the wheel turns, a middle-click on a text box isn't a paste;
   - **notices:** each one's reason in the host's log, for:
-    - nothing selected;
+    - nothing selected, with the notice shown;
     - a selection in a password box;
+    - a selection in a Windows Forms box on .NET Framework, which doesn't share it;
     - a test window that stops responding, as the app with the selection and as the box;
     - text that's too long;
     - a box that doesn't take dropped text;
     - a second click while a paste waits;
   - **rights:** with the host labeled Medium integrity, a test window running as administrator isn't recognized and gets its click;
-  - **privacy:** the clipboard's sequence number doesn't change, and the host's log never holds the text;
+  - **privacy:** the clipboard's sequence number doesn't change during a paste, and the host's log never holds the text;
   - **the hook:** a listed app gets its click, and the hook is set only while the pointer rests on a text box;
   - **the page** in English and Arabic, in light and dark, with screenshots;
   - no feature holds the host's UI thread, as every group checks.
