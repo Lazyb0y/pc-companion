@@ -71,6 +71,7 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - While an earlier read still waits for its app, a press doesn't ask again, and the menu says the app didn't answer in time.
 - The menu opens when the text has been read: usually in under 0.1 seconds, and at most 1.5 seconds after the press. The text is read before the feature's window comes to the front for the menu, which would move the keyboard focus away from the selection.
 - The selected text stays in memory only until the menu closes and the chosen action has started, as copied text does.
+- **Middle-Click Paste** reads the selection with the same code, on a reading thread of its own, so each feature works with the other turned off; see [Which text](middle-click-paste.md#which-text).
 
 ## When the selected text can't be read
 
