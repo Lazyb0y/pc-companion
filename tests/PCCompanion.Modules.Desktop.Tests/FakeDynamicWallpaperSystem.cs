@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using PCCompanion.Modules.Desktop.DynamicWallpaper;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -75,6 +76,15 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
 
     public Action? BackgroundChanged { get; private set; }
 
+    /// <summary>The pipe's answer, while it's served.</summary>
+    public Func<byte[], Task<byte[]>>? Pipe { get; private set; }
+
+    public IDisposable ServePipe(Func<byte[], Task<byte[]>> answer, Action<Exception> failed)
+    {
+        Pipe = answer;
+        return new PipeServed(this);
+    }
+
     public Guid? Desktop { get; set; }
 
     public bool? Spotlight { get; set; }
@@ -134,6 +144,11 @@ internal sealed class FakeDynamicWallpaperSystem : IDynamicWallpaperSystem, IDis
     public void FireTimer() => TimerElapsed?.Invoke();
 
     public void Dispose() => _folder.Dispose();
+
+    private sealed class PipeServed(FakeDynamicWallpaperSystem system) : IDisposable
+    {
+        public void Dispose() => system.Pipe = null;
+    }
 
     private sealed class Watch(FakeDynamicWallpaperSystem system) : IDisposable
     {
