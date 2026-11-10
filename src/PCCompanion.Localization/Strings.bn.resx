@@ -4676,4 +4676,12 @@
     <value>অন্যান্য ডিসপ্লের মতোই</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>মিডল-ক্লিক পেস্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>যেকোনো অ্যাপে টেক্সট নির্বাচন করুন, তারপর কোনো টেক্সট বক্সে মিডল-ক্লিক করুন, পয়েন্টার যেখানে আছে সেখানে তা পেস্ট হবে, ক্লিপবোর্ড ছাড়াই।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

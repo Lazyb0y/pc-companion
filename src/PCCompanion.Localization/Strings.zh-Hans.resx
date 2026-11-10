@@ -4628,4 +4628,12 @@
     <value>与其他显示器相同</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>中键粘贴</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>在任意应用中选择文本，然后在文本框中单击鼠标中键，即可将其粘贴到指针所在位置，无需使用剪贴板。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

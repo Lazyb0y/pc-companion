@@ -4676,4 +4676,12 @@
     <value>Wie andere Bildschirme</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>Mittelklick-Einfügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>Markieren Sie Text in einer beliebigen App und klicken Sie dann mit der mittleren Maustaste in ein Textfeld, um ihn an der Zeigerposition einzufügen, ohne die Zwischenablage.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

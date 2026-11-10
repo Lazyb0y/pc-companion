@@ -4676,4 +4676,12 @@
     <value>Igual que otras pantallas</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>Pegar con clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>Selecciona texto en cualquier aplicación y haz clic con el botón central en un cuadro de texto para pegarlo donde está el puntero, sin usar el portapapeles.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

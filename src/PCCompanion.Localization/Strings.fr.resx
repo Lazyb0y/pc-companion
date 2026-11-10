@@ -4676,4 +4676,12 @@
     <value>Comme les autres écrans</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>Coller par clic central</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>Sélectionnez du texte dans n’importe quelle application, puis cliquez avec le bouton central dans une zone de texte pour le coller à l’emplacement du pointeur, sans le Presse-papiers.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

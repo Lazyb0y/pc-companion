@@ -4676,4 +4676,12 @@
     <value>Same as other displays</value>
     <comment>Page: menu item of Choose for a display, which gives it the picture other displays show</comment>
   </data>
+  <data name="MiddleClickPasteName" xml:space="preserve">
+    <value>Middle-Click Paste</value>
+    <comment>Feature name: navigation pane, Home and the Middle-Click Paste page.</comment>
+  </data>
+  <data name="MiddleClickPasteDescription" xml:space="preserve">
+    <value>Select text in any app, then middle-click in a text box to paste it where the pointer is, without the clipboard.</value>
+    <comment>Middle-Click Paste: one-sentence description below the feature name.</comment>
+  </data>
 </root>
