@@ -59,8 +59,11 @@ public interface IMiddleClickPasteSystem : IListedAppWindows
     /// <summary>Puts the text into a box at its text cursor, off the host's UI thread; see <see cref="EditBoxes.InsertAtCursor"/>.</summary>
     Task<EditBoxResult> InsertAtCursorAsync(nint box, string text);
 
-    /// <summary>Brings <paramref name="root"/> to the front and gives the box under the point the keyboard focus. The task never fails.</summary>
-    Task<bool> FocusAsync(nint root, Point point);
+    /// <summary>
+    /// Brings <paramref name="root"/> to the front and gives the box under the point the keyboard
+    /// focus; <paramref name="box"/> is the box's own window, or 0. The task never fails.
+    /// </summary>
+    Task<bool> FocusAsync(nint root, nint box, Point point);
 
     /// <summary>Drops the text at the point; see <see cref="TextDrop"/>. The task never fails.</summary>
     Task<TextDropResult> DropAsync(Point point, string text);

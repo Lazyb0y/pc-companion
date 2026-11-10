@@ -101,9 +101,9 @@ internal sealed class FakeMiddleClickPasteSystem : IMiddleClickPasteSystem
         return Task.FromResult(CursorInsertResult);
     }
 
-    public Task<bool> FocusAsync(nint root, Point point)
+    public Task<bool> FocusAsync(nint root, nint box, Point point)
     {
-        Steps.Add($"focus {root} at {point.X},{point.Y}");
+        Steps.Add($"focus {root}, box {box}, at {point.X},{point.Y}");
         return Task.FromResult(true);
     }
 

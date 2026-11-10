@@ -24,6 +24,10 @@ public sealed class WindowsMiddleClickPasteSystem(PointerHook hook, SelectedText
     /// </summary>
     public static readonly TimeSpan ReadRetryFor = TimeSpan.FromSeconds(1.3);
 
+    // How long, and how often, the front is watched after a box with a window of its own is focused.
+    private static readonly TimeSpan FrontWatch = TimeSpan.FromMilliseconds(300);
+    private static readonly TimeSpan FrontCheck = TimeSpan.FromMilliseconds(30);
+
     private TextDrop? _drop;
 
     public Point? PointerPosition => InputState.PointerPosition;
@@ -56,10 +60,31 @@ public sealed class WindowsMiddleClickPasteSystem(PointerHook hook, SelectedText
 
     public Task<EditBoxResult> InsertAtCursorAsync(nint box, string text) => Task.Run(() => EditBoxes.InsertAtCursor(box, text));
 
-    public Task<bool> FocusAsync(nint root, Point point)
+    public async Task<bool> FocusAsync(nint root, nint box, Point point)
     {
         Foreground.Bring(root);
-        return reader.FocusAsync(point);
+        var focused = await reader.FocusAsync(point).ConfigureAwait(false);
+        if (box == 0)
+        {
+            return focused;
+        }
+
+        // UI Automation focuses a box that has a window of its own, as Windows' own text boxes do,
+        // by making that window the foreground window, a moment later (Sandbox checks). The
+        // top-level window gets the front back, and the box keeps the focus.
+        for (var watched = TimeSpan.Zero; watched < FrontWatch; watched += FrontCheck)
+        {
+            var front = Foreground.Window;
+            if (front != 0 && front != root && WindowHitTest.Root(front) == root)
+            {
+                Foreground.Bring(root);
+                break;
+            }
+
+            await Task.Delay(FrontCheck).ConfigureAwait(false);
+        }
+
+        return focused;
     }
 
     // The drop's thread starts at the first drop.
