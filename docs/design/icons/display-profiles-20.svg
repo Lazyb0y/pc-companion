@@ -21,10 +21,10 @@
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
     </defs>
-    <rect x="8" y="15" width="4" height="2" rx="0" fill="url(#blue-deep)"/>
-    <rect x="5" y="17" width="10" height="2" rx="1" fill="url(#blue-deepest)"/>
-    <rect x="1" y="2" width="18" height="13" rx="1.5" fill="url(#blue-deepest)"/>
-    <rect x="2" y="3" width="16" height="11" rx="0.5" fill="url(#blue-main)"/>
-    <path fill="url(#blue-light)" d="M2 13.5C6.5 10 11 7.5 18 7V13.5A0.5 0.5 0 0 1 17.5 14H2.5A0.5 0.5 0 0 1 2 13.5Z"/>
-    <path fill="url(#orange)" d="M14 11H19V19L16.5 17L14 19Z"/>
+    <rect x="9" y="13" width="2" height="2" rx="0" fill="url(#blue-deep)"/>
+    <rect x="6" y="15" width="8" height="2" rx="1" fill="url(#blue-deepest)"/>
+    <rect x="2" y="3" width="16" height="10" rx="1.5" fill="url(#blue-deepest)"/>
+    <rect x="3" y="4" width="14" height="8" rx="0.5" fill="url(#blue-main)"/>
+    <path fill="url(#blue-light)" d="M3 11.5C6.5 9 10.5 7 17 6.5V11.5A0.5 0.5 0 0 1 16.5 12H3.5A0.5 0.5 0 0 1 3 11.5Z"/>
+    <path fill="url(#orange)" d="M13 10H18V18L15.5 16.2L13 18Z"/>
 </svg>

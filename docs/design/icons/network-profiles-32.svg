@@ -17,8 +17,8 @@
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
     </defs>
-    <path fill="none" stroke="url(#sky-main)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" d="M2.919 13.919A18.5 18.5 0 0 1 29.081 13.919"/>
-    <path fill="none" stroke="url(#sky-deep)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" d="M7.868 18.868A11.5 11.5 0 0 1 24.132 18.868"/>
-    <path fill="url(#sky-deepest)" d="M12.4 26.5A3.6 3.6 0 1 0 19.6 26.5A3.6 3.6 0 1 0 12.4 26.5Z"/>
-    <path fill="url(#orange)" d="M22 18H30V31L26 28L22 31Z"/>
+    <path fill="none" stroke="url(#sky-main)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" d="M2.919 10.919A18.5 18.5 0 0 1 29.081 10.919"/>
+    <path fill="none" stroke="url(#sky-deep)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" d="M7.868 15.868A11.5 11.5 0 0 1 24.132 15.868"/>
+    <path fill="url(#sky-deepest)" d="M12.4 23.5A3.6 3.6 0 1 0 19.6 23.5A3.6 3.6 0 1 0 12.4 23.5Z"/>
+    <path fill="url(#orange)" d="M22 15H30V28L26 25L22 28Z"/>
 </svg>

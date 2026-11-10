@@ -17,12 +17,12 @@
             <stop offset="1" stop-color="#FF8A3C"/>
         </linearGradient>
     </defs>
-    <g transform="rotate(45 16 16)">
-        <rect x="12" y="2.5" width="8" height="7.5" rx="1" fill="url(#paper)"/>
-        <rect x="10" y="9" width="12" height="20.5" rx="2" fill="url(#green-main)"/>
-        <path fill="url(#green-deep)" d="M12 9H20A2 2 0 0 1 22 11V12.5H10V11A2 2 0 0 1 12 9Z"/>
-        <rect x="13.4" y="4.6" width="2" height="2" rx="0" fill="url(#green-deep)"/>
-        <rect x="16.6" y="4.6" width="2" height="2" rx="0" fill="url(#green-deep)"/>
+    <g transform="rotate(45 16 13)">
+        <rect x="12" y="-0.5" width="8" height="7.5" rx="1" fill="url(#paper)"/>
+        <rect x="10" y="6" width="12" height="20.5" rx="2" fill="url(#green-main)"/>
+        <path fill="url(#green-deep)" d="M12 6H20A2 2 0 0 1 22 8V9.5H10V8A2 2 0 0 1 12 6Z"/>
+        <rect x="13.4" y="1.6" width="2" height="2" rx="0" fill="url(#green-deep)"/>
+        <rect x="16.6" y="1.6" width="2" height="2" rx="0" fill="url(#green-deep)"/>
     </g>
     <path fill="url(#orange)" stroke="url(#orange)" stroke-width="1" stroke-linejoin="round" d="M26 14.5L18.5 24L23.5 24L21.5 31L29.5 21L24.5 21Z"/>
 </svg>

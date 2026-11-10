@@ -18,20 +18,23 @@
         PaneDisplayMode="Auto"
         SelectionChanged="OnNavigationSelectionChanged">
         <NavigationView.Resources>
-            <!-- The items' icons are 20 pixels high instead of 16, so the feature icons' drawings read clearly. -->
+            <!--
+                The items' icons are 20 pixels high instead of 16, so the feature icons' drawings read
+                clearly. Glyphs stay 16 pixels high, as elsewhere in Windows, with 2 pixels round them.
+            -->
             <x:Double x:Key="NavigationViewItemOnLeftIconBoxHeight">20</x:Double>
         </NavigationView.Resources>
         <NavigationView.MenuItems>
             <NavigationViewItem x:Name="HomeItem" Content="{app:Localized Key=NavigationHome}">
                 <NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xE80F;" />
+                    <FontIcon Glyph="&#xE80F;" FontSize="16" Margin="2" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Name="GeneralItem" Content="{app:Localized Key=NavigationGeneral}">
                 <NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xE713;" />
+                    <FontIcon Glyph="&#xE713;" FontSize="16" Margin="2" />
                 </NavigationViewItem.Icon>
                 <!-- Shown in code while a newer version is available that the General page hasn't shown. -->
                 <NavigationViewItem.InfoBadge>

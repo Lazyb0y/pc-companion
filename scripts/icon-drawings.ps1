@@ -303,7 +303,7 @@ foreach ($icon in $app) {
 $pointer = @(@(0, 0), @(0, 13), @(3.2, 10), @(5.6, 15.2), @(8, 14.1), @(5.6, 9), @(10, 9))
 $hotCorners = @(
     @{ Size = 32; Screen = 1, 4, 30, 24, 2.5; Lit = 19; Spot = 6.5; Pointer = 12, 11.5, 1.05; Stroke = 1; Cut = 1.2 }
-    @{ Size = 20; Screen = 1, 2, 18, 16, 1.5; Lit = 12; Spot = 4; Pointer = 7.5, 7, 0.66; Stroke = 0.8; Cut = 1 }
+    @{ Size = 20; Screen = 2, 4, 16, 12, 1.5; Lit = 13; Spot = 3.5; Pointer = 8, 7.5, 0.53; Stroke = 0.8; Cut = 1 }
 )
 foreach ($icon in $hotCorners) {
     $x, $y, $w, $h, $r = $icon.Screen
@@ -325,7 +325,7 @@ foreach ($icon in $hotCorners) {
 # the width of the stroke that rounds its corners.
 $bolts = @{
     32 = @{ Points = @(@(26, 14.5), @(18.5, 24), @(23.5, 24), @(21.5, 31), @(29.5, 21), @(24.5, 21)); Stroke = 1 }
-    20 = @{ Points = @(@(16.5, 8.6), @(11.5, 15.1), @(14.5, 15.1), @(13.5, 19.1), @(18.5, 12.6), @(15.5, 12.6)); Stroke = 0.8 }
+    20 = @{ Points = @(@(15.8, 8.9), @(11.6, 14.2), @(14.1, 14.2), @(13.2, 17.6), @(17.6, 12.2), @(15, 12.2)); Stroke = 0.8 }
 }
 
 function Get-BoltPath([int] $Size) {
@@ -343,7 +343,7 @@ function Get-BoltShape([int] $Size) {
 # bottom right. The one-color version cuts the paper out, and Cut wide round the clip and the bolt.
 $clipboardActions = @(
     @{ Size = 32; Board = 2, 3, 24, 28, 2.5; Clip = 9, 1, 10, 5, 1.5; Paper = 6, 8, 16, 19, 1; Lines = @(@(9, 12, 10, 2, 1), @(9, 16, 6, 2, 1)); Cut = 1.2 }
-    @{ Size = 20; Board = 1, 2, 15, 17, 1.5; Clip = 5, 1, 7, 3, 1; Paper = 4, 5, 9, 11, 0.5; Lines = @(@(6, 8, 5, 1, 0.5), @(6, 10, 3, 1, 0.5)); Cut = 1 }
+    @{ Size = 20; Board = 2, 3, 12, 15, 1.5; Clip = 5, 2, 6, 3, 1; Paper = 4, 6, 8, 9, 0.5; Lines = @(@(5, 8, 5, 1, 0.5), @(5, 10, 3, 1, 0.5)); Cut = 1 }
 )
 foreach ($icon in $clipboardActions) {
     $body = @((Get-Rect $icon.Board ' fill="url(#blue-main)"'), (Get-Rect $icon.Clip ' fill="url(#blue-deepest)"'), (Get-Rect $icon.Paper ' fill="url(#paper)"')) +
@@ -362,7 +362,7 @@ foreach ($icon in $clipboardActions) {
 # System Meters, in green: three bars, from light and short to deep and tall.
 $systemMeters = @(
     @{ Size = 32; Bars = @(@(1, 19, 8, 12, 1.5), @(12, 11, 8, 20, 1.5), @(23, 1, 8, 30, 1.5)) }
-    @{ Size = 20; Bars = @(@(1, 12, 4, 7, 1), @(8, 7, 4, 12, 1), @(15, 1, 4, 18, 1)) }
+    @{ Size = 20; Bars = @(@(2, 12, 4, 6, 1), @(8, 8, 4, 10, 1), @(14, 2, 4, 16, 1)) }
 )
 foreach ($icon in $systemMeters) {
     $short, $middle, $tall = $icon.Bars
@@ -377,8 +377,8 @@ foreach ($icon in $systemMeters) {
 $lockKeys = @(
     @{ Size = 32; Cap = 1, 1, 30, 30, 3; Face = 4, 3, 24, 23, 2; Bar = 12, 20, 8, 3, 0.75; Stroke = 1; Cut = 1.2
         Arrow = @(@(16, 7.5), @(22.5, 14.5), @(18.5, 14.5), @(18.5, 18.5), @(13.5, 18.5), @(13.5, 14.5), @(9.5, 14.5)) }
-    @{ Size = 20; Cap = 1, 1, 18, 18, 2; Face = 3, 2, 14, 13, 1.5; Bar = 8, 12, 4, 2, 0.5; Stroke = 0.8; Cut = 1
-        Arrow = @(@(10, 4.6), @(14.2, 8.6), @(11.6, 8.6), @(11.6, 10.6), @(8.4, 10.6), @(8.4, 8.6), @(5.8, 8.6)) }
+    @{ Size = 20; Cap = 2, 2, 16, 16, 2; Face = 3, 3, 14, 12, 1.5; Bar = 8, 12, 4, 2, 0.5; Stroke = 0.8; Cut = 1
+        Arrow = @(@(10, 5.2), @(13.6, 8.6), @(11.6, 8.6), @(11.6, 10.6), @(8.4, 10.6), @(8.4, 8.6), @(6.4, 8.6)) }
 )
 foreach ($icon in $lockKeys) {
     $arrow = Get-PolygonPath $icon.Arrow
@@ -399,8 +399,8 @@ foreach ($icon in $lockKeys) {
 $inputLanguagePerApp = @(
     @{ Size = 32; Window = 1, 2, 25, 22, 2; TitleBar = 5; Badge = 16, 16, 15, 15, 2.5; A = 10.2, 15.8, 9.6, 17.3; Wen = 23.5, 23.5, 8.4, 21.82
         Letter = 2.4, 2.1; Cut = 1.2 }
-    @{ Size = 20; Window = 1, 2, 15, 13, 1.5; TitleBar = 3; Badge = 10, 10, 9, 9, 1.5; A = 6.3, 10, 6, 11.2; Wen = 14.5, 14.5, 6, 13.3
-        Letter = 1.6, 1.4; Cut = 1 }
+    @{ Size = 20; Window = 2, 3, 14, 12, 1.5; TitleBar = 4; Badge = 9, 9, 9, 9, 1.5; A = 5.6, 11, 5.4, 11.9; Wen = 13.5, 13.5, 6, 12.3
+        Letter = 1.3, 1.2; Cut = 1 }
 )
 foreach ($icon in $inputLanguagePerApp) {
     $titleBar = Get-TitleBarPath $icon.Window $icon.TitleBar
@@ -426,7 +426,7 @@ foreach ($icon in $inputLanguagePerApp) {
 # main tone. The one-color version keeps them apart with cuts Cut wide.
 $appWindows = @(
     @{ Size = 32; Windows = @(@(11, 1, 20, 16, 2), @(6, 8, 20, 16, 2), @(1, 15, 20, 16, 2)); TitleBar = 4; Cut = 1.2 }
-    @{ Size = 20; Windows = @(@(7, 1, 12, 10, 1.5), @(4, 5, 12, 10, 1.5), @(1, 9, 12, 10, 1.5)); TitleBar = 3; Cut = 1 }
+    @{ Size = 20; Windows = @(@(8, 2, 10, 8, 1.5), @(5, 6, 10, 8, 1.5), @(2, 10, 10, 8, 1.5)); TitleBar = 2; Cut = 1 }
 )
 foreach ($icon in $appWindows) {
     $back, $middle, $front = $icon.Windows
@@ -446,8 +446,8 @@ foreach ($icon in $appWindows) {
 $minimizeToTray = @(
     @{ Size = 32; Window = 2, 1, 28, 20, 2; TitleBar = 4; Taskbar = 1, 24, 30, 7, 1.5; Tray = 24, 26, 4, 3, 0.5; Stroke = 1; Cut = 1.2
         Arrow = @(@(14.5, 7.5), @(17.5, 7.5), @(17.5, 12.5), @(21.5, 12.5), @(16, 18.5), @(10.5, 12.5), @(14.5, 12.5)) }
-    @{ Size = 20; Window = 1, 1, 18, 12, 1.5; TitleBar = 2; Taskbar = 1, 15, 18, 4, 1; Tray = 14, 16, 3, 2, 0.5; Stroke = 0.8; Cut = 1
-        Arrow = @(@(9.4, 4.4), @(10.6, 4.4), @(10.6, 7.6), @(13.4, 7.6), @(10, 11.2), @(6.6, 7.6), @(9.4, 7.6)) }
+    @{ Size = 20; Window = 2, 2, 16, 10, 1.5; TitleBar = 2; Taskbar = 2, 14, 16, 4, 1; Tray = 13, 15, 3, 2, 0.5; Stroke = 0.8; Cut = 1
+        Arrow = @(@(9.4, 5.4), @(10.6, 5.4), @(10.6, 8.2), @(13.2, 8.2), @(10, 11.2), @(6.8, 8.2), @(9.4, 8.2)) }
 )
 foreach ($icon in $minimizeToTray) {
     $arrow = Get-PolygonPath $icon.Arrow
@@ -466,7 +466,7 @@ foreach ($icon in $minimizeToTray) {
 # one-color version cuts the eye and the slash out, and Cut wide under the title bar.
 $hideApps = @(
     @{ Size = 32; Window = 1, 3, 30, 26, 2.5; TitleBar = 5; Eye = 16, 18.5, 10, 6.1; Line = 2; Pupil = 3; SlashLine = 8.5, 26, 23.5, 11; Slash = 2.2; Gap = 1.4; Cut = 1.2 }
-    @{ Size = 20; Window = 1, 2, 18, 16, 1.5; TitleBar = 3; Eye = 10, 11.5, 6, 3.7; Line = 1.4; Pupil = 1.8; SlashLine = 5.5, 16, 14.5, 7; Slash = 1.4; Gap = 1; Cut = 1 }
+    @{ Size = 20; Window = 2, 3, 16, 14, 1.5; TitleBar = 3; Eye = 10, 11.5, 5.4, 3.3; Line = 1.2; Pupil = 1.6; SlashLine = 6, 15.5, 14, 7.5; Slash = 1.2; Gap = 0.9; Cut = 1 }
 )
 foreach ($icon in $hideApps) {
     $cx, $cy, $half, $tall = $icon.Eye
@@ -494,7 +494,7 @@ foreach ($icon in $hideApps) {
 # out, and Cut wide round the panel.
 $dropDownApps = @(
     @{ Size = 32; Screen = 1, 3, 30, 26, 2.5; Panel = 4, 3, 24, 16, 2; Chevron = @(@(12, 10), @(16, 14), @(20, 10)); Line = 2.4; Cut = 1.2 }
-    @{ Size = 20; Screen = 1, 2, 18, 16, 1.5; Panel = 3, 2, 14, 10, 1.5; Chevron = @(@(7.5, 5.8), @(10, 8.3), @(12.5, 5.8)); Line = 1.6; Cut = 1 }
+    @{ Size = 20; Screen = 2, 3, 16, 14, 1.5; Panel = 4, 3, 12, 9, 1.5; Chevron = @(@(7.8, 6.2), @(10, 8.4), @(12.2, 6.2)); Line = 1.5; Cut = 1 }
 )
 foreach ($icon in $dropDownApps) {
     $x, $y, $w, $h, $r = $icon.Panel
@@ -514,7 +514,7 @@ foreach ($icon in $dropDownApps) {
 # round the mouse and round its wheel.
 $titleBarActions = @(
     @{ Size = 32; Window = 1, 2, 26, 23, 2; Paper = 3, 9, 22, 14, 1; Mouse = 19, 14, 12, 17, 6; Wheel = 23.75, 16.5, 2.5, 5, 1.25; Cut = 1.2 }
-    @{ Size = 20; Window = 1, 1, 16, 14, 1.5; Paper = 2, 5, 14, 9, 0.5; Mouse = 11, 9, 8, 10, 4; Wheel = 14, 11, 2, 3, 1; Cut = 1 }
+    @{ Size = 20; Window = 2, 2, 13, 12, 1.5; Paper = 3, 6, 11, 7, 0.5; Mouse = 10, 9, 8, 9, 4; Wheel = 13, 11, 2, 3, 1; Cut = 1 }
 )
 foreach ($icon in $titleBarActions) {
     $body = @((Get-Rect $icon.Window ' fill="url(#sky-main)"'), (Get-Rect $icon.Paper ' fill="url(#paper)"'), (Get-Rect $icon.Mouse ' fill="url(#blue-deep)"'),
@@ -539,8 +539,8 @@ function Get-BookmarkPath([double[]] $Box, [double] $Notch) {
 # and a dot in the deepest tone, and the orange bookmark. The one-color version cuts Cut wide round
 # the bookmark.
 $networkProfiles = @(
-    @{ Size = 32; Center = 16, 27; Radii = 18.5, 11.5; Turn = 45; Arc = 3.6; Dot = 16, 26.5, 3.6; Bookmark = 22, 18, 8, 13; Notch = 3; Cut = 1.2 }
-    @{ Size = 20; Center = 10, 17; Radii = 11.5, 7; Turn = 45; Arc = 2.4; Dot = 10, 16.5, 2.3; Bookmark = 14, 11, 5, 8; Notch = 2; Cut = 1 }
+    @{ Size = 32; Center = 16, 24; Radii = 18.5, 11.5; Turn = 45; Arc = 3.6; Dot = 16, 23.5, 3.6; Bookmark = 22, 15, 8, 13; Notch = 3; Cut = 1.2 }
+    @{ Size = 20; Center = 10, 13.5; Radii = 9.5, 6; Turn = 45; Arc = 1.7; Dot = 10, 13, 2.1; Bookmark = 13, 9, 5, 8; Notch = 1.8; Cut = 1 }
 )
 foreach ($icon in $networkProfiles) {
     $cx, $cy = $icon.Center
@@ -566,10 +566,10 @@ foreach ($icon in $networkProfiles) {
 # in the deepest, and the orange bookmark. The one-color version keeps the frame, the screen, its
 # light plane and the stand apart with cuts Cut wide, and cuts Cut wide round the bookmark.
 $displayProfiles = @(
-    @{ Size = 32; Frame = 1, 3, 30, 20, 2; Screen = 3, 5, 26, 16, 1; Light = 'M3 20C10 15 18 11 29 10'; Neck = 13, 23, 6, 4, 0; Foot = 8, 27, 16, 3, 1
-        Bookmark = 22, 18, 8, 13; Notch = 3; Cut = 1.2 }
-    @{ Size = 20; Frame = 1, 2, 18, 13, 1.5; Screen = 2, 3, 16, 11, 0.5; Light = 'M2 13.5C6.5 10 11 7.5 18 7'; Neck = 8, 15, 4, 2, 0; Foot = 5, 17, 10, 2, 1
-        Bookmark = 14, 11, 5, 8; Notch = 2; Cut = 1 }
+    @{ Size = 32; Frame = 1, 2, 30, 20, 2; Screen = 3, 4, 26, 16, 1; Light = 'M3 19C10 14 18 10 29 9'; Neck = 13, 22, 6, 4, 0; Foot = 8, 26, 16, 3, 1
+        Bookmark = 22, 17, 8, 13; Notch = 3; Cut = 1.2 }
+    @{ Size = 20; Frame = 2, 3, 16, 10, 1.5; Screen = 3, 4, 14, 8, 0.5; Light = 'M3 11.5C6.5 9 10.5 7 17 6.5'; Neck = 9, 13, 2, 2, 0; Foot = 6, 15, 8, 2, 1
+        Bookmark = 13, 10, 5, 8; Notch = 1.8; Cut = 1 }
 )
 foreach ($icon in $displayProfiles) {
     $sx, $sy, $sw, $sh, $sr = $icon.Screen
@@ -595,8 +595,8 @@ foreach ($icon in $displayProfiles) {
 $folderRules = @(
     @{ Size = 32; Back = 'M1 5A2 2 0 0 1 3 3H11.5L14.5 6H29A2 2 0 0 1 31 8V12H1Z'; Front = 1, 8, 30, 21, 2; Stroke = 1; Cut = 1.2
         Funnel = @(@(17.5, 17.5), @(30.5, 17.5), @(25.5, 23.5), @(25.5, 30), @(22.5, 28.5), @(22.5, 23.5)) }
-    @{ Size = 20; Back = 'M1 3.5A1.5 1.5 0 0 1 2.5 2H7L9 4H17.5A1.5 1.5 0 0 1 19 5.5V8H1Z'; Front = 1, 5, 18, 13, 1.5; Stroke = 0.8; Cut = 1
-        Funnel = @(@(10.4, 10.4), @(18.6, 10.4), @(15.6, 14), @(15.6, 18.6), @(13.4, 17.5), @(13.4, 14)) }
+    @{ Size = 20; Back = 'M2 4.5A1.5 1.5 0 0 1 3.5 3H7L9 5H16.5A1.5 1.5 0 0 1 18 6.5V8H2Z'; Front = 2, 6, 16, 12, 1.5; Stroke = 0.8; Cut = 1
+        Funnel = @(@(10.4, 10.4), @(17.6, 10.4), @(14.6, 13.6), @(14.6, 17.6), @(13.4, 17), @(13.4, 13.6)) }
 )
 foreach ($icon in $folderRules) {
     $funnel = Get-PolygonPath $icon.Funnel
@@ -609,24 +609,30 @@ foreach ($icon in $folderRules) {
     Write-Drawing "folder-rules-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $shape (Get-GrownShape $funnel $icon.Stroke)))
 }
 
-# Drive Actions, in green: a USB stick turned 45° about the icon's middle, its plug in paper with
-# two holes in the deep tone, its body in the main tone with a band in the deep tone at its top, and
-# the orange bolt at its bottom right. The one-color version keeps the plug's holes, the band and
-# the body apart, and cuts Cut wide round the bolt.
+# Drive Actions, in green: a USB stick, drawn upright about the icon's middle, then turned 45° and
+# lifted Lift, so that what shows of it on a light background, where its pale plug hardly does, is
+# centered. Its plug is in paper with two holes in the deep tone, and its body in the main tone with
+# a band in the deep tone at its top, and the orange bolt is at its bottom right. The one-color
+# version keeps the plug's holes, the band and the body apart, and cuts Cut wide round the bolt.
 $driveActions = @(
-    @{ Size = 32; Plug = 12, 2.5, 8, 7.5, 1; Holes = @(@(13.4, 4.6, 2, 2, 0), @(16.6, 4.6, 2, 2, 0)); Body = 10, 9, 12, 20.5, 2; Band = 3.5; Cut = 1.2 }
-    @{ Size = 20; Plug = 7.5, 1, 5, 4.5, 0.5; Holes = @(@(8.3, 2.2, 1.2, 1.2, 0), @(10.5, 2.2, 1.2, 1.2, 0)); Body = 6, 5, 8, 13, 1.5; Band = 2.5; Cut = 1 }
+    @{ Size = 32; Plug = 12, 2.5, 8, 7.5, 1; Holes = @(@(13.4, 4.6, 2, 2, 0), @(16.6, 4.6, 2, 2, 0)); Body = 10, 9, 12, 20.5, 2; Band = 3.5; Lift = 3; Cut = 1.2 }
+    @{ Size = 20; Plug = 8, 2.8, 4, 3.6, 0.5; Holes = @(@(8.7, 3.8, 1, 1, 0), @(10.3, 3.8, 1, 1, 0)); Body = 7, 6, 6, 10.4, 1.2; Band = 1.8; Lift = 1; Cut = 1 }
 )
 foreach ($icon in $driveActions) {
+    $lift = $icon.Lift
+    $up = { param([double[]] $Box) , @($Box[0], ($Box[1] - $lift), $Box[2], $Box[3], $Box[4]) }
+    $plugBox = & $up $icon.Plug
+    $bodyBox = & $up $icon.Body
+    $holes = @($icon.Holes | ForEach-Object { , (& $up $_) })
     $middle = $icon.Size / 2
-    $rotation = New-Object Windows.Media.RotateTransform -ArgumentList 45, $middle, $middle
-    $items = @((Get-Rect $icon.Plug ' fill="url(#paper)"'), (Get-Rect $icon.Body ' fill="url(#green-main)"'), "<path fill=`"url(#green-deep)`" d=`"$(Get-TitleBarPath $icon.Body $icon.Band)`"/>") +
-        @($icon.Holes | ForEach-Object { Get-Rect $_ ' fill="url(#green-deep)"' })
-    $body = @(Get-Group "transform=`"rotate(45 $(F $middle) $(F $middle))`"" $items) + @(Get-BoltPath $icon.Size)
+    $rotation = New-Object Windows.Media.RotateTransform -ArgumentList 45, $middle, ($middle - $lift)
+    $items = @((Get-Rect $plugBox ' fill="url(#paper)"'), (Get-Rect $bodyBox ' fill="url(#green-main)"'), "<path fill=`"url(#green-deep)`" d=`"$(Get-TitleBarPath $bodyBox $icon.Band)`"/>") +
+        @($holes | ForEach-Object { Get-Rect $_ ' fill="url(#green-deep)"' })
+    $body = @(Get-Group "transform=`"rotate(45 $(F $middle) $(F ($middle - $lift)))`"" $items) + @(Get-BoltPath $icon.Size)
     Write-Drawing "drive-actions-$($icon.Size)" $icon.Size (@(Get-Gradient 'paper') + @(Get-Gradient 'green-main') + @(Get-Gradient 'green-deep') + @(Get-Gradient 'orange')) $body
-    $plug = ConvertTo-Shape (Get-RectPath $icon.Plug)
-    foreach ($hole in $icon.Holes) { $plug = Remove-Shape $plug (ConvertTo-Shape (Get-RectPath $hole)) }
-    $stick = Join-Shape $plug (Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Body)) (Get-TitleBarCut $icon.Body $icon.Band $icon.Cut))
+    $plug = ConvertTo-Shape (Get-RectPath $plugBox)
+    foreach ($hole in $holes) { $plug = Remove-Shape $plug (ConvertTo-Shape (Get-RectPath $hole)) }
+    $stick = Join-Shape $plug (Remove-Shape (ConvertTo-Shape (Get-RectPath $bodyBox)) (Get-TitleBarCut $bodyBox $icon.Band $icon.Cut))
     $stick = [Windows.Media.PathGeometry]::CreateFromGeometry($stick)
     $stick.Transform = $rotation
     $bolt = $bolts[$icon.Size]
@@ -640,7 +646,7 @@ foreach ($icon in $driveActions) {
 # under the title bar and round the sign.
 $endApp = @(
     @{ Size = 32; Window = 1, 2, 25, 22, 2; TitleBar = 5; Sign = 23.5, 23.5, 7.1; Bar = 18, 22, 11, 3, 0.75; Stroke = 0.8; Cut = 1.2 }
-    @{ Size = 20; Window = 1, 1, 16, 14, 1.5; TitleBar = 3; Sign = 14.5, 15, 4.4; Bar = 11, 14, 7, 2, 0.5; Stroke = 0.8; Cut = 1 }
+    @{ Size = 20; Window = 2, 3, 13, 11, 1.5; TitleBar = 3; Sign = 14, 14, 3.6; Bar = 11, 13, 6, 2, 0.5; Stroke = 0.8; Cut = 1 }
 )
 foreach ($icon in $endApp) {
     $cx, $cy, $half = $icon.Sign
