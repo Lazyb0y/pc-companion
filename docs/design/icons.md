@@ -43,12 +43,12 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 ## Feature icons
 
 - One familiar object that stands for what the feature works on, drawn large: it fills almost the whole square, so the icon reads without its name.
-- At most one second object, at the bottom right, for what the feature adds or does, in a color of its own, such as an orange bolt or a red stop sign.
-- Two or three parts in all. Small details only where they name the object, such as the lines on a clipboard's paper; nothing that disappears at 20 pixels.
+- At most one second object, at the bottom right, for what the feature adds or does, in a color of its own, such as an orange bolt or a red stop sign. Input Language per App is the one exception: its window has three speech bubbles round it, one for each language, and the 文 bubble is orange, which keeps the icon warm among the blues.
+- Two or three parts in all, but for that exception. Small details only where they name the object, such as the lines on a clipboard's paper; nothing that disappears at 20 pixels.
 - Depth from tones, not lines: an object is two or three flat planes in tones of its color, deeper for parts at the back and edges, such as a title bar or a keycap's sides, and lighter for faces in front. A round object can instead be lit from the left, as the mouse of Middle-Click Paste is: each of its parts split down the middle, lighter on the left and deeper on the right. No outlines, highlights, shadows or perspective.
 - Symbols on an object, such as a pointer, an arrow, an eye or a letter, are plain white.
 - No gray, which makes an icon look dull: parts that are often gray, such as a keyboard or a monitor's frame, are in a deep tone of the icon's color, and paper and plastic are white with a tint of blue.
-- Letters, such as the A and 文 of Input Language per App, are drawn as strokes, not set in a font.
+- Letters, such as the 文, A and ع of Input Language per App, are drawn as strokes, not set in a font.
 - Features of a kind share their second object: the bolt of Clipboard Actions and Drive Actions, an action, and the bookmark of Network Profiles and Display Profiles, a saved profile.
 - Color is never the only thing that tells two icons apart: each has its own object.
 
@@ -56,7 +56,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 |---|---|---|---|
 | Hot Corners | A screen, its top-left corner lit, with a white pointer heading for it | | Green |
 | Lock Keys | A keycap with the white Caps Lock arrow and bar | | Violet |
-| Input Language per App | An app window with a white A | An orange badge with a white 文 | App blue |
+| Input Language per App | An app window | Three speech bubbles round it, with a white 文, A and ع: the 文 bubble orange, the A bubble in the main tone and the ع bubble in the deepest | App blue |
 | App Windows | Three windows stacked, deepest at the back and lightest in front | | Sky |
 | Minimize to Tray | A window with a white arrow down to the taskbar, which has a tray icon | | Green |
 | Hide Apps | A window with a white eye, crossed out | | Violet |
