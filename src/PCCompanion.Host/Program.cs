@@ -115,6 +115,8 @@ internal static partial class Program
             .AddSingleton<FeatureRunner>()
             .AddSingleton<HostCommands>()
             .AddSingleton<IHostCommands>(provider => provider.GetRequiredService<HostCommands>())
+            .AddSingleton<HostActions>()
+            .AddSingleton<IHostActions>(provider => provider.GetRequiredService<HostActions>())
             .AddSingleton<HostNotifications>()
             .AddSingleton<IHostNotifications>(provider => provider.GetRequiredService<HostNotifications>())
             .AddSingleton<UpdateCheckStore>()
@@ -174,6 +176,7 @@ internal static partial class Program
 
         // Features started before the window existed; their Settings and Exit work from now on.
         services.GetRequiredService<HostCommands>().Attach(action => window.BeginInvoke(action), tray.OpenSettings, tray.Exit, WebPageCommand.Open, ProgramCommand.Start, AppCommand.Start);
+        services.GetRequiredService<HostActions>().Attach(features, action => window.BeginInvoke(action));
 
         // The file is read on the watcher's thread, so the UI thread, which every feature shares,
         // only applies it; a read that ends after a later one isn't applied.
