@@ -16,11 +16,12 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
 {
     private readonly FakeClipboardActionsSystem _system = new();
     private readonly RecordingLogger<ClipboardActionsFeature> _logger = new();
+    private readonly ShortcutRefusals _refusals = new();
     private readonly ClipboardActionsFeature _feature;
 
     public ClipboardActionsFeatureTests()
     {
-        _feature = new ClipboardActionsFeature(_system, new FakeHostCommands(), _logger);
+        _feature = new ClipboardActionsFeature(_system, new FakeHostCommands(), _refusals, _logger);
     }
 
     public void Dispose() => _feature.Dispose();
@@ -51,19 +52,18 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
         Assert.True(_system.WaitUntil(_ => _logger.Entries.Contains((LogLevel.Debug, "Clipboard Actions' thread ended."))));
     }
 
-    // The pipe is this session's, and only these tests, one at a time, serve it.
     [Fact]
-    public async Task TheSettingsAppCanReadWhichShortcutsWindowsRefused()
+    public void RefusedShortcutsAreListedForTheSettingsAppUntilTheFeatureStops()
     {
         _system.RefusesShortcut = true;
         _feature.Apply(Section("""{ "enabled": true, "selectedText": true }"""));
-        // The status is set before the settings are logged as applied, after both shortcuts.
-        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
 
-        var snapshot = await SnapshotPipe.ReadAsync(ClipboardShortcutStatus.PipeName, TimeSpan.FromSeconds(5), ClipboardShortcutStatus.MaximumSnapshotLength, TestContext.Current.CancellationToken);
+        Assert.True(_system.WaitUntil(_ => _refusals.All.Count > 0));
+        Assert.Equal([new RefusedShortcut("clipboardActions", ClipboardActionsFeature.CopiedTextShortcut)], _refusals.All);
 
-        Assert.NotNull(snapshot);
-        Assert.Equal(new ClipboardShortcutRefusals(true, false), ClipboardShortcutStatus.FromJson(snapshot));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.True(_system.WaitUntil(_ => _refusals.All.Count == 0));
     }
 
     [Fact]

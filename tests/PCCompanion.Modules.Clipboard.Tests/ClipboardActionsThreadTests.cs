@@ -34,7 +34,7 @@ public sealed class ClipboardActionsThreadTests : IDisposable
     private readonly FakeClipboardActionsSystem _system = new();
     private readonly FakeHostCommands _commands = new();
     private readonly RecordingLogger<ClipboardActionsThreadTests> _logger = new();
-    private readonly ClipboardShortcutStatus _status = new();
+    private readonly ShortcutRefusals _refusals = new();
     private readonly List<ClipboardActionsThread> _threads = [];
 
     public void Dispose()
@@ -420,7 +420,8 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         _system.RefusesSelectionShortcut = true;
         Start(SelectTrackParcels);
 
-        Assert.True(_system.WaitUntil(_ => _status.Refused == new ClipboardShortcutRefusals(true, true)));
+        Assert.True(_system.WaitUntil(_ => _refusals.All.Count == 2));
+        Assert.Equal([new RefusedShortcut("clipboardActions", "copiedText"), new RefusedShortcut("clipboardActions", "selectedText")], _refusals.All);
         Assert.Equal(["refused", "refused selected"], _system.Events);
     }
 
@@ -432,7 +433,7 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         Assert.True(_system.WaitUntil(system => system.Events.Contains("register")));
 
         Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
-        Assert.Equal(new ClipboardShortcutRefusals(false, false), _status.Refused);
+        Assert.Empty(_refusals.All);
         Assert.DoesNotContain("refused selected", _system.Events);
     }
 
@@ -442,12 +443,12 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         _system.RefusesShortcut = true;
         _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
         var thread = Start(TrackParcels);
-        Assert.True(_system.WaitUntil(_ => _status.Refused == new ClipboardShortcutRefusals(true, false)));
+        Assert.True(_system.WaitUntil(_ => _refusals.All.Count == 1));
 
         _system.RefusesShortcut = false;
         thread.Update(TrackParcels with { OpenLinks = false });
 
-        Assert.True(_system.WaitUntil(_ => _status.Refused == new ClipboardShortcutRefusals(false, false)));
+        Assert.True(_system.WaitUntil(_ => _refusals.All.Count == 0));
         Assert.Equal(["refused", "register"], _system.Events);
         Press();
         Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
@@ -473,7 +474,7 @@ public sealed class ClipboardActionsThreadTests : IDisposable
 
     private ClipboardActionsThread Start(ClipboardActionsSettings settings, ClipboardActionsThread? previous = null)
     {
-        var thread = new ClipboardActionsThread(settings, _system, _commands, _logger, previous, _status);
+        var thread = new ClipboardActionsThread(settings, _system, _commands, _logger, previous, _refusals);
         _threads.Add(thread);
         return thread;
     }
