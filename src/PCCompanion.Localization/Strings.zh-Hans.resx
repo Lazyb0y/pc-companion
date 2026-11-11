@@ -4740,4 +4740,24 @@
     <value>另一个程序正在使用 {0}，因此 {1} 的快捷键在此不起作用。在此处更改设置时，PC Companion 会重试。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>应用的下一个窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>应用的上一个窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>将前台窗口发送到通知区域</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>选择要结束的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>显示或隐藏 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4788,4 +4788,24 @@
     <value>Ein anderes Programm verwendet {0}, daher bewirkt die Tastenkombination für {1} hier nichts. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>Nächstes Fenster der App</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>Vorheriges Fenster der App</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>Fenster im Vordergrund in den Infobereich senden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>App zum Beenden auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>{0} ein- oder ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

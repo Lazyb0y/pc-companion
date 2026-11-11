@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -101,5 +102,18 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
 
         Assert.Empty(_feature.GetMenuItems());
         _feature.ChooseMenuItem(1);
+    }
+
+    [Fact]
+    public void ItOffersSendingTheWindowInFrontToTheTrayWhileItsOn()
+    {
+        var sendToTray = Assert.Single(MinimizeToTrayFeature.OfferedActions()).Action;
+        Assert.Equal(new FeatureAction("minimizeToTray", "sendToTray"), sendToTray);
+        Assert.False(_feature.CanRun(sendToTray));
+
+        _feature.Apply(Section(Quiet));
+
+        Assert.True(_feature.CanRun(sendToTray));
+        Assert.False(_feature.CanRun(sendToTray with { ActionId = "bringAllBack" }));
     }
 }

@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -80,5 +82,41 @@ public sealed class DropDownAppsFeatureTests : IDisposable
 
         Assert.False(_feature.IsRunning);
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("can't be read", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ItOffersShowingOrHidingEachListedAppByItsAppIdOrProgram()
+    {
+        var settings = new DropDownAppsSettings
+        {
+            Apps =
+            [
+                new DropDownApp { Name = "Terminal", AppId = "Microsoft.WindowsTerminal_8wekyb3d8bbwe!App" },
+                new DropDownApp { Name = "Notes", Program = @"C:\Apps\Notes.exe" },
+                new DropDownApp { Name = "Nothing" },
+            ],
+        };
+
+        var offered = DropDownAppsFeature.OfferedActions(settings);
+
+        Assert.Equal(
+            [new FeatureAction("dropDownApps", "showOrHide", "Microsoft.WindowsTerminal_8wekyb3d8bbwe!App"), new FeatureAction("dropDownApps", "showOrHide", @"C:\Apps\Notes.exe")],
+            offered.Select(action => action.Action));
+        Assert.Contains("Terminal", offered[0].Name, StringComparison.Ordinal);
+        Assert.Contains("Notes", offered[1].Name, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ItCanShowOrHideOnlyAnAppItLists()
+    {
+        var notes = new FeatureAction("dropDownApps", "showOrHide", @"C:\Apps\Notes.exe");
+        Assert.False(_feature.CanRun(notes));
+
+        _feature.Apply(Section("""{ "enabled": true, "apps": [ { "name": "Notes", "program": "C:\\Apps\\Notes.exe", "shortcut": "None" } ] }"""));
+
+        Assert.True(_feature.CanRun(notes));
+        Assert.True(_feature.CanRun(notes with { Target = @"c:\apps\notes.EXE" }));
+        Assert.False(_feature.CanRun(notes with { Target = @"C:\Apps\Other.exe" }));
+        Assert.False(_feature.CanRun(notes with { Target = null }));
     }
 }

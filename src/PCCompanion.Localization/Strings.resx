@@ -4788,4 +4788,24 @@
     <value>Another program uses {0}, so the shortcut for {1} does nothing here. PC Companion tries again when a setting here changes.</value>
     <comment>A warning note below the Drop-down Apps list. {0} is the shortcut Windows refused, such as "Windows + Ctrl + `", and {1} the name of the app it's for.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>Next window of the app</value>
+    <comment>An action that a shortcut or mouse button can run, in the list on the Shortcuts &amp; Mouse Buttons page: the next window of the app in front comes to the front.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>Previous window of the app</value>
+    <comment>An action that a shortcut or mouse button can run: goes back to the app's previous window.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>Send the window in front to the tray</value>
+    <comment>An action that a shortcut or mouse button can run: sends the window in front to the notification area.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>Choose an app to end</value>
+    <comment>An action that a shortcut or mouse button can run: starts choosing an app to end, as End App's shortcut does.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>Show or hide {0}</value>
+    <comment>An action that a shortcut or mouse button can run: slides the app's window down, or back up. {0} is the app's name, such as Terminal.</comment>
+  </data>
 </root>

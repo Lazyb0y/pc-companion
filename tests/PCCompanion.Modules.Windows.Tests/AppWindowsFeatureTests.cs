@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.AppWindows;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -68,5 +69,22 @@ public sealed class AppWindowsFeatureTests : IDisposable
         Assert.True(_feature.IsRunning);
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("unknown", StringComparison.Ordinal));
         Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("registered", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ItOffersTheNextAndPreviousWindowWhileItsOn()
+    {
+        Assert.Equal(
+            [new FeatureAction("appWindows", "next"), new FeatureAction("appWindows", "previous")],
+            AppWindowsFeature.OfferedActions().Select(offered => offered.Action));
+        var next = new FeatureAction("appWindows", "next");
+        Assert.False(_feature.CanRun(next));
+
+        // An unknown shortcut registers none, so nothing is taken from the apps.
+        _feature.Apply(Section("""{ "enabled": true, "shortcut": 7 }"""));
+
+        Assert.True(_feature.CanRun(next));
+        Assert.True(_feature.CanRun(next with { ActionId = "previous" }));
+        Assert.False(_feature.CanRun(next with { ActionId = "last" }));
     }
 }

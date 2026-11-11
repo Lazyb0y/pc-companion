@@ -113,6 +113,10 @@ Put away every window of the app in front, or of every other app, with one short
 - Minimize to Tray sends a listed app's window to the tray when it's minimized, and a window minimized with Shift held. It leaves alone the windows Hide Apps minimizes, so they stay on the taskbar and come back with Hide others or Show all: the two features share a list, within the module, of the windows in Hide Apps' list, to which Hide Apps adds each window before it minimizes it, and Minimize to Tray logs why it left the window.
 - With Minimize to Tray off, nothing changes.
 
+## With Shortcuts & Mouse Buttons
+
+- **Hide app**, **Hide others** and **Show all hidden windows** are actions that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Hide Apps is on (`IFeatureActions`). They do what the shortcuts and the menu item do, on the feature's thread.
+
 ## With Title Bar Actions
 
 - **Hide app,** an action for a middle-click on a title bar, passes the clicked window to Hide Apps, which minimizes every window of that window's app, as Hide app does for the app in front, with the same rules and warning sound. When one of the app's windows is in front, it goes last, so Windows gives the front to the window behind them; the others are minimized without taking the front. See [With the other features](title-bar-actions.md#with-the-other-features).

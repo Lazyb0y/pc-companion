@@ -145,6 +145,10 @@ Send any app's window to an icon in the notification area instead of the taskbar
 - With Always run as administrator, or UAC off, every window goes to the tray. Running as administrator, the host's window accepts the taskbar's messages, as the PC Companion icon's window does (`TrayIcon`).
 - In the spike, a minimize posted by the program without admin rights (`WM_SYSCOMMAND` with `SC_MINIMIZE`) did minimize the window of the one with them, with UAC off. Minimize to Tray doesn't rely on it; it's checked by hand with UAC on.
 
+## With Shortcuts & Mouse Buttons
+
+- **Send the window in front to the tray** is an action that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Minimize to Tray is on (`IFeatureActions`). It does what Windows + Shift + Z does, on the feature's thread.
+
 ## With Title Bar Actions
 
 - **Minimize to tray,** an action for a middle-click on a title bar, passes the clicked window to Minimize to Tray, which sends it as its shortcut sends the window in front, with the same rules and warning sound. Its log names the way `TitleBar`. See [With the other features](title-bar-actions.md#with-the-other-features).

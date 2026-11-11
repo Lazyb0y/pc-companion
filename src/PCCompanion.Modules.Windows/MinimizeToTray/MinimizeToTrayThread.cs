@@ -65,6 +65,9 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
 
     public void BringAllBack() => Post(() => _tray?.Controller.BringAllBack());
 
+    /// <summary>Sends the window in front to the tray, as the shortcut does, on the feature's thread.</summary>
+    public void SendFront() => Post(() => _tray?.SendFront());
+
     /// <summary>
     /// Sends a window to the tray, for a click on its title bar, on the feature's thread. Returns
     /// false while the feature's thread doesn't run, as when it's starting or failed.
@@ -241,6 +244,12 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
 
         public TrayController Controller { get; }
 
+        public void SendFront()
+        {
+            var outcome = Controller.SendFront();
+            LogPressed(_owner._logger, outcome);
+        }
+
         public void Apply(MinimizeToTraySettings settings)
         {
             Controller.Apply(settings);
@@ -316,11 +325,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
                 return;
             }
 
-            _shortcut.Pressed += (_, _) => _owner.Guard(() =>
-            {
-                var outcome = Controller.SendFront();
-                LogPressed(_owner._logger, outcome);
-            });
+            _shortcut.Pressed += (_, _) => _owner.Guard(SendFront);
         }
 
         // At sign-out, restart and shutdown, the windows go back on the taskbar before their apps

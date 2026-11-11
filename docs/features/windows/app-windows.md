@@ -65,6 +65,10 @@ Press Alt and the key above Tab to switch to another window of the app in front,
 - Windows keeps the input and windows of apps running as administrator away from programs that don't run as administrator. While such an app is in front, the shortcut does nothing, unless PC Companion runs as administrator: with Always run as administrator, or with UAC off, where every program runs with the user's full rights.
 - The feature page's note says which applies. It reads whether the host runs as administrator from its process when the page opens, as the General page does, and follows the setting when no host runs or its rights can't be read.
 
+## With Shortcuts & Mouse Buttons
+
+- **Next window of the app** and **Previous window of the app** are actions that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while App Windows is on (`IFeatureActions`). They switch as Alt + the key above Tab and its Shift version do, on the host's UI thread.
+
 ## Threads
 
 - App Windows has no thread of its own: between presses it only checks the layout, and a press is short.

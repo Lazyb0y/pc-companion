@@ -29,6 +29,16 @@ public sealed record DropDownApp
     [JsonIgnore]
     public ListedApp App => new() { Name = Name, AppId = AppId, Program = Program };
 
+    /// <summary>
+    /// How an action of Shortcuts & Mouse Buttons names the app: its app ID, or its program for an
+    /// app without one.
+    /// </summary>
+    [JsonIgnore]
+    public string? Target => string.IsNullOrWhiteSpace(AppId) ? (string.IsNullOrWhiteSpace(Program) ? null : Program) : AppId;
+
+    /// <summary>Whether <paramref name="target"/> names this app, ignoring case, as app IDs and paths do.</summary>
+    public bool IsTarget(string? target) => Target is { } own && string.Equals(own, target, StringComparison.OrdinalIgnoreCase);
+
     /// <summary><paramref name="app"/>, dropping down with <paramref name="shortcut"/>.</summary>
     public static DropDownApp For(ListedApp app, DropDownShortcut shortcut)
     {

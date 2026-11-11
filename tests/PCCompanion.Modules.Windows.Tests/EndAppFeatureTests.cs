@@ -83,4 +83,17 @@ public sealed class EndAppFeatureTests : IDisposable
     {
         public bool Show(string title, string text, Action? selected) => true;
     }
+
+    [Fact]
+    public void ItOffersChoosingAnAppToEndWhileItsOn()
+    {
+        var chooseApp = Assert.Single(EndAppFeature.OfferedActions()).Action;
+        Assert.Equal(new FeatureAction("endApp", "chooseApp"), chooseApp);
+        Assert.False(_feature.CanRun(chooseApp));
+
+        _feature.Apply(Section(Quiet));
+
+        Assert.True(_feature.CanRun(chooseApp));
+        Assert.False(_feature.CanRun(chooseApp with { Target = "Notepad" }));
+    }
 }

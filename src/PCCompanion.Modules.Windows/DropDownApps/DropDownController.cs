@@ -178,6 +178,19 @@ public sealed partial class DropDownController : IDisposable
         }
     }
 
+    /// <summary>Handles a press for the listed app that <paramref name="target"/> names, by its app ID or program.</summary>
+    public void PressApp(string target)
+    {
+        for (var index = 0; index < _settings.Apps.Count; index++)
+        {
+            if (_settings.Apps[index].IsTarget(target))
+            {
+                Press(index);
+                return;
+            }
+        }
+    }
+
     /// <summary>Handles a press of the shortcut of the listed app at <paramref name="index"/>.</summary>
     public void Press(int index)
     {

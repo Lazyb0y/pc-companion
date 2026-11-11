@@ -4788,4 +4788,24 @@
     <value>Un autre programme utilise le raccourci pour {1} ({0}), il ne fait donc rien ici. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>Fenêtre suivante de l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>Fenêtre précédente de l’application</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>Envoyer la fenêtre au premier plan dans la zone de notification</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>Choisir une application à arrêter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>Afficher ou masquer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

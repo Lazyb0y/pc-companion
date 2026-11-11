@@ -129,6 +129,7 @@ Press a shortcut, click the window of an app that stopped responding, confirm, a
 
 ## With the other features
 
+- **Choose an app to end** is an action that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while End App is on (`IFeatureActions`). It starts choosing as Ctrl + Alt + Esc does, with the frame on the window in front.
 - **Windows hidden or minimized** by Minimize to Tray, Drop-down Apps or Hide Apps aren't on screen, so they can't be chosen.
 - **Ending an app with such windows** is like the app closing: Minimize to Tray removes their icons, Drop-down Apps forgets the window, and Hide Apps takes them off its list.
 

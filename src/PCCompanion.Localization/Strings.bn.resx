@@ -4788,4 +4788,24 @@
     <value>অন্য একটি প্রোগ্রাম {0} ব্যবহার করে, তাই {1}-এর শর্টকাট এখানে কিছু করে না। এখানে কোনো সেটিং বদলালে PC Companion আবার চেষ্টা করে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>অ্যাপের পরের উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>অ্যাপের আগের উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>সামনের উইন্ডোটি বিজ্ঞপ্তি এলাকায় পাঠান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>শেষ করার জন্য একটি অ্যাপ বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>{0} দেখান বা লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

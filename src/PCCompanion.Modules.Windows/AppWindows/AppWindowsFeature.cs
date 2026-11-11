@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.AppWindows;
@@ -10,7 +12,7 @@ namespace PCCompanion.Modules.Windows.AppWindows;
 /// <summary>
 /// Switches between the windows of the app in front with a shortcut. See docs/features/windows/app-windows.md.
 /// </summary>
-public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger, TimeProvider time, ShortcutRefusals refusals) : IFeature
+public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger, TimeProvider time, ShortcutRefusals refusals) : IFeature, IFeatureActions
 {
     /// <summary>The shortcut that goes to the next window, in <see cref="ShortcutRefusals"/>.</summary>
     public const string NextShortcut = "next";
@@ -39,6 +41,24 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _window is not null;
+
+    /// <summary>The actions App Windows offers to shortcuts and mouse buttons, named in the user's language.</summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions() =>
+    [
+        new(new FeatureAction(Definition.Id, NextShortcut), Strings.AppWindowsActionNext),
+        new(new FeatureAction(Definition.Id, PreviousShortcut), Strings.AppWindowsActionPrevious),
+    ];
+
+    public bool CanRun(FeatureAction action) => _window is not null && DirectionOf(action) is not null;
+
+    // App Windows runs on the host's UI thread, so the switch runs right away.
+    public void Run(FeatureAction action)
+    {
+        if (_window is not null && DirectionOf(action) is { } direction)
+        {
+            Switch(direction);
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -72,6 +92,14 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     }
 
     public void Dispose() => Stop();
+
+    private static SwitchDirection? DirectionOf(FeatureAction action) =>
+        action.FeatureId != Definition.Id || action.Target is not null ? null : action.ActionId switch
+        {
+            NextShortcut => SwitchDirection.Forward,
+            PreviousShortcut => SwitchDirection.Back,
+            _ => null,
+        };
 
     private void Start()
     {

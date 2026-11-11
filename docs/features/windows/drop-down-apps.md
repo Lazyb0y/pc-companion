@@ -236,6 +236,10 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 - **Their specs** say so too: [Hide Apps](hide-apps.md#windows-that-stay) and [Minimize to Tray](minimize-to-tray.md#windows-that-cant-go-to-the-tray).
 - **With either feature off,** nothing changes.
 
+## With Shortcuts & Mouse Buttons
+
+- **Show or hide** *app*, for each listed app, is an action that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Drop-down Apps is on (`IFeatureActions`). It names the app by its app ID, or its program for an app without one, ignoring case, and does what the app's own shortcut does, also for an app whose shortcut is None. An app that's no longer listed has no action.
+
 ## With Title Bar Actions
 
 - **Minimize,** an action for a middle-click on a title bar, hides a shown drop-down window, as minimizing one does.
