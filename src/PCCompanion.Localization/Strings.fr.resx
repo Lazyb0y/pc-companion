@@ -4840,4 +4840,16 @@
     <value>Utiliser {0}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsActionLock" xml:space="preserve">
+    <value>Verrouiller</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionTurnOffDisplays" xml:space="preserve">
+    <value>Éteindre les écrans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionScreenSaver" xml:space="preserve">
+    <value>Démarrer l’écran de veille</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

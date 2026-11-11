@@ -4792,4 +4792,16 @@
     <value>使用 {0}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsActionLock" xml:space="preserve">
+    <value>锁定</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionTurnOffDisplays" xml:space="preserve">
+    <value>关闭显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionScreenSaver" xml:space="preserve">
+    <value>启动屏幕保护程序</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
