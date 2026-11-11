@@ -83,6 +83,20 @@ public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ATriggerThatCantBeUsedIsWarnedAboutOncePerChange()
+    {
+        _feature.Apply(On(NoInput, LockOnForward));
+        _actions.RaiseChanged();
+        _feature.Apply(On(NoInput, LockOnForward));
+
+        Assert.Single(_logger.Entries, entry => entry.Message.Contains("Trigger 1", StringComparison.Ordinal));
+
+        _feature.Apply(On(LockOnForward, NoInput));
+
+        Assert.Single(_logger.Entries, entry => entry.Message.Contains("Trigger 2", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void ItsOwnActionsAreOffered()
     {
         Assert.Equal(

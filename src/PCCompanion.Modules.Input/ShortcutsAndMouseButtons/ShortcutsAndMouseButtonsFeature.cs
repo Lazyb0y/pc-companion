@@ -103,16 +103,27 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
             return;
         }
 
+        ShortcutsAndMouseButtonsSettings read;
         try
         {
-            _settings = ShortcutsAndMouseButtonsSettings.Read(settings);
+            read = ShortcutsAndMouseButtonsSettings.Read(settings);
         }
         catch (JsonException exception)
         {
             LogUnreadableSettings(_logger, exception);
-            _settings = new ShortcutsAndMouseButtonsSettings();
+            read = new ShortcutsAndMouseButtonsSettings();
         }
 
+        // Once for each change, not at each plan, which the other features' changes also bring.
+        if (read.Enabled && !read.Equals(_settings))
+        {
+            foreach (var unusable in TriggerCheck.CheckAll(read.Triggers).Where(checkedTrigger => !checkedTrigger.IsUsable))
+            {
+                LogUnusableTrigger(_logger, unusable.Index + 1, unusable.Problem);
+            }
+        }
+
+        _settings = read;
         Plan();
     }
 
@@ -143,7 +154,6 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
         {
             if (!checkedTrigger.IsUsable)
             {
-                LogUnusableTrigger(_logger, checkedTrigger.Index + 1, checkedTrigger.Problem);
                 continue;
             }
 
