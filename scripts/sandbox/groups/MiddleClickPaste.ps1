@@ -263,9 +263,18 @@ function Get-IndexAt($Element, [System.Drawing.Point] $Point) {
 }
 
 $VK_CONTROL = 0x11; $VK_SHIFT = 0x10; $VK_HOME = 0x24; $VK_RIGHT = 0x27; $VK_ESCAPE = 0x1B
+# Home and Right go as a keyboard's own keys send them, by their scan codes with the extended flag:
+# as plain virtual keys they go without it, as the number pad's 7 and 6 do.
+function Send-Key([uint16] $Key, [bool] $Up) {
+    switch ($Key) {
+        $VK_HOME { [void] [Win32]::ScanKey(0x47, $Up, $true) }
+        $VK_RIGHT { [void] [Win32]::ScanKey(0x4D, $Up, $true) }
+        default { [void] [Win32]::Key($Key, $Up) }
+    }
+}
 function Send-Keys([uint16[]] $Keys) {
-    foreach ($key in $Keys) { [void] [Win32]::Key($key, $false) }
-    for ($at = $Keys.Count - 1; $at -ge 0; $at--) { [void] [Win32]::Key($Keys[$at], $true) }
+    foreach ($key in $Keys) { Send-Key $key $false }
+    for ($at = $Keys.Count - 1; $at -ge 0; $at--) { Send-Key $Keys[$at] $true }
     Start-Sleep -Milliseconds 300
 }
 function Send-MiddleClick([int] $Wait = 300) {
@@ -338,9 +347,10 @@ function Select-PageWord([string] $Word) {
     }
     Write-Report "[NOTE] Edge's selection is '$selected', not $Word; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is in front."
 }
-# Selects the first word of a test box with the keyboard: Home, then Ctrl + Shift + Right. Once in
-# a few runs the keys left the box without a selection, three times in a row, and then worked
-# again, so it tries again when the box shows no selection.
+# Selects the first word of a test box with the keyboard: Home, then Ctrl + Shift + Right. In two
+# full rounds, before Home and Right were sent as a keyboard's own keys, every try in the group left
+# the boxes without a selection, so it tries again when a box shows none, and notes Num Lock's state
+# when three tries leave none.
 function Select-BoxStart([IntPtr] $Window, $Box) {
     $selected = ''
     for ($attempt = 1; $attempt -le 3; $attempt++) {
@@ -354,7 +364,7 @@ function Select-BoxStart([IntPtr] $Window, $Box) {
         $selected = (@($pattern.GetSelection()) | ForEach-Object { $_.GetText(-1) }) -join ''
         if ($selected) { return }
     }
-    Write-Report "[NOTE] The box in $([Win32]::WindowTitle($Window)) has no selection after Ctrl + Shift + Right; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is in front."
+    Write-Report "[NOTE] The box in $([Win32]::WindowTitle($Window)) has no selection after Ctrl + Shift + Right; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is in front, Num Lock is $(if ([Console]::NumberLock) { 'on' } else { 'off' })."
 }
 function Select-BoxAll([IntPtr] $Window, $Box) {
     Select-Window $Window
