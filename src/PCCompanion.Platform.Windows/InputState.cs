@@ -43,6 +43,18 @@ public static class InputState
     }
 
     /// <summary>
+    /// Whether an app has captured the pointer, as games and virtual machines do: hidden it, or
+    /// confined it to less than all the displays. It calls no other program.
+    /// </summary>
+    public static bool IsPointerCaptured =>
+        PointerVisibility == PointerVisibility.Hidden
+        || (PointerClip is { } clip && !clip.Contains(new Rectangle(
+            PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_XVIRTUALSCREEN),
+            PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_YVIRTUALSCREEN),
+            PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXVIRTUALSCREEN),
+            PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYVIRTUALSCREEN))));
+
+    /// <summary>
     /// Whether the pointer shows Windows' own text pointer, the I-beam, as apps do over text the
     /// user can select or type in. It's read from Windows, without asking any app; an app that draws
     /// an I-beam of its own doesn't count.
