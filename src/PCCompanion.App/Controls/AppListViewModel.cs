@@ -44,6 +44,12 @@ public sealed partial class AppListViewModel : ObservableObject
 
     public ObservableCollection<ListedAppItem> Items { get; } = [];
 
+    /// <summary>
+    /// Shows the Running app dialog in place of the dialog the list is in, since WinUI shows one
+    /// dialog at a time; null for a list on a page, which shows it itself.
+    /// </summary>
+    public Func<ContentDialog, Task<ContentDialogResult>>? ShowDialog { get; set; }
+
     public bool IsEmpty => Items.Count == 0;
 
     /// <summary>Whether each app's row has a list to choose what it gets.</summary>
