@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
-using static PCCompanion.Modules.Windows.Tests.FakeShortcutEnvironment;
+using static PCCompanion.Platform.Windows.Tests.FakeShortcutEnvironment;
 
-namespace PCCompanion.Modules.Windows.Tests;
+namespace PCCompanion.Platform.Windows.Tests;
 
 public sealed class ShortcutKeeperTests : IDisposable
 {

@@ -10,7 +10,6 @@ using PCCompanion.App.Controls;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
-using PCCompanion.Modules.Windows;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Platform.Windows;
 

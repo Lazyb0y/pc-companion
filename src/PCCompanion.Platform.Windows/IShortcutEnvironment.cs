@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// What <see cref="ShortcutKeeper"/> reads from Windows and registers there, so tests can supply it instead.

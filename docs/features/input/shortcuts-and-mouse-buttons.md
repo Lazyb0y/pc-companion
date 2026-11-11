@@ -106,7 +106,7 @@ public interface IHostActions
 ### Keys by position
 
 - **Stored by position,** with the names of the web's `KeyboardEvent.code`, such as `KeyH`, `Digit1`, `Backquote` and `F13`, which stand for scan codes.
-- **Registered in the layout of the window in front:** the host maps each key to its virtual key there (`MapVirtualKeyEx`) and registers the shortcut again when it changes, as App Windows does for the key above Tab. `ShortcutKeeper` does this; it moves from Window Management to `PCCompanion.Platform.Windows`, so both modules use it, and takes any key, not only the key above Tab and the digits.
+- **Registered in the layout of the window in front:** the host maps each key to its virtual key there (`MapVirtualKeyEx`) and registers the shortcut again when it changes, as App Windows does for the key above Tab. `ShortcutKeeper`, in `PCCompanion.Platform.Windows` so that both modules use it, does this, and takes any key, not only the key above Tab and the digits.
 - **Keys that are the same in every layout,** such as F13 or the arrows, need no checks; while the user's layouts all agree on a shortcut's keys, no timer runs, as for App Windows.
 - **Shown as the current layout writes them,** such as "Ctrl + Alt + ;" in US English and "Ctrl + Alt + Ö" in German, for the same key. Named keys, such as Esc, have their own strings.
 
