@@ -122,7 +122,9 @@ Select text in any app, then middle-click in a text box: the text goes in where 
   - **Rich edit boxes:** their `EM_CHARFROMPOS` takes a pointer to memory, which Windows can't pass to another app, so UI Automation places the cursor instead (`RangeFromPoint` and `Select`). The same goes for plain boxes with more than 65,535 characters, since `EM_CHARFROMPOS` gives 16-bit positions.
   - For a window that isn't per-monitor DPI aware, the point is converted to the window's own pixels first (`PhysicalToLogicalPointForPerMonitorDPI`), as Title Bar Actions does.
 - **The text goes in** with `EM_REPLACESEL`, marked so it can be undone. Windows copies the text into the app's process, as it does for every message below `WM_USER`.
-- **No waiting:** each message is sent with `SendMessageTimeout` and `SMTO_ABORTIFHUNG`, at most 500 ms each, so an app that stopped responding gets nothing, now or later.
+- **No waiting:** each message is sent with `SendMessageTimeout` and `SMTO_ABORTIFHUNG`, so an app that stopped responding gets nothing, now or later. Windows drops a message the app hasn't taken when the wait is over.
+  - **Placing the text cursor:** at most 500 ms for each message.
+  - **`EM_REPLACESEL`:** at most 5 seconds. Long text, or the first text that needs fonts the app hasn't loaded, can take the box longer than 500 ms, and once the app handles the message, the text goes in even after the wait is over. A shorter wait would say that text that went in didn't.
 - **Then the window comes to the front,** and the box gets the keyboard focus (`SetForegroundWindow`, then UI Automation's `SetFocus`).
   - UI Automation focuses a box that has a window of its own by making that window, a child window, the foreground window, a moment later (Sandbox checks).
   - So for 300 ms the front is watched, and when it's the box's window, the top-level window is brought to the front again. The box keeps the focus.

@@ -44,15 +44,26 @@ public enum EditBoxResult
 /// <summary>
 /// Puts text into Windows' own text boxes with window messages, as "Windows' own text boxes" in
 /// docs/features/clipboard/middle-click-paste.md says. Each message is sent with
-/// <c>SendMessageTimeout</c> and <c>SMTO_ABORTIFHUNG</c>, at most <see cref="MessageTimeout"/>, and
-/// a message that fails stops the rest, so an app that stopped responding gets nothing, now or
-/// later. Windows copies the text into the app's process, as it does for every message below
-/// <c>WM_USER</c>. The calls wait for the app, so make them off the host's UI thread.
+/// <c>SendMessageTimeout</c> and <c>SMTO_ABORTIFHUNG</c>, at most <see cref="MessageTimeout"/>, or
+/// <see cref="InsertTimeout"/> for the text itself, and a message that fails stops the rest, so an
+/// app that stopped responding gets nothing, now or later. Windows copies the text into the app's
+/// process, as it does for every message below <c>WM_USER</c>. The calls wait for the app, so make
+/// them off the host's UI thread.
 /// </summary>
 public static class EditBoxes
 {
-    /// <summary>How long each message waits for the box's app.</summary>
+    /// <summary>How long each message that places the text cursor waits for the box's app.</summary>
     public static readonly TimeSpan MessageTimeout = TimeSpan.FromMilliseconds(500);
+
+    /// <summary>
+    /// How long the message that puts the text in waits for the box's app. Long text, or the first
+    /// text that needs fonts the app hasn't loaded, can take longer than <see cref="MessageTimeout"/>,
+    /// and once the app handles the message, the text goes in even after the wait is over: a short
+    /// wait would say that text that went in didn't. The app answered the messages just before it,
+    /// and Windows lets a message the app hasn't taken yet go when the wait is over, so an app that
+    /// stopped responding still gets nothing.
+    /// </summary>
+    public static readonly TimeSpan InsertTimeout = TimeSpan.FromSeconds(5);
 
     /// <summary>The longest text a plain box may have for its text cursor to be placed by message: <c>EM_CHARFROMPOS</c> gives 16-bit positions.</summary>
     public const int MaxPlacedLength = 65_535;
@@ -134,7 +145,7 @@ public static class EditBoxes
 
         fixed (char* characters = text)
         {
-            return Send(box, PInvoke.EM_REPLACESEL, 1, (nint)characters, out _) ? EditBoxResult.Inserted : EditBoxResult.NotResponding;
+            return Send(box, PInvoke.EM_REPLACESEL, 1, (nint)characters, out _, InsertTimeout) ? EditBoxResult.Inserted : EditBoxResult.NotResponding;
         }
     }
 
@@ -161,10 +172,10 @@ public static class EditBoxes
         }
     }
 
-    private static bool Send(nint box, uint message, nuint wParam, nint lParam, out nint result)
+    private static bool Send(nint box, uint message, nuint wParam, nint lParam, out nint result, TimeSpan? timeout = null)
     {
         var sent = PInvoke.SendMessageTimeout(new HWND(box), message, wParam, lParam,
-            SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_ABORTIFHUNG, (uint)MessageTimeout.TotalMilliseconds, out var answer);
+            SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_ABORTIFHUNG, (uint)(timeout ?? MessageTimeout).TotalMilliseconds, out var answer);
         result = (nint)answer;
         return sent != 0;
     }

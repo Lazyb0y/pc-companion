@@ -57,6 +57,18 @@ public sealed class EditBoxesTests
         Assert.Equal("alpha! beta", box.Text);
     }
 
+    // Once the app handles the message, the text goes in however long it takes, so the wait for it
+    // must not end first and say the box didn't answer.
+    [Fact]
+    public void ABoxThatTakesAWhileToPutTheTextInSaysItWentIn()
+    {
+        using var box = new EditBoxThread("alpha beta", insertDelay: EditBoxes.MessageTimeout * 2);
+        box.Select(5);
+
+        Assert.Equal(EditBoxResult.Inserted, EditBoxes.InsertAtCursor(box.Handle, "!"));
+        Assert.Equal("alpha! beta", box.Text);
+    }
+
     [Fact]
     public void ABoxThatDoesntAnswerGetsNothingNowOrLater()
     {
@@ -81,9 +93,12 @@ public sealed class EditBoxesTests
         Assert.False(TopLevelWindows.Answers(box.Handle, TimeSpan.FromMilliseconds(200)));
     }
 
-    // A hidden Edit box with its own thread and message loop.
+    // A hidden Edit box with its own thread and message loop. With an insert delay, the box waits
+    // that long before it handles EM_REPLACESEL, as a box with long text can.
     private sealed class EditBoxThread : IDisposable
     {
+        private const int WindowProcedure = -4; // GWLP_WNDPROC
+        private const uint ReplaceSelection = 0x00C2; // EM_REPLACESEL
         private const uint GetTextLength = 0x000E; // WM_GETTEXTLENGTH
         private const uint GetText = 0x000D; // WM_GETTEXT
         private const uint SetSelection = 0x00B1; // EM_SETSEL
@@ -95,10 +110,12 @@ public sealed class EditBoxesTests
         private readonly Thread _thread;
         private readonly ManualResetEventSlim _ready = new();
         private uint _threadId;
+        private WindowProc? _slowProcedure;
+        private nint _editProcedure;
 
-        public EditBoxThread(string text)
+        public EditBoxThread(string text, TimeSpan? insertDelay = null)
         {
-            _thread = new Thread(() => Run(text)) { IsBackground = true, Name = "Test Edit box" };
+            _thread = new Thread(() => Run(text, insertDelay)) { IsBackground = true, Name = "Test Edit box" };
             _thread.Start();
             _ready.Wait(TimeSpan.FromSeconds(5));
             Assert.NotEqual(nint.Zero, Handle);
@@ -145,10 +162,24 @@ public sealed class EditBoxesTests
             _ready.Dispose();
         }
 
-        private void Run(string text)
+        private void Run(string text, TimeSpan? insertDelay)
         {
             _threadId = GetCurrentThreadId();
             Handle = CreateWindowExW(0, "EDIT", text, 0x00CF0000, 100, 100, 400, 60, 0, 0, 0, 0);
+            if (insertDelay is { } delay)
+            {
+                _slowProcedure = (window, message, wParam, lParam) =>
+                {
+                    if (message == ReplaceSelection)
+                    {
+                        Thread.Sleep(delay);
+                    }
+
+                    return CallWindowProcW(_editProcedure, window, message, wParam, lParam);
+                };
+                _editProcedure = SetWindowLongPtrW(Handle, WindowProcedure, Marshal.GetFunctionPointerForDelegate(_slowProcedure));
+            }
+
             _ready.Set();
             while (GetMessageW(out var message, 0, 0, 0) > 0)
             {
@@ -176,6 +207,14 @@ public sealed class EditBoxesTests
             public Point Point;
             public uint Private;
         }
+
+        private delegate nint WindowProc(nint window, uint message, nint wParam, nint lParam);
+
+        [DllImport("user32.dll")]
+        private static extern nint SetWindowLongPtrW(nint window, int index, nint value);
+
+        [DllImport("user32.dll")]
+        private static extern nint CallWindowProcW(nint procedure, nint window, uint message, nint wParam, nint lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern nint CreateWindowExW(uint exStyle, string className, string title, uint style, int x, int y, int width, int height, nint parent, nint menu, nint instance, nint parameter);
