@@ -9,7 +9,8 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Keeps chosen clicks and wheel moves in an area of the screen from the apps under the pointer,
+/// Keeps chosen clicks (the middle, Back and Forward buttons) and wheel moves in an area of the
+/// screen from the apps under the pointer,
 /// with one low-level mouse hook that every feature shares. Windows waits for a low-level hook at
 /// every pointer event in every program, and removes one that's slow without telling it, so the
 /// hook runs on a thread of its own, is set only while some hook has a claim, and only compares
@@ -33,8 +34,8 @@ public sealed class PointerHook : IDisposable
     }
 
     /// <summary>
-    /// Raised on the window's thread for each middle-click or wheel notch this hook's claim kept.
-    /// The release of a kept middle-click is kept too, without an event. Guard the handler.
+    /// Raised on the window's thread for each click or wheel notch this hook's claim kept. The
+    /// release of a kept click is kept too, without an event. Guard the handler.
     /// </summary>
     public event EventHandler<KeptPointerInputEventArgs>? Kept;
 
@@ -50,7 +51,7 @@ public sealed class PointerHook : IDisposable
     public static bool IsSet => Registry.IsSet;
 
     /// <summary>
-    /// What the hook did with the middle-click or wheel notch stamped <paramref name="time"/>, as
+    /// What the hook did with the click or wheel notch stamped <paramref name="time"/>, as
     /// <see cref="PointerInputEventArgs.Time"/> reports it: kept, let through, or never seen. Raw
     /// input can report an event before the hook has seen it, so ask a moment later.
     /// </summary>
@@ -105,6 +106,9 @@ public sealed class PointerHook : IDisposable
         private const string WindowClassName = "PCCompanion.PointerHook";
 
         private static readonly Lock Gate = new();
+
+        // Read in the hook, only for a claim that needs it; neither calls another program.
+        private static readonly IPointerPlace Place = new WindowsPointerPlace();
 
         // Replaced, never changed, so the hook reads a whole set on its thread without a lock.
         private static Claims s_claims = Claims.None;
@@ -222,6 +226,8 @@ public sealed class PointerHook : IDisposable
                     return;
                 }
 
+                // The first call of WindowFromPoint took 3 to 5 ms in the spike, too long for the hook.
+                _ = Place.WindowAt(InputState.PointerPosition ?? Point.Empty);
                 _hook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_MOUSE_LL, _procedure, PInvoke.GetModuleHandle((string?)null), 0);
                 if (_hook.IsInvalid)
                 {
@@ -311,7 +317,7 @@ public sealed class PointerHook : IDisposable
             // Windows waits for this at every pointer event, so it only compares and posts.
             private unsafe LRESULT OnHook(int code, WPARAM wParam, LPARAM lParam)
             {
-                if (code >= 0 && Input((uint)wParam.Value) is { } input)
+                if (code >= 0 && Input((uint)wParam.Value, ((MSLLHOOKSTRUCT*)lParam.Value)->mouseData) is { } input)
                 {
                     var keep = false;
                     try
@@ -337,11 +343,11 @@ public sealed class PointerHook : IDisposable
                 var claims = Volatile.Read(ref s_claims);
                 var point = new Point(data->pt.X, data->pt.Y);
                 var keys = HeldKeys();
-                var decision = Keeper.Decide(claims.List, input, point, keys, data->time);
+                var decision = Keeper.Decide(claims.List, input, point, keys, data->time, Place);
                 if (decision.Claim >= 0)
                 {
                     var isWheel = input == PointerInput.Wheel;
-                    var trigger = new PointerTrigger(isWheel ? PointerButton.Wheel : PointerButton.Middle, keys);
+                    var trigger = new PointerTrigger(ButtonOf(input), keys);
                     var wheelDelta = isWheel ? unchecked((short)(data->mouseData >> 16)) : (short)0;
                     claims.Owners[decision.Claim].Report(new KeptPointerInputEventArgs(trigger, point, wheelDelta, data->time));
                 }
@@ -349,12 +355,25 @@ public sealed class PointerHook : IDisposable
                 return decision.Keep;
             }
 
-            private static PointerInput? Input(uint message) => message switch
+            // The X buttons say which in the high word of mouseData: 1 for Back, 2 for Forward.
+            private static PointerInput? Input(uint message, uint mouseData) => (message, mouseData >> 16) switch
             {
-                PInvoke.WM_MBUTTONDOWN => PointerInput.MiddleDown,
-                PInvoke.WM_MBUTTONUP => PointerInput.MiddleUp,
-                PInvoke.WM_MOUSEWHEEL => PointerInput.Wheel,
+                (PInvoke.WM_MBUTTONDOWN, _) => PointerInput.MiddleDown,
+                (PInvoke.WM_MBUTTONUP, _) => PointerInput.MiddleUp,
+                (PInvoke.WM_MOUSEWHEEL, _) => PointerInput.Wheel,
+                (PInvoke.WM_XBUTTONDOWN, 1) => PointerInput.BackDown,
+                (PInvoke.WM_XBUTTONUP, 1) => PointerInput.BackUp,
+                (PInvoke.WM_XBUTTONDOWN, 2) => PointerInput.ForwardDown,
+                (PInvoke.WM_XBUTTONUP, 2) => PointerInput.ForwardUp,
                 _ => null,
+            };
+
+            private static PointerButton ButtonOf(PointerInput input) => input switch
+            {
+                PointerInput.MiddleDown or PointerInput.MiddleUp => PointerButton.Middle,
+                PointerInput.BackDown or PointerInput.BackUp => PointerButton.Back,
+                PointerInput.ForwardDown or PointerInput.ForwardUp => PointerButton.Forward,
+                _ => PointerButton.Wheel,
             };
 
             private static PointerKeys HeldKeys() =>
@@ -362,6 +381,13 @@ public sealed class PointerHook : IDisposable
                 | (InputState.IsModifierHeld(ModifierKey.Control) ? PointerKeys.Control : PointerKeys.None)
                 | (InputState.IsModifierHeld(ModifierKey.Alt) ? PointerKeys.Alt : PointerKeys.None)
                 | (InputState.IsModifierHeld(ModifierKey.Windows) ? PointerKeys.Windows : PointerKeys.None);
+        }
+
+        private sealed class WindowsPointerPlace : IPointerPlace
+        {
+            public nint WindowAt(Point point) => WindowHitTest.Root(WindowHitTest.WindowAt(point));
+
+            public bool IsPointerCaptured() => InputState.IsPointerCaptured;
         }
 
         // Each hook's claim, in the order they came, so an earlier claim wins where two overlap.
@@ -399,7 +425,7 @@ public sealed class PointerHook : IDisposable
     }
 }
 
-/// <summary>A middle-click or wheel notch that a <see cref="PointerHook"/>'s claim kept from the apps.</summary>
+/// <summary>A click or wheel notch that a <see cref="PointerHook"/>'s claim kept from the apps.</summary>
 /// <param name="trigger">The click or wheel move, with the keys held.</param>
 /// <param name="point">Where the pointer was, in physical pixels.</param>
 /// <param name="wheelDelta">How far the wheel turned, positive away from the user, 120 a notch; 0 for a click.</param>

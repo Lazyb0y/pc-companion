@@ -408,6 +408,8 @@ MSLLHOOKSTRUCT
 WM_MBUTTONDOWN
 WM_MBUTTONUP
 WM_MOUSEWHEEL
+WM_XBUTTONDOWN
+WM_XBUTTONUP
 WindowFromPoint
 GetAwarenessFromDpiAwarenessContext
 PhysicalToLogicalPointForPerMonitorDPI
