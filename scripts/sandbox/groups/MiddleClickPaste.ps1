@@ -338,13 +338,23 @@ function Select-PageWord([string] $Word) {
     }
     Write-Report "[NOTE] Edge's selection is '$selected', not $Word; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is in front."
 }
-# Selects the first word of a test box with the keyboard: Home, then Ctrl + Shift + Right.
+# Selects the first word of a test box with the keyboard: Home, then Ctrl + Shift + Right. Once in
+# a few runs the keys left the box without a selection, three times in a row, and then worked
+# again, so it tries again when the box shows no selection.
 function Select-BoxStart([IntPtr] $Window, $Box) {
-    Select-Window $Window
-    $Box.SetFocus()
-    Start-Sleep -Milliseconds 300
-    Send-Keys @($VK_HOME)
-    Send-Keys @($VK_CONTROL, $VK_SHIFT, $VK_RIGHT)
+    $selected = ''
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        Select-Window $Window
+        $Box.SetFocus()
+        Start-Sleep -Milliseconds 300
+        Send-Keys @($VK_HOME)
+        Send-Keys @($VK_CONTROL, $VK_SHIFT, $VK_RIGHT)
+        $pattern = Get-TextPattern $Box
+        if ($null -eq $pattern) { return }
+        $selected = (@($pattern.GetSelection()) | ForEach-Object { $_.GetText(-1) }) -join ''
+        if ($selected) { return }
+    }
+    Write-Report "[NOTE] The box in $([Win32]::WindowTitle($Window)) has no selection after Ctrl + Shift + Right; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is in front."
 }
 function Select-BoxAll([IntPtr] $Window, $Box) {
     Select-Window $Window
