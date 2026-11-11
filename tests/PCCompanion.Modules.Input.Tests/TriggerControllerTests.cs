@@ -197,6 +197,165 @@ public sealed class TriggerControllerTests : IDisposable
         Assert.Empty(_system.Events);
     }
 
+    [Fact]
+    public void MouseButtonsAreClaimedEverywhereWithTheirKeysExceptWhileThePointerIsCaptured()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back), Button(1, HideOthers with { ActionId = "hideApp" }, TriggerButton.Middle, HotKeyModifiers.Windows)));
+
+        var claim = _system.Claimed!;
+        Assert.True(claim.Triggers.SetEquals([BackAlone, new PointerTrigger(PointerButton.Middle, PointerKeys.Windows)]));
+        Assert.True(claim.NotWhileCaptured);
+        Assert.True(claim.Area.Contains(-3000, 2000));
+        Assert.Empty(_system.Registered);
+    }
+
+    [Fact]
+    public void AKeptClickRunsItsActionAfterTheUnassignedKey()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+
+        _controller.Kept(BackAlone);
+        _controller.Kept(new PointerTrigger(PointerButton.Back, PointerKeys.Control));
+
+        Assert.Equal(["mask", "run hideApps.hideOthers"], _system.Events);
+    }
+
+    [Fact]
+    public void WhileTheWindowInFrontIsFullScreenNoButtonIsClaimed()
+    {
+        _system.FullScreen = true;
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+        Assert.Null(_system.Claimed);
+        Assert.True(_system.Watching);
+
+        _system.FullScreen = false;
+        _controller.OnForeground();
+
+        Assert.NotNull(_system.Claimed);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("paused", StringComparison.Ordinal));
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("resumed", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void WithThePauseOffFullScreenIsntChecked()
+    {
+        _system.FullScreen = true;
+
+        _controller.Apply(new TriggerPlan([Button(0, HideOthers, TriggerButton.Back)], PauseMouseButtonsInFullScreen: false));
+        _controller.OnForeground();
+
+        Assert.NotNull(_system.Claimed);
+        Assert.Equal(0, _system.FullScreenReads);
+        Assert.False(_system.Watching);
+    }
+
+    [Fact]
+    public void MovesOfTheWindowInFrontAreCheckedOnceAMomentLater()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+        var reads = _system.FullScreenReads;
+        _system.FullScreen = true;
+
+        _controller.FrontMoved();
+        _controller.FrontMoved();
+        Assert.NotNull(_system.Claimed);
+        _clock.Advance(TriggerController.MoveCheckDelay);
+
+        Assert.Null(_system.Claimed);
+        Assert.Equal(reads + 1, _system.FullScreenReads);
+    }
+
+    [Fact]
+    public void TheWindowsOfAButtonsListedAppsAreLeftOutOfItsClaim()
+    {
+        _system.Taskbar.Add((5, Game));
+        _system.Taskbar.Add((6, new AppOfWindow(null, null, @"C:\Windows\notepad.exe", 9)));
+
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back, HotKeyModifiers.None, ListedGame)));
+        Assert.True(_system.Claimed!.ExceptIn[BackAlone].SetEquals([5]));
+
+        _system.FrontWindowHandle = 8;
+        _system.AppsOfWindows[8] = Game;
+        _controller.OnForeground();
+        Assert.True(_system.Claimed!.ExceptIn[BackAlone].SetEquals([5, 8]));
+
+        _system.Closed.Add(5);
+        _controller.OnForeground();
+        Assert.True(_system.Claimed!.ExceptIn[BackAlone].SetEquals([8]));
+        Assert.Equal(1, _system.TaskbarReads);
+    }
+
+    [Fact]
+    public void AnUnchangedClaimIsntMadeAgain()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+
+        _controller.OnForeground();
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+
+        Assert.Equal(1, _system.Claims);
+    }
+
+    [Fact]
+    public void AClickTheHookNeverSawSetsItAgainAMomentLater()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+        _system.Outcomes[77] = PointerInputOutcome.NotSeen;
+        _system.Outcomes[78] = PointerInputOutcome.NotSeen;
+
+        _controller.RawPress(PointerButton.Back, 77);
+        _controller.RawPress(PointerButton.Forward, 78);
+        Assert.Empty(_system.Events);
+        _clock.Advance(TriggerController.HookCheckDelay);
+
+        Assert.Equal(["hook again"], _system.Events);
+        Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("removed the pointer hook", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AClickTheHookSawChangesNothing()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+
+        _controller.RawPress(PointerButton.Back, 77);
+        _clock.Advance(TriggerController.HookCheckDelay);
+
+        Assert.Empty(_system.Events);
+    }
+
+    [Fact]
+    public void TurningOffTheDisplaysFromAButtonWaitsUntilItsReleased()
+    {
+        _controller.Apply(Plan(Button(0, Own(ShortcutsAndMouseButtonsFeature.TurnOffDisplaysAction), TriggerButton.Forward)));
+        _system.ButtonHeld = true;
+
+        _controller.Kept(new PointerTrigger(PointerButton.Forward, PointerKeys.None));
+        _clock.Advance(TimeSpan.FromSeconds(1));
+        Assert.Equal(["mask"], _system.Events);
+
+        _system.ButtonHeld = false;
+        _clock.Advance(TriggerController.ReleasePoll);
+        _clock.Advance(TriggerController.AfterRelease);
+
+        Assert.Equal(["mask", "displays off"], _system.Events);
+    }
+
+    [Fact]
+    public void DisposingTakesTheClaimBackAndStopsWatching()
+    {
+        _controller.Apply(Plan(Button(0, HideOthers, TriggerButton.Back)));
+
+        _controller.Dispose();
+
+        Assert.Null(_system.Claimed);
+        Assert.False(_system.Watching);
+    }
+
+    private static readonly PointerTrigger BackAlone = new(PointerButton.Back, PointerKeys.None);
+
+    private static PlannedTrigger Button(int index, FeatureAction action, TriggerButton button, HotKeyModifiers modifiers = HotKeyModifiers.None, params ListedApp[] excluded) =>
+        new(index, action, new TriggerInput(modifiers, null, button), excluded);
+
     private static FeatureAction Own(string actionId) => new(ShortcutsAndMouseButtonsFeature.Definition.Id, actionId);
 
     private static PlannedTrigger Shortcut(int index, FeatureAction action, HotKeyModifiers modifiers, string key, params ListedApp[] excluded) =>

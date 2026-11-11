@@ -11,13 +11,13 @@ using static PCCompanion.Testing.TestJson;
 
 namespace PCCompanion.Modules.Input.Tests;
 
-// Starting the feature creates its own hidden window on a thread of its own. The tests use mouse
-// buttons, which this feature doesn't take yet, and a shortcut whose action can't run, so nothing
-// registers a shortcut.
+// Starting the feature creates its own hidden window on a thread of its own, which claims its mouse
+// buttons in the shared pointer hook. They're held with all four modifier keys, which nobody does,
+// and the shortcut's action can't run, so nothing registers a shortcut. Raw input is a stand-in.
 public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
 {
-    private const string HideOthersOnBack = """{ "action": { "feature": "hideApps", "id": "hideOthers" }, "mouseButton": { "button": "Back", "modifiers": [] } }""";
-    private const string LockOnForward = """{ "action": { "feature": "shortcutsAndMouseButtons", "id": "lock" }, "mouseButton": { "button": "Forward", "modifiers": [] } }""";
+    private const string HideOthersOnBack = """{ "action": { "feature": "hideApps", "id": "hideOthers" }, "mouseButton": { "button": "Back", "modifiers": [ "Control", "Alt", "Shift", "Windows" ] } }""";
+    private const string LockOnForward = """{ "action": { "feature": "shortcutsAndMouseButtons", "id": "lock" }, "mouseButton": { "button": "Forward", "modifiers": [ "Control", "Alt", "Shift", "Windows" ] } }""";
     private const string UseOfficeOnCtrlAltO = """{ "action": { "feature": "networkProfiles", "id": "use", "target": "Office" }, "shortcut": { "modifiers": [ "Control", "Alt" ], "key": "KeyO" } }""";
     private const string NoInput = """{ "action": { "feature": "hideApps", "id": "hideApp" } }""";
 
@@ -25,10 +25,16 @@ public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
     private readonly ShortcutRefusals _refusals = new();
     private readonly RecordingLogger<ShortcutsAndMouseButtonsFeature> _logger = new();
     private readonly ShortcutsAndMouseButtonsFeature _feature;
+    private int _rawWatches;
+    private int _rawWatchesEnded;
 
     public ShortcutsAndMouseButtonsFeatureTests()
     {
-        _feature = new ShortcutsAndMouseButtonsFeature(_actions, _refusals, TimeProvider.System, _logger);
+        _feature = new ShortcutsAndMouseButtonsFeature(_actions, _refusals, TimeProvider.System, _logger, _ =>
+        {
+            _rawWatches++;
+            return new Ending(() => _rawWatchesEnded++);
+        });
     }
 
     public void Dispose() => _feature.Dispose();
@@ -105,6 +111,21 @@ public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void RawInputIsWatchedWhileAMouseButtonIsPlanned()
+    {
+        _feature.Apply(On(LockOnForward));
+        _feature.Apply(On(LockOnForward, NoInput));
+        Assert.Equal((1, 0), (_rawWatches, _rawWatchesEnded));
+
+        _feature.Apply(On(UseOfficeOnCtrlAltO));
+        Assert.Equal((1, 1), (_rawWatches, _rawWatchesEnded));
+
+        _feature.Apply(On(LockOnForward));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+        Assert.Equal((2, 2), (_rawWatches, _rawWatchesEnded));
+    }
+
+    [Fact]
     public void TurningItOffStopsItAndClearsThePlan()
     {
         _feature.Apply(On(LockOnForward));
@@ -129,6 +150,11 @@ public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
 
     private static System.Text.Json.JsonElement On(params string[] triggers) =>
         Section($$"""{ "enabled": true, "triggers": [{{string.Join(",", triggers)}}] }""");
+
+    private sealed class Ending(Action ended) : IDisposable
+    {
+        public void Dispose() => ended();
+    }
 
     private sealed class FakeHostActions : IHostActions
     {

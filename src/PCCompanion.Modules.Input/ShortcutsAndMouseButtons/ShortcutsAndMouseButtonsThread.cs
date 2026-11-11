@@ -39,9 +39,12 @@ public sealed partial class ShortcutsAndMouseButtonsThread : MessageLoopThread<T
         Start();
     }
 
+    /// <summary>Raw input reported a click, which the thread checks the shared pointer hook saw. Call it from any thread.</summary>
+    public void RawPress(PointerButton button, uint time) => Post(() => _controller?.RawPress(button, time));
+
     protected override IDisposable? Open(MessageWindow window)
     {
-        var system = new WindowsTriggerSystem(window, _actions, _refusals, ShortcutsAndMouseButtonsFeature.Definition.Id);
+        var system = new WindowsTriggerSystem(window, _actions, _refusals, ShortcutsAndMouseButtonsFeature.Definition.Id, new Events(this));
         var controller = new TriggerController(system, new WindowsShortcutEnvironment(window), _time, action => window.BeginInvoke(() => Guard(action)), _logger);
         WinEventHook foreground;
         try
@@ -52,12 +55,13 @@ public sealed partial class ShortcutsAndMouseButtonsThread : MessageLoopThread<T
         catch
         {
             controller.Dispose();
+            system.Dispose();
             throw;
         }
 
         foreground.Raised += (_, _) => Guard(controller.OnForeground);
         _controller = controller;
-        return new Opened(controller, foreground);
+        return new Opened(controller, foreground, system);
     }
 
     protected override void Apply(TriggerPlan settings) => _controller!.Apply(settings);
@@ -82,13 +86,24 @@ public sealed partial class ShortcutsAndMouseButtonsThread : MessageLoopThread<T
     [LoggerMessage(Level = LogLevel.Error, Message = "Shortcuts & Mouse Buttons failed, so it's stopped until PC Companion restarts.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
 
-    // Removes the shortcuts and the hook as the message loop ends.
-    private sealed class Opened(TriggerController controller, WinEventHook foreground) : IDisposable
+    // Removes the shortcuts, the claim and the hooks as the message loop ends.
+    private sealed class Opened(TriggerController controller, WinEventHook foreground, WindowsTriggerSystem system) : IDisposable
     {
         public void Dispose()
         {
             foreground.Dispose();
             controller.Dispose();
+            system.Dispose();
         }
+    }
+
+    // What the system hears of, on this thread, passed to the controller inside the thread's error boundary.
+    private sealed class Events(ShortcutsAndMouseButtonsThread thread) : ITriggerEvents
+    {
+        public void Kept(PointerTrigger trigger) => thread.Guard(() => thread._controller?.Kept(trigger));
+
+        public void FrontMoved() => thread.Guard(() => thread._controller?.FrontMoved());
+
+        public void HookFailed(Exception exception) => thread.Guard(() => thread._controller?.HookFailed(exception));
     }
 }
