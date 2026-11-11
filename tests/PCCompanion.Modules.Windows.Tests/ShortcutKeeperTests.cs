@@ -152,6 +152,62 @@ public sealed class ShortcutKeeperTests : IDisposable
     }
 
     [Fact]
+    public void TheRefusedShortcutsAreListedAndAChangeIsReported()
+    {
+        var changes = 0;
+        _keeper.RefusedShortcutsChanged += (_, _) => changes++;
+        _environment.Taken.Add((AltShift, 0xC0));
+
+        _keeper.Configure([AltAboveTab, AltShiftAboveTab]);
+        _keeper.Check();
+
+        Assert.Equal([AltShiftAboveTab], _keeper.RefusedShortcuts);
+        Assert.Equal(1, changes);
+    }
+
+    [Fact]
+    public void AShortcutTakenAgainAfterALayoutChangeIsNoLongerRefused()
+    {
+        var changes = 0;
+        _keeper.RefusedShortcutsChanged += (_, _) => changes++;
+        _environment.Layouts.Add(German);
+        _environment.Taken.Add((Alt, 0xC0));
+        _keeper.Configure([AltAboveTab]);
+        Assert.Equal([AltAboveTab], _keeper.RefusedShortcuts);
+
+        _environment.Foreground = German;
+        _keeper.Check();
+
+        Assert.Empty(_keeper.RefusedShortcuts);
+        Assert.Equal(2, changes);
+    }
+
+    [Fact]
+    public void AShortcutThatIsNoLongerWantedIsNoLongerRefused()
+    {
+        _environment.Taken.Add((Alt, 0xC0));
+        _keeper.Configure([AltAboveTab]);
+        var changes = 0;
+        _keeper.RefusedShortcutsChanged += (_, _) => changes++;
+
+        _keeper.Configure([]);
+
+        Assert.Empty(_keeper.RefusedShortcuts);
+        Assert.Equal(1, changes);
+    }
+
+    [Fact]
+    public void AKeyTheLayoutDoesntHaveIsntRefused()
+    {
+        _environment.Foreground = Russian;
+        _environment.Layouts.Add(Russian);
+
+        _keeper.Configure([new(Alt, 0x7F)]);
+
+        Assert.Empty(_keeper.RefusedShortcuts);
+    }
+
+    [Fact]
     public void ARefusedShortcutIsTriedAgainWhenTheSettingsApply()
     {
         _environment.Taken.Add((Alt, 0xC0));

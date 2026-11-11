@@ -23,6 +23,7 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems
     private readonly TimeProvider _time;
     private readonly ILogger<EndAppFeature> _logger;
     private readonly IHostNotifications _notifications;
+    private readonly ShortcutRefusals _refusals;
     private EndAppThread? _thread;
     private EndAppThread? _stopped;
 
@@ -30,16 +31,22 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems
     private MessageWindow? _hostWindow;
     private bool _failed;
 
-    public EndAppFeature(TimeProvider time, ILogger<EndAppFeature> logger, IHostNotifications notifications)
+    /// <param name="refusals">Where the feature says whether Windows refused its shortcut.</param>
+    public EndAppFeature(TimeProvider time, ILogger<EndAppFeature> logger, IHostNotifications notifications, ShortcutRefusals refusals)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(notifications);
+        ArgumentNullException.ThrowIfNull(refusals);
 
         _time = time;
         _logger = logger;
         _notifications = notifications;
+        _refusals = refusals;
     }
+
+    /// <summary>The shortcut's name in <see cref="ShortcutRefusals"/>.</summary>
+    public const string ChooseAppShortcut = "chooseApp";
 
     public static FeatureInfo Definition { get; } = new("endApp", WindowsModule.Id, "EndAppName", "EndAppDescription", "");
 
@@ -88,7 +95,7 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems
         {
             _hostWindow = new MessageWindow(HostWindowClassName);
             var hostWindow = _hostWindow;
-            _thread = new EndAppThread(read, _time, _logger, (title, text) => hostWindow.BeginInvoke(() => Notify(title, text)), _stopped);
+            _thread = new EndAppThread(read, _time, _logger, (title, text) => hostWindow.BeginInvoke(() => Notify(title, text)), _stopped, _refusals);
             _stopped = null;
         }
         else

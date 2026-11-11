@@ -23,6 +23,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
     private readonly IHostCommands _commands;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly ShortcutRefusals? _refusals;
     private readonly DropDownWindows _shared;
     private readonly DropDownResults _results;
 
@@ -31,7 +32,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
 
     /// <param name="shared">The drop-down windows as Hide Apps and Minimize to Tray read them.</param>
     /// <param name="results">The recent results, which the feature gives the settings app.</param>
-    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownResults results, DropDownAppsThread? previous = null)
+    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownResults results, DropDownAppsThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Drop-down Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
@@ -45,6 +46,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
         _logger = logger;
         _shared = shared;
         _results = results;
+        _refusals = refusals;
         Start();
     }
 
@@ -62,7 +64,12 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
 
     protected override void OnStarted() => LogStarted(_logger);
 
-    protected override void OnStopped() => LogStopped(_logger);
+    // Runs after the loop ends, also after a failure, and before a next thread registers the shortcuts.
+    protected override void OnStopped()
+    {
+        _refusals?.Set(DropDownAppsFeature.Definition.Id, []);
+        LogStopped(_logger);
+    }
 
     protected override void OnFailed(Exception exception)
     {
@@ -125,6 +132,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             Controller.Reported += (_, report) => owner._results.Add(report.AppIndex, report.Outcome);
             _shortcuts.Pressed += (_, keys) => owner.Guard(() => Press(keys));
             _shortcuts.Refused += (_, keys) => owner.Guard(() => Refused(keys));
+            _shortcuts.RefusedShortcutsChanged += (_, _) => owner.Guard(ReportRefused);
             _foreground.Raised += (_, _) => owner.Guard(() =>
             {
                 _shortcuts.Check();
@@ -174,6 +182,10 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             DropDownShortcuts.All.FirstOrDefault(shortcut => DropDownShortcuts.KeysOf(shortcut) == keys, DropDownShortcut.None);
 
         private void Press(KeyPositionShortcut keys) => Controller.Press(ShortcutOf(keys));
+
+        // The settings app shows a note at each app whose shortcut Windows refused, named as in the settings.
+        private void ReportRefused() =>
+            _owner._refusals?.Set(DropDownAppsFeature.Definition.Id, _shortcuts.RefusedShortcuts.Select(ShortcutOf).Where(shortcut => shortcut != DropDownShortcut.None).Select(shortcut => shortcut.ToString()));
 
         // Another program has the shortcut, which the recent results say for the app that has it.
         private void Refused(KeyPositionShortcut keys)

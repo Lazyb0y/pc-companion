@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.DropDownApps;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -21,7 +22,7 @@ public sealed class DropDownAppsFeatureTests : IDisposable
 
     public DropDownAppsFeatureTests()
     {
-        _feature = new DropDownAppsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new DropDownWindows(), () =>
+        _feature = new DropDownAppsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new DropDownWindows(), new ShortcutRefusals(), () =>
         {
             _recoveries++;
             return _left;

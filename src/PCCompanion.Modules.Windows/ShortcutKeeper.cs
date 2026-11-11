@@ -41,6 +41,12 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
     /// <summary>Raised on the keeper's thread when Windows refuses one of the shortcuts, once for each key it's tried with.</summary>
     public event EventHandler<KeyPositionShortcut>? Refused;
 
+    /// <summary>Raised on the keeper's thread when <see cref="RefusedShortcuts"/> changed.</summary>
+    public event EventHandler? RefusedShortcutsChanged;
+
+    /// <summary>The shortcuts that Windows refused the last time they were registered.</summary>
+    public IReadOnlyList<KeyPositionShortcut> RefusedShortcuts => [.. _registrations.Where(pair => pair.Value.Refused).Select(pair => pair.Key)];
+
     /// <summary>Whether the layout is checked once a second, because the user's layouts disagree on one of the keys.</summary>
     public bool ChecksLayout => _timer is not null;
 
@@ -50,13 +56,16 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         ObjectDisposedException.ThrowIf(_disposed, this);
 
         // Registers again, so a shortcut Windows refused before is tried again.
-        UnregisterAll();
-        foreach (var shortcut in shortcuts)
+        Tracked(() =>
         {
-            _registrations.TryAdd(shortcut, new Registration());
-        }
+            UnregisterAll();
+            foreach (var shortcut in shortcuts)
+            {
+                _registrations.TryAdd(shortcut, new Registration());
+            }
 
-        CheckLayout();
+            CheckLayout();
+        });
     }
 
     /// <summary>
@@ -70,7 +79,7 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
             return;
         }
 
-        CheckLayout();
+        Tracked(CheckLayout);
         _timer?.Change(FollowUpDelay, Timeout.InfiniteTimeSpan);
     }
 
@@ -125,8 +134,19 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
             return;
         }
 
-        CheckLayout();
+        Tracked(CheckLayout);
         _timer?.Change(LayoutCheckInterval, Timeout.InfiniteTimeSpan);
+    }
+
+    // Runs a change, and says so when it changed which shortcuts Windows refused.
+    private void Tracked(Action change)
+    {
+        var before = RefusedShortcuts;
+        change();
+        if (!before.ToHashSet().SetEquals(RefusedShortcuts))
+        {
+            RefusedShortcutsChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void Register(KeyPositionShortcut shortcut, Registration registration, uint? virtualKey)
@@ -149,6 +169,7 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         registration.Handle = environment.Register(shortcut.Modifiers, key, () => Pressed?.Invoke(this, shortcut));
         if (registration.Handle is null)
         {
+            registration.Refused = true;
             LogRefused(logger, feature, shortcut.Modifiers, key);
             Refused?.Invoke(this, shortcut);
         }
@@ -192,10 +213,12 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
 
         public IDisposable? Handle { get; set; }
 
+        public bool Refused { get; set; }
+
         public void Unregister()
         {
             Handle?.Dispose();
-            (Handle, VirtualKey, Attempted) = (null, null, false);
+            (Handle, VirtualKey, Attempted, Refused) = (null, null, false, false);
         }
     }
 }

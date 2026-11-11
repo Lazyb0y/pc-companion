@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.HideApps;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -19,7 +20,7 @@ public sealed class HideAppsFeatureTests : IDisposable
 
     public HideAppsFeatureTests()
     {
-        _feature = new HideAppsFeature(TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests);
+        _feature = new HideAppsFeature(TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests, new ShortcutRefusals());
     }
 
     public void Dispose() => _feature.Dispose();
