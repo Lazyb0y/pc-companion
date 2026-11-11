@@ -501,7 +501,11 @@ if ($run -ne [IntPtr]::Zero) {
     [PasteChecks]::Place($run, 820, 420, 420, 200)
     Start-Sleep -Seconds 1
     $runBox = Wait-ById $run '1001'
-    Test-PasteInto 'the Run box' $runBox $run (Get-BoxPoint $runBox 10) 'Zebrafinch' 'Message' { Select-PageWord 'Zebrafinch' } -NoUndo
+    # The Run box opens with the last command, such as the one the App checks ran, and shows a
+    # long one from its start once it loses the focus, so the characters under the pointer change.
+    # A short command of the checks' own fits in the box.
+    $runBox.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue('run words here')
+    Test-PasteInto 'the Run box' $runBox $run (Get-BoxPoint $runBox 40) 'Zebrafinch' 'Message' { Select-PageWord 'Zebrafinch' } -NoUndo
     [void] [Win32]::PostMessage($run, 0x0010, [UIntPtr]::Zero, [IntPtr]::Zero)
 } else {
     Test-Check 'the Run box opens' $false
