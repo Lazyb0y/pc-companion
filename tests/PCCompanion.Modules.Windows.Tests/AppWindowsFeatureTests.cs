@@ -72,6 +72,19 @@ public sealed class AppWindowsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysItsShortcutsUse()
+    {
+        Assert.Equal(
+            [
+                (new FeatureAction("appWindows", "next"), ShortcutKeys.OfPosition(new(HotKeyModifiers.Windows, ShortcutKeeper.KeyAboveTab))),
+                (new FeatureAction("appWindows", "previous"), ShortcutKeys.OfPosition(new(HotKeyModifiers.Windows | HotKeyModifiers.Shift, ShortcutKeeper.KeyAboveTab))),
+            ],
+            AppWindowsFeature.Shortcuts(new AppWindowsSettings { Shortcut = AppWindowsShortcut.WindowsAboveTab }));
+        Assert.Equal(HotKeyModifiers.Alt, AppWindowsFeature.Shortcuts(new AppWindowsSettings())[0].Keys.Modifiers);
+        Assert.Empty(AppWindowsFeature.Shortcuts(new AppWindowsSettings { Shortcut = (AppWindowsShortcut)7 }));
+    }
+
+    [Fact]
     public void ItOffersTheNextAndPreviousWindowWhileItsOn()
     {
         Assert.Equal(

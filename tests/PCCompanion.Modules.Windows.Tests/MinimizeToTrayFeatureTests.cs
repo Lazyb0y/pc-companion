@@ -105,6 +105,15 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysItsShortcutUses()
+    {
+        Assert.Equal(
+            [(new FeatureAction("minimizeToTray", "sendToTray"), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Shift, 0x5A))],
+            MinimizeToTrayFeature.Shortcuts(new MinimizeToTraySettings()));
+        Assert.Empty(MinimizeToTrayFeature.Shortcuts(new MinimizeToTraySettings { Shortcut = MinimizeToTrayShortcut.None }));
+    }
+
+    [Fact]
     public void ItOffersSendingTheWindowInFrontToTheTrayWhileItsOn()
     {
         var sendToTray = Assert.Single(MinimizeToTrayFeature.OfferedActions()).Action;

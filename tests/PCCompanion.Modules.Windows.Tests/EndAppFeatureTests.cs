@@ -85,6 +85,18 @@ public sealed class EndAppFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysItsShortcutUses()
+    {
+        var chooseApp = new FeatureAction("endApp", "chooseApp");
+
+        Assert.Equal([(chooseApp, ShortcutKeys.OfVirtualKey(HotKeyModifiers.Control | HotKeyModifiers.Alt, 0x1B))], EndAppFeature.Shortcuts(new EndAppSettings()));
+        Assert.Equal(
+            [(chooseApp, ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Control, 0x1B))],
+            EndAppFeature.Shortcuts(new EndAppSettings { Shortcut = EndAppShortcut.WindowsControlEscape }));
+        Assert.Empty(EndAppFeature.Shortcuts(new EndAppSettings { Shortcut = EndAppShortcut.None }));
+    }
+
+    [Fact]
     public void ItOffersChoosingAnAppToEndWhileItsOn()
     {
         var chooseApp = Assert.Single(EndAppFeature.OfferedActions()).Action;

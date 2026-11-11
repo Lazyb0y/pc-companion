@@ -19,7 +19,7 @@ namespace PCCompanion.Modules.Windows.EndApp;
 public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
 {
     private const string WindowClassName = "PCCompanion.EndApp";
-    private const uint KeyEscape = 0x1B;
+    internal const uint KeyEscape = 0x1B;
 
     // The frame's colors outside high contrast, as 0xRRGGBB.
     private const uint CanEndColor = 0xE81123;

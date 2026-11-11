@@ -17,7 +17,7 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
     private const string WindowClassName = "PCCompanion.HideApps";
 
     // The H key.
-    private const uint KeyH = 0x48;
+    internal const uint KeyH = 0x48;
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;

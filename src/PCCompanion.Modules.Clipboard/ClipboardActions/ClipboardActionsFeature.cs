@@ -60,6 +60,28 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
             : [copied];
     }
 
+    /// <summary>
+    /// The shortcuts Clipboard Actions registers with <paramref name="settings"/> while it's on,
+    /// each with the action it runs: the selected text's only while Selected text is on.
+    /// </summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(ClipboardActionsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var shortcuts = new List<(FeatureAction, ShortcutKeys)>(2);
+        if (settings.Shortcut == ClipboardActionsShortcut.WindowsAltV)
+        {
+            shortcuts.Add((new FeatureAction(Definition.Id, CopiedTextShortcut), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Alt, WindowsClipboardActionsSystem.VirtualKeyV)));
+        }
+
+        if (settings.SelectedText && settings.SelectedTextShortcut == ClipboardActionsSelectionShortcut.WindowsAltS)
+        {
+            shortcuts.Add((new FeatureAction(Definition.Id, SelectedTextShortcut), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Alt, WindowsClipboardActionsSystem.VirtualKeyS)));
+        }
+
+        return shortcuts;
+    }
+
     public bool CanRun(FeatureAction action) =>
         _thread is not null
         && action.FeatureId == Definition.Id

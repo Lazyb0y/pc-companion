@@ -24,7 +24,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     private const uint QueryEndSession = 0x0011;
 
     // The Z key.
-    private const uint KeyZ = 0x5A;
+    internal const uint KeyZ = 0x5A;
 
     private readonly IHostCommands _commands;
     private readonly TimeProvider _time;

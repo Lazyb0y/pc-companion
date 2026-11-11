@@ -63,6 +63,23 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems, IFeatureAc
     public static IReadOnlyList<OfferedAction> OfferedActions() =>
         [new(new FeatureAction(Definition.Id, ChooseAppShortcut), Strings.EndAppActionChooseApp)];
 
+    /// <summary>The shortcut End App registers with <paramref name="settings"/> while it's on, with the action it runs.</summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(EndAppSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        HotKeyModifiers? modifiers = settings.Shortcut switch
+        {
+            EndAppShortcut.ControlAltEscape => HotKeyModifiers.Control | HotKeyModifiers.Alt,
+            EndAppShortcut.WindowsControlEscape => HotKeyModifiers.Windows | HotKeyModifiers.Control,
+            _ => null,
+        };
+
+        return modifiers is { } keys
+            ? [(new FeatureAction(Definition.Id, ChooseAppShortcut), ShortcutKeys.OfVirtualKey(keys, EndAppThread.KeyEscape))]
+            : [];
+    }
+
     public bool CanRun(FeatureAction action) => _thread is not null && action == new FeatureAction(Definition.Id, ChooseAppShortcut);
 
     public void Run(FeatureAction action)

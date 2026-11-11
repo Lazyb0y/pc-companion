@@ -93,6 +93,17 @@ public sealed class HideAppsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysItsShortcutsUse()
+    {
+        const HotKeyModifiers WindowsControl = HotKeyModifiers.Windows | HotKeyModifiers.Control;
+
+        Assert.Equal(
+            [(new FeatureAction("hideApps", "hideApp"), ShortcutKeys.OfVirtualKey(WindowsControl, 0x48)), (new FeatureAction("hideApps", "hideOthers"), ShortcutKeys.OfVirtualKey(WindowsControl | HotKeyModifiers.Shift, 0x48))],
+            HideAppsFeature.Shortcuts(new HideAppsSettings()));
+        Assert.Empty(HideAppsFeature.Shortcuts(new HideAppsSettings { HideAppShortcut = HideAppShortcut.None, HideOthersShortcut = HideOthersShortcut.None }));
+    }
+
+    [Fact]
     public void ItCanRunItsActionsOnlyWhileItsOn()
     {
         var hideOthers = new FeatureAction("hideApps", "hideOthers");

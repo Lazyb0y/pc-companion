@@ -107,6 +107,25 @@ public sealed class DropDownAppsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysEachListedAppsShortcutUses()
+    {
+        var settings = new DropDownAppsSettings
+        {
+            Apps =
+            [
+                new DropDownApp { Name = "Terminal", AppId = "Terminal!App", Shortcut = DropDownShortcut.WindowsControlAlt2 },
+                new DropDownApp { Name = "Notes", Program = @"C:\Apps\Notes.exe", Shortcut = DropDownShortcut.WindowsControlAlt2 },
+                new DropDownApp { Name = "Calculator", AppId = "Calculator!App" },
+            ],
+        };
+
+        // Notes has the shortcut Terminal has, so it gets none.
+        Assert.Equal(
+            [(new FeatureAction("dropDownApps", "showOrHide", "Terminal!App"), ShortcutKeys.OfPosition(new(HotKeyModifiers.Windows | HotKeyModifiers.Control | HotKeyModifiers.Alt, 0x03)))],
+            DropDownAppsFeature.Shortcuts(settings));
+    }
+
+    [Fact]
     public void ItCanShowOrHideOnlyAnAppItLists()
     {
         var notes = new FeatureAction("dropDownApps", "showOrHide", @"C:\Apps\Notes.exe");
