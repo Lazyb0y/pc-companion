@@ -1265,7 +1265,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>يقرأ نص الحافظة فقط عند الضغط على مفتاح شعار Windows + Alt + V، والنص المحدد فقط عند الضغط على مفتاح شعار Windows + Alt + S، ولا يقرأ أبدًا في الخلفية، ولا من مربع كلمة مرور، ولا النص الذي وضع عليه التطبيق الذي نسخه علامة خاص. لا يخزن النص أو يسجله أو يرسله. يؤدي طلب النص المحدد من مستعرض إلى تشغيل دعم إمكانية الوصول فيه حتى يتم إغلاقه، ما يستهلك ذاكرة أكبر في الصفحات الطويلة جدًا. يفتح الارتباطات وعناوين الويب في المستعرض، الذي يرسل النص إلى الموقع الذي تحدده القاعدة، ولا يبدأ إلا البرامج التي تحددها قواعدك.</value>
+    <value>يقرأ نص الحافظة فقط عند عرض قائمته، باستخدام مفتاح شعار Windows + Alt + V أو اختصار أو زر ماوس من اختيارك، والنص المحدد فقط عند عرض قائمته، ولا يقرأ أبدًا في الخلفية، ولا من مربع كلمة مرور، ولا النص الذي وضع عليه التطبيق الذي نسخه علامة خاص. لا يخزن النص أو يسجله أو يرسله. يؤدي طلب النص المحدد من مستعرض إلى تشغيل دعم إمكانية الوصول فيه حتى يتم إغلاقه، ما يستهلك ذاكرة أكبر في الصفحات الطويلة جدًا. يفتح الارتباطات وعناوين الويب في المستعرض، الذي يرسل النص إلى الموقع الذي تحدده القاعدة، ولا يبدأ إلا البرامج التي تحددها قواعدك.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4998,6 +4998,30 @@
   </data>
   <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
     <value>إظهار {0} أو إخفاؤه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionCopiedText" xml:space="preserve">
+    <value>إجراءات النص المنسوخ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionSelectedText" xml:space="preserve">
+    <value>إجراءات النص المحدد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcut" xml:space="preserve">
+    <value>مفتاح شعار Windows + Alt + S</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutHeader" xml:space="preserve">
+    <value>اختصار النص المحدد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutDescription" xml:space="preserve">
+    <value>يعرض إجراءات النص المحدد. يمكن لميزة «الاختصارات وأزرار الماوس» منح القائمتين اختصارات وأزرار ماوس من اختيارك.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

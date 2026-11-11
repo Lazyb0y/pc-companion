@@ -66,11 +66,20 @@ public sealed record ClipboardActionsSettings : IFeatureSettings<ClipboardAction
 
     public bool Enabled { get; set; }
 
+    /// <summary>
+    /// The shortcut for the copied text. A number in the file reads as any value, named or not; an
+    /// unknown one registers no shortcut.
+    /// </summary>
+    public ClipboardActionsShortcut Shortcut { get; set; } = ClipboardActionsShortcut.WindowsAltV;
+
     /// <summary>Whether a copied web link gets Open in browser.</summary>
     public bool OpenLinks { get; set; } = true;
 
     /// <summary>Whether Windows + Alt + S shows actions for the text selected in the app in front.</summary>
     public bool SelectedText { get; set; }
+
+    /// <summary>The shortcut for the selected text, while <see cref="SelectedText"/> is on; an unknown one registers none.</summary>
+    public ClipboardActionsSelectionShortcut SelectedTextShortcut { get; set; } = ClipboardActionsSelectionShortcut.WindowsAltS;
 
     public IReadOnlyList<ClipboardRule> Rules { get; set; } = [];
 
@@ -87,7 +96,13 @@ public sealed record ClipboardActionsSettings : IFeatureSettings<ClipboardAction
 
     // Compares the rules one by one, not the lists, so the same settings read twice are equal.
     public bool Equals(ClipboardActionsSettings? other) =>
-        other is not null && Enabled == other.Enabled && OpenLinks == other.OpenLinks && SelectedText == other.SelectedText && Rules.SequenceEqual(other.Rules);
+        other is not null
+        && Enabled == other.Enabled
+        && Shortcut == other.Shortcut
+        && OpenLinks == other.OpenLinks
+        && SelectedText == other.SelectedText
+        && SelectedTextShortcut == other.SelectedTextShortcut
+        && Rules.SequenceEqual(other.Rules);
 
-    public override int GetHashCode() => HashCode.Combine(Enabled, OpenLinks, SelectedText, Rules.Count);
+    public override int GetHashCode() => HashCode.Combine(Enabled, Shortcut, OpenLinks, SelectedText, SelectedTextShortcut, Rules.Count);
 }

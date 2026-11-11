@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -110,5 +110,31 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
     {
         Assert.Equal("clipboardActions", ClipboardActionsFeature.Definition.Id);
         Assert.Equal(ClipboardModule.Id, ClipboardActionsFeature.Definition.ModuleId);
+    }
+
+    [Fact]
+    public void ItOffersTheMenuForTheSelectedTextOnlyWithSelectedTextOn()
+    {
+        var copied = new FeatureAction("clipboardActions", "copiedText");
+        var selected = new FeatureAction("clipboardActions", "selectedText");
+
+        Assert.Equal([copied], ClipboardActionsFeature.OfferedActions(new ClipboardActionsSettings()).Select(offered => offered.Action));
+        Assert.Equal([copied, selected], ClipboardActionsFeature.OfferedActions(new ClipboardActionsSettings { SelectedText = true }).Select(offered => offered.Action));
+    }
+
+    [Fact]
+    public void ItCanRunItsActionsWhileItsOn()
+    {
+        var copied = new FeatureAction("clipboardActions", "copiedText");
+        var selected = new FeatureAction("clipboardActions", "selectedText");
+        Assert.False(_feature.CanRun(copied));
+
+        _feature.Apply(Section("""{ "enabled": true }"""));
+        Assert.True(_feature.CanRun(copied));
+        Assert.False(_feature.CanRun(selected));
+        Assert.False(_feature.CanRun(copied with { Target = "Notes" }));
+
+        _feature.Apply(Section("""{ "enabled": true, "selectedText": true }"""));
+        Assert.True(_feature.CanRun(selected));
     }
 }

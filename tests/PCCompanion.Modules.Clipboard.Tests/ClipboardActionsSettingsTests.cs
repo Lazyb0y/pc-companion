@@ -15,6 +15,8 @@ public sealed class ClipboardActionsSettingsTests
         Assert.True(settings.OpenLinks);
         Assert.False(settings.SelectedText);
         Assert.Empty(settings.Rules);
+        Assert.Equal(ClipboardActionsShortcut.WindowsAltV, settings.Shortcut);
+        Assert.Equal(ClipboardActionsSelectionShortcut.WindowsAltS, settings.SelectedTextShortcut);
     }
 
     [Fact]
@@ -23,8 +25,10 @@ public sealed class ClipboardActionsSettingsTests
         var settings = new ClipboardActionsSettings
         {
             Enabled = true,
+            Shortcut = ClipboardActionsShortcut.None,
             OpenLinks = false,
             SelectedText = true,
+            SelectedTextShortcut = ClipboardActionsSelectionShortcut.None,
             Rules =
             [
                 new ClipboardRule { Name = "Track the parcel", Pattern = "1Z[0-9A-Z]{16}", Address = "https://tracking.example.com/?number={text}" },
@@ -47,7 +51,7 @@ public sealed class ClipboardActionsSettingsTests
         }.Write());
 
         Assert.Equal(
-            """{"enabled":true,"openLinks":true,"selectedText":false,"rules":[{"name":"Track","pattern":"1Z.*","matchCase":false,"action":"OpenAddress","address":"https://example.com/?n={text}","program":"","arguments":""}]}""",
+            """{"enabled":true,"shortcut":"WindowsAltV","openLinks":true,"selectedText":false,"selectedTextShortcut":"WindowsAltS","rules":[{"name":"Track","pattern":"1Z.*","matchCase":false,"action":"OpenAddress","address":"https://example.com/?n={text}","program":"","arguments":""}]}""",
             json);
     }
 
@@ -57,6 +61,15 @@ public sealed class ClipboardActionsSettingsTests
         var settings = new ClipboardActionsSettings { Enabled = true };
 
         Assert.NotEqual(settings, settings with { SelectedText = true });
+    }
+
+    [Fact]
+    public void TheShortcutsCountInTheSettingsEquality()
+    {
+        var settings = new ClipboardActionsSettings { Enabled = true };
+
+        Assert.NotEqual(settings, settings with { Shortcut = ClipboardActionsShortcut.None });
+        Assert.NotEqual(settings, settings with { SelectedTextShortcut = ClipboardActionsSelectionShortcut.None });
     }
 
     [Fact]

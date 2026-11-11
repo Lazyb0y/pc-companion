@@ -1201,7 +1201,7 @@
     <comment>Clipboard Actions page: note.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Reads the clipboard's text only when you press Windows logo key + Alt + V, and the selected text only when you press Windows logo key + Alt + S, never in the background, never from a password box and never text that the app that copied it marked private. Doesn't store, log or send the text. Asking a browser for its selected text turns on its accessibility support until it closes, which uses more memory on very long pages. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
+    <value>Reads the clipboard's text only when you show its menu, with Windows logo key + Alt + V or a shortcut or mouse button of your own, and the selected text only when you show its menu, never in the background, never from a password box and never text that the app that copied it marked private. Doesn't store, log or send the text. Asking a browser for its selected text turns on its accessibility support until it closes, which uses more memory on very long pages. Opens links and web addresses in your browser, which sends the text to the site the rule names, and starts only the programs your rules name.</value>
     <comment>Clipboard Actions page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4807,5 +4807,29 @@
   <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
     <value>Show or hide {0}</value>
     <comment>An action that a shortcut or mouse button can run: slides the app's window down, or back up. {0} is the app's name, such as Terminal.</comment>
+  </data>
+  <data name="ClipboardActionsActionCopiedText" xml:space="preserve">
+    <value>Actions for the copied text</value>
+    <comment>An action that a shortcut or mouse button can run: shows the Clipboard Actions menu for the copied text, as Windows logo key + Alt + V does.</comment>
+  </data>
+  <data name="ClipboardActionsActionSelectedText" xml:space="preserve">
+    <value>Actions for the selected text</value>
+    <comment>An action that a shortcut or mouse button can run: shows the Clipboard Actions menu for the selected text, as Windows logo key + Alt + S does.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutNone" xml:space="preserve">
+    <value>None</value>
+    <comment>A choice in the list of Clipboard Actions' shortcuts: no shortcut.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcut" xml:space="preserve">
+    <value>Windows logo key + Alt + S</value>
+    <comment>The shortcut for the selected text, a choice in its list.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutHeader" xml:space="preserve">
+    <value>Shortcut for the selected text</value>
+    <comment>The header of the list that chooses the shortcut for the selected text.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutDescription" xml:space="preserve">
+    <value>Shows the actions for the selected text. Shortcuts &amp; Mouse Buttons can give both menus shortcuts and mouse buttons of your own.</value>
+    <comment>Below Shortcut for the selected text. Shortcuts &amp; Mouse Buttons is the name of another feature of PC Companion.</comment>
   </data>
 </root>

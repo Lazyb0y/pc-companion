@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Clipboard.ClipboardActions;
@@ -10,18 +12,19 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 /// Shows actions for the copied text with Windows + Alt + V, and for the selected text with
 /// Windows + Alt + S. See docs/features/clipboard/clipboard-actions.md.
 /// </summary>
-public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem system, IHostCommands commands, ShortcutRefusals refusals, ILogger<ClipboardActionsFeature> logger) : IFeature
+public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem system, IHostCommands commands, ShortcutRefusals refusals, ILogger<ClipboardActionsFeature> logger) : IFeature, IFeatureActions
 {
-    /// <summary>Windows + Alt + V's name in <see cref="ShortcutRefusals"/>.</summary>
+    /// <summary>Windows + Alt + V's name in <see cref="ShortcutRefusals"/>, and the copied text's action ID.</summary>
     public const string CopiedTextShortcut = "copiedText";
 
-    /// <summary>Windows + Alt + S's name in <see cref="ShortcutRefusals"/>.</summary>
+    /// <summary>Windows + Alt + S's name in <see cref="ShortcutRefusals"/>, and the selected text's action ID.</summary>
     public const string SelectedTextShortcut = "selectedText";
 
     // How long the host waits as it exits for the thread to remove the shortcuts.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
 
     private ClipboardActionsThread? _thread;
+    private ClipboardActionsSettings _settings = new();
     private ClipboardActionsThread? _stopped;
     private bool _failed;
 
@@ -42,6 +45,43 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    /// <summary>
+    /// The actions Clipboard Actions offers to shortcuts and mouse buttons, named in the user's
+    /// language: the menu for the copied text, and for the selected text while Selected text is on.
+    /// </summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions(ClipboardActionsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var copied = new OfferedAction(new FeatureAction(Definition.Id, CopiedTextShortcut), Strings.ClipboardActionsActionCopiedText);
+        return settings.SelectedText
+            ? [copied, new OfferedAction(new FeatureAction(Definition.Id, SelectedTextShortcut), Strings.ClipboardActionsActionSelectedText)]
+            : [copied];
+    }
+
+    public bool CanRun(FeatureAction action) =>
+        _thread is not null
+        && action.FeatureId == Definition.Id
+        && action.Target is null
+        && (action.ActionId == CopiedTextShortcut || (action.ActionId == SelectedTextShortcut && _settings.SelectedText));
+
+    public void Run(FeatureAction action)
+    {
+        if (!CanRun(action))
+        {
+            return;
+        }
+
+        if (action.ActionId == CopiedTextShortcut)
+        {
+            _thread?.ShowCopiedText();
+        }
+        else
+        {
+            _thread?.ShowSelectedText();
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -74,6 +114,8 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
             Stop();
             return;
         }
+
+        _settings = read;
 
         if (_thread is null)
         {

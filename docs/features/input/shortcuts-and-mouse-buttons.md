@@ -197,7 +197,7 @@ public interface IHostActions
 - **Middle-Click Paste and Title Bar Actions** share the pointer hook. Their claims never overlap with these, which need the Windows key for the middle button; if they did, the claim made first would win, as for any two claims.
 - **Hot Corners** keeps its own actions; sharing the other features' actions with corners is [#152](https://github.com/Lazyb0y/pc-companion/issues/152)'s.
 - **App Windows' exceptions** ([#123](https://github.com/Lazyb0y/pc-companion/issues/123)) can reuse how a shortcut is left to a listed app in front.
-- **Their specs change** when this is built: Clipboard Actions' Not included loses "Choosing another shortcut"; Display Profiles' and Network Profiles' Not included lose shortcuts.
+- **Their specs change** when this is built: Display Profiles' and Network Profiles' Not included lose shortcuts.
 
 ## Threads
 
