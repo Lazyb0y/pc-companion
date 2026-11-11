@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Network.NetworkProfiles;
 using PCCompanion.Platform.Windows;
@@ -341,6 +342,43 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     {
         Assert.Equal("networkProfiles", NetworkProfilesFeature.Definition.Id);
         Assert.Equal(NetworkModule.Id, NetworkProfilesFeature.Definition.ModuleId);
+    }
+
+    [Fact]
+    public void ItOffersUsingEachProfileItCanUse()
+    {
+        var settings = NetworkProfilesSettings.Read(On(Office, Home, """{ "name": " office ", "proxy": { "autoDetect": true } }"""));
+
+        var offered = NetworkProfilesFeature.OfferedActions(settings);
+
+        Assert.Equal([new FeatureAction("networkProfiles", "use", "Office"), new FeatureAction("networkProfiles", "use", "Home")], offered.Select(action => action.Action));
+        Assert.Contains("Home", offered[1].Name, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AnActionSwitchesToTheProfileItNamesAsTheMenuDoes()
+    {
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+        var useOffice = new FeatureAction("networkProfiles", "use", "OFFICE");
+
+        Assert.True(_feature.CanRun(useOffice));
+        _feature.Run(useOffice);
+        _system.RunBackground();
+
+        Assert.Equal([new ProxySettings(false, false, "", true, "proxy.example.com:8080", "*.example.com;<local>")], _system.Written);
+    }
+
+    [Fact]
+    public void AnActionForAProfileItDoesntHaveCantRun()
+    {
+        Assert.False(_feature.CanRun(new FeatureAction("networkProfiles", "use", "Office")));
+        _feature.Apply(On(Office, Home));
+        _system.RunBackground();
+
+        Assert.False(_feature.CanRun(new FeatureAction("networkProfiles", "use", "Cafe")));
+        Assert.False(_feature.CanRun(new FeatureAction("networkProfiles", "use")));
+        Assert.False(_feature.CanRun(new FeatureAction("displayProfiles", "use", "Office")));
     }
 
     private static JsonElement On(params string[] profiles) => Section($$"""{ "enabled": true, "profiles": [{{string.Join(",", profiles)}}] }""");

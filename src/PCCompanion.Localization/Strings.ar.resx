@@ -5024,4 +5024,12 @@
     <value>يعرض إجراءات النص المحدد. يمكن لميزة «الاختصارات وأزرار الماوس» منح القائمتين اختصارات وأزرار ماوس من اختيارك.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>استخدام {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>استخدام {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

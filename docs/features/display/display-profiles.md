@@ -101,6 +101,11 @@ Making and changing profiles:
 - The submenu comes through `IHostMenuItems`, with the submenus and radio marks of `PopupMenu`, as Network Profiles' does; see [Running in the host](../../architecture/features.md#running-in-the-host).
 - The profiles can change while the menu is open, when the settings are saved meanwhile. A profile chosen then is applied only if the list still has it unchanged, wherever it is now; otherwise nothing changes, with a Debug entry in the log.
 
+## With Shortcuts & Mouse Buttons
+
+- **Use** *profile*, for each profile that can be used, is an action that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Display Profiles is on (`IFeatureActions`). It names the profile by its name, ignoring case and spaces at its ends, as names are told apart, and switches as the menu does, with the same question and revert.
+- **It can't run** in a remote session, for a profile that needs a display that isn't connected, or for a name no profile has, such as after a rename; the trigger's page says so.
+
 ## The settings app and the host
 
 - **Use** on the page asks the host to switch, through a named pipe that only the user's own account and the system can open, and that rejects remote clients, as Folder Rules' pipe does. The request gives the profile's number and its contents, and the host switches only if its list has that profile unchanged. So a switch from the page gets the same question, countdown and revert as one from the menu, whatever happens to the settings window.
@@ -197,7 +202,7 @@ Making and changing profiles:
 - Each display's scale. Windows has no documented function to set it, only an undocumented one that Windows Settings uses. Profiles leave each display at the scale Windows keeps for it. Setting it behind a check of the Windows build, as the undocumented functions in [Windows support](../../compatibility/windows-support.md) do, comes later ([#236](https://github.com/Lazyb0y/pc-companion/issues/236)).
 - Switching on its own when displays are connected or disconnected, which belongs to profiles and context triggers ([#56](https://github.com/Lazyb0y/pc-companion/issues/56)). Windows already brings back the setup last kept with the same displays, as KDE Plasma, GNOME and macOS do, and a kept profile is that setup; switching on its own would only choose between several profiles for the same displays, which needs other context, such as the network, the time or an app.
 - Switching without the question, for a profile already kept with the same displays on the same connections ([#238](https://github.com/Lazyb0y/pc-companion/issues/238)).
-- A keyboard shortcut or a command line for switching ([#237](https://github.com/Lazyb0y/pc-companion/issues/237)).
+- A command line for switching ([#237](https://github.com/Lazyb0y/pc-companion/issues/237)). Shortcuts and mouse buttons come through Shortcuts & Mouse Buttons; see [With Shortcuts & Mouse Buttons](#with-shortcuts--mouse-buttons).
 - Window positions for each profile.
 - Color profiles, brightness, the brightness of SDR content in HDR, night light, color depth, dynamic and variable refresh rates, the scaling mode for resolutions that don't fill the screen, color management for displays without HDR, the wallpaper, and settings in the graphics driver's own control panel, such as custom resolutions and combined displays.
 - Wireless displays, which connect only on request.

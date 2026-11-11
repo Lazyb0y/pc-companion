@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Display.DisplayProfiles;
 using PCCompanion.Platform.Windows;
@@ -398,6 +399,56 @@ public sealed class DisplayProfilesFeatureTests : IDisposable
         _feature.Apply(Section("""{ "enabled": false }"""));
 
         Assert.Null(await DisplayProfilesPipe.AskAsync(_pipeName, new DisplayProfilesRequest { Number = 2, Profile = _small }, TimeSpan.FromMilliseconds(300), TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public void ItOffersUsingEachProfileItCanUse()
+    {
+        var settings = new DisplayProfilesSettings { Profiles = [_desk, _small, _desk with { Name = " desk " }] };
+
+        var offered = DisplayProfilesFeature.OfferedActions(settings);
+
+        Assert.Equal([new FeatureAction("displayProfiles", "use", "Desk"), new FeatureAction("displayProfiles", "use", "Small")], offered.Select(action => action.Action));
+        Assert.Contains("Small", offered[1].Name, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AnActionSwitchesToTheProfileItNamesWithTheSameQuestion()
+    {
+        StartWith(_desk, _small);
+        var useSmall = new FeatureAction("displayProfiles", "use", " small ");
+
+        Assert.True(_feature.CanRun(useSmall));
+        _feature.Run(useSmall);
+        _system.RunBackground();
+
+        Assert.True(Assert.Single(_system.Questions).IsOpen);
+        Assert.Equal(1680, _system.Displays.Current[1].Area.Width);
+    }
+
+    [Fact]
+    public void AnActionForAProfileItDoesntHaveCantRun()
+    {
+        Assert.False(_feature.CanRun(new FeatureAction("displayProfiles", "use", "Desk")));
+        StartWith(_desk, _small);
+
+        Assert.False(_feature.CanRun(new FeatureAction("displayProfiles", "use", "Large")));
+        Assert.False(_feature.CanRun(new FeatureAction("displayProfiles", "use")));
+        Assert.False(_feature.CanRun(new FeatureAction("networkProfiles", "use", "Desk")));
+    }
+
+    [Fact]
+    public void InARemoteSessionNoActionCanRun()
+    {
+        _system.IsRemoteSession = true;
+        StartWith(_desk, _small);
+        var useSmall = new FeatureAction("displayProfiles", "use", "Small");
+
+        Assert.False(_feature.CanRun(useSmall));
+        _feature.Run(useSmall);
+        _system.RunBackground();
+
+        Assert.Empty(_system.Displays.Calls);
     }
 
     private static JsonElement On(params DisplayProfile[] profiles) => new DisplayProfilesSettings { Enabled = true, Profiles = profiles }.Write();
