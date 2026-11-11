@@ -68,6 +68,30 @@ public sealed class DropDownControllerTests : IDisposable
     }
 
     [Fact]
+    public void AnActionPressesTheAppItNamesByProgramOrAppIdIgnoringCase()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+
+        _controller.PressApp(NotesProgram.ToUpperInvariant());
+        Settle();
+
+        Assert.True(window.Visible);
+        Assert.Equal([new DropDownReport(0, DropDownOutcome.Shown)], _reports);
+    }
+
+    [Fact]
+    public void AnActionForAnAppThatIsntListedDoesNothing()
+    {
+        _system.Add(1, program: NotesProgram);
+
+        _controller.PressApp(@"C:\Apps\Other.exe");
+        Settle();
+
+        Assert.Empty(_reports);
+        Assert.Empty(_system.Moves);
+    }
+
+    [Fact]
     public void TheWindowTakesThePagesSizeCenteredAtTheTopOfTheWorkArea()
     {
         var window = _system.Add(1, program: NotesProgram);

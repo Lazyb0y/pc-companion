@@ -4788,4 +4788,24 @@
     <value>Otro programa usa el método abreviado de {1} ({0}), así que no hace nada aquí. PC Companion vuelve a intentarlo cuando cambias una configuración aquí.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="AppWindowsActionNext" xml:space="preserve">
+    <value>Siguiente ventana de la aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsActionPrevious" xml:space="preserve">
+    <value>Ventana anterior de la aplicación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="MinimizeToTrayActionSendToTray" xml:space="preserve">
+    <value>Enviar la ventana en primer plano al área de notificación</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="EndAppActionChooseApp" xml:space="preserve">
+    <value>Elegir una aplicación para finalizar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
+    <value>Mostrar u ocultar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
@@ -12,7 +13,7 @@ namespace PCCompanion.Modules.Windows.HideApps;
 /// Minimizes every window of the app in front, or of every other app, with one shortcut, and
 /// brings them back as they were. See docs/features/windows/hide-apps.md.
 /// </summary>
-public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
+public sealed partial class HideAppsFeature : IFeature, IHostMenuItems, IFeatureActions
 {
     // How long the host waits as it exits for the feature's thread to end.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -55,6 +56,9 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
     /// <summary>Hide others' name in <see cref="ShortcutRefusals"/>.</summary>
     public const string HideOthersShortcut = "hideOthers";
+
+    /// <summary>Show all hidden windows' action ID; Hide app and Hide others use their shortcuts' names.</summary>
+    public const string ShowAllAction = "showAll";
 
     public static FeatureInfo Definition { get; } = new("hideApps", WindowsModule.Id, "HideAppsName", "HideAppsDescription", "");
 
@@ -113,6 +117,24 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
         }
     }
 
+    /// <summary>The actions Hide Apps offers to shortcuts and mouse buttons, named in the user's language.</summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions() =>
+    [
+        new(new FeatureAction(Definition.Id, HideAppShortcut), Strings.HideAppsHideAppHeader),
+        new(new FeatureAction(Definition.Id, HideOthersShortcut), Strings.HideAppsHideOthersHeader),
+        new(new FeatureAction(Definition.Id, ShowAllAction), Strings.HideAppsShowAll),
+    ];
+
+    public bool CanRun(FeatureAction action) => _thread is not null && ActionOf(action) is not null;
+
+    public void Run(FeatureAction action)
+    {
+        if (ActionOf(action) is { } hide)
+        {
+            _thread?.Run(hide);
+        }
+    }
+
     public IReadOnlyList<HostMenuItem> GetMenuItems() =>
         _thread is { Count: > 0 } ? [new HostMenuItem(ShowAllItem, Strings.HideAppsShowAll)] : [];
 
@@ -135,6 +157,15 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
         _stopped = null;
     }
+
+    private static HideAction? ActionOf(FeatureAction action) =>
+        action.FeatureId != Definition.Id || action.Target is not null ? null : action.ActionId switch
+        {
+            HideAppShortcut => HideAction.HideApp,
+            HideOthersShortcut => HideAction.HideOthers,
+            ShowAllAction => HideAction.ShowAll,
+            _ => null,
+        };
 
     // Doesn't wait: a new thread waits for this one before it starts.
     private void Stop()

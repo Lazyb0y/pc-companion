@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.DropDownApps;
@@ -11,7 +16,7 @@ namespace PCCompanion.Modules.Windows.DropDownApps;
 /// Slides a chosen app's window down from the top of the screen with a shortcut, and back up out of
 /// the way with the same shortcut. See docs/features/windows/drop-down-apps.md.
 /// </summary>
-public sealed partial class DropDownAppsFeature : IFeature
+public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
 {
     // How long the host waits as it exits for the windows to go back on the taskbar.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -24,6 +29,7 @@ public sealed partial class DropDownAppsFeature : IFeature
     private readonly DropDownResults _results;
     private readonly ShortcutRefusals _refusals;
     private DropDownAppsThread? _thread;
+    private DropDownAppsSettings _settings = new();
     private SnapshotPipe? _resultsPipe;
     private DropDownAppsThread? _stopped;
     private bool _failed;
@@ -61,6 +67,9 @@ public sealed partial class DropDownAppsFeature : IFeature
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
+    /// <summary>The action that shows or hides a listed app, whose target is the app's app ID or program.</summary>
+    public const string ShowOrHideAction = "showOrHide";
+
     public static FeatureInfo Definition { get; } = new("dropDownApps", WindowsModule.Id, "DropDownAppsName", "DropDownAppsDescription", "");
 
     /// <summary>
@@ -73,6 +82,38 @@ public sealed partial class DropDownAppsFeature : IFeature
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    /// <summary>
+    /// The actions Drop-down Apps offers to shortcuts and mouse buttons: showing or hiding each
+    /// listed app, named in the user's language.
+    /// </summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions(DropDownAppsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return
+        [
+            .. settings.Apps
+                .Where(app => app.Target is not null)
+                .Select(app => new OfferedAction(
+                    new FeatureAction(Definition.Id, ShowOrHideAction, app.Target),
+                    string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.DropDownAppsActionShowOrHide), app.Name))),
+        ];
+    }
+
+    public bool CanRun(FeatureAction action) =>
+        _thread is not null
+        && action.FeatureId == Definition.Id
+        && action.ActionId == ShowOrHideAction
+        && _settings.Apps.Any(app => app.IsTarget(action.Target));
+
+    public void Run(FeatureAction action)
+    {
+        if (CanRun(action))
+        {
+            _thread?.PressApp(action.Target!);
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -129,6 +170,7 @@ public sealed partial class DropDownAppsFeature : IFeature
             }
         }
 
+        _settings = read;
         if (_thread is null)
         {
             _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _results, _stopped, _refusals);

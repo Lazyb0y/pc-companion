@@ -12,7 +12,7 @@ namespace PCCompanion.Modules.Windows.EndApp;
 /// Ends the app of a window the user chooses, such as one that stopped responding, after asking.
 /// See docs/features/windows/end-app.md.
 /// </summary>
-public sealed partial class EndAppFeature : IFeature, IHostMenuItems
+public sealed partial class EndAppFeature : IFeature, IHostMenuItems, IFeatureActions
 {
     // How long the host waits as it exits for the feature's thread to end.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -58,6 +58,20 @@ public sealed partial class EndAppFeature : IFeature, IHostMenuItems
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    /// <summary>The action End App offers to shortcuts and mouse buttons, named in the user's language.</summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions() =>
+        [new(new FeatureAction(Definition.Id, ChooseAppShortcut), Strings.EndAppActionChooseApp)];
+
+    public bool CanRun(FeatureAction action) => _thread is not null && action == new FeatureAction(Definition.Id, ChooseAppShortcut);
+
+    public void Run(FeatureAction action)
+    {
+        if (CanRun(action))
+        {
+            _thread?.StartFromAction();
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {

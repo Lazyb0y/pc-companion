@@ -53,6 +53,9 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
     /// <summary>Brings the hidden windows back on the taskbar at once, from any thread, as the host crashes.</summary>
     public void ReleaseNow() => _dropper?.Controller.ReleaseNow();
 
+    /// <summary>Does what the shortcut of the listed app that <paramref name="target"/> names does, on the feature's thread.</summary>
+    public void PressApp(string target) => Post(() => _dropper?.Controller.PressApp(target));
+
     protected override IDisposable Open(MessageWindow window)
     {
         var dropper = new Dropper(this, window);

@@ -15,7 +15,7 @@ namespace PCCompanion.Modules.Windows.MinimizeToTray;
 /// Sends any app's window to an icon in the notification area instead of the taskbar. See
 /// docs/features/windows/minimize-to-tray.md.
 /// </summary>
-public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
+public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems, IFeatureActions
 {
     // How long the host waits as it exits for the windows to go back on the taskbar.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -90,6 +90,20 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    /// <summary>The action Minimize to Tray offers to shortcuts and mouse buttons, named in the user's language.</summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions() =>
+        [new(new FeatureAction(Definition.Id, SendToTrayShortcut), Strings.MinimizeToTrayActionSendToTray)];
+
+    public bool CanRun(FeatureAction action) => _thread is not null && IsSendToTray(action);
+
+    public void Run(FeatureAction action)
+    {
+        if (IsSendToTray(action))
+        {
+            _thread?.SendFront();
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -201,6 +215,8 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
 
         _stopped = null;
     }
+
+    private static bool IsSendToTray(FeatureAction action) => action == new FeatureAction(Definition.Id, SendToTrayShortcut);
 
     // Doesn't wait: a new thread waits for this one before it starts.
     private void Stop()

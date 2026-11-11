@@ -51,6 +51,9 @@ public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
     /// <summary>Starts choosing an app, for the PC Companion icon's menu item, on the feature's thread.</summary>
     public void StartFromMenu() => Post(() => _runner?.Controller.Start(EndAppSource.Menu));
 
+    /// <summary>Starts choosing an app, as the shortcut does, for a shortcut or mouse button of Shortcuts & Mouse Buttons.</summary>
+    public void StartFromAction() => Post(() => _runner?.Controller.Start(EndAppSource.Shortcut));
+
     protected override IDisposable Open(MessageWindow window)
     {
         var runner = new Runner(this, window);

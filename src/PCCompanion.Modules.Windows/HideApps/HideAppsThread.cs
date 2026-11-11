@@ -48,7 +48,10 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
     public int Count => _hider?.Controller.Count ?? 0;
 
     /// <summary>Brings back every window that Hide Apps minimized, on the feature's thread.</summary>
-    public void ShowAll() => Post(() => _hider?.Press(HideAction.ShowAll));
+    public void ShowAll() => Run(HideAction.ShowAll);
+
+    /// <summary>Does what a press of a shortcut, or the menu item, asks for, on the feature's thread.</summary>
+    public void Run(HideAction action) => Post(() => _hider?.Press(action));
 
     /// <summary>
     /// Minimizes every window of a window's app, for a click on its title bar, on the feature's

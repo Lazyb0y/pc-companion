@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -79,5 +81,30 @@ public sealed class HideAppsFeatureTests : IDisposable
 
         Assert.Empty(_feature.GetMenuItems());
         _feature.ChooseMenuItem(1);
+    }
+
+    [Fact]
+    public void ItOffersHideAppHideOthersAndShowAll()
+    {
+        Assert.Equal(
+            [new FeatureAction("hideApps", "hideApp"), new FeatureAction("hideApps", "hideOthers"), new FeatureAction("hideApps", "showAll")],
+            HideAppsFeature.OfferedActions().Select(offered => offered.Action));
+        Assert.All(HideAppsFeature.OfferedActions(), offered => Assert.NotEmpty(offered.Name));
+    }
+
+    [Fact]
+    public void ItCanRunItsActionsOnlyWhileItsOn()
+    {
+        var hideOthers = new FeatureAction("hideApps", "hideOthers");
+        Assert.False(_feature.CanRun(hideOthers));
+
+        _feature.Apply(Section(Quiet));
+        Assert.True(_feature.CanRun(hideOthers));
+        Assert.False(_feature.CanRun(hideOthers with { Target = "Notes" }));
+        Assert.False(_feature.CanRun(new FeatureAction("hideApps", "hideEverything")));
+        Assert.False(_feature.CanRun(new FeatureAction("endApp", "hideOthers")));
+
+        _feature.Apply(Section("""{ "enabled": false }"""));
+        Assert.False(_feature.CanRun(hideOthers));
     }
 }
