@@ -36,6 +36,9 @@ function Write-AppWindowsSettings([string] $Section) {
     Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""appWindows"": $Section } }"
     Start-Sleep -Seconds 3
 }
+# Another program that has Alt + Shift + the key above Tab: the page names it and suggests the other shortcut.
+Test-ShortcutTakenNote 'Alt + Shift + `' 0x5 0xC0 { Write-AppWindowsSettings '{ "enabled": false }' } { Write-AppWindowsSettings '{ "enabled": true, "shortcut": "AltAboveTab" }' } { Write-AppWindowsSettings '{ "enabled": true, "shortcut": "AltAboveTab", "includeMinimized": true }' } 'App Windows' 'Another program uses Alt + Shift + `, so this shortcut doesn''t switch windows. Choose the other shortcut above. PC Companion also tries again when a setting here changes.' '13b-app-windows-shortcut-taken'
+
 function Get-ExplorerWindows { @([Win32]::TopLevelWindows() | Where-Object { [Win32]::WindowTitle($_) -like '* - File Explorer' }) }
 function Get-ExplorerOrder { (Get-ExplorerWindows | ForEach-Object { [Win32]::WindowTitle($_) -replace ' - File Explorer$', '' }) -join ' | ' }
 function Get-FrontTitle { [Win32]::WindowTitle([Win32]::GetForegroundWindow()) -replace ' - File Explorer$', '' }

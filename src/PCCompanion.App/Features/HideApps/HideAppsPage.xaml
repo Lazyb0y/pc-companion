@@ -25,12 +25,22 @@
                     ItemsSource="{x:Bind ViewModel.HideAppShortcuts}"
                     SelectedItem="{x:Bind ViewModel.SelectedHideAppShortcut, Mode=TwoWay}" />
 
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.HideAppRefused, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.HideAppRefusedInfo}"
+                    Severity="Warning" />
+
                 <controls:ChoiceCard
                     Description="{app:Localized Key=HideAppsHideOthersDescription}"
                     Glyph="&#xE765;"
                     Header="{app:Localized Key=HideAppsHideOthersHeader}"
                     ItemsSource="{x:Bind ViewModel.HideOthersShortcuts}"
                     SelectedItem="{x:Bind ViewModel.SelectedHideOthersShortcut, Mode=TwoWay}" />
+
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.HideOthersRefused, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.HideOthersRefusedInfo}"
+                    Severity="Warning" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=HideAppsFrontDisplayOnlyDescription}"

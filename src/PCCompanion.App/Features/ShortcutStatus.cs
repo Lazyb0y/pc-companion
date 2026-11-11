@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features;
@@ -19,6 +22,7 @@ public sealed class ShortcutStatus(string feature, Func<bool> isOn)
     // How long the page waits for the host to answer.
     private static readonly TimeSpan ReadTimeout = TimeSpan.FromMilliseconds(500);
     private static readonly IReadOnlySet<string> None = new HashSet<string>(StringComparer.Ordinal);
+    private static readonly CompositeFormat RefusedFormat = CompositeFormat.Parse(Strings.ShortcutRefused);
 
     private DispatcherQueueTimer? _timer;
     private bool _reading;
@@ -28,6 +32,10 @@ public sealed class ShortcutStatus(string feature, Func<bool> isOn)
 
     /// <summary>The feature's names of the shortcuts Windows refused.</summary>
     public IReadOnlySet<string> Refused { get; private set; } = None;
+
+    /// <summary>The warning note at a refused shortcut, such as "Another program uses Ctrl + Alt + Esc, so this shortcut does nothing here."</summary>
+    /// <param name="keys">The shortcut as the page shows it.</param>
+    public static string RefusedNote(string keys) => string.Format(CultureInfo.CurrentCulture, RefusedFormat, keys);
 
     /// <summary>Starts reading, now and every 2 seconds, until <see cref="Stop"/>. Call it on the page's thread.</summary>
     public void Start()

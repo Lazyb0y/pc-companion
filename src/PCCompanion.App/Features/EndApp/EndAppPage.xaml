@@ -25,6 +25,11 @@
                     ItemsSource="{x:Bind ViewModel.Shortcuts}"
                     SelectedItem="{x:Bind ViewModel.SelectedShortcut, Mode=TwoWay}" />
 
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.ShortcutRefused, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.ShortcutRefusedInfo, Mode=OneWay}"
+                    Severity="Warning" />
+
                 <controls:IconCard
                     Description="{app:Localized Key=EndAppChoosingDescription}"
                     Glyph="&#xE7C9;"

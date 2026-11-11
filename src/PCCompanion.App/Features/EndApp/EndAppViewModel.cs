@@ -15,12 +15,15 @@ public sealed record EndAppShortcutOption(EndAppShortcut Shortcut, string Displa
 public sealed class EndAppViewModel : FeatureViewModel<EndAppSettings>
 {
     private readonly AppSettings _appSettings;
+    private readonly ShortcutStatus _shortcutStatus;
     private EndAppShortcutOption? _selectedShortcut;
 
     public EndAppViewModel(FeatureSettingsEditor editor, AppSettings appSettings)
         : base(editor, EndAppFeature.Definition)
     {
         _appSettings = appSettings;
+        _shortcutStatus = new ShortcutStatus(EndAppFeature.Definition.Id, () => IsOn);
+        _shortcutStatus.Changed += (_, _) => OnPropertyChanged(nameof(ShortcutRefused));
 
         Shortcuts =
         [
@@ -38,7 +41,20 @@ public sealed class EndAppViewModel : FeatureViewModel<EndAppSettings>
         ? Strings.EndAppCantEndInfoOn
         : Strings.EndAppCantEndInfo;
 
+    /// <summary>Whether Windows refused the shortcut, as the running feature last said.</summary>
+    public bool ShortcutRefused => _shortcutStatus.Refused.Contains(EndAppFeature.ChooseAppShortcut);
+
+    /// <summary>The note that names the shortcut chosen now.</summary>
+    public string ShortcutRefusedInfo => ShortcutStatus.RefusedNote(Settings.Shortcut == EndAppShortcut.WindowsControlEscape
+        ? Strings.EndAppShortcutWindowsControlEscape
+        : Strings.EndAppShortcutControlAltEscape);
+
     public IReadOnlyList<EndAppShortcutOption> Shortcuts { get; }
+
+    /// <summary>Reads which shortcuts Windows refused from the host while the page shows. Call it on the page's thread.</summary>
+    public void StartShortcutStatus() => _shortcutStatus.Start();
+
+    public void StopShortcutStatus() => _shortcutStatus.Stop();
 
     public EndAppShortcutOption? SelectedShortcut
     {
@@ -48,6 +64,7 @@ public sealed class EndAppViewModel : FeatureViewModel<EndAppSettings>
             if (value is not null && SetProperty(ref _selectedShortcut, value))
             {
                 Save(Settings with { Shortcut = value.Shortcut });
+                OnPropertyChanged(nameof(ShortcutRefusedInfo));
             }
         }
     }

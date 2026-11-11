@@ -185,7 +185,7 @@ public interface IHostActions
   - The settings app asks through a named pipe, `PCCompanion.Shortcuts.Pause.<session ID>`, that only the user's own account and the system can open, and that rejects remote clients (`RequestPipe`). The request says only "pause" or "resume".
   - A pause lasts 10 seconds and the editor renews it every 5 seconds while it listens, so a settings app that closes or stops never leaves the shortcuts paused.
   - Every shortcut is registered through `HotKey`, which removes them all on their own threads for the pause, and registers them again after it.
-- **Shortcuts Windows refused,** for this page and every other page with a shortcut, such as App Windows' ([#175](https://github.com/Lazyb0y/pc-companion/issues/175)): each feature tells `ShortcutRefusals` which of its shortcuts Windows refused, and the host passes the list through a named pipe, `PCCompanion.Shortcuts.Status.<session ID>`, with the same protections, which reads nothing (`SnapshotPipe`). Each page reads it while it shows, and its note goes away once Windows takes the shortcut. Clipboard Actions' own status pipe is replaced by it. PC Companion never learns which program has a shortcut.
+- **Shortcuts Windows refused,** for this page and every other page with a shortcut, such as App Windows' ([#175](https://github.com/Lazyb0y/pc-companion/issues/175)): each feature tells `ShortcutRefusals` which of its shortcuts Windows refused, and the host passes the list through a named pipe, `PCCompanion.Shortcuts.Status.<session ID>`, with the same protections, which reads nothing (`SnapshotPipe`). Each page reads it while it shows, and its note goes away once Windows takes the shortcut. Every feature with shortcuts already reports to it, and its page shows the note. PC Companion never learns which program has a shortcut.
 - **The rest** the page works out itself, from the settings and the layouts: an action whose feature is off or that has no such profile or app, and a shortcut that types a character with AltGr.
 
 ## With the other features
@@ -197,7 +197,7 @@ public interface IHostActions
 - **Middle-Click Paste and Title Bar Actions** share the pointer hook. Their claims never overlap with these, which need the Windows key for the middle button; if they did, the claim made first would win, as for any two claims.
 - **Hot Corners** keeps its own actions; sharing the other features' actions with corners is [#152](https://github.com/Lazyb0y/pc-companion/issues/152)'s.
 - **App Windows' exceptions** ([#123](https://github.com/Lazyb0y/pc-companion/issues/123)) can reuse how a shortcut is left to a listed app in front.
-- **Their specs change** when this is built: Clipboard Actions' Not included loses "Choosing another shortcut"; Display Profiles' and Network Profiles' Not included lose shortcuts; App Windows', Hide Apps', Minimize to Tray's, End App's and Drop-down Apps' shortcut sections gain the note from the shared status; and [Features](../../architecture/features.md) gains `IFeatureActions`.
+- **Their specs change** when this is built: Clipboard Actions' Not included loses "Choosing another shortcut"; Display Profiles' and Network Profiles' Not included lose shortcuts; and [Features](../../architecture/features.md) gains `IFeatureActions`.
 
 ## Threads
 

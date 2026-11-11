@@ -321,6 +321,9 @@ Start-Sleep -Seconds 1
 Test-Check 'the page saves the shortcut' ((Get-EndSettings).shortcut -eq 'WindowsControlEscape') "saved: $(Get-EndSettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
+# Another program that has Ctrl + Alt + Esc: the page says so.
+Test-ShortcutTakenNote 'Ctrl + Alt + Esc' 0x3 0x1B { Write-EndSettings '{ "enabled": false }' } { Write-EndSettings '{ "enabled": true, "shortcut": "ControlAltEscape" }' } { Write-EndSettings '{ "enabled": true, "shortcut": "None" }'; Write-EndSettings '{ "enabled": true, "shortcut": "ControlAltEscape" }' } 'End App' 'Another program uses Ctrl + Alt + Esc, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '15a-end-app-shortcut-taken'
+
 Write-EndSettings '{ "enabled": true }'
 Start-Host
 $quit = New-Object System.Threading.EventWaitHandle($false, [System.Threading.EventResetMode]::ManualReset, 'Local\PCCompanionEndAppChecksQuit')

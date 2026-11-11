@@ -4720,4 +4720,24 @@
     <value>开启后，会关注指针；指针停在文本上时，会询问应用其下方是什么，但绝不读取其文本；列出应用后，会读取窗口所属的应用。仅在文本框中单击鼠标中键时读取所选文本，绝不从密码框读取，也不会存储、记录或发送这些文本。只会将文本放入你单击的框中，且不使用剪贴板。询问浏览器会开启其辅助功能支持，直到浏览器关闭，这在很长的页面上会占用更多内存。不会建立任何网络连接。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>另一个程序正在使用 {0}，因此此快捷键在此不起作用。在此处更改设置时，PC Companion 会重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>另一个程序正在使用 {0}，因此此快捷键不会切换窗口。请在上方选择另一个快捷键。在此处更改设置时，PC Companion 也会重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Shift + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>Windows 徽标键 + Shift + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>另一个程序正在使用 {0}，因此 {1} 的快捷键在此不起作用。在此处更改设置时，PC Companion 会重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

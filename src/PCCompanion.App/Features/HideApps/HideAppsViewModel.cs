@@ -17,6 +17,7 @@ public sealed record HideOthersShortcutOption(HideOthersShortcut Shortcut, strin
 public sealed class HideAppsViewModel : FeatureViewModel<HideAppsSettings>
 {
     private readonly AppSettings _appSettings;
+    private readonly ShortcutStatus _shortcutStatus;
     private HideAppShortcutOption? _selectedHideAppShortcut;
     private HideOthersShortcutOption? _selectedHideOthersShortcut;
 
@@ -24,6 +25,12 @@ public sealed class HideAppsViewModel : FeatureViewModel<HideAppsSettings>
         : base(editor, HideAppsFeature.Definition)
     {
         _appSettings = appSettings;
+        _shortcutStatus = new ShortcutStatus(HideAppsFeature.Definition.Id, () => IsOn);
+        _shortcutStatus.Changed += (_, _) =>
+        {
+            OnPropertyChanged(nameof(HideAppRefused));
+            OnPropertyChanged(nameof(HideOthersRefused));
+        };
 
         HideAppShortcuts =
         [
@@ -45,6 +52,16 @@ public sealed class HideAppsViewModel : FeatureViewModel<HideAppsSettings>
     public string StayInfo => HostLauncher.RunsAsAdministrator(_appSettings.General)
         ? Strings.HideAppsStayInfoOn
         : Strings.HideAppsStayInfo;
+
+    /// <summary>Whether Windows refused Hide app's shortcut, as the running feature last said.</summary>
+    public bool HideAppRefused => _shortcutStatus.Refused.Contains(HideAppsFeature.HideAppShortcut);
+
+    /// <summary>Whether Windows refused Hide others' shortcut.</summary>
+    public bool HideOthersRefused => _shortcutStatus.Refused.Contains(HideAppsFeature.HideOthersShortcut);
+
+    public string HideAppRefusedInfo { get; } = ShortcutStatus.RefusedNote(Strings.HideAppsHideAppWindowsControlH);
+
+    public string HideOthersRefusedInfo { get; } = ShortcutStatus.RefusedNote(Strings.HideAppsHideOthersWindowsControlShiftH);
 
     public IReadOnlyList<HideAppShortcutOption> HideAppShortcuts { get; }
 
@@ -73,6 +90,11 @@ public sealed class HideAppsViewModel : FeatureViewModel<HideAppsSettings>
             }
         }
     }
+
+    /// <summary>Reads which shortcuts Windows refused from the host while the page shows. Call it on the page's thread.</summary>
+    public void StartShortcutStatus() => _shortcutStatus.Start();
+
+    public void StopShortcutStatus() => _shortcutStatus.Stop();
 
     public bool FrontDisplayOnly
     {

@@ -65,7 +65,7 @@ Put away every window of the app in front, or of every other app, with one short
 - **Windows + Ctrl + H** for Hide app and **Windows + Ctrl + Shift + H** for Hide others, registered with `RegisterHotKey` and `MOD_NOREPEAT`, so Windows tells PC Companion only when a shortcut is pressed. No keyboard hook. Shift means "the others", as Shift goes the other way in App Windows.
 - Windows uses Windows + H for voice typing, and Windows + Alt + H while voice typing is open; a popular mouse utility uses Windows + Shift + H; Ctrl + Alt + H is AltGr + H on many keyboard layouts; and apps use Ctrl + H for Replace or History. Windows + Ctrl + H and Windows + Ctrl + Shift + H aren't in Windows' list of keyboard shortcuts, and Windows let a program register both on Windows 11 builds 26100 and 26300.
 - **Hide app** and **Hide others** on the page each offer their shortcut or None.
-- When another program already has a shortcut, Windows refuses it and a warning is logged. PC Companion tries again after any change to the settings.
+- When another program already has a shortcut, Windows refuses it and a warning is logged. PC Companion tries again after any change to the settings. The page shows a warning note at that shortcut, such as "Another program uses Windows logo key + Ctrl + Shift + H, so this shortcut does nothing here.", which goes away once Windows takes it; see [Running in the host](../../architecture/features.md#running-in-the-host).
 
 ## Bringing windows back
 
@@ -223,6 +223,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - the settings: defaults, the spec's example, an unknown shortcut and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/HideApps.ps1`), with test windows the checks start:
   - the Home switch turns the feature on with its defaults, and the page saves both shortcuts and both switches;
+  - with a test program holding Windows + Ctrl + Shift + H, the page shows its note at Hide others, until the program lets it go and a setting changes;
   - Hide app, sent by `SendInput`, minimizes both windows of a test app and its palette, keeps their taskbar buttons and brings another window to the front;
   - when the test app restores one of its windows, the other comes back right behind it;
   - Hide others keeps both of the app in front's windows and the focus, minimizes other test apps' windows, Settings and File Explorer's, leaves an always-on-top window and a window without a Minimize button, and the host logs why;

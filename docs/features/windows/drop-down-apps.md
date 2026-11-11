@@ -107,7 +107,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - Windows Terminal's quake mode uses Windows + the key above Tab, which is also App Windows' second shortcut, so it isn't offered.
   - Windows uses Windows + Ctrl and Windows + Alt with the numbers for its taskbar buttons, and Ctrl + Alt is AltGr on many layouts, so the numbers come with all three keys.
   - In the spike, Windows let a program register every shortcut on the list on Windows 11 build 26100. Pressing them reached it in 1 to 4 ms and opened nothing of Windows'.
-- When another program already has a shortcut, Windows refuses it, a warning is logged and a recent result says so. PC Companion tries again after any change to the settings.
+- When another program already has a shortcut, Windows refuses it, a warning is logged and a recent result says so. PC Companion tries again after any change to the settings. A warning note below the app list names the shortcut and its app, such as "Another program uses Windows + Ctrl + `, so the shortcut for Terminal does nothing here.", until Windows takes it; see [Running in the host](../../architecture/features.md#running-in-the-host).
 
 ## Showing
 
@@ -493,7 +493,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
   - **the settings:** defaults, the spec's example, an unknown shortcut, a shortcut listed twice, values out of range, and a section that can't be read;
   - **recent results:** the last 5 kept, the JSON the pipe gives, and the page's text for each outcome.
 - **Sandbox checks** (`scripts/sandbox/groups/DropDownApps.ps1`), with test programs the checks build and start, and animation effects turned on for the slide, since the Sandbox has them off:
-  - **the page:** the Home switch turns the feature on, and the page saves the list, with Running app adding an app with the first shortcut, the shortcut chosen in its row, Keep on top and Remove;
+  - **the page:** the Home switch turns the feature on, and the page saves the list, with Running app adding an app with the first shortcut, the shortcut chosen in its row, Keep on top and Remove; with a test program holding Windows + Ctrl + the key above Tab, the note below the list names the app, until the program lets it go and a setting changes;
   - **dropping down:** the shortcut, sent by `SendInput` by scan code, slides the app's front-most window in at the top of the work area at the page's width and height, in front, and leaves its other window; the host logs the slide's frames;
   - **hiding:** pressing it again slides the window up and hides it, marked, and the window that had the front gets it back; with animation effects off, the window shows and hides at once;
   - **hiding on focus loss:** the window hides when another test program's window comes to the front;

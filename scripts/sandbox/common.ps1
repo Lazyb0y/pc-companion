@@ -902,6 +902,49 @@ function Start-TestWindow([string] $Kind) {
     return $process
 }
 
+# Another program that holds a shortcut for 2 minutes, so that Windows refuses it to the host:
+# RegisterHotKey's modifiers (Alt 1, Ctrl 2, Shift 4, Windows 8; MOD_NOREPEAT is added) and
+# virtual key. Returns the process once the shortcut is taken, or $null when it couldn't be.
+function Start-ShortcutHolder([uint32] $Modifiers, [uint32] $Key) {
+    $result = Join-Path $env:TEMP "PCCompanion-hotkey-holder-$Modifiers-$Key.txt"
+    Remove-Item $result -Force -ErrorAction SilentlyContinue
+    $script = Join-Path $env:TEMP "PCCompanion-hotkey-holder-$Modifiers-$Key.ps1"
+    Set-Content -Path $script -Encoding utf8 -Value @"
+Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public static class Holder { [DllImport("user32.dll")] public static extern bool RegisterHotKey(IntPtr window, int id, uint modifiers, uint key); }'
+Set-Content -Path '$result' -Value ([Holder]::RegisterHotKey([IntPtr]::Zero, 1, $(0x4000 -bor $Modifiers), $Key))
+Start-Sleep -Seconds 120
+"@
+    $process = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $script -WindowStyle Hidden -PassThru
+    if (Wait-Until { (Test-Path $result) -and ((Get-Content $result) -eq 'True') } 15) { return $process }
+    Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+    return $null
+}
+
+# Another program holds a feature's shortcut as the host registers it: the feature's page says so,
+# and once the program lets it go and a setting changes, the note goes away. $Off turns the
+# feature off, so that the host lets the shortcut go first, and again at the end, so that the
+# group's next settings start it afresh; $On turns it on with the shortcut; $Change changes another
+# setting, since a feature applies only settings that changed, which is when it tries again.
+function Test-ShortcutTakenNote([string] $Name, [uint32] $Modifiers, [uint32] $Key, [scriptblock] $Off, [scriptblock] $On, [scriptblock] $Change, [string] $Page, [string] $Note, [string] $Screenshot) {
+    [void] (Close-SettingsApp)
+    & $Off
+    $holder = Start-ShortcutHolder $Modifiers $Key
+    Test-Check "a test program takes $Name" ($null -ne $holder)
+    & $On
+    Start-Process $appExe
+    [void] (Wait-Until { Get-AppWindow })
+    Start-Sleep -Seconds 3
+    [void] (Select-NavigationItem $Page)
+    Test-Check "the $Page page says another program has $Name" (Wait-Until { Find-AppText $Note } 10) ((Get-WindowText) -join ' | ')
+    Save-Screenshot $Screenshot
+    if ($holder) { Stop-Process -Id $holder.Id -Force -ErrorAction SilentlyContinue }
+    Start-Sleep -Seconds 1
+    & $Change
+    Test-Check "once the program lets $Name go and a setting changes, the $Page note goes away" (Wait-Until { -not (Find-AppText $Note) } 15)
+    [void] (Close-SettingsApp)
+    & $Off
+}
+
 $msi = (Get-ChildItem 'C:\Test\msi' -Filter 'PCCompanion-*.msi' | Select-Object -First 1).FullName
 $upgradeMsi = 'C:\Test\upgrade\PCCompanion-upgrade.msi'
 $sameVersionMsi = 'C:\Test\upgrade\PCCompanion-same-version.msi'

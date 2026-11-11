@@ -750,16 +750,8 @@ Start-HostAgain
 # until the program lets it go and a setting changes.
 Write-ClipboardSettings $true $false
 Test-Check 'turning Selected text off removes its shortcut' (Wait-Until { (Get-HostLog) -match 'Selected text "?False"?\.' } 10)
-$holderResult = Join-Path $env:TEMP 'PCCompanion-hotkey-holder.txt'
-Remove-Item $holderResult -Force -ErrorAction SilentlyContinue
-$holderScript = Join-Path $env:TEMP 'PCCompanion-hotkey-holder.ps1'
-Set-Content -Path $holderScript -Encoding utf8 -Value @"
-Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public static class Holder { [DllImport("user32.dll")] public static extern bool RegisterHotKey(IntPtr window, int id, uint modifiers, uint key); }'
-Set-Content -Path '$holderResult' -Value ([Holder]::RegisterHotKey([IntPtr]::Zero, 1, 0x4009, 0x53))
-Start-Sleep -Seconds 120
-"@
-$holder = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $holderScript -WindowStyle Hidden -PassThru
-Test-Check 'a test program takes Windows + Alt + S' (Wait-Until { (Test-Path $holderResult) -and ((Get-Content $holderResult) -eq 'True') } 15)
+$holder = Start-ShortcutHolder 0x9 0x53
+Test-Check 'a test program takes Windows + Alt + S' ($null -ne $holder)
 [void] [Win32]::SetForegroundWindow($charmap)
 Press-SelectionShortcut
 Start-Sleep -Seconds 2
@@ -775,7 +767,7 @@ $taken = "Another program uses Windows logo key + Alt + S, so this shortcut does
 Test-Check 'the page says another program has Windows + Alt + S' (Wait-Until { Find-AppText $taken } 10)
 Test-Check 'and nothing about Windows + Alt + V' (-not (Find-AppText ($taken -replace '\+ S,', '+ V,')))
 Save-Screenshot '13j-clipboard-actions-shortcut-taken'
-Stop-Process -Id $holder.Id -Force -ErrorAction SilentlyContinue
+if ($holder) { Stop-Process -Id $holder.Id -Force -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 1
 Write-ClipboardSettings $true $true $false
 Test-Check 'once the program lets it go and a setting changes, the note goes away' (Wait-Until { -not (Find-AppText $taken) } 15)

@@ -124,7 +124,7 @@ Press a shortcut, click the window of an app that stopped responding, confirm, a
 - **Why these:** Ctrl + Shift + Esc opens Task Manager and Ctrl + Esc opens Start, while Ctrl + Alt + Esc and Windows + Ctrl + Esc aren't in Windows' list of keyboard shortcuts. Windows let a program register both on build 26300, and Ctrl + Alt + Esc on build 26100 (spike). Ctrl + Alt is AltGr on many keyboard layouts, but AltGr + Esc types nothing.
 - **Ctrl and Alt reach the app in front** before Esc, as for any shortcut (spike). Their release goes to the covering window, which has the focus by then, so the app's menu bar doesn't open.
 - **While an app running as administrator is in front,** Windows still reports the shortcut, as for Hide Apps, and the covering window takes the front (spike).
-- **A shortcut another program has:** Windows refuses it, and a warning is logged. PC Companion tries again after any change to the settings.
+- **A shortcut another program has:** Windows refuses it, and a warning is logged. PC Companion tries again after any change to the settings. The page shows a warning note at the shortcut, which goes away once Windows takes it; see [Running in the host](../../architecture/features.md#running-in-the-host).
 - **End an app…** is in the PC Companion icon's menu above Settings and Exit while the feature is on (`IHostMenuItems`). Choosing it starts choosing an app once the menu closes.
 
 ## With the other features
@@ -285,7 +285,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale on on
   - **Safety:**
     - The checks end only test programs they started. They confirm **End app** only in a dialog that names one of them; any other dialog is canceled, and the check fails.
     - Each check compares the running processes before and after, and fails and stops the group when any other process with a window, or one of Windows' own, is gone.
-  - **the page:** the Home switch turns the feature on with its defaults, and the page saves the shortcut;
+  - **the page:** the Home switch turns the feature on with its defaults, and the page saves the shortcut; with a test program holding Ctrl + Alt + Esc, the page shows its note, until the program lets it go and a setting changes;
   - **choosing:**
     - the shortcut, with a responding test window in front, and the menu item start choosing;
     - clicks and keys don't reach the test windows, and the pointer is the crosshair or Unavailable;

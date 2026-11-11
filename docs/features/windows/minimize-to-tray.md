@@ -52,7 +52,7 @@ Send any app's window to an icon in the notification area instead of the taskbar
 
 - **Windows + Shift + Z,** registered with `RegisterHotKey` and `MOD_NOREPEAT`, so Windows tells PC Companion only when the shortcut is pressed. No keyboard hook. Windows 11's list of keyboard shortcuts doesn't include it, and several tray tools for Windows use it too.
 - **Shortcut** on the page offers Windows + Shift + Z or None.
-- When another program already has the shortcut, Windows refuses it and a warning is logged. PC Companion tries again after any change to the settings.
+- When another program already has the shortcut, Windows refuses it and a warning is logged. PC Companion tries again after any change to the settings. The page shows a warning note at the shortcut, which goes away once Windows takes it; see [Running in the host](../../architecture/features.md#running-in-the-host).
 
 ### Shift + Minimize
 
@@ -263,6 +263,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
   - the settings: defaults, the spec's example, an unknown shortcut, listed apps that don't match, and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/MinimizeToTray.ps1`), with test windows the checks start:
   - the Home switch turns the feature on with its defaults, and the page saves the shortcut, Shift + Minimize and the app list, with Running app and Remove; Program file is the same list as Hot Corners', whose checks cover it;
+  - with a test program holding Windows + Shift + Z, the page shows its note, until the program lets it go and a setting changes;
   - Windows + Shift + Z, sent by `SendInput`, sends the test window and its palette to the tray: hidden, off the taskbar, and the app's icon found by its name in the hidden icons menu; selecting the icon brings it back where it was and maximized when it was, in front;
   - Shift + Minimize sends a window, also Edge's, whose title bar Edge draws itself; Minimize without Shift doesn't;
   - a listed app's window goes to the tray when minimized, and Windows + D and Windows + M send nothing;

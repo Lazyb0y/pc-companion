@@ -9,6 +9,8 @@ public sealed partial class HideAppsPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<HideAppsViewModel>();
         InitializeComponent();
+        Loaded += (_, _) => ViewModel.StartShortcutStatus();
+        Unloaded += (_, _) => ViewModel.StopShortcutStatus();
     }
 
     public HideAppsViewModel ViewModel { get; }

@@ -4768,4 +4768,24 @@
     <value>Beobachtet, solange es eingeschaltet ist, den Zeiger und fragt die App, wenn er auf Text ruht, was sich darunter befindet, nie nach ihrem Text; bei aufgeführten Apps liest es, zu welcher App ein Fenster gehört. Liest den markierten Text nur bei einem Mittelklick in ein Textfeld, nie aus einem Kennwortfeld, und speichert, protokolliert oder sendet ihn nicht. Fügt den Text nur in das angeklickte Feld ein und verwendet die Zwischenablage nicht. Eine Anfrage an einen Browser schaltet dessen Barrierefreiheitsunterstützung ein, bis er geschlossen wird, was auf sehr langen Seiten mehr Arbeitsspeicher belegt. Stellt keine Netzwerkverbindungen her.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>Ein anderes Programm verwendet {0}, daher bewirkt diese Tastenkombination hier nichts. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>Ein anderes Programm verwendet {0}, daher wechselt diese Tastenkombination keine Fenster. Wählen Sie oben die andere Tastenkombination. PC Companion versucht es außerdem erneut, wenn Sie hier eine Einstellung ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Umschalt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>Windows-Logo-Taste + Umschalt + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>Ein anderes Programm verwendet {0}, daher bewirkt die Tastenkombination für {1} hier nichts. PC Companion versucht es erneut, wenn Sie hier eine Einstellung ändern.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

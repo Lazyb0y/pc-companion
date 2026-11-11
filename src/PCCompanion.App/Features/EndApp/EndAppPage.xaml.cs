@@ -9,6 +9,8 @@ public sealed partial class EndAppPage : Page
     {
         ViewModel = App.Current.Services.GetRequiredService<EndAppViewModel>();
         InitializeComponent();
+        Loaded += (_, _) => ViewModel.StartShortcutStatus();
+        Unloaded += (_, _) => ViewModel.StopShortcutStatus();
     }
 
     public EndAppViewModel ViewModel { get; }
