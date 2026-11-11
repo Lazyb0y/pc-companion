@@ -5144,4 +5144,168 @@
     <value>الزر الأوسط</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>الاختصارات وأزرار الماوس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>شغّل إجراءات PC Companion، مثل إخفاء التطبيقات الأخرى أو تبديل ملف تعريف، باختصارات لوحة المفاتيح وأزرار الماوس الخاصة بك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>الاختصارات وأزرار الماوس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>يشغّل كل واحد منها إجراءً لإحدى الميزات ما دامت تلك الميزة قيد التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>لا توجد اختصارات أو أزرار ماوس بعد. أضف واحداً لإخفاء التطبيقات الأخرى أو تبديل ملف تعريف أو إظهار تطبيق منسدل بمفاتيح أو زر من اختيارك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>مزيد من الخيارات لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>حذف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>هل تريد حذف {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>إلغاء الأمر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>لا يوجد اختصار أو زر صالح للاستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>إجراء غير معروف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>إجراء غير متاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>لا يحتوي هذا على إجراء، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>لا يحتوي هذا على اختصار أو زر ماوس، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>يحتوي هذا على اختصار وزر ماوس معاً، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>يستخدم هذا مع مفتاحه أو زره مفتاحاً غير Ctrl وAlt وShift ومفتاح شعار Windows، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>لا يمكن للاختصارات استخدام هذا المفتاح، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>يحتاج هذا الاختصار إلى Ctrl أو Alt أو مفتاح شعار Windows، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>يحتفظ Windows بهذا الاختصار لنفسه، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>يستخدم هذا زر ماوس غير زر الرجوع وزر التقدم والزر الأوسط، لذا لا يفعل شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>يحتاج الزر الأوسط إلى مفتاح شعار Windows، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>يحتوي صف أعلاه على الاختصار أو الزر نفسه، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>لا يحتوي PC Companion على هذا الإجراء، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>لا يدعم هذا الكمبيوتر {0}، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>لا تقدّم {0} هذا الإجراء الآن، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>لم تعد {0} تحتوي على {1}، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} قيد إيقاف التشغيل، لذا لا يفعل هذا شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>تستخدم {0} هذا الاختصار، لذا لا يفعل شيئاً هنا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>في {0}، يكتب {1} الحرف {2}، لذا لا يفعل هذا الاختصار شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>في تخطيط لوحة مفاتيح آخر، يكتب {0} الحرف {1}، لذا لا يفعل هذا الاختصار شيئاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>فتح {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>إيقاف أزرار الماوس مؤقتاً أثناء عرض تطبيق بملء الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>يتلقى التطبيق الذي يملأ الشاشة، مثل لعبة، زر الرجوع وزر التقدم والزر الأوسط بنفسه. تستمر الاختصارات في العمل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>الاختصارات في الصفحات الأخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>اختصارات الميزات قيد التشغيل. غيّر أياً منها في صفحة الميزة الخاصة به.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>لا تحتوي أي ميزة أخرى قيد التشغيل على اختصار.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>عند استخدام زر الرجوع وزر التقدم دون مفاتيح، يتوقفان عن الرجوع والتقدم في التطبيقات، مثل المستعرضات، ما لم تضف تلك التطبيقات إلى "ليس في هذه التطبيقات".</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>تعمل الاختصارات أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة، لكن بعض الإجراءات لا يمكنها تغيير نوافذه. لا تعمل أزرار الماوس أثناء وجوده في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا تعمل الاختصارات وأزرار الماوس أيضاً عندما يكون تطبيق يعمل كمسؤول في المقدمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>يقرأ فقط الاختصارات التي تضيفها عند الضغط عليها، دون خطاف للوحة المفاتيح، وعند إضافة أزرار الماوس، يقرأ زر الرجوع وزر التقدم والزر الأوسط والمفاتيح المضغوطة معها. وأثناء وجود تطبيقات في القائمة، يقرأ أيضاً التطبيق الموجود في المقدمة أو أسفل المؤشر، ومن أجل الإيقاف المؤقت عند ملء الشاشة، موضع النافذة الموجودة في المقدمة، دون قراءة عناوين النوافذ أو محتوياتها مطلقاً. لا يشغّل إلا الإجراءات التي تختارها. لا يخزّن أي شيء ولا يرسله.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

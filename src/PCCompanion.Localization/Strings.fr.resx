@@ -4952,4 +4952,168 @@
     <value>Bouton central</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>Raccourcis et boutons de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>Exécutez les actions de PC Companion, comme masquer les autres applications ou changer de profil, avec vos propres raccourcis clavier et boutons de souris.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>Raccourcis et boutons de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>Chacun exécute une action d’une fonctionnalité tant que cette fonctionnalité est activée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>Aucun raccourci ni bouton de souris pour l’instant. Ajoutez-en un pour masquer les autres applications, changer de profil ou afficher une application déroulante avec vos propres touches ou un bouton.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>Plus d’options pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>Supprimer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>Supprimer {0} ?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>Aucun raccourci ni bouton utilisable</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>Action inconnue</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>Action non disponible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>Aucune action n’est définie, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>Aucun raccourci ni bouton de souris n’est défini, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>Un raccourci et un bouton de souris sont définis en même temps, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>Une touche autre que Ctrl, Alt, Maj et la touche du logo Windows est utilisée avec sa touche ou son bouton, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>Les raccourcis ne peuvent pas utiliser cette touche, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>Ce raccourci a besoin de Ctrl, Alt ou de la touche du logo Windows, donc il ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows se réserve ce raccourci, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>Un bouton de souris autre que Précédent, Suivant et le bouton central est utilisé, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>Le bouton central a besoin de la touche du logo Windows, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>Une ligne au-dessus a le même raccourci ou bouton, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion n’a pas cette action, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>Ce PC ne prend pas en charge {0}, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0} ne propose pas cette action pour l’instant, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0} n’a plus {1}, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} est désactivé, donc cela ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0} utilise ce raccourci, donc il ne fait rien ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>En {0}, {1} tape {2}, donc ce raccourci ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>Dans une autre disposition de clavier, {0} tape {1}, donc ce raccourci ne fait rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>Ouvrir {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>Suspendre les boutons de souris quand une application est en plein écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>Une application qui remplit l’écran, comme un jeu, reçoit elle-même les boutons Précédent, Suivant et central. Les raccourcis continuent de fonctionner.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>Raccourcis des autres pages</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>Les raccourcis des fonctionnalités activées. Modifiez-les sur la page de chaque fonctionnalité.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>Aucune autre fonctionnalité activée n’a de raccourci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>Utilisés sans touche, Précédent et Suivant ne permettent plus de reculer et d’avancer dans les applications, comme les navigateurs, sauf si vous ajoutez ces applications à « Pas dans ces applications ».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>Les raccourcis fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan, mais certaines actions ne peuvent pas modifier ses fenêtres. Les boutons de souris ne fonctionnent pas tant qu’elle est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion est exécuté en tant qu’administrateur : les raccourcis et les boutons de souris fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>Lit uniquement les raccourcis que vous ajoutez, quand vous les appuyez, sans hook clavier, et tant que des boutons de souris sont ajoutés, les boutons Précédent, Suivant et central et les touches maintenues avec eux. Tant que des applications sont listées, lit aussi l’application au premier plan ou sous le pointeur et, pour la suspension en plein écran, la position de la fenêtre au premier plan, jamais les titres ni le contenu des fenêtres. Exécute uniquement les actions que vous choisissez. Ne stocke et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
