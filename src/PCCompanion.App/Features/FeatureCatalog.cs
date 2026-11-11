@@ -92,7 +92,7 @@ public static class FeatureCatalog
         new(ClipboardModule.Id, "ModuleClipboardName",
         [
             new(ClipboardActionsFeature.Definition, ClipboardActionsFeature.CurrentSupport, typeof(ClipboardActionsPage), DrawnIcon: "clipboard-actions"),
-            new(MiddleClickPasteFeature.Definition, MiddleClickPasteFeature.CurrentSupport, typeof(MiddleClickPastePage)),
+            new(MiddleClickPasteFeature.Definition, MiddleClickPasteFeature.CurrentSupport, typeof(MiddleClickPastePage), DrawnIcon: "middle-click-paste"),
         ]),
         new(NetworkModule.Id, "ModuleNetworkName",
         [

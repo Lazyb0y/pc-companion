@@ -545,6 +545,33 @@ foreach ($icon in $titleBarActions) {
     Write-Drawing "title-bar-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $device))
 }
 
+# Middle-Click Paste, in violet: a mouse, its body in the main tone and its buttons in the light
+# tone above the line Buttons, with an orange wheel, the middle click, and a white I-beam on its
+# body, the text it pastes into: IBeam is the I-beam's middle, height and half width, and Line its
+# strokes' width. The one-color version cuts the I-beam out, and Cut wide under the buttons and
+# round the wheel.
+$middleClickPaste = @(
+    @{ Size = 32; Mouse = 6, 1, 20, 30, 10; Buttons = 14; Wheel = 14, 4, 4, 7, 2; IBeam = 16, 22.5, 10, 2.5; Line = 2.2; Cut = 1.2 }
+    @{ Size = 20; Mouse = 4, 2, 12, 16, 6; Buttons = 9; Wheel = 9, 4, 2, 4, 1; IBeam = 10, 13.25, 5, 2; Line = 1.4; Cut = 1 }
+)
+foreach ($icon in $middleClickPaste) {
+    $x, $y, $w, $h, $r = $icon.Mouse
+    $buttons = "M$(F $x) $(F $icon.Buttons)V$(F ($y + $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F $icon.Buttons)Z"
+    $cx, $cy, $tall, $half = $icon.IBeam
+    $top = $cy - $tall / 2
+    $bottom = $cy + $tall / 2
+    $iBeam = "M$(F ($cx - $half)) $(F $top)H$(F ($cx + $half))M$(F $cx) $(F $top)V$(F $bottom)M$(F ($cx - $half)) $(F $bottom)H$(F ($cx + $half))"
+    $body = @((Get-Rect $icon.Mouse ' fill="url(#violet-main)"'), "<path fill=`"url(#violet-light)`" d=`"$buttons`"/>", (Get-Rect $icon.Wheel ' fill="url(#orange)"'),
+        (Get-SymbolPath $iBeam $icon.Line))
+    Write-Drawing "middle-click-paste-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-main') + @(Get-Gradient 'violet-light') + @(Get-Gradient 'orange')) $body
+    $wheel = Get-RectPath $icon.Wheel
+    $shape = ConvertTo-Shape (Get-RectPath $icon.Mouse)
+    foreach ($cut in (Get-StrokeArea "M$(F ($x - 2)) $(F $icon.Buttons)H$(F ($x + $w + 2))" $icon.Cut), (Get-GrownShape $wheel (2 * $icon.Cut)), (Get-StrokeArea $iBeam $icon.Line)) {
+        $shape = Remove-Shape $shape $cut
+    }
+    Write-Drawing "middle-click-paste-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $shape (ConvertTo-Shape $wheel)))
+}
+
 # The orange bookmark of Network Profiles and Display Profiles, a saved profile, at an icon's
 # bottom right: Box is its x, y, width and height, and the notch at its foot is Notch deep.
 function Get-BookmarkPath([double[]] $Box, [double] $Notch) {
