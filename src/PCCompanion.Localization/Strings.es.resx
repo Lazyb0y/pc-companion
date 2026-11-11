@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Lee el texto del Portapapeles solo cuando presionas la tecla del logotipo de Windows + Alt + V, y el texto seleccionado solo cuando presionas la tecla del logotipo de Windows + Alt + S, nunca en segundo plano, nunca de un cuadro de contraseña y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Al pedir a un explorador su texto seleccionado, este activa su compatibilidad con accesibilidad hasta que se cierra, lo que usa más memoria en páginas muy largas. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
+    <value>Lee el texto del Portapapeles solo cuando muestras su menú, con la tecla del logotipo de Windows + Alt + V o un método abreviado o botón del mouse propio, y el texto seleccionado solo cuando muestras su menú, nunca en segundo plano, nunca de un cuadro de contraseña y nunca el texto que la aplicación que lo copió marcó como privado. No guarda, registra ni envía el texto. Al pedir a un explorador su texto seleccionado, este activa su compatibilidad con accesibilidad hasta que se cierra, lo que usa más memoria en páginas muy largas. Abre vínculos y direcciones web en tu explorador, que envía el texto al sitio que indica la regla, y solo inicia los programas que indican tus reglas.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4806,6 +4806,30 @@
   </data>
   <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
     <value>Mostrar u ocultar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionCopiedText" xml:space="preserve">
+    <value>Acciones para el texto copiado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionSelectedText" xml:space="preserve">
+    <value>Acciones para el texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcut" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Alt + S</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutHeader" xml:space="preserve">
+    <value>Método abreviado para el texto seleccionado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutDescription" xml:space="preserve">
+    <value>Muestra las acciones para el texto seleccionado. Con la característica Métodos abreviados y botones del mouse puedes dar a ambos menús tus propios métodos abreviados y botones del mouse.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

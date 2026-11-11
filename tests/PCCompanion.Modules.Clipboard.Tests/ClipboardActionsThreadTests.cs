@@ -472,6 +472,74 @@ public sealed class ClipboardActionsThreadTests : IDisposable
         _system.SelectionShortcut!.Press();
     }
 
+    [Fact]
+    public void WithoutAShortcutTheActionStillShowsTheMenuForTheCopiedText()
+    {
+        _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
+        _system.Choice = "Track the parcel";
+        var thread = Start(TrackParcels with { Shortcut = ClipboardActionsShortcut.None });
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
+
+        thread.ShowCopiedText();
+
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("background")));
+        Assert.DoesNotContain("register", _system.Events);
+        Assert.Equal([new Uri("https://tracking.example.com/?number=" + Parcel)], _commands.WebPages);
+    }
+
+    [Fact]
+    public void WithoutItsShortcutTheActionStillShowsTheMenuForTheSelectedText()
+    {
+        _system.Selection = Task.FromResult(new SelectedTextResult(SelectedTextStatus.Read, Parcel));
+        var thread = Start(SelectTrackParcels with { SelectedTextShortcut = ClipboardActionsSelectionShortcut.None });
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
+
+        thread.ShowSelectedText();
+
+        Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
+        Assert.Contains("register", _system.Events);
+        Assert.DoesNotContain("register selected", _system.Events);
+    }
+
+    [Fact]
+    public void TheSelectedTextsActionDoesNothingWhileSelectedTextIsOff()
+    {
+        _system.Clipboard = new ClipboardTextResult(ClipboardTextStatus.Text, Parcel);
+        var thread = Start(TrackParcels);
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
+
+        thread.ShowSelectedText();
+        thread.ShowCopiedText();
+
+        Assert.True(_system.WaitUntil(system => system.Menus.Count == 1));
+        Assert.DoesNotContain("read selection", _system.Events);
+        Assert.Contains("read", _system.Events);
+    }
+
+    [Fact]
+    public void AShortcutTurnedOffIsntNotedAsRefused()
+    {
+        _system.RefusesShortcut = true;
+        _system.RefusesSelectionShortcut = true;
+        Start(SelectTrackParcels with { Shortcut = ClipboardActionsShortcut.None, SelectedTextShortcut = ClipboardActionsSelectionShortcut.None });
+
+        Assert.True(_system.WaitUntil(_ => _logger.Entries.Any(entry => entry.Message.StartsWith("Clipboard Actions applied its settings", StringComparison.Ordinal))));
+        Assert.Empty(_refusals.All);
+        Assert.DoesNotContain("refused", _system.Events);
+        Assert.DoesNotContain("refused selected", _system.Events);
+    }
+
+    [Fact]
+    public void TurningTheShortcutOffRemovesIt()
+    {
+        var thread = Start(TrackParcels);
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("register")));
+
+        thread.Update(TrackParcels with { Shortcut = ClipboardActionsShortcut.None });
+
+        Assert.True(_system.WaitUntil(system => system.Events.Contains("dispose shortcut")));
+    }
+
     private ClipboardActionsThread Start(ClipboardActionsSettings settings, ClipboardActionsThread? previous = null)
     {
         var thread = new ClipboardActionsThread(settings, _system, _commands, _logger, previous, _refusals);

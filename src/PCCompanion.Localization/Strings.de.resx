@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Liest den Text der Zwischenablage nur, wenn Sie die Windows-Logo-Taste + Alt + V drücken, und den markierten Text nur, wenn Sie die Windows-Logo-Taste + Alt + S drücken, nie im Hintergrund, nie aus einem Kennwortfeld und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Wird ein Browser nach seinem markierten Text gefragt, schaltet er seine Barrierefreiheitsunterstützung ein, bis er geschlossen wird, was auf sehr langen Seiten mehr Arbeitsspeicher belegt. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
+    <value>Liest den Text der Zwischenablage nur, wenn Sie sein Menü anzeigen, mit der Windows-Logo-Taste + Alt + V oder einer eigenen Tastenkombination oder Maustaste, und den markierten Text nur, wenn Sie sein Menü anzeigen, nie im Hintergrund, nie aus einem Kennwortfeld und nie Text, den die kopierende App als privat markiert hat. Speichert, protokolliert und sendet den Text nicht. Wird ein Browser nach seinem markierten Text gefragt, schaltet er seine Barrierefreiheitsunterstützung ein, bis er geschlossen wird, was auf sehr langen Seiten mehr Arbeitsspeicher belegt. Öffnet Links und Webadressen in Ihrem Browser, der den Text an die von der Regel genannte Website sendet, und startet nur die Programme, die Ihre Regeln nennen.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4806,6 +4806,30 @@
   </data>
   <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
     <value>{0} ein- oder ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionCopiedText" xml:space="preserve">
+    <value>Aktionen für den kopierten Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionSelectedText" xml:space="preserve">
+    <value>Aktionen für den markierten Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcut" xml:space="preserve">
+    <value>Windows-Logo-Taste + Alt + S</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination für den markierten Text</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutDescription" xml:space="preserve">
+    <value>Zeigt die Aktionen für den markierten Text. Mit „Tastenkombinationen und Maustasten“ können Sie beiden Menüs eigene Tastenkombinationen und Maustasten zuweisen.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

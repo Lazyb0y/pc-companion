@@ -1201,7 +1201,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="ClipboardActionsPermissions" xml:space="preserve">
-    <value>Lit le texte du Presse-papiers uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + V, et le texte sélectionné uniquement lorsque vous appuyez sur la touche du logo Windows + Alt + S, jamais en arrière-plan, jamais dans une zone de mot de passe et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Demander son texte sélectionné à un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
+    <value>Lit le texte du Presse-papiers uniquement lorsque vous affichez son menu, avec la touche du logo Windows + Alt + V ou un raccourci ou bouton de souris de votre choix, et le texte sélectionné uniquement lorsque vous affichez son menu, jamais en arrière-plan, jamais dans une zone de mot de passe et jamais un texte que l’application qui l’a copié a marqué comme privé. N’enregistre, ne journalise et n’envoie pas le texte. Demander son texte sélectionné à un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Ouvre les liens et adresses web dans votre navigateur, qui envoie le texte au site indiqué par la règle, et démarre uniquement les programmes indiqués par vos règles.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="ModuleNetworkName" xml:space="preserve">
@@ -4806,6 +4806,30 @@
   </data>
   <data name="DropDownAppsActionShowOrHide" xml:space="preserve">
     <value>Afficher ou masquer {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionCopiedText" xml:space="preserve">
+    <value>Actions pour le texte copié</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsActionSelectedText" xml:space="preserve">
+    <value>Actions pour le texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsShortcutNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcut" xml:space="preserve">
+    <value>Touche du logo Windows + Alt + S</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutHeader" xml:space="preserve">
+    <value>Raccourci pour le texte sélectionné</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ClipboardActionsSelectedShortcutDescription" xml:space="preserve">
+    <value>Affiche les actions pour le texte sélectionné. La fonctionnalité Raccourcis et boutons de souris peut donner aux deux menus vos propres raccourcis et boutons de souris.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

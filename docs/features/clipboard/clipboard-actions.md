@@ -22,7 +22,8 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
   - another app keeps the clipboard open, even after a few tries;
   - the app that copied the text didn't provide it when asked, such as one that stopped responding; see [Reading the clipboard](#reading-the-clipboard).
 - Spaces and line breaks at the ends of the text are removed before matching, such as the line break a terminal adds when copying a line. The actions get the same trimmed text.
-- Nothing happens when text is copied or selected: PC Companion reads the clipboard only when Windows + Alt + V is pressed, and the selected text only when Windows + Alt + S is.
+- Nothing happens when text is copied or selected: PC Companion reads the clipboard only when its menu is asked for, with Windows + Alt + V or a shortcut or mouse button of the user's own, and the selected text only when its menu is asked for.
+- **Each shortcut can be None,** and [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can give both menus shortcuts and mouse buttons of the user's own; see [With Shortcuts & Mouse Buttons](#with-shortcuts--mouse-buttons).
 - The menu opens as the shortcut is pressed. Releasing Alt and the Windows key keeps it open and opens neither Start nor a menu bar.
 - Pressing the shortcut again closes the menu.
 - A letter chooses the item that starts with it, when only one does, as in other Windows menus.
@@ -124,6 +125,11 @@ Press Windows + Alt + V to see actions for the copied text, such as opening a co
 - The page then shows a warning note at that shortcut, such as "Another program uses Windows + Alt + S, so this shortcut does nothing here." The feature's thread tries again after any change to the settings, and the note goes away once Windows takes the shortcut.
 - The feature's thread tells `ShortcutRefusals` which shortcuts Windows refused, as every feature with shortcuts does, and the host passes only that through a named pipe that only the user's own account and the system can open, named `PCCompanion.Shortcuts.Status.<session ID>`, which rejects remote clients and reads nothing (`SnapshotPipe`); see [Running in the host](../../architecture/features.md#running-in-the-host). The page reads it while it's shown. PC Companion never learns which program has a shortcut.
 
+## With Shortcuts & Mouse Buttons
+
+- **Actions for the copied text,** and **Actions for the selected text** while Selected text is on, are actions that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Clipboard Actions is on (`IFeatureActions`). They show the menu as Windows + Alt + V and Windows + Alt + S do, also when those shortcuts are None, and close it when it's open, as the shortcuts do.
+- **The reader for the selected text** follows Selected text, not its shortcut, so its action works without the shortcut.
+
 ## Private text
 
 - Apps can mark what they copy as private, so that clipboard history and clipboard tools leave it alone. PC Companion looks for these marks before it reads the text, and when one is there, it reads nothing else and the menu says the copied text is private:
@@ -204,9 +210,9 @@ A spike for [Selected text](#selected-text), in Windows Sandbox on Windows 11 bu
 
 ## Settings
 
-- **Feature page:** the on/off switch; the shortcut, Windows + Alt + V; **Selected text**, off by default, with its shortcut, Windows + Alt + S, and a note that apps share their selected text through Windows' accessibility support, which some apps don't have, and that PC Companion never reads password boxes; **Open copied links**, on by default; **Rules**, a list with **Add rule**, and for each rule **Edit** and **More options**, which has **Move up**, **Move down** and **Delete**; a note that programs start with the user's rights, and links and web addresses open in the browser without admin rights, also while PC Companion runs as administrator; and a **Permissions & data** card.
+- **Feature page:** the on/off switch; **Shortcut**, Windows + Alt + V or None; **Selected text**, off by default, and **Shortcut for the selected text**, Windows + Alt + S or None, available while Selected text is on, with a note that apps share their selected text through Windows' accessibility support, which some apps don't have, and that PC Companion never reads password boxes; **Open copied links**, on by default; **Rules**, a list with **Add rule**, and for each rule **Edit** and **More options**, which has **Move up**, **Move down** and **Delete**; a note that programs start with the user's rights, and links and web addresses open in the browser without admin rights, also while PC Companion runs as administrator; and a **Permissions & data** card.
 - A shortcut that another program has gets a warning note at it; see [A shortcut another program has](#a-shortcut-another-program-has).
-- **Permissions & data** says that the clipboard is read only when Windows + Alt + V is pressed, and the selected text only when Windows + Alt + S is, never from a password box; that neither is stored, logged or sent; and that asking a browser for its selected text turns on its accessibility support, which uses more memory on very long pages, until the browser closes.
+- **Permissions & data** says that the clipboard is read only when its menu is shown, with Windows + Alt + V or a shortcut or mouse button of the user's own, and the selected text only when its menu is shown, never from a password box; that neither is stored, logged or sent; and that asking a browser for its selected text turns on its accessibility support, which uses more memory on very long pages, until the browser closes.
 - **The rule editor** is a dialog with:
   - **Name**, the text shown in the menu;
   - **Pattern**, with **Match case** and a link to Microsoft's regular expression reference;
@@ -224,8 +230,10 @@ A spike for [Selected text](#selected-text), in Windows Sandbox on Windows 11 bu
 "features": {
   "clipboardActions": {
     "enabled": true,
+    "shortcut": "WindowsAltV",
     "openLinks": true,
     "selectedText": true,
+    "selectedTextShortcut": "WindowsAltS",
     "rules": [
       {
         "name": "Track the parcel",
@@ -247,13 +255,15 @@ A spike for [Selected text](#selected-text), in Windows Sandbox on Windows 11 bu
 }
 ```
 
-- `selectedText`: whether Windows + Alt + S shows actions for the selected text; `false` by default.
+- `shortcut`: `WindowsAltV`, the default, or `None`.
+- `selectedText`: whether the menu for the selected text can be shown; `false` by default.
+- `selectedTextShortcut`: `WindowsAltS`, the default, or `None`; it's registered only while `selectedText` is on.
+- An unknown shortcut registers none, with a warning.
 - `action`: `OpenAddress` or `RunProgram`.
 
 ## Not included
 
 - Showing the actions on their own when matching text is copied, in a flyout or a notification.
-- Choosing another shortcut.
 - Actions that change or paste the copied text, such as removing tracking parameters from a link.
 - Clipboard history, which Windows has (Windows + V), and pictures, files and formatted text.
 - Parts of the match in the actions, such as a pattern's groups; only the whole text.

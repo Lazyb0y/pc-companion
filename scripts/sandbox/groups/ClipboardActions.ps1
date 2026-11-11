@@ -32,8 +32,18 @@ Test-Check 'select Clipboard Actions' (Select-NavigationItem 'Clipboard Actions'
 Start-Sleep -Seconds 2
 Save-Screenshot '13d-clipboard-actions-english'
 $text = Get-WindowText
-Test-Check 'Clipboard Actions shows its settings' (($text -contains 'Shortcut') -and ($text -contains 'Windows logo key + Alt + V') -and ($text -contains 'Open copied links') -and ($text -contains 'Rules') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'Clipboard Actions shows its settings' (($text -contains 'Shortcut') -and ($text -contains 'Shortcut for the selected text') -and ($text -contains 'Open copied links') -and ($text -contains 'Rules') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 Test-Check 'the page says there are no rules yet' (@($text | Where-Object { $_ -like 'No rules yet.*' }).Count -eq 1)
+$selected = Get-ListSelection 'Shortcut'
+Test-Check 'the shortcut is Windows logo key + Alt + V' ($selected -eq 'Windows logo key + Alt + V') "selected: $selected"
+$selected = Get-ListSelection 'Shortcut for the selected text'
+Test-Check 'the shortcut for the selected text is Windows logo key + Alt + S' ($selected -eq 'Windows logo key + Alt + S') "selected: $selected"
+Test-Check 'choose no shortcut' (Select-ListItem 'Shortcut' 'None')
+Start-Sleep -Seconds 1
+Test-Check 'the page saves no shortcut' ((Get-ClipboardActionsSettings).shortcut -eq 'None') "saved: $(Get-ClipboardActionsSettings | ConvertTo-Json -Compress)"
+Test-Check 'choose Windows logo key + Alt + V again' (Select-ListItem 'Shortcut' 'Windows logo key + Alt + V')
+Start-Sleep -Seconds 1
+Test-Check 'the page saves it' ((Get-ClipboardActionsSettings).shortcut -eq 'WindowsAltV') "saved: $(Get-ClipboardActionsSettings | ConvertTo-Json -Compress)"
 $openLinks = Find-Toggle 'Open copied links'
 Test-Check 'Open copied links is on' (($null -ne $openLinks) -and $openLinks.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -eq 'On')
 $selectedText = Find-Toggle 'Selected text'

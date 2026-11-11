@@ -6,10 +6,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PCCompanion.App.ViewModels;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Clipboard.ClipboardActions;
 
 namespace PCCompanion.App.Features.ClipboardActions;
+
+public sealed record ClipboardShortcutOption(ClipboardActionsShortcut Shortcut, string DisplayName) : Choice(DisplayName);
+
+public sealed record ClipboardSelectionShortcutOption(ClipboardActionsSelectionShortcut Shortcut, string DisplayName) : Choice(DisplayName);
 
 /// <summary>A rule in the page's list.</summary>
 /// <param name="Index">The rule's place in the list, from 0.</param>
@@ -30,6 +35,8 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
     private static readonly CompositeFormat BeyondMaximumFormat = CompositeFormat.Parse(Strings.ClipboardActionsBeyondMaximum);
 
     private readonly ShortcutStatus _shortcutStatus;
+    private ClipboardShortcutOption? _selectedShortcut;
+    private ClipboardSelectionShortcutOption? _selectedSelectionShortcut;
 
     public ClipboardActionsViewModel(FeatureSettingsEditor editor)
         : base(editor, ClipboardActionsFeature.Definition)
@@ -40,7 +47,50 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
             OnPropertyChanged(nameof(CopiedShortcutRefused));
             OnPropertyChanged(nameof(SelectedShortcutRefused));
         };
+
+        Shortcuts =
+        [
+            new(ClipboardActionsShortcut.WindowsAltV, Strings.ClipboardActionsShortcut),
+            new(ClipboardActionsShortcut.None, Strings.ClipboardActionsShortcutNone),
+        ];
+        SelectionShortcuts =
+        [
+            new(ClipboardActionsSelectionShortcut.WindowsAltS, Strings.ClipboardActionsSelectedShortcut),
+            new(ClipboardActionsSelectionShortcut.None, Strings.ClipboardActionsShortcutNone),
+        ];
+
+        // An unknown shortcut in the file shows none chosen.
+        _selectedShortcut = Shortcuts.FirstOrDefault(option => option.Shortcut == Settings.Shortcut);
+        _selectedSelectionShortcut = SelectionShortcuts.FirstOrDefault(option => option.Shortcut == Settings.SelectedTextShortcut);
         RefreshRules();
+    }
+
+    public IReadOnlyList<ClipboardShortcutOption> Shortcuts { get; }
+
+    public ClipboardShortcutOption? SelectedShortcut
+    {
+        get => _selectedShortcut;
+        set
+        {
+            if (value is not null && SetProperty(ref _selectedShortcut, value))
+            {
+                Save(Settings with { Shortcut = value.Shortcut });
+            }
+        }
+    }
+
+    public IReadOnlyList<ClipboardSelectionShortcutOption> SelectionShortcuts { get; }
+
+    public ClipboardSelectionShortcutOption? SelectedSelectionShortcut
+    {
+        get => _selectedSelectionShortcut;
+        set
+        {
+            if (value is not null && SetProperty(ref _selectedSelectionShortcut, value))
+            {
+                Save(Settings with { SelectedTextShortcut = value.Shortcut });
+            }
+        }
     }
 
     public bool OpenLinks

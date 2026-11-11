@@ -20,11 +20,12 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=ClipboardActionsName}" />
 
-                <controls:TextCard
+                <controls:ChoiceCard
                     Description="{app:Localized Key=ClipboardActionsShortcutDescription}"
                     Glyph="&#xE765;"
                     Header="{app:Localized Key=ClipboardActionsShortcutHeader}"
-                    Text="{app:Localized Key=ClipboardActionsShortcut}" />
+                    ItemsSource="{x:Bind ViewModel.Shortcuts}"
+                    SelectedItem="{x:Bind ViewModel.SelectedShortcut, Mode=TwoWay}" />
 
                 <controls:Note
                     IsOpen="{x:Bind ViewModel.CopiedShortcutRefused, Mode=OneWay}"
@@ -36,6 +37,14 @@
                     Glyph="&#xE8B3;"
                     Header="{app:Localized Key=ClipboardActionsSelectedTextHeader}"
                     IsOn="{x:Bind ViewModel.SelectedText, Mode=TwoWay}" />
+
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=ClipboardActionsSelectedShortcutDescription}"
+                    Glyph="&#xE765;"
+                    Header="{app:Localized Key=ClipboardActionsSelectedShortcutHeader}"
+                    IsEnabled="{x:Bind ViewModel.SelectedText, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.SelectionShortcuts}"
+                    SelectedItem="{x:Bind ViewModel.SelectedSelectionShortcut, Mode=TwoWay}" />
 
                 <controls:Note
                     IsOpen="{x:Bind ViewModel.SelectedShortcutRefused, Mode=OneWay}"

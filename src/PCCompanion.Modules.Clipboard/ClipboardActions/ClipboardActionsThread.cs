@@ -45,6 +45,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     private ClipboardRules? _rules;
     private bool _pressed;
     private bool _menuOpen;
+    private bool _selectionOn;
 
     // The window that was in front before the menu whose action or Settings was chosen last. The
     // thread's window keeps the front when what that started doesn't come to the front, such as a
@@ -85,9 +86,14 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     protected override void Apply(ClipboardActionsSettings settings)
     {
         _rules = ClipboardRules.Compile(settings, _logger);
-        RegisterCopiedShortcut();
-        UpdateSelectionShortcut(settings.SelectedText);
-        _refusals?.Set(ClipboardActionsFeature.Definition.Id, RefusedShortcuts(settings.SelectedText));
+        if (!Enum.IsDefined(settings.Shortcut) || !Enum.IsDefined(settings.SelectedTextShortcut))
+        {
+            LogUnknownShortcut(_logger);
+        }
+
+        UpdateCopiedShortcut(settings.Shortcut == ClipboardActionsShortcut.WindowsAltV);
+        UpdateSelection(settings.SelectedText, settings.SelectedTextShortcut == ClipboardActionsSelectionShortcut.WindowsAltS);
+        _refusals?.Set(ClipboardActionsFeature.Definition.Id, RefusedShortcuts(settings));
 
         LogApplied(_logger, _rules.Count, settings.Rules.Count, settings.OpenLinks, settings.SelectedText);
     }
@@ -111,21 +117,59 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
 
-    private IEnumerable<string> RefusedShortcuts(bool selectedText)
+    /// <summary>
+    /// Shows the actions for the copied text, as Windows + Alt + V does, for an action of
+    /// Shortcuts & Mouse Buttons; while the menu is open, it closes it, as the shortcut does.
+    /// </summary>
+    public void ShowCopiedText() => Post(() =>
     {
-        if (_copiedShortcut is null)
+        if (_menuOpen)
+        {
+            PopupMenu.CloseOpenMenu();
+        }
+        else if (_window is { } window)
+        {
+            Pressed(window);
+        }
+    });
+
+    /// <summary>Shows the actions for the selected text, as Windows + Alt + S does, while Selected text is on.</summary>
+    public void ShowSelectedText() => Post(() =>
+    {
+        if (_menuOpen)
+        {
+            PopupMenu.CloseOpenMenu();
+        }
+        else if (_window is { } window && _selectionOn)
+        {
+            PressedSelection(window);
+        }
+    });
+
+    // An unknown shortcut, which registers none, isn't one Windows refused.
+    private IEnumerable<string> RefusedShortcuts(ClipboardActionsSettings settings)
+    {
+        if (settings.Shortcut == ClipboardActionsShortcut.WindowsAltV && _copiedShortcut is null)
         {
             yield return ClipboardActionsFeature.CopiedTextShortcut;
         }
 
-        if (selectedText && _selectionShortcut is null)
+        if (settings.SelectedText && settings.SelectedTextShortcut == ClipboardActionsSelectionShortcut.WindowsAltS && _selectionShortcut is null)
         {
             yield return ClipboardActionsFeature.SelectedTextShortcut;
         }
     }
 
-    private void RegisterCopiedShortcut()
+    // A shortcut Windows refused is tried again at each change to the settings.
+    private void UpdateCopiedShortcut(bool on)
     {
+        if (!on)
+        {
+            _copiedShortcut?.Dispose();
+            _copiedShortcut = null;
+            return;
+        }
+
         if (_copiedShortcut is not null || _window is not { } window)
         {
             return;
@@ -142,11 +186,12 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         }
     }
 
-    // Windows + Alt + S is registered only while Selected text is on, and turning it off also ends
-    // the reader's thread.
-    private void UpdateSelectionShortcut(bool on)
+    // Windows + Alt + S is registered only while Selected text and its shortcut are on, and turning
+    // Selected text off also ends the reader's thread.
+    private void UpdateSelection(bool on, bool shortcut)
     {
-        if (on && _selectionShortcut is null && _window is { } window)
+        _selectionOn = on;
+        if (on && shortcut && _selectionShortcut is null && _window is { } window)
         {
             _selectionShortcut = _system.RegisterShortcut(window, ClipboardShortcut.SelectedText);
             if (_selectionShortcut is null)
@@ -158,10 +203,14 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
                 _selectionShortcut.Pressed += (_, _) => Guard(() => PressedSelection(window));
             }
         }
-        else if (!on)
+        else if (!(on && shortcut))
         {
             _selectionShortcut?.Dispose();
             _selectionShortcut = null;
+        }
+
+        if (!on)
+        {
             _reader?.Dispose();
             _reader = null;
             _reading = null;
@@ -394,6 +443,9 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions applied its settings: {Usable} of {Rules} rules can be used; Open copied links {OpenLinks}; Selected text {SelectedText}.")]
     private static partial void LogApplied(ILogger logger, int usable, int rules, bool openLinks, bool selectedText);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "A Clipboard Actions shortcut in the settings is unknown, so it has no shortcut.")]
+    private static partial void LogUnknownShortcut(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Clipboard Actions' shortcut was pressed; clipboard: {Status}, actions offered: {Offers}, menu: {Place}.")]
     private static partial void LogPressed(ILogger logger, ClipboardTextStatus status, int offers, MenuPlace place);
