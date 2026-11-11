@@ -18,7 +18,7 @@ namespace PCCompanion.App.Features.ShortcutsAndMouseButtons;
 /// does nothing, why, with a button to the page that can change that.
 /// </summary>
 /// <param name="Index">Its place in the settings' list.</param>
-public sealed record TriggerItem(int Index, string Input, string Action, string Glyph, string? Warning, string? WarningButton, ICommand? WarningCommand, string MoreName)
+public sealed record TriggerItem(int Index, string Input, string Action, string Glyph, string? Warning, string? WarningButton, ICommand? WarningCommand, string EditName, string MoreName)
 {
     public bool HasWarning => Warning is not null;
 }
@@ -34,6 +34,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
     private const string KeyboardGlyph = "";
     private const string MouseGlyph = "";
 
+    private static readonly CompositeFormat EditFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsEditName);
     private static readonly CompositeFormat MoreFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsMoreName);
     private static readonly CompositeFormat ActionNameFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsActionName);
     private static readonly CompositeFormat NotSupportedFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsNotSupported);
@@ -101,6 +102,35 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
     /// <summary>Opens the page of the feature with the ID <paramref name="featureId"/>.</summary>
     public static void ShowFeature(string featureId) => App.Current.MainWindow?.ShowFeature(featureId);
 
+    /// <summary>The editor of the trigger at <paramref name="index"/>, or of a new one when it's <see langword="null"/>.</summary>
+    public TriggerEditor CreateEditor(int? index)
+    {
+        var trigger = index is { } place && place >= 0 && place < Settings.Triggers.Count ? Settings.Triggers[place] : null;
+        return new TriggerEditor(trigger, trigger is null ? null : index, Settings.Triggers, _catalog, _editor, _layout);
+    }
+
+    /// <summary>Adds <paramref name="trigger"/> at the end of the list and saves.</summary>
+    public void Add(Trigger trigger)
+    {
+        ArgumentNullException.ThrowIfNull(trigger);
+
+        Save(Settings with { Triggers = [.. Settings.Triggers, trigger] });
+        RefreshTriggers();
+    }
+
+    /// <summary>Puts <paramref name="trigger"/> in place of the one at <paramref name="index"/> and saves.</summary>
+    public void Replace(int index, Trigger trigger)
+    {
+        ArgumentNullException.ThrowIfNull(trigger);
+        if (index < 0 || index >= Settings.Triggers.Count)
+        {
+            return;
+        }
+
+        Save(Settings with { Triggers = [.. Settings.Triggers.Select((other, place) => place == index ? trigger : other)] });
+        RefreshTriggers();
+    }
+
     /// <summary>Deletes the trigger at <paramref name="index"/> and saves.</summary>
     public void Delete(int index)
     {
@@ -147,6 +177,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
             warning,
             pageFeature is null ? null : Format(OpenFeatureFormat, Localized.GetString(pageFeature.Info.NameKey)),
             pageFeature is null ? null : new RelayCommand(() => ShowFeature(pageFeature.Info.Id)),
+            Format(EditFormat, input),
             Format(MoreFormat, input));
     }
 
@@ -193,7 +224,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
 
         if (used.Key is { } key && ShortcutRules.AltGrConflict(used.Modifiers, key, layouts, KeyboardLayout.TypedWithAltGr) is { } typed)
         {
-            return (LanguageOf(typed.Layout) is { } language ? Format(AltGrFormat, language, input, typed.Text) : Format(AltGrOtherLayoutFormat, input, typed.Text), null);
+            return (KeyboardLanguage.NameOf(typed.Layout) is { } language ? Format(AltGrFormat, language, input, typed.Text) : Format(AltGrOtherLayoutFormat, input, typed.Text), null);
         }
 
         return (null, null);
@@ -212,19 +243,6 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
         TriggerProblem.MiddleNeedsWindowsKey => Strings.ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey,
         _ => Strings.ShortcutsAndMouseButtonsProblemSameAsEarlier,
     };
-
-    // The language of a keyboard layout, such as "Polish (Poland)", or null when it has no name.
-    private static string? LanguageOf(nint layout)
-    {
-        try
-        {
-            return CultureInfo.GetCultureInfo((int)(layout & 0xFFFF)).DisplayName;
-        }
-        catch (CultureNotFoundException)
-        {
-            return null;
-        }
-    }
 
     private static string Format(CompositeFormat format, params object?[] values) => string.Format(CultureInfo.CurrentCulture, format, values);
 }

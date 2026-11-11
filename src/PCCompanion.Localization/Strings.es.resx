@@ -5116,4 +5116,116 @@
     <value>Lee solo los métodos abreviados que agregas, cuando los presionas, sin enlace de teclado, y mientras haya botones del mouse agregados, los botones Atrás, Adelante y central y las teclas que se mantienen presionadas con ellos. Mientras haya aplicaciones en la lista, también lee qué aplicación está en primer plano o bajo el puntero y, para la pausa en pantalla completa, dónde está la ventana en primer plano, nunca títulos ni contenido de ventanas. Solo ejecuta las acciones que eliges. No almacena ni envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>Agregar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>Agregar un método abreviado o un botón del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>Editar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>Agregar un método abreviado o un botón del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>Editar el método abreviado o el botón del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>Acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>Elige una acción</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0} está desactivado, así que no hará nada hasta que lo actives en su página.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>Método abreviado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>Método abreviado para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>Presiona las teclas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>Selecciona el cuadro y presiona las teclas. Sin Ctrl, Alt ni la tecla del logotipo de Windows, Tab, Esc, Entrar y la barra espaciadora mantienen su función habitual.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>Elegir teclas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>Tecla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>Elige una tecla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>Los métodos abreviados no pueden usar esta tecla.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>Agrega Ctrl, Alt o la tecla del logotipo de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows se reserva este método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0} usa este método abreviado. Elige otro o cámbialo en la página de {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>{0} ya tiene este método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>En {0}, {1} escribe {2}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>En otra distribución de teclado, {0} escribe {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows u otro programa usa este método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows o las aplicaciones usan este método abreviado. Esta acción ocupa su lugar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>No en estas aplicaciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>Mientras una de estas aplicaciones está en primer plano, recibe ella misma las teclas.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

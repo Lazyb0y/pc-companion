@@ -5116,4 +5116,116 @@
     <value>শুধু আপনার যোগ করা শর্টকাটগুলো, আপনি চাপলে, কোনো কিবোর্ড হুক ছাড়া পড়ে, এবং মাউস বোতাম যোগ করলে পেছনের, সামনের ও মাঝের বোতাম এবং সেগুলোর সঙ্গে চেপে রাখা কী পড়ে। অ্যাপ তালিকায় থাকলে কোন অ্যাপ সামনে বা পয়েন্টারের নিচে আছে তাও পড়ে, এবং পূর্ণ স্ক্রিনে বিরতির জন্য সামনের উইন্ডো কোথায় আছে তা পড়ে, কখনও উইন্ডোর শিরোনাম বা বিষয়বস্তু নয়। শুধু আপনার বেছে নেওয়া অ্যাকশন চালায়। কিছুই সংরক্ষণ বা পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>একটি শর্টকাট বা মাউস বোতাম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>{0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>একটি শর্টকাট বা মাউস বোতাম যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>শর্টকাট বা মাউস বোতাম সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>একটি অ্যাকশন বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0} বন্ধ আছে, তাই এর পৃষ্ঠায় চালু না করা পর্যন্ত এটি কিছুই করবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>{0}-এর শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>কীগুলো চাপুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>বক্সটি নির্বাচন করে কীগুলো চাপুন। Ctrl, Alt বা Windows লোগো কী ছাড়া Tab, Esc, Enter ও স্পেসবার তাদের সাধারণ কাজই করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>কী বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>একটি কী বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>শর্টকাট এই কী ব্যবহার করতে পারে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>Ctrl, Alt বা Windows লোগো কী যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows এই শর্টকাট নিজের জন্য রাখে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0} এই শর্টকাট ব্যবহার করে। অন্য একটি বেছে নিন, বা {0}-এর পৃষ্ঠায় এটি বদলান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>{0}-এ ইতিমধ্যে এই শর্টকাট আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>{0}-এ {1} চাপলে {2} টাইপ হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>অন্য একটি কিবোর্ড লেআউটে {0} চাপলে {1} টাইপ হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows বা অন্য কোনো প্রোগ্রাম এই শর্টকাট ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows বা অ্যাপগুলো এই শর্টকাট ব্যবহার করে। এই অ্যাকশন তার জায়গা নেবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>এই অ্যাপগুলোতে নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>এই অ্যাপগুলোর কোনোটি সামনে থাকলে সেটি নিজেই কীগুলো পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

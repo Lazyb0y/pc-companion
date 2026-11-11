@@ -68,12 +68,43 @@ function Select-Window([IntPtr] $Window) {
     }
     Write-Report "[NOTE] $([Win32]::WindowTitle($Window)) didn't come to the front; $([Win32]::WindowTitle([Win32]::GetForegroundWindow())) is."
 }
-$LeftControl = 0x1D; $LeftAlt = 0x38; $KeyJ = 0x24
+$LeftControl = 0x1D; $LeftAlt = 0x38; $LeftShift = 0x2A; $LeftWindows = 0x5B
+$KeyA = 0x1E; $KeyH = 0x23; $KeyJ = 0x24; $KeyU = 0x16; $KeyY = 0x15; $KeyF4 = 0x3E
 function Send-Keys([int[]] $Keys, [int] $Wait = 1500) {
-    foreach ($key in $Keys) { [void] [Win32]::ScanKey($key, $false, $false) }
+    foreach ($key in $Keys) { [void] [Win32]::ScanKey($key, $false, $key -eq $LeftWindows) }
     [array]::Reverse($Keys)
-    foreach ($key in $Keys) { [void] [Win32]::ScanKey($key, $true, $false) }
+    foreach ($key in $Keys) { [void] [Win32]::ScanKey($key, $true, $key -eq $LeftWindows) }
     Start-Sleep -Milliseconds $Wait
+}
+
+# The editor's box, by its name, given the focus so that it listens; the host then pauses PC
+# Companion's shortcuts.
+function Select-ShortcutBox([string] $Name) {
+    $box = Find-AppBox $Name
+    if (-not $box) { return $false }
+    $box.SetFocus()
+    Start-Sleep -Seconds 1
+    return $true
+}
+function Get-ProblemText { @(Get-WindowText | Where-Object { $_ -like '*shortcut*' -or $_ -like 'Add Ctrl*' -or $_ -like '* already has *' }) -join ' | ' }
+# A button of the settings app by its name, where a text has the same name, such as the page's Add.
+function Invoke-AppButton([string] $Name) {
+    $window = Get-AppWindow
+    if (-not $window) { return $false }
+    $condition = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::Button)))
+    $button = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $condition)
+    if (-not $button) { return $false }
+    $button.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    return $true
+}
+# A running app in the Running app dialog, by a pattern of its name.
+function Find-RunningApp([string] $Like) {
+    $window = Get-AppWindow
+    if (-not $window) { return $null }
+    $condition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)
+    @($window.FindAll([System.Windows.Automation.TreeScope]::Descendants, $condition) | Where-Object { $_.Current.Name -like $Like }) | Select-Object -First 1
 }
 
 # Turned on from Home, which saves only that it's on: the list is empty, the full-screen pause is
@@ -159,14 +190,91 @@ Start-Sleep -Seconds 2
 $saved = Get-ShortcutSettings
 Test-Check 'the page deletes the row' ((@($saved.triggers).Count -eq 5) -and (@($saved.triggers | Where-Object { $_.action.id -eq 'lock' }).Count -eq 0)) "saved: $($saved | ConvertTo-Json -Compress -Depth 6)"
 Test-Check 'the row is gone from the page' (-not ((Get-WindowText) -contains 'Shift + A'))
-[void] (Close-SettingsApp)
 
-# Ctrl + Alt + J runs Hide app on the test program in front.
+# The editor: Save waits for an action and a shortcut that can be used; the box records the keys
+# pressed in it, and says why a shortcut can't be used: one without Ctrl, Alt or the Windows logo
+# key, another feature's, another row's and another program's. PC Companion's own shortcut is
+# recorded, not run, since the host pauses them while the box listens. Windows logo key + Y is
+# allowed with a warning, and Choose keys picks keys that aren't pressed.
+$holder = Start-ShortcutHolder 0x3 0x59
+Test-Check 'a test program takes Ctrl + Alt + Y' ($null -ne $holder)
+Test-Check 'Add opens the editor' ((Invoke-AppElement 'Add a shortcut or mouse button') -and (Wait-Until { Find-AppText 'Add a shortcut or mouse button' } 5))
+Start-Sleep -Seconds 1
+Test-Check 'Save waits for an action and a shortcut' (-not (Test-AppEnabled 'Save'))
+Test-Check 'choose Hide Apps: Hide others' (Select-ListItem 'Action' 'Hide Apps: Hide others')
+$boxName = 'Shortcut for Hide others'
+Test-Check 'the box is named after the action' (Select-ShortcutBox $boxName)
+Test-Check 'the box waits for keys' ((Get-AppBox $boxName) -eq 'Press the keys') "box: $(Get-AppBox $boxName)"
+Send-Keys @($LeftShift, $KeyA)
+Test-Check 'Shift + A needs Ctrl, Alt or the Windows logo key' (((Get-AppBox $boxName) -eq 'Shift + A') -and (Find-AppText 'Add Ctrl, Alt or the Windows logo key.') -and -not (Test-AppEnabled 'Save')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+Send-Keys @($LeftWindows, $LeftControl, $KeyH)
+Test-Check 'Windows logo key + Ctrl + H is Hide Apps''' (((Get-AppBox $boxName) -eq 'Windows logo key + Ctrl + H') -and (Find-AppText 'Hide Apps uses this shortcut. Choose another, or change it on the Hide Apps page.')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+$appWindow = [IntPtr] (Get-AppWindow).Current.NativeWindowHandle
+Send-Keys @($LeftControl, $LeftAlt, $KeyJ)
+Test-Check 'Ctrl + Alt + J is recorded, and is another row''s' (((Get-AppBox $boxName) -eq 'Ctrl + Alt + J') -and (Find-AppText 'Hide app already has this shortcut.')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+Test-Check 'the paused host doesn''t run Hide app on the settings window' (-not [Win32]::IsIconic($appWindow))
+Send-Keys @($LeftControl, $LeftAlt, $KeyY)
+Test-Check 'another program''s Ctrl + Alt + Y is taken' (((Get-AppBox $boxName) -eq 'Ctrl + Alt + Y') -and (Find-AppText 'Windows or another program uses this shortcut.')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+Send-Keys @($LeftWindows, $KeyY)
+Test-Check 'Windows logo key + Y is allowed with a warning' (((Get-AppBox $boxName) -eq 'Windows logo key + Y') -and (Find-AppText 'Windows or apps use this shortcut. This action takes its place.') -and (Test-AppEnabled 'Save')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+Test-Check 'Choose keys opens' (Invoke-AppElement 'Choose keys')
+Start-Sleep -Seconds 1
+Test-Check 'its check boxes follow the keys pressed' (Test-Toggled 'Windows logo key')
+[void] (Set-Toggle 'Windows logo key' $false)
+[void] (Set-Toggle 'Ctrl' $true)
+[void] (Set-Toggle 'Alt' $true)
+Test-Check 'choose U' (Select-ListItem 'Key' 'U')
+Start-Sleep -Seconds 1
+Test-Check 'Choose keys sets Ctrl + Alt + U' (((Get-AppBox $boxName) -eq 'Ctrl + Alt + U') -and (Test-AppEnabled 'Save')) "box: $(Get-AppBox $boxName); $(Get-ProblemText)"
+Save-Screenshot '20e-shortcuts-and-mouse-buttons-editor'
+[void] (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+$saved = Get-ShortcutSettings
+$added = @($saved.triggers)[-1]
+Test-Check 'Save adds the shortcut' ((@($saved.triggers).Count -eq 6) -and ($added.action.id -eq 'hideOthers') -and ($added.shortcut.key -eq 'KeyU') -and (($added.shortcut.modifiers -join ',') -eq 'Control,Alt')) "saved: $($saved | ConvertTo-Json -Compress -Depth 6)"
+Test-Check 'the page lists it' ((Get-WindowText) -contains 'Ctrl + Alt + U')
+if ($holder) { Stop-Process -Id $holder.Id -Force -ErrorAction SilentlyContinue }
+
+# Edit shows the shortcut, and Not in these apps adds the test program through Running app, which
+# opens in the editor's place and gives it back.
 $app = Start-Process $shortcutExe -PassThru
 [void] (Wait-Until { [Win32]::FindWindow([NullString]::Value, 'ShortcutApp') -ne [IntPtr]::Zero } 15)
+Test-Check 'Edit opens the editor with the shortcut' ((Invoke-AppElement 'Edit Ctrl + Alt + U') -and (Wait-Until { (Get-AppBox $boxName) -eq 'Ctrl + Alt + U' } 5)) "box: $(Get-AppBox $boxName)"
+Test-Check 'Add an app offers Running app' ((Invoke-AppElement 'Add an app') -and (Wait-Until { Find-AppElement 'Running app…' } 5))
+[void] (Invoke-AppElement 'Running app…')
+Test-Check 'Running app lists the test program' (Wait-Until { $null -ne (Find-RunningApp 'shortcut-app*') } 15)
+$running = Find-RunningApp 'shortcut-app*'
+$runningName = if ($running) { $running.Current.Name } else { '' }
+if ($running) { $running.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep -Milliseconds 300 }
+Test-Check 'Running app''s Add adds it' (Invoke-AppButton 'Add')
+Test-Check 'the editor comes back with the test program listed' (Wait-Until { (Find-AppElement "Remove $runningName") -and ((Get-AppBox $boxName) -eq 'Ctrl + Alt + U') } 10) "listed: $runningName"
+[void] (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+$listed = @(@(Get-ShortcutSettings).triggers)[-1].excludedApps
+Test-Check 'Save keeps the test program in Not in these apps' ((@($listed).Count -eq 1) -and (@($listed)[0].program -like '*shortcut-app.exe')) "saved: $($listed | ConvertTo-Json -Compress)"
+
+# Alt + F4 in the box is recorded rather than closing the window, and Esc without Ctrl, Alt or the
+# Windows logo key closes the editor.
+[void] (Invoke-AppElement 'Add a shortcut or mouse button')
+Start-Sleep -Seconds 1
+# Alt + F4 and Esc go to the window in front, so only to the settings window.
+$listening = (Select-ShortcutBox 'Shortcut') -and ([Win32]::GetForegroundWindow() -eq $appWindow)
+Test-Check 'the editor''s box listens in the window in front' $listening
+if ($listening) { Send-Keys @($LeftAlt, $KeyF4) }
+Test-Check 'Alt + F4 in the box is recorded, and the window stays' (((Get-AppBox 'Shortcut') -eq 'Alt + F4') -and (Get-AppWindow)) "box: $(Get-AppBox 'Shortcut')"
+if ([Win32]::GetForegroundWindow() -eq $appWindow) { Send-Key 0x1B }
+Test-Check 'Esc closes the editor' (Wait-Until { -not (Find-AppBox 'Shortcut') } 5)
+Test-Check 'nothing is added' (@((Get-ShortcutSettings).triggers).Count -eq 6)
+[void] (Close-SettingsApp)
+
+# Ctrl + Alt + U is left to the test program, which Not in these apps lists, and Ctrl + Alt + J runs
+# Hide app on it.
 $window = [Win32]::FindWindow([NullString]::Value, 'ShortcutApp')
 Test-Check 'the test program shows its window' ($window -ne [IntPtr]::Zero)
 Select-Window $window
+Test-Check 'the host leaves Ctrl + Alt + U to the listed app in front' (Test-Logged 'Shortcuts & Mouse Buttons left 1 shortcuts to the app in front' 5)
+Send-Keys @($LeftControl, $LeftAlt, $KeyU)
+Test-Check 'Ctrl + Alt + U reaches the listed app, and Hide others doesn''t run' ((-not [Win32]::IsIconic($window)) -and -not (Test-Logged 'runs hideApps''s action hideOthers' 2))
 Send-Keys @($LeftControl, $LeftAlt, $KeyJ)
 Test-Check 'Ctrl + Alt + J runs Hide app on the test program' (Wait-Until { [Win32]::IsIconic($window) } 5)
 Test-Check 'the host logs which action ran' (Test-Logged "Shortcuts & Mouse Buttons runs hideApps's action hideApp, for Control\+Alt\+KeyJ\.")
@@ -187,6 +295,11 @@ Test-Check 'select Shortcuts & Mouse Buttons in Arabic' (Open-Page 'الاختص
 Save-Screenshot '20d-shortcuts-and-mouse-buttons-arabic-dark'
 $text = Get-WindowText
 Test-Check 'the page is in Arabic' ($text -contains 'الاختصارات في الصفحات الأخرى') ($text -join ' | ')
+Test-Check 'the editor opens in Arabic' ((Invoke-AppElement 'إضافة اختصار أو زر ماوس') -and (Wait-Until { Find-AppText 'إضافة اختصار أو زر ماوس' } 5))
+[void] (Invoke-AppElement 'اختيار المفاتيح')
+Start-Sleep -Seconds 1
+Save-Screenshot '20f-shortcuts-and-mouse-buttons-editor-arabic-dark'
+[void] (Invoke-AppButton 'إلغاء الأمر')
 [void] (Close-SettingsApp)
 
 Remove-Item $shortcutFolder -Recurse -Force -ErrorAction SilentlyContinue

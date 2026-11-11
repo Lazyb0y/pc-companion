@@ -5068,4 +5068,116 @@
     <value>仅在你按下时读取你添加的快捷键，不使用键盘挂钩；添加了鼠标按钮时，读取后退按钮、前进按钮和中键以及同时按住的键。列出了应用时，还会读取哪个应用位于前台或指针下方，并为全屏暂停读取前台窗口的位置，从不读取窗口标题或内容。仅运行你选择的操作。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>添加</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>添加快捷键或鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>编辑 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>添加快捷键或鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>编辑快捷键或鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>选择一个操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0}已关闭，因此在其页面上将其打开之前，此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>{0}的快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>按下按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>选择该框并按下按键。不配合 Ctrl、Alt 或 Windows 徽标键时，Tab、Esc、Enter 和空格键保持其常规作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>选择按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>选择一个按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>快捷键不能使用此键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>请添加 Ctrl、Alt 或 Windows 徽标键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows 保留了此快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0}正在使用此快捷键。请选择其他快捷键，或在{0}页面上更改它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>“{0}”已使用此快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>在{0}中，{1} 会输入 {2}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>在另一种键盘布局中，{0} 会输入 {1}。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows 或其他程序正在使用此快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows 或应用正在使用此快捷键。此操作将取而代之。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>不在这些应用中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>当其中某个应用位于前台时，该应用会自己接收这些按键。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

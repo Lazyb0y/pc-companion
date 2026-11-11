@@ -26,6 +26,29 @@ public sealed partial class ShortcutsAndMouseButtonsPage : Page
 
     public ShortcutsAndMouseButtonsViewModel ViewModel { get; }
 
+    private async void OnAddClick(object sender, RoutedEventArgs e)
+    {
+        var editor = ViewModel.CreateEditor(null);
+        if (await new TriggerDialog(editor).ShowUntilDoneAsync(ShowAsync).ConfigureAwait(true) == ContentDialogResult.Primary)
+        {
+            ViewModel.Add(editor.ToTrigger());
+        }
+    }
+
+    private async void OnEditClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: int index })
+        {
+            return;
+        }
+
+        var editor = ViewModel.CreateEditor(index);
+        if (await new TriggerDialog(editor).ShowUntilDoneAsync(ShowAsync).ConfigureAwait(true) == ContentDialogResult.Primary)
+        {
+            ViewModel.Replace(index, editor.ToTrigger());
+        }
+    }
+
     private async void OnDeleteClick(object sender, RoutedEventArgs e)
     {
         var item = sender is FrameworkElement { Tag: int index } ? ViewModel.Triggers.FirstOrDefault(trigger => trigger.Index == index) : null;

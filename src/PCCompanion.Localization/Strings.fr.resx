@@ -5116,4 +5116,116 @@
     <value>Lit uniquement les raccourcis que vous ajoutez, quand vous les appuyez, sans hook clavier, et tant que des boutons de souris sont ajoutés, les boutons Précédent, Suivant et central et les touches maintenues avec eux. Tant que des applications sont listées, lit aussi l’application au premier plan ou sous le pointeur et, pour la suspension en plein écran, la position de la fenêtre au premier plan, jamais les titres ni le contenu des fenêtres. Exécute uniquement les actions que vous choisissez. Ne stocke et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>Ajouter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>Ajouter un raccourci ou un bouton de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>Modifier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>Modifier {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>Ajouter un raccourci ou un bouton de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>Modifier le raccourci ou le bouton de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>Enregistrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>Choisissez une action</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0} est désactivé, donc cela ne fera rien tant que vous ne l’aurez pas activé sur sa page.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>Raccourci</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>Raccourci pour {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>Appuyez sur les touches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>Sélectionnez la zone et appuyez sur les touches. Sans Ctrl, Alt ni la touche du logo Windows, Tab, Échap, Entrée et Espace gardent leur fonction habituelle.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>Choisir les touches</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>Touche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>Choisissez une touche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>Les raccourcis ne peuvent pas utiliser cette touche.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>Ajoutez Ctrl, Alt ou la touche du logo Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows se réserve ce raccourci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0} utilise ce raccourci. Choisissez-en un autre, ou modifiez-le sur la page {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>{0} a déjà ce raccourci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>En {0}, {1} tape {2}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>Dans une autre disposition de clavier, {0} tape {1}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows ou un autre programme utilise ce raccourci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows ou des applications utilisent ce raccourci. Cette action prend sa place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>Pas dans ces applications</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>Tant qu’une de ces applications est au premier plan, elle reçoit elle-même les touches.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

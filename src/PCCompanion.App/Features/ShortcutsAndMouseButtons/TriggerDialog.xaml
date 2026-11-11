@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.ShortcutsAndMouseButtons.TriggerDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
+    CloseButtonText="{app:Localized Key=ShortcutsAndMouseButtonsCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=ShortcutsAndMouseButtonsSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <StackPanel MinWidth="460" Spacing="16">
+        <StackPanel Spacing="4">
+            <ComboBox
+                x:Name="ActionBox"
+                HorizontalAlignment="Stretch"
+                Header="{app:Localized Key=ShortcutsAndMouseButtonsEditorActionHeader}"
+                ItemsSource="{x:Bind Editor.Actions}"
+                PlaceholderText="{app:Localized Key=ShortcutsAndMouseButtonsEditorActionPlaceholder}"
+                SelectedItem="{x:Bind Editor.SelectedAction, Mode=TwoWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.ActionNote, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasActionNote, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <!-- The box listens for keys while it has the focus; it's read only, so typing changes nothing else. -->
+            <TextBox
+                x:Name="ShortcutBox"
+                AutomationProperties.HelpText="{x:Bind Editor.Problem, Mode=OneWay}"
+                AutomationProperties.Name="{x:Bind Editor.ShortcutBoxName, Mode=OneWay}"
+                GotFocus="OnShortcutBoxGotFocus"
+                Header="{app:Localized Key=ShortcutsAndMouseButtonsEditorShortcutHeader}"
+                IsReadOnly="True"
+                LostFocus="OnShortcutBoxLostFocus"
+                PreviewKeyDown="OnShortcutBoxKeyDown"
+                PreviewKeyUp="OnShortcutBoxKeyUp"
+                Text="{x:Bind Editor.ShortcutText, Mode=OneWay}" />
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.Problem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasProblem, Mode=OneWay}" />
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.Warning, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasWarning, Mode=OneWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=ShortcutsAndMouseButtonsEditorShortcutNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="{app:Localized Key=ShortcutsAndMouseButtonsEditorChooseKeys}">
+            <StackPanel Spacing="8">
+                <!-- Two by two, so that the longest names in any language fit. -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <CheckBox Content="{app:Localized Key=ShortcutsAndMouseButtonsKeyControl}" IsChecked="{x:Bind Editor.ChooseControl, Mode=TwoWay}" />
+                    <CheckBox Grid.Column="1" Content="{app:Localized Key=ShortcutsAndMouseButtonsKeyAlt}" IsChecked="{x:Bind Editor.ChooseAlt, Mode=TwoWay}" />
+                    <CheckBox Grid.Row="1" Content="{app:Localized Key=ShortcutsAndMouseButtonsKeyShift}" IsChecked="{x:Bind Editor.ChooseShift, Mode=TwoWay}" />
+                    <CheckBox Grid.Row="1" Grid.Column="1" Content="{app:Localized Key=ShortcutsAndMouseButtonsKeyWindows}" IsChecked="{x:Bind Editor.ChooseWindows, Mode=TwoWay}" />
+                </Grid>
+                <ComboBox
+                    MinWidth="200"
+                    Header="{app:Localized Key=ShortcutsAndMouseButtonsEditorKeyHeader}"
+                    ItemsSource="{x:Bind Editor.Keys}"
+                    PlaceholderText="{app:Localized Key=ShortcutsAndMouseButtonsEditorKeyPlaceholder}"
+                    SelectedItem="{x:Bind Editor.SelectedKey, Mode=TwoWay}" />
+            </StackPanel>
+        </Expander>
+
+        <controls:AppList
+            Apps="{x:Bind Editor.ExcludedApps}"
+            Description="{app:Localized Key=ShortcutsAndMouseButtonsEditorExcludedDescription}"
+            Header="{app:Localized Key=ShortcutsAndMouseButtonsEditorExcludedHeader}" />
+    </StackPanel>
+</ContentDialog>
