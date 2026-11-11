@@ -49,6 +49,16 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         new(new FeatureAction(Definition.Id, PreviousShortcut), Strings.AppWindowsActionPrevious),
     ];
 
+    /// <summary>The shortcuts App Windows registers with <paramref name="settings"/> while it's on, each with the action it runs.</summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(AppWindowsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return KeysOf(settings.Shortcut) is [var next, var previous]
+            ? [(new FeatureAction(Definition.Id, NextShortcut), ShortcutKeys.OfPosition(next)), (new FeatureAction(Definition.Id, PreviousShortcut), ShortcutKeys.OfPosition(previous))]
+            : [];
+    }
+
     public bool CanRun(FeatureAction action) => _window is not null && DirectionOf(action) is not null;
 
     // App Windows runs on the host's UI thread, so the switch runs right away.
@@ -150,23 +160,30 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
 
     private void Configure()
     {
-        HotKeyModifiers? modifiers = _settings.Shortcut switch
+        var keys = KeysOf(_settings.Shortcut);
+        if (keys.Count == 0)
+        {
+            LogUnknownShortcut(logger);
+        }
+
+        _shortcut?.Configure(keys);
+        LogConfigured(logger, _settings.Shortcut, _settings.IncludeMinimized, _shortcut?.ChecksLayout ?? false);
+    }
+
+    // The keys of the shortcut that goes to the next window and of the one with Shift added,
+    // which goes back; none for an unknown shortcut.
+    private static IReadOnlyList<KeyPositionShortcut> KeysOf(AppWindowsShortcut shortcut)
+    {
+        HotKeyModifiers? modifiers = shortcut switch
         {
             AppWindowsShortcut.AltAboveTab => HotKeyModifiers.Alt,
             AppWindowsShortcut.WindowsAboveTab => HotKeyModifiers.Windows,
             _ => null,
         };
 
-        if (modifiers is null)
-        {
-            LogUnknownShortcut(logger);
-        }
-
-        // The shortcut with Shift added goes back.
-        _shortcut?.Configure(modifiers is { } held
+        return modifiers is { } held
             ? [new(held, ShortcutKeeper.KeyAboveTab), new(held | HotKeyModifiers.Shift, ShortcutKeeper.KeyAboveTab)]
-            : []);
-        LogConfigured(logger, _settings.Shortcut, _settings.IncludeMinimized, _shortcut?.ChecksLayout ?? false);
+            : [];
     }
 
     // A press runs on the host's UI thread, so its time is logged.

@@ -108,6 +108,18 @@ public static class KeyboardLayout
     }
 
     /// <summary>
+    /// The scan code of the key that means <paramref name="virtualKey"/> in <paramref name="layout"/>,
+    /// such as the key right of G for H in US English, or <see langword="null"/> when no key does.
+    /// Meant for letters, digits, punctuation and Esc: for an arrow or another key that the numeric
+    /// keypad also has, Windows gives the keypad key's scan code, without 0xE0.
+    /// </summary>
+    public static uint? ScanCodeOf(uint virtualKey, nint layout)
+    {
+        var scanCode = PInvoke.MapVirtualKeyEx(virtualKey, MAP_VIRTUAL_KEY_TYPE.MAPVK_VK_TO_VSC_EX, (HKL)layout);
+        return scanCode != 0 ? scanCode : null;
+    }
+
+    /// <summary>
     /// The character that the key with <paramref name="scanCode"/> types in <paramref name="layout"/>
     /// without Shift, such as <c>`</c> for the key above Tab in US English and <c>^</c> in German,
     /// or <see langword="null"/> when it types none there.

@@ -14,8 +14,8 @@ namespace PCCompanion.Modules.Clipboard.ClipboardActions;
 /// </summary>
 internal sealed class WindowsClipboardActionsSystem : IClipboardActionsSystem
 {
-    private const uint VirtualKeyV = 0x56;
-    private const uint VirtualKeyS = 0x53;
+    internal const uint VirtualKeyV = 0x56;
+    internal const uint VirtualKeyS = 0x53;
     private const uint KeyDownMessage = 0x0100; // WM_KEYDOWN
     private const uint SystemKeyDownMessage = 0x0104; // WM_SYSKEYDOWN
 

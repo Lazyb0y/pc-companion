@@ -95,6 +95,16 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems, IF
     public static IReadOnlyList<OfferedAction> OfferedActions() =>
         [new(new FeatureAction(Definition.Id, SendToTrayShortcut), Strings.MinimizeToTrayActionSendToTray)];
 
+    /// <summary>The shortcut Minimize to Tray registers with <paramref name="settings"/> while it's on, with the action it runs.</summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(MinimizeToTraySettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return settings.Shortcut == MinimizeToTrayShortcut.WindowsShiftZ
+            ? [(new FeatureAction(Definition.Id, SendToTrayShortcut), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Shift, MinimizeToTrayThread.KeyZ))]
+            : [];
+    }
+
     public bool CanRun(FeatureAction action) => _thread is not null && IsSendToTray(action);
 
     public void Run(FeatureAction action)

@@ -101,6 +101,23 @@ public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
         ];
     }
 
+    /// <summary>
+    /// The shortcuts Drop-down Apps registers with <paramref name="settings"/> while it's on, each
+    /// with the action it runs; an app's shortcut that an app earlier in the list has is left out.
+    /// </summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(DropDownAppsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return
+        [
+            .. settings.Apps
+                .Zip(DropDownShortcuts.Assign(settings.Apps))
+                .Where(pair => pair.First.Target is not null && DropDownShortcuts.KeysOf(pair.Second.Shortcut) is not null)
+                .Select(pair => (new FeatureAction(Definition.Id, ShowOrHideAction, pair.First.Target), ShortcutKeys.OfPosition(DropDownShortcuts.KeysOf(pair.Second.Shortcut)!.Value))),
+        ];
+    }
+
     public bool CanRun(FeatureAction action) =>
         _thread is not null
         && action.FeatureId == Definition.Id

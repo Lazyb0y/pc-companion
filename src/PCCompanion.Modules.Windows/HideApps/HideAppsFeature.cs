@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
+using HideAppChoice = PCCompanion.Modules.Windows.HideApps.HideAppShortcut;
+using HideOthersChoice = PCCompanion.Modules.Windows.HideApps.HideOthersShortcut;
 
 namespace PCCompanion.Modules.Windows.HideApps;
 
@@ -124,6 +126,25 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems, IFeature
         new(new FeatureAction(Definition.Id, HideOthersShortcut), Strings.HideAppsHideOthersHeader),
         new(new FeatureAction(Definition.Id, ShowAllAction), Strings.HideAppsShowAll),
     ];
+
+    /// <summary>The shortcuts Hide Apps registers with <paramref name="settings"/> while it's on, each with the action it runs.</summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(HideAppsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var shortcuts = new List<(FeatureAction, ShortcutKeys)>(2);
+        if (settings.HideAppShortcut == HideAppChoice.WindowsControlH)
+        {
+            shortcuts.Add((new FeatureAction(Definition.Id, HideAppShortcut), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Control, HideAppsThread.KeyH)));
+        }
+
+        if (settings.HideOthersShortcut == HideOthersChoice.WindowsControlShiftH)
+        {
+            shortcuts.Add((new FeatureAction(Definition.Id, HideOthersShortcut), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Control | HotKeyModifiers.Shift, HideAppsThread.KeyH)));
+        }
+
+        return shortcuts;
+    }
 
     public bool CanRun(FeatureAction action) => _thread is not null && ActionOf(action) is not null;
 

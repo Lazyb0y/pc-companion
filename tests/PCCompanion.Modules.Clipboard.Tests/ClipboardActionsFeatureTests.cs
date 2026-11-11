@@ -123,6 +123,19 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItSaysWhichKeysItsShortcutsUseAndTheSelectedTextsOnlyWithSelectedTextOn()
+    {
+        const HotKeyModifiers WindowsAlt = HotKeyModifiers.Windows | HotKeyModifiers.Alt;
+        var copied = (new FeatureAction("clipboardActions", "copiedText"), ShortcutKeys.OfVirtualKey(WindowsAlt, 0x56));
+        var selected = (new FeatureAction("clipboardActions", "selectedText"), ShortcutKeys.OfVirtualKey(WindowsAlt, 0x53));
+
+        Assert.Equal([copied], ClipboardActionsFeature.Shortcuts(new ClipboardActionsSettings()));
+        Assert.Equal([copied, selected], ClipboardActionsFeature.Shortcuts(new ClipboardActionsSettings { SelectedText = true }));
+        Assert.Equal([selected], ClipboardActionsFeature.Shortcuts(new ClipboardActionsSettings { SelectedText = true, Shortcut = ClipboardActionsShortcut.None }));
+        Assert.Empty(ClipboardActionsFeature.Shortcuts(new ClipboardActionsSettings { SelectedText = true, Shortcut = ClipboardActionsShortcut.None, SelectedTextShortcut = ClipboardActionsSelectionShortcut.None }));
+    }
+
+    [Fact]
     public void ItCanRunItsActionsWhileItsOn()
     {
         var copied = new FeatureAction("clipboardActions", "copiedText");
