@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -119,6 +120,7 @@ internal static partial class Program
             .AddSingleton<GitHubReleaseSource>()
             .AddSingleton<UpdateChecker>()
             .AddSingleton<UpdateNotifier>()
+            .AddSingleton<ShortcutRefusals>()
             .AddInputModule()
             .AddWindowsModule()
             .AddDesktopModule()
@@ -135,6 +137,9 @@ internal static partial class Program
         {
             LogCantRunAsAdministrator(logger);
         }
+
+        // Pages that show a shortcut say when Windows refused it; without the pipe, the shortcuts still work.
+        using var shortcutStatus = ServeShortcutStatus(services.GetRequiredService<ShortcutRefusals>(), logger);
 
         // Features run on this thread, whose message loop they need.
         var store = services.GetRequiredService<SettingsStore>();
@@ -198,6 +203,19 @@ internal static partial class Program
     }
 
     private static bool IsHostRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
+
+    private static SnapshotPipe? ServeShortcutStatus(ShortcutRefusals refusals, ILogger logger)
+    {
+        try
+        {
+            return SnapshotPipe.Serve(ShortcutRefusals.PipeName, refusals.ToJson, exception => LogShortcutStatusFailed(logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogShortcutStatusFailed(logger, exception);
+            return null;
+        }
+    }
 
     // Returns null when another host holds the lock.
     private static Mutex? TryTakeInstanceLock()
@@ -274,6 +292,9 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "{Source} held the host's UI thread for {Milliseconds:F0} ms, handling {Handled}, so every feature waited.")]
     private static partial void LogSlowHandler(ILogger logger, string source, double milliseconds, string handled);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The host can't tell the settings app which shortcuts Windows refused.")]
+    private static partial void LogShortcutStatusFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The settings changed and were loaded again.")]
     private static partial void LogSettingsReloaded(ILogger logger);
