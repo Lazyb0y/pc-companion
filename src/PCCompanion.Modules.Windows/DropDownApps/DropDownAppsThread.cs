@@ -120,7 +120,8 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             Action<Action> post = action => window.BeginInvoke(() => owner.Guard(action));
             _system = new WindowsDropDownSystem(window, owner.Guard, owner._commands);
             Controller = new DropDownController(_system, owner._time, post, owner._logger, owner._shared);
-            _shortcuts = new ShortcutKeeper(new WindowsShortcutEnvironment(window), owner._time, post, owner._logger, "Drop-down Apps");
+            _shortcuts = new ShortcutKeeper(new WindowsShortcutEnvironment(window), owner._time, post);
+            ShortcutKeeperLog.Attach(_shortcuts, owner._logger, "Drop-down Apps");
 
             // Another program's window coming to the front: the keyboard layout may change, and a
             // shown drop-down window may hide. Out-of-context, so it runs no code in other apps.
@@ -131,7 +132,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             _system.MinimizeStarted += (_, minimizing) => Controller.OnMinimizeStart(minimizing);
             Controller.Reported += (_, report) => owner._results.Add(report.AppIndex, report.Outcome);
             _shortcuts.Pressed += (_, keys) => owner.Guard(() => Press(keys));
-            _shortcuts.Refused += (_, keys) => owner.Guard(() => Refused(keys));
+            _shortcuts.Refused += (_, refused) => owner.Guard(() => Refused(refused.Shortcut));
             _shortcuts.RefusedShortcutsChanged += (_, _) => owner.Guard(ReportRefused);
             _foreground.Raised += (_, _) => owner.Guard(() =>
             {

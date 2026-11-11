@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows;
@@ -14,15 +13,19 @@ namespace PCCompanion.Modules.Windows;
 /// <param name="ScanCode">The key's scan code, such as <see cref="ShortcutKeeper.KeyAboveTab"/>.</param>
 public readonly record struct KeyPositionShortcut(HotKeyModifiers Modifiers, uint ScanCode);
 
+/// <summary>A shortcut and the virtual key its key means in the layout it was registered for.</summary>
+public readonly record struct RegisteredKey(KeyPositionShortcut Shortcut, uint VirtualKey);
+
 /// <summary>
 /// Keeps shortcuts registered for keys found by their position, such as the key above Tab, which
 /// means a different virtual key in some keyboard layouts. Windows reports no layout change within
 /// a window, so while the user's layouts disagree on one of the keys, it also checks the layout
 /// once a second, and soon after another window comes to the front, whose layout Windows may
 /// switch a moment later. Use it on one thread; <paramref name="post"/> runs an action on that thread.
+/// It logs nothing itself: its events say what it registered, what Windows refused and which key
+/// a layout doesn't have.
 /// </summary>
-/// <param name="feature">The feature's name for the log, such as "App Windows".</param>
-public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, TimeProvider time, Action<Action> post, ILogger logger, string feature) : IDisposable
+public sealed class ShortcutKeeper(IShortcutEnvironment environment, TimeProvider time, Action<Action> post) : IDisposable
 {
     /// <summary>The scan code of the key above Tab, left of 1, on every keyboard.</summary>
     public const uint KeyAboveTab = 0x29;
@@ -38,8 +41,14 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
     /// <summary>Raised on the keeper's thread when one of the shortcuts is pressed.</summary>
     public event EventHandler<KeyPositionShortcut>? Pressed;
 
+    /// <summary>Raised on the keeper's thread when one of the shortcuts is registered with a virtual key.</summary>
+    public event EventHandler<RegisteredKey>? Registered;
+
     /// <summary>Raised on the keeper's thread when Windows refuses one of the shortcuts, once for each key it's tried with.</summary>
-    public event EventHandler<KeyPositionShortcut>? Refused;
+    public event EventHandler<RegisteredKey>? Refused;
+
+    /// <summary>Raised on the keeper's thread when a shortcut's key means no virtual key in the layout in front.</summary>
+    public event EventHandler<KeyPositionShortcut>? NoKey;
 
     /// <summary>Raised on the keeper's thread when <see cref="RefusedShortcuts"/> changed.</summary>
     public event EventHandler? RefusedShortcutsChanged;
@@ -161,7 +170,7 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         (registration.Attempted, registration.VirtualKey) = (true, virtualKey);
         if (virtualKey is not { } key)
         {
-            LogNoKey(logger, feature, shortcut.Modifiers, shortcut.ScanCode);
+            NoKey?.Invoke(this, shortcut);
             return;
         }
 
@@ -170,12 +179,11 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         if (registration.Handle is null)
         {
             registration.Refused = true;
-            LogRefused(logger, feature, shortcut.Modifiers, key);
-            Refused?.Invoke(this, shortcut);
+            Refused?.Invoke(this, new RegisteredKey(shortcut, key));
         }
         else
         {
-            LogRegistered(logger, feature, shortcut.Modifiers, key);
+            Registered?.Invoke(this, new RegisteredKey(shortcut, key));
         }
     }
 
@@ -194,15 +202,6 @@ public sealed partial class ShortcutKeeper(IShortcutEnvironment environment, Tim
         _timer?.Dispose();
         _timer = null;
     }
-
-    [LoggerMessage(Level = LogLevel.Debug, Message = "{Feature} registered {Modifiers} with virtual key {VirtualKey:X2}.")]
-    private static partial void LogRegistered(ILogger logger, string feature, HotKeyModifiers modifiers, uint virtualKey);
-
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows refused the {Feature} shortcut, {Modifiers} with virtual key {VirtualKey:X2}; another program may have it.")]
-    private static partial void LogRefused(ILogger logger, string feature, HotKeyModifiers modifiers, uint virtualKey);
-
-    [LoggerMessage(Level = LogLevel.Debug, Message = "The key with scan code {ScanCode:X2} means no key in the layout in front, so {Feature} has no shortcut {Modifiers} with it there.")]
-    private static partial void LogNoKey(ILogger logger, string feature, HotKeyModifiers modifiers, uint scanCode);
 
     // Where a shortcut is registered, and with which virtual key.
     private sealed class Registration
