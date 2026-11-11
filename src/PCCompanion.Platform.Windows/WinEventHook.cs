@@ -45,6 +45,9 @@ public sealed class WinEventHook : IDisposable
     /// <summary>An object's name changed, as a window's title does (<c>EVENT_OBJECT_NAMECHANGE</c>).</summary>
     public const uint ObjectNameChangeEvent = 0x800C;
 
+    /// <summary>An object moved or changed size (<c>EVENT_OBJECT_LOCATIONCHANGE</c>); for a window, its object ID is 0.</summary>
+    public const uint LocationChangeEvent = 0x800B;
+
     // Kept in a field so the delegate lives as long as the hook.
     private readonly WINEVENTPROC _callback;
     private readonly UnhookWinEventSafeHandle _hook;

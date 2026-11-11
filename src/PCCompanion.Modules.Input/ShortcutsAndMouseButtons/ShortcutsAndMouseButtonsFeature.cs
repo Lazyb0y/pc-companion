@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,8 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
     private readonly ShortcutRefusals _refusals;
     private readonly TimeProvider _time;
     private readonly ILogger<ShortcutsAndMouseButtonsFeature> _logger;
+    private readonly Func<Action<PointerButton, uint>, IDisposable> _watchRawPresses;
+    private IDisposable? _rawPresses;
     private ShortcutsAndMouseButtonsSettings _settings = new();
     private ShortcutsAndMouseButtonsThread? _thread;
     private ShortcutsAndMouseButtonsThread? _stopped;
@@ -39,16 +42,27 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
     /// <param name="actions">The other features' actions, which the host gives this feature only.</param>
     /// <param name="refusals">Where the feature says which of its shortcuts Windows refused.</param>
     public ShortcutsAndMouseButtonsFeature(IHostActions actions, ShortcutRefusals refusals, TimeProvider time, ILogger<ShortcutsAndMouseButtonsFeature> logger)
+        : this(actions, refusals, time, logger, WatchRawPresses)
+    {
+    }
+
+    /// <param name="watchRawPresses">
+    /// Reports the Back, Forward and middle buttons going down, with their times, on the host's UI
+    /// thread until disposed, as raw input does, which every feature shares on that thread.
+    /// </param>
+    public ShortcutsAndMouseButtonsFeature(IHostActions actions, ShortcutRefusals refusals, TimeProvider time, ILogger<ShortcutsAndMouseButtonsFeature> logger, Func<Action<PointerButton, uint>, IDisposable> watchRawPresses)
     {
         ArgumentNullException.ThrowIfNull(actions);
         ArgumentNullException.ThrowIfNull(refusals);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(watchRawPresses);
 
         _actions = actions;
         _refusals = refusals;
         _time = time;
         _logger = logger;
+        _watchRawPresses = watchRawPresses;
 
         // After the host applied the settings to every feature, other features' actions may have
         // come or gone. Raised on the host's UI thread, outside the feature runner's error boundary.
@@ -184,6 +198,53 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
         {
             _thread.Update(plan);
         }
+
+        // Raw input tells the thread of clicks the shared pointer hook should have seen.
+        if (planned.Any(trigger => trigger.Input.Button is not null))
+        {
+            _rawPresses ??= WatchRawPressesOrNot();
+        }
+        else
+        {
+            _rawPresses?.Dispose();
+            _rawPresses = null;
+        }
+    }
+
+    private IDisposable? WatchRawPressesOrNot()
+    {
+        try
+        {
+            return _watchRawPresses((button, time) => _thread?.RawPress(button, time));
+        }
+        catch (Win32Exception exception)
+        {
+            LogNoRawInput(_logger, exception);
+            return null;
+        }
+    }
+
+    private static IDisposable WatchRawPresses(Action<PointerButton, uint> pressed)
+    {
+        var monitor = new RawPointerMonitor();
+        monitor.InputReceived += (_, input) =>
+        {
+            if (input.Changes.HasFlag(PointerButtonChanges.X1Down))
+            {
+                pressed(PointerButton.Back, input.Time);
+            }
+
+            if (input.Changes.HasFlag(PointerButtonChanges.X2Down))
+            {
+                pressed(PointerButton.Forward, input.Time);
+            }
+
+            if (input.Changes.HasFlag(PointerButtonChanges.MiddleDown))
+            {
+                pressed(PointerButton.Middle, input.Time);
+            }
+        };
+        return monitor;
     }
 
     private bool CanRun(FeatureAction action) =>
@@ -195,6 +256,8 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
     private void Stop()
     {
         CurrentPlan = null;
+        _rawPresses?.Dispose();
+        _rawPresses = null;
         if (_thread is null)
         {
             return;
@@ -218,4 +281,7 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Shortcuts & Mouse Buttons didn't stop within {Seconds} s.")]
     private static partial void LogNotStoppedInTime(ILogger logger, double seconds);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't report mouse input, so Shortcuts & Mouse Buttons can't tell when Windows removes the pointer hook.")]
+    private static partial void LogNoRawInput(ILogger logger, Exception exception);
 }

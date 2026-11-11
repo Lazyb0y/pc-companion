@@ -40,18 +40,28 @@ function Test-Toggled([string] $Name) {
     ($null -ne $toggle) -and ($toggle.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern).Current.ToggleState -eq [System.Windows.Automation.ToggleState]::On)
 }
 
-# A test program with one window, which Hide app minimizes.
+# A test program with one window, which Hide app minimizes. It writes an x to xbuttons.txt for
+# each Back or Forward click it gets.
 $shortcutFolder = Join-Path $env:TEMP 'PCCompanionShortcuts'
 New-Item -ItemType Directory -Force -Path $shortcutFolder | Out-Null
 $shortcutExe = Join-Path $shortcutFolder 'shortcut-app.exe'
+$xClicks = Join-Path $shortcutFolder 'xbuttons.txt'
 Add-Type -OutputAssembly $shortcutExe -OutputType WindowsApplication -ReferencedAssemblies System.Windows.Forms, System.Drawing -TypeDefinition @'
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 public static class ShortcutApp {
+    private sealed class Window : Form {
+        protected override void WndProc(ref Message message) {
+            if (message.Msg == 0x020B) { File.AppendAllText(Path.Combine(Path.GetTempPath(), "PCCompanionShortcuts", "xbuttons.txt"), "x"); }
+            base.WndProc(ref message);
+        }
+    }
+
     [STAThread]
     public static void Main() {
-        Application.Run(new Form { Text = "ShortcutApp", StartPosition = FormStartPosition.Manual, Bounds = new Rectangle(200, 200, 480, 320) });
+        Application.Run(new Window { Text = "ShortcutApp", StartPosition = FormStartPosition.Manual, Bounds = new Rectangle(200, 200, 480, 320) });
     }
 }
 '@
@@ -287,6 +297,75 @@ $onlyJPaused = "{ ""enabled"": true, ""triggers"": [ $hideAppOnJ ], ""pauseMouse
 Start-Host
 Test-ShortcutTakenNote 'Ctrl + Alt + J' 0x3 0x4A { Write-ShortcutSettings '{ "enabled": false }' $hideApps } { Write-ShortcutSettings $onlyJ $hideApps } { Write-ShortcutSettings $onlyJPaused $hideApps } `
     'Shortcuts & Mouse Buttons' 'Another program uses Ctrl + Alt + J, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '20c-shortcuts-and-mouse-buttons-taken'
+
+# Mouse buttons, with the pointer over the test program in front: Back runs Hide app and the
+# program gets no click; Windows logo key + middle runs it and Start doesn't open; Forward runs
+# End App's choosing, which takes the front. With the program listed, it gets Back itself, and while
+# a full-screen window is in front the buttons pause.
+function Get-XClicks { if (Test-Path $xClicks) { (Get-Content $xClicks -Raw).Length } else { 0 } }
+function Send-XButton([uint32] $Button) {
+    [Win32]::mouse_event(0x0080, 0, 0, $Button, [UIntPtr]::Zero)
+    Start-Sleep -Milliseconds 50
+    [Win32]::mouse_event(0x0100, 0, 0, $Button, [UIntPtr]::Zero)
+    Start-Sleep -Milliseconds 1500
+}
+function Show-TestProgram {
+    [void] [Win32]::ShowWindow($window, 9)
+    Select-Window $window
+    [void] [Win32]::SetCursorPos(440, 360)
+    Start-Sleep -Milliseconds 500
+}
+function Get-Runs([string] $Trigger) { Get-MatchCount (Get-HostLog) "runs [a-zA-Z]+'s action [a-zA-Z]+, for $Trigger\." }
+$back = '{ "action": { "feature": "hideApps", "id": "hideApp" }, "mouseButton": { "button": "Back", "modifiers": [] } }'
+$forward = '{ "action": { "feature": "endApp", "id": "chooseApp" }, "mouseButton": { "button": "Forward", "modifiers": [] } }'
+$middle = '{ "action": { "feature": "hideApps", "id": "hideApp" }, "mouseButton": { "button": "Middle", "modifiers": [ "Windows" ] } }'
+$others = ', "hideApps": { "enabled": true }, "endApp": { "enabled": true }'
+Remove-Item $xClicks -Force -ErrorAction SilentlyContinue
+$app = Start-Process $shortcutExe -PassThru
+[void] (Wait-Until { [Win32]::FindWindow([NullString]::Value, 'ShortcutApp') -ne [IntPtr]::Zero } 15)
+$window = [Win32]::FindWindow([NullString]::Value, 'ShortcutApp')
+Write-ShortcutSettings "{ ""enabled"": true, ""triggers"": [ $back, $forward, $middle ] }" $others
+Start-Host
+Test-Check 'the host keeps the three mouse buttons' (Test-Logged 'keeps 3 mouse buttons from the apps' 10)
+
+Show-TestProgram
+Send-XButton 1
+Test-Check 'Back runs Hide app on the program in front' ((Wait-Until { [Win32]::IsIconic($window) } 5) -and ((Get-Runs 'Back') -eq 1))
+Test-Check 'the program gets no Back click' ((Get-XClicks) -eq 0) "clicks: $(Get-XClicks)"
+
+Show-TestProgram
+[void] [Win32]::ScanKey($LeftWindows, $false, $true)
+[Win32]::mouse_event(0x0020, 0, 0, 0, [UIntPtr]::Zero)
+Start-Sleep -Milliseconds 50
+[Win32]::mouse_event(0x0040, 0, 0, 0, [UIntPtr]::Zero)
+Start-Sleep -Milliseconds 300
+[void] [Win32]::ScanKey($LeftWindows, $true, $true)
+Start-Sleep -Seconds 2
+$front = [Win32]::GetForegroundWindow()
+Test-Check 'Windows logo key + middle runs Hide app' ((Wait-Until { [Win32]::IsIconic($window) } 5) -and ((Get-Runs 'Windows\+Middle') -eq 1))
+Test-Check 'Start doesn''t open as the Windows logo key is released' ([Win32]::WindowTitle($front) -notin @('Start', 'Search')) "front: $([Win32]::WindowClass($front)), '$([Win32]::WindowTitle($front))'"
+
+Show-TestProgram
+Send-XButton 2
+$covering = [Win32]::FindWindow('PCCompanion.EndApp.Covering', [NullString]::Value)
+Test-Check 'Forward starts End App''s choosing, which takes the front' (($covering -ne [IntPtr]::Zero) -and ([Win32]::GetForegroundWindow() -eq $covering)) "front: $([Win32]::WindowClass([Win32]::GetForegroundWindow()))"
+if (($covering -ne [IntPtr]::Zero) -and ([Win32]::GetForegroundWindow() -eq $covering)) { Send-Key 0x1B }
+Start-Sleep -Seconds 1
+
+$listedBack = '{ "action": { "feature": "hideApps", "id": "hideApp" }, "mouseButton": { "button": "Back", "modifiers": [] }, "excludedApps": [ { "name": "shortcut-app", "program": "' + ($shortcutExe -replace '\\', '\\') + '" } ] }'
+Write-ShortcutSettings "{ ""enabled"": true, ""triggers"": [ $listedBack, $forward, $middle ] }" $others
+Show-TestProgram
+Send-XButton 1
+Test-Check 'with the program listed, it gets Back itself' (((Get-XClicks) -eq 1) -and -not [Win32]::IsIconic($window) -and ((Get-Runs 'Back') -eq 1)) "clicks: $(Get-XClicks)"
+
+$fullScreen = Start-TestWindow 'FullScreen'
+Select-Window (Find-TestWindow 'FullScreen')
+Test-Check 'a full-screen window in front pauses the mouse buttons' (Test-Logged 'paused its mouse buttons, since the window in front is full screen' 5)
+Send-XButton 2
+Test-Check 'Forward then runs nothing' ((Get-Runs 'Forward') -eq 1)
+if ($fullScreen) { Stop-Process -Id $fullScreen.Id -Force -ErrorAction SilentlyContinue }
+Stop-Process -Id $app.Id -Force -ErrorAction SilentlyContinue
+Stop-Host
 
 # The page in Arabic with the dark theme.
 Stop-Host

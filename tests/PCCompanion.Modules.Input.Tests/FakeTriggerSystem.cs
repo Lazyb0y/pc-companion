@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Input.ShortcutsAndMouseButtons;
 using PCCompanion.Platform.Windows;
@@ -35,6 +36,30 @@ internal sealed class FakeTriggerSystem : ITriggerSystem, IShortcutEnvironment
     public List<string> Events { get; } = [];
 
     public List<string> Refused { get; private set; } = [];
+
+    public nint FrontWindowHandle { get; set; }
+
+    public Dictionary<nint, AppOfWindow> AppsOfWindows { get; } = [];
+
+    public List<(nint Window, AppOfWindow App)> Taskbar { get; } = [];
+
+    public int TaskbarReads { get; private set; }
+
+    public HashSet<nint> Closed { get; } = [];
+
+    public bool FullScreen { get; set; }
+
+    public int FullScreenReads { get; private set; }
+
+    public bool Watching { get; private set; }
+
+    public bool ButtonHeld { get; set; }
+
+    public PointerClaim? Claimed { get; private set; }
+
+    public int Claims { get; private set; }
+
+    public Dictionary<uint, PointerInputOutcome> Outcomes { get; } = [];
 
     public nint? ForegroundLayout() => Foreground;
 
@@ -87,6 +112,38 @@ internal sealed class FakeTriggerSystem : ITriggerSystem, IShortcutEnvironment
     public void Run(FeatureAction action) => Events.Add($"run {action.FeatureId}.{action.ActionId}");
 
     public void ReportRefused(IEnumerable<string> shortcuts) => Refused = [.. shortcuts];
+
+    public nint FrontWindow() => FrontWindowHandle;
+
+    public AppOfWindow AppOf(nint window) => AppsOfWindows[window];
+
+    public Task<IReadOnlyList<(nint Window, AppOfWindow App)>> ReadTaskbarAppsAsync()
+    {
+        TaskbarReads++;
+        return Task.FromResult<IReadOnlyList<(nint Window, AppOfWindow App)>>([.. Taskbar]);
+    }
+
+    public bool Exists(nint window) => !Closed.Contains(window);
+
+    public bool IsFrontFullScreen()
+    {
+        FullScreenReads++;
+        return FullScreen;
+    }
+
+    public void WatchFront(bool watch) => Watching = watch;
+
+    public bool IsHeld(PointerTrigger trigger) => ButtonHeld;
+
+    public void Claim(PointerClaim? claim)
+    {
+        Claimed = claim;
+        Claims++;
+    }
+
+    public PointerInputOutcome Outcome(uint time) => Outcomes.GetValueOrDefault(time, PointerInputOutcome.LetThrough);
+
+    public void SetHookAgain() => Events.Add("hook again");
 
     private sealed class Registration(Action remove) : IDisposable
     {
