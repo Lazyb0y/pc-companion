@@ -15,6 +15,12 @@ namespace PCCompanion.Platform.Windows;
 /// </summary>
 public static class KeyboardLayout
 {
+    // ToUnicodeEx leaves the keyboard's state alone with this flag (Windows 10 version 1607 and later).
+    private const uint DontChangeKeyboardState = 0x4;
+
+    // A key that's held, in a key state array.
+    private const byte Down = 0x80;
+
     /// <summary>
     /// The layout of the window in front, read from the window with the keyboard focus, which for
     /// Store apps belongs to another process than their frame. Returns <see langword="null"/> when
@@ -92,11 +98,12 @@ public static class KeyboardLayout
 
     /// <summary>
     /// The virtual key that the key with <paramref name="scanCode"/> means in
-    /// <paramref name="layout"/>, or <see langword="null"/> when it means none there.
+    /// <paramref name="layout"/>, or <see langword="null"/> when it means none there. An extended
+    /// key, such as an arrow, has 0xE0 in the scan code's high byte, and Pause 0xE1.
     /// </summary>
     public static uint? VirtualKeyOf(uint scanCode, nint layout)
     {
-        var key = PInvoke.MapVirtualKeyEx(scanCode, MAP_VIRTUAL_KEY_TYPE.MAPVK_VSC_TO_VK, (HKL)layout);
+        var key = PInvoke.MapVirtualKeyEx(scanCode, MAP_VIRTUAL_KEY_TYPE.MAPVK_VSC_TO_VK_EX, (HKL)layout);
         return key != 0 ? key : null;
     }
 
@@ -115,6 +122,53 @@ public static class KeyboardLayout
         // The top bit marks a dead key, such as the German ^.
         var character = PInvoke.MapVirtualKeyEx(key, MAP_VIRTUAL_KEY_TYPE.MAPVK_VK_TO_CHAR, (HKL)layout) & 0x7FFFFFFF;
         return character != 0 ? (char)character : null;
+    }
+
+    /// <summary>
+    /// What the key with <paramref name="scanCode"/> types in <paramref name="layout"/> with Ctrl
+    /// and Alt held, which Windows treats as AltGr, and with Shift when <paramref name="shift"/>,
+    /// such as € for E in German; <see langword="null"/> when it types nothing. It doesn't change
+    /// the keyboard's state, such as a dead key typed before.
+    /// </summary>
+    public static unsafe string? TypedWithAltGr(uint scanCode, bool shift, nint layout)
+    {
+        if (VirtualKeyOf(scanCode, layout) is not { } key)
+        {
+            return null;
+        }
+
+        Span<byte> state = stackalloc byte[256];
+        foreach (var held in (ReadOnlySpan<VIRTUAL_KEY>)[VIRTUAL_KEY.VK_CONTROL, VIRTUAL_KEY.VK_LCONTROL, VIRTUAL_KEY.VK_MENU, VIRTUAL_KEY.VK_RMENU])
+        {
+            state[(int)held] = Down;
+        }
+
+        if (shift)
+        {
+            state[(int)VIRTUAL_KEY.VK_SHIFT] = Down;
+            state[(int)VIRTUAL_KEY.VK_LSHIFT] = Down;
+        }
+
+        Span<char> typed = stackalloc char[8];
+        int count;
+        fixed (byte* keys = state)
+        fixed (char* buffer = typed)
+        {
+            count = PInvoke.ToUnicodeEx(key, scanCode & 0xFF, keys, buffer, typed.Length, DontChangeKeyboardState, (HKL)layout);
+        }
+
+
+        // A negative count is a dead key, which types its character with the next key.
+        var text = new string(typed[..Math.Min(Math.Abs(count), typed.Length)]);
+        foreach (var character in text)
+        {
+            if (!char.IsControl(character))
+            {
+                return text;
+            }
+        }
+
+        return null;
     }
 }
 
