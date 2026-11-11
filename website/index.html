@@ -233,7 +233,25 @@
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="system-meters-title">
+        <article class="feature" aria-labelledby="end-app-title">
+          <div class="feature-text">
+            <p class="eyebrow">Window Management</p>
+            <h3 id="end-app-title">End App</h3>
+            <p>Press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Esc</kbd>, click the window of an app that stopped responding, confirm, and PC Companion ends that app. Inspired by <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Esc</kbd> in KDE Plasma and Force Quit in macOS.</p>
+            <ul class="points">
+              <li>Or choose <strong>End an app…</strong> in the PC Companion icon's menu. A red frame shows the app under the pointer, and <kbd>Tab</kbd> moves it through the windows on the taskbar.</li>
+              <li>The question names the app and how many processes end. For an app that still responds, <strong>Cancel</strong> is the default, with a note to close it as usual.</li>
+              <li>Ends the app with its helper processes, such as a browser's, and leaves other copies of the program running.</li>
+              <li>Never ends PC Companion, File Explorer or Windows' own programs, and offers <strong>Open Task Manager</strong> instead.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/end-app-light.png" width="763" height="598" loading="lazy" alt="The End App page, with Ctrl + Alt + Esc as the shortcut, how to choose an app, and which apps can't be ended.">
+            <img class="shot-dark" src="images/end-app-dark.png" width="763" height="598" loading="lazy" alt="The End App page, with Ctrl + Alt + Esc as the shortcut, how to choose an app, and which apps can't be ended.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="system-meters-title">
           <div class="feature-text">
             <p class="eyebrow">Desktop</p>
             <h3 id="system-meters-title">System Meters</h3>
@@ -251,6 +269,24 @@
           </div>
         </article>
 
+        <article class="feature" aria-labelledby="dynamic-wallpaper-title">
+          <div class="feature-text">
+            <p class="eyebrow">Desktop</p>
+            <h3 id="dynamic-wallpaper-title">Dynamic Wallpaper</h3>
+            <p>Change the desktop picture with the time of day: at sunrise and sunset, at times you choose, or with the Windows mode, light or dark. Inspired by the dynamic desktop of macOS, GNOME's timed and light-and-dark wallpapers and KDE Plasma's day and night wallpapers.</p>
+            <ul class="points">
+              <li>Sunrise and sunset are worked out on your PC, from your time zone, or from coordinates you type or fill in once with <strong>Use my location</strong>.</li>
+              <li>Each part of the day gets a picture, or a folder whose pictures each show once, in a shuffled order. Each display can have pictures of its own.</li>
+              <li>Windows shows and fits the pictures as it does yours, and your own background comes back when you turn the feature off.</li>
+              <li>Steps aside when something else changes the background, until you select <strong>Resume</strong>.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/dynamic-wallpaper-light.png" width="763" height="682" loading="lazy" alt="The Dynamic Wallpaper page, changing with sunrise and sunset, with a picture for Sunrise, Day, in use, Sunset and Night.">
+            <img class="shot-dark" src="images/dynamic-wallpaper-dark.png" width="763" height="682" loading="lazy" alt="The Dynamic Wallpaper page, changing with sunrise and sunset, with a picture for Sunrise, Day, in use, Sunset and Night.">
+          </div>
+        </article>
+
         <article class="feature feature-reverse" aria-labelledby="clipboard-actions-title">
           <div class="feature-text">
             <p class="eyebrow">Clipboard &amp; Text</p>
@@ -260,16 +296,35 @@
               <li>The menu opens at the text cursor and starts with the copied text, so you see what the action gets.</li>
               <li>Make your own rules: a pattern the copied text matches, and a web address to open with the text in it, or a program to run with it.</li>
               <li><strong>Open in browser</strong> for a copied web link, with no rule needed.</li>
-              <li>Reads the clipboard only when you press the shortcut, leaves alone what password managers mark private, and never keeps or sends the text.</li>
+              <li><strong>Selected text:</strong> <kbd>Windows</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> shows the same actions for the text you selected, without copying it.</li>
+              <li>Reads the clipboard or the selection only when you press the shortcut, never from a password box, leaves alone what password managers mark private, and never keeps or sends the text.</li>
             </ul>
           </div>
           <div class="shot">
-            <img class="shot-light" src="images/clipboard-actions-light.png" width="763" height="624" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
-            <img class="shot-dark" src="images/clipboard-actions-dark.png" width="763" height="624" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
+            <img class="shot-light" src="images/clipboard-actions-light.png" width="763" height="645" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Selected text, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
+            <img class="shot-dark" src="images/clipboard-actions-dark.png" width="763" height="645" loading="lazy" alt="The Clipboard Actions page, with the shortcut, Selected text, Open copied links, and two rules: one opens a parcel tracking page, the other opens a copied link in a private browser window.">
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="network-profiles-title">
+        <article class="feature" aria-labelledby="middle-click-paste-title">
+          <div class="feature-text">
+            <p class="eyebrow">Clipboard &amp; Text</p>
+            <h3 id="middle-click-paste-title">Middle-Click Paste</h3>
+            <p>Select text in any app, then middle-click in a text box: the text goes in where the pointer is, without the clipboard. Inspired by the middle-click paste of Linux desktops, such as GNOME and KDE Plasma.</p>
+            <ul class="points">
+              <li>The clipboard is never read or changed, so what you copied stays there, and clipboard history never sees the text.</li>
+              <li>Only a middle-click on a text box pastes, so links, tabs, scrolling and title bars keep their middle-click. Apps you list keep all of theirs.</li>
+              <li>One <kbd>Ctrl</kbd> + <kbd>Z</kbd> takes a paste out, and when nothing can be pasted, a short notice at the pointer says why.</li>
+              <li>Reads the selection only at the middle-click, never from a password box, and leaves terminals alone.</li>
+            </ul>
+          </div>
+          <div class="shot">
+            <img class="shot-light" src="images/middle-click-paste-light.png" width="763" height="659" loading="lazy" alt="The Middle-Click Paste page, with how it works, Firefox among the apps that keep their middle-click, and notes about apps that share their selection.">
+            <img class="shot-dark" src="images/middle-click-paste-dark.png" width="763" height="659" loading="lazy" alt="The Middle-Click Paste page, with how it works, Firefox among the apps that keep their middle-click, and notes about apps that share their selection.">
+          </div>
+        </article>
+
+        <article class="feature feature-reverse" aria-labelledby="network-profiles-title">
           <div class="feature-text">
             <p class="eyebrow">Network</p>
             <h3 id="network-profiles-title">Network Profiles</h3>
@@ -287,7 +342,7 @@
           </div>
         </article>
 
-        <article class="feature feature-reverse" aria-labelledby="folder-rules-title">
+        <article class="feature" aria-labelledby="folder-rules-title">
           <div class="feature-text">
             <p class="eyebrow">Files</p>
             <h3 id="folder-rules-title">Folder Rules</h3>
@@ -305,7 +360,7 @@
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="drive-actions-title">
+        <article class="feature feature-reverse" aria-labelledby="drive-actions-title">
           <div class="feature-text">
             <p class="eyebrow">Files</p>
             <h3 id="drive-actions-title">Drive Actions</h3>
@@ -323,7 +378,7 @@
           </div>
         </article>
 
-        <article class="feature feature-reverse" aria-labelledby="display-profiles-title">
+        <article class="feature" aria-labelledby="display-profiles-title">
           <div class="feature-text">
             <p class="eyebrow">Display</p>
             <h3 id="display-profiles-title">Display Profiles</h3>
@@ -341,14 +396,14 @@
           </div>
         </article>
 
-        <article class="feature" aria-labelledby="general-title">
+        <article class="feature feature-reverse" aria-labelledby="general-title">
           <div class="feature-text">
             <p class="eyebrow">General</p>
             <h3 id="general-title">Made to fit Windows</h3>
             <p>The settings app is laid out like Windows Settings, follows your light or dark mode, and works with the keyboard and screen readers.</p>
             <ul class="points">
               <li><strong>Always run as administrator</strong> lets features work in front of apps that run as administrator, when PC Companion is installed for all users.</li>
-              <li><strong>Update check:</strong> once a day, PC Companion tells you when a newer version is out. Check now, or turn it off.</li>
+              <li><strong>Update check:</strong> once a day, PC Companion tells you when a newer version is out, with a dot on its icon until you look. Check now, or turn it off.</li>
               <li>Choose the language and theme, start with Windows, and open the logs when you report a problem.</li>
             </ul>
           </div>
