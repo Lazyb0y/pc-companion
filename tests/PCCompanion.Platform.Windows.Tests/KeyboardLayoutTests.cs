@@ -1,3 +1,4 @@
+using System.Linq;
 using Xunit;
 using static PCCompanion.Platform.Windows.Tests.TestWindows;
 
@@ -36,6 +37,27 @@ public sealed class KeyboardLayoutTests
     public void TheSpaceBarTypesASpaceInEveryLayout()
     {
         Assert.All(KeyboardLayout.Installed(), layout => Assert.Equal(' ', KeyboardLayout.CharacterOf(0x39, layout)));
+    }
+
+    [Fact]
+    public void EscTypesNothingWithAltGrInAnyLayout()
+    {
+        Assert.All(KeyboardLayout.Installed(), layout =>
+        {
+            Assert.Null(KeyboardLayout.TypedWithAltGr(0x01, shift: false, layout));
+            Assert.Null(KeyboardLayout.TypedWithAltGr(0x01, shift: true, layout));
+        });
+    }
+
+    [Fact]
+    public void UsEnglishTypesNoLetterWithAltGr()
+    {
+        const nint UsEnglish = 0x04090409;
+        if (KeyboardLayout.Installed().Contains(UsEnglish))
+        {
+            Assert.Null(KeyboardLayout.TypedWithAltGr(0x12, shift: false, UsEnglish)); // E
+            Assert.Null(KeyboardLayout.TypedWithAltGr(0x1E, shift: true, UsEnglish)); // A
+        }
     }
 
     [Fact]

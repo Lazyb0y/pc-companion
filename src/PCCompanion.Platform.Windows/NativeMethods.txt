@@ -28,6 +28,7 @@ EnumDisplayMonitors
 EnumWindows
 EVENT_SYSTEM_FOREGROUND
 ExtTextOut
+ToUnicodeEx
 FileOpenDialog
 FILEOPENDIALOGOPTIONS
 FindWindow
