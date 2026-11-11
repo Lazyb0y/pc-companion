@@ -5116,4 +5116,116 @@
     <value>Reads only the shortcuts you add, when you press them, with no keyboard hook, and while you add mouse buttons, the Back, Forward and middle buttons and the keys held with them. While apps are listed, also reads which app is in front or under the pointer, and for the full-screen pause, where the window in front is, never window titles or contents. Runs only the actions you choose. Stores and sends nothing.</value>
     <comment>Shortcuts &amp; Mouse Buttons page: below FeaturePermissionsHeader.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>Add</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: button that opens the editor for a new shortcut or mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>Add a shortcut or mouse button</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: name of the Add button for screen readers.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: a row's button that opens the editor.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>Edit {0}</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: name of a row's Edit button for screen readers. {0} is the row's shortcut or mouse button, such as "Ctrl + Alt + H".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>Add a shortcut or mouse button</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: the dialog's title for a new shortcut or mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>Edit the shortcut or mouse button</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: the dialog's title for a shortcut or mouse button in the list.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: the button that saves the shortcut or mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>Action</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the list of actions, such as "Hide Apps: Hide others".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>Choose an action</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: shown in the list of actions until one is chosen.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0} is off, so this does nothing until you turn it on on its page.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the list of actions when the chosen action's feature is off. {0} is the feature's name, such as "Hide Apps".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>Shortcut</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the box that records a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>Shortcut for {0}</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: name of the box that records a shortcut, for screen readers. {0} is the chosen action, such as "Hide others".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>Press the keys</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: shown in the box until keys are pressed.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>Select the box and press the keys. Without Ctrl, Alt or the Windows logo key, Tab, Esc, Enter and Spacebar keep their usual meaning.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box that records a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>Choose keys</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the section that chooses a shortcut's keys with check boxes and a list, for keys that can't be pressed.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>Key</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of Choose keys' list of keys.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>Choose a key</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: shown in Choose keys' list until a key is chosen.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>Shortcuts can't use this key.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when the key can't be part of a shortcut, such as F12 or a key of the numeric keypad.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>Add Ctrl, Alt or the Windows logo key.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when the shortcut has neither Ctrl, Alt nor the Windows logo key.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows keeps this shortcut for itself.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box for a shortcut that Windows never gives to a program, such as Windows logo key + L.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0} uses this shortcut. Choose another, or change it on the {0} page.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when another feature has the shortcut on its own page. {0} is that feature's name, such as "Hide Apps".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>{0} already has this shortcut.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when another row on the page has the shortcut. {0} is that row's action, such as "Lock".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>In {0}, {1} types {2}.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when the Ctrl + Alt shortcut types a character with AltGr in one of the user's keyboard layouts. {0} is the layout's language, such as "Polish (Poland)", {1} the shortcut, such as "Ctrl + Alt + A", and {2} the character, such as "ą".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>In another keyboard layout, {0} types {1}.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: shown instead of ShortcutsAndMouseButtonsEditorAltGr when the keyboard layout's language has no name. {0} is the shortcut and {1} the character it types.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows or another program uses this shortcut.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the box when Windows or another program has the shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows or apps use this shortcut. This action takes its place.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: a warning below the box for a shortcut that Windows lets PC Companion have but that Windows or apps use, such as Alt + Spacebar. Saving is allowed.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>Not in these apps</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the list of apps that a shortcut or mouse button skips.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>While one of these apps is in front, it gets the keys itself.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below ShortcutsAndMouseButtonsEditorExcludedHeader.</comment>
+  </data>
 </root>

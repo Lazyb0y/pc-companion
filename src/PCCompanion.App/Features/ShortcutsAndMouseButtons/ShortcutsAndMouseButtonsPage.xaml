@@ -20,14 +20,31 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=ShortcutsAndMouseButtonsName}" />
 
-                <StackPanel Margin="0,24,0,4" Spacing="2">
-                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=ShortcutsAndMouseButtonsTriggersHeader}" />
-                    <TextBlock
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{app:Localized Key=ShortcutsAndMouseButtonsTriggersDescription}"
-                        TextWrapping="Wrap" />
-                </StackPanel>
+                <Grid Margin="0,24,0,4" ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="2">
+                        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=ShortcutsAndMouseButtonsTriggersHeader}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{app:Localized Key=ShortcutsAndMouseButtonsTriggersDescription}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        AutomationProperties.Name="{app:Localized Key=ShortcutsAndMouseButtonsAddName}"
+                        Click="OnAddClick"
+                        Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="14" Glyph="&#xE710;" />
+                            <TextBlock Text="{app:Localized Key=ShortcutsAndMouseButtonsAdd}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
 
                 <TextBlock
                     Margin="0,8"
@@ -49,21 +66,28 @@
                                     <toolkit:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="{x:Bind Glyph}" />
                                     </toolkit:SettingsCard.HeaderIcon>
-                                    <Button AutomationProperties.Name="{x:Bind MoreName}" ToolTipService.ToolTip="{x:Bind MoreName}">
-                                        <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
-                                        <Button.Flyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem
-                                                    Click="OnDeleteClick"
-                                                    Tag="{x:Bind Index}"
-                                                    Text="{app:Localized Key=ShortcutsAndMouseButtonsDelete}">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xE74D;" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                            </MenuFlyout>
-                                        </Button.Flyout>
-                                    </Button>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button
+                                            AutomationProperties.Name="{x:Bind EditName}"
+                                            Click="OnEditClick"
+                                            Content="{app:Localized Key=ShortcutsAndMouseButtonsEdit}"
+                                            Tag="{x:Bind Index}" />
+                                        <Button AutomationProperties.Name="{x:Bind MoreName}" ToolTipService.ToolTip="{x:Bind MoreName}">
+                                            <FontIcon AutomationProperties.AccessibilityView="Raw" FontSize="16" Glyph="&#xE712;" />
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem
+                                                        Click="OnDeleteClick"
+                                                        Tag="{x:Bind Index}"
+                                                        Text="{app:Localized Key=ShortcutsAndMouseButtonsDelete}">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE74D;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </StackPanel>
                                 </toolkit:SettingsCard>
                                 <controls:Note
                                     ButtonCommand="{x:Bind WarningCommand}"

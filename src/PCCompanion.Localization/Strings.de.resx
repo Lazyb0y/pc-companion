@@ -5116,4 +5116,116 @@
     <value>Liest nur die Tastenkombinationen, die Sie hinzufügen, wenn Sie sie drücken, ohne Tastatur-Hook, und solange Maustasten hinzugefügt sind, die Zurück-, Vorwärts- und mittlere Maustaste sowie die dabei gehaltenen Tasten. Solange Apps aufgeführt sind, liest es auch, welche App im Vordergrund oder unter dem Mauszeiger ist, und für das Anhalten im Vollbild, wo sich das Fenster im Vordergrund befindet, nie Fenstertitel oder -inhalte. Führt nur die von Ihnen gewählten Aktionen aus. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsAdd" xml:space="preserve">
+    <value>Hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddName" xml:space="preserve">
+    <value>Tastenkombination oder Maustaste hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEdit" xml:space="preserve">
+    <value>Bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditName" xml:space="preserve">
+    <value>{0} bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAddTitle" xml:space="preserve">
+    <value>Tastenkombination oder Maustaste hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditTitle" xml:space="preserve">
+    <value>Tastenkombination oder Maustaste bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsSave" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionHeader" xml:space="preserve">
+    <value>Aktion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorActionPlaceholder" xml:space="preserve">
+    <value>Aktion auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorFeatureOff" xml:space="preserve">
+    <value>{0} ist deaktiviert, daher bewirkt dies nichts, bis Sie die Funktion auf ihrer Seite aktivieren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutHeader" xml:space="preserve">
+    <value>Tastenkombination</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutName" xml:space="preserve">
+    <value>Tastenkombination für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorPressKeys" xml:space="preserve">
+    <value>Tasten drücken</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorShortcutNote" xml:space="preserve">
+    <value>Wählen Sie das Feld aus, und drücken Sie die Tasten. Ohne Strg, Alt oder die Windows-Logo-Taste behalten Tab, Esc, Eingabe und Leertaste ihre übliche Funktion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorChooseKeys" xml:space="preserve">
+    <value>Tasten auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyHeader" xml:space="preserve">
+    <value>Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKeyPlaceholder" xml:space="preserve">
+    <value>Taste auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUnknownKey" xml:space="preserve">
+    <value>Tastenkombinationen können diese Taste nicht verwenden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorNeedsModifier" xml:space="preserve">
+    <value>Fügen Sie Strg, Alt oder die Windows-Logo-Taste hinzu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorReserved" xml:space="preserve">
+    <value>Windows behält diese Tastenkombination sich selbst vor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsFeature" xml:space="preserve">
+    <value>{0} verwendet diese Tastenkombination. Wählen Sie eine andere, oder ändern Sie sie auf der Seite von {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameAsTrigger" xml:space="preserve">
+    <value>„{0}“ hat diese Tastenkombination bereits.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGr" xml:space="preserve">
+    <value>Im Tastaturlayout „{0}“ wird mit {1} das Zeichen {2} eingegeben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorAltGrOtherLayout" xml:space="preserve">
+    <value>In einem anderen Tastaturlayout wird mit {0} das Zeichen {1} eingegeben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorTaken" xml:space="preserve">
+    <value>Windows oder ein anderes Programm verwendet diese Tastenkombination.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorUsedByWindows" xml:space="preserve">
+    <value>Windows oder Apps verwenden diese Tastenkombination. Diese Aktion tritt an ihre Stelle.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedHeader" xml:space="preserve">
+    <value>Nicht in diesen Apps</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedDescription" xml:space="preserve">
+    <value>Solange eine dieser Apps im Vordergrund ist, erhält sie die Tasten selbst.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
