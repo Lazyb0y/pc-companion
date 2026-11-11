@@ -201,9 +201,9 @@ function Get-GrownShape([string] $Data, [double] $Width) {
     Join-Shape (ConvertTo-Shape $Data) (Get-StrokeArea $Data $Width)
 }
 
-# A shape as a path in the text color, for a one-color version: its path data in the drawings'
-# number format, and its fill rule.
-function Get-MonoPath($Shape) {
+# A shape as a path filled with $Fill: its path data in the drawings' number format, and its fill
+# rule. It draws a shape that only shape arithmetic makes, such as a speech bubble with its tail.
+function Get-ShapePath($Shape, [string] $Fill) {
     $geometry = [Windows.Media.PathGeometry]::CreateFromGeometry($Shape)
     $point = { param($p) "$(F $p.X) $(F $p.Y)" }
     $data = foreach ($figure in $geometry.Figures) {
@@ -222,7 +222,12 @@ function Get-MonoPath($Shape) {
         if ($figure.IsClosed) { 'Z' }
     }
     $rule = if ($geometry.FillRule -eq 'EvenOdd') { ' fill-rule="evenodd"' } else { '' }
-    return "<path fill=`"currentColor`"$rule d=`"$($data -join '')`"/>"
+    return "<path fill=`"$Fill`"$rule d=`"$($data -join '')`"/>"
+}
+
+# A shape as a path in the text color, for a one-color version.
+function Get-MonoPath($Shape) {
+    Get-ShapePath $Shape 'currentColor'
 }
 
 # A white symbol drawn as a stroke along $Data, $Width wide.
@@ -250,6 +255,21 @@ function Get-LetterWen([double] $CenterX, [double] $CenterY, [double] $Height, [
     "M$(F ($CenterX - $s)) $(F $BarY)H$(F ($CenterX + $s))" +
     "M$(F ($CenterX + $s * 0.55)) $(F $start)Q$(F ($CenterX + $s * 0.2)) $(F ($CenterY + $s * 0.55)) $(F ($CenterX - $s)) $(F ($CenterY + $s))" +
     "M$(F ($CenterX - $s * 0.55)) $(F $start)Q$(F ($CenterX - $s * 0.2)) $(F ($CenterY + $s * 0.55)) $(F ($CenterX + $s)) $(F ($CenterY + $s))"
+}
+
+# The Arabic letter ain, ع on its own, $Height high, centered on x, y, as one stroke: a small hook
+# open to the right, then a larger curve that ends in a tail to the right.
+function Get-LetterAin([double] $CenterX, [double] $CenterY, [double] $Height) {
+    $top = $CenterY - $Height / 2
+    $point = { param([double] $u, [double] $v) "$(F ($CenterX + $u * $Height)) $(F ($top + $v * $Height))" }
+    "M$(& $point 0.30 0.10)Q$(& $point 0.02 -0.08) $(& $point -0.18 0.13)Q$(& $point -0.30 0.33) $(& $point 0.02 0.44)" +
+    "Q$(& $point -0.36 0.54) $(& $point -0.30 0.78)Q$(& $point -0.22 1) $(& $point 0.34 0.98)"
+}
+
+# A speech bubble: the rounded box $Box, x, y, width, height and corner radius, and its tail, the
+# triangle $Tail, three x, y points, as one shape.
+function Get-BubbleShape([double[]] $Box, [object[]] $Tail) {
+    Join-Shape (ConvertTo-Shape (Get-RectPath $Box)) (ConvertTo-Shape (Get-PolygonPath $Tail))
 }
 
 # A window's title bar, $Height high, with the window's top corners. $Window is the window's x, y,
@@ -409,34 +429,41 @@ foreach ($icon in $lockKeys) {
     Write-Drawing "lock-keys-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $sides $top))
 }
 
-# Input Language per App, in the app icon's blue: an app window, its title bar TitleBar high in the
-# deep tone, with a white A, and an orange badge with a white 文 at its bottom right, the language
-# the app keeps. A and Wen are each letter's middle, height and the y of its bar, and Letter their
-# strokes' width. The one-color version cuts the letters out, and Cut wide under the title bar and
-# round the badge.
+# Input Language per App, in the app icon's blue: an app window at the bottom left, its title bar
+# TitleBar high in the deep tone over the light one, and three speech bubbles round it, each with a
+# white letter of another script: an orange one with 文 at the top left, which keeps the icon warm,
+# one in the main tone with A at the top right, and one in the deepest tone with ain at the bottom
+# right. Each bubble is its box and the triangle Tail pointing at the window, with its letter's
+# middle, height and, for 文 and A, the y of its bar. Letter is the letters' strokes' width. The
+# one-color version cuts the letters out, and Cut wide under the title bar.
 $inputLanguagePerApp = @(
-    @{ Size = 32; Window = 1, 2, 25, 22, 2; TitleBar = 5; Badge = 16, 16, 15, 15, 2.5; A = 10.2, 15.8, 9.6, 17.3; Wen = 23.5, 23.5, 8.4, 21.82
-        Letter = 2.4, 2.1; Cut = 1.2 }
-    @{ Size = 20; Window = 2, 3, 14, 12, 1.5; TitleBar = 4; Badge = 9, 9, 9, 9, 1.5; A = 5.6, 11, 5.4, 11.9; Wen = 13.5, 13.5, 6, 12.3
-        Letter = 1.3, 1.2; Cut = 1 }
+    @{ Size = 32; Window = 1, 17, 14, 14, 2; TitleBar = 4; Letter = 2; Cut = 1.2
+        Wen = @{ Box = 1, 1, 13, 11, 2.5; Tail = @(@(5, 11), @(9.6, 15), @(9.5, 11)); Letter = 7.5, 6.5, 7, 4.9 }
+        A = @{ Box = 18, 3, 13, 11, 2.5; Tail = @(@(19.5, 13), @(17.4, 17.2), @(23.5, 13)); Letter = 24.5, 8.5, 7, 10.2 }
+        Ain = @{ Box = 18, 19, 13, 11, 2.5; Tail = @(@(19, 21.5), @(16.6, 24.2), @(19, 25.5)); Letter = 24.5, 24.5, 7.2 } }
+    @{ Size = 20; Window = 2, 11, 7, 7, 1.5; TitleBar = 2.5; Letter = 1.2; Cut = 1
+        Wen = @{ Box = 2, 2, 8, 7, 1.5; Tail = @(@(4, 8.5), @(6.6, 10), @(7, 8.5)); Letter = 6, 5.5, 4.6, 4.5 }
+        A = @{ Box = 11, 3, 7, 7, 1.5; Tail = @(@(12, 9.5), @(10.6, 11), @(14, 9.5)); Letter = 14.5, 6.5, 4.6, 7.4 }
+        Ain = @{ Box = 11, 11, 7, 7, 1.5; Tail = @(@(11.5, 13), @(10, 14.6), @(11.5, 15.5)); Letter = 14.5, 14.5, 4.6 } }
 )
 foreach ($icon in $inputLanguagePerApp) {
-    $titleBar = Get-TitleBarPath $icon.Window $icon.TitleBar
-    $ax, $ay, $aHeight, $aBar = $icon.A
-    $letterA = Get-LetterA $ax $ay $aHeight $aBar
-    $wx, $wy, $wenHeight, $wenBar = $icon.Wen
-    $wen = Get-LetterWen $wx $wy $wenHeight $wenBar
-    $aWidth, $wenWidth = $icon.Letter
-    $body = @((Get-Rect $icon.Window ' fill="url(#blue-main)"'), "<path fill=`"url(#blue-deep)`" d=`"$titleBar`"/>", (Get-SymbolPath $letterA $aWidth),
-        (Get-Rect $icon.Badge ' fill="url(#orange)"'), (Get-SymbolPath $wen $wenWidth))
-    Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size (@(Get-Gradient 'blue-main') + @(Get-Gradient 'blue-deep') + @(Get-Gradient 'orange')) $body
-    $badge = Get-RectPath $icon.Badge
-    $window = ConvertTo-Shape (Get-RectPath $icon.Window)
-    foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), (Get-StrokeArea $letterA $aWidth), (Get-GrownShape $badge (2 * $icon.Cut))) {
-        $window = Remove-Shape $window $cut
+    $wen = $icon.Wen
+    $a = $icon.A
+    $ain = $icon.Ain
+    $bubbles = @(
+        @{ Shape = (Get-BubbleShape $wen.Box $wen.Tail); Fill = 'orange'; Letter = (Get-LetterWen $wen.Letter[0] $wen.Letter[1] $wen.Letter[2] $wen.Letter[3]) }
+        @{ Shape = (Get-BubbleShape $a.Box $a.Tail); Fill = 'blue-main'; Letter = (Get-LetterA $a.Letter[0] $a.Letter[1] $a.Letter[2] $a.Letter[3]) }
+        @{ Shape = (Get-BubbleShape $ain.Box $ain.Tail); Fill = 'blue-deepest'; Letter = (Get-LetterAin $ain.Letter[0] $ain.Letter[1] $ain.Letter[2]) }
+    )
+    $body = @((Get-Rect $icon.Window ' fill="url(#blue-light)"'), "<path fill=`"url(#blue-deep)`" d=`"$(Get-TitleBarPath $icon.Window $icon.TitleBar)`"/>")
+    $shape = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Window)) (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut)
+    foreach ($bubble in $bubbles) {
+        $body += @((Get-ShapePath $bubble.Shape "url(#$($bubble.Fill))"), (Get-SymbolPath $bubble.Letter $icon.Letter))
+        $shape = Join-Shape $shape (Remove-Shape $bubble.Shape (Get-StrokeArea $bubble.Letter $icon.Letter))
     }
-    $sign = Remove-Shape (ConvertTo-Shape $badge) (Get-StrokeArea $wen $wenWidth)
-    Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $sign))
+    $defs = @('blue-light', 'blue-deep', 'orange', 'blue-main', 'blue-deepest') | ForEach-Object { Get-Gradient $_ }
+    Write-Drawing "input-language-per-app-$($icon.Size)" $icon.Size $defs $body
+    Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
 # App Windows, in sky: three of an app's windows stacked, Windows' boxes from the back to the
