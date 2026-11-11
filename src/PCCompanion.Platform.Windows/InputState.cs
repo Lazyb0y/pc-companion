@@ -87,6 +87,9 @@ public static class InputState
         _ => throw new ArgumentOutOfRangeException(nameof(key), key, null),
     })) & 1) != 0;
 
+    /// <summary>Whether the key with <paramref name="virtualKey"/> is held now, such as one of a shortcut's keys.</summary>
+    public static bool IsKeyDown(uint virtualKey) => IsDown((VIRTUAL_KEY)virtualKey);
+
     internal static bool IsDown(VIRTUAL_KEY key) => (PInvoke.GetAsyncKeyState((int)key) & 0x8000) != 0;
 }
 

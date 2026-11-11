@@ -165,7 +165,7 @@ public interface IHostActions
 ## Not in these apps
 
 - **Each trigger has its own list,** empty by default, with **Running app**, **Program file** and **Remove**, as Hot Corners' list. What counts as one app is `AppOfWindow`'s: the window's own app ID, its package's or its program.
-- **Shortcuts:** while a listed app is in front, the shortcut isn't registered, so the app gets the keys itself; it's registered again when another app comes to the front. The app of the window in front is read at each change of the window in front, only while some shortcut has a list, and kept until that window closes. Reading it waits for no program.
+- **Shortcuts:** while a listed app is in front, the shortcut isn't registered, so the app gets the keys itself; it's registered again when another app comes to the front. The app of the window in front is read at each change of the window in front, only while some shortcut has a list; reading it waits for no program. The shortcuts are registered again only when which of them are left to the app changes.
 - **Mouse buttons:** the app under the pointer decides, in the hook, at each press. The hook finds the top-level window under the pointer (`WindowFromPoint`, then `GetAncestor` with `GA_ROOT`) and compares it with the claim's windows of listed apps.
   - **How long:** 20 to 130 µs per press, and 28 µs over a window that stopped responding: it sends the window nothing (spike).
   - **The first call** took 3 to 5 ms, so the hook's thread makes one before it sets the hook.

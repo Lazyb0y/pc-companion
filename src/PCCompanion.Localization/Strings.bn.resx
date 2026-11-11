@@ -4840,4 +4840,16 @@
     <value>{0} ব্যবহার করুন</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsActionLock" xml:space="preserve">
+    <value>লক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionTurnOffDisplays" xml:space="preserve">
+    <value>ডিসপ্লে বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionScreenSaver" xml:space="preserve">
+    <value>স্ক্রিন সেভার চালু করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

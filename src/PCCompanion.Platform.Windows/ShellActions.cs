@@ -48,6 +48,17 @@ public static class ShellActions
     public static bool Lock() => PInvoke.LockWorkStation();
 
     /// <summary>
+    /// Presses and releases a key that does nothing, so that releasing a held Windows key or Alt
+    /// opens neither Start nor a menu bar. Windows also lets the process that sent it bring a
+    /// window to the front afterwards, which isn't documented.
+    /// </summary>
+    public static bool PressMaskKey()
+    {
+        INPUT[] inputs = [Key(MaskKey, up: false), Key(MaskKey, up: true)];
+        return PInvoke.SendInput(inputs, Marshal.SizeOf<INPUT>()) == inputs.Length;
+    }
+
+    /// <summary>
     /// Opens a web page in the default browser. Only https addresses are opened: the shell starts
     /// whatever program is registered for other kinds of addresses. A browser started from a
     /// process running as administrator would run as administrator too.

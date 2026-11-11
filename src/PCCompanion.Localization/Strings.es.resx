@@ -4840,4 +4840,16 @@
     <value>Usar {0}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsActionLock" xml:space="preserve">
+    <value>Bloquear</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionTurnOffDisplays" xml:space="preserve">
+    <value>Apagar las pantallas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionScreenSaver" xml:space="preserve">
+    <value>Iniciar el protector de pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

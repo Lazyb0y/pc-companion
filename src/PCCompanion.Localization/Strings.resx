@@ -4840,4 +4840,16 @@
     <value>Use {0}</value>
     <comment>An action that a shortcut or mouse button can run: applies a network profile's proxy settings. {0} is the profile's name, such as Office.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsActionLock" xml:space="preserve">
+    <value>Lock</value>
+    <comment>An action that a shortcut or mouse button can run: locks the PC.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionTurnOffDisplays" xml:space="preserve">
+    <value>Turn off displays</value>
+    <comment>An action that a shortcut or mouse button can run: turns the displays off until the pointer moves or a key is pressed.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionScreenSaver" xml:space="preserve">
+    <value>Start the screen saver</value>
+    <comment>An action that a shortcut or mouse button can run: starts the screen saver chosen in Windows settings.</comment>
+  </data>
 </root>

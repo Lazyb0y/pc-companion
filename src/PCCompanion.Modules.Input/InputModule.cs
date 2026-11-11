@@ -4,6 +4,7 @@ using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Modules.Input.InputLanguagePerApp;
 using PCCompanion.Modules.Input.LockKeys;
 using PCCompanion.Modules.Input.Notice;
+using PCCompanion.Modules.Input.ShortcutsAndMouseButtons;
 
 namespace PCCompanion.Modules.Input;
 
@@ -23,6 +24,7 @@ public static class InputModule
         services.AddSingleton<IFeature, HotCornersFeature>();
         services.AddSingleton<IFeature, LockKeysFeature>();
         services.AddSingleton<IFeature, InputLanguagePerAppFeature>();
+        services.AddSingleton<IFeature, ShortcutsAndMouseButtonsFeature>();
         return services;
     }
 }

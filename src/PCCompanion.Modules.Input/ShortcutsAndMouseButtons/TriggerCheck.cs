@@ -147,4 +147,11 @@ public static class TriggerCheck
 }
 
 /// <summary>A shortcut, by its modifiers and key, or a mouse button, by its modifiers and button.</summary>
-public readonly record struct TriggerInput(HotKeyModifiers Modifiers, string? Key, TriggerButton? Button);
+public readonly record struct TriggerInput(HotKeyModifiers Modifiers, string? Key, TriggerButton? Button)
+{
+    /// <summary>
+    /// The input's name, such as <c>Control+Alt+KeyH</c> or <c>Windows+Middle</c>, as the feature names it in
+    /// <see cref="ShortcutRefusals"/> and the log; it names keys, never what they type.
+    /// </summary>
+    public string Name => string.Join('+', [.. TriggerModifiers.NamesOf(Modifiers), Key ?? Button?.ToString() ?? string.Empty]);
+}
