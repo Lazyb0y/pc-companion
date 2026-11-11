@@ -49,7 +49,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 - Symbols on an object, such as a pointer, an arrow, an eye or a letter, are plain white.
 - No gray, which makes an icon look dull: parts that are often gray, such as a keyboard or a monitor's frame, are in a deep tone of the icon's color, and paper and plastic are white with a tint of blue.
 - Letters, such as the 文, A and ع of Input Language per App, are drawn as strokes, not set in a font.
-- Features of a kind share their second object: the bolt of Clipboard Actions and Drive Actions, an action, and the bookmark of Network Profiles and Display Profiles, a saved profile.
+- Features of a kind share their second object: the bolt of Clipboard Actions and Drive Actions, an action, and the bookmark of Network Profiles and Display Profiles, a saved profile. The bolt of Clipboard Actions lies on its paper, so the clipboard stays centered.
 - Color is never the only thing that tells two icons apart: each has its own object.
 
 | Feature | Object | Second object | Color |
@@ -65,7 +65,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | End App | An app window | A red stop sign with a white bar | Violet |
 | System Meters | Three bars, from light and short to deep and tall | | Green |
 | Dynamic Wallpaper | A picture of mountains, its sky split into day with a white sun and night with a white moon | | Sky |
-| Clipboard Actions | A clipboard | An orange bolt | App blue |
+| Clipboard Actions | A clipboard with two lines of text | An orange bolt on its paper, at the bottom right | App blue |
 | Middle-Click Paste | A mouse lit from the left, with an orange wheel | | Violet |
 | Network Profiles | A Wi-Fi symbol | An orange bookmark | Sky |
 | Folder Rules | A yellow folder | A blue funnel | Yellow, with an app blue funnel |

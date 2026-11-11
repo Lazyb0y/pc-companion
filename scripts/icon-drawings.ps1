@@ -359,41 +359,56 @@ foreach ($icon in $hotCorners) {
     Write-Drawing "hot-corners-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
-# The orange bolt of Clipboard Actions and Drive Actions, an action, at each size: its points, and
-# the width of the stroke that rounds its corners.
+# The orange bolt of Clipboard Actions and Drive Actions, an action, at each size: its points at an
+# icon's bottom right, and the width of the stroke that rounds its corners.
 $bolts = @{
     32 = @{ Points = @(@(26, 14.5), @(18.5, 24), @(23.5, 24), @(21.5, 31), @(29.5, 21), @(24.5, 21)); Stroke = 1 }
     20 = @{ Points = @(@(15.8, 8.9), @(11.6, 14.2), @(14.1, 14.2), @(13.2, 17.6), @(17.6, 12.2), @(15, 12.2)); Stroke = 0.8 }
 }
 
-function Get-BoltPath([int] $Size) {
-    $bolt = $bolts[$Size]
-    $data = Get-PolygonPath $bolt.Points
-    "<path fill=`"url(#orange)`" stroke=`"url(#orange)`" stroke-width=`"$(F $bolt.Stroke)`" stroke-linejoin=`"round`" d=`"$data`"/>"
+# The bolt of $Size, scaled by $Scale about the middle of its box and moved to have its middle at
+# CenterX, CenterY: for a bolt inside an object rather than at the icon's bottom right.
+function Get-MovedBolt([int] $Size, [double] $CenterX, [double] $CenterY, [double] $Scale) {
+    $points = $bolts[$Size].Points
+    $xs = $points | ForEach-Object { $_[0] }
+    $ys = $points | ForEach-Object { $_[1] }
+    $middleX = (($xs | Measure-Object -Minimum).Minimum + ($xs | Measure-Object -Maximum).Maximum) / 2
+    $middleY = (($ys | Measure-Object -Minimum).Minimum + ($ys | Measure-Object -Maximum).Maximum) / 2
+    $moved = $points | ForEach-Object { , @(($CenterX + ($_[0] - $middleX) * $Scale), ($CenterY + ($_[1] - $middleY) * $Scale)) }
+    @{ Points = @($moved); Stroke = $bolts[$Size].Stroke * $Scale }
 }
 
-function Get-BoltShape([int] $Size) {
-    Get-GrownShape (Get-PolygonPath $bolts[$Size].Points) $bolts[$Size].Stroke
+function Get-BoltPath([hashtable] $Bolt) {
+    $data = Get-PolygonPath $Bolt.Points
+    "<path fill=`"url(#orange)`" stroke=`"url(#orange)`" stroke-width=`"$(F $Bolt.Stroke)`" stroke-linejoin=`"round`" d=`"$data`"/>"
 }
 
-# Clipboard Actions, in the app icon's blue: a clipboard, its board in the main tone and its clip
-# in the deepest, with paper and two lines of text in the light tone, and the orange bolt at its
-# bottom right. The one-color version cuts the paper out, and Cut wide round the clip and the bolt.
+function Get-BoltShape([hashtable] $Bolt) {
+    Get-GrownShape (Get-PolygonPath $Bolt.Points) $Bolt.Stroke
+}
+
+# Clipboard Actions, in the app icon's blue: a clipboard, centered, its board in the main tone and
+# its clip in the deepest, with two lines of text in the light tone on the paper and the orange bolt
+# on the paper at its bottom right: Bolt is the bolt's middle and its scale. At 20 pixels the lines
+# are left out and the bolt fills the paper. The one-color version cuts the paper out, and Cut wide
+# round the clip.
 $clipboardActions = @(
-    @{ Size = 32; Board = 2, 3, 24, 28, 2.5; Clip = 9, 1, 10, 5, 1.5; Paper = 6, 8, 16, 19, 1; Lines = @(@(9, 12, 10, 2, 1), @(9, 16, 6, 2, 1)); Cut = 1.2 }
-    @{ Size = 20; Board = 2, 3, 12, 15, 1.5; Clip = 5, 2, 6, 3, 1; Paper = 4, 6, 8, 9, 0.5; Lines = @(@(5, 8, 5, 1, 0.5), @(5, 10, 3, 1, 0.5)); Cut = 1 }
+    @{ Size = 32; Board = 4, 3, 24, 28, 2.5; Clip = 11, 1, 10, 5, 1.5; Paper = 7, 8, 18, 20, 1; Lines = @(@(10, 12, 11, 2, 1), @(10, 16, 7, 2, 1)); Bolt = 20, 21.8, 0.6
+        Cut = 1.2 }
+    @{ Size = 20; Board = 4, 3, 12, 15, 1.5; Clip = 7, 2, 6, 3, 1; Paper = 6, 6, 8, 10, 0.5; Lines = @(); Bolt = 10, 11, 0.85; Cut = 1 }
 )
 foreach ($icon in $clipboardActions) {
+    $boltX, $boltY, $boltScale = $icon.Bolt
+    $bolt = Get-MovedBolt $icon.Size $boltX $boltY $boltScale
     $body = @((Get-Rect $icon.Board ' fill="url(#blue-main)"'), (Get-Rect $icon.Clip ' fill="url(#blue-deepest)"'), (Get-Rect $icon.Paper ' fill="url(#paper)"')) +
-        @($icon.Lines | ForEach-Object { Get-Rect $_ ' fill="url(#blue-light)"' }) + @(Get-BoltPath $icon.Size)
+        @($icon.Lines | ForEach-Object { Get-Rect $_ ' fill="url(#blue-light)"' }) + @(Get-BoltPath $bolt)
     $defs = @(@('main', 'deepest', 'light') | ForEach-Object { Get-Gradient "blue-$_" }) + @(Get-Gradient 'paper') + @(Get-Gradient 'orange')
     Write-Drawing "clipboard-actions-$($icon.Size)" $icon.Size $defs $body
-    $bolt = Get-BoltShape $icon.Size
     $clip = Get-RectPath $icon.Clip
     $board = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Board)) (ConvertTo-Shape (Get-RectPath $icon.Paper))
     foreach ($line in $icon.Lines) { $board = Join-Shape $board (ConvertTo-Shape (Get-RectPath $line)) }
-    $board = Remove-Shape (Remove-Shape $board (Get-GrownShape $clip (2 * $icon.Cut))) (Get-GrownShape (Get-PolygonPath $bolts[$icon.Size].Points) ($bolts[$icon.Size].Stroke + 2 * $icon.Cut))
-    $clipboard = Join-Shape (Join-Shape $board (ConvertTo-Shape $clip)) $bolt
+    $board = Remove-Shape $board (Get-GrownShape $clip (2 * $icon.Cut))
+    $clipboard = Join-Shape (Join-Shape $board (ConvertTo-Shape $clip)) (Get-BoltShape $bolt)
     Write-Drawing "clipboard-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $clipboard)
 }
 
@@ -703,16 +718,16 @@ foreach ($icon in $driveActions) {
     $rotation = New-Object Windows.Media.RotateTransform -ArgumentList 45, $middle, ($middle - $lift)
     $items = @((Get-Rect $plugBox ' fill="url(#paper)"'), (Get-Rect $bodyBox ' fill="url(#green-main)"'), "<path fill=`"url(#green-deep)`" d=`"$(Get-TitleBarPath $bodyBox $icon.Band)`"/>") +
         @($holes | ForEach-Object { Get-Rect $_ ' fill="url(#green-deep)"' })
-    $body = @(Get-Group "transform=`"rotate(45 $(F $middle) $(F ($middle - $lift)))`"" $items) + @(Get-BoltPath $icon.Size)
+    $bolt = $bolts[$icon.Size]
+    $body = @(Get-Group "transform=`"rotate(45 $(F $middle) $(F ($middle - $lift)))`"" $items) + @(Get-BoltPath $bolt)
     Write-Drawing "drive-actions-$($icon.Size)" $icon.Size (@(Get-Gradient 'paper') + @(Get-Gradient 'green-main') + @(Get-Gradient 'green-deep') + @(Get-Gradient 'orange')) $body
     $plug = ConvertTo-Shape (Get-RectPath $plugBox)
     foreach ($hole in $holes) { $plug = Remove-Shape $plug (ConvertTo-Shape (Get-RectPath $hole)) }
     $stick = Join-Shape $plug (Remove-Shape (ConvertTo-Shape (Get-RectPath $bodyBox)) (Get-TitleBarCut $bodyBox $icon.Band $icon.Cut))
     $stick = [Windows.Media.PathGeometry]::CreateFromGeometry($stick)
     $stick.Transform = $rotation
-    $bolt = $bolts[$icon.Size]
     $stick = Remove-Shape $stick (Get-GrownShape (Get-PolygonPath $bolt.Points) ($bolt.Stroke + 2 * $icon.Cut))
-    Write-Drawing "drive-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $stick (Get-BoltShape $icon.Size)))
+    Write-Drawing "drive-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $stick (Get-BoltShape $bolt)))
 }
 
 # End App, in violet: an app window, its title bar TitleBar high in the deep tone, with a red stop
