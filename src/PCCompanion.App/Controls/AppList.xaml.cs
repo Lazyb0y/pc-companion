@@ -65,7 +65,8 @@ public sealed partial class AppList : UserControl
             RequestedTheme = ActualTheme,
         };
 
-        if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Chosen is { } app)
+        var result = apps.ShowDialog is { } show ? await show(dialog).ConfigureAwait(true) : await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Chosen is { } app)
         {
             Add(apps, app);
         }
