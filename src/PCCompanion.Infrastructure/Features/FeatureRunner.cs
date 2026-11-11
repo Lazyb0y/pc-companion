@@ -8,9 +8,10 @@ using PCCompanion.Core.Settings;
 namespace PCCompanion.Infrastructure.Features;
 
 /// <summary>
-/// Passes each feature its section of the settings, and the PC Companion icon's menu its items,
-/// keeping features apart: one that fails is stopped for the rest of the session and the others
-/// keep running. Call it on the host's UI thread.
+/// Passes each feature its section of the settings, the PC Companion icon's menu its items, and
+/// each action that a shortcut or mouse button runs to the feature that offers it, keeping
+/// features apart: one that fails is stopped for the rest of the session and the others keep
+/// running. Call it on the host's UI thread.
 /// </summary>
 public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogger<FeatureRunner> logger) : IDisposable
 {
@@ -20,6 +21,9 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
     // The items of the menu that opened last, by their menu IDs.
     private readonly Dictionary<int, MenuItemOwner> _menuItems = [];
     private bool _disposed;
+
+    /// <summary>Raised after <see cref="Apply"/> applied the settings to every feature.</summary>
+    public event EventHandler? Applied;
 
     /// <summary>
     /// Starts, stops or reconfigures every feature that can run, at startup and after every
@@ -48,6 +52,58 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
                 Stop(feature, exception);
             }
         }
+
+        Applied?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Whether a running feature offers <paramref name="action"/> and can run it now.</summary>
+    public bool CanRun(FeatureAction action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if (Offering(action) is not { } owner)
+        {
+            return false;
+        }
+
+        try
+        {
+            return owner.Actions.CanRun(action);
+        }
+        catch (Exception exception)
+        {
+            Stop(owner.Feature, exception);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Runs <paramref name="action"/> through the running feature that offers it. Returns false
+    /// when no running feature does, as after the feature was turned off.
+    /// </summary>
+    public bool Run(FeatureAction action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if (Offering(action) is not { } owner)
+        {
+            LogActionOfNoFeature(logger, action.FeatureId, action.ActionId);
+            return false;
+        }
+
+        LogActionRun(logger, action.FeatureId, action.ActionId);
+        try
+        {
+            owner.Actions.Run(action);
+        }
+        catch (Exception exception)
+        {
+            Stop(owner.Feature, exception);
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -141,6 +197,13 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
         }
     }
 
+    // The running feature with the action's feature ID, when it offers actions.
+    private (IFeature Feature, IFeatureActions Actions)? Offering(FeatureAction action) =>
+        _features.FirstOrDefault(feature => feature.Info.Id == action.FeatureId && !_stopped.Contains(feature)) is { } feature
+        && feature is IFeatureActions actions
+            ? (feature, actions)
+            : null;
+
     private void Stop(IFeature feature, Exception exception)
     {
         LogFailed(logger, exception, feature.Info.Id);
@@ -204,6 +267,12 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The {FeatureId} feature's menu item was chosen after the feature stopped, so it does nothing.")]
     private static partial void LogMenuItemOfStoppedFeature(ILogger logger, string featureId);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The {FeatureId} feature's action {ActionId} runs.")]
+    private static partial void LogActionRun(ILogger logger, string featureId, string actionId);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The {FeatureId} feature's action {ActionId} does nothing, since no running feature offers it.")]
+    private static partial void LogActionOfNoFeature(ILogger logger, string featureId, string actionId);
 
     // A feature's item in the menu, with the feature's own ID for it.
     private sealed record MenuItemOwner(IFeature Feature, IHostMenuItems Menu, int ItemId);

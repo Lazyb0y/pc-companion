@@ -69,14 +69,14 @@ public interface IFeatureActions
 
 public interface IHostActions
 {
-    // Any thread. The host runs the action on its UI thread, through the feature that offers it.
-    void Run(FeatureAction action);
+    // Raised on the host's UI thread after the host applied the settings to every feature, so availability may have changed.
+    event EventHandler? Changed;
 
-    // Any thread. Whether the action can run now, as its feature answered after the last settings change.
+    // On the host's UI thread. Whether a running feature offers the action and can run it now.
     bool CanRun(FeatureAction action);
 
-    // Raised on the host's UI thread after the host applied changed settings, so availability may have changed.
-    event EventHandler? Changed;
+    // Any thread. The host runs the action on its UI thread, through the feature that offers it.
+    void Run(FeatureAction action);
 }
 ```
 
@@ -197,7 +197,7 @@ public interface IHostActions
 - **Middle-Click Paste and Title Bar Actions** share the pointer hook. Their claims never overlap with these, which need the Windows key for the middle button; if they did, the claim made first would win, as for any two claims.
 - **Hot Corners** keeps its own actions; sharing the other features' actions with corners is [#152](https://github.com/Lazyb0y/pc-companion/issues/152)'s.
 - **App Windows' exceptions** ([#123](https://github.com/Lazyb0y/pc-companion/issues/123)) can reuse how a shortcut is left to a listed app in front.
-- **Their specs change** when this is built: Clipboard Actions' Not included loses "Choosing another shortcut"; Display Profiles' and Network Profiles' Not included lose shortcuts; and [Features](../../architecture/features.md) gains `IFeatureActions`.
+- **Their specs change** when this is built: Clipboard Actions' Not included loses "Choosing another shortcut"; Display Profiles' and Network Profiles' Not included lose shortcuts.
 
 ## Threads
 
