@@ -4852,4 +4852,104 @@
     <value>Iniciar el protector de pantalla</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsKeyWindows" xml:space="preserve">
+    <value>Tecla del logotipo de Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyAlt" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyShift" xml:space="preserve">
+    <value>Mayús</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeySpace" xml:space="preserve">
+    <value>Barra espaciadora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnter" xml:space="preserve">
+    <value>Entrar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyBackspace" xml:space="preserve">
+    <value>Retroceso</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyInsert" xml:space="preserve">
+    <value>Insertar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyDelete" xml:space="preserve">
+    <value>Suprimir</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyHome" xml:space="preserve">
+    <value>Inicio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnd" xml:space="preserve">
+    <value>Fin</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageUp" xml:space="preserve">
+    <value>Re Pág</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageDown" xml:space="preserve">
+    <value>Av Pág</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowUp" xml:space="preserve">
+    <value>Flecha arriba</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowDown" xml:space="preserve">
+    <value>Flecha abajo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowLeft" xml:space="preserve">
+    <value>Flecha izquierda</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowRight" xml:space="preserve">
+    <value>Flecha derecha</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPrintScreen" xml:space="preserve">
+    <value>Imprimir pantalla</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPause" xml:space="preserve">
+    <value>Pausa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyMenu" xml:space="preserve">
+    <value>Tecla de menú</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonBack" xml:space="preserve">
+    <value>Botón Atrás</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonForward" xml:space="preserve">
+    <value>Botón Adelante</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonMiddle" xml:space="preserve">
+    <value>Botón central</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

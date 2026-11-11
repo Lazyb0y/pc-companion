@@ -4804,4 +4804,104 @@
     <value>启动屏幕保护程序</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsKeyWindows" xml:space="preserve">
+    <value>Windows 徽标键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyAlt" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyShift" xml:space="preserve">
+    <value>Shift</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeySpace" xml:space="preserve">
+    <value>空格键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnter" xml:space="preserve">
+    <value>Enter</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyBackspace" xml:space="preserve">
+    <value>Backspace</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyInsert" xml:space="preserve">
+    <value>Insert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyHome" xml:space="preserve">
+    <value>Home</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnd" xml:space="preserve">
+    <value>End</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageUp" xml:space="preserve">
+    <value>Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageDown" xml:space="preserve">
+    <value>Page Down</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowUp" xml:space="preserve">
+    <value>向上键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowDown" xml:space="preserve">
+    <value>向下键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowLeft" xml:space="preserve">
+    <value>向左键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowRight" xml:space="preserve">
+    <value>向右键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPrintScreen" xml:space="preserve">
+    <value>Print Screen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyMenu" xml:space="preserve">
+    <value>菜单键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonBack" xml:space="preserve">
+    <value>后退按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonForward" xml:space="preserve">
+    <value>前进按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonMiddle" xml:space="preserve">
+    <value>中键</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
