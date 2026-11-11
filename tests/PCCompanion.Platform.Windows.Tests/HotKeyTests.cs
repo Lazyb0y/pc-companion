@@ -9,6 +9,7 @@ public sealed class HotKeyTests
 {
     private const HotKeyModifiers Modifiers = HotKeyModifiers.Control | HotKeyModifiers.Alt | HotKeyModifiers.Shift;
     private const uint F24 = 0x87;
+    private const uint F22 = 0x85;
     private const uint HotKeyMessage = 0x0312; // WM_HOTKEY
 
     [Fact]
@@ -25,6 +26,23 @@ public sealed class HotKeyTests
         RunPostedMessages();
 
         Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public void AFreeShortcutStaysFreeAfterItsTest()
+    {
+        Assert.True(HotKey.IsFree(Modifiers, F22));
+        Assert.True(HotKey.IsFree(Modifiers, F22));
+    }
+
+    [Fact]
+    public void ARegisteredShortcutIsntFree()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var hotKey = HotKey.Register(window, Modifiers, F22);
+        Assert.NotNull(hotKey);
+
+        Assert.False(HotKey.IsFree(Modifiers, F22));
     }
 
     [Fact]
