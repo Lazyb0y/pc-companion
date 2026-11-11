@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -141,6 +142,21 @@ internal static partial class Program
         // Pages that show a shortcut say when Windows refused it; without the pipe, the shortcuts still work.
         using var shortcutStatus = ServeShortcutStatus(services.GetRequiredService<ShortcutRefusals>(), logger);
 
+        // While the settings app records a shortcut, it pauses every shortcut, so that pressing one records it.
+        using var shortcutPause = new ShortcutPause(
+            TimeProvider.System,
+            () =>
+            {
+                HotKey.Pause();
+                LogShortcutsPaused(logger);
+            },
+            () =>
+            {
+                HotKey.Resume();
+                LogShortcutsResumed(logger);
+            });
+        using var shortcutPausePipe = ServeShortcutPause(shortcutPause, logger);
+
         // Features run on this thread, whose message loop they need.
         var store = services.GetRequiredService<SettingsStore>();
         var features = services.GetRequiredService<FeatureRunner>();
@@ -203,6 +219,19 @@ internal static partial class Program
     }
 
     private static bool IsHostRunning() => InstanceLock.IsHeld(HostProcess.InstanceLockName);
+
+    private static RequestPipe? ServeShortcutPause(ShortcutPause pause, ILogger logger)
+    {
+        try
+        {
+            return RequestPipe.Serve(ShortcutPause.PipeName, ShortcutPause.MaximumRequestLength, request => Task.FromResult(pause.Answer(request)), exception => LogShortcutPauseFailed(logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogShortcutPauseFailed(logger, exception);
+            return null;
+        }
+    }
 
     private static SnapshotPipe? ServeShortcutStatus(ShortcutRefusals refusals, ILogger logger)
     {
@@ -295,6 +324,15 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The host can't tell the settings app which shortcuts Windows refused.")]
     private static partial void LogShortcutStatusFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The settings app can't pause the shortcuts while it records one, so pressing one of PC Companion's shortcuts there runs it.")]
+    private static partial void LogShortcutPauseFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "PC Companion's shortcuts are paused while the settings app records one.")]
+    private static partial void LogShortcutsPaused(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "PC Companion's shortcuts are registered again.")]
+    private static partial void LogShortcutsResumed(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "The settings changed and were loaded again.")]
     private static partial void LogSettingsReloaded(ILogger logger);

@@ -57,4 +57,41 @@ public sealed class HotKeyTests
         Assert.NotNull(again);
         Assert.NotEqual(hotKey.Id, again.Id);
     }
+
+    [Fact]
+    public void APauseLetsTheKeysGoAndResumingTakesThemBack()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var other = new MessageWindow(UniqueClassName());
+        using var hotKey = HotKey.Register(window, Modifiers, F24);
+        Assert.NotNull(hotKey);
+
+        HotKey.Pause();
+        RunPostedMessages();
+        var whilePaused = HotKey.Register(other, Modifiers, F24);
+        Assert.NotNull(whilePaused);
+        whilePaused.Dispose();
+        HotKey.Resume();
+        RunPostedMessages();
+
+        Assert.Null(HotKey.Register(other, Modifiers, F24));
+    }
+
+    [Fact]
+    public void AShortcutDisposedWhilePausedIsntRegisteredAgain()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        using var other = new MessageWindow(UniqueClassName());
+        var hotKey = HotKey.Register(window, Modifiers, F24);
+        Assert.NotNull(hotKey);
+
+        HotKey.Pause();
+        RunPostedMessages();
+        hotKey.Dispose();
+        HotKey.Resume();
+        RunPostedMessages();
+
+        using var again = HotKey.Register(other, Modifiers, F24);
+        Assert.NotNull(again);
+    }
 }
