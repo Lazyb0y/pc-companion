@@ -11,8 +11,16 @@ public sealed partial class DropDownAppsPage : Page
         InitializeComponent();
 
         // The recent results are read only while the page is shown.
-        Loaded += (_, _) => ViewModel.StartResults();
-        Unloaded += (_, _) => ViewModel.StopResults();
+        Loaded += (_, _) =>
+        {
+            ViewModel.StartResults();
+            ViewModel.StartShortcutStatus();
+        };
+        Unloaded += (_, _) =>
+        {
+            ViewModel.StopResults();
+            ViewModel.StopShortcutStatus();
+        };
     }
 
     public DropDownAppsViewModel ViewModel { get; }

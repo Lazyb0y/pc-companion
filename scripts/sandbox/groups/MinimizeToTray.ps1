@@ -253,6 +253,9 @@ Test-Check 'Running app adds it to the apps that go to the tray' (Wait-Until { $
 Save-Screenshot '13s-minimize-to-tray-apps'
 Test-Check 'Remove takes it out' ((Invoke-AppElement 'Remove tray-app') -and (Wait-Until { @((Get-TraySettings).minimizedApps).Count -eq 0 } 5)) "saved: $(Get-TraySettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
+
+# Another program that has Windows + Shift + Z: the page says so.
+Test-ShortcutTakenNote 'Windows + Shift + Z' 0xC 0x5A { Write-TraySettings '{ "enabled": false }' } { Write-TraySettings '{ "enabled": true, "shortcut": "WindowsShiftZ" }' } { Write-TraySettings '{ "enabled": true, "shortcut": "WindowsShiftZ", "shiftMinimize": false }' } 'Minimize to Tray' 'Another program uses Windows logo key + Shift + Z, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '13s-minimize-to-tray-shortcut-taken'
 Stop-Process -Id $trayProcess.Id -Force -ErrorAction SilentlyContinue
 [void] (Wait-Until { (Find-TrayWindow 1) -eq [IntPtr]::Zero } 10)
 

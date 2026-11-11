@@ -32,10 +32,12 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
     private static readonly CompositeFormat ControlKeyFormat = CompositeFormat.Parse(Strings.DropDownAppsShortcutControlKey);
     private static readonly CompositeFormat AltKeyFormat = CompositeFormat.Parse(Strings.DropDownAppsShortcutAltKey);
     private static readonly CompositeFormat ControlAltKeyFormat = CompositeFormat.Parse(Strings.DropDownAppsShortcutControlAltKey);
+    private static readonly CompositeFormat RefusedFormat = CompositeFormat.Parse(Strings.DropDownAppsShortcutRefused);
     private static readonly TimeSpan ResultsTimeout = TimeSpan.FromMilliseconds(500);
 
     private readonly AppSettings _appSettings;
     private readonly DropDownResultsReading _resultsReading = new();
+    private readonly ShortcutStatus _shortcutStatus;
     private DropDownDisplayOption? _selectedDisplay;
     private HideWhenInactiveOption? _selectedHide;
     private DispatcherQueueTimer? _resultsTimer;
@@ -46,6 +48,8 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
         : base(editor, DropDownAppsFeature.Definition)
     {
         _appSettings = appSettings;
+        _shortcutStatus = new ShortcutStatus(DropDownAppsFeature.Definition.Id, () => IsOn);
+        _shortcutStatus.Changed += (_, _) => OnRefusalsChanged();
 
         Shortcuts =
         [
@@ -83,6 +87,19 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
 
     /// <summary>The listed apps, each with its shortcut.</summary>
     public AppListViewModel Apps { get; }
+
+    /// <summary>Whether Windows refused the shortcut of a listed app, as the running feature last said.</summary>
+    public bool ShortcutRefused => ShortcutRefusedInfo.Length > 0;
+
+    /// <summary>A line for each listed app whose shortcut Windows refused, naming the shortcut and the app.</summary>
+    public string ShortcutRefusedInfo => string.Join(Environment.NewLine, Settings.Apps
+        .Where(app => app.Shortcut != DropDownShortcut.None && _shortcutStatus.Refused.Contains(app.Shortcut.ToString()))
+        .Select(app => string.Format(CultureInfo.CurrentCulture, RefusedFormat, NameOf(app.Shortcut), app.Name)));
+
+    /// <summary>Reads which shortcuts Windows refused from the host while the page shows. Call it on the page's thread.</summary>
+    public void StartShortcutStatus() => _shortcutStatus.Start();
+
+    public void StopShortcutStatus() => _shortcutStatus.Stop();
 
     public IReadOnlyList<DropDownDisplayOption> Displays { get; }
 
@@ -251,7 +268,14 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
         }
 
         Save(settings);
+        OnRefusalsChanged();
         return true;
+    }
+
+    private void OnRefusalsChanged()
+    {
+        OnPropertyChanged(nameof(ShortcutRefused));
+        OnPropertyChanged(nameof(ShortcutRefusedInfo));
     }
 
     // The pipe is read off the UI thread; a read still going when the next tick comes is let finish.

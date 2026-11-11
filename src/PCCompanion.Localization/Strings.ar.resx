@@ -4960,4 +4960,24 @@
     <value>أثناء تشغيله، يراقب المؤشر، وعندما يستقر على نص، يسأل التطبيق عما تحته، دون نصه أبدًا؛ ومع إدراج تطبيقات، يقرأ التطبيق الذي تنتمي إليه النافذة. يقرأ النص المحدد فقط عند النقر الأوسط على مربع نص، ولا يقرأه أبدًا من مربع كلمة مرور، ولا يخزنه أو يسجله أو يرسله. يضع النص فقط في المربع الذي نقرت عليه، ولا يستخدم الحافظة. يؤدي سؤال المستعرض إلى تشغيل دعم إمكانية الوصول فيه حتى يتم إغلاقه، ما يستهلك ذاكرة أكبر في الصفحات الطويلة جدًا. لا ينشئ أي اتصالات شبكة.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>يستخدم برنامج آخر {0}، لذا لا يفعل هذا الاختصار شيئًا هنا. يحاول PC Companion مرة أخرى عند تغيير إعداد هنا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>يستخدم برنامج آخر {0}، لذا لا يبدّل هذا الاختصار بين النوافذ. اختر الاختصار الآخر أعلاه. يحاول PC Companion أيضًا مرة أخرى عند تغيير إعداد هنا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Shift + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>مفتاح شعار Windows + Shift + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>يستخدم برنامج آخر {0}، لذا لا يفعل اختصار {1} شيئًا هنا. يحاول PC Companion مرة أخرى عند تغيير إعداد هنا.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

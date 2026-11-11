@@ -4768,4 +4768,24 @@
     <value>Mientras está activado, observa el puntero y, cuando se detiene sobre texto, pregunta a la aplicación qué hay debajo, nunca su texto; con aplicaciones en la lista, lee a qué aplicación pertenece una ventana. Lee el texto seleccionado solo con un clic central en un cuadro de texto, nunca de un cuadro de contraseña, y no lo guarda, registra ni envía. Inserta el texto solo en el cuadro en el que hiciste clic y no usa el portapapeles. Preguntar a un navegador activa su compatibilidad con accesibilidad hasta que se cierra, lo que usa más memoria en páginas muy largas. No establece conexiones de red.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>Otro programa usa este método abreviado ({0}), así que no hace nada aquí. PC Companion vuelve a intentarlo cuando cambias una configuración aquí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>Otro programa usa este método abreviado ({0}), así que no cambia de ventana. Elige el otro método abreviado arriba. PC Companion también vuelve a intentarlo cuando cambias una configuración aquí.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Mayús + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Mayús + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>Otro programa usa el método abreviado de {1} ({0}), así que no hace nada aquí. PC Companion vuelve a intentarlo cuando cambias una configuración aquí.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

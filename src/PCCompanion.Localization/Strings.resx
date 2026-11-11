@@ -4768,4 +4768,24 @@
     <value>While it's on, watches the pointer, and when it rests on text, asks the app what's under it, never its text; with apps listed, reads which app a window belongs to. Reads the selected text only at a middle-click on a text box, never from a password box, and doesn't store, log or send it. Puts the text only into the box you clicked, and doesn't use the clipboard. Asking a browser turns on its accessibility support until it closes, which uses more memory on very long pages. Makes no network connections.</value>
     <comment>Middle-Click Paste page: what the feature reads and changes, in the Permissions &amp; data card.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>Another program uses {0}, so this shortcut does nothing here. PC Companion tries again when a setting here changes.</value>
+    <comment>A warning note at a shortcut that Windows refused to PC Companion because another program has it. {0} is the shortcut, such as "Ctrl + Alt + Esc".</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>Another program uses {0}, so this shortcut doesn't switch windows. Choose the other shortcut above. PC Companion also tries again when a setting here changes.</value>
+    <comment>A warning note on the App Windows page. {0} is the shortcut Windows refused, such as "Alt + Shift + `".</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Shift + {0}</value>
+    <comment>The App Windows shortcut that goes back, in a warning note. {0} is what the key above Tab types, such as `.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>Windows logo key + Shift + {0}</value>
+    <comment>The App Windows shortcut that goes back, in a warning note. {0} is what the key above Tab types, such as `.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>Another program uses {0}, so the shortcut for {1} does nothing here. PC Companion tries again when a setting here changes.</value>
+    <comment>A warning note below the Drop-down Apps list. {0} is the shortcut Windows refused, such as "Windows + Ctrl + `", and {1} the name of the app it's for.</comment>
+  </data>
 </root>

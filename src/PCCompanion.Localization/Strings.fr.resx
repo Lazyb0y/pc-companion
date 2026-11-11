@@ -4768,4 +4768,24 @@
     <value>Tant qu’il est activé, il suit le pointeur et, quand celui-ci s’arrête sur du texte, demande à l’application ce qui se trouve dessous, jamais son texte ; avec des applications dans la liste, il lit à quelle application appartient une fenêtre. Il lit le texte sélectionné uniquement lors d’un clic central dans une zone de texte, jamais dans une zone de mot de passe, et ne le stocke, ne l’enregistre ni ne l’envoie. Il insère le texte uniquement dans la zone sur laquelle vous avez cliqué et n’utilise pas le Presse-papiers. Interroger un navigateur active sa prise en charge de l’accessibilité jusqu’à sa fermeture, ce qui utilise plus de mémoire sur les pages très longues. Il n’établit aucune connexion réseau.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise ce raccourci ({0}), il ne fait donc rien ici. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise ce raccourci ({0}), il ne change donc pas de fenêtre. Choisissez l’autre raccourci ci-dessus. PC Companion réessaie aussi quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutAltShift" xml:space="preserve">
+    <value>Alt + Maj + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="AppWindowsShortcutWindowsShift" xml:space="preserve">
+    <value>Touche du logo Windows + Maj + {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsShortcutRefused" xml:space="preserve">
+    <value>Un autre programme utilise le raccourci pour {1} ({0}), il ne fait donc rien ici. PC Companion réessaie quand vous modifiez un paramètre ici.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

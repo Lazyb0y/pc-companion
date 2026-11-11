@@ -185,6 +185,9 @@ Test-Check 'the page saves it' (Wait-Until { (Get-DropSettings).keepOnTop -eq $t
 Test-Check 'Remove takes the app out' ((Invoke-AppElement 'Remove drop-app') -and (Wait-Until { @((Get-DropSettings).apps).Count -eq 0 } 5)) "saved: $(Get-DropSettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
+# Another program that has Windows + Ctrl + the key above Tab: the page names the app whose shortcut it is.
+Test-ShortcutTakenNote 'Windows + Ctrl + `' 0xA 0xC0 { Write-DropSettings '{ "enabled": false }' } { Write-DropSettings "{ ""enabled"": true, ""apps"": [ $dropApp ] }" } { Write-DropSettings "{ ""enabled"": true, ""apps"": [ $dropApp ], ""keepOnTop"": true }" } 'Drop-down Apps' 'Another program uses Windows + Ctrl + `, so the shortcut for drop-app does nothing here. PC Companion tries again when a setting here changes.' '13y-drop-down-apps-shortcut-taken'
+
 # The shortcut slides the window in, at the top of the work area, in front, and back up, giving the
 # front back to the window that had it.
 Write-DropSettings "{ ""enabled"": true, ""apps"": [ $dropApp ] }"

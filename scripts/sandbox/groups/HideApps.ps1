@@ -178,6 +178,9 @@ Start-Sleep -Seconds 1
 Test-Check 'the page saves that' ((Get-HideSettings).bringBackWholeApp -eq $false) "saved: $(Get-HideSettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
+# Another program that has Windows + Ctrl + Shift + H: the page says so at Hide others.
+Test-ShortcutTakenNote 'Windows + Ctrl + Shift + H' 0xE 0x48 { Write-HideSettings '{ "enabled": false }' } { Write-HideSettings '{ "enabled": true, "hideAppShortcut": "WindowsControlH", "hideOthersShortcut": "WindowsControlShiftH" }' } { Write-HideSettings '{ "enabled": true, "hideAppShortcut": "WindowsControlH", "hideOthersShortcut": "WindowsControlShiftH", "frontDisplayOnly": true }' } 'Hide Apps' 'Another program uses Windows logo key + Ctrl + Shift + H, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '13x-hide-apps-shortcut-taken'
+
 Write-HideSettings '{ "enabled": true }'
 Start-Host
 Start-Process explorer.exe 'C:\Windows'

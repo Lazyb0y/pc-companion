@@ -25,6 +25,11 @@
                     Description="{app:Localized Key=DropDownAppsAppsDescription}"
                     Header="{app:Localized Key=DropDownAppsAppsHeader}" />
 
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.ShortcutRefused, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.ShortcutRefusedInfo, Mode=OneWay}"
+                    Severity="Warning" />
+
                 <controls:ChoiceCard
                     Margin="0,16,0,0"
                     Description="{app:Localized Key=DropDownAppsDisplayDescription}"
