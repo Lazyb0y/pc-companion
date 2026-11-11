@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Security;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Network.NetworkProfiles;
@@ -17,7 +20,7 @@ namespace PCCompanion.Modules.Network.NetworkProfiles;
 /// docs/features/network/network-profiles.md.
 /// </summary>
 public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system, IHostCommands commands, ILogger<NetworkProfilesFeature> logger)
-    : IFeature, IHostMenuItems
+    : IFeature, IHostMenuItems, IFeatureActions
 {
     // Windows signals each change twice, about 1 ms apart, so one read follows both.
     private static readonly TimeSpan ReadDelay = TimeSpan.FromMilliseconds(50);
@@ -66,6 +69,36 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _session is not null;
+
+    /// <summary>The action that switches to a profile, whose target is the profile's name.</summary>
+    public const string UseAction = "use";
+
+    /// <summary>
+    /// The actions Network Profiles offers to shortcuts and mouse buttons: using each profile it can
+    /// use, named in the user's language.
+    /// </summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions(NetworkProfilesSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return
+        [
+            .. UsableProfiles(settings.Profiles).Select(usable => new OfferedAction(
+                new FeatureAction(Definition.Id, UseAction, usable.Profile.Name),
+                string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.NetworkProfilesActionUse), usable.Profile.Name.Trim()))),
+        ];
+    }
+
+    public bool CanRun(FeatureAction action) => ProfileOf(action) is { } profile && _restrictions == ProxyRestrictions.None;
+
+    public void Run(FeatureAction action)
+    {
+        if (_session is { } session && ProfileOf(action) is { } chosen && _restrictions == ProxyRestrictions.None)
+        {
+            LogChosen(logger, chosen.Number);
+            system.RunInBackground(TimeSpan.Zero, () => Switch(chosen, session));
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -141,7 +174,11 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
     public void Dispose() => Stop();
 
     // The profiles the menu shows, up to the most it shows; each other one is logged with its number.
-    private List<UsableProfile> Usable(IReadOnlyList<NetworkProfile> profiles)
+    private List<UsableProfile> Usable(IReadOnlyList<NetworkProfile> profiles) =>
+        UsableProfiles(profiles, count => LogTooManyProfiles(logger, count, NetworkProfilesSettings.MaximumProfiles), (number, problem) => LogUnusableProfile(logger, number, problem));
+
+    // The profiles that can be used, numbered by their place in the list; the others are passed to the callbacks.
+    private static List<UsableProfile> UsableProfiles(IReadOnlyList<NetworkProfile> profiles, Action<int>? tooMany = null, Action<int, ProfileProblem>? unusable = null)
     {
         var usable = new List<UsableProfile>();
         for (var index = 0; index < profiles.Count; index++)
@@ -149,14 +186,14 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
             var number = index + 1;
             if (number > NetworkProfilesSettings.MaximumProfiles)
             {
-                LogTooManyProfiles(logger, profiles.Count, NetworkProfilesSettings.MaximumProfiles);
+                tooMany?.Invoke(profiles.Count);
                 break;
             }
 
             var problem = NetworkProfileCheck.Check(profiles[index], usable.Select(other => other.Profile.Name));
             if (problem != ProfileProblem.None)
             {
-                LogUnusableProfile(logger, number, problem);
+                unusable?.Invoke(number, problem);
                 continue;
             }
 
@@ -165,6 +202,12 @@ public sealed partial class NetworkProfilesFeature(INetworkProfilesSystem system
 
         return usable;
     }
+
+    // The running feature's profile that an action names, ignoring case and spaces at its ends, as names are told apart.
+    private UsableProfile? ProfileOf(FeatureAction action) =>
+        _session is null || action.FeatureId != Definition.Id || action.ActionId != UseAction || action.Target is not { } name
+            ? null
+            : _profiles.FirstOrDefault(profile => string.Equals(profile.Profile.Name.Trim(), name.Trim(), StringComparison.OrdinalIgnoreCase));
 
     private void Start()
     {

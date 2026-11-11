@@ -77,6 +77,11 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - **Stopping** removes the wait and closes the key; a read or write that's running finishes, and its result is dropped.
 - **Failures:** the thread pool callbacks run inside the feature's error boundary. A failure there is logged, stops the watch and keeps the feature off until the host restarts, like a failing `Apply`. Windows refusing to read the settings or the policies isn't such a failure: it's logged as a warning, and the feature keeps running.
 
+## With Shortcuts & Mouse Buttons
+
+- **Use** *profile*, for each profile that can be used, is an action that [Shortcuts & Mouse Buttons](../input/shortcuts-and-mouse-buttons.md) can run from the user's own shortcuts and mouse buttons while Network Profiles is on (`IFeatureActions`). It names the profile by its name, ignoring case and spaces at its ends, as names are told apart, and switches as the menu does, with the same checks.
+- **It can't run** while Group Policy manages the proxy settings, or for a name no profile has, such as after a rename.
+
 ## The PC Companion icon's menu
 
 - A running feature adds a submenu through `IHostMenuItems` in Core: the host asks each feature for its items each time the menu opens, on the UI thread, and a feature answers from the state it already has, so the menu never waits. The chosen item goes back to its feature. See [Running in the host](../../architecture/features.md#running-in-the-host).
@@ -134,7 +139,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - The proxy settings of VPN and dial-up connections, and the computer's own proxy setting for services (`netsh winhttp`), which needs admin rights.
 - Environment variables for command-line tools, such as `http_proxy` and `no_proxy`. Their formats differ from tool to tool and from Windows' exceptions, and a variable left behind overrides Windows' settings in .NET and Python programs.
 - Switching on its own when the PC joins a network or Wi-Fi, which belongs to profiles and context triggers ([#56](https://github.com/Lazyb0y/pc-companion/issues/56)).
-- A shortcut or a command line for switching.
+- A command line for switching. Shortcuts and mouse buttons come through Shortcuts & Mouse Buttons; see [With Shortcuts & Mouse Buttons](#with-shortcuts--mouse-buttons).
 - Keeping a profile in place when another program, such as a VPN or a security product, changes the settings. PC Companion shows the change instead of fighting it.
 - Proxy user names and passwords: Windows' proxy settings have none, and programs ask for them when a proxy needs them.
 - Editing setup scripts, and rules that send some sites or programs through a proxy.

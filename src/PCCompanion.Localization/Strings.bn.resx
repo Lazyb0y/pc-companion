@@ -4832,4 +4832,12 @@
     <value>নির্বাচিত টেক্সটের অ্যাকশন দেখায়। শর্টকাট ও মাউস বোতাম বৈশিষ্ট্যটি দুটি মেনুকেই আপনার নিজের শর্টকাট ও মাউস বোতাম দিতে পারে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>{0} ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>{0} ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4832,4 +4832,12 @@
     <value>Muestra las acciones para el texto seleccionado. Con la característica Métodos abreviados y botones del mouse puedes dar a ambos menús tus propios métodos abreviados y botones del mouse.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>Usar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>Usar {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

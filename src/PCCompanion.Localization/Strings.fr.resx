@@ -4832,4 +4832,12 @@
     <value>Affiche les actions pour le texte sélectionné. La fonctionnalité Raccourcis et boutons de souris peut donner aux deux menus vos propres raccourcis et boutons de souris.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>Utiliser {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>Utiliser {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Display.DisplayProfiles;
@@ -18,7 +21,7 @@ namespace PCCompanion.Modules.Display.DisplayProfiles;
 /// </summary>
 /// <param name="pipeName">The pipe through which the settings app asks for a switch; <see cref="DisplayProfilesPipe.Name"/>.</param>
 public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system, string pipeName, IHostCommands commands, ILogger<DisplayProfilesFeature> logger)
-    : IFeature, IHostMenuItems
+    : IFeature, IHostMenuItems, IFeatureActions
 {
     /// <summary>The time the question counts down from before the switch is reverted.</summary>
     public static readonly TimeSpan QuestionTime = TimeSpan.FromSeconds(15);
@@ -73,6 +76,36 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _session is not null;
+
+    /// <summary>The action that switches to a profile, whose target is the profile's name.</summary>
+    public const string UseAction = "use";
+
+    /// <summary>
+    /// The actions Display Profiles offers to shortcuts and mouse buttons: using each profile it can
+    /// use, named in the user's language.
+    /// </summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions(DisplayProfilesSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        return
+        [
+            .. UsableProfiles(settings.Profiles).Select(usable => new OfferedAction(
+                new FeatureAction(Definition.Id, UseAction, usable.Profile.Name),
+                string.Format(CultureInfo.CurrentCulture, CompositeFormat.Parse(Strings.DisplayProfilesActionUse), usable.Profile.Name.Trim()))),
+        ];
+    }
+
+    public bool CanRun(FeatureAction action) => ProfileOf(action) is { } profile && !_remote && CanBeUsed(profile.Profile);
+
+    public void Run(FeatureAction action)
+    {
+        if (_session is { } session && ProfileOf(action) is { } chosen && !_remote && CanBeUsed(chosen.Profile))
+        {
+            LogChosen(logger, chosen.Number);
+            RunInBackground(session, () => Switch(session, chosen.Number, chosen.Profile, answer: null));
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -154,7 +187,11 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
     public void Dispose() => Stop();
 
     // The profiles the menu shows, up to the most it shows; each other one is logged with its number.
-    private List<NumberedProfile> Usable(IReadOnlyList<DisplayProfile> profiles)
+    private List<NumberedProfile> Usable(IReadOnlyList<DisplayProfile> profiles) =>
+        UsableProfiles(profiles, count => LogTooManyProfiles(logger, count, DisplayProfilesSettings.MaximumProfiles), (number, problem) => LogUnusableProfile(logger, number, problem));
+
+    // The profiles that can be used, numbered by their place in the list; the others are passed to the callbacks.
+    private static List<NumberedProfile> UsableProfiles(IReadOnlyList<DisplayProfile> profiles, Action<int>? tooMany = null, Action<int, DisplayProfileProblem>? unusable = null)
     {
         var usable = new List<NumberedProfile>();
         for (var index = 0; index < profiles.Count; index++)
@@ -162,14 +199,14 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
             var number = index + 1;
             if (number > DisplayProfilesSettings.MaximumProfiles)
             {
-                LogTooManyProfiles(logger, profiles.Count, DisplayProfilesSettings.MaximumProfiles);
+                tooMany?.Invoke(profiles.Count);
                 break;
             }
 
             var problem = DisplayProfileCheck.Check(profiles[index], usable.Select(other => other.Profile.Name));
             if (problem != DisplayProfileProblem.None)
             {
-                LogUnusableProfile(logger, number, problem);
+                unusable?.Invoke(number, problem);
                 continue;
             }
 
@@ -180,6 +217,12 @@ public sealed partial class DisplayProfilesFeature(IDisplayProfilesSystem system
     }
 
     // Before the displays are read, a profile counts as usable; choosing it then finds out.
+    // The running feature's profile that an action names, ignoring case and spaces at its ends, as names are told apart.
+    private NumberedProfile? ProfileOf(FeatureAction action) =>
+        _session is null || action.FeatureId != Definition.Id || action.ActionId != UseAction || action.Target is not { } name
+            ? null
+            : _profiles.FirstOrDefault(profile => string.Equals(profile.Profile.Name.Trim(), name.Trim(), StringComparison.OrdinalIgnoreCase));
+
     private bool CanBeUsed(DisplayProfile profile) =>
         _current is not { } current || ProfileRecognition.Recognize(profile, current).CanBeUsed;
 

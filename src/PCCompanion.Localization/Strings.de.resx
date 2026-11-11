@@ -4832,4 +4832,12 @@
     <value>Zeigt die Aktionen für den markierten Text. Mit „Tastenkombinationen und Maustasten“ können Sie beiden Menüs eigene Tastenkombinationen und Maustasten zuweisen.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>{0} verwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>{0} verwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

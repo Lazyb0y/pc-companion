@@ -4832,4 +4832,12 @@
     <value>Shows the actions for the selected text. Shortcuts &amp; Mouse Buttons can give both menus shortcuts and mouse buttons of your own.</value>
     <comment>Below Shortcut for the selected text. Shortcuts &amp; Mouse Buttons is the name of another feature of PC Companion.</comment>
   </data>
+  <data name="DisplayProfilesActionUse" xml:space="preserve">
+    <value>Use {0}</value>
+    <comment>An action that a shortcut or mouse button can run: switches the displays to a profile, with the same question as the menu. {0} is the profile's name, such as Desk.</comment>
+  </data>
+  <data name="NetworkProfilesActionUse" xml:space="preserve">
+    <value>Use {0}</value>
+    <comment>An action that a shortcut or mouse button can run: applies a network profile's proxy settings. {0} is the profile's name, such as Office.</comment>
+  </data>
 </root>
