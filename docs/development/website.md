@@ -37,6 +37,7 @@ powershell -ExecutionPolicy Bypass -File scripts\website-screenshots.ps1 -Msi <f
 - Commit only the screenshots of new or changed pages: every version of an image stays in the repository's history. All of them are taken again from time to time, without `-Pages`, when the maintainer asks.
 - `scripts/sandbox/website-screenshots.ps1` runs inside the Sandbox and lists the pages and the settings they're taken with. When a release adds a feature, add its page there and turn the feature on, then add it to `index.html`, with each screenshot's width and height from the report.
 - A program in a rule must exist in the Sandbox, and not be one that PC Companion refuses, such as File Explorer; otherwise the page shows a warning.
+- Dynamic Wallpaper's pictures are drawn by the script, in grays only: the desktop shows the one in use, and a colored one would tint the window's backdrop in every screenshot. The Sandbox has the PC's time zone, which the page names, so the script sets it to London's first.
 - Display Profiles' screenshot is taken on a PC with two displays instead: Windows Sandbox is a remote session, where the page says profiles aren't available and dims Use. It shows three profiles made from that PC's displays, Desk, One display and Presenting, with the same window size, crop and gray desktop, and without selecting Use. Its displays' model names show in it.
 - Needs the Windows Sandbox feature, and only one Sandbox can run at a time. Keep the Sandbox window visible until it closes: a minimized Sandbox draws nothing, so its screenshots come out blank.
 

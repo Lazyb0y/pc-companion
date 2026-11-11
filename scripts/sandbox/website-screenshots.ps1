@@ -23,10 +23,10 @@ New-Item -ItemType Directory -Force -Path $results | Out-Null
 Set-Content -Path $report -Value "PC Companion website screenshots - $(Get-Date -Format o)" -Encoding utf8
 
 # The pages, by their names in the navigation pane, and the features' settings: an action for each
-# corner, and a key for one, apps with a language, a shortcut or the tray, title-bar clicks, rules,
-# profiles and drives, so the pages show what the features can do. %USERPROFILE% stands for the
-# user's folder.
-$pages = 'Home', 'Hot Corners', 'Lock Keys', 'Input Language per App', 'App Windows', 'Minimize to Tray', 'Hide Apps', 'Drop-down Apps', 'Title Bar Actions', 'System Meters', 'Clipboard Actions', 'Network Profiles', 'Folder Rules', 'Drive Actions', 'General'
+# corner, and a key for one, apps with a language, a shortcut or the tray, title-bar clicks, a
+# picture for each part of the day, rules, profiles and drives, so the pages show what the features
+# can do. %USERPROFILE% stands for the user's folder.
+$pages = 'Home', 'Hot Corners', 'Lock Keys', 'Input Language per App', 'App Windows', 'Minimize to Tray', 'Hide Apps', 'Drop-down Apps', 'Title Bar Actions', 'End App', 'System Meters', 'Dynamic Wallpaper', 'Clipboard Actions', 'Middle-Click Paste', 'Network Profiles', 'Folder Rules', 'Drive Actions', 'General'
 $features = @'
 "hotCorners": {
     "enabled": true,
@@ -67,14 +67,34 @@ $features = @'
     "controlWheel": "Opacity",
     "excludedApps": [ { "name": "Firefox", "program": "C:\\Program Files\\Mozilla Firefox\\firefox.exe" } ]
 },
+"endApp": { "enabled": true, "shortcut": "ControlAltEscape" },
 "systemMeters": { "enabled": true },
+"dynamicWallpaper": {
+    "enabled": true,
+    "changeWith": "Sun",
+    "location": "TimeZone",
+    "fit": "Fill",
+    "eachDisplay": false,
+    "displays": [],
+    "sun": {
+        "sunrise": { "picture": "%USERPROFILE%\\Pictures\\Wallpapers\\Sunrise.jpg" },
+        "day": { "picture": "%USERPROFILE%\\Pictures\\Wallpapers\\Day.jpg" },
+        "sunset": { "picture": "%USERPROFILE%\\Pictures\\Wallpapers\\Sunset.jpg" },
+        "night": { "picture": "%USERPROFILE%\\Pictures\\Wallpapers\\Night.jpg" }
+    }
+},
 "clipboardActions": {
     "enabled": true,
+    "selectedText": true,
     "openLinks": true,
     "rules": [
         { "name": "Track the parcel", "pattern": "1Z[0-9A-Z]{16}", "matchCase": false, "action": "OpenAddress", "address": "https://tracking.example.com/?number={text}" },
         { "name": "Open in a private window", "pattern": "https?://\\S+", "matchCase": false, "action": "RunProgram", "program": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "arguments": "--inprivate {text}" }
     ]
+},
+"middleClickPaste": {
+    "enabled": true,
+    "excludedApps": [ { "name": "Firefox", "program": "C:\\Program Files\\Mozilla Firefox\\firefox.exe" } ]
 },
 "networkProfiles": {
     "enabled": true,
@@ -267,6 +287,63 @@ function Save-Page([string] $Name) {
 # Keeps the pointer off the window, so nothing shows as hovered, and out of the corners.
 function Move-PointerAside { [void] (Move-Pointer ($screen.Width - 20) ([int] ($screen.Height / 2))) }
 
+# The settings window as it is on screen, without its borders, for the checks of Home below.
+function Get-WindowPicture {
+    $frame = [Frame]::Bounds([IntPtr] (Get-AppWindow).Current.NativeWindowHandle)
+    $bitmap = New-Object System.Drawing.Bitmap ($frame.Right - $frame.Left), ($frame.Bottom - $frame.Top)
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen($frame.Left, $frame.Top, 0, 0, $bitmap.Size)
+    $graphics.Dispose()
+    return $bitmap
+}
+
+# How much a picture's pixels differ, from 0 to 1 in brightness, at most: those of columns $From to
+# $To from column $Reference's in each row, or with $Row, from row $Row's in each column.
+function Get-Difference($Bitmap, [int] $From, [int] $To, [int] $Top, [int] $Bottom, [int] $Reference = -1, [int] $Row = -1) {
+    $most = 0.0
+    for ($x = $From; $x -le $To; $x++) {
+        for ($y = $Top; $y -le $Bottom; $y++) {
+            $other = if ($Row -ge 0) { $Bitmap.GetPixel($x, $Row) } else { $Bitmap.GetPixel($Reference, $y) }
+            $most = [math]::Max($most, [math]::Abs([double] $Bitmap.GetPixel($x, $y).GetBrightness() - [double] $other.GetBrightness()))
+        }
+    }
+    return $most
+}
+
+# After a key press, such as the Num Lock the Sandbox takes from the PC, WinUI outlines the focused
+# item, Home in the navigation pane, in the window's screenshot. A click takes the outline away but
+# leaves the page's scroll bar showing, so instead the settings app starts again, whose new window
+# hasn't seen the key. Left of the item, the outline's edge is the only thing that differs from the
+# pane below the item, column by column, since the window's border runs down the first column.
+function Test-FocusOutline {
+    $bitmap = Get-WindowPicture
+    $edge = Get-Difference $bitmap 0 4 80 109 -Row 130
+    $bitmap.Dispose()
+    return $edge -gt 0.25
+}
+
+# WinUI shows thin scroll bars for a few seconds at times, such as after the window opens: the
+# page's at its right edge and the pane's at its own. They show when their columns differ from the
+# background beside them.
+function Test-ScrollBars {
+    $bitmap = Get-WindowPicture
+    $page = Get-Difference $bitmap ($bitmap.Width - 8) ($bitmap.Width - 4) 50 300 -Reference ($bitmap.Width - 16)
+    $pane = Get-Difference $bitmap 314 317 50 300 -Reference 310
+    $bitmap.Dispose()
+    return [math]::Max($page, $pane) -gt 0.15
+}
+function Restart-SettingsApp {
+    Get-Process -Name 'PCCompanion' -ErrorAction SilentlyContinue | Stop-Process -Force
+    [void] (Wait-Until { -not (Get-AppWindow) } 10)
+    Start-Process $appExe
+    [void] (Wait-Until { Get-AppWindow })
+    Start-Sleep -Seconds 4
+    Set-WindowSize
+    [void] (Show-Page 'Home')
+    Move-PointerAside
+    Start-Sleep -Seconds 3
+}
+
 # Waits until no Lock Keys or Input Language per App notice is on screen, such as one for Num Lock,
 # which the Sandbox can turn on to match the PC, so none shows in a screenshot.
 function Wait-NoNotice {
@@ -298,6 +375,52 @@ foreach ($folder in 'Downloads\Installers', 'Documents\Invoices', 'Pictures\Down
     New-Item -ItemType Directory -Force -Path (Join-Path $env:USERPROFILE $folder) | Out-Null
 }
 
+# Dynamic Wallpaper's pictures: a sky, hills and the sun or the moon, in grays only, since the
+# desktop shows the one in use and a colored one would tint the window's backdrop. Day's averages
+# about the desktop's gray, and its sun is where the window covers it, since the window's thin
+# border shows the desktop behind it. The Sandbox takes the PC's time zone, which Dynamic
+# Wallpaper's page names, so it's set to London's first.
+& tzutil.exe /s 'GMT Standard Time'
+Test-Check 'the time zone is London''s' ((& tzutil.exe /g) -eq 'GMT Standard Time') (& tzutil.exe /g)
+function New-Wallpaper([string] $Name, [int] $SkyTop, [int] $SkyBottom, [int] $Hills, [int] $Light, [double] $X, [double] $Y, [int] $Radius, [switch] $Night) {
+    $pictureWidth = 1600
+    $pictureHeight = 900
+    $bitmap = New-Object System.Drawing.Bitmap $pictureWidth, $pictureHeight
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $gray = { param([int] $Value) [System.Drawing.Color]::FromArgb($Value, $Value, $Value) }
+    $sky = New-Object System.Drawing.Drawing2D.LinearGradientBrush (New-Object System.Drawing.Point 0, 0), (New-Object System.Drawing.Point 0, $pictureHeight), (& $gray $SkyTop), (& $gray $SkyBottom)
+    $graphics.FillRectangle($sky, 0, 0, $pictureWidth, $pictureHeight)
+    $bright = New-Object System.Drawing.SolidBrush (& $gray $Light)
+    if ($Night) {
+        foreach ($star in @(@(180, 120), @(420, 70), @(640, 190), @(860, 90), @(1340, 160), @(1480, 60), @(300, 300), @(1000, 260))) {
+            $graphics.FillEllipse($bright, $star[0], $star[1], 5, 5)
+        }
+    }
+    $graphics.FillEllipse($bright, [int] ($X * $pictureWidth - $Radius), [int] ($Y * $pictureHeight - $Radius), 2 * $Radius, 2 * $Radius)
+    if ($Night) {
+        $shade = New-Object System.Drawing.SolidBrush (& $gray ([int] ($SkyTop + ($SkyBottom - $SkyTop) * $Y)))
+        $graphics.FillEllipse($shade, [int] ($X * $pictureWidth - $Radius + 0.45 * $Radius), [int] ($Y * $pictureHeight - $Radius - 0.2 * $Radius), 2 * $Radius, 2 * $Radius)
+        $shade.Dispose()
+    }
+    $far = New-Object System.Drawing.SolidBrush (& $gray ([math]::Min(255, $Hills + 25)))
+    $near = New-Object System.Drawing.SolidBrush (& $gray $Hills)
+    $graphics.FillEllipse($far, 700, 560, 1300, 700)
+    $graphics.FillEllipse($near, -300, 620, 1400, 700)
+    $path = Join-Path $env:USERPROFILE "Pictures\Wallpapers\$Name.jpg"
+    $bitmap.Save($path, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+    foreach ($item in $sky, $bright, $far, $near, $graphics, $bitmap) { $item.Dispose() }
+    return $path
+}
+New-Item -ItemType Directory -Force -Path (Join-Path $env:USERPROFILE 'Pictures\Wallpapers') | Out-Null
+$wallpapers = @(
+    (New-Wallpaper 'Sunrise' 95 165 80 225 0.3 0.66 80),
+    (New-Wallpaper 'Day' 120 150 100 235 0.25 0.22 70),
+    (New-Wallpaper 'Sunset' 100 170 75 215 0.76 0.64 85),
+    (New-Wallpaper 'Night' 45 80 30 215 0.7 0.26 60 -Night)
+)
+Test-Check 'Dynamic Wallpaper''s pictures are made' (@($wallpapers | Where-Object { Test-Path $_ }).Count -eq 4) ($wallpapers -join ', ')
+
 $code = (Start-Process msiexec.exe -ArgumentList @('/i', "`"$msi`"", '/qn', 'ALLUSERS=2', 'MSIINSTALLPERUSER=1', '/l*v', "`"$results\install.log`"") -Wait -PassThru).ExitCode
 Test-Check 'install for the current user' ($code -eq 0) "exit code $code"
 
@@ -305,6 +428,9 @@ foreach ($theme in 'Light', 'Dark') {
     Stop-All
     Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""$theme"" }, ""features"": { $features } }"
     Start-Sleep -Seconds 2
+    # The pointer stays off the window from the start: once it has crossed the page, the page keeps
+    # showing its scroll bar.
+    Move-PointerAside
     Start-Process $appExe
     Test-Check "$theme`: the settings window opens" ([bool] (Wait-Until { Get-AppWindow }))
     Start-Sleep -Seconds 4
@@ -317,7 +443,17 @@ foreach ($theme in 'Light', 'Dark') {
         Start-Sleep -Seconds 3
         Wait-NoNotice
         $name = "$($page.ToLowerInvariant() -replace ' ', '-')-$($theme.ToLowerInvariant())"
-        if ($page -eq 'Home') { Save-Window $name } else { Save-Page $name }
+        if ($page -eq 'Home') {
+            for ($try = 1; ($try -le 3) -and (Test-FocusOutline); $try++) {
+                Write-Report "[NOTE] $theme`: the settings window outlines Home after a key press, so the settings app starts again."
+                Restart-SettingsApp
+            }
+            Test-Check "$theme`: Home has no focus outline" (-not (Test-FocusOutline))
+            Test-Check "$theme`: Home shows no scroll bars" (Wait-Until { -not (Test-ScrollBars) } 15)
+            Save-Window $name
+        } else {
+            Save-Page $name
+        }
     }
 }
 
