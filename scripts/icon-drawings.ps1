@@ -147,26 +147,6 @@ function Get-CrescentPath([double[]] $Moon) {
     "M$(F $x1) $(F $y1)A$(F $r) $(F $r) 0 1 0 $(F $x2) $(F $y2)A$(F $br) $(F $br) 0 0 1 $(F $x1) $(F $y1)Z"
 }
 
-# The line from x1, y1 to x2, y2 grown by $Radius with round ends, as path data.
-function Get-CapsulePath([double[]] $Line, [double] $Radius) {
-    $x1, $y1, $x2, $y2 = $Line
-    $dx = $x2 - $x1
-    $dy = $y2 - $y1
-    $length = [math]::Sqrt($dx * $dx + $dy * $dy)
-    $nx = -$dy / $length * $Radius
-    $ny = $dx / $length * $Radius
-    $arc = "A$(F $Radius) $(F $Radius) 0 0 0 "
-    "M$(F ($x1 + $nx)) $(F ($y1 + $ny))L$(F ($x2 + $nx)) $(F ($y2 + $ny))$arc$(F ($x2 - $nx)) $(F ($y2 - $ny))" +
-    "L$(F ($x1 - $nx)) $(F ($y1 - $ny))$arc$(F ($x1 + $nx)) $(F ($y1 + $ny))Z"
-}
-
-# A clip path that keeps everything but the gap's outline.
-function Get-GapClip([int] $Size, [string] $Outline) {
-    '<clipPath id="gap">'
-    "$indent<path clip-rule=`"evenodd`" d=`"M0 0H$($Size)V$($Size)H0Z$Outline`"/>"
-    '</clipPath>'
-}
-
 function Get-Group([string] $Attributes, [string[]] $Items) {
     "<g $Attributes>"
     $Items | ForEach-Object { "$indent$_" }
@@ -270,6 +250,29 @@ function Get-LetterAin([double] $CenterX, [double] $CenterY, [double] $Height) {
 # triangle $Tail, three x, y points, as one shape.
 function Get-BubbleShape([double[]] $Box, [object[]] $Tail) {
     Join-Shape (ConvertTo-Shape (Get-RectPath $Box)) (ConvertTo-Shape (Get-PolygonPath $Tail))
+}
+
+# The outline of something hidden: a rounded square's outline, $Width wide and inside the square
+# $Box (x, y, side, side and corner radius), as $Count dashes $Dash long with round ends, one
+# centered on each corner.
+function Get-DashedOutline([double[]] $Box, [double] $Width, [int] $Count, [double] $Dash) {
+    $x, $y, $side, $null, $radius = $Box
+    $half = $Width / 2
+    $inner = [math]::Max($radius - $half, 0.01)
+    $path = Get-RectPath @(($x + $half), ($y + $half), ($side - $Width), ($side - $Width), $inner)
+    $length = 4 * ($side - $Width - 2 * $inner) + 2 * [math]::PI * $inner
+    $period = $length / $Count
+    $on = $Dash - $Width
+    # The path starts where the top-left corner ends, so the dashes start half a dash before that
+    # corner's middle.
+    $start = [math]::PI * $inner / 4 + $on / 2
+    $pen = New-Object Windows.Media.Pen -ArgumentList ([Windows.Media.Brushes]::Black), $Width
+    $pen.StartLineCap = 'Round'
+    $pen.EndLineCap = 'Round'
+    $pen.DashCap = 'Round'
+    $pen.LineJoin = 'Round'
+    $pen.DashStyle = New-Object Windows.Media.DashStyle -ArgumentList ([double[]] @(($on / $Width), (($period - $on) / $Width))), (($start % $period) / $Width)
+    (ConvertTo-Shape $path).GetWidenedPathGeometry($pen, $tolerance, 'Absolute')
 }
 
 # A window's title bar, $Height high, with the window's top corners. $Window is the window's x, y,
@@ -520,32 +523,26 @@ foreach ($icon in $minimizeToTray) {
     Write-Drawing "minimize-to-tray-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $window $taskbar))
 }
 
-# Hide Apps, in violet: a window, its title bar TitleBar high in the deep tone, with a white eye,
-# its outline Line wide round a pupil, crossed out by a white slash Slash wide, which a cut Gap wide
-# keeps apart from the eye. Eye is the eye's middle, half its width and half its height. The
-# one-color version cuts the eye and the slash out, and Cut wide under the title bar.
+# Hide Apps, in violet: two apps as rounded squares, Shown in front and Hidden behind it. The shown
+# one is split along its diagonal from the top left, its lower-left half in the light tone and its
+# upper-right half in the main one. The hidden one is a dashed outline in the deeper orange of a
+# folder's back, Width wide, of Count dashes Dash long, left out Cut wide round the shown square.
+# The one-color version keeps the shown square whole, since its split is only shading.
 $hideApps = @(
-    @{ Size = 32; Window = 1, 3, 30, 26, 2.5; TitleBar = 5; Eye = 16, 18.5, 10, 6.1; Line = 2; Pupil = 3; SlashLine = 8.5, 26, 23.5, 11; Slash = 2.2; Gap = 1.4; Cut = 1.2 }
-    @{ Size = 20; Window = 2, 3, 16, 14, 1.5; TitleBar = 3; Eye = 10, 11.5, 5.4, 3.3; Line = 1.2; Pupil = 1.6; SlashLine = 6, 15.5, 14, 7.5; Slash = 1.2; Gap = 0.9; Cut = 1 }
+    @{ Size = 32; Hidden = 1, 1, 19, 19, 2; Shown = 12, 12, 19, 19, 2; Width = 2; Count = 12; Dash = 3.3; Cut = 1.2 }
+    @{ Size = 20; Hidden = 2, 2, 10, 10, 1.5; Shown = 8, 8, 10, 10, 1.5; Width = 1.2; Count = 8; Dash = 2.4; Cut = 1 }
 )
 foreach ($icon in $hideApps) {
-    $cx, $cy, $half, $tall = $icon.Eye
-    # Two curves through the eye's corners, each drawn as a pair of cubic curves that meet at its top or bottom.
-    $eye = "M$(F ($cx - $half)) $(F $cy)C$(F ($cx - $half * 0.75)) $(F ($cy - $tall * 0.69)) $(F ($cx - $half * 0.4)) $(F ($cy - $tall)) $(F $cx) $(F ($cy - $tall))" +
-        "S$(F ($cx + $half * 0.75)) $(F ($cy - $tall * 0.69)) $(F ($cx + $half)) $(F $cy)" +
-        "C$(F ($cx + $half * 0.75)) $(F ($cy + $tall * 0.69)) $(F ($cx + $half * 0.4)) $(F ($cy + $tall)) $(F $cx) $(F ($cy + $tall))" +
-        "S$(F ($cx - $half * 0.75)) $(F ($cy + $tall * 0.69)) $(F ($cx - $half)) $(F $cy)Z"
-    $pupil = Get-EllipsePath $cx $cy $icon.Pupil $icon.Pupil
-    $x1, $y1, $x2, $y2 = $icon.SlashLine
-    $slash = "M$(F $x1) $(F $y1)L$(F $x2) $(F $y2)"
-    $clip = @(Get-GapClip $icon.Size (Get-CapsulePath $icon.SlashLine ($icon.Slash / 2 + $icon.Gap)))
-    $body = @((Get-Rect $icon.Window ' fill="url(#violet-main)"'), "<path fill=`"url(#violet-deep)`" d=`"$(Get-TitleBarPath $icon.Window $icon.TitleBar)`"/>") +
-        @(Get-Group 'clip-path="url(#gap)"' @((Get-SymbolPath $eye $icon.Line), "<path fill=`"$white`" d=`"$pupil`"/>")) + @(Get-SymbolPath $slash $icon.Slash)
-    Write-Drawing "hide-apps-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-main') + @(Get-Gradient 'violet-deep') + $clip) $body
-    $marks = Remove-Shape (Join-Shape (Get-StrokeArea $eye $icon.Line) (ConvertTo-Shape $pupil)) (Get-StrokeArea $slash ($icon.Slash + 2 * $icon.Gap))
-    $shape = ConvertTo-Shape (Get-RectPath $icon.Window)
-    foreach ($cut in (Get-TitleBarCut $icon.Window $icon.TitleBar $icon.Cut), $marks, (Get-StrokeArea $slash $icon.Slash)) { $shape = Remove-Shape $shape $cut }
-    Write-Drawing "hide-apps-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
+    $x, $y, $side, $null, $null = $icon.Shown
+    $shown = Get-RectPath $icon.Shown
+    $lower = Get-PolygonPath @(@($x, $y), @($x, ($y + $side)), @(($x + $side), ($y + $side)))
+    $upper = Get-PolygonPath @(@($x, $y), @(($x + $side), $y), @(($x + $side), ($y + $side)))
+    $hidden = Remove-Shape (Get-DashedOutline $icon.Hidden $icon.Width $icon.Count $icon.Dash) (Get-GrownShape $shown (2 * $icon.Cut))
+    $defs = @(@('yellow-back', 'violet-light', 'violet-main') | ForEach-Object { Get-Gradient $_ }) + @('<clipPath id="shown">', "$indent$(Get-Rect $icon.Shown)", '</clipPath>')
+    $body = @(Get-ShapePath $hidden 'url(#yellow-back)') +
+        @(Get-Group 'clip-path="url(#shown)"' @("<path fill=`"url(#violet-light)`" d=`"$lower`"/>", "<path fill=`"url(#violet-main)`" d=`"$upper`"/>"))
+    Write-Drawing "hide-apps-$($icon.Size)" $icon.Size $defs $body
+    Write-Drawing "hide-apps-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $hidden (ConvertTo-Shape $shown)))
 }
 
 # Drop-down Apps, in the app icon's blue: a screen in the light tone with a panel in the deep tone

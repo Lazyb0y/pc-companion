@@ -45,7 +45,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 - One familiar object that stands for what the feature works on, drawn large: it fills almost the whole square, so the icon reads without its name.
 - At most one second object, at the bottom right, for what the feature adds or does, in a color of its own, such as an orange bolt or a red stop sign. Input Language per App is the one exception: its window has three speech bubbles round it, one for each language, and the 文 bubble is orange, which keeps the icon warm among the blues.
 - Two or three parts in all, but for that exception. Small details only where they name the object, such as the lines on a clipboard's paper; nothing that disappears at 20 pixels.
-- Depth from tones, not lines: an object is two or three flat planes in tones of its color, deeper for parts at the back and edges, such as a title bar or a keycap's sides, and lighter for faces in front. A round object can instead be lit from the left, as the mouse of Middle-Click Paste is: each of its parts split down the middle, lighter on the left and deeper on the right. No outlines, highlights, shadows or perspective.
+- Depth from tones, not lines: an object is two or three flat planes in tones of its color, deeper for parts at the back and edges, such as a title bar or a keycap's sides, and lighter for faces in front. A round object can instead be lit from the left, as the mouse of Middle-Click Paste is: each of its parts split down the middle, lighter on the left and deeper on the right. A square can be split the same way along its diagonal from the top left, lighter below it, as the app in front in Hide Apps is. No outlines, highlights, shadows or perspective, except the dashed outline of something hidden, such as the hidden app of Hide Apps.
 - Symbols on an object, such as a pointer, an arrow, an eye or a letter, are plain white.
 - No gray, which makes an icon look dull: parts that are often gray, such as a keyboard or a monitor's frame, are in a deep tone of the icon's color, and paper and plastic are white with a tint of blue.
 - Letters, such as the 文, A and ع of Input Language per App, are drawn as strokes, not set in a font.
@@ -59,7 +59,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Input Language per App | An app window | Three speech bubbles round it, with a white 文, A and ع: the 文 bubble orange, the A bubble in the main tone and the ع bubble in the deepest | App blue |
 | App Windows | Three windows stacked, deepest at the back and lightest in front | | Sky |
 | Minimize to Tray | A window with a white arrow down to the taskbar, which has a tray icon | | Green |
-| Hide Apps | A window with a white eye, crossed out | | Violet |
+| Hide Apps | Two apps as rounded squares: one in front, split along its diagonal, and a hidden one behind it, a dashed outline in the deeper orange | | Violet |
 | Drop-down Apps | A screen with a panel hanging from its top edge, with a white chevron | | App blue |
 | Title Bar Actions | A window with a blue title bar | A blue mouse with an orange wheel | Sky |
 | End App | An app window | A red stop sign with a white bar | Violet |
@@ -89,7 +89,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 |---|---|---|
 | Paper | Paper, plastic and a window's content | `#F8FAFF` → `#DCE6FF` |
 | Orange | Second objects; it's the app icon's amber | `#FFD25E` → `#FF8A3C` |
-| Yellow | Folders: the front, then the back | `#FFE06B` → `#FAB500`, `#FFA43D` → `#E67505` |
+| Yellow | Folders: the front, then the back; the back's deeper orange is also the hidden app of Hide Apps | `#FFE06B` → `#FAB500`, `#FFA43D` → `#E67505` |
 | Red | Stop signs | `#F83F54` → `#CA2134` |
 | White | Symbols on an object | `#FFFFFF` |
 
@@ -112,13 +112,13 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | A white symbol's stroke | 2 to 2.6 | 1.2 to 1.6 |
 | A cut where a white symbol crosses another | 1.2 to 1.5 | 0.9 to 1 |
 
-- A second object lies on the first without a gap, since its color sets it apart. Where a white symbol crosses another, such as the slash through the eye of Hide Apps, the one under it is cut, so the two stay apart.
+- A second object lies on the first without a gap, since its color sets it apart. Where a white symbol crosses another, such as a slash through an eye, the one under it is cut, so the two stay apart.
 - Icons aren't mirrored in right-to-left layouts.
 
 ## High contrast
 
 - Each icon has a one-color version for high contrast themes, in the theme's text color: the same shapes, with paper and white symbols cut out, so they show the background, and everything else filled.
-- Planes of one object that meet, such as stacked windows or a title bar on its window, are kept apart by a cut as wide as in the cut row of [Shapes and sizes](#shapes-and-sizes), and so is a second object from the first. A split that is only light, such as down the body of Middle-Click Paste's mouse, gets no cut; the split between its two buttons does.
+- Planes of one object that meet, such as stacked windows or a title bar on its window, are kept apart by a cut as wide as in the cut row of [Shapes and sizes](#shapes-and-sizes), and so is a second object from the first. A split that is only light, such as down the body of Middle-Click Paste's mouse or across the app in front in Hide Apps, gets no cut; the split between the mouse's two buttons does.
 - No gradients, and nothing added or left out compared with the color version.
 
 ## Inside pages
@@ -133,7 +133,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 - `scripts/app-icon.ps1` makes `PCCompanion.ico` from the `app-<size>.svg` drawings; see [Packaging](../development/packaging.md).
 - They use only what Windows' SVG renderer, Direct2D, [supports](https://learn.microsoft.com/en-us/windows/win32/direct2d/svg-support), which WinUI's `SvgImageSource` uses: `svg`, `defs`, `g`, `rect`, `path`, `linearGradient`, `stop` and `clipPath`, with attributes rather than `style` or CSS. Direct2D ignores `mask`, `symbol`, `use`, `filter` and `text`.
 - Coordinates are in pixels, with a `viewBox` the size of the icon.
-- A cut in a color drawing, such as the one round the slash of Hide Apps, is a `clipPath` on the shapes under it: the whole icon minus the cut's outline, as one path with `clip-rule="evenodd"`. The outline is the shape grown by half its stroke plus the cut, with round corners.
+- A cut in a color drawing, such as round a slash through an eye, is a `clipPath` on the shapes under it: the whole icon minus the cut's outline, as one path with `clip-rule="evenodd"`. The outline is the shape grown by half its stroke plus the cut, with round corners.
 - A one-color version is one path with `fill="currentColor"`, with the cutouts as holes. The script works it out with the shape geometry of WPF, which comes with Windows: it takes the white symbols, the paper and the cuts out of the shapes.
 
 ## Checklist
@@ -141,7 +141,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 Before an icon is proposed:
 
 - It's one large object, with at most one second object at the bottom right, in two or three parts, and reads at 20 pixels without its name.
-- It has no outlines, highlights, shadows or gray, and its colors are the ones in [Colors](#colors), in the color its row of the icon table gives it.
+- It has no outlines, other than the dashed outline of something hidden, and no highlights, shadows or gray, and its colors are the ones in [Colors](#colors), in the color its row of the icon table gives it.
 - It's drawn at 32 and 20 pixels, with straight edges on whole pixels at 20, and each size has a one-color version.
 - It was looked at at its real sizes and enlarged, on light, dark and high contrast backgrounds, next to the icons in [`icons/`](icons/): in the navigation pane, on a Home card and in a page header.
 - Its files are written by `scripts/icon-drawings.ps1`, so they use only what Direct2D supports.
