@@ -4904,4 +4904,168 @@
     <value>中键</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>快捷键和鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>使用你自己的键盘快捷键和鼠标按钮运行 PC Companion 的操作，例如隐藏其他应用或切换配置文件。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>快捷键和鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>每一项都会在对应功能打开时运行该功能的一个操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>还没有快捷键或鼠标按钮。添加一个，即可用你自己的按键或按钮隐藏其他应用、切换配置文件或显示下拉应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>没有可用的快捷键或按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>未知操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>操作不可用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>此项没有操作，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>此项没有快捷键或鼠标按钮，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>此项同时有快捷键和鼠标按钮，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>此项与其按键或按钮一起使用了 Ctrl、Alt、Shift 和 Windows 徽标键以外的键，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>快捷键不能使用此键，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>此快捷键需要 Ctrl、Alt 或 Windows 徽标键，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows 保留了此快捷键，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>此项使用了后退按钮、前进按钮和中键以外的鼠标按钮，因此不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>中键需要配合 Windows 徽标键，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>上方某一行已有相同的快捷键或按钮，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion 没有此操作，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>此电脑不支持{0}，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0}目前不提供此操作，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0}中已没有“{1}”，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0}已关闭，因此此项不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0}正在使用此快捷键，因此它在此处不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>在{0}中，{1} 会输入 {2}，因此此快捷键不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>在另一种键盘布局中，{0} 会输入 {1}，因此此快捷键不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>打开{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>应用全屏时暂停鼠标按钮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>占满屏幕的应用（例如游戏）会自己接收后退按钮、前进按钮和中键。快捷键仍然有效。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>其他页面上的快捷键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>已打开的功能的快捷键。请在相应功能的页面上更改。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>其他已打开的功能都没有快捷键。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>不配合按键使用时，后退按钮和前进按钮将不再在应用（例如浏览器）中后退和前进，除非将这些应用添加到“不在这些应用中”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>以管理员身份运行的应用位于前台时，快捷键仍然有效，但某些操作无法更改其窗口。该应用位于前台时，鼠标按钮不起作用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，快捷键和鼠标按钮也能工作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>仅在你按下时读取你添加的快捷键，不使用键盘挂钩；添加了鼠标按钮时，读取后退按钮、前进按钮和中键以及同时按住的键。列出了应用时，还会读取哪个应用位于前台或指针下方，并为全屏暂停读取前台窗口的位置，从不读取窗口标题或内容。仅运行你选择的操作。不存储也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4952,4 +4952,168 @@
     <value>Middle button</value>
     <comment>A mouse's middle button, which is also its wheel.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>Shortcuts &amp; Mouse Buttons</value>
+    <comment>The name of the feature that runs PC Companion's actions with the user's own keyboard shortcuts and mouse buttons.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>Run PC Companion's actions, such as hiding the other apps or switching a profile, with your own keyboard shortcuts and mouse buttons.</value>
+    <comment>Shortcuts &amp; Mouse Buttons: the feature's description on Home and below its page's title.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>Shortcuts and mouse buttons</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: header of the list of the user's shortcuts and mouse buttons.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>Each one runs an action of a feature while that feature is on.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: below ShortcutsAndMouseButtonsTriggersHeader.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>No shortcuts or mouse buttons yet. Add one to hide the other apps, switch a profile or show a drop-down app with keys or a button of your own.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown while the list of shortcuts and mouse buttons is empty.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: name of a row's More options button for screen readers. {0} is the row's shortcut or mouse button, such as "Ctrl + Alt + H".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: menu item and dialog button that delete a shortcut or mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: title of the dialog that asks before a shortcut or mouse button is deleted. {0} is the shortcut or mouse button, such as "Ctrl + Alt + H".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Shortcuts &amp; Mouse Buttons dialogs: button that closes the dialog without a change.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: an action with its feature, such as "Hide Apps: Hide others". {0} is the feature's name, {1} the action's.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>No usable shortcut or button</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown instead of the keys or button of a row whose shortcut or button can't be used, for example after a hand edit of the settings file.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>Unknown action</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown instead of the action of a row whose action no feature of PC Companion has.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>Action not available</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown after the feature's name, as {1} in ShortcutsAndMouseButtonsActionName, for an action the feature doesn't offer now.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>This has no action, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row that has no action, for example after a hand edit of the settings file.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>This has no shortcut or mouse button, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row that has neither a shortcut nor a mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>This has both a shortcut and a mouse button, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row that has both a shortcut and a mouse button, which the settings file allows only by a hand edit.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>This uses a key other than Ctrl, Alt, Shift and the Windows logo key with its key or button, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose settings name a modifier key other than Ctrl, Alt, Shift and the Windows logo key.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>Shortcuts can't use this key, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose shortcut uses a key that shortcuts can't use, such as F12 or a key of the numeric keypad.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>This shortcut needs Ctrl, Alt or the Windows logo key, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose shortcut has neither Ctrl, Alt nor the Windows logo key, and its key isn't F13 to F24.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows keeps this shortcut for itself, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose shortcut Windows never gives to a program, such as Windows logo key + L.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>This uses a mouse button other than Back, Forward and the middle button, so it does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose settings name a mouse button other than Back, Forward and the middle button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>The middle button needs the Windows logo key, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row that uses the middle mouse button without the Windows logo key.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>A row above has the same shortcut or button, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose shortcut or mouse button a row above it already has.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion doesn't have this action, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose action no feature of PC Companion has, for example one from a newer version.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>This PC doesn't support {0}, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose action's feature this PC doesn't support. {0} is the feature's name, such as "Display Profiles".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0} doesn't offer this action now, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose action its feature doesn't offer now, for example Clipboard Actions' menu for the selected text while Selected text is off. {0} is the feature's name.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0} no longer has {1}, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose action uses a profile or app that its feature no longer has, for example after the profile was renamed. {0} is the feature's name, {1} the profile's name or the app as stored.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} is off, so this does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose action's feature is off. {0} is the feature's name, such as "Hide Apps".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0} uses this shortcut, so this does nothing here.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose shortcut Windows refused because another feature of PC Companion has the same shortcut on its own page. {0} is that feature's name, such as "Hide Apps".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>In {0}, {1} types {2}, so this shortcut does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: warning at a row whose Ctrl + Alt shortcut types a character with AltGr in one of the user's keyboard layouts, so PC Companion leaves it to typing. {0} is the layout's language, such as "Polish (Poland)", {1} the shortcut, such as "Ctrl + Alt + A", and {2} the character, such as "ą".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>In another keyboard layout, {0} types {1}, so this shortcut does nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown instead of ShortcutsAndMouseButtonsAltGr when the keyboard layout's language has no name. {0} is the shortcut, such as "Ctrl + Alt + A", and {1} the character it types.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>Open {0}</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: button in a row's warning that opens another feature's page. {0} is the feature's name, such as "Hide Apps".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>Pause mouse buttons while an app is full screen</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: header of the switch that lets mouse buttons reach an app while it fills the screen.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>An app that fills the screen, such as a game, gets Back, Forward and the middle button itself. Shortcuts keep working.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: below ShortcutsAndMouseButtonsPauseHeader.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>Shortcuts on other pages</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: header of the read-only list of the shortcuts that other features have on their own pages.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>The shortcuts of the features that are on. Change one on its feature's page.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: below ShortcutsAndMouseButtonsOtherHeader.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>No other feature that's on has a shortcut.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown while no other feature that's on has a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>Back and Forward used without keys stop going back and forward in apps, such as browsers, unless you add those apps to Not in these apps.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: a note about a mouse's Back and Forward buttons used without keys. Not in these apps is the editor's list of apps that a shortcut or button skips.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>Shortcuts also work while an app running as administrator is in front, but some actions can't change its windows. Mouse buttons don't work while it's in front.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: a limitation of Windows, shown while PC Companion runs without admin rights.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so shortcuts and mouse buttons also work while an app running as administrator is in front.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: shown instead of ShortcutsAndMouseButtonsAdministratorInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>Reads only the shortcuts you add, when you press them, with no keyboard hook, and while you add mouse buttons, the Back, Forward and middle buttons and the keys held with them. While apps are listed, also reads which app is in front or under the pointer, and for the full-screen pause, where the window in front is, never window titles or contents. Runs only the actions you choose. Stores and sends nothing.</value>
+    <comment>Shortcuts &amp; Mouse Buttons page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

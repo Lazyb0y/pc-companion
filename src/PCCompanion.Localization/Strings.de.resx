@@ -4952,4 +4952,168 @@
     <value>Mittlere Maustaste</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>Tastenkombinationen und Maustasten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>Aktionen von PC Companion, etwa andere Apps ausblenden oder ein Profil wechseln, mit eigenen Tastenkombinationen und Maustasten ausführen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>Tastenkombinationen und Maustasten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>Jeder Eintrag führt eine Aktion einer Funktion aus, solange diese Funktion aktiviert ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>Noch keine Tastenkombinationen oder Maustasten. Fügen Sie eine hinzu, um mit eigenen Tasten andere Apps auszublenden, ein Profil zu wechseln oder eine Drop-down-App anzuzeigen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>Weitere Optionen für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>Löschen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>{0} löschen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>Keine verwendbare Tastenkombination oder Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>Unbekannte Aktion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>Aktion nicht verfügbar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>Hierfür ist keine Aktion festgelegt, daher bewirkt es nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>Hierfür ist keine Tastenkombination oder Maustaste festgelegt, daher bewirkt es nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>Hierfür sind sowohl eine Tastenkombination als auch eine Maustaste festgelegt, daher bewirkt es nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>Hier wird zusammen mit der Taste eine andere Taste als Strg, Alt, Umschalt und die Windows-Logo-Taste verwendet, daher bewirkt es nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>Tastenkombinationen können diese Taste nicht verwenden, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>Diese Tastenkombination braucht Strg, Alt oder die Windows-Logo-Taste, daher bewirkt sie nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows behält diese Tastenkombination sich selbst vor, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>Hier wird eine andere Maustaste als Zurück, Vorwärts und die mittlere Maustaste verwendet, daher bewirkt es nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>Die mittlere Maustaste braucht die Windows-Logo-Taste, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>Ein Eintrag weiter oben hat dieselbe Tastenkombination oder Taste, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion hat diese Aktion nicht, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>Dieser PC unterstützt {0} nicht, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0} bietet diese Aktion derzeit nicht an, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0} enthält {1} nicht mehr, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} ist deaktiviert, daher bewirkt dies nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0} verwendet diese Tastenkombination, daher bewirkt sie hier nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>Im Tastaturlayout „{0}“ wird mit {1} das Zeichen {2} eingegeben, daher bewirkt diese Tastenkombination nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>In einem anderen Tastaturlayout wird mit {0} das Zeichen {1} eingegeben, daher bewirkt diese Tastenkombination nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>{0} öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>Maustasten anhalten, solange eine App im Vollbild ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>Eine App, die den Bildschirm füllt, etwa ein Spiel, erhält die Zurück-, Vorwärts- und mittlere Maustaste selbst. Tastenkombinationen funktionieren weiter.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>Tastenkombinationen auf anderen Seiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>Die Tastenkombinationen der aktivierten Funktionen. Ändern Sie sie auf der Seite der jeweiligen Funktion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>Keine andere aktivierte Funktion hat eine Tastenkombination.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>Ohne Tasten verwendet, wechseln Zurück und Vorwärts in Apps wie Browsern nicht mehr vor und zurück, es sei denn, Sie fügen diese Apps zu „Nicht in diesen Apps“ hinzu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>Tastenkombinationen funktionieren auch, wenn eine als Administrator ausgeführte App im Vordergrund ist, aber manche Aktionen können ihre Fenster nicht ändern. Maustasten funktionieren nicht, solange sie im Vordergrund ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren Tastenkombinationen und Maustasten auch, wenn eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>Liest nur die Tastenkombinationen, die Sie hinzufügen, wenn Sie sie drücken, ohne Tastatur-Hook, und solange Maustasten hinzugefügt sind, die Zurück-, Vorwärts- und mittlere Maustaste sowie die dabei gehaltenen Tasten. Solange Apps aufgeführt sind, liest es auch, welche App im Vordergrund oder unter dem Mauszeiger ist, und für das Anhalten im Vollbild, wo sich das Fenster im Vordergrund befindet, nie Fenstertitel oder -inhalte. Führt nur die von Ihnen gewählten Aktionen aus. Speichert und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

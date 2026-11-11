@@ -4952,4 +4952,168 @@
     <value>মাঝের বোতাম</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>শর্টকাট ও মাউস বোতাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>নিজের কিবোর্ড শর্টকাট ও মাউস বোতাম দিয়ে PC Companion-এর অ্যাকশন চালান, যেমন অন্য অ্যাপ লুকানো বা প্রোফাইল বদলানো।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>শর্টকাট ও মাউস বোতাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>প্রতিটি একটি বৈশিষ্ট্যের অ্যাকশন চালায়, যতক্ষণ সেই বৈশিষ্ট্যটি চালু থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>এখনও কোনো শর্টকাট বা মাউস বোতাম নেই। নিজের পছন্দের কী বা বোতাম দিয়ে অন্য অ্যাপ লুকাতে, প্রোফাইল বদলাতে বা ড্রপ-ডাউন অ্যাপ দেখাতে একটি যোগ করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>{0}-এর জন্য আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>{0} মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>ব্যবহারযোগ্য কোনো শর্টকাট বা বোতাম নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>অজানা অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>অ্যাকশনটি উপলব্ধ নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>এতে কোনো অ্যাকশন নেই, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>এতে কোনো শর্টকাট বা মাউস বোতাম নেই, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>এতে শর্টকাট ও মাউস বোতাম দুটোই আছে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>এটি নিজের কী বা বোতামের সঙ্গে Ctrl, Alt, Shift ও Windows লোগো কী ছাড়া অন্য একটি কী ব্যবহার করে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>শর্টকাট এই কী ব্যবহার করতে পারে না, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>এই শর্টকাটে Ctrl, Alt বা Windows লোগো কী দরকার, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows এই শর্টকাট নিজের জন্য রাখে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>এটি পেছনের, সামনের ও মাঝের বোতাম ছাড়া অন্য একটি মাউস বোতাম ব্যবহার করে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>মাঝের বোতামের সঙ্গে Windows লোগো কী দরকার, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>উপরের একটি সারিতে একই শর্টকাট বা বোতাম আছে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion-এ এই অ্যাকশন নেই, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>এই PC {0} সমর্থন করে না, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0} এখন এই অ্যাকশন দেয় না, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0}-এ আর {1} নেই, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} বন্ধ আছে, তাই এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0} এই শর্টকাট ব্যবহার করে, তাই এখানে এটি কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>{0}-এ {1} চাপলে {2} টাইপ হয়, তাই এই শর্টকাট কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>অন্য একটি কিবোর্ড লেআউটে {0} চাপলে {1} টাইপ হয়, তাই এই শর্টকাট কিছুই করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>{0} খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>কোনো অ্যাপ পূর্ণ স্ক্রিনে থাকলে মাউস বোতাম বিরতি দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>যে অ্যাপ পুরো স্ক্রিন জুড়ে থাকে, যেমন একটি গেম, সেটি নিজেই পেছনের, সামনের ও মাঝের বোতাম পায়। শর্টকাট কাজ করতে থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>অন্য পৃষ্ঠার শর্টকাট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>চালু থাকা বৈশিষ্ট্যগুলোর শর্টকাট। কোনোটি বদলাতে তার বৈশিষ্ট্যের পৃষ্ঠায় যান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>চালু থাকা অন্য কোনো বৈশিষ্ট্যের শর্টকাট নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>কোনো কী ছাড়া পেছনের ও সামনের বোতাম ব্যবহার করলে ব্রাউজারের মতো অ্যাপে পেছনে ও সামনে যাওয়া বন্ধ হয়ে যায়, যদি না আপনি সেই অ্যাপগুলো "এই অ্যাপগুলোতে নয়"-এ যোগ করেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও শর্টকাট কাজ করে, তবে কিছু অ্যাকশন সেটির উইন্ডো বদলাতে পারে না। সেটি সামনে থাকলে মাউস বোতাম কাজ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও শর্টকাট ও মাউস বোতাম কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>শুধু আপনার যোগ করা শর্টকাটগুলো, আপনি চাপলে, কোনো কিবোর্ড হুক ছাড়া পড়ে, এবং মাউস বোতাম যোগ করলে পেছনের, সামনের ও মাঝের বোতাম এবং সেগুলোর সঙ্গে চেপে রাখা কী পড়ে। অ্যাপ তালিকায় থাকলে কোন অ্যাপ সামনে বা পয়েন্টারের নিচে আছে তাও পড়ে, এবং পূর্ণ স্ক্রিনে বিরতির জন্য সামনের উইন্ডো কোথায় আছে তা পড়ে, কখনও উইন্ডোর শিরোনাম বা বিষয়বস্তু নয়। শুধু আপনার বেছে নেওয়া অ্যাকশন চালায়। কিছুই সংরক্ষণ বা পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

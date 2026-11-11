@@ -4952,4 +4952,168 @@
     <value>Botón central</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsName" xml:space="preserve">
+    <value>Métodos abreviados y botones del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDescription" xml:space="preserve">
+    <value>Ejecuta acciones de PC Companion, como ocultar las demás aplicaciones o cambiar de perfil, con tus propios métodos abreviados de teclado y botones del mouse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersHeader" xml:space="preserve">
+    <value>Métodos abreviados y botones del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTriggersDescription" xml:space="preserve">
+    <value>Cada uno ejecuta una acción de una característica mientras esa característica está activada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoTriggers" xml:space="preserve">
+    <value>Todavía no hay métodos abreviados ni botones del mouse. Agrega uno para ocultar las demás aplicaciones, cambiar de perfil o mostrar una aplicación desplegable con teclas o un botón propios.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDelete" xml:space="preserve">
+    <value>Eliminar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsDeleteTitle" xml:space="preserve">
+    <value>¿Eliminar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsActionName" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownInput" xml:space="preserve">
+    <value>No hay ningún método abreviado o botón utilizable</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnknownActionName" xml:space="preserve">
+    <value>Acción desconocida</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsUnavailableActionName" xml:space="preserve">
+    <value>Acción no disponible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoAction" xml:space="preserve">
+    <value>No tiene ninguna acción, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNoInput" xml:space="preserve">
+    <value>No tiene ningún método abreviado ni botón del mouse, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemBothInputs" xml:space="preserve">
+    <value>Tiene un método abreviado y un botón del mouse a la vez, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownModifier" xml:space="preserve">
+    <value>Usa con su tecla o botón una tecla distinta de Ctrl, Alt, Mayús y la tecla del logotipo de Windows, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownKey" xml:space="preserve">
+    <value>Los métodos abreviados no pueden usar esta tecla, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemNeedsModifier" xml:space="preserve">
+    <value>Este método abreviado necesita Ctrl, Alt o la tecla del logotipo de Windows, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemReserved" xml:space="preserve">
+    <value>Windows se reserva este método abreviado, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemUnknownButton" xml:space="preserve">
+    <value>Usa un botón del mouse distinto de Atrás, Adelante y el botón central, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemMiddleNeedsWindowsKey" xml:space="preserve">
+    <value>El botón central necesita la tecla del logotipo de Windows, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsProblemSameAsEarlier" xml:space="preserve">
+    <value>Una fila de arriba tiene el mismo método abreviado o botón, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoSuchAction" xml:space="preserve">
+    <value>PC Companion no tiene esta acción, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotSupported" xml:space="preserve">
+    <value>Este equipo no admite {0}, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNotOffered" xml:space="preserve">
+    <value>{0} no ofrece esta acción ahora, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTargetMissing" xml:space="preserve">
+    <value>{0} ya no tiene {1}, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsFeatureOff" xml:space="preserve">
+    <value>{0} está desactivado, así que no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsTaken" xml:space="preserve">
+    <value>{0} usa este método abreviado, así que aquí no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGr" xml:space="preserve">
+    <value>En {0}, {1} escribe {2}, así que este método abreviado no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAltGrOtherLayout" xml:space="preserve">
+    <value>En otra distribución de teclado, {0} escribe {1}, así que este método abreviado no hace nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOpenFeature" xml:space="preserve">
+    <value>Abrir {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseHeader" xml:space="preserve">
+    <value>Pausar los botones del mouse mientras una aplicación está en pantalla completa</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPauseDescription" xml:space="preserve">
+    <value>Una aplicación que ocupa toda la pantalla, como un juego, recibe ella misma los botones Atrás, Adelante y central. Los métodos abreviados siguen funcionando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherHeader" xml:space="preserve">
+    <value>Métodos abreviados de otras páginas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsOtherDescription" xml:space="preserve">
+    <value>Los métodos abreviados de las características activadas. Cámbialos en la página de cada característica.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsNoOther" xml:space="preserve">
+    <value>Ninguna otra característica activada tiene un método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsBackForwardInfo" xml:space="preserve">
+    <value>Si se usan sin teclas, Atrás y Adelante dejan de retroceder y avanzar en aplicaciones como los exploradores, a menos que agregues esas aplicaciones a No en estas aplicaciones.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfo" xml:space="preserve">
+    <value>Los métodos abreviados también funcionan mientras una aplicación que se ejecuta como administrador está en primer plano, pero algunas acciones no pueden cambiar sus ventanas. Los botones del mouse no funcionan mientras está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que los métodos abreviados y los botones del mouse también funcionan mientras una aplicación que se ejecuta como administrador está en primer plano.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsPermissions" xml:space="preserve">
+    <value>Lee solo los métodos abreviados que agregas, cuando los presionas, sin enlace de teclado, y mientras haya botones del mouse agregados, los botones Atrás, Adelante y central y las teclas que se mantienen presionadas con ellos. Mientras haya aplicaciones en la lista, también lee qué aplicación está en primer plano o bajo el puntero y, para la pausa en pantalla completa, dónde está la ventana en primer plano, nunca títulos ni contenido de ventanas. Solo ejecuta las acciones que eliges. No almacena ni envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

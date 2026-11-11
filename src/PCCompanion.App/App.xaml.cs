@@ -25,6 +25,7 @@ using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
+using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
 using PCCompanion.App.ViewModels;
@@ -182,6 +183,7 @@ public partial class App : Application
             .AddTransient<HotCornersViewModel>()
             .AddTransient<LockKeysViewModel>()
             .AddTransient<InputLanguagePerAppViewModel>()
+            .AddTransient<ShortcutsAndMouseButtonsViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<MinimizeToTrayViewModel>()
             .AddTransient<HideAppsViewModel>()

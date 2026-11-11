@@ -67,7 +67,7 @@ public sealed partial class ShortcutsAndMouseButtonsFeature : IFeature
         };
     }
 
-    public static FeatureInfo Definition { get; } = new("shortcutsAndMouseButtons", InputModule.Id, "ShortcutsAndMouseButtonsName", "ShortcutsAndMouseButtonsDescription", "");
+    public static FeatureInfo Definition { get; } = new("shortcutsAndMouseButtons", InputModule.Id, "ShortcutsAndMouseButtonsName", "ShortcutsAndMouseButtonsDescription", "\uE765");
 
     /// <summary>Whether this PC can run Shortcuts & Mouse Buttons, for the settings app, which doesn't create the feature.</summary>
     public static FeatureSupport CurrentSupport => FeatureSupport.Supported;
