@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
@@ -9,8 +10,14 @@ namespace PCCompanion.Modules.Windows.AppWindows;
 /// <summary>
 /// Switches between the windows of the app in front with a shortcut. See docs/features/windows/app-windows.md.
 /// </summary>
-public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger, TimeProvider time) : IFeature
+public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger, TimeProvider time, ShortcutRefusals refusals) : IFeature
 {
+    /// <summary>The shortcut that goes to the next window, in <see cref="ShortcutRefusals"/>.</summary>
+    public const string NextShortcut = "next";
+
+    /// <summary>The shortcut with Shift, which goes back, in <see cref="ShortcutRefusals"/>.</summary>
+    public const string PreviousShortcut = "previous";
+
     private const string WindowClassName = "PCCompanion.AppWindows";
 
     private readonly WindowSwitcher _switcher = new(new WindowsAppWindowsEnvironment());
@@ -88,6 +95,7 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)), logger, "App Windows");
         _shortcut.Pressed += (_, shortcut) => Guard(() =>
             Switch(shortcut.Modifiers.HasFlag(HotKeyModifiers.Shift) ? SwitchDirection.Back : SwitchDirection.Forward));
+        _shortcut.RefusedShortcutsChanged += (_, _) => Guard(ReportRefused);
         _foreground.Raised += (_, _) => Guard(() => _shortcut?.Check());
         LogStarted(logger);
     }
@@ -103,8 +111,13 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         _foreground?.Dispose();
         _window.Dispose();
         (_shortcut, _foreground, _window) = (null, null, null);
+        refusals.Set(Definition.Id, []);
         LogStopped(logger);
     }
+
+    // The settings app shows a note when Windows refused the shortcut or its Shift version.
+    private void ReportRefused() =>
+        refusals.Set(Definition.Id, _shortcut?.RefusedShortcuts.Select(shortcut => shortcut.Modifiers.HasFlag(HotKeyModifiers.Shift) ? PreviousShortcut : NextShortcut) ?? []);
 
     private void Configure()
     {

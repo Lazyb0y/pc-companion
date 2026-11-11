@@ -27,13 +27,14 @@ public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly ShortcutRefusals? _refusals;
     private readonly Action<string, string> _notify;
 
     // Set on the feature's thread while its message loop runs.
     private volatile Runner? _runner;
 
     /// <param name="notify">Shows a notification from the PC Companion icon, from any thread.</param>
-    public EndAppThread(EndAppSettings settings, TimeProvider time, ILogger logger, Action<string, string> notify, EndAppThread? previous = null)
+    public EndAppThread(EndAppSettings settings, TimeProvider time, ILogger logger, Action<string, string> notify, EndAppThread? previous = null, ShortcutRefusals? refusals = null)
         : base("End App", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(time);
@@ -43,6 +44,7 @@ public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
         _time = time;
         _logger = logger;
         _notify = notify;
+        _refusals = refusals;
         Start();
     }
 
@@ -62,7 +64,12 @@ public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
 
     protected override void OnStarted() => LogStarted(_logger);
 
-    protected override void OnStopped() => LogStopped(_logger);
+    // Runs after the loop ends, also after a failure, and before a next thread registers the shortcuts.
+    protected override void OnStopped()
+    {
+        _refusals?.Set(EndAppFeature.Definition.Id, []);
+        LogStopped(_logger);
+    }
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
 
@@ -122,6 +129,8 @@ public sealed partial class EndAppThread : MessageLoopThread<EndAppSettings>
         public void Apply(EndAppSettings settings)
         {
             Register(settings.Shortcut);
+            var refused = settings.Shortcut is EndAppShortcut.ControlAltEscape or EndAppShortcut.WindowsControlEscape && _hotKey is null;
+            _owner._refusals?.Set(EndAppFeature.Definition.Id, refused ? [EndAppFeature.ChooseAppShortcut] : []);
             LogApplied(_owner._logger, settings.Shortcut);
         }
 

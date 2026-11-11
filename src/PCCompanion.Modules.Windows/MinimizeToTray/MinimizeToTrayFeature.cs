@@ -29,6 +29,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     private readonly HideAppsMinimized _hideApps;
     private readonly DropDownWindows _dropDown;
     private readonly WindowRequests _requests;
+    private readonly ShortcutRefusals _refusals;
     private MinimizeToTrayThread? _thread;
     private MinimizeToTrayThread? _stopped;
     private IReadOnlyList<TrayWindowInfo> _menuWindows = [];
@@ -39,16 +40,18 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
     /// <param name="requests">Where Title Bar Actions passes on windows to send to the tray.</param>
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests)
-        : this(commands, time, logger, hideApps, dropDown, requests, () => new WindowsTrayWindowsSystem(null, action => action()))
+    /// <param name="refusals">Where the feature says whether Windows refused its shortcut.</param>
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals)
+        : this(commands, time, logger, hideApps, dropDown, requests, refusals, () => new WindowsTrayWindowsSystem(null, action => action()))
     {
     }
 
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
     /// <param name="requests">Where Title Bar Actions passes on windows to send to the tray.</param>
+    /// <param name="refusals">Where the feature says whether Windows refused its shortcut.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests, Func<ITrayWindowsSystem> recoverySystem)
+    public MinimizeToTrayFeature(IHostCommands commands, TimeProvider time, ILogger<MinimizeToTrayFeature> logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals, Func<ITrayWindowsSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
@@ -56,6 +59,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
         ArgumentNullException.ThrowIfNull(hideApps);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(requests);
+        ArgumentNullException.ThrowIfNull(refusals);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
         _commands = commands;
@@ -64,11 +68,15 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
         _hideApps = hideApps;
         _dropDown = dropDown;
         _requests = requests;
+        _refusals = refusals;
         _recoverySystem = recoverySystem;
 
         // A crash ends the host without stopping the feature, so the windows go back on the taskbar first.
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
+
+    /// <summary>The shortcut's name in <see cref="ShortcutRefusals"/>.</summary>
+    public const string SendToTrayShortcut = "sendToTray";
 
     public static FeatureInfo Definition { get; } = new("minimizeToTray", WindowsModule.Id, "MinimizeToTrayName", "MinimizeToTrayDescription", "");
 
@@ -140,7 +148,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems
 
         if (_thread is null)
         {
-            _thread = new MinimizeToTrayThread(read, _commands, _time, _logger, _hideApps, _dropDown, _stopped);
+            _thread = new MinimizeToTrayThread(read, _commands, _time, _logger, _hideApps, _dropDown, _stopped, _refusals);
             _stopped = null;
             _requests.SetTray(_thread.SendFromTitleBar);
         }

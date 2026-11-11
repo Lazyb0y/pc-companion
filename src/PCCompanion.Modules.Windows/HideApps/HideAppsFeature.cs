@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
+using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.HideApps;
 
@@ -23,6 +24,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
     private readonly HideAppsMinimized _minimized;
     private readonly DropDownWindows _dropDown;
     private readonly WindowRequests _requests;
+    private readonly ShortcutRefusals _refusals;
     private HideAppsThread? _thread;
     private HideAppsThread? _stopped;
     private bool _failed;
@@ -30,20 +32,29 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
     /// <param name="minimized">The windows Hide Apps minimized, shared with Minimize to Tray.</param>
     /// <param name="dropDown">The drop-down windows, which Hide Apps leaves alone.</param>
     /// <param name="requests">Where Title Bar Actions passes on windows whose apps to hide.</param>
-    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized, DropDownWindows dropDown, WindowRequests requests)
+    /// <param name="refusals">Where the feature says which of its shortcuts Windows refused.</param>
+    public HideAppsFeature(TimeProvider time, ILogger<HideAppsFeature> logger, HideAppsMinimized minimized, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(minimized);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(requests);
+        ArgumentNullException.ThrowIfNull(refusals);
 
         _time = time;
         _logger = logger;
         _minimized = minimized;
         _dropDown = dropDown;
         _requests = requests;
+        _refusals = refusals;
     }
+
+    /// <summary>Hide app's name in <see cref="ShortcutRefusals"/>.</summary>
+    public const string HideAppShortcut = "hideApp";
+
+    /// <summary>Hide others' name in <see cref="ShortcutRefusals"/>.</summary>
+    public const string HideOthersShortcut = "hideOthers";
 
     public static FeatureInfo Definition { get; } = new("hideApps", WindowsModule.Id, "HideAppsName", "HideAppsDescription", "");
 
@@ -92,7 +103,7 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems
 
         if (_thread is null)
         {
-            _thread = new HideAppsThread(read, _time, _logger, _minimized, _dropDown, _stopped);
+            _thread = new HideAppsThread(read, _time, _logger, _minimized, _dropDown, _stopped, _refusals);
             _stopped = null;
             _requests.SetHideApps(_thread.HideApp);
         }

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.MinimizeToTray;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -22,7 +23,7 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
 
     public MinimizeToTrayFeatureTests()
     {
-        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests, () =>
+        _feature = new MinimizeToTrayFeature(new FakeHostCommands(), TimeProvider.System, _logger, new HideAppsMinimized(), new DropDownWindows(), _requests, new ShortcutRefusals(), () =>
         {
             _recoveries++;
             return _left;

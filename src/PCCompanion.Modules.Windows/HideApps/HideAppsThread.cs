@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 
@@ -20,13 +21,14 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly ShortcutRefusals? _refusals;
     private readonly HideAppsMinimized _minimized;
     private readonly DropDownWindows _dropDown;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Hider? _hider;
 
-    public HideAppsThread(HideAppsSettings settings, TimeProvider time, ILogger logger, HideAppsMinimized minimized, DropDownWindows dropDown, HideAppsThread? previous = null)
+    public HideAppsThread(HideAppsSettings settings, TimeProvider time, ILogger logger, HideAppsMinimized minimized, DropDownWindows dropDown, HideAppsThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Hide Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(time);
@@ -38,6 +40,7 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
         _logger = logger;
         _minimized = minimized;
         _dropDown = dropDown;
+        _refusals = refusals;
         Start();
     }
 
@@ -73,7 +76,12 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
 
     protected override void OnStarted() => LogStarted(_logger);
 
-    protected override void OnStopped() => LogStopped(_logger);
+    // Runs after the loop ends, also after a failure, and before a next thread registers the shortcuts.
+    protected override void OnStopped()
+    {
+        _refusals?.Set(HideAppsFeature.Definition.Id, []);
+        LogStopped(_logger);
+    }
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
 
@@ -125,6 +133,7 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
             Controller.Apply(settings);
             RegisterHideApp(settings.HideAppShortcut);
             RegisterHideOthers(settings.HideOthersShortcut);
+            _owner._refusals?.Set(HideAppsFeature.Definition.Id, RefusedShortcuts(settings));
             LogApplied(_owner._logger, settings.HideAppShortcut, settings.HideOthersShortcut, settings.FrontDisplayOnly, settings.BringBackWholeApp);
         }
 
@@ -143,6 +152,20 @@ public sealed partial class HideAppsThread : MessageLoopThread<HideAppsSettings>
             _hideOthers?.Dispose();
             _system.Dispose();
             _owner._hider = null;
+        }
+
+        // An unknown shortcut, which has none, isn't one Windows refused.
+        private IEnumerable<string> RefusedShortcuts(HideAppsSettings settings)
+        {
+            if (settings.HideAppShortcut == HideAppShortcut.WindowsControlH && _hideApp is null)
+            {
+                yield return HideAppsFeature.HideAppShortcut;
+            }
+
+            if (settings.HideOthersShortcut == HideOthersShortcut.WindowsControlShiftH && _hideOthers is null)
+            {
+                yield return HideAppsFeature.HideOthersShortcut;
+            }
         }
 
         // Each shortcut is registered again only when it changed, or when Windows refused it before.

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.EndApp;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -19,7 +20,7 @@ public sealed class EndAppFeatureTests : IDisposable
     private readonly RecordingLogger<EndAppFeature> _logger = new();
     private readonly EndAppFeature _feature;
 
-    public EndAppFeatureTests() => _feature = new EndAppFeature(TimeProvider.System, _logger, new NoNotifications());
+    public EndAppFeatureTests() => _feature = new EndAppFeature(TimeProvider.System, _logger, new NoNotifications(), new ShortcutRefusals());
 
     public void Dispose() => _feature.Dispose();
 

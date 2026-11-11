@@ -29,6 +29,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     private readonly IHostCommands _commands;
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
+    private readonly ShortcutRefusals? _refusals;
     private readonly HideAppsMinimized _hideApps;
     private readonly DropDownWindows _dropDown;
 
@@ -38,7 +39,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     // The feature thread's own: whether an icon's menu is open.
     private bool _menuOpen;
 
-    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, DropDownWindows dropDown, MinimizeToTrayThread? previous = null)
+    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, DropDownWindows dropDown, MinimizeToTrayThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Minimize to Tray", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
@@ -52,6 +53,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
         _logger = logger;
         _hideApps = hideApps;
         _dropDown = dropDown;
+        _refusals = refusals;
         Start();
     }
 
@@ -101,7 +103,12 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
 
     protected override void OnStarted() => LogStarted(_logger);
 
-    protected override void OnStopped() => LogStopped(_logger);
+    // Runs after the loop ends, also after a failure, and before a next thread registers the shortcuts.
+    protected override void OnStopped()
+    {
+        _refusals?.Set(MinimizeToTrayFeature.Definition.Id, []);
+        LogStopped(_logger);
+    }
 
     protected override void OnFailed(Exception exception)
     {
@@ -238,6 +245,8 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
         {
             Controller.Apply(settings);
             Register(settings.Shortcut);
+            var refused = settings.Shortcut == MinimizeToTrayShortcut.WindowsShiftZ && _shortcut is null;
+            _owner._refusals?.Set(MinimizeToTrayFeature.Definition.Id, refused ? [MinimizeToTrayFeature.SendToTrayShortcut] : []);
 
             if (Controller.WatchesMinimizes && _minimizes is null)
             {

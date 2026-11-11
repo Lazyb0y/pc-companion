@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Modules.Windows.AppWindows;
+using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
 using static PCCompanion.Testing.TestJson;
@@ -17,7 +18,7 @@ public sealed class AppWindowsFeatureTests : IDisposable
 
     public AppWindowsFeatureTests()
     {
-        _feature = new AppWindowsFeature(_logger, TimeProvider.System);
+        _feature = new AppWindowsFeature(_logger, TimeProvider.System, new ShortcutRefusals());
     }
 
     public void Dispose() => _feature.Dispose();
