@@ -33,6 +33,24 @@ public static class ShortcutRules
 {
     private const HotKeyModifiers Held = HotKeyModifiers.Control | HotKeyModifiers.Alt | HotKeyModifiers.Windows;
 
+    // Shortcuts Windows lets a program register, which Windows or apps then lose, as the spike
+    // found: see "Windows' own shortcuts" in docs/features/input/shortcuts-and-mouse-buttons.md.
+    private static readonly (HotKeyModifiers Modifiers, string Key)[] UsedByWindowsList =
+    [
+        (HotKeyModifiers.Alt, "Space"),
+        (HotKeyModifiers.Alt, "Escape"),
+        (HotKeyModifiers.Control, "Space"),
+        (HotKeyModifiers.Alt, "PrintScreen"),
+        (HotKeyModifiers.Windows, "Slash"),
+        (HotKeyModifiers.Windows, "Minus"),
+        (HotKeyModifiers.Windows, "Escape"),
+        (HotKeyModifiers.Windows | HotKeyModifiers.Alt, "KeyH"),
+        (HotKeyModifiers.Windows | HotKeyModifiers.Alt, "Enter"),
+        (HotKeyModifiers.Windows, "KeyJ"),
+        (HotKeyModifiers.Windows, "KeyW"),
+        (HotKeyModifiers.Windows, "KeyY"),
+    ];
+
     /// <summary>Why the shortcut <paramref name="modifiers"/> + <paramref name="key"/> can't be used, or <see cref="ShortcutRuleProblem.None"/>.</summary>
     /// <param name="key">The key's name, such as <c>KeyH</c>; see <see cref="KeyCodes"/>.</param>
     public static ShortcutRuleProblem Check(HotKeyModifiers modifiers, string key)
@@ -51,6 +69,13 @@ public static class ShortcutRules
             || ((modifiers & (HotKeyModifiers.Control | HotKeyModifiers.Alt)) == (HotKeyModifiers.Control | HotKeyModifiers.Alt) && key == "Delete");
         return reserved ? ShortcutRuleProblem.Reserved : ShortcutRuleProblem.None;
     }
+
+    /// <summary>
+    /// Whether Windows or apps use the shortcut although Windows lets a program register it, such
+    /// as Alt + Space, so that the action takes its place.
+    /// </summary>
+    public static bool UsedByWindows(HotKeyModifiers modifiers, string key) =>
+        Array.Exists(UsedByWindowsList, used => used.Modifiers == modifiers && used.Key == key);
 
     /// <summary>
     /// The first character that the shortcut's key types with AltGr in one of

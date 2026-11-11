@@ -18,6 +18,9 @@ public sealed class HotKey : IDisposable
 {
     // IDs from 0xC000 are for shared DLLs.
     private const uint IdCount = 0xBFFF;
+
+    // The ID of a test registration, which Register never uses.
+    private const int TestId = 0;
     private static readonly Lock s_gate = new();
     private static readonly HashSet<HotKey> s_registered = [];
     private static int s_lastId;
@@ -71,6 +74,22 @@ public sealed class HotKey : IDisposable
         }
 
         return hotKey;
+    }
+
+    /// <summary>
+    /// Whether Windows would give this process the shortcut now, by a test registration for the
+    /// calling thread that's removed at once: false when Windows or another program has it, or
+    /// this process registered it already.
+    /// </summary>
+    public static bool IsFree(HotKeyModifiers modifiers, uint virtualKey)
+    {
+        if (!PInvoke.RegisterHotKey(HWND.Null, TestId, (HOT_KEY_MODIFIERS)modifiers | HOT_KEY_MODIFIERS.MOD_NOREPEAT, virtualKey))
+        {
+            return false;
+        }
+
+        PInvoke.UnregisterHotKey(HWND.Null, TestId);
+        return true;
     }
 
     /// <summary>

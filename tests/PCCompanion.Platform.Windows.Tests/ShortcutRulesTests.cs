@@ -84,6 +84,18 @@ public sealed class ShortcutRulesTests
         Assert.Null(ShortcutRules.AltGrConflict(modifiers, key, [English, German, Polish], Typed));
     }
 
+    [Theory]
+    [InlineData(HotKeyModifiers.Alt, "Space", true)]
+    [InlineData(HotKeyModifiers.Windows, "KeyJ", true)]
+    [InlineData(HotKeyModifiers.Windows | HotKeyModifiers.Alt, "Enter", true)]
+    [InlineData(ControlAlt, "Space", false)]
+    [InlineData(HotKeyModifiers.Windows | HotKeyModifiers.Shift, "KeyJ", false)]
+    [InlineData(ControlAlt, "KeyH", false)]
+    public void WindowsOrAppsUseSomeShortcutsTheyLetProgramsRegister(HotKeyModifiers modifiers, string key, bool used)
+    {
+        Assert.Equal(used, ShortcutRules.UsedByWindows(modifiers, key));
+    }
+
     [Fact]
     public void WithoutLayoutsThatTypeWithAltGrNothingConflicts()
     {
