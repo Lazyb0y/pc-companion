@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     private readonly ILogger _logger;
     private readonly ClipboardActionRunner _runner;
     private readonly MenuPlacer _placer;
-    private readonly ClipboardShortcutStatus? _status;
+    private readonly ShortcutRefusals? _refusals;
 
     // The thread's own, while its message loop runs.
     private MessageWindow? _window;
@@ -55,8 +56,8 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
     /// A thread that was asked to stop, which this one waits for before it registers the shortcuts,
     /// which Windows would refuse while the old thread has them.
     /// </param>
-    /// <param name="status">Where the thread notes which shortcuts Windows refused, for the settings app.</param>
-    public ClipboardActionsThread(ClipboardActionsSettings settings, IClipboardActionsSystem system, IHostCommands commands, ILogger logger, ClipboardActionsThread? previous = null, ClipboardShortcutStatus? status = null)
+    /// <param name="refusals">Where the thread notes which shortcuts Windows refused, for the settings app.</param>
+    public ClipboardActionsThread(ClipboardActionsSettings settings, IClipboardActionsSystem system, IHostCommands commands, ILogger logger, ClipboardActionsThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Clipboard Actions", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(system);
@@ -68,7 +69,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         _logger = logger;
         _runner = new ClipboardActionRunner(commands, system.FileExists, logger);
         _placer = new MenuPlacer(system);
-        _status = status;
+        _refusals = refusals;
         Start();
     }
 
@@ -86,10 +87,7 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
         _rules = ClipboardRules.Compile(settings, _logger);
         RegisterCopiedShortcut();
         UpdateSelectionShortcut(settings.SelectedText);
-        if (_status is not null)
-        {
-            _status.Refused = new ClipboardShortcutRefusals(_copiedShortcut is null, settings.SelectedText && _selectionShortcut is null);
-        }
+        _refusals?.Set(ClipboardActionsFeature.Definition.Id, RefusedShortcuts(settings.SelectedText));
 
         LogApplied(_logger, _rules.Count, settings.Rules.Count, settings.OpenLinks, settings.SelectedText);
     }
@@ -104,9 +102,27 @@ public sealed partial class ClipboardActionsThread : MessageLoopThread<Clipboard
 
     protected override void OnStarted() => LogStarted(_logger);
 
-    protected override void OnStopped() => LogStopped(_logger);
+    // Runs after the loop ends, also after a failure, and before a next thread registers the shortcuts.
+    protected override void OnStopped()
+    {
+        _refusals?.Set(ClipboardActionsFeature.Definition.Id, []);
+        LogStopped(_logger);
+    }
 
     protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
+
+    private IEnumerable<string> RefusedShortcuts(bool selectedText)
+    {
+        if (_copiedShortcut is null)
+        {
+            yield return ClipboardActionsFeature.CopiedTextShortcut;
+        }
+
+        if (selectedText && _selectionShortcut is null)
+        {
+            yield return ClipboardActionsFeature.SelectedTextShortcut;
+        }
+    }
 
     private void RegisterCopiedShortcut()
     {
