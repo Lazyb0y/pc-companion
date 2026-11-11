@@ -4852,4 +4852,104 @@
     <value>Bildschirmschoner starten</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsKeyWindows" xml:space="preserve">
+    <value>Windows-Logo-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyControl" xml:space="preserve">
+    <value>Strg</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyAlt" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyShift" xml:space="preserve">
+    <value>Umschalt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeySpace" xml:space="preserve">
+    <value>Leertaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnter" xml:space="preserve">
+    <value>Eingabetaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyBackspace" xml:space="preserve">
+    <value>Rücktaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyInsert" xml:space="preserve">
+    <value>Einfg</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyDelete" xml:space="preserve">
+    <value>Entf</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyHome" xml:space="preserve">
+    <value>Pos1</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnd" xml:space="preserve">
+    <value>Ende</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageUp" xml:space="preserve">
+    <value>Bild-auf</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageDown" xml:space="preserve">
+    <value>Bild-ab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowUp" xml:space="preserve">
+    <value>Nach-oben-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowDown" xml:space="preserve">
+    <value>Nach-unten-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowLeft" xml:space="preserve">
+    <value>Nach-links-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowRight" xml:space="preserve">
+    <value>Nach-rechts-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPrintScreen" xml:space="preserve">
+    <value>Druck</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyMenu" xml:space="preserve">
+    <value>Menütaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonBack" xml:space="preserve">
+    <value>Zurück-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonForward" xml:space="preserve">
+    <value>Vorwärts-Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonMiddle" xml:space="preserve">
+    <value>Mittlere Maustaste</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

@@ -4852,4 +4852,104 @@
     <value>Start the screen saver</value>
     <comment>An action that a shortcut or mouse button can run: starts the screen saver chosen in Windows settings.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsKeyWindows" xml:space="preserve">
+    <value>Windows logo key</value>
+    <comment>The Windows logo key, in a shortcut such as Windows logo key + Ctrl + H.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>The Ctrl key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyAlt" xml:space="preserve">
+    <value>Alt</value>
+    <comment>The Alt key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyShift" xml:space="preserve">
+    <value>Shift</value>
+    <comment>The Shift key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>The Esc key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>The Tab key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeySpace" xml:space="preserve">
+    <value>Spacebar</value>
+    <comment>The Spacebar, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnter" xml:space="preserve">
+    <value>Enter</value>
+    <comment>The Enter key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyBackspace" xml:space="preserve">
+    <value>Backspace</value>
+    <comment>The Backspace key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyInsert" xml:space="preserve">
+    <value>Insert</value>
+    <comment>The Insert key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>The Delete key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyHome" xml:space="preserve">
+    <value>Home</value>
+    <comment>The Home key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnd" xml:space="preserve">
+    <value>End</value>
+    <comment>The End key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageUp" xml:space="preserve">
+    <value>Page Up</value>
+    <comment>The Page Up key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageDown" xml:space="preserve">
+    <value>Page Down</value>
+    <comment>The Page Down key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowUp" xml:space="preserve">
+    <value>Up arrow</value>
+    <comment>The Up arrow key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowDown" xml:space="preserve">
+    <value>Down arrow</value>
+    <comment>The Down arrow key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowLeft" xml:space="preserve">
+    <value>Left arrow</value>
+    <comment>The Left arrow key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowRight" xml:space="preserve">
+    <value>Right arrow</value>
+    <comment>The Right arrow key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPrintScreen" xml:space="preserve">
+    <value>Print Screen</value>
+    <comment>The Print Screen key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>The Pause key, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyMenu" xml:space="preserve">
+    <value>Menu key</value>
+    <comment>The Menu key, between the right Windows logo key and Ctrl, in a shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonBack" xml:space="preserve">
+    <value>Back button</value>
+    <comment>A mouse's Back button, in a trigger such as Ctrl + Back button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonForward" xml:space="preserve">
+    <value>Forward button</value>
+    <comment>A mouse's Forward button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonMiddle" xml:space="preserve">
+    <value>Middle button</value>
+    <comment>A mouse's middle button, which is also its wheel.</comment>
+  </data>
 </root>

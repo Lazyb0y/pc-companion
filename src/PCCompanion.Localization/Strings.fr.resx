@@ -4852,4 +4852,104 @@
     <value>Démarrer l’écran de veille</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsKeyWindows" xml:space="preserve">
+    <value>Touche du logo Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyAlt" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyShift" xml:space="preserve">
+    <value>Maj</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEscape" xml:space="preserve">
+    <value>Échap</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeySpace" xml:space="preserve">
+    <value>Espace</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnter" xml:space="preserve">
+    <value>Entrée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyBackspace" xml:space="preserve">
+    <value>Retour arrière</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyInsert" xml:space="preserve">
+    <value>Inser</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyDelete" xml:space="preserve">
+    <value>Suppr</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyHome" xml:space="preserve">
+    <value>Origine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyEnd" xml:space="preserve">
+    <value>Fin</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageUp" xml:space="preserve">
+    <value>Page préc.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPageDown" xml:space="preserve">
+    <value>Page suiv.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowUp" xml:space="preserve">
+    <value>Flèche haut</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowDown" xml:space="preserve">
+    <value>Flèche bas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowLeft" xml:space="preserve">
+    <value>Flèche gauche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyArrowRight" xml:space="preserve">
+    <value>Flèche droite</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPrintScreen" xml:space="preserve">
+    <value>Impr. écran</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsKeyMenu" xml:space="preserve">
+    <value>Touche Menu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonBack" xml:space="preserve">
+    <value>Bouton Précédent</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonForward" xml:space="preserve">
+    <value>Bouton Suivant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsButtonMiddle" xml:space="preserve">
+    <value>Bouton central</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
