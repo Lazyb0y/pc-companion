@@ -92,7 +92,8 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
         _foreground = foreground;
 
         // The timer fires on the thread pool; the keeper runs on the window's thread.
-        _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)), logger, "App Windows");
+        _shortcut = new ShortcutKeeper(new WindowsShortcutEnvironment(window), time, action => window.BeginInvoke(() => Guard(action)));
+        ShortcutKeeperLog.Attach(_shortcut, logger, "App Windows");
         _shortcut.Pressed += (_, shortcut) => Guard(() =>
             Switch(shortcut.Modifiers.HasFlag(HotKeyModifiers.Shift) ? SwitchDirection.Back : SwitchDirection.Forward));
         _shortcut.RefusedShortcutsChanged += (_, _) => Guard(ReportRefused);

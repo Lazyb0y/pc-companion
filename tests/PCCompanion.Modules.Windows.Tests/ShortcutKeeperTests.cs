@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
 using Xunit;
@@ -20,12 +19,11 @@ public sealed class ShortcutKeeperTests : IDisposable
 
     private readonly FakeShortcutEnvironment _environment = new();
     private readonly ManualTimeProvider _clock = new();
-    private readonly RecordingLogger<ShortcutKeeper> _logger = new();
     private readonly ShortcutKeeper _keeper;
 
     public ShortcutKeeperTests()
     {
-        _keeper = new ShortcutKeeper(_environment, _clock, action => action(), _logger, "App Windows");
+        _keeper = new ShortcutKeeper(_environment, _clock, action => action());
     }
 
     public void Dispose() => _keeper.Dispose();
@@ -114,27 +112,29 @@ public sealed class ShortcutKeeperTests : IDisposable
     }
 
     [Fact]
-    public void ARefusedShortcutIsLoggedAndNotTriedAgainForTheSameKey()
+    public void ARefusedShortcutIsReportedAndNotTriedAgainForTheSameKey()
     {
+        var refused = new List<RegisteredKey>();
+        _keeper.Refused += (_, key) => refused.Add(key);
         _environment.Taken.Add((Alt, 0xC0));
         _keeper.Configure([AltAboveTab]);
 
         _keeper.Check();
         _keeper.Check();
 
-        var warning = Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
-        Assert.Contains("App Windows", warning.Message, StringComparison.Ordinal);
+        Assert.Equal([new RegisteredKey(AltAboveTab, 0xC0)], refused);
         Assert.Equal(0, _environment.Registrations);
     }
 
     [Fact]
-    public void ARefusedShortcutIsTheOneLoggedAndTheOthersStillWork()
+    public void ARefusedShortcutIsTheOneReportedAndTheOthersStillWork()
     {
+        var refused = new List<RegisteredKey>();
+        _keeper.Refused += (_, key) => refused.Add(key);
         _environment.Taken.Add((AltShift, 0xC0));
         _keeper.Configure([AltAboveTab, AltShiftAboveTab]);
 
-        var warning = Assert.Single(_logger.Entries, entry => entry.Level == LogLevel.Warning);
-        Assert.Contains("Alt, Shift", warning.Message, StringComparison.Ordinal);
+        Assert.Equal([new RegisteredKey(AltShiftAboveTab, 0xC0)], refused);
         Assert.Equal([(Alt, 0xC0u)], Registered());
     }
 
@@ -142,7 +142,7 @@ public sealed class ShortcutKeeperTests : IDisposable
     public void ARefusedShortcutIsReportedOnceForItsKey()
     {
         var refused = new List<KeyPositionShortcut>();
-        _keeper.Refused += (_, shortcut) => refused.Add(shortcut);
+        _keeper.Refused += (_, key) => refused.Add(key.Shortcut);
         _environment.Taken.Add((Alt, 0xC0));
 
         _keeper.Configure([AltAboveTab, AltShiftAboveTab]);
@@ -309,14 +309,28 @@ public sealed class ShortcutKeeperTests : IDisposable
     }
 
     [Fact]
-    public void TheLogNamesNoLayout()
+    public void EachRegistrationIsReportedWithItsVirtualKey()
     {
+        var registered = new List<RegisteredKey>();
+        _keeper.Registered += (_, key) => registered.Add(key);
         _environment.Layouts.Add(German);
         _keeper.Configure([AltAboveTab]);
         _environment.Foreground = German;
         _keeper.Check();
 
-        Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("407", StringComparison.Ordinal));
+        Assert.Equal([new RegisteredKey(AltAboveTab, 0xC0), new RegisteredKey(AltAboveTab, 0xDC)], registered);
+    }
+
+    [Fact]
+    public void AKeyTheLayoutInFrontDoesntHaveIsReported()
+    {
+        var noKey = new List<KeyPositionShortcut>();
+        _keeper.NoKey += (_, shortcut) => noKey.Add(shortcut);
+        var unknown = new KeyPositionShortcut(Alt, 0x7F);
+
+        _keeper.Configure([unknown]);
+
+        Assert.Equal([unknown], noKey);
     }
 
     private List<(HotKeyModifiers Modifiers, uint Key)> Registered() =>
