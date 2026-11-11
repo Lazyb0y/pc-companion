@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// Reads keyboard layouts from Windows and registers shortcuts for <paramref name="window"/>.
 /// </summary>
-internal sealed class WindowsShortcutEnvironment(MessageWindow window) : IShortcutEnvironment
+public sealed class WindowsShortcutEnvironment(MessageWindow window) : IShortcutEnvironment
 {
     public nint? ForegroundLayout() => KeyboardLayout.OfForegroundWindow();
 

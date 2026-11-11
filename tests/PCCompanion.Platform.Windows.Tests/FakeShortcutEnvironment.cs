@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows.Tests;
+namespace PCCompanion.Platform.Windows.Tests;
 
 /// <summary>
 /// Made-up keyboard layouts and a shortcut register that refuses the shortcuts in <see cref="Taken"/>.

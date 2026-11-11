@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Windows;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// A shortcut whose key is found by its position on the keyboard, the same on every layout.
