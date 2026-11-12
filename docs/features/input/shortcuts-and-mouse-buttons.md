@@ -190,7 +190,7 @@ public interface IHostActions
 
 ## With the other features
 
-- **Each feature keeps its own shortcut setting,** with its fixed choices. This page lists them, read only, in **Shortcuts on other pages**, each with a link to its page, so every shortcut of PC Companion can be seen in one place.
+- **Each feature keeps its own shortcut setting,** with its fixed choices. This page lists them, read only, in **Shortcuts on other pages**, each with a button that opens its page, so every shortcut of PC Companion can be seen in one place.
 - **Clipboard Actions** gets None for both its shortcuts, so its menus can have other shortcuts here ([#259](https://github.com/Lazyb0y/pc-companion/issues/259), the shortcut part; a shortcut for each rule stays there).
 - **Display Profiles and Network Profiles** get a shortcut for each profile through this feature ([#237](https://github.com/Lazyb0y/pc-companion/issues/237), [#209](https://github.com/Lazyb0y/pc-companion/issues/209), the shortcut parts; the command lines stay there).
 - **Drop-down Apps'** apps can have any shortcut here, besides the choices on its page.
@@ -240,7 +240,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
   - a shortcut Windows or another program has arrived as a key release with no press, such as Windows + E, Ctrl + Shift + Esc and the Copilot key;
   - Alt + Space opened the window menu, Alt + Esc and Ctrl + Alt + Esc switched windows, and Alt + F4 closed the window, even when handled: Windows acts on them in the window itself;
   - AltGr arrived as Right Alt with a Left Ctrl that Windows adds, which tells it from Ctrl + Alt.
-- **Not checked yet:** a real mouse and its maker's software; the unassigned key and the front on a real PC; UAC on; Sticky Keys; the editor's handling of Alt + Space, Alt + Esc, Ctrl + Alt + Esc and Alt + F4; several displays; Narrator; full-screen games; Windows 10.
+- **Not checked yet:** a real mouse and its maker's software; the unassigned key and the front on a real PC; UAC on; Sticky Keys; the editor with Alt + Space, Alt + Esc and Ctrl + Alt + Esc; several displays; Narrator; full-screen games; Windows 10.
 
 ## Settings
 
@@ -258,17 +258,17 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
 ### The editor
 
 - **A dialog** with **Action**, **Trigger** and **Not in these apps**, and **Save**, available only when the trigger has no problem.
-- **Action:** a list of every action of the features supported on this PC, by feature, such as "Hide Apps: Hide others" and "Display Profiles: Use Office". An action whose feature is off shows a note with a link to its page.
+- **Action:** a list of every action of the features supported on this PC, by feature, such as "Hide Apps: Hide others" and "Display Profiles: Use Office". An action whose feature is off shows a note that it does nothing until the feature is turned on on its page; the page's row for it has a button to that page.
 - **Trigger: Shortcut or Mouse button.**
 - **Shortcut:** a box that says "Press the keys" and listens while it has the focus:
   - it shows the keys as they're held, and keeps the shortcut once a key that isn't a modifier is pressed;
   - keys that can't start a shortcut, such as Tab, Esc and Enter without Ctrl, Alt or the Windows key, keep their usual meaning, so keyboard users can leave the box and the dialog; pressed with Ctrl, Alt or the Windows key, they're recorded;
   - a key release with no press means Windows or another program has the shortcut;
-  - Alt + Space, Alt + Esc, Ctrl + Alt + Esc and Alt + F4 are kept from Windows' handling in the window while the box listens (`WM_SYSCOMMAND`), to be confirmed when it's built;
+  - Alt + F4 is recorded and doesn't close the window: while the box listens, the window turns down a close request while F4 is held. Alt + Space, Alt + Esc and Ctrl + Alt + Esc are recorded, and Windows then still opens the window menu or switches windows: keeping them from Windows' handling (`WM_SYSCOMMAND`) needs a window subclass, which needs Common Controls 6, which the settings app doesn't load;
   - **Choose keys** shows check boxes for Ctrl, Alt, Shift and the Windows key and a list of keys, for keys that can't be pressed, such as F13 to F24 on most keyboards, or when pressing several keys at once is hard.
 - **The checks,** as the shortcut is recorded or chosen, with the reason below the box:
   - the rules in [Which shortcuts](#which-shortcuts), such as "Add Ctrl, Alt or the Windows key.";
-  - another feature's shortcut: "Hide Apps uses this shortcut.", with a link to that page; another trigger here: "Lock already has this shortcut.";
+  - another feature's shortcut: "Hide Apps uses this shortcut. Choose another, or change it on the Hide Apps page."; another trigger here: "Lock already has this shortcut.";
   - AltGr: "In Polish (Programmers), Ctrl + Alt + A types ą.";
   - a test registration on the settings app's own window, removed at once, and the key release with no press: "Windows or another program uses this shortcut.";
   - the short list in [Windows' own shortcuts](#windows-own-shortcuts): a warning, "Windows or apps use this shortcut. This action takes its place.", which allows **Save**.
