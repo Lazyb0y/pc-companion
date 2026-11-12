@@ -34,7 +34,7 @@
                                         <DataTemplate x:DataType="viewModels:FeatureCardViewModel">
                                             <controls:SwitchCard
                                                 Margin="0,0,0,4"
-                                                Click="OnFeatureCardClick"
+                                                Command="{x:Bind OpenCommand}"
                                                 Description="{x:Bind Description}"
                                                 DrawnIcon="{x:Bind DrawnIcon}"
                                                 Glyph="{x:Bind Glyph}"
