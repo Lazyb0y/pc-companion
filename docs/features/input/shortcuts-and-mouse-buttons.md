@@ -251,7 +251,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
   - **Shortcuts on other pages**, read only;
   - notes: Back and Forward alone stop working in apps unless they're listed; apps running as administrator;
   - a **Permissions & data** card.
-- **The icon** is drawn as [Icons](../../design/icons.md) says: a keycap with a mouse beside it, in colors reviewed before it's drawn.
+- **The icon** is drawn as [Icons](../../design/icons.md) says: a green keycap with a violet mouse at its bottom right, lit from the left, with an orange wheel.
 - **When the feature is first turned on,** the list is empty and the full-screen pause is on.
 - **The switch on Home** changes only `enabled` and keeps the triggers.
 

@@ -94,7 +94,7 @@ public static class FeatureCatalog
             new(HotCornersFeature.Definition, HotCornersFeature.CurrentSupport, typeof(HotCornersPage), DrawnIcon: "hot-corners"),
             new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage), DrawnIcon: "lock-keys"),
             new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage), DrawnIcon: "input-language-per-app"),
-            new(ShortcutsAndMouseButtonsFeature.Definition, ShortcutsAndMouseButtonsFeature.CurrentSupport, typeof(ShortcutsAndMouseButtonsPage), Actions: _ => ShortcutsAndMouseButtonsFeature.OfferedActions()),
+            new(ShortcutsAndMouseButtonsFeature.Definition, ShortcutsAndMouseButtonsFeature.CurrentSupport, typeof(ShortcutsAndMouseButtonsPage), DrawnIcon: "shortcuts-and-mouse-buttons", Actions: _ => ShortcutsAndMouseButtonsFeature.OfferedActions()),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [

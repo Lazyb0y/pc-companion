@@ -484,6 +484,40 @@ foreach ($icon in $inputLanguagePerApp) {
     Write-Drawing "input-language-per-app-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
+# Shortcuts & Mouse Buttons, in green: a keycap at the top left, its sides in the deepest tone and
+# its face in the main one, and a violet mouse lit from the left at its bottom right, with an orange
+# wheel, as Middle-Click Paste's is. The one-color version cuts Cut wide round the face and round
+# the mouse, and under the mouse's buttons, between them and round the wheel.
+$shortcutsAndMouseButtons = @(
+    @{ Size = 32; Cap = 1, 1, 21, 21, 2.5; Face = 3, 2, 17, 15, 1.5; Mouse = 17, 12, 14, 19, 7; Buttons = 20; Wheel = 22.75, 15, 2.5, 5.5, 1.25; Cut = 1.2 }
+    @{ Size = 20; Cap = 2, 2, 13, 13, 1.5; Face = 3, 3, 11, 9, 1; Mouse = 10, 8, 8, 10, 4; Buttons = 13; Wheel = 13, 9.5, 2, 3, 1; Cut = 1 }
+)
+foreach ($icon in $shortcutsAndMouseButtons) {
+    $x, $y, $w, $h, $r = $icon.Mouse
+    $middle = $x + $w / 2
+    $line = $icon.Buttons
+    $planes = @(
+        @(@($x, $y, ($middle - $x), ($line - $y), 0), 'light'), @(@($middle, $y, ($x + $w - $middle), ($line - $y), 0), 'deep'),
+        @(@($x, $line, ($middle - $x), ($y + $h - $line), 0), 'main'), @(@($middle, $line, ($x + $w - $middle), ($y + $h - $line), 0), 'deepest'))
+    $defs = @(Get-Gradient 'green-deepest') + @(Get-Gradient 'green-main') + @(@('light', 'deep', 'main', 'deepest') | ForEach-Object { Get-Gradient "violet-$_" }) +
+        @(Get-Gradient 'orange') + @('<clipPath id="mouse">', "$indent$(Get-Rect $icon.Mouse)", '</clipPath>')
+    $body = @((Get-Rect $icon.Cap ' fill="url(#green-deepest)"'), (Get-Rect $icon.Face ' fill="url(#green-main)"')) +
+        @(Get-Group 'clip-path="url(#mouse)"' @($planes | ForEach-Object { "<path fill=`"url(#violet-$($_[1]))`" d=`"$(Get-RectPath $_[0])`"/>" })) +
+        @(Get-Rect $icon.Wheel ' fill="url(#orange)"')
+    Write-Drawing "shortcuts-and-mouse-buttons-$($icon.Size)" $icon.Size $defs $body
+    $face = Get-RectPath $icon.Face
+    $mouse = Get-RectPath $icon.Mouse
+    $wheel = Get-RectPath $icon.Wheel
+    $key = Join-Shape (Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Cap)) (Get-GrownShape $face (2 * $icon.Cut))) (ConvertTo-Shape $face)
+    $key = Remove-Shape $key (Get-GrownShape $mouse (2 * $icon.Cut))
+    $device = ConvertTo-Shape $mouse
+    foreach ($cut in (Get-StrokeArea "M$(F ($x - 2)) $(F $line)H$(F ($x + $w + 2))" $icon.Cut), (Get-StrokeArea "M$(F $middle) $(F ($y - 2))V$(F $line)" $icon.Cut),
+        (Get-GrownShape $wheel (2 * $icon.Cut))) {
+        $device = Remove-Shape $device $cut
+    }
+    Write-Drawing "shortcuts-and-mouse-buttons-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $key (Join-Shape $device (ConvertTo-Shape $wheel))))
+}
+
 # App Windows, in sky: three of an app's windows stacked, Windows' boxes from the back to the
 # front, in the deepest, deep and light tones, the front one with a title bar TitleBar high in the
 # main tone. The one-color version keeps them apart with cuts Cut wide.

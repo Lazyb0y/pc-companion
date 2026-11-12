@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <linearGradient id="green-deepest" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1A7F7C"/>
+            <stop offset="1" stop-color="#0E5C5A"/>
+        </linearGradient>
+        <linearGradient id="green-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#52D17C"/>
+            <stop offset="1" stop-color="#22918B"/>
+        </linearGradient>
+        <linearGradient id="violet-light" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#BD96FF"/>
+            <stop offset="1" stop-color="#9C6CFE"/>
+        </linearGradient>
+        <linearGradient id="violet-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#885EDB"/>
+            <stop offset="1" stop-color="#5B2AB5"/>
+        </linearGradient>
+        <linearGradient id="violet-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9C6CFE"/>
+            <stop offset="1" stop-color="#7A41DC"/>
+        </linearGradient>
+        <linearGradient id="violet-deepest" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6D37CD"/>
+            <stop offset="1" stop-color="#3B148A"/>
+        </linearGradient>
+        <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFD25E"/>
+            <stop offset="1" stop-color="#FF8A3C"/>
+        </linearGradient>
+        <clipPath id="mouse">
+            <rect x="17" y="12" width="14" height="19" rx="7"/>
+        </clipPath>
+    </defs>
+    <rect x="1" y="1" width="21" height="21" rx="2.5" fill="url(#green-deepest)"/>
+    <rect x="3" y="2" width="17" height="15" rx="1.5" fill="url(#green-main)"/>
+    <g clip-path="url(#mouse)">
+        <path fill="url(#violet-light)" d="M17 12H24V20H17Z"/>
+        <path fill="url(#violet-deep)" d="M24 12H31V20H24Z"/>
+        <path fill="url(#violet-main)" d="M17 20H24V31H17Z"/>
+        <path fill="url(#violet-deepest)" d="M24 20H31V31H24Z"/>
+    </g>
+    <rect x="22.75" y="15" width="2.5" height="5.5" rx="1.25" fill="url(#orange)"/>
+</svg>
