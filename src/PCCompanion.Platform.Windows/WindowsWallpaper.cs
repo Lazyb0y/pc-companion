@@ -107,6 +107,9 @@ public sealed class WindowsWallpaper : IWindowsWallpaper
     private const int ServerDiedDidNotExecute = unchecked((int)0x80010012); // RPC_E_SERVER_DIED_DNE
     private const int ClassNotRegistered = unchecked((int)0x80040154); // REGDB_E_CLASSNOTREG
     private const int ServerFailedToStart = unchecked((int)0x80080005); // CO_E_SERVER_EXEC_FAILURE
+    private const int NotAttached = 1; // S_FALSE
+    private const int UnspecifiedFailure = unchecked((int)0x80004005); // E_FAIL
+    private const int InvalidArgument = unchecked((int)0x80070057); // E_INVALIDARG
 
     private readonly IDesktopWallpaper _wallpaper;
     private bool _disposed;
@@ -171,6 +174,13 @@ public sealed class WindowsWallpaper : IWindowsWallpaper
     public static bool IsExplorerGone(int hresult) =>
         hresult is ServerUnavailable or CallFailed or Disconnected or ServerDied or ServerDiedDidNotExecute or ClassNotRegistered or ServerFailedToStart;
 
+    /// <summary>
+    /// Whether the answer to a display's area means the display isn't connected. Windows documents
+    /// <c>S_FALSE</c> for that, but some of its builds answer <c>E_FAIL</c>, and <c>E_INVALIDARG</c>
+    /// means the display went between listing it and asking.
+    /// </summary>
+    public static bool IsNotConnected(int hresult) => hresult is NotAttached or UnspecifiedFailure or InvalidArgument;
+
     /// <summary>The displays Windows lists, also the disconnected ones it keeps a picture for.</summary>
     public unsafe IReadOnlyList<WallpaperMonitor> Displays()
     {
@@ -185,7 +195,11 @@ public sealed class WindowsWallpaper : IWindowsWallpaper
             fixed (char* idText = path)
             {
                 var result = _wallpaper.GetMonitorRECT(idText, &area);
-                Check(result);
+                if (!IsNotConnected(result.Value))
+                {
+                    Check(result);
+                }
+
                 displays.Add(new WallpaperMonitor(path, result.Value == Ok ? Rectangle.FromLTRB(area.left, area.top, area.right, area.bottom) : null));
             }
         }
