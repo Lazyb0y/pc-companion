@@ -18,10 +18,14 @@ public sealed record ActionChoice(CatalogAction Action) : Choice(Action.FullName
 /// <summary>A key in Choose keys' list, by its name as the user's layout writes it.</summary>
 public sealed record KeyChoice(string Key, string DisplayName) : Choice(DisplayName);
 
+/// <summary>A mouse button in the editor's list, such as "Back button".</summary>
+public sealed record ButtonChoice(TriggerButton Button, string DisplayName) : Choice(DisplayName);
+
 /// <summary>
-/// The editor of a shortcut: its action, its keys, recorded or chosen with check boxes, what's wrong
-/// with them, and the apps it skips. Save is available when it has an action and keys that can be
-/// used. See "The editor" in docs/features/input/shortcuts-and-mouse-buttons.md.
+/// The editor of a shortcut or mouse button: its action; its keys, recorded or chosen with check
+/// boxes, or its button and the keys held with it; what's wrong with them; and the apps it skips.
+/// Save is available when it has an action and keys or a button that can be used. See "The editor"
+/// in docs/features/input/shortcuts-and-mouse-buttons.md.
 /// </summary>
 public sealed partial class TriggerEditor : ObservableObject
 {
@@ -31,6 +35,7 @@ public sealed partial class TriggerEditor : ObservableObject
     private static readonly CompositeFormat SameAsTriggerFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsEditorSameAsTrigger);
     private static readonly CompositeFormat AltGrFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsEditorAltGr);
     private static readonly CompositeFormat AltGrOtherLayoutFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsEditorAltGrOtherLayout);
+    private static readonly CompositeFormat SameButtonFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsEditorSameButton);
 
     // Named keys in Choose keys' list, in this order after the letters, digits and function keys.
     private static readonly string[] NamedKeys =
@@ -51,6 +56,12 @@ public sealed partial class TriggerEditor : ObservableObject
     private bool _shift;
     private bool _windows;
     private KeyChoice? _selectedKey;
+    private bool _isMouseButton;
+    private ButtonChoice? _selectedButton;
+    private bool _buttonControl;
+    private bool _buttonAlt;
+    private bool _buttonShift;
+    private bool _buttonWindows;
 
     /// <param name="trigger">The trigger to edit, or <see langword="null"/> for a new one.</param>
     /// <param name="index">The trigger's place in <paramref name="triggers"/>, or <see langword="null"/> for a new one.</param>
@@ -83,12 +94,123 @@ public sealed partial class TriggerEditor : ObservableObject
         _excluded = [.. trigger?.ExcludedApps ?? []];
         ExcludedApps = new AppListViewModel(() => _excluded, AddExcluded, RemoveExcluded);
 
+        Buttons = [.. Enum.GetValues<TriggerButton>().Select(button => new ButtonChoice(button, TriggerText.ButtonName(button)))];
+
         Recorder.Changed += (_, _) => OnRecorderChanged();
         if (trigger?.Shortcut is { } shortcut && TriggerModifiers.ModifiersOf(shortcut.Modifiers) is { } modifiers)
         {
             Recorder.Set(new RecordedShortcut(modifiers, KeyCodes.ScanCodeOf(shortcut.Key) is null ? null : shortcut.Key, Taken: false));
         }
+        else if (trigger?.MouseButton is { } mouseButton && TriggerModifiers.ModifiersOf(mouseButton.Modifiers) is { } held)
+        {
+            _isMouseButton = true;
+            _selectedButton = Buttons.FirstOrDefault(choice => choice.Button == mouseButton.Button);
+            _buttonControl = held.HasFlag(HotKeyModifiers.Control);
+            _buttonAlt = held.HasFlag(HotKeyModifiers.Alt);
+            _buttonShift = held.HasFlag(HotKeyModifiers.Shift);
+            _buttonWindows = held.HasFlag(HotKeyModifiers.Windows) || mouseButton.Button == TriggerButton.Middle;
+        }
     }
+
+    /// <summary>Whether the trigger is a mouse button rather than a shortcut.</summary>
+    public bool IsMouseButton
+    {
+        get => _isMouseButton;
+        set
+        {
+            if (SetProperty(ref _isMouseButton, value))
+            {
+                OnPropertyChanged(nameof(IsShortcut));
+                OnPropertyChanged(nameof(TriggerKindIndex));
+                OnInputChanged();
+            }
+        }
+    }
+
+    public bool IsShortcut => !IsMouseButton;
+
+    /// <summary>The names of the trigger's kinds, in <see cref="TriggerKindIndex"/>'s order.</summary>
+    public IReadOnlyList<string> Kinds { get; } = [Strings.ShortcutsAndMouseButtonsEditorShortcutHeader, Strings.ShortcutsAndMouseButtonsEditorKindMouseButton];
+
+    /// <summary>The trigger's kind for the editor's choice: 0 for a shortcut, 1 for a mouse button.</summary>
+    public int TriggerKindIndex
+    {
+        get => IsMouseButton ? 1 : 0;
+        set => IsMouseButton = value == 1;
+    }
+
+    /// <summary>Back, Forward and the middle button.</summary>
+    public IReadOnlyList<ButtonChoice> Buttons { get; }
+
+    public ButtonChoice? SelectedButton
+    {
+        get => _selectedButton;
+        set
+        {
+            if (SetProperty(ref _selectedButton, value))
+            {
+                // The middle button belongs to the apps without the Windows logo key.
+                if (value?.Button == TriggerButton.Middle)
+                {
+                    ButtonWindows = true;
+                }
+
+                OnPropertyChanged(nameof(CanUncheckButtonWindows));
+                OnInputChanged();
+            }
+        }
+    }
+
+    public bool ButtonControl
+    {
+        get => _buttonControl;
+        set => ChooseButtonKey(ref _buttonControl, value);
+    }
+
+    public bool ButtonAlt
+    {
+        get => _buttonAlt;
+        set => ChooseButtonKey(ref _buttonAlt, value);
+    }
+
+    public bool ButtonShift
+    {
+        get => _buttonShift;
+        set => ChooseButtonKey(ref _buttonShift, value);
+    }
+
+    public bool ButtonWindows
+    {
+        get => _buttonWindows;
+        set => ChooseButtonKey(ref _buttonWindows, value || SelectedButton?.Button == TriggerButton.Middle);
+    }
+
+    /// <summary>Whether the Windows logo key can be left out: not for the middle button.</summary>
+    public bool CanUncheckButtonWindows => SelectedButton?.Button != TriggerButton.Middle;
+
+    /// <summary>Why the mouse button can't be saved, or an empty string.</summary>
+    public string ButtonProblem =>
+        ButtonInput is { } input && _triggers.FirstOrDefault(known => known.Input == input) is { } other
+            ? string.Format(CultureInfo.CurrentCulture, SameButtonFormat, other.Name)
+            : string.Empty;
+
+    public bool HasButtonProblem => ButtonProblem.Length > 0;
+
+    /// <summary>Whether Back or Forward is chosen without keys, which apps such as browsers then lose.</summary>
+    public bool IsBackOrForwardAlone => SelectedButton?.Button is TriggerButton.Back or TriggerButton.Forward && ButtonModifiers == HotKeyModifiers.None;
+
+    /// <summary>What the apps in Not in these apps get: the keys, or the click.</summary>
+    public string ExcludedDescription => IsMouseButton
+        ? Strings.ShortcutsAndMouseButtonsEditorExcludedMouseDescription
+        : Strings.ShortcutsAndMouseButtonsEditorExcludedDescription;
+
+    private HotKeyModifiers ButtonModifiers =>
+        (ButtonControl ? HotKeyModifiers.Control : HotKeyModifiers.None)
+        | (ButtonAlt ? HotKeyModifiers.Alt : HotKeyModifiers.None)
+        | (ButtonShift ? HotKeyModifiers.Shift : HotKeyModifiers.None)
+        | (ButtonWindows ? HotKeyModifiers.Windows : HotKeyModifiers.None);
+
+    private TriggerInput? ButtonInput => SelectedButton is { } choice ? new TriggerInput(ButtonModifiers, null, choice.Button) : null;
 
     public bool IsNew { get; }
 
@@ -159,7 +281,10 @@ public sealed partial class TriggerEditor : ObservableObject
 
     public bool HasWarning => Warning.Length > 0;
 
-    public bool CanSave => SelectedAction is not null && Recorder.Recorded is { Key: not null } && _check is { CanSave: true };
+    public bool CanSave => SelectedAction is not null
+        && (IsMouseButton
+            ? SelectedButton is not null && !HasButtonProblem
+            : Recorder.Recorded is { Key: not null } && _check is { CanSave: true });
 
     public bool ChooseControl
     {
@@ -206,17 +331,38 @@ public sealed partial class TriggerEditor : ObservableObject
     /// <summary>The trigger as edited. Call it only when <see cref="CanSave"/>.</summary>
     public Trigger ToTrigger()
     {
-        if (SelectedAction is not { } action || Recorder.Recorded is not { Key: { } key } recorded)
+        if (SelectedAction is not { } action)
         {
-            throw new InvalidOperationException("The trigger has no action or no shortcut.");
+            throw new InvalidOperationException("The trigger has no action.");
         }
 
-        return new Trigger
+        if (IsMouseButton)
         {
-            Action = TriggerAction.For(action.Action.Action),
-            Shortcut = TriggerShortcut.For(recorded.Modifiers, key),
-            ExcludedApps = [.. _excluded],
-        };
+            return SelectedButton is { } choice
+                ? new Trigger { Action = TriggerAction.For(action.Action.Action), MouseButton = TriggerMouseButton.For(choice.Button, ButtonModifiers), ExcludedApps = [.. _excluded] }
+                : throw new InvalidOperationException("The trigger has no button.");
+        }
+
+        return Recorder.Recorded is { Key: { } key } recorded
+            ? new Trigger { Action = TriggerAction.For(action.Action.Action), Shortcut = TriggerShortcut.For(recorded.Modifiers, key), ExcludedApps = [.. _excluded] }
+            : throw new InvalidOperationException("The trigger has no shortcut.");
+    }
+
+    private void ChooseButtonKey(ref bool field, bool value, [System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+    {
+        if (SetProperty(ref field, value, propertyName))
+        {
+            OnInputChanged();
+        }
+    }
+
+    private void OnInputChanged()
+    {
+        OnPropertyChanged(nameof(ButtonProblem));
+        OnPropertyChanged(nameof(HasButtonProblem));
+        OnPropertyChanged(nameof(IsBackOrForwardAlone));
+        OnPropertyChanged(nameof(ExcludedDescription));
+        OnPropertyChanged(nameof(CanSave));
     }
 
     private void OnRecorderChanged()

@@ -5228,4 +5228,28 @@
     <value>Tant qu’une de ces applications est au premier plan, elle reçoit elle-même les touches.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsEditorTriggerHeader" xml:space="preserve">
+    <value>Déclencheur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKindMouseButton" xml:space="preserve">
+    <value>Bouton de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonHeader" xml:space="preserve">
+    <value>Bouton</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonPlaceholder" xml:space="preserve">
+    <value>Choisissez un bouton</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameButton" xml:space="preserve">
+    <value>{0} a déjà ce bouton.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedMouseDescription" xml:space="preserve">
+    <value>Quand le pointeur est sur une de ces applications, elle reçoit elle-même le clic.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

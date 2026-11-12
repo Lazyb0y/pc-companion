@@ -5420,4 +5420,28 @@
     <value>عندما يكون أحد هذه التطبيقات في المقدمة، فإنه يتلقى المفاتيح بنفسه.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsEditorTriggerHeader" xml:space="preserve">
+    <value>المشغّل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKindMouseButton" xml:space="preserve">
+    <value>زر الماوس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonHeader" xml:space="preserve">
+    <value>الزر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonPlaceholder" xml:space="preserve">
+    <value>اختر زراً</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameButton" xml:space="preserve">
+    <value>يحتوي {0} على هذا الزر بالفعل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedMouseDescription" xml:space="preserve">
+    <value>عندما يكون المؤشر فوق أحد هذه التطبيقات، فإنه يتلقى النقرة بنفسه.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

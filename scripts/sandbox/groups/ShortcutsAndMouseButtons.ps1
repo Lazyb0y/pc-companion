@@ -275,6 +275,36 @@ Test-Check 'Alt + F4 in the box is recorded, and the window stays' (((Get-AppBox
 if ([Win32]::GetForegroundWindow() -eq $appWindow) { Send-Key 0x1B }
 Test-Check 'Esc closes the editor' (Wait-Until { -not (Find-AppBox 'Shortcut') } 5)
 Test-Check 'nothing is added' (@((Get-ShortcutSettings).triggers).Count -eq 6)
+
+# A mouse button: Ctrl + Back is another row's, Back alone warns about the apps, the middle button
+# keeps the Windows logo key, and Alt + Forward is saved and shown, and comes back in Edit.
+Test-Check 'Add opens the editor again' ((Invoke-AppElement 'Add a shortcut or mouse button') -and (Wait-Until { Find-AppText 'Add a shortcut or mouse button' } 5))
+Start-Sleep -Seconds 1
+[void] (Select-ListItem 'Action' 'Hide Apps: Hide others')
+Test-Check 'choose Mouse button' (Invoke-AppElement 'Mouse button')
+Start-Sleep -Seconds 1
+Test-Check 'choose the Back button' (Select-ListItem 'Button' 'Back button')
+Start-Sleep -Milliseconds 500
+Test-Check 'Back alone says what the apps lose' ((Find-AppText 'Back and Forward used without keys stop going back and forward in apps, such as browsers, unless you add those apps to Not in these apps.') -and (Test-AppEnabled 'Save'))
+[void] (Set-Toggle 'Ctrl' $true)
+Start-Sleep -Milliseconds 500
+Test-Check 'Ctrl + Back is another row''s' ((Find-AppText 'Show all hidden windows already has this button.') -and -not (Test-AppEnabled 'Save'))
+[void] (Set-Toggle 'Ctrl' $false)
+Test-Check 'choose the middle button' (Select-ListItem 'Button' 'Middle button')
+Start-Sleep -Milliseconds 500
+Test-Check 'the middle button keeps the Windows logo key' ((Test-Toggled 'Windows logo key') -and -not (Test-AppEnabled 'Windows logo key'))
+[void] (Select-ListItem 'Button' 'Forward button')
+[void] (Set-Toggle 'Windows logo key' $false)
+[void] (Set-Toggle 'Alt' $true)
+Start-Sleep -Milliseconds 500
+Save-Screenshot '20g-shortcuts-and-mouse-buttons-editor-mouse'
+[void] (Invoke-AppElement 'Save')
+Start-Sleep -Seconds 2
+$added = @((Get-ShortcutSettings).triggers)[-1]
+Test-Check 'Save adds Alt + Forward' (($added.mouseButton.button -eq 'Forward') -and (($added.mouseButton.modifiers -join ',') -eq 'Alt') -and ($null -eq $added.shortcut) -and ($added.action.id -eq 'hideOthers')) "saved: $($added | ConvertTo-Json -Compress -Depth 5)"
+Test-Check 'the page lists Alt + Forward button' ((Get-WindowText) -contains 'Alt + Forward button')
+Test-Check 'Edit shows the mouse button' ((Invoke-AppElement 'Edit Alt + Forward button') -and (Wait-Until { (Get-ListSelection 'Button') -eq 'Forward button' } 5)) "button: $(Get-ListSelection 'Button')"
+[void] (Invoke-AppButton 'Cancel')
 [void] (Close-SettingsApp)
 
 # Ctrl + Alt + U is left to the test program, which Not in these apps lists, and Ctrl + Alt + J runs
