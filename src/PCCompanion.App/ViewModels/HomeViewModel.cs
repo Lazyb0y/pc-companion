@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PCCompanion.App.Features;
 using PCCompanion.Localization;
 
@@ -22,9 +23,12 @@ public sealed partial class HomeViewModel : ObservableObject
         [
             .. FeatureCatalog.Modules.Select(module => new ModuleGroup(
                 Localized.GetString(module.NameKey),
-                [.. module.Features.Select(feature => new FeatureCardViewModel(feature, editor, saved => SaveFailed = !saved))])),
+                [.. module.Features.Select(feature => new FeatureCardViewModel(feature, editor, saved => SaveFailed = !saved, id => FeatureOpenRequested?.Invoke(this, id)))])),
         ];
     }
+
+    /// <summary>Raised with a feature's ID when its card asks for the feature's page.</summary>
+    public event EventHandler<string>? FeatureOpenRequested;
 
     public IReadOnlyList<ModuleGroup> Modules { get; }
 
@@ -44,10 +48,12 @@ public sealed partial class FeatureCardViewModel : ObservableObject
     private readonly FeatureSettingsEditor _editor;
     private readonly CatalogFeature _feature;
     private readonly Action<bool> _saved;
+    private readonly Action<string> _open;
     private bool _isOn;
 
     /// <param name="saved">Called after every change with whether it was saved.</param>
-    public FeatureCardViewModel(CatalogFeature feature, FeatureSettingsEditor editor, Action<bool> saved)
+    /// <param name="open">Called with the feature's ID to open its page.</param>
+    public FeatureCardViewModel(CatalogFeature feature, FeatureSettingsEditor editor, Action<bool> saved, Action<string> open)
     {
         ArgumentNullException.ThrowIfNull(feature);
         ArgumentNullException.ThrowIfNull(editor);
@@ -55,6 +61,7 @@ public sealed partial class FeatureCardViewModel : ObservableObject
         _editor = editor;
         _feature = feature;
         _saved = saved;
+        _open = open;
         Id = feature.Info.Id;
         Name = Localized.GetString(feature.Info.NameKey);
         Glyph = feature.Info.Glyph;
@@ -88,4 +95,8 @@ public sealed partial class FeatureCardViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>Opens the feature's page, when the card is clicked or a screen reader opens it.</summary>
+    [RelayCommand]
+    private void Open() => _open(Id);
 }
