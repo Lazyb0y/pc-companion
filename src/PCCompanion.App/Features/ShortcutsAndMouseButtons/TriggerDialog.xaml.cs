@@ -38,7 +38,7 @@ public sealed partial class TriggerDialog : ContentDialog
             if (!_focused)
             {
                 _focused = true;
-                ((Control)(editor.SelectedAction is null ? ActionBox : ShortcutBox)).Focus(FocusState.Programmatic);
+                ((Control)(editor.SelectedAction is null ? ActionBox : editor.IsMouseButton ? KindChoice : ShortcutBox)).Focus(FocusState.Programmatic);
             }
         };
         Closed += (_, _) => StopListening();

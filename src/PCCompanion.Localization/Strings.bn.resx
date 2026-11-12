@@ -5228,4 +5228,28 @@
     <value>এই অ্যাপগুলোর কোনোটি সামনে থাকলে সেটি নিজেই কীগুলো পায়।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsEditorTriggerHeader" xml:space="preserve">
+    <value>ট্রিগার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKindMouseButton" xml:space="preserve">
+    <value>মাউস বোতাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonHeader" xml:space="preserve">
+    <value>বোতাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonPlaceholder" xml:space="preserve">
+    <value>একটি বোতাম বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameButton" xml:space="preserve">
+    <value>{0}-এ ইতিমধ্যে এই বোতাম আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedMouseDescription" xml:space="preserve">
+    <value>পয়েন্টার এই অ্যাপগুলোর কোনোটির উপরে থাকলে সেটি নিজেই ক্লিকটি পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

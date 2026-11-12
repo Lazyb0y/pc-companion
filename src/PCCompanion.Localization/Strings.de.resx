@@ -5228,4 +5228,28 @@
     <value>Solange eine dieser Apps im Vordergrund ist, erhält sie die Tasten selbst.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsEditorTriggerHeader" xml:space="preserve">
+    <value>Auslöser</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKindMouseButton" xml:space="preserve">
+    <value>Maustaste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonHeader" xml:space="preserve">
+    <value>Taste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonPlaceholder" xml:space="preserve">
+    <value>Taste auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameButton" xml:space="preserve">
+    <value>„{0}“ hat diese Taste bereits.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedMouseDescription" xml:space="preserve">
+    <value>Befindet sich der Mauszeiger über einer dieser Apps, erhält sie den Klick selbst.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

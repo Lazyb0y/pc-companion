@@ -5228,4 +5228,28 @@
     <value>While one of these apps is in front, it gets the keys itself.</value>
     <comment>Shortcuts &amp; Mouse Buttons editor: below ShortcutsAndMouseButtonsEditorExcludedHeader.</comment>
   </data>
+  <data name="ShortcutsAndMouseButtonsEditorTriggerHeader" xml:space="preserve">
+    <value>Trigger</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the choice between a shortcut and a mouse button.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorKindMouseButton" xml:space="preserve">
+    <value>Mouse button</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: the choice of a mouse button as the trigger, next to Shortcut.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonHeader" xml:space="preserve">
+    <value>Button</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: header of the list of mouse buttons: Back, Forward and Middle.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorButtonPlaceholder" xml:space="preserve">
+    <value>Choose a button</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: shown in the list of mouse buttons until one is chosen.</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorSameButton" xml:space="preserve">
+    <value>{0} already has this button.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below the mouse button when another row on the page has the same button with the same keys. {0} is that row's action, such as "Lock".</comment>
+  </data>
+  <data name="ShortcutsAndMouseButtonsEditorExcludedMouseDescription" xml:space="preserve">
+    <value>While the pointer is over one of these apps, it gets the click itself.</value>
+    <comment>Shortcuts &amp; Mouse Buttons editor: below ShortcutsAndMouseButtonsEditorExcludedHeader for a mouse button.</comment>
+  </data>
 </root>
