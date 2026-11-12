@@ -4,6 +4,35 @@ Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
 
+# A Home card opens its feature's page when UI Automation invokes it, as Narrator's default action
+# does, and when Enter is pressed on it. The card and its switch both have the feature's name; the
+# card's class is SwitchCard.
+function Find-HomeCard([string] $Name) {
+    (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ClassNameProperty, 'SwitchCard')))))
+}
+function Test-PageShown([string] $Name) {
+    $item = (Get-AppWindow).FindFirst([System.Windows.Automation.TreeScope]::Descendants, (New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $Name)),
+        (New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ControlTypeProperty, [System.Windows.Automation.ControlType]::ListItem)))))
+    ($null -ne $item) -and $item.GetCurrentPattern([System.Windows.Automation.SelectionItemPattern]::Pattern).Current.IsSelected
+}
+Test-Check 'show Home' (Show-Page 'Home')
+Start-Sleep -Seconds 1
+$card = Find-HomeCard 'Hot Corners'
+$pattern = $null
+$canInvoke = ($null -ne $card) -and $card.TryGetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern, [ref] $pattern)
+$invokeError = ''
+if ($canInvoke) { try { $pattern.Invoke() } catch { $invokeError = $_.Exception.Message } }
+Test-Check 'invoking Home''s Hot Corners card opens its page' (Wait-Until { Test-PageShown 'Hot Corners' } 5) "card found: $($null -ne $card); Invoke offered: $canInvoke; Invoke error: '$invokeError'"
+Save-Screenshot '01a-home-card-invoked'
+Test-Check 'show Home again' (Show-Page 'Home')
+Start-Sleep -Seconds 1
+$card = Find-HomeCard 'Lock Keys'
+if ($card) { $card.SetFocus(); Start-Sleep -Milliseconds 300; Send-Key 0x0D }
+Test-Check 'Enter on Home''s Lock Keys card opens its page' (Wait-Until { Test-PageShown 'Lock Keys' } 5) "card found: $($null -ne $card)"
+
 # The General page.
 Test-Check 'select General' (Select-NavigationItem 'General')
 Start-Sleep -Seconds 2
