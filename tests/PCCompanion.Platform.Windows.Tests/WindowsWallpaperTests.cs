@@ -59,6 +59,20 @@ public sealed class WindowsWallpaperTests
     }
 
     [Fact]
+    public void TheAnswersForADisplayThatIsntConnectedAreKnown()
+    {
+        // S_FALSE as documented, E_FAIL as some builds of Windows 11 answer, and E_INVALIDARG for a display that went.
+        Assert.True(WindowsWallpaper.IsNotConnected(1));
+        Assert.True(WindowsWallpaper.IsNotConnected(unchecked((int)0x80004005)));
+        Assert.True(WindowsWallpaper.IsNotConnected(unchecked((int)0x80070057)));
+
+        // Connected, and failures that mean Explorer is gone or the call was cancelled, which still throw.
+        Assert.False(WindowsWallpaper.IsNotConnected(0));
+        Assert.False(WindowsWallpaper.IsNotConnected(unchecked((int)0x800706BA)));
+        Assert.False(WindowsWallpaper.IsNotConnected(unchecked((int)0x80010002)));
+    }
+
+    [Fact]
     public void AThreadWaitingForNoCallHasNothingToCancel()
     {
         var id = 0u;
