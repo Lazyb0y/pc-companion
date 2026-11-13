@@ -40,9 +40,9 @@
       },
       "Microsoft.Windows.SDK.BuildTools": {
         "type": "Direct",
-        "requested": "[10.0.28000.2705, )",
-        "resolved": "10.0.28000.2705",
-        "contentHash": "TZQ96xtu7+fyFsyJCgj6Hazru0H8G1kiE1CeZLGpsqT4xKQmkxWu9yRuxYLeHJECjqEHN7duZUTcdbt8zlQ8OQ=="
+        "requested": "[10.0.28000.2957, )",
+        "resolved": "10.0.28000.2957",
+        "contentHash": "nTsRheC9AO+if3BykWkRJ4QXkIMfkqufnBFPIcSEOj7rnX60fqiGrORnxzVFnIXJvsMIjlDOvs/K5EzMLA2RKQ=="
       },
       "Microsoft.WindowsAppSDK.WinUI": {
         "type": "Direct",
@@ -145,7 +145,7 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )"
         }
       },
       "pccompanion.localization": {
@@ -164,9 +164,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.desktop": {
@@ -174,9 +174,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.display": {
@@ -184,9 +184,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.files": {
@@ -194,9 +194,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.input": {
@@ -204,9 +204,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.network": {
@@ -214,9 +214,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.modules.windows": {
@@ -224,9 +224,9 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.4.0, )",
-          "PCCompanion.Localization": "[0.4.0, )",
-          "PCCompanion.Platform.Windows": "[0.4.0, )"
+          "PCCompanion.Core": "[0.6.0, )",
+          "PCCompanion.Localization": "[0.6.0, )",
+          "PCCompanion.Platform.Windows": "[0.6.0, )"
         }
       },
       "pccompanion.platform.windows": {
@@ -270,6 +270,22 @@
         "contentHash": "fKL7mXv7qaiNBUC71ssvn/dU0k9t0o45+qm2XgKAlSt19xF+ijjxyA3R6HmCgfKEKwfcfkwWjayuQtRueZFkYw==",
         "dependencies": {
           "Serilog": "4.2.0"
+        }
+      }
+    },
+    "net10.0-windows10.0.19041/linux-x64": {
+      "Microsoft.Web.WebView2": {
+        "type": "Transitive",
+        "resolved": "1.0.3719.77",
+        "contentHash": "t+ucyKw5NTwMjsUrDF6R9Lk40lpcKQD1/HgyGFxl49tdA4h9dKlsj6FYGEmDRpFNfnTpENuTypMcdbrlkqBdDA=="
+      },
+      "Microsoft.WindowsAppSDK.Foundation": {
+        "type": "Transitive",
+        "resolved": "2.3.12",
+        "contentHash": "UflrNbXoZmHPt8lLGDk4gQ+yoGfQlCHd3TVTy7YwCMZ/aVGWAiLDqGCEjtWmNsI8ySy6imx3ZlenKfd2/VMPEg==",
+        "dependencies": {
+          "Microsoft.WindowsAppSDK.Base": "2.0.4",
+          "Microsoft.WindowsAppSDK.InteractiveExperiences": "2.1.8"
         }
       }
     },
