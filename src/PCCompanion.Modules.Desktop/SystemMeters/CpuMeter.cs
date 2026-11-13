@@ -16,7 +16,7 @@ public sealed partial class CpuMeter : IDisposable
 
     private readonly ISystemReadings _readings;
     private readonly ILogger _logger;
-    private IProcessorUtilityReader? _utility;
+    private IProcessorCounterReader? _counter;
     private int _failures;
     private ProcessorTimes? _lastTimes;
 
@@ -28,8 +28,8 @@ public sealed partial class CpuMeter : IDisposable
 
         _readings = readings;
         _logger = logger;
-        _utility = readings.OpenProcessorUtility(out var status);
-        if (_utility is null)
+        _counter = readings.OpenProcessorCounter(out var status);
+        if (_counter is null)
         {
             LogCounterNotAvailable(logger, status);
             Restart();
@@ -37,7 +37,7 @@ public sealed partial class CpuMeter : IDisposable
     }
 
     /// <summary>Whether the meter reads processor time because the utility counter isn't available.</summary>
-    public bool UsesProcessorTime => _utility is null;
+    public bool UsesSystemTimes => _counter is null;
 
     /// <summary>
     /// How busy the processors were since the last reading, from 0 to 100, or
@@ -45,9 +45,9 @@ public sealed partial class CpuMeter : IDisposable
     /// </summary>
     public double? Read()
     {
-        if (_utility is not null)
+        if (_counter is not null)
         {
-            if (_utility.TryRead(out var percent))
+            if (_counter.TryRead(out var percent))
             {
                 _failures = 0;
                 return Math.Clamp(percent, 0, 100);
@@ -56,8 +56,8 @@ public sealed partial class CpuMeter : IDisposable
             if (++_failures == FailuresBeforeFallback)
             {
                 LogCounterStoppedWorking(_logger, FailuresBeforeFallback);
-                _utility.Dispose();
-                _utility = null;
+                _counter.Dispose();
+                _counter = null;
                 Restart();
             }
 
@@ -85,9 +85,9 @@ public sealed partial class CpuMeter : IDisposable
     /// <summary>Starts over, so the next reading covers only the time from now, as after a pause.</summary>
     public void Restart()
     {
-        if (_utility is not null)
+        if (_counter is not null)
         {
-            _utility.TryRead(out _);
+            _counter.TryRead(out _);
         }
         else
         {
@@ -95,7 +95,7 @@ public sealed partial class CpuMeter : IDisposable
         }
     }
 
-    public void Dispose() => _utility?.Dispose();
+    public void Dispose() => _counter?.Dispose();
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The processor utility counter isn't available (PDH status 0x{Status:X8}), so the CPU meter shows processor time, which can differ from Task Manager.")]
     private static partial void LogCounterNotAvailable(ILogger logger, uint status);

@@ -8,9 +8,9 @@ namespace PCCompanion.Platform.Windows.Tests;
 public sealed class SystemReadingTests
 {
     [Fact]
-    public void ProcessorUtilityIsAPercentage()
+    public void ProcessorCounterIsAPercentage()
     {
-        using var utility = ProcessorUtility.TryOpen(out var status);
+        using var utility = ProcessorCounter.TryOpen(out var status);
 
         Assert.True(utility is not null, $"PDH status 0x{status:X8}");
         Thread.Sleep(100);

@@ -80,27 +80,27 @@ public sealed class MeterReadingTests
     }
 
     [Fact]
-    public void CpuReadsProcessorUtilityCappedAt100()
+    public void CpuReadsProcessorCounterCappedAt100()
     {
-        _readings.Utility.Enqueue(42.5);
-        _readings.Utility.Enqueue(130);
+        _readings.Counter.Enqueue(42.5);
+        _readings.Counter.Enqueue(130);
         using var cpu = new CpuMeter(_readings, _logger);
 
-        Assert.False(cpu.UsesProcessorTime);
+        Assert.False(cpu.UsesSystemTimes);
         Assert.Equal(42.5, cpu.Read());
         Assert.Equal(100, cpu.Read());
     }
 
     [Fact]
-    public void CpuFallsBackToProcessorTimeWhenTheCounterIsntAvailable()
+    public void CpuFallsBackToSystemTimesWhenTheCounterIsntAvailable()
     {
-        _readings.UtilityAvailable = false;
+        _readings.CounterAvailable = false;
         _readings.Times = new ProcessorTimes(Idle: 1000, Kernel: 3000, User: 1000);
         using var cpu = new CpuMeter(_readings, _logger);
         _readings.Times = new ProcessorTimes(Idle: 1600, Kernel: 3800, User: 1200);
 
         // 1,000 ticks passed, 600 of them idle.
-        Assert.True(cpu.UsesProcessorTime);
+        Assert.True(cpu.UsesSystemTimes);
         Assert.Equal(40, cpu.Read());
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning);
     }
@@ -108,28 +108,28 @@ public sealed class MeterReadingTests
     [Fact]
     public void CpuFallsBackAfterTheCounterFailsThreeTimesInARow()
     {
-        _readings.Utility.Enqueue(null);
-        _readings.Utility.Enqueue(10);
-        _readings.Utility.Enqueue(null);
-        _readings.Utility.Enqueue(null);
-        _readings.Utility.Enqueue(null);
+        _readings.Counter.Enqueue(null);
+        _readings.Counter.Enqueue(10);
+        _readings.Counter.Enqueue(null);
+        _readings.Counter.Enqueue(null);
+        _readings.Counter.Enqueue(null);
         using var cpu = new CpuMeter(_readings, _logger);
 
         Assert.Null(cpu.Read());
         Assert.Equal(10, cpu.Read());
         Assert.Null(cpu.Read());
         Assert.Null(cpu.Read());
-        Assert.False(cpu.UsesProcessorTime);
+        Assert.False(cpu.UsesSystemTimes);
         Assert.Null(cpu.Read());
 
-        Assert.True(cpu.UsesProcessorTime);
-        Assert.True(_readings.UtilityDisposed);
+        Assert.True(cpu.UsesSystemTimes);
+        Assert.True(_readings.CounterDisposed);
     }
 
     [Fact]
-    public void ProcessorTimeNeedsTimeToPassAndNeverGoesBack()
+    public void SystemTimesNeedTimeToPassAndNeverGoBack()
     {
-        _readings.UtilityAvailable = false;
+        _readings.CounterAvailable = false;
         using var cpu = new CpuMeter(_readings, _logger);
         _readings.Times = new ProcessorTimes(100, 300, 100);
 
@@ -144,8 +144,8 @@ public sealed class MeterReadingTests
     [Fact]
     public void RestartingTheCpuMeterStartsTheNextReadingNow()
     {
-        _readings.Utility.Enqueue(90); // used up by the restart
-        _readings.Utility.Enqueue(12);
+        _readings.Counter.Enqueue(90); // used up by the restart
+        _readings.Counter.Enqueue(12);
         using var cpu = new CpuMeter(_readings, _logger);
 
         cpu.Restart();

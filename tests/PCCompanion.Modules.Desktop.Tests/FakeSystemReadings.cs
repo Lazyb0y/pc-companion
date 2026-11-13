@@ -10,9 +10,9 @@ namespace PCCompanion.Modules.Desktop.Tests;
 /// </summary>
 internal sealed class FakeSystemReadings : ISystemReadings
 {
-    public bool UtilityAvailable { get; set; } = true;
+    public bool CounterAvailable { get; set; } = true;
 
-    public Queue<double?> Utility { get; } = new();
+    public Queue<double?> Counter { get; } = new();
 
     public ProcessorTimes? Times { get; set; }
 
@@ -22,14 +22,14 @@ internal sealed class FakeSystemReadings : ISystemReadings
 
     public bool AdaptersFail { get; set; }
 
-    public int UtilityReads { get; private set; }
+    public int CounterReads { get; private set; }
 
-    public bool UtilityDisposed { get; private set; }
+    public bool CounterDisposed { get; private set; }
 
-    public IProcessorUtilityReader? OpenProcessorUtility(out uint status)
+    public IProcessorCounterReader? OpenProcessorCounter(out uint status)
     {
-        status = UtilityAvailable ? 0 : 0xC0000BB8; // PDH_CSTATUS_NO_OBJECT
-        return UtilityAvailable ? new Reader(this) : null;
+        status = CounterAvailable ? 0 : 0xC0000BB8; // PDH_CSTATUS_NO_OBJECT
+        return CounterAvailable ? new Reader(this) : null;
     }
 
     public bool TryReadProcessorTimes(out ProcessorTimes times)
@@ -43,16 +43,16 @@ internal sealed class FakeSystemReadings : ISystemReadings
     public IReadOnlyList<NetworkAdapterCounts> ReadNetworkAdapters() =>
         AdaptersFail ? throw new Win32Exception(5) : [.. Adapters];
 
-    private sealed class Reader(FakeSystemReadings readings) : IProcessorUtilityReader
+    private sealed class Reader(FakeSystemReadings readings) : IProcessorCounterReader
     {
         public bool TryRead(out double percent)
         {
-            readings.UtilityReads++;
-            var next = readings.Utility.Count > 0 ? readings.Utility.Dequeue() : 0;
+            readings.CounterReads++;
+            var next = readings.Counter.Count > 0 ? readings.Counter.Dequeue() : 0;
             percent = next ?? 0;
             return next is not null;
         }
 
-        public void Dispose() => readings.UtilityDisposed = true;
+        public void Dispose() => readings.CounterDisposed = true;
     }
 }
