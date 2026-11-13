@@ -10,8 +10,8 @@ namespace PCCompanion.Modules.Desktop.SystemMeters;
 public interface ISystemReadings
 {
     /// <summary>
-    /// Opens the processor utility counter and takes its first reading, or returns
-    /// <see langword="null"/> with PDH's error code when it isn't available.
+    /// Opens the processor counter that Task Manager shows on this Windows version and takes its
+    /// first reading, or returns <see langword="null"/> with PDH's error code when it isn't available.
     /// </summary>
     IProcessorCounterReader? OpenProcessorCounter(out uint status);
 
@@ -24,9 +24,9 @@ public interface ISystemReadings
     IReadOnlyList<NetworkAdapterCounts> ReadNetworkAdapters();
 }
 
-/// <summary>The processor utility counter, open until disposed.</summary>
+/// <summary>The processor counter, open until disposed.</summary>
 public interface IProcessorCounterReader : IDisposable
 {
-    /// <summary>The utility since the last reading, from 0 to 100. Returns false when the reading failed.</summary>
+    /// <summary>How busy the processors were since the last reading, from 0 to 100. Returns false when the reading failed.</summary>
     bool TryRead(out double percent);
 }

@@ -80,7 +80,7 @@ public sealed class MeterReadingTests
     }
 
     [Fact]
-    public void CpuReadsProcessorCounterCappedAt100()
+    public void CpuReadsTheCounterCappedAt100()
     {
         _readings.Counter.Enqueue(42.5);
         _readings.Counter.Enqueue(130);

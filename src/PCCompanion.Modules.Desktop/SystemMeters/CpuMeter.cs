@@ -5,8 +5,8 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Desktop.SystemMeters;
 
 /// <summary>
-/// How busy the processors are: processor utility, as Task Manager shows it, or, when that counter
-/// isn't available, the share of time the processors weren't idle (<c>GetSystemTimes</c>). Each
+/// How busy the processors are: the processor counter that Task Manager shows, or, when that
+/// counter isn't available, the share of time the processors weren't idle (<c>GetSystemTimes</c>). Each
 /// reading covers the time since the one before. Use it on one thread.
 /// </summary>
 public sealed partial class CpuMeter : IDisposable
@@ -36,7 +36,7 @@ public sealed partial class CpuMeter : IDisposable
         }
     }
 
-    /// <summary>Whether the meter reads processor time because the utility counter isn't available.</summary>
+    /// <summary>Whether the meter reads <c>GetSystemTimes</c> because the counter isn't available.</summary>
     public bool UsesSystemTimes => _counter is null;
 
     /// <summary>
@@ -97,9 +97,9 @@ public sealed partial class CpuMeter : IDisposable
 
     public void Dispose() => _counter?.Dispose();
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "The processor utility counter isn't available (PDH status 0x{Status:X8}), so the CPU meter shows processor time, which can differ from Task Manager.")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The processor counter isn't available (PDH status 0x{Status:X8}), so the CPU meter reads GetSystemTimes, which can differ from Task Manager.")]
     private static partial void LogCounterNotAvailable(ILogger logger, uint status);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "The processor utility counter failed {Count} times in a row, so the CPU meter shows processor time from now on.")]
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The processor counter failed {Count} times in a row, so the CPU meter reads GetSystemTimes from now on.")]
     private static partial void LogCounterStoppedWorking(ILogger logger, int count);
 }
