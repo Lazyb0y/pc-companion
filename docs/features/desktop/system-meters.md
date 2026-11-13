@@ -117,8 +117,11 @@ With **Show on** set to **Notification area**, or where the strip can't show, ea
 
 ## Reading the values
 
-- **CPU:** the performance counter `\Processor Information(_Total)\% Processor Utility`, read through PDH. It's what Task Manager's Processes and Performance tabs show: it accounts for the processors' speed and covers every processor group. It's capped at 100%, as in Task Manager, since it goes above 100 while processors run faster than their base speed. The counter is added by its English name (`PdhAddEnglishCounter`), so it's found in every Windows language.
-- When the counter can't be added or read, for example because performance counters are turned off, the CPU meter uses `GetSystemTimes`: the share of time the processors weren't idle. That can differ from Task Manager under load, and on PCs with more than 64 logical processors it covers only one processor group. A warning is logged each time the CPU meter starts without the counter, and once when the counter fails three readings in a row.
+- **CPU:** a performance counter, read through PDH: the one that Task Manager's Processes and Performance tabs show on that Windows version.
+  - **Windows 11** (build 22000 and later): `\Processor Information(_Total)\% Processor Time`, the share of time the processors weren't idle. Task Manager has shown it on every page since a 2025 update; the earlier figure is now only in the optional **CPU Utility** column of its Details tab.
+  - **Windows 10:** `\Processor Information(_Total)\% Processor Utility`, which also accounts for the processors' speed. It reads higher while processors run faster than their base speed and can go above 100 then, so it's capped at 100%, as in Task Manager.
+  - Both counters cover every processor group. The counter is added by its English name (`PdhAddEnglishCounter`), so it's found in every Windows language.
+- When the counter can't be added or read, for example because performance counters are turned off, the CPU meter uses `GetSystemTimes`: the share of time the processors weren't idle. That's what the Windows 11 counter measures, but it can differ from Task Manager on Windows 10 under load, and on PCs with more than 64 logical processors it covers only one processor group. A warning is logged each time the CPU meter starts without the counter, and once when the counter fails three readings in a row.
 - **Memory:** `GlobalMemoryStatusEx`. In use is the physical memory minus the available memory, as in Task Manager.
 - **Network:** `GetIfTable2`: the bytes received and sent (`InOctets` and `OutOctets`) by the adapters that are up and are hardware, such as Ethernet, Wi-Fi and cellular adapters. Filter, loopback and virtual adapters, such as VPNs and Hyper-V's virtual switch, are left out: their traffic also passes through a hardware adapter, so it would count twice.
 - A rate is the change since the last reading divided by the time between the two readings. That time is measured rather than assumed, so a late update doesn't inflate the rate. An adapter that appears or disappears between two readings, or whose counts go back, as when it's reset, adds nothing to that update.
@@ -193,7 +196,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 
 - Windows 10 version 2004 and later, and Windows 11, on x64 and ARM64.
 - The strip runs on Windows 11 builds 22621 to the newest tested one, and on Windows 10 versions 2004 to 22H2; builds 26100 and 26300 are tested, and Windows 11 versions 22H2 and 23H2 and Windows 10 aren't yet. Elsewhere the meters show as notification icons. See [When the strip can't show](#when-the-strip-cant-show).
-- Every API is documented and in every supported version: processor utility since Windows 8, `SetCoalescableTimer` since Windows 8, `GetSystemMetricsForDpi` since Windows 10 version 1607, and the others earlier. What the strip relies on about the taskbar's layout isn't documented, so [Windows support](../../compatibility/windows-support.md) lists it with the tested builds.
+- Every API is documented and in every supported version: the processor counters since Windows 8, `SetCoalescableTimer` since Windows 8, `GetSystemMetricsForDpi` since Windows 10 version 1607, and the others earlier. What the strip relies on about the taskbar's layout isn't documented, so [Windows support](../../compatibility/windows-support.md) lists it with the tested builds.
 
 ## Security and privacy
 
@@ -270,7 +273,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 ## Testing
 
 - **Unit tests** with fake readings and a fake clock:
-  - CPU: utility capped at 100, and the fallback to `GetSystemTimes` when the counter can't be added or read: the busy share, no time passed, and times that go back;
+  - CPU: processor time on Windows 11 and utility on Windows 10, each capped at 100, and the fallback to `GetSystemTimes` when the counter can't be added or read: the busy share, no time passed, and times that go back;
   - memory: the percentage and the sizes, and a total of zero;
   - network: which adapters count (hardware, filter, loopback, down), rates over the measured time, late updates, and adapters that appear, disappear or reset;
   - formatting: percentages, sizes, the rate units and decimals in English, German, French and Arabic, and every language's tooltips within 127 characters.
@@ -297,6 +300,7 @@ A spike in Windows Sandbox, on Windows 11 build 26100, and on a desktop PC with 
 - The App group checks the page's layout at each window width, and the Languages group checks it in Arabic, as for the other feature pages.
 - **By hand:**
   - Windows 11 versions 22H2, 23H2 and 24H2, Windows 10, and an ARM64 PC;
+  - the CPU meter next to Task Manager's Performance tab under a steady load, on Windows 11 and Windows 10, while the processors run faster than their base speed;
   - display scales from 100% to 200%, a scale change while the meters run, several displays, and the taskbar's alignment, size and Widgets entry changing;
   - clicks on the taskbar, Start, Search and the taskbar's flyouts, a full-screen game and video, and an auto-hiding taskbar;
   - a right-to-left Windows display language, the taskbar in an accent color, and high contrast;
