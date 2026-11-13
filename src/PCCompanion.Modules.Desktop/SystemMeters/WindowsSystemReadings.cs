@@ -8,8 +8,8 @@ namespace PCCompanion.Modules.Desktop.SystemMeters;
 /// </summary>
 internal sealed class WindowsSystemReadings : ISystemReadings
 {
-    public IProcessorUtilityReader? OpenProcessorUtility(out uint status) =>
-        ProcessorUtility.TryOpen(out status) is { } utility ? new UtilityReader(utility) : null;
+    public IProcessorCounterReader? OpenProcessorCounter(out uint status) =>
+        ProcessorCounter.TryOpen(out status) is { } counter ? new CounterReader(counter) : null;
 
     public bool TryReadProcessorTimes(out ProcessorTimes times) => ProcessorTimes.TryRead(out times);
 
@@ -17,10 +17,10 @@ internal sealed class WindowsSystemReadings : ISystemReadings
 
     public IReadOnlyList<NetworkAdapterCounts> ReadNetworkAdapters() => NetworkAdapters.ReadCounts();
 
-    private sealed class UtilityReader(ProcessorUtility utility) : IProcessorUtilityReader
+    private sealed class CounterReader(ProcessorCounter counter) : IProcessorCounterReader
     {
-        public bool TryRead(out double percent) => utility.TryRead(out percent);
+        public bool TryRead(out double percent) => counter.TryRead(out percent);
 
-        public void Dispose() => utility.Dispose();
+        public void Dispose() => counter.Dispose();
     }
 }

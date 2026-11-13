@@ -13,7 +13,7 @@ public interface ISystemReadings
     /// Opens the processor utility counter and takes its first reading, or returns
     /// <see langword="null"/> with PDH's error code when it isn't available.
     /// </summary>
-    IProcessorUtilityReader? OpenProcessorUtility(out uint status);
+    IProcessorCounterReader? OpenProcessorCounter(out uint status);
 
     /// <summary>Returns false when Windows refused.</summary>
     bool TryReadProcessorTimes(out ProcessorTimes times);
@@ -25,7 +25,7 @@ public interface ISystemReadings
 }
 
 /// <summary>The processor utility counter, open until disposed.</summary>
-public interface IProcessorUtilityReader : IDisposable
+public interface IProcessorCounterReader : IDisposable
 {
     /// <summary>The utility since the last reading, from 0 to 100. Returns false when the reading failed.</summary>
     bool TryRead(out double percent);

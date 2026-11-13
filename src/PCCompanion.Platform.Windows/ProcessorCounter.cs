@@ -11,7 +11,7 @@ namespace PCCompanion.Platform.Windows;
 /// reading covers the time since the one before. Opening it takes up to half a second, so open
 /// and read it on a thread that may wait. Create, use and dispose it on one thread.
 /// </summary>
-public sealed class ProcessorUtility : IDisposable
+public sealed class ProcessorCounter : IDisposable
 {
     // Added by its English name, so it's found in every Windows language.
     private const string CounterPath = @"\Processor Information(_Total)\% Processor Utility";
@@ -23,7 +23,7 @@ public sealed class ProcessorUtility : IDisposable
     private readonly PdhCloseQuerySafeHandle _query;
     private readonly PDH_HCOUNTER _counter;
 
-    private ProcessorUtility(PdhCloseQuerySafeHandle query, PDH_HCOUNTER counter)
+    private ProcessorCounter(PdhCloseQuerySafeHandle query, PDH_HCOUNTER counter)
     {
         _query = query;
         _counter = counter;
@@ -34,7 +34,7 @@ public sealed class ProcessorUtility : IDisposable
     /// can't provide it, for example because performance counters are turned off;
     /// <paramref name="status"/> is then PDH's error code.
     /// </summary>
-    public static ProcessorUtility? TryOpen(out uint status)
+    public static ProcessorCounter? TryOpen(out uint status)
     {
         status = PInvoke.PdhOpenQuery((string?)null, 0, out var query);
         if (status == 0)
@@ -45,7 +45,7 @@ public sealed class ProcessorUtility : IDisposable
                 status = PInvoke.PdhCollectQueryData((PDH_HQUERY)query.DangerousGetHandle());
                 if (status == 0)
                 {
-                    return new ProcessorUtility(query, counter);
+                    return new ProcessorCounter(query, counter);
                 }
             }
         }

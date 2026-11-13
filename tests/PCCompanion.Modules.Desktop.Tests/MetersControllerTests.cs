@@ -52,7 +52,7 @@ public sealed class MetersControllerTests : IDisposable
         UpdateAfter(TimeSpan.FromSeconds(1));
 
         Assert.Equal(["show Memory"], _system.Events);
-        Assert.Equal(0, _system.FakeReadings.UtilityReads);
+        Assert.Equal(0, _system.FakeReadings.CounterReads);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public sealed class MetersControllerTests : IDisposable
         UpdateAfter(TimeSpan.FromSeconds(1));
 
         Assert.Equal(["remove Cpu", "remove Network"], _system.Events.Skip(3));
-        Assert.True(_system.FakeReadings.UtilityDisposed);
+        Assert.True(_system.FakeReadings.CounterDisposed);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public sealed class MetersControllerTests : IDisposable
         _controller.Dispose();
 
         Assert.Equal(["remove Cpu", "remove Memory", "remove Network"], _system.Events.Skip(3).Order(StringComparer.Ordinal));
-        Assert.True(_system.FakeReadings.UtilityDisposed);
+        Assert.True(_system.FakeReadings.CounterDisposed);
     }
 
     [Fact]
