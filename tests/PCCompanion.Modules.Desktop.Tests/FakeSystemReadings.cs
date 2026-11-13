@@ -6,7 +6,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Desktop.Tests;
 
 /// <summary>
-/// Readings that tests set, with a processor utility counter that's available or not.
+/// Readings that tests set, with a processor counter that's available or not.
 /// </summary>
 internal sealed class FakeSystemReadings : ISystemReadings
 {

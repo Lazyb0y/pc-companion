@@ -7,15 +7,27 @@ namespace PCCompanion.Platform.Windows.Tests;
 // Reads the PC's system-wide counters; nothing is changed.
 public sealed class SystemReadingTests
 {
-    [Fact]
-    public void ProcessorCounterIsAPercentage()
+    [Theory]
+    [InlineData(ProcessorCounterKind.Time)]
+    [InlineData(ProcessorCounterKind.Utility)]
+    public void ProcessorCounterIsAPercentage(ProcessorCounterKind kind)
     {
-        using var utility = ProcessorCounter.TryOpen(out var status);
+        using var counter = ProcessorCounter.TryOpen(kind, out var status);
 
-        Assert.True(utility is not null, $"PDH status 0x{status:X8}");
+        Assert.True(counter is not null, $"PDH status 0x{status:X8}");
         Thread.Sleep(100);
-        Assert.True(utility.TryRead(out var percent));
+        Assert.True(counter.TryRead(out var percent));
         Assert.InRange(percent, 0, 100);
+    }
+
+    [Theory]
+    [InlineData(19041, ProcessorCounterKind.Utility)]
+    [InlineData(19045, ProcessorCounterKind.Utility)]
+    [InlineData(22000, ProcessorCounterKind.Time)]
+    [InlineData(26100, ProcessorCounterKind.Time)]
+    public void TaskManagerShowsProcessorTimeOnWindows11AndUtilityOnWindows10(int windowsBuild, ProcessorCounterKind kind)
+    {
+        Assert.Equal(kind, ProcessorCounter.ShownByTaskManager(windowsBuild));
     }
 
     [Fact]
