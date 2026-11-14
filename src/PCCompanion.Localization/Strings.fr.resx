@@ -5344,4 +5344,8 @@
     <value>Tant qu’elle est activée, les actions que vos programmes demandent avec la commande s’exécutent avec leurs propres vérifications et questions, et seuls les programmes de votre compte sur ce PC, sans intégrité faible, peuvent les demander. Les entrées se trouvent dans votre propre dossier du menu Démarrer et portent le nom de vos profils et applications. Actions du lanceur n’utilise pas le réseau.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (conflit {1})</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

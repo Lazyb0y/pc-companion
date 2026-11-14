@@ -5344,4 +5344,8 @@
     <value>Mientras está activado, las acciones que tus programas piden con el comando se ejecutan con sus propias comprobaciones y preguntas, y solo pueden pedirlas los programas de tu cuenta en este equipo que no tengan integridad baja. Las entradas están en tu propia carpeta del menú Inicio y llevan el nombre de tus perfiles y aplicaciones. Acciones del iniciador no usa la red.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (conflicto {1})</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

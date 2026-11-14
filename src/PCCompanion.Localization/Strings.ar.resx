@@ -5536,4 +5536,8 @@
     <value>أثناء تشغيلها، تعمل الإجراءات التي تطلبها برامجك بالأمر مع عمليات التحقق والأسئلة الخاصة بها، ولا يمكن أن يطلبها إلا برامج حسابك على هذا الكمبيوتر التي لا تعمل بتكامل منخفض. توجد الإدخالات في مجلد قائمة ابدأ الخاص بك وتحمل أسماء ملفات التعريف والتطبيقات الخاصة بك. لا تستخدم إجراءات المشغّل الشبكة.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (تعارض {1})</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

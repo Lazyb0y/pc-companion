@@ -5344,4 +5344,8 @@
     <value>Solange es aktiviert ist, werden die Aktionen, die Ihre Programme mit dem Befehl anfordern, mit ihren eigenen Prüfungen und Fragen ausgeführt, und nur Programme Ihres Kontos auf diesem PC ohne niedrige Integritätsstufe können sie anfordern. Die Einträge befinden sich in Ihrem eigenen Startmenüordner und tragen die Namen Ihrer Profile und Apps. Launcher-Aktionen verwendet kein Netzwerk.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (Konflikt {1})</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
