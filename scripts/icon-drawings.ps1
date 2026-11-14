@@ -518,6 +518,29 @@ foreach ($icon in $shortcutsAndMouseButtons) {
     Write-Drawing "shortcuts-and-mouse-buttons-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $key (Join-Shape $device (ConvertTo-Shape $wheel))))
 }
 
+# Launcher Actions, in violet: a magnifier, its ring in the main tone and its handle, a line Handle
+# wide with round ends, in the deepest, with the orange bolt of an action on the paper of its lens:
+# Bolt is the bolt's middle and its scale. The one-color version cuts the paper out, and Cut wide
+# between the handle and the ring.
+$launcherActions = @(
+    @{ Size = 32; Center = 12.5, 12.5; Outer = 11.2; Inner = 8; Handle = @(@(20.8, 20.8), @(28.8, 28.8)); HandleWidth = 5; Bolt = 12.5, 12.7, 0.62; Cut = 1.2 }
+    @{ Size = 20; Center = 8.5, 8.5; Outer = 6.5; Inner = 4.4; Handle = @(@(13.3, 13.3), @(16.8, 16.8)); HandleWidth = 3.2; Bolt = 8.5, 8.6, 0.55; Cut = 1 }
+)
+foreach ($icon in $launcherActions) {
+    $cx, $cy = $icon.Center
+    $outer = Get-EllipsePath $cx $cy $icon.Outer $icon.Outer
+    $inner = Get-EllipsePath $cx $cy $icon.Inner $icon.Inner
+    $handle = "M$(F $icon.Handle[0][0]) $(F $icon.Handle[0][1])L$(F $icon.Handle[1][0]) $(F $icon.Handle[1][1])"
+    $boltX, $boltY, $boltScale = $icon.Bolt
+    $bolt = Get-MovedBolt $icon.Size $boltX $boltY $boltScale
+    $body = @((Get-SymbolPath $handle $icon.HandleWidth 'url(#violet-deepest)'), "<path fill=`"url(#violet-main)`" d=`"$outer`"/>", "<path fill=`"url(#paper)`" d=`"$inner`"/>", (Get-BoltPath $bolt))
+    $defs = @(@('main', 'deepest') | ForEach-Object { Get-Gradient "violet-$_" }) + @(Get-Gradient 'paper') + @(Get-Gradient 'orange')
+    Write-Drawing "launcher-actions-$($icon.Size)" $icon.Size $defs $body
+    $ring = Remove-Shape (ConvertTo-Shape $outer) (ConvertTo-Shape $inner)
+    $handleShape = Remove-Shape (Get-StrokeArea $handle $icon.HandleWidth) (Get-GrownShape $outer (2 * $icon.Cut))
+    Write-Drawing "launcher-actions-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape (Join-Shape $ring $handleShape) (Get-BoltShape $bolt)))
+}
+
 # App Windows, in sky: three of an app's windows stacked, Windows' boxes from the back to the
 # front, in the deepest, deep and light tones, the front one with a title bar TitleBar high in the
 # main tone. The one-color version keeps them apart with cuts Cut wide.

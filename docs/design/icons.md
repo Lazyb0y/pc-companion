@@ -49,7 +49,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 - Symbols on an object, such as a pointer, an arrow, an eye or a letter, are plain white.
 - No gray, which makes an icon look dull: parts that are often gray, such as a keyboard or a monitor's frame, are in a deep tone of the icon's color, and paper and plastic are white with a tint of blue.
 - Letters, such as the 文, A and ع of Input Language per App, are drawn as strokes, not set in a font.
-- Features of a kind share their second object: the bolt of Clipboard Actions and Drive Actions, an action, and the bookmark of Network Profiles and Display Profiles, a saved profile. The bolt of Clipboard Actions lies on its paper, so the clipboard stays centered.
+- Features of a kind share their second object: the bolt of Clipboard Actions, Drive Actions and Launcher Actions, an action, and the bookmark of Network Profiles and Display Profiles, a saved profile. The bolt of Clipboard Actions lies on its paper, so the clipboard stays centered, and that of Launcher Actions on the paper of its lens, since the handle takes the bottom right.
 - Color is never the only thing that tells two icons apart: each has its own object.
 
 | Feature | Object | Second object | Color |
@@ -58,6 +58,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Lock Keys | A keycap with the white Caps Lock arrow and bar | | Violet |
 | Input Language per App | An app window | Three speech bubbles round it, with a white 文, A and ع: the 文 bubble orange, the A bubble in the main tone and the ع bubble in the deepest | App blue |
 | Shortcuts & Mouse Buttons | A keycap at the top left, its sides in the deepest tone | A violet mouse lit from the left, with an orange wheel | Green |
+| Launcher Actions | A magnifier, its ring in the main tone and its handle in the deepest | An orange bolt on the paper of its lens | Violet |
 | App Windows | Three windows stacked, deepest at the back and lightest in front | | Sky |
 | Minimize to Tray | A window with a white arrow down to the taskbar, which has a tray icon | | Green |
 | Hide Apps | Two apps as rounded squares: one in front, split along its diagonal, and a hidden one behind it, a dashed outline in the deeper orange | | Violet |
