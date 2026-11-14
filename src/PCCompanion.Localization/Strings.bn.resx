@@ -5288,4 +5288,8 @@
     <value>{0} - {1}</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsStartFolder" xml:space="preserve">
+    <value>PC Companion অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

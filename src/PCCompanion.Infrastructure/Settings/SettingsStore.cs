@@ -18,6 +18,9 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
 
     private bool _keepCorruptFile;
 
+    /// <summary>Raised on the saving thread after <see cref="Save"/> saved the settings.</summary>
+    public event EventHandler? Saved;
+
     /// <summary>
     /// Returns the saved settings, or the defaults when nothing has been saved yet or the file
     /// can't be read. An unreadable file is left as it is until <see cref="Save"/> moves it aside.
@@ -86,6 +89,7 @@ public sealed partial class SettingsStore(AppDataPaths paths, ILogger<SettingsSt
 
         Replace(temporaryFile, paths.SettingsFile);
         LogSaved(logger);
+        Saved?.Invoke(this, EventArgs.Empty);
     }
 
     // The move fails while another process is reading the file, which only takes a moment.
