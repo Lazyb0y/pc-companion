@@ -37,7 +37,8 @@ internal static partial class Program
 
     // The settings app starts the helper through UAC, so it can't read the helper's output: a
     // command for one user logs to that user's protected logs folder, which only administrators
-    // can change and the user can read. Deleting every user's tasks, when uninstalling, logs nothing.
+    // can change and the user can read. Deleting every user's tasks and Remote Folders' folders,
+    // when uninstalling, logs nothing.
     private static ILoggerFactory CreateLogging(string[] args)
     {
         var sid = args is [ElevatedStartup.CreateTasksCommand or ElevatedStartup.DeleteTasksCommand, var user] && Elevation.IsAccountSid(user) ? user : null;
@@ -88,11 +89,16 @@ internal static partial class Program
 
                     return Succeeded;
 
+                case [ElevatedUninstall.RemoveAllRemoteFoldersCommand]:
+                    // Each user's folders would show in File Explorer with nothing behind them.
+                    SyncRootCleanup.RemoveForAllUsers(ElevatedUninstall.RemoteFoldersSyncRootPrefix);
+                    return Succeeded;
+
                 default:
                     return InvalidArguments;
             }
         }
-        catch (Exception exception) when (exception is InvalidOperationException or IOException or UnauthorizedAccessException)
+        catch (Exception exception) when (exception is InvalidOperationException or IOException or UnauthorizedAccessException or System.Security.SecurityException)
         {
             LogFailed(logger, exception, args.Length > 0 ? args[0] : string.Empty);
             return Failed;

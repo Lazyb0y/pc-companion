@@ -153,6 +153,11 @@ public sealed class RemoteFoldersFeatureTests
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("can't be read", StringComparison.Ordinal));
     }
 
+    // Setup removes every user's folders by the start of their sync roots' IDs.
+    [Fact]
+    public void TheUninstallFindsTheProvidersSyncRoots() =>
+        Assert.Equal(RemoteFoldersProcess.ProviderName + "!", PCCompanion.Core.ElevatedUninstall.RemoteFoldersSyncRootPrefix);
+
     [Fact]
     public void ItsDefinitionIsInTheFilesModule()
     {
