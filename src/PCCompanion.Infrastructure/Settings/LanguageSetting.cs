@@ -1,14 +1,15 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 
-namespace PCCompanion.Host;
+namespace PCCompanion.Infrastructure.Settings;
 
-internal static partial class LanguageSetting
+/// <summary>The language PC Companion's processes use for their text.</summary>
+public static partial class LanguageSetting
 {
     private static CultureInfo? _windowsLanguage;
 
     /// <summary>
-    /// Uses the language from the settings for the host's text, such as the tray menu.
+    /// Uses the language from the settings for the process's text, such as the host's tray menu.
     /// Without a language setting, the Windows display language is used.
     /// </summary>
     public static void Apply(string? language, ILogger logger)
