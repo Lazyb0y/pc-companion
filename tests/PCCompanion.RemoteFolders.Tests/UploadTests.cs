@@ -348,6 +348,21 @@ public sealed class UploadTests : IDisposable
     }
 
     [Fact]
+    public void AFolderThatsOnTheServerIsntAChangeWaiting()
+    {
+        _pc.AddPlaceholder(Local("docs"), ItemIdentity.Of("", "docs", true, 0, default));
+        _pc.AddNewFolder(Local("photos"));
+        _pc.AddNewFile(Local("notes.txt"), "new");
+
+        _uploads.Changed(Local("docs"));
+        _uploads.Changed(Local("photos"));
+        _uploads.Changed(Local("notes.txt"));
+        _uploads.Changed(Local("gone.txt"));
+
+        Assert.Equal(3, _uploads.Waiting);
+    }
+
+    [Fact]
     public async Task TheWorkerUploadsAChangeOnceItHasBeenQuiet()
     {
         _pc.AddNewFile(Local("notes.txt"), "from the PC");

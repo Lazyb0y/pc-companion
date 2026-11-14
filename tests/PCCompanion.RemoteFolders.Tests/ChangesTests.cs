@@ -293,7 +293,9 @@ public sealed class ChangesTests : IDisposable
         var journal = new ChangeJournal(JournalFile);
         Assert.Equal(2, journal.Count);
         Assert.Equal(Rename("docs", "papers", isDirectory: true), journal.First);
-        Assert.Equal(5, _uploads.Waiting);
+
+        // The files wait to be checked; the folders are on the server, so they need nothing.
+        Assert.Equal(3, _uploads.Waiting);
     }
 
     [Fact]
