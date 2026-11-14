@@ -37,6 +37,9 @@ public enum RemoteError
     /// <summary>The file or folder isn't there.</summary>
     NotFound,
 
+    /// <summary>The file on the server isn't the version expected: it changed since the PC's copy was made.</summary>
+    Changed,
+
     /// <summary>The server refused the user access.</summary>
     PermissionDenied,
 

@@ -34,6 +34,7 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
         _number = number;
         Id = SyncRoots.MakeId(RemoteFoldersProcess.ProviderName, userSid, server.Id);
         Listings = new ServerListings(server.Folder, server.RemoteFolder, connections, pc, time, logger, number);
+        Downloads = new ServerDownloads(server.RemoteFolder, connections, Listings, time, logger, number);
     }
 
     /// <summary>The sync root's ID.</summary>
@@ -43,6 +44,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     public RemoteServer Server => _server;
 
     public ServerListings Listings { get; }
+
+    public ServerDownloads Downloads { get; }
 
     /// <summary>Makes the folder if it's missing, registers it, again when it was, and connects to it.</summary>
     /// <exception cref="Exception">Windows refused, for example for a folder that isn't on an NTFS drive.</exception>
@@ -78,11 +81,9 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public void FetchPlaceholders(FetchPlaceholdersRequest request) => _ = Task.Run(() => Listings.HandleAsync(new ListingRequest(request)));
 
-    public void FetchData(FetchDataRequest request) => request.Refuse(CloudFileStatus.Unsuccessful);
+    public void FetchData(FetchDataRequest request) => _ = Task.Run(() => Downloads.HandleAsync(new DataRequest(request)));
 
-    public void CancelFetchData(CancelFetchDataNotice notice)
-    {
-    }
+    public void CancelFetchData(CancelFetchDataNotice notice) => Downloads.Cancel(notice.Path);
 
     // PC Companion's own changes, such as removing a file deleted on the server, go ahead.
     public void Delete(DeleteRequest request)
@@ -129,57 +130,52 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 }
 
 /// <summary>
-/// The connection to one SFTP server, opened when it's first needed and again after it drops, with
-/// the password or passphrase from Credential Manager.
+/// The connections to one SFTP server, one for listings and changes and one for downloads, each
+/// opened when it's first needed and again after it drops, with the password or passphrase from
+/// Credential Manager.
 /// </summary>
 public sealed class SftpConnections(RemoteServer server, Func<string, string?> readSecret) : IServerConnections
 {
-    private readonly SemaphoreSlim _gate = new(1, 1);
-    private IRemoteServer? _connection;
-    private bool _disposed;
+    private readonly Slot _control = new();
+    private readonly Slot _transfer = new();
 
-    public async Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation)
+    public Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => UseAsync(_control, work, cancellation);
+
+    public Task<T> UseForTransferAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => UseAsync(_transfer, work, cancellation);
+
+    public void Dispose()
     {
-        await _gate.WaitAsync(cancellation).ConfigureAwait(false);
+        _control.Dispose();
+        _transfer.Dispose();
+    }
+
+    private async Task<T> UseAsync<T>(Slot slot, Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation)
+    {
+        await slot.Gate.WaitAsync(cancellation).ConfigureAwait(false);
         try
         {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-            if (_connection is not { IsConnected: true })
+            ObjectDisposedException.ThrowIf(slot.IsDisposed, this);
+            if (slot.Connection is not { IsConnected: true })
             {
-                _connection?.Dispose();
-                _connection = null;
-                _connection = await ConnectAsync(cancellation).ConfigureAwait(false);
+                slot.Connection?.Dispose();
+                slot.Connection = null;
+                slot.Connection = await ConnectAsync(cancellation).ConfigureAwait(false);
             }
 
             try
             {
-                return await work(_connection, cancellation).ConfigureAwait(false);
+                return await work(slot.Connection, cancellation).ConfigureAwait(false);
             }
             catch (RemoteServerException exception) when (exception.Error == RemoteError.Unreachable)
             {
-                _connection.Dispose();
-                _connection = null;
+                slot.Connection.Dispose();
+                slot.Connection = null;
                 throw;
             }
         }
         finally
         {
-            _gate.Release();
-        }
-    }
-
-    public void Dispose()
-    {
-        _gate.Wait();
-        try
-        {
-            _disposed = true;
-            _connection?.Dispose();
-            _connection = null;
-        }
-        finally
-        {
-            _gate.Release();
+            slot.Gate.Release();
         }
     }
 
@@ -191,6 +187,31 @@ public sealed class SftpConnections(RemoteServer server, Func<string, string?> r
             : new SftpSignIn(server.Host, server.Port, server.UserName, secret, null, null);
         var key = new ServerKey(server.HostKey!.Type, server.HostKey.Sha256);
         return await SftpServer.ConnectAsync(signIn, key, cancellation).ConfigureAwait(false);
+    }
+
+    // One connection, used by one request at a time.
+    private sealed class Slot : IDisposable
+    {
+        public SemaphoreSlim Gate { get; } = new(1, 1);
+
+        public IRemoteServer? Connection { get; set; }
+
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            Gate.Wait();
+            try
+            {
+                IsDisposed = true;
+                Connection?.Dispose();
+                Connection = null;
+            }
+            finally
+            {
+                Gate.Release();
+            }
+        }
     }
 }
 

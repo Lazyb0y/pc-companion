@@ -61,6 +61,10 @@ public interface IServerConnections : IDisposable
     /// <summary>Runs <paramref name="work"/> on the connection for listings and changes.</summary>
     /// <exception cref="RemoteServerException">The server can't be reached, refused the sign-in, or failed the request.</exception>
     Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation);
+
+    /// <summary>Runs <paramref name="work"/> on a connection for downloads, so they don't hold up listings.</summary>
+    /// <exception cref="RemoteServerException">The server can't be reached, refused the sign-in, or failed the request.</exception>
+    Task<T> UseForTransferAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation);
 }
 
 /// <summary>The PC's side of a server's folder, with Windows' Cloud Files API and file system.</summary>
