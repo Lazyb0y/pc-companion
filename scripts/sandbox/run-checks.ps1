@@ -49,6 +49,7 @@ $startStates = [ordered] @{
     LockKeys = 'Installed'
     InputLanguagePerApp = 'Installed'
     ShortcutsAndMouseButtons = 'Installed'
+    LauncherActions = 'Installed'
     AppWindows = 'Installed'
     MinimizeToTray = 'Installed'
     HideApps = 'Installed'
