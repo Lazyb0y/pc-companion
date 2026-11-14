@@ -5348,4 +5348,12 @@
     <value>{0} (conflict {1})</value>
     <comment>Remote Folders: the name of a conflict copy, the PC's version of a file that also changed on the server. {0} is the file's name without its extension, {1} its date and time; the extension follows. Only characters Windows allows in file names.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>Remote Folders stopped</value>
+    <comment>Title of the notification shown when Remote Folders' background process ended unexpectedly four times within an hour and isn't started again. "Remote Folders" is the feature's name. At most 63 characters.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>It ended unexpectedly four times within an hour, so files that are only online can't be opened. Select to open its settings; changing them starts it again.</value>
+    <comment>Text of the notification shown when Remote Folders' background process ended unexpectedly four times within an hour. Online-only files can't be opened until it runs again; changing its settings starts it again. Selecting the notification opens Remote Folders' settings page. At most 255 characters.</comment>
+  </data>
 </root>

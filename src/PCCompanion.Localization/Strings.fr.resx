@@ -5348,4 +5348,12 @@
     <value>{0} (conflit {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>Dossiers distants s’est arrêté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>Il s’est arrêté de manière inattendue quatre fois en une heure : les fichiers uniquement en ligne ne peuvent donc pas être ouverts. Sélectionnez pour ouvrir ses paramètres ; les modifier le redémarre.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

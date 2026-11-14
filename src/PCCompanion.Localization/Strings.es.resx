@@ -5348,4 +5348,12 @@
     <value>{0} (conflicto {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>Carpetas remotas se detuvo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>Se cerró de forma inesperada cuatro veces en una hora, así que no se pueden abrir los archivos que solo están en línea. Selecciona para abrir su configuración; al cambiarla, se vuelve a iniciar.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

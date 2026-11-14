@@ -5348,4 +5348,12 @@
     <value>{0} (দ্বন্দ্ব {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>রিমোট ফোল্ডার বন্ধ হয়ে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>এটি এক ঘণ্টার মধ্যে চারবার অপ্রত্যাশিতভাবে বন্ধ হয়েছে, তাই শুধু অনলাইনে থাকা ফাইল খোলা যাচ্ছে না। এর সেটিংস খুলতে নির্বাচন করুন; সেগুলো বদলালে এটি আবার চালু হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

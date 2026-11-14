@@ -5348,4 +5348,12 @@
     <value>{0} (Konflikt {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>Remoteordner wurde beendet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>Es wurde innerhalb einer Stunde viermal unerwartet beendet, daher können Dateien, die nur online sind, nicht geöffnet werden. Wählen Sie diese Benachrichtigung aus, um die Einstellungen zu öffnen; wenn Sie sie ändern, wird es neu gestartet.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

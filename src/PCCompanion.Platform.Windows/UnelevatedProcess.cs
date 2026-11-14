@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Security;
@@ -38,6 +39,25 @@ public static class UnelevatedProcess
         var process = Create(path, arguments, sameUser: false);
         PInvoke.CloseHandle(process.hThread);
         PInvoke.CloseHandle(process.hProcess);
+    }
+
+    /// <summary>
+    /// Starts the program at <paramref name="path"/> in its own folder, as the same user as this
+    /// process without admin rights, and keeps watching it. The <paramref name="arguments"/> are
+    /// passed as they are, so they must need no quotes, and with the path they must fit in 1,024
+    /// characters.
+    /// </summary>
+    /// <exception cref="Win32Exception">
+    /// There's no shell of this user without admin rights to take the token from, or Windows
+    /// refused to start the program.
+    /// </exception>
+    public static RunningProcess StartKept(string path, string? arguments)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path);
+
+        var process = Create(path, arguments, sameUser: true);
+        PInvoke.CloseHandle(process.hThread);
+        return RunningProcess.FromHandle(new SafeProcessHandle(process.hProcess, ownsHandle: true), (int)process.dwProcessId);
     }
 
     /// <summary>
