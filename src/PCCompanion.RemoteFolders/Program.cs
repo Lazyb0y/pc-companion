@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -57,6 +58,16 @@ internal static partial class Program
         WatchHost(arguments.HostProcessId, stop, logger);
 
         var store = new SettingsStore(paths, loggers.CreateLogger<SettingsStore>());
+        using var recycleBin = new RecycleBin();
+        var pc = new WindowsPlaceholderSystem(recycleBin);
+        var sync = new WindowsSyncRootSystem();
+        string sid = Elevation.CurrentUserSid;
+        string icon = Environment.ProcessPath + ",0";
+        using var service = new ProviderService(
+            sync,
+            sid,
+            (server, number) => new ServerFolder(server, sid, icon, sync, pc, new SftpConnections(server, ReadSecret), TimeProvider.System, loggers.CreateLogger<ServerFolder>(), number),
+            loggers.CreateLogger<ProviderService>());
         using var watcher = new SettingsWatcher(paths);
         var applying = new Lock();
         void Apply()
@@ -83,6 +94,7 @@ internal static partial class Program
                 }
 
                 LogApplied(logger, section.Servers.Count, section.UsableServers.Count);
+                service.Apply(section);
             }
         }
 
@@ -121,6 +133,19 @@ internal static partial class Program
             // The host already ended.
             LogHostEnded(logger);
             stop.Set();
+        }
+    }
+
+    // A server's password or key passphrase; none when it's missing or can't be read.
+    private static string? ReadSecret(string target)
+    {
+        try
+        {
+            return CredentialStore.Read(target);
+        }
+        catch (Win32Exception)
+        {
+            return null;
         }
     }
 
