@@ -5284,4 +5284,8 @@
     <value>PC Companion has no such action. Copy its command again on the {0} page.</value>
     <comment>Notification after the command asked for an action PC Companion doesn't have, such as one typed by hand. {0} is this feature's name, Launcher Actions, whose page lists the actions with their commands.</comment>
   </data>
+  <data name="LauncherActionsEntryName" xml:space="preserve">
+    <value>{0} - {1}</value>
+    <comment>Name of an action's entry in Start and Windows Search: {0} is the action, such as Use Office, and {1} its feature, such as Network Profiles, or PC Companion for Launcher Actions' own. Translations may change the order and the separator. Characters Windows doesn't allow in file names, such as a colon, become spaces.</comment>
+  </data>
 </root>
