@@ -18,6 +18,7 @@ CfOpenFileWithOplock
 CfReportProviderProgress
 CfSetInSyncState
 CfSetPinState
+CfUnregisterSyncRoot
 CfUpdatePlaceholder
 ChangeWindowMessageFilterEx
 CloseDesktop
