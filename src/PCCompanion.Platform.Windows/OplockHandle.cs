@@ -6,6 +6,7 @@ using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Storage.CloudFilters;
+using Windows.Win32.Storage.FileSystem;
 
 namespace PCCompanion.Platform.Windows;
 
@@ -136,6 +137,45 @@ internal sealed class OplockHandle : IDisposable
             }
 
             return (int)read;
+        }
+        finally
+        {
+            PInvoke.CfReleaseProtectedHandle(_protected);
+        }
+    }
+
+    /// <summary>
+    /// Renames the file through the handle, which needs delete access, so no program can open it
+    /// in between; fails when <paramref name="newPath"/> is taken.
+    /// </summary>
+    /// <returns>Windows' HRESULT, or <see cref="Closed"/> when a program opened the file.</returns>
+    public unsafe int Rename(string newPath)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(newPath);
+        if (!PInvoke.CfReferenceProtectedHandle(_protected))
+        {
+            return Closed;
+        }
+
+        try
+        {
+            int nameOffset;
+            {
+                FILE_RENAME_INFO probe = default;
+                nameOffset = (int)((byte*)&probe.FileName - (byte*)&probe);
+            }
+
+            int size = Math.Max(sizeof(FILE_RENAME_INFO), nameOffset + ((newPath.Length + 1) * sizeof(char)));
+            byte[] buffer = new byte[size];
+            fixed (byte* bytes = buffer)
+            {
+                // Zeroed, so it doesn't replace a file and the path is a full one.
+                ((FILE_RENAME_INFO*)bytes)->FileNameLength = (uint)(newPath.Length * sizeof(char));
+                newPath.AsSpan().CopyTo(new Span<char>(bytes + nameOffset, newPath.Length));
+                return PInvoke.SetFileInformationByHandle((HANDLE)_win32.DangerousGetHandle(), FILE_INFO_BY_HANDLE_CLASS.FileRenameInfo, bytes, (uint)size)
+                    ? 0
+                    : HResultOf((WIN32_ERROR)Marshal.GetLastPInvokeError());
+            }
         }
         finally
         {

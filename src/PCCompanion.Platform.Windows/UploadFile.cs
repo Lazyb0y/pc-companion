@@ -40,11 +40,13 @@ public sealed class UploadFile : IDisposable
     public static int Open(string path, out UploadFile? file)
     {
         file = null;
-        int result = OplockHandle.Open(path, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_EXCLUSIVE | CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var handle);
+        // Delete access lets a conflict copy be renamed through the same handle.
+        const CF_OPEN_FILE_FLAGS Flags = CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_EXCLUSIVE | CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_DELETE_ACCESS;
+        int result = OplockHandle.Open(path, Flags | CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var handle);
         if (result == AccessDenied)
         {
-            // A read-only file can still be read, and marked in sync.
-            result = OplockHandle.Open(path, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_EXCLUSIVE, out handle);
+            // A read-only file can still be read, renamed and marked in sync.
+            result = OplockHandle.Open(path, Flags, out handle);
         }
 
         if (result != 0)
@@ -85,6 +87,18 @@ public sealed class UploadFile : IDisposable
         int result = _handle.Use(win32 => isPlaceholder
             ? PInvoke.CfUpdatePlaceholder(win32, (CF_FS_METADATA?)null, identity, default, CF_UPDATE_FLAGS.CF_UPDATE_FLAG_MARK_IN_SYNC).Value
             : PInvoke.CfConvertToPlaceholder(win32, identity, CF_CONVERT_FLAGS.CF_CONVERT_FLAG_MARK_IN_SYNC).Value);
+        IsClosed |= result == Closed;
+        return result;
+    }
+
+    /// <summary>
+    /// Renames the file, as for a conflict copy, so that no program can open it in between; it
+    /// fails when <paramref name="newPath"/> is taken.
+    /// </summary>
+    /// <returns>Windows' HRESULT; <see cref="Closed"/> when a program opened the file meanwhile.</returns>
+    public int Rename(string newPath)
+    {
+        int result = _handle.Rename(newPath);
         IsClosed |= result == Closed;
         return result;
     }

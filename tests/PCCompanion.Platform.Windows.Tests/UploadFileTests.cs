@@ -19,6 +19,9 @@ public sealed class UploadFileTests : IDisposable
     // HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)
     private const int NotACloudFile = unchecked((int)0x80070178);
 
+    // HRESULT_FROM_WIN32(ERROR_ALREADY_EXISTS)
+    private const int AlreadyExists = unchecked((int)0x800700B7);
+
     // HRESULT_FROM_WIN32(ERROR_CLOUD_FILE_NOT_UNDER_SYNC_ROOT)
     private const int NotUnderASyncRoot = unchecked((int)0x80070186);
 
@@ -127,6 +130,59 @@ public sealed class UploadFileTests : IDisposable
     {
         Assert.NotEqual(0, Placeholders.ConvertFolder(_folder.FullPath, [1, 2, 3]));
         Assert.Null(Placeholders.Read(_folder.FullPath));
+    }
+
+    [Fact]
+    public void AFileIsRenamedThroughItsUploadHandle()
+    {
+        string path = File("Report.docx", "the PC's version");
+        string copy = Path.Join(_folder.FullPath, "Report (conflict).docx");
+
+        Assert.Equal(0, UploadFile.Open(path, out var file));
+        using (file)
+        {
+            Assert.Equal(0, file!.Rename(copy));
+            using var reader = new StreamReader(file.OpenRead());
+            Assert.Equal("the PC's version", reader.ReadToEnd());
+        }
+
+        Assert.False(System.IO.File.Exists(path));
+        Assert.Equal("the PC's version", System.IO.File.ReadAllText(copy));
+    }
+
+    [Fact]
+    public void ARenameToATakenNameFailsAndChangesNothing()
+    {
+        string path = File("Report.docx", "the PC's version");
+        string taken = File("Taken.docx", "another file");
+
+        Assert.Equal(0, UploadFile.Open(path, out var file));
+        using (file)
+        {
+            Assert.Equal(AlreadyExists, file!.Rename(taken));
+        }
+
+        Assert.Equal("the PC's version", System.IO.File.ReadAllText(path));
+        Assert.Equal("another file", System.IO.File.ReadAllText(taken));
+    }
+
+    [Fact]
+    public void ARenameAfterAProgramOpenedTheFileIsRefused()
+    {
+        string path = File("Report.docx", "the PC's version");
+
+        Assert.Equal(0, UploadFile.Open(path, out var file));
+        using (file)
+        {
+            using (new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+            }
+
+            Assert.Equal(UploadFile.Closed, file!.Rename(Path.Join(_folder.FullPath, "Copy.docx")));
+            Assert.True(file.IsClosed);
+        }
+
+        Assert.True(System.IO.File.Exists(path));
     }
 
     [Fact]

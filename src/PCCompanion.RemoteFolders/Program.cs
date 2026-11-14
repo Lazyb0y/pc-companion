@@ -91,6 +91,9 @@ internal static partial class Program
                 }
 
                 detailedLogging.TurnOnUntil(settings.Diagnostics.DetailedLoggingUntil);
+
+                // Conflict copies are named in the user's language.
+                LanguageSetting.Apply(settings.General.Language, logger);
                 var section = ProviderSettings.Read(settings, out var error);
                 if (error is not null)
                 {

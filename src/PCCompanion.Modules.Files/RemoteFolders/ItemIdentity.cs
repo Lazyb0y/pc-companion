@@ -96,25 +96,41 @@ public static class ConflictNames
 {
     /// <summary>
     /// The conflict copy's name for <paramref name="name"/>, such as <c>Report (conflict 14-11-2026 15.30).docx</c>,
-    /// in the language of <paramref name="culture"/>, with its date and time in that culture's
-    /// formats, made safe for file names. A name that would be too long is shortened before the extension.
+    /// with the words in the language of <paramref name="language"/> and the date and time in the
+    /// formats of <paramref name="formats"/>, such as the user's regional settings, made safe for file
+    /// names. A name that would be too long is shortened before the extension.
     /// </summary>
-    public static string For(string name, DateTime localTime, CultureInfo culture)
+    public static string For(string name, DateTime localTime, CultureInfo language, CultureInfo formats)
     {
         ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(culture);
+        ArgumentNullException.ThrowIfNull(language);
+        ArgumentNullException.ThrowIfNull(formats);
         string extension = Path.GetExtension(name);
         string stem = name[..^extension.Length];
-        string when = Safe(localTime.ToString("d", culture)) + " " + Safe(localTime.ToString("t", culture));
-        string pattern = Strings.ResourceManager.GetString(nameof(Strings.RemoteFoldersConflictName), culture) ?? "{0} (conflict {1})";
-        string result = string.Format(culture, pattern, stem, when) + extension;
+        string when = Safe(localTime.ToString("d", formats)) + " " + Safe(localTime.ToString("t", formats));
+        string pattern = Strings.ResourceManager.GetString(nameof(Strings.RemoteFoldersConflictName), language) ?? "{0} (conflict {1})";
+        string result = string.Format(formats, pattern, stem, when) + extension;
         if (result.Length <= FileNaming.MaximumNameLength)
         {
             return result;
         }
 
         int over = result.Length - FileNaming.MaximumNameLength;
-        return string.Format(culture, pattern, stem[..Math.Max(1, stem.Length - over)], when) + extension;
+        return string.Format(formats, pattern, stem[..Math.Max(1, stem.Length - over)], when) + extension;
+    }
+
+    /// <summary>
+    /// Another conflict copy's name, when <paramref name="conflictName"/> is taken, as by a conflict
+    /// in the same minute: <c>Report (conflict 14-11-2026 15.30) 2.docx</c>.
+    /// </summary>
+    public static string Numbered(string conflictName, int number)
+    {
+        ArgumentNullException.ThrowIfNull(conflictName);
+        string extension = Path.GetExtension(conflictName);
+        string stem = conflictName[..^extension.Length];
+        string suffix = " " + number.ToString(CultureInfo.InvariantCulture);
+        int over = stem.Length + suffix.Length + extension.Length - FileNaming.MaximumNameLength;
+        return (over > 0 ? stem[..Math.Max(1, stem.Length - over)] : stem) + suffix + extension;
     }
 
     // Dates and times can hold characters file names can't, such as / and :.
