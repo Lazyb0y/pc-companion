@@ -14,7 +14,7 @@ namespace PCCompanion.Architecture.Tests;
 public sealed class ThirdPartyNoticesTests
 {
     // The projects whose published files the installer includes.
-    private static readonly string[] InstalledProjects = ["src/PCCompanion.App", "src/PCCompanion.Host", "src/PCCompanion.Elevated"];
+    private static readonly string[] InstalledProjects = ["src/PCCompanion.App", "src/PCCompanion.Host", "src/PCCompanion.Elevated", "src/PCCompanion.RemoteFolders"];
 
     // Used only to build; nothing from them is installed.
     private static readonly HashSet<string> BuildOnlyPackages = new(StringComparer.OrdinalIgnoreCase)

@@ -17,6 +17,8 @@ internal static class DependencyRules
     private const string Elevated = "PCCompanion.Elevated";
     private const string Host = "PCCompanion.Host";
     private const string App = "PCCompanion.App";
+    private const string RemoteFolders = "PCCompanion.RemoteFolders";
+    private const string FilesModule = "PCCompanion.Modules.Files";
     private const string ModulePrefix = "PCCompanion.Modules.";
     private const string TestSuffix = ".Tests";
 
@@ -31,6 +33,9 @@ internal static class DependencyRules
         [Logging] = [Core],
         [Infrastructure] = [Core],
         [Elevated] = [Core, Infrastructure, Logging, PlatformWindows],
+
+        // Remote Folders' process, which serves the feature's folders; only its tests reference it.
+        [RemoteFolders] = [Core, Infrastructure, Logging, PlatformWindows, FilesModule],
     };
 
     private static readonly string[] ModuleReferences = [Core, PlatformWindows, Localization];

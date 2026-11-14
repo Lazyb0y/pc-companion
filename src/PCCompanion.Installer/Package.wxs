@@ -72,6 +72,7 @@
     -->
     <util:CloseApplication Id="CloseSettingsApp" Target="PCCompanion.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
     <util:CloseApplication Id="CloseHost" Target="PCCompanion.Host.exe" CloseMessage="yes" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
+    <util:CloseApplication Id="CloseRemoteFolders" Target="PCCompanion.RemoteFolders.exe" TerminateProcess="1" RebootPrompt="no" Timeout="5000" />
     <InstallExecuteSequence>
       <Custom Action="ExitPCCompanion" Before="InstallValidate" Condition="INSTALLEDHOST" />
       <Custom Action="override Wix4CloseApplications_$(sys.BUILDARCHSHORT)" After="InstallInitialize" Condition="VersionNT &gt; 400" />

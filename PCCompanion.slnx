@@ -27,6 +27,10 @@
   <Project Path="src/PCCompanion.Modules.Network/PCCompanion.Modules.Network.csproj" />
   <Project Path="src/PCCompanion.Modules.Windows/PCCompanion.Modules.Windows.csproj" />
   <Project Path="src/PCCompanion.Platform.Windows/PCCompanion.Platform.Windows.csproj" />
+  <Project Path="src/PCCompanion.RemoteFolders/PCCompanion.RemoteFolders.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
   <Project Path="tests/PCCompanion.Architecture.Tests/PCCompanion.Architecture.Tests.csproj" />
   <Project Path="tests/PCCompanion.Infrastructure.Tests/PCCompanion.Infrastructure.Tests.csproj" />
   <Project Path="tests/PCCompanion.Localization.Tests/PCCompanion.Localization.Tests.csproj" />
@@ -39,5 +43,6 @@
   <Project Path="tests/PCCompanion.Modules.Network.Tests/PCCompanion.Modules.Network.Tests.csproj" />
   <Project Path="tests/PCCompanion.Modules.Windows.Tests/PCCompanion.Modules.Windows.Tests.csproj" />
   <Project Path="tests/PCCompanion.Platform.Windows.Tests/PCCompanion.Platform.Windows.Tests.csproj" />
+  <Project Path="tests/PCCompanion.RemoteFolders.Tests/PCCompanion.RemoteFolders.Tests.csproj" />
   <Project Path="tests/PCCompanion.Testing/PCCompanion.Testing.csproj" />
 </Solution>
