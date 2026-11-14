@@ -361,8 +361,21 @@ public sealed partial class ServerListings(
                 continue;
             }
 
+            // Windows doesn't remove a kept file's copy, so its pin steps aside for the update; set
+            // again, it has the new version downloaded at once.
             var entry = ListingDiff.Placeholder(change.Remote, change.NewIdentity);
+            bool kept = change.Local.State.Pin == PinState.Pinned;
+            if (kept)
+            {
+                pc.SetPinState(change.Local.Path, PinState.Unspecified);
+            }
+
             int result = pc.Update(change.Local.Path, entry, change.NewIdentity.ToBytes(), PlaceholderUpdate.VerifyInSync | PlaceholderUpdate.MarkInSync | PlaceholderUpdate.Dehydrate);
+            if (kept)
+            {
+                pc.SetPinState(change.Local.Path, PinState.Pinned);
+            }
+
             if (result != 0)
             {
                 LogUpdateFailed(logger, serverNumber, result);

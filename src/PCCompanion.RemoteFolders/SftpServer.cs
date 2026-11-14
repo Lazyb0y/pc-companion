@@ -371,7 +371,7 @@ public sealed class SftpServer : IRemoteServer
                 break;
             }
 
-            return new RemoteEntry(file.Name, IsDirectory: true, 0, file.LastWriteTimeUtc);
+            return new RemoteEntry(file.Name, IsDirectory: true, 0, file.LastWriteTimeUtc) { IsLink = true };
         }
         catch (Exception exception) when (exception is SshException or SftpPathNotFoundException or SftpPermissionDeniedException)
         {
@@ -380,7 +380,7 @@ public sealed class SftpServer : IRemoteServer
         try
         {
             await using var target = await _client.OpenAsync(file.FullName, FileMode.Open, FileAccess.Read, cancellation).ConfigureAwait(false);
-            return new RemoteEntry(file.Name, IsDirectory: false, target.Length, file.LastWriteTimeUtc);
+            return new RemoteEntry(file.Name, IsDirectory: false, target.Length, file.LastWriteTimeUtc) { IsLink = true };
         }
         catch (Exception exception) when (exception is SshException or SftpPathNotFoundException or SftpPermissionDeniedException)
         {

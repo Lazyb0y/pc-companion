@@ -8,7 +8,11 @@ namespace PCCompanion.RemoteFolders;
 
 /// <summary>A file or folder on a server, as a listing or <c>stat</c> gives it, with links followed.</summary>
 /// <param name="Name">Its name as the server gives it, unchecked: see "Names from the server" in the spec.</param>
-public sealed record RemoteEntry(string Name, bool IsDirectory, long Size, DateTime LastWriteTimeUtc);
+public sealed record RemoteEntry(string Name, bool IsDirectory, long Size, DateTime LastWriteTimeUtc)
+{
+    /// <summary>Whether it's a link, shown as what it points to.</summary>
+    public bool IsLink { get; init; }
+}
 
 /// <summary>A folder's entries, with whether the server had more than were read.</summary>
 public sealed record RemoteListing(IReadOnlyList<RemoteEntry> Entries, bool IsTruncated);

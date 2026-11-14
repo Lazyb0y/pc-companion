@@ -16,6 +16,10 @@ namespace PCCompanion.Modules.Files.RemoteFolders;
 /// <param name="RelativePath">The path on the server below the server's folder, with <c>/</c> between folders; empty for the folder itself.</param>
 public sealed record ItemIdentity(string RelativePath, bool IsDirectory, long Size, DateTime LastWriteTimeUtc)
 {
+    // Flags: 1 for a folder, 2 for a link on the server, shown as what it points to.
+    private const byte DirectoryFlag = 1;
+    private const byte LinkFlag = 2;
+
     /// <summary>The most bytes Windows keeps in a placeholder's identity.</summary>
     public const int MaximumLength = 4 * 1024;
 
@@ -37,6 +41,9 @@ public sealed record ItemIdentity(string RelativePath, bool IsDirectory, long Si
     public static string RemotePath(string remoteFolder, string relativePath) =>
         relativePath.Length == 0 ? remoteFolder : remoteFolder.TrimEnd('/') + "/" + relativePath;
 
+    /// <summary>Whether it's a link on the server, which keeping a folder on this device doesn't follow.</summary>
+    public bool IsLink { get; init; }
+
     /// <summary>The name of the file or folder, the end of its path.</summary>
     public string Name => RelativePath[(RelativePath.LastIndexOf('/') + 1)..];
 
@@ -55,7 +62,7 @@ public sealed record ItemIdentity(string RelativePath, bool IsDirectory, long Si
 
         byte[] bytes = new byte[HeaderLength + path.Length];
         bytes[0] = FormatVersion;
-        bytes[1] = IsDirectory ? (byte)1 : (byte)0;
+        bytes[1] = (byte)((IsDirectory ? DirectoryFlag : 0) | (IsLink ? LinkFlag : 0));
         BinaryPrimitives.WriteInt64LittleEndian(bytes.AsSpan(2), Size);
         BinaryPrimitives.WriteInt64LittleEndian(bytes.AsSpan(10), LastWriteTimeUtc.Ticks);
         path.CopyTo(bytes, HeaderLength);
@@ -65,7 +72,7 @@ public sealed record ItemIdentity(string RelativePath, bool IsDirectory, long Si
     /// <summary>The identity in a placeholder's bytes, or <see langword="null"/> when they aren't one of this format, such as a placeholder another program made.</summary>
     public static ItemIdentity? FromBytes(ReadOnlySpan<byte> bytes)
     {
-        if (bytes.Length < HeaderLength || bytes.Length > MaximumLength || bytes[0] != FormatVersion || bytes[1] > 1)
+        if (bytes.Length < HeaderLength || bytes.Length > MaximumLength || bytes[0] != FormatVersion || bytes[1] > (DirectoryFlag | LinkFlag))
         {
             return null;
         }
@@ -82,7 +89,7 @@ public sealed record ItemIdentity(string RelativePath, bool IsDirectory, long Si
             string path = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetString(bytes[HeaderLength..]);
             return path.StartsWith('/') || path.EndsWith('/') || path.Contains("//", StringComparison.Ordinal) || path.Split('/').Any(part => part is "." or "..")
                 ? null
-                : new ItemIdentity(path, bytes[1] == 1, size, new DateTime(ticks, DateTimeKind.Utc));
+                : new ItemIdentity(path, (bytes[1] & DirectoryFlag) != 0, size, new DateTime(ticks, DateTimeKind.Utc)) { IsLink = (bytes[1] & LinkFlag) != 0 };
         }
         catch (DecoderFallbackException)
         {

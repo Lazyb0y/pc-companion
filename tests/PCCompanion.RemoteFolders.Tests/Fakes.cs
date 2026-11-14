@@ -270,6 +270,50 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
 
     public List<(string Path, bool MarkInSync)> IdentityUpdates { get; } = [];
 
+    public List<string> Hydrated { get; } = [];
+
+    public List<string> Dehydrated { get; } = [];
+
+    /// <summary>When set, downloads and copies being freed fail with it, as when the server is gone or a file is open.</summary>
+    public int? HydrateResult { get; set; }
+
+    public int? DehydrateResult { get; set; }
+
+    public int Hydrate(string path)
+    {
+        if (HydrateResult is { } failure)
+        {
+            return failure;
+        }
+
+        Hydrated.Add(path);
+        var state = Local[path].State!;
+        Local[path] = (false, state with { Attributes = FileAttributes.Archive | FileAttributes.ReparsePoint, OnDiskSize = 1 });
+        return 0;
+    }
+
+    public int Dehydrate(string path)
+    {
+        if (DehydrateResult is { } failure)
+        {
+            return failure;
+        }
+
+        Dehydrated.Add(path);
+        var state = Local[path].State!;
+        Local[path] = (false, state with { Attributes = (FileAttributes)0x00401620, OnDiskSize = 0 });
+        return 0;
+    }
+
+    public int SetPinState(string path, PinState pin)
+    {
+        var item = Local[path];
+        Local[path] = (item.IsDirectory, item.State! with { Pin = pin });
+        return 0;
+    }
+
+    public void Pin(string path, PinState pin) => SetPinState(path, pin);
+
     public int UpdateIdentity(string path, byte[] identity, bool markInSync)
     {
         IdentityUpdates.Add((path, markInSync));
@@ -356,7 +400,14 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
             return unchecked((int)0x80070179);
         }
 
-        Local[path] = (false, State(identity, inSync: true, onlineOnly: update.HasFlag(PlaceholderUpdate.Dehydrate)));
+        // Windows doesn't remove a pinned file's copy.
+        var pin = Local[path].State!.Pin;
+        if (update.HasFlag(PlaceholderUpdate.Dehydrate) && pin == PinState.Pinned)
+        {
+            return unchecked((int)0x80070188);
+        }
+
+        Local[path] = (false, State(identity, inSync: true, onlineOnly: update.HasFlag(PlaceholderUpdate.Dehydrate)) with { Pin = pin });
         return 0;
     }
 

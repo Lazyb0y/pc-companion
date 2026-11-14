@@ -56,6 +56,15 @@ public interface IPlaceholderSystem
     /// <summary>Gives a placeholder a new identity; see <see cref="Placeholders.UpdateIdentity"/>.</summary>
     int UpdateIdentity(string path, byte[] identity, bool markInSync);
 
+    /// <summary>Downloads all of a placeholder's data, and waits until it's there; see <see cref="Placeholders.Hydrate"/>.</summary>
+    int Hydrate(string path);
+
+    /// <summary>Removes a placeholder's copy on the PC; see <see cref="Placeholders.Dehydrate"/>.</summary>
+    int Dehydrate(string path);
+
+    /// <summary>Sets whether a placeholder's copy stays on the PC; see <see cref="Placeholders.SetPinState"/>.</summary>
+    int SetPinState(string path, PinState pin);
+
     /// <summary>Marks a file that stays on the PC as excluded, which File Explorer shows.</summary>
     int Exclude(string path);
 
@@ -68,7 +77,8 @@ public interface IPlaceholderSystem
 
     /// <summary>
     /// Watches <paramref name="folder"/> and the folders below it: <paramref name="changed"/> gets
-    /// each new, changed or renamed file and folder, and <paramref name="missed"/> is called when
+    /// each new, changed or renamed file and folder, also when its pin or copy on the PC changes,
+    /// and <paramref name="missed"/> is called when
     /// Windows reported more changes than it could keep. Dispose the watch to stop.
     /// </summary>
     IDisposable Watch(string folder, Action<string> changed, Action missed);
@@ -152,17 +162,13 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
 
     public int ConvertFolder(string path, byte[] identity) => Placeholders.ConvertFolder(path, identity);
 
-    public int UpdateIdentity(string path, byte[] identity, bool markInSync)
-    {
-        try
-        {
-            return Placeholders.UpdateIdentity(path, identity, markInSync);
-        }
-        catch (IOException exception)
-        {
-            return exception.HResult;
-        }
-    }
+    public int UpdateIdentity(string path, byte[] identity, bool markInSync) => Try(() => Placeholders.UpdateIdentity(path, identity, markInSync));
+
+    public int Hydrate(string path) => Try(() => Placeholders.Hydrate(path));
+
+    public int Dehydrate(string path) => Try(() => Placeholders.Dehydrate(path));
+
+    public int SetPinState(string path, PinState pin) => Try(() => Placeholders.SetPinState(path, pin));
 
     public int Exclude(string path) => Placeholders.SetPinState(path, PinState.Excluded);
 
@@ -198,7 +204,7 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
         var watcher = new FileSystemWatcher(folder)
         {
             IncludeSubdirectories = true,
-            NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
+            NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes,
             InternalBufferSize = 64 * 1024,
         };
         watcher.Created += (_, e) => changed(e.FullPath);
@@ -248,6 +254,19 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
         });
         done.Wait();
         return result;
+    }
+
+    // A file that's gone, or can't be opened, gives the error's HRESULT.
+    private static int Try(Func<int> action)
+    {
+        try
+        {
+            return action();
+        }
+        catch (IOException exception)
+        {
+            return exception.HResult;
+        }
     }
 
     // A reparse point that isn't a placeholder is a link, which stays on the PC.
