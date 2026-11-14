@@ -139,7 +139,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 - The proxy settings of VPN and dial-up connections, and the computer's own proxy setting for services (`netsh winhttp`), which needs admin rights.
 - Environment variables for command-line tools, such as `http_proxy` and `no_proxy`. Their formats differ from tool to tool and from Windows' exceptions, and a variable left behind overrides Windows' settings in .NET and Python programs.
 - Switching on its own when the PC joins a network or Wi-Fi, which belongs to profiles and context triggers ([#56](https://github.com/Lazyb0y/pc-companion/issues/56)).
-- A command line for switching. Shortcuts and mouse buttons come through Shortcuts & Mouse Buttons; see [With Shortcuts & Mouse Buttons](#with-shortcuts--mouse-buttons).
+- A command line of its own. [Launcher Actions](../input/launcher-actions.md) switches with `PCCompanion.exe --run networkProfiles use <profile>` and from Start, and shortcuts and mouse buttons come through Shortcuts & Mouse Buttons; see [With Shortcuts & Mouse Buttons](#with-shortcuts--mouse-buttons).
 - Keeping a profile in place when another program, such as a VPN or a security product, changes the settings. PC Companion shows the change instead of fighting it.
 - Proxy user names and passwords: Windows' proxy settings have none, and programs ask for them when a proxy needs them.
 - Editing setup scripts, and rules that send some sites or programs through a proxy.
