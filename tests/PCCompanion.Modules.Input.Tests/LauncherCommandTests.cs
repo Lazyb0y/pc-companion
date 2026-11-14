@@ -74,6 +74,15 @@ public sealed class LauncherCommandTests
     }
 
     [Fact]
+    public void TheExitCodeSaysWhatTheHostAnswered()
+    {
+        Assert.Equal(0, (int)LauncherCommand.ExitCodeOf(LauncherResult.Ran));
+        Assert.Equal(1, (int)LauncherCommand.ExitCodeOf(LauncherResult.Refused));
+        Assert.Equal(2, (int)LauncherCommand.ExitCodeOf(LauncherResult.Invalid));
+        Assert.Equal(3, (int)LauncherCommand.ExitCodeOf(null));
+    }
+
+    [Fact]
     public void ARequestIsTheSpecsJson()
     {
         Assert.Equal("""{"feature":"networkProfiles","action":"use","target":"Office"}""", Encoding.UTF8.GetString(LauncherPipe.WriteRequest(UseOffice)));

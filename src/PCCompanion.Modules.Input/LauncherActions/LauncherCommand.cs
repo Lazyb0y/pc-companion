@@ -5,6 +5,22 @@ using PCCompanion.Core.Features;
 
 namespace PCCompanion.Modules.Input.LauncherActions;
 
+/// <summary>The command's exit codes, which scripts read.</summary>
+public enum LauncherExitCode
+{
+    /// <summary>The host started the action.</summary>
+    Ran = 0,
+
+    /// <summary>The host couldn't run it now, and showed a notification that says why.</summary>
+    Refused = 1,
+
+    /// <summary>The arguments aren't a command.</summary>
+    NotACommand = 2,
+
+    /// <summary>PC Companion couldn't be reached, or Launcher Actions is off.</summary>
+    Unreachable = 3,
+}
+
 /// <summary>
 /// The command that runs an action through the host: <c>PCCompanion.exe --run &lt;feature&gt;
 /// &lt;action&gt; [&lt;target&gt;]</c>. See "The command" in docs/features/input/launcher-actions.md.
@@ -55,6 +71,18 @@ public static class LauncherCommand
             ? [RunArgument, action.FeatureId, action.ActionId, target]
             : [RunArgument, action.FeatureId, action.ActionId];
     }
+
+    /// <summary>
+    /// The exit code for the host's answer, or for none, as when no host serves the pipe or it
+    /// didn't answer in time.
+    /// </summary>
+    public static LauncherExitCode ExitCodeOf(LauncherResult? answer) => answer switch
+    {
+        LauncherResult.Ran => LauncherExitCode.Ran,
+        LauncherResult.Refused => LauncherExitCode.Refused,
+        LauncherResult.Invalid => LauncherExitCode.NotACommand,
+        _ => LauncherExitCode.Unreachable,
+    };
 
     private static bool IsId(string? id) => id is { Length: > 0 and <= MaximumIdLength } && id.All(char.IsAsciiLetterOrDigit);
 
