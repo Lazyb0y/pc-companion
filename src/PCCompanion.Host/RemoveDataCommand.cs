@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.IO;
 using PCCompanion.Core;
 using PCCompanion.Infrastructure;
+using PCCompanion.Modules.Files.RemoteFolders;
 using PCCompanion.Modules.Input.LauncherActions;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
 
 /// <summary>
-/// Removes the user's data folder, and Launcher Actions' entries in Start, as setup uninstalls PC Companion. Setup runs the host with
+/// Removes the user's data folder, Launcher Actions' entries in Start, and Remote Folders' folders
+/// and credentials, as setup uninstalls PC Companion. Setup runs the host with
 /// <see cref="HostProcess.RemoveDataArgument"/>, and <see cref="HostProcess.KeepSettingsArgument"/>
 /// to keep the settings file, as the user who uninstalls it.
 /// </summary>
@@ -38,6 +40,9 @@ internal static class RemoveDataCommand
 
             return;
         }
+
+        // Remote Folders' process stops first, and its folders would show with nothing behind them.
+        RemoteFoldersRemoval.RemoveForCurrentUser(keepSettings);
 
         UserDataRemoval.Remove(AppDataPaths.ForCurrentUser(), keepSettings);
 

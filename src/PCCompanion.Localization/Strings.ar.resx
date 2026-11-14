@@ -5540,4 +5540,12 @@
     <value>{0} (تعارض {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>توقفت المجلدات البعيدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>انتهى بشكل غير متوقع أربع مرات خلال ساعة، لذا لا يمكن فتح الملفات المتوفرة عبر الإنترنت فقط. حدد لفتح إعداداته؛ تغييرها يشغّله من جديد.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

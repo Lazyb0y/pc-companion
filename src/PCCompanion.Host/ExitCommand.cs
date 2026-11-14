@@ -5,13 +5,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using PCCompanion.Core;
+using PCCompanion.Modules.Files.RemoteFolders;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
 
 /// <summary>
-/// Closes the settings app and the host running in this session, as Exit in the tray menu does, and
-/// waits until their processes end. Setup runs the host with <see cref="HostProcess.ExitArgument"/>
+/// Closes the settings app, the host and Remote Folders' process running in this session, as Exit
+/// in the tray menu does, and waits until their processes end. Setup runs the host with <see cref="HostProcess.ExitArgument"/>
 /// before Windows Installer looks for files in use, so it doesn't ask to close them.
 /// </summary>
 internal static class ExitCommand
@@ -34,6 +35,7 @@ internal static class ExitCommand
         try
         {
             SessionSignal.Send(SettingsAppProcess.ExitSignalName);
+            SessionSignal.Send(RemoteFoldersProcess.StopSignalName);
             MessageWindow.PostToWindow(HostProcess.WindowClassName, TrayController.ExitMessage);
 
             foreach (var process in processes)
@@ -66,6 +68,7 @@ internal static class ExitCommand
         }
 
         processes.AddRange(FindInSession(SettingsAppProcess.FileName));
+        processes.AddRange(FindInSession(RemoteFoldersProcess.FileName));
         return processes;
     }
 

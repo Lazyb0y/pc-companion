@@ -5300,4 +5300,12 @@
     <value>{0} (冲突 {1})</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersStoppedTitle" xml:space="preserve">
+    <value>远程文件夹已停止</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStoppedMessage" xml:space="preserve">
+    <value>它在一小时内意外结束了四次，因此无法打开仅联机的文件。选择以打开其设置；更改设置会重新启动它。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
