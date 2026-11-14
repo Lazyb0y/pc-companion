@@ -5292,4 +5292,56 @@
     <value>Acciones de PC Companion</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>Mostrar acciones en Inicio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>La búsqueda de Windows y los iniciadores que leen Inicio también las encuentran.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>Características en Inicio</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>Elige de qué características se muestran las acciones en Inicio. El comando las ejecuta todas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>Acciones</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>Copia el comando de una acción para ejecutarla desde un script, el cuadro Ejecutar, una tarea programada o un iniciador que ejecute comandos.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>Copiar comando</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>Copiar el comando de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>Se copió el comando de {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>Las características que ofrecen acciones, como Perfiles de red o Finalizar aplicación, las añaden aquí una vez activadas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>Las acciones sobre la ventana en primer plano, como Ocultar aplicación, no están aquí, porque un iniciador deja otra ventana en primer plano. Asígnales un método abreviado o un botón del mouse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>Abrir Métodos abreviados y botones del mouse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>Mientras está activado, las acciones que tus programas piden con el comando se ejecutan con sus propias comprobaciones y preguntas, y solo pueden pedirlas los programas de tu cuenta en este equipo que no tengan integridad baja. Las entradas están en tu propia carpeta del menú Inicio y llevan el nombre de tus perfiles y aplicaciones. Acciones del iniciador no usa la red.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

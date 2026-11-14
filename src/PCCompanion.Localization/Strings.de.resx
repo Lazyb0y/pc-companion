@@ -5292,4 +5292,56 @@
     <value>PC Companion-Aktionen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>Aktionen in „Start“ anzeigen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>Die Windows-Suche und Launcher, die „Start“ lesen, finden sie ebenfalls.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>Features in „Start“</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>Wählen Sie, wessen Aktionen in „Start“ angezeigt werden. Der Befehl führt alle aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>Aktionen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>Kopieren Sie den Befehl einer Aktion, um sie aus einem Skript, dem Feld „Ausführen“, einer geplanten Aufgabe oder einem Launcher auszuführen, der Befehle ausführt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>Befehl kopieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>Befehl für „{0}“ kopieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>Der Befehl für „{0}“ wurde kopiert.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>Features mit Aktionen, etwa „Netzwerkprofile“ oder „App beenden“, fügen sie hier hinzu, sobald sie aktiviert sind.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>Aktionen für das Fenster im Vordergrund, etwa „App ausblenden“, sind hier nicht aufgeführt, da ein Launcher ein anderes Fenster im Vordergrund lässt. Weisen Sie ihnen stattdessen eine Tastenkombination oder eine Maustaste zu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>„Tastenkombinationen und Maustasten“ öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>Solange es aktiviert ist, werden die Aktionen, die Ihre Programme mit dem Befehl anfordern, mit ihren eigenen Prüfungen und Fragen ausgeführt, und nur Programme Ihres Kontos auf diesem PC ohne niedrige Integritätsstufe können sie anfordern. Die Einträge befinden sich in Ihrem eigenen Startmenüordner und tragen die Namen Ihrer Profile und Apps. Launcher-Aktionen verwendet kein Netzwerk.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

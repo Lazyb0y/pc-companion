@@ -5292,4 +5292,56 @@
     <value>PC Companion অ্যাকশন</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>স্টার্টে অ্যাকশন দেখান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>Windows সার্চ ও যেসব লঞ্চার স্টার্ট পড়ে, সেগুলোও এগুলো খুঁজে পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>স্টার্টে থাকা ফিচার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>কোন ফিচারের অ্যাকশন স্টার্টে দেখাবে তা বেছে নিন। কমান্ড সবগুলোই চালায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>কোনো অ্যাকশন স্ক্রিপ্ট, রান বক্স, নির্ধারিত টাস্ক বা কমান্ড চালাতে পারে এমন লঞ্চার থেকে চালাতে এর কমান্ড কপি করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>কমান্ড কপি করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>{0}-এর কমান্ড কপি করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>{0}-এর কমান্ড কপি করা হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>অ্যাকশন দেয় এমন ফিচার, যেমন নেটওয়ার্ক প্রোফাইল বা অ্যাপ শেষ করুন, চালু হলে সেগুলোর অ্যাকশন এখানে যোগ হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>সামনের উইন্ডোর ওপর কাজ করা অ্যাকশন, যেমন অ্যাপ লুকান, এখানে নেই, কারণ লঞ্চার সামনে অন্য একটি উইন্ডো রেখে যায়। এগুলোর জন্য বরং একটি শর্টকাট বা মাউস বোতাম দিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>শর্টকাট ও মাউস বোতাম খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>চালু থাকাকালীন, আপনার প্রোগ্রাম কমান্ড দিয়ে যে অ্যাকশন চায়, সেগুলো নিজস্ব যাচাই ও প্রশ্নসহ চলে, আর শুধু এই পিসিতে আপনার অ্যাকাউন্টের লো ইন্টেগ্রিটি ছাড়া চলা প্রোগ্রামই চাইতে পারে। স্টার্টের এন্ট্রিগুলো আপনার নিজের স্টার্ট মেনু ফোল্ডারে থাকে এবং আপনার প্রোফাইল ও অ্যাপের নামে হয়। লঞ্চার অ্যাকশন নেটওয়ার্ক ব্যবহার করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
