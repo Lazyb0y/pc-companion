@@ -158,17 +158,16 @@ public static class Placeholders
     /// <param name="identity">Its new identity, or <see langword="null"/> to keep it.</param>
     public static int Update(string path, PlaceholderEntry? metadata, byte[]? identity, PlaceholderUpdate update)
     {
-        int opened = PInvoke.CfOpenFileWithOplock(path, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_EXCLUSIVE | CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var protectedHandle).Value;
+        int opened = OplockHandle.Open(path, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_EXCLUSIVE | CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var file);
         if (opened != 0)
         {
             return opened;
         }
 
-        using (protectedHandle)
+        using (file)
         {
-            using var handle = PInvoke.CfGetWin32HandleFromProtectedHandle(protectedHandle);
             CF_FS_METADATA? fs = metadata is null ? null : NativePlaceholders.Metadata(metadata);
-            return PInvoke.CfUpdatePlaceholder(handle, fs, identity ?? default(ReadOnlySpan<byte>), default, (CF_UPDATE_FLAGS)update).Value;
+            return file!.Use(handle => PInvoke.CfUpdatePlaceholder(handle, fs, identity ?? default(ReadOnlySpan<byte>), default, (CF_UPDATE_FLAGS)update).Value);
         }
     }
 

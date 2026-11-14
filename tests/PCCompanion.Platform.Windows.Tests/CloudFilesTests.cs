@@ -16,6 +16,9 @@ public sealed class CloudFilesTests : IDisposable
     // HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)
     private const int NotACloudFile = unchecked((int)0x80070178);
 
+    // HRESULT_FROM_WIN32(ERROR_SHARING_VIOLATION)
+    private const int SharingViolation = unchecked((int)0x80070020);
+
     private readonly TemporaryFolder _folder = new();
 
     public void Dispose() => _folder.Dispose();
@@ -86,6 +89,31 @@ public sealed class CloudFilesTests : IDisposable
 
         Assert.NotEqual(0, Placeholders.Convert(path, [1, 2, 3], markInSync: true));
         Assert.Null(Placeholders.Read(path));
+    }
+
+    [Fact]
+    public void UpdatingAnOrdinaryFileIsRefusedAndLeavesItAsItIs()
+    {
+        string path = File("plain.txt");
+
+        Assert.Equal(NotACloudFile, Placeholders.Update(path, null, [1, 2, 3], PlaceholderUpdate.MarkInSync));
+
+        // The handle Windows owned was closed once, by Windows: the file opens and reads as before.
+        Assert.Equal("content", System.IO.File.ReadAllText(path));
+        Assert.Null(Placeholders.Read(path));
+    }
+
+    [Fact]
+    public void AFileAProgramHasOpenIsntUpdated()
+    {
+        string path = File("plain.txt");
+        using var program = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+
+        Assert.Equal(SharingViolation, Placeholders.Update(path, null, [1, 2, 3], PlaceholderUpdate.MarkInSync));
+
+        program.WriteByte((byte)'C');
+        program.Flush();
+        Assert.Equal(7, program.Length);
     }
 
     [Fact]
