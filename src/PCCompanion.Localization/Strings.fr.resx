@@ -5356,4 +5356,84 @@
     <value>Il s’est arrêté de manière inattendue quatre fois en une heure : les fichiers uniquement en ligne ne peuvent donc pas être ouverts. Sélectionnez pour ouvrir ses paramètres ; les modifier le redémarre.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersName" xml:space="preserve">
+    <value>Dossiers distants</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuServer" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateWithChanges" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_one" xml:space="preserve">
+    <value>{0} modification en attente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_other" xml:space="preserve">
+    <value>{0} modifications en attente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateConnected" xml:space="preserve">
+    <value>Connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotConnected" xml:space="preserve">
+    <value>Non connecté</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateUnreachable" xml:space="preserve">
+    <value>Serveur inaccessible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateSignInFailed" xml:space="preserve">
+    <value>Échec de la connexion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateKeyChanged" xml:space="preserve">
+    <value>Clé du serveur modifiée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNoSafeAlgorithm" xml:space="preserve">
+    <value>Aucune connexion sécurisée possible</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotRunning" xml:space="preserve">
+    <value>Démarrage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuOpenFolder" xml:space="preserve">
+    <value>Ouvrir le dossier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuSyncNow" xml:space="preserve">
+    <value>Synchroniser maintenant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedTitle" xml:space="preserve">
+    <value>Impossible de se connecter à {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedMessage" xml:space="preserve">
+    <value>Le serveur a refusé le mot de passe, la clé ou la phrase secrète : aucune nouvelle tentative n’a lieu tant que vous ne vous reconnectez pas. Sélectionnez pour ouvrir les paramètres de Dossiers distants.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedTitle" xml:space="preserve">
+    <value>La clé de {0} a changé</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedMessage" xml:space="preserve">
+    <value>Le serveur a peut-être été réinstallé, ou quelqu’un s’est peut-être interposé. Aucune connexion n’a lieu tant que vous n’avez pas vérifié la nouvelle clé : sélectionnez pour ouvrir les paramètres de Dossiers distants.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictTitle" xml:space="preserve">
+    <value>Un fichier a été modifié à deux endroits</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictMessage" xml:space="preserve">
+    <value>Il a été modifié sur ce PC et sur {0} : les deux versions sont conservées, la vôtre sous le nom {1}, à côté. Sélectionnez pour la voir.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

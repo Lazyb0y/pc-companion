@@ -5356,4 +5356,84 @@
     <value>It ended unexpectedly four times within an hour, so files that are only online can't be opened. Select to open its settings; changing them starts it again.</value>
     <comment>Text of the notification shown when Remote Folders' background process ended unexpectedly four times within an hour. Online-only files can't be opened until it runs again; changing its settings starts it again. Selecting the notification opens Remote Folders' settings page. At most 255 characters.</comment>
   </data>
+  <data name="RemoteFoldersName" xml:space="preserve">
+    <value>Remote Folders</value>
+    <comment>Remote Folders: the feature's name, in the navigation pane, on Home, on its page and as its submenu of the PC Companion icon's menu. It shows the files on the user's SFTP servers as folders in File Explorer.</comment>
+  </data>
+  <data name="RemoteFoldersMenuServer" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Remote Folders submenu of the PC Companion icon's menu: a server's submenu, with its name and its state. {0} is the server's name the user gave it, such as "Home server"; {1} is its state, such as "Connected" or "Can't reach the server, 2 changes waiting".</comment>
+  </data>
+  <data name="RemoteFoldersStateWithChanges" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Remote Folders: a server's state followed by how many changes wait for it. {0} is the state, such as "Can't reach the server"; {1} is RemoteFoldersChangesWaiting, such as "2 changes waiting".</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_one" xml:space="preserve">
+    <value>{0} change waiting</value>
+    <comment>Plural form "one". Remote Folders: how many changes made on the PC wait to be made on the server. {0} is the number.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_other" xml:space="preserve">
+    <value>{0} changes waiting</value>
+    <comment>Plural form "other". Remote Folders: how many changes made on the PC wait to be made on the server. {0} is the number.</comment>
+  </data>
+  <data name="RemoteFoldersStateConnected" xml:space="preserve">
+    <value>Connected</value>
+    <comment>Remote Folders: a server's state, on the page and in the PC Companion icon's menu: connected.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotConnected" xml:space="preserve">
+    <value>Not connected</value>
+    <comment>Remote Folders: a server's state: no connection is open because there's nothing to do; one opens when needed.</comment>
+  </data>
+  <data name="RemoteFoldersStateUnreachable" xml:space="preserve">
+    <value>Can't reach the server</value>
+    <comment>Remote Folders: a server's state: the server couldn't be reached at the last try.</comment>
+  </data>
+  <data name="RemoteFoldersStateSignInFailed" xml:space="preserve">
+    <value>Sign-in failed</value>
+    <comment>Remote Folders: a server's state: the server refused the password, key or passphrase.</comment>
+  </data>
+  <data name="RemoteFoldersStateKeyChanged" xml:space="preserve">
+    <value>Server key changed</value>
+    <comment>Remote Folders: a server's state: the server presented another key than the one the user confirmed, so nothing connects until the user checks it.</comment>
+  </data>
+  <data name="RemoteFoldersStateNoSafeAlgorithm" xml:space="preserve">
+    <value>No safe connection possible</value>
+    <comment>Remote Folders: a server's state: the server offers no encryption PC Companion considers safe.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotRunning" xml:space="preserve">
+    <value>Starting</value>
+    <comment>Remote Folders: a server's state while the feature's background process isn't running, as just after it was turned on.</comment>
+  </data>
+  <data name="RemoteFoldersMenuOpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+    <comment>Remote Folders submenu of the PC Companion icon's menu, in a server's submenu: opens the server's folder in File Explorer.</comment>
+  </data>
+  <data name="RemoteFoldersMenuSyncNow" xml:space="preserve">
+    <value>Sync now</value>
+    <comment>Remote Folders submenu of the PC Companion icon's menu: lists the recently opened folders of every server again now, to see what changed there.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedTitle" xml:space="preserve">
+    <value>Couldn't sign in to {0}</value>
+    <comment>Title of the notification shown when a server refused the sign-in. {0} is the server's name the user gave it. At most 63 characters with the name.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedMessage" xml:space="preserve">
+    <value>The server refused the password, key or passphrase, so it isn't tried again until you sign in again. Select to open Remote Folders' settings.</value>
+    <comment>Text of the notification shown when a server refused the password, key or passphrase. PC Companion doesn't try again on its own, so a server that locks accounts doesn't lock the user's. Selecting it opens Remote Folders' settings page. At most 255 characters.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedTitle" xml:space="preserve">
+    <value>The key of {0} changed</value>
+    <comment>Title of the notification shown when a server presented another key than the one the user confirmed. {0} is the server's name the user gave it. At most 63 characters with the name.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedMessage" xml:space="preserve">
+    <value>The server may have been reinstalled, or someone may be in between. Nothing connects until you check the new key: select to open Remote Folders' settings.</value>
+    <comment>Text of the notification shown when a server presented another key. The server may have been reinstalled, or someone may be in between; nothing connects until the user checks the new key on the settings page, which selecting the notification opens. At most 255 characters.</comment>
+  </data>
+  <data name="RemoteFoldersConflictTitle" xml:space="preserve">
+    <value>A file changed in two places</value>
+    <comment>Title of the notification shown when a file changed on the PC and on the server, so both versions are kept. At most 63 characters.</comment>
+  </data>
+  <data name="RemoteFoldersConflictMessage" xml:space="preserve">
+    <value>It changed on this PC and on {0}, so both versions are kept: yours as {1}, next to it. Select to see it.</value>
+    <comment>Text of the notification shown when a file changed on this PC and on the server. {0} is the server's name the user gave it; {1} is the name of the conflict copy, the PC's version, kept next to the server's version, such as "Report (conflict 15-11-2026 10.30).docx". Selecting the notification opens the folder with that copy selected. At most 255 characters.</comment>
+  </data>
 </root>

@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Modules.Files.RemoteFolders;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -68,12 +70,45 @@ internal sealed class FakeProviders
 
 public sealed class RemoteFoldersFeatureTests
 {
+    private const string Home = "00000000000000000000000000000001";
+    private const string Work = "00000000000000000000000000000002";
+    private const string Servers = """
+        { "enabled": true, "servers": [
+          { "id": "00000000000000000000000000000001", "name": "Home", "host": "nas.example.lan", "userName": "ana", "remoteFolder": "/home/ana", "folder": "C:\\Users\\Ana\\Remote Folders\\Home", "hostKey": { "type": "ssh-ed25519", "sha256": "key" } },
+          { "id": "00000000000000000000000000000002", "name": "Work", "host": "files.example.com", "userName": "ana", "remoteFolder": "/home/ana", "folder": "C:\\Users\\Ana\\Remote Folders\\Work", "hostKey": { "type": "ssh-ed25519", "sha256": "key" } } ] }
+        """;
+
     private readonly RecordingLogger<RemoteFoldersFeature> _logger = new();
     private readonly FakeProviders _providers = new();
     private readonly ManualTimeProvider _time = new();
+    private readonly RecordingNotifications _notifications = new();
+    private readonly FakeHostCommands _commands = new();
+    private readonly List<RemoteFoldersRequest> _requests = [];
+    private RemoteFoldersAnswer? _status;
 
     private RemoteFoldersFeature NewFeature() =>
-        new(_providers.Start, _providers.AskToStop, new NoNotifications(), new FakeHostCommands(), _time, _logger);
+        new(_providers.Start, _providers.AskToStop, AskAsync, action => action(), _notifications, _commands, _time, _logger);
+
+    private Task<RemoteFoldersAnswer?> AskAsync(RemoteFoldersRequest request, CancellationToken cancellation)
+    {
+        lock (_requests)
+        {
+            _requests.Add(request);
+        }
+
+        return Task.FromResult(request.Kind == RemoteFoldersRequestKind.Status ? _status : new RemoteFoldersAnswer { Done = true });
+    }
+
+    private bool WasAsked(RemoteFoldersRequestKind kind)
+    {
+        lock (_requests)
+        {
+            return _requests.Any(request => request.Kind == kind);
+        }
+    }
+
+    private static RemoteServerStatus Status(string id, RemoteServerState state, int waiting = 0, params string[] conflicts) =>
+        new() { Id = id, State = state, ChangesWaiting = waiting, Conflicts = conflicts };
 
     // The feature's window must be disposed on the thread that made it, as the host does on its UI
     // thread, so the tests wait without leaving it.
@@ -126,9 +161,114 @@ public sealed class RemoteFoldersFeatureTests
         Assert.True(RemoteFoldersFeature.CurrentSupport.IsSupported);
     }
 
-    private sealed class NoNotifications : IHostNotifications
+    [Fact]
+    public async Task TheMenuListsTheServersWithTheirStates()
     {
-        public bool Show(string title, string text, Action? selected) => true;
+        using var feature = NewFeature();
+        feature.Apply(Section(Servers));
+        Assert.Contains(ServerText("Home", Strings.RemoteFoldersStateNotRunning), Texts(feature.GetMenuItems()));
+
+        _status = new RemoteFoldersAnswer { Servers = [Status(Home, RemoteServerState.Connected), Status(Work, RemoteServerState.Unreachable, waiting: 2)], Done = true };
+        await feature.AskStatusAsync();
+
+        var menu = Assert.Single(feature.GetMenuItems());
+        Assert.Equal(Strings.RemoteFoldersName, menu.Text);
+        var texts = Texts([menu]);
+        Assert.Contains(ServerText("Home", Strings.RemoteFoldersStateConnected), texts);
+        Assert.Contains(ServerText("Work", RemoteFoldersFeature.StateText(Status(Work, RemoteServerState.Unreachable, waiting: 2))), texts);
+        Assert.Contains("2", RemoteFoldersFeature.StateText(Status(Work, RemoteServerState.Unreachable, waiting: 2)), StringComparison.Ordinal);
+        Assert.Contains(Strings.RemoteFoldersMenuSyncNow, texts);
+    }
+
+    [Fact]
+    public void WithoutServersThereIsNoMenu()
+    {
+        using var feature = NewFeature();
+        feature.Apply(Section("""{ "enabled": true }"""));
+
+        Assert.Empty(feature.GetMenuItems());
+    }
+
+    [Fact]
+    public async Task SyncNowAsksTheProviderAndOpenFolderOpensIt()
+    {
+        using var feature = NewFeature();
+        feature.Apply(Section(Servers));
+        _status = new RemoteFoldersAnswer { Servers = [Status(Home, RemoteServerState.Connected)], Done = true };
+        await feature.AskStatusAsync();
+        var menu = feature.GetMenuItems()[0].Items!;
+
+        feature.ChooseMenuItem(menu.Single(item => item.Text == Strings.RemoteFoldersMenuSyncNow).Id);
+        feature.ChooseMenuItem(menu[1].Items![0].Id);
+
+        WaitUntil(() => WasAsked(RemoteFoldersRequestKind.SyncNow));
+        WaitUntil(() => _commands.Programs.Count == 1);
+        Assert.Equal([@"C:\Users\Ana\Remote Folders\Work"], _commands.Programs[0].Arguments);
+    }
+
+    [Fact]
+    public async Task ASignInThatFailsOrAKeyThatChangesIsNotifiedOnce()
+    {
+        using var feature = NewFeature();
+        feature.Apply(Section(Servers));
+
+        _status = new RemoteFoldersAnswer { Servers = [Status(Home, RemoteServerState.SignInFailed), Status(Work, RemoteServerState.KeyChanged)] };
+        await feature.AskStatusAsync();
+        await feature.AskStatusAsync();
+
+        Assert.Equal(2, _notifications.Shown.Count);
+        Assert.Contains("Home", _notifications.Shown[0].Title, StringComparison.Ordinal);
+        Assert.Contains("Work", _notifications.Shown[1].Title, StringComparison.Ordinal);
+        _notifications.Shown[0].Selected!();
+        Assert.Equal(["remoteFolders"], _commands.FeaturePagesOpened);
+    }
+
+    [Fact]
+    public async Task ANewConflictCopyIsNotifiedAndOpensWithTheCopySelected()
+    {
+        using var feature = NewFeature();
+        feature.Apply(Section(Servers));
+        _status = new RemoteFoldersAnswer { Servers = [Status(Home, RemoteServerState.Connected, 0, "docs/Plan (conflict).docx")] };
+
+        await feature.AskStatusAsync();
+        await feature.AskStatusAsync();
+
+        var (title, text, selected) = Assert.Single(_notifications.Shown);
+        Assert.Equal(Strings.RemoteFoldersConflictTitle, title);
+        Assert.Contains("Plan (conflict).docx", text, StringComparison.Ordinal);
+        selected!();
+        WaitUntil(() => _commands.Programs.Count == 1);
+        Assert.Equal(["/select,", @"C:\Users\Ana\Remote Folders\Home\docs\Plan (conflict).docx"], _commands.Programs[0].Arguments);
+    }
+
+    [Fact]
+    public async Task WhileTheProviderDoesntAnswerTheServersShowAsStarting()
+    {
+        using var feature = NewFeature();
+        feature.Apply(Section(Servers));
+
+        await feature.AskStatusAsync();
+
+        Assert.Contains(ServerText("Home", Strings.RemoteFoldersStateNotRunning), Texts(feature.GetMenuItems()));
+        Assert.False(feature.GetMenuItems()[0].Items!.Single(item => item.Text == Strings.RemoteFoldersMenuSyncNow).IsEnabled);
+    }
+
+    private static string ServerText(string name, string state) => Format(Strings.RemoteFoldersMenuServer, name, state);
+
+    private static string Format(string format, params object[] values) => string.Format(System.Globalization.CultureInfo.CurrentCulture, format, values);
+
+    private static List<string> Texts(IEnumerable<HostMenuItem> items) =>
+        [.. items.SelectMany(item => item.Items is { } children ? [item.Text, .. Texts(children)] : new[] { item.Text })];
+
+    private sealed class RecordingNotifications : IHostNotifications
+    {
+        public List<(string Title, string Text, Action? Selected)> Shown { get; } = [];
+
+        public bool Show(string title, string text, Action? selected)
+        {
+            Shown.Add((title, text, selected));
+            return true;
+        }
     }
 }
 

@@ -5548,4 +5548,100 @@
     <value>انتهى بشكل غير متوقع أربع مرات خلال ساعة، لذا لا يمكن فتح الملفات المتوفرة عبر الإنترنت فقط. حدد لفتح إعداداته؛ تغييرها يشغّله من جديد.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersName" xml:space="preserve">
+    <value>المجلدات البعيدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuServer" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateWithChanges" xml:space="preserve">
+    <value>{0}، {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_zero" xml:space="preserve">
+    <value>لا تغييرات بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_one" xml:space="preserve">
+    <value>تغيير واحد بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_two" xml:space="preserve">
+    <value>تغييران بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_few" xml:space="preserve">
+    <value>{0} تغييرات بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_many" xml:space="preserve">
+    <value>{0} تغييرًا بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersChangesWaiting_other" xml:space="preserve">
+    <value>{0} تغيير بالانتظار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateConnected" xml:space="preserve">
+    <value>متصل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotConnected" xml:space="preserve">
+    <value>غير متصل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateUnreachable" xml:space="preserve">
+    <value>تعذّر الوصول إلى الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateSignInFailed" xml:space="preserve">
+    <value>فشل تسجيل الدخول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateKeyChanged" xml:space="preserve">
+    <value>تغيّر مفتاح الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNoSafeAlgorithm" xml:space="preserve">
+    <value>لا يمكن إنشاء اتصال آمن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotRunning" xml:space="preserve">
+    <value>جارٍ البدء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuOpenFolder" xml:space="preserve">
+    <value>فتح المجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMenuSyncNow" xml:space="preserve">
+    <value>مزامنة الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedTitle" xml:space="preserve">
+    <value>تعذّر تسجيل الدخول إلى {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedMessage" xml:space="preserve">
+    <value>رفض الخادم كلمة المرور أو المفتاح أو عبارة المرور، لذا لن تتم المحاولة مرة أخرى حتى تسجّل الدخول من جديد. حدد لفتح إعدادات المجلدات البعيدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedTitle" xml:space="preserve">
+    <value>تغيّر مفتاح {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedMessage" xml:space="preserve">
+    <value>ربما أُعيد تثبيت الخادم، أو ربما يتوسط أحدهم الاتصال. لن يتم أي اتصال حتى تتحقق من المفتاح الجديد: حدد لفتح إعدادات المجلدات البعيدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictTitle" xml:space="preserve">
+    <value>تغيّر ملف في مكانين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictMessage" xml:space="preserve">
+    <value>تغيّر على هذا الكمبيوتر وعلى {0}، لذا تم الاحتفاظ بالإصدارين: إصدارك باسم {1} بجانبه. حدد لرؤيته.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
