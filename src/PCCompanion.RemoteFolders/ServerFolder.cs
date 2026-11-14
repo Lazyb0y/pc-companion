@@ -47,6 +47,9 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public ServerDownloads Downloads { get; }
 
+    /// <summary>The server's state, and when it's tried again.</summary>
+    public ConnectionState State => _connections.State;
+
     /// <summary>Makes the folder if it's missing, registers it, again when it was, and connects to it.</summary>
     /// <exception cref="Exception">Windows refused, for example for a folder that isn't on an NTFS drive.</exception>
     public void Start()
@@ -59,6 +62,9 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     /// <summary>Registers the folder again with a new name; its files stay.</summary>
     public void Rename(string name) => _sync.Register(new SyncRootRegistration(Id, _server.Folder, name, _iconResource));
+
+    /// <summary>Lets the server be tried again at once; see <see cref="IServerConnections.TryAgainNow"/>.</summary>
+    public void TryAgainNow() => _connections.TryAgainNow();
 
     /// <summary>
     /// Disconnects and unregisters the folder, as removing the server does: online-only files
@@ -130,92 +136,6 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 }
 
 /// <summary>
-/// The connections to one SFTP server, one for listings and changes and one for downloads, each
-/// opened when it's first needed and again after it drops, with the password or passphrase from
-/// Credential Manager.
-/// </summary>
-public sealed class SftpConnections(RemoteServer server, Func<string, string?> readSecret) : IServerConnections
-{
-    private readonly Slot _control = new();
-    private readonly Slot _transfer = new();
-
-    public Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => UseAsync(_control, work, cancellation);
-
-    public Task<T> UseForTransferAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => UseAsync(_transfer, work, cancellation);
-
-    public void Dispose()
-    {
-        _control.Dispose();
-        _transfer.Dispose();
-    }
-
-    private async Task<T> UseAsync<T>(Slot slot, Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation)
-    {
-        await slot.Gate.WaitAsync(cancellation).ConfigureAwait(false);
-        try
-        {
-            ObjectDisposedException.ThrowIf(slot.IsDisposed, this);
-            if (slot.Connection is not { IsConnected: true })
-            {
-                slot.Connection?.Dispose();
-                slot.Connection = null;
-                slot.Connection = await ConnectAsync(cancellation).ConfigureAwait(false);
-            }
-
-            try
-            {
-                return await work(slot.Connection, cancellation).ConfigureAwait(false);
-            }
-            catch (RemoteServerException exception) when (exception.Error == RemoteError.Unreachable)
-            {
-                slot.Connection.Dispose();
-                slot.Connection = null;
-                throw;
-            }
-        }
-        finally
-        {
-            slot.Gate.Release();
-        }
-    }
-
-    private async Task<IRemoteServer> ConnectAsync(CancellationToken cancellation)
-    {
-        string? secret = readSecret(RemoteFoldersProcess.CredentialTarget(server.Id));
-        var signIn = server.KnownSignIn == RemoteSignIn.Key
-            ? new SftpSignIn(server.Host, server.Port, server.UserName, null, server.KeyFile, secret)
-            : new SftpSignIn(server.Host, server.Port, server.UserName, secret, null, null);
-        var key = new ServerKey(server.HostKey!.Type, server.HostKey.Sha256);
-        return await SftpServer.ConnectAsync(signIn, key, cancellation).ConfigureAwait(false);
-    }
-
-    // One connection, used by one request at a time.
-    private sealed class Slot : IDisposable
-    {
-        public SemaphoreSlim Gate { get; } = new(1, 1);
-
-        public IRemoteServer? Connection { get; set; }
-
-        public bool IsDisposed { get; private set; }
-
-        public void Dispose()
-        {
-            Gate.Wait();
-            try
-            {
-                IsDisposed = true;
-                Connection?.Dispose();
-                Connection = null;
-            }
-            finally
-            {
-                Gate.Release();
-            }
-        }
-    }
-}
-
-/// <summary>
 /// The folders of the servers in the settings: started, renamed, connected again after their
 /// details change, and removed with their servers. See docs/features/files/remote-folders.md.
 /// </summary>
@@ -278,6 +198,15 @@ public sealed partial class ProviderService(ISyncRootSystem sync, string userSid
                 LogStartFailed(logger, number, exception);
                 folder.Dispose();
             }
+        }
+    }
+
+    /// <summary>Lets every server be tried again at once, after a network change or after the PC wakes from sleep.</summary>
+    public void TryAgainNow()
+    {
+        foreach (var folder in _folders.Values)
+        {
+            Run(folder.TryAgainNow);
         }
     }
 

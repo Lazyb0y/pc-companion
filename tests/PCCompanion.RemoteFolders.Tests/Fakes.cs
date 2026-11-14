@@ -139,12 +139,18 @@ public sealed class FakeConnections(FakeRemoteServer server) : IServerConnection
 {
     public bool IsDisposed { get; private set; }
 
+    public int TriedAgain { get; private set; }
+
+    public ConnectionState State { get; } = new(TimeProvider.System);
+
     /// <summary>When set, downloads use it instead of the fake server.</summary>
     public IRemoteServer? Transfer { get; init; }
 
     public Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => work(server, cancellation);
 
     public Task<T> UseForTransferAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation) => work(Transfer ?? server, cancellation);
+
+    public void TryAgainNow() => TriedAgain++;
 
     public void Dispose() => IsDisposed = true;
 }

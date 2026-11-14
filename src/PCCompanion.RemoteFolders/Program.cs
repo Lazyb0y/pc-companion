@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,7 @@ internal static partial class Program
 {
     private const int Stopped = 0;
     private const int RunsAsAdministrator = 1;
+    private const string ResumeWindowClass = "PCCompanion.RemoteFolders.Power";
 
     private static int Main(string[] args)
     {
@@ -66,7 +68,16 @@ internal static partial class Program
         using var service = new ProviderService(
             sync,
             sid,
-            (server, number) => new ServerFolder(server, sid, icon, sync, pc, new SftpConnections(server, ReadSecret), TimeProvider.System, loggers.CreateLogger<ServerFolder>(), number),
+            (server, number) => new ServerFolder(
+                server,
+                sid,
+                icon,
+                sync,
+                pc,
+                ServerConnections.ForSftp(server, ReadSecret, TimeProvider.System, loggers.CreateLogger<ServerConnections>(), number),
+                TimeProvider.System,
+                loggers.CreateLogger<ServerFolder>(),
+                number),
             loggers.CreateLogger<ProviderService>());
         using var watcher = new SettingsWatcher(paths);
         var applying = new Lock();
@@ -98,10 +109,25 @@ internal static partial class Program
             }
         }
 
+        // A server that couldn't be reached may be back after the network changes or the PC wakes.
+        void TryAgainNow(string reason)
+        {
+            lock (applying)
+            {
+                LogTryingAgain(logger, reason);
+                service.TryAgainNow();
+            }
+        }
+
+        NetworkAddressChangedEventHandler networkChanged = (_, _) => TryAgainNow("network change");
+        NetworkChange.NetworkAddressChanged += networkChanged;
+        WatchResume(() => TryAgainNow("wake from sleep"), logger);
+
         watcher.Changed += (_, _) => Apply();
         Apply();
 
         stop.Wait();
+        NetworkChange.NetworkAddressChanged -= networkChanged;
         LogStopped(logger);
         return Stopped;
     }
@@ -134,6 +160,30 @@ internal static partial class Program
             LogHostEnded(logger);
             stop.Set();
         }
+    }
+
+    // Windows tells only windows that the PC woke, so a hidden one waits for it on a thread of its own.
+    private static void WatchResume(Action resumed, ILogger logger)
+    {
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                using var window = new MessageWindow(ResumeWindowClass);
+                using var notifications = new DeviceNotifications(window);
+                notifications.Resumed += (_, _) => resumed();
+                MessageLoop.Run();
+            }
+            catch (Exception exception)
+            {
+                LogResumeWatchFailed(logger, exception);
+            }
+        })
+        {
+            IsBackground = true,
+            Name = "Wake from sleep",
+        };
+        thread.Start();
     }
 
     // A server's password or key passphrase; none when it's missing or can't be read.
@@ -207,6 +257,12 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The settings can't be read, so the previous settings stay in use.")]
     private static partial void LogCantReadSettings(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Servers are tried again at once after a {Reason}.")]
+    private static partial void LogTryingAgain(ILogger logger, string reason);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Waking from sleep can't be watched, so servers are tried again only on their own schedule.")]
+    private static partial void LogResumeWatchFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The process stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);
