@@ -230,10 +230,14 @@ public sealed partial class ServerUploads(
     /// <summary>Has the worker look at the journal soon, as after a change was written to it.</summary>
     public void Wake() => _queue.Wake();
 
-    /// <summary>Records a change to a file or folder in the server's folder, from the folder's watch or from Windows.</summary>
+    /// <summary>
+    /// Records a change to a file or folder in the server's folder, from the folder's watch or from
+    /// Windows. A folder that's on the server needs nothing, so it isn't a change waiting: Windows
+    /// and the provider change its placeholder as it's listed, such as every time it's listed again.
+    /// </summary>
     public void Changed(string path)
     {
-        if (RelativePath(path) is { Length: > 0 })
+        if (RelativePath(path) is { Length: > 0 } && pc.Inspect(path) is not { IsDirectory: true, State: not null })
         {
             _queue.Changed(path);
         }
