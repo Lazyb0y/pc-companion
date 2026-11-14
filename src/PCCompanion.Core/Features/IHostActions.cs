@@ -35,6 +35,12 @@ public interface IHostActions
     bool IsRunning(string featureId);
 
     /// <summary>
+    /// The feature with the ID <paramref name="featureId"/>, running or not, or
+    /// <see langword="null"/> when the host has none, so a refused action can name its feature.
+    /// </summary>
+    FeatureInfo? FindFeature(string featureId);
+
+    /// <summary>
     /// Runs <paramref name="action"/> through the feature that offers it, on the host's UI thread.
     /// Call it from any thread; it doesn't wait.
     /// </summary>

@@ -5204,4 +5204,36 @@
     <value>当指针位于其中某个应用上方时，该应用会自己接收点击。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>启动器操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>从“开始”、Windows 搜索、其他启动器和命令运行 PC Companion 的操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>锁定</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>关闭显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>启动屏幕保护程序</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>{0} 已关闭，因此无法运行此操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>此操作现在无法运行。请在“{0}”页面上检查。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>PC Companion 没有此操作。请在“{0}”页面上重新复制其命令。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

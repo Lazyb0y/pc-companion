@@ -129,6 +129,15 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
         return _features.Any(feature => feature.Info.Id == featureId && _on.Contains(feature) && !_stopped.Contains(feature));
     }
 
+    /// <summary>The feature with the ID <paramref name="featureId"/>, running or not, or <see langword="null"/> when there is none.</summary>
+    public FeatureInfo? FindFeature(string featureId)
+    {
+        ArgumentNullException.ThrowIfNull(featureId);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        return _features.FirstOrDefault(feature => feature.Info.Id == featureId)?.Info;
+    }
+
     /// <summary>
     /// Runs <paramref name="action"/> through the running feature that offers it. Returns false
     /// when no running feature does, as after the feature was turned off.

@@ -5252,4 +5252,36 @@
     <value>পয়েন্টার এই অ্যাপগুলোর কোনোটির উপরে থাকলে সেটি নিজেই ক্লিকটি পায়।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>লঞ্চার অ্যাকশন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>স্টার্ট, Windows সার্চ, অন্যান্য লঞ্চার ও একটি কমান্ড থেকে PC Companion-এর অ্যাকশন চালান।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>লক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>ডিসপ্লে বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>স্ক্রিন সেভার চালু করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>{0} বন্ধ আছে, তাই এই অ্যাকশনটি চালানো যাবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>এই অ্যাকশনটি এখন চালানো যাবে না। {0} পৃষ্ঠায় এটি দেখে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>PC Companion-এ এমন কোনো অ্যাকশন নেই। {0} পৃষ্ঠা থেকে এর কমান্ড আবার কপি করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

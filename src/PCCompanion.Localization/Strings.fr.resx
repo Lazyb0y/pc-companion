@@ -5252,4 +5252,36 @@
     <value>Quand le pointeur est sur une de ces applications, elle reçoit elle-même le clic.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>Actions du lanceur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>Exécutez les actions de PC Companion depuis Démarrer, la recherche Windows, d’autres lanceurs et une commande.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>Verrouiller</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>Éteindre les écrans</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>Démarrer l’écran de veille</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>{0} est désactivé, cette action ne peut donc pas être exécutée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>Cette action ne peut pas être exécutée pour l’instant. Vérifiez-la sur la page {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>PC Companion n’a pas cette action. Copiez à nouveau sa commande sur la page {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
