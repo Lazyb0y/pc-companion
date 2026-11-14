@@ -167,7 +167,7 @@ public sealed partial class ServerListings(
     {
         RemoteError.SignInFailed or RemoteError.KeyNotTrusted or RemoteError.KeyFile => CloudFileStatus.AuthenticationFailed,
         RemoteError.PermissionDenied => CloudFileStatus.AccessDenied,
-        RemoteError.NotFound or RemoteError.Failed => CloudFileStatus.Unsuccessful,
+        RemoteError.NotFound or RemoteError.Changed or RemoteError.Failed => CloudFileStatus.Unsuccessful,
         _ => CloudFileStatus.NetworkUnavailable,
     };
 
