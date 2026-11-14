@@ -58,6 +58,9 @@ public interface ISyncRootSystem
 /// </summary>
 public interface IServerConnections : IDisposable
 {
+    /// <summary>The server's state, and when it's tried again.</summary>
+    ConnectionState State { get; }
+
     /// <summary>Runs <paramref name="work"/> on the connection for listings and changes.</summary>
     /// <exception cref="RemoteServerException">The server can't be reached, refused the sign-in, or failed the request.</exception>
     Task<T> UseAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation);
@@ -65,6 +68,13 @@ public interface IServerConnections : IDisposable
     /// <summary>Runs <paramref name="work"/> on a connection for downloads, so they don't hold up listings.</summary>
     /// <exception cref="RemoteServerException">The server can't be reached, refused the sign-in, or failed the request.</exception>
     Task<T> UseForTransferAsync<T>(Func<IRemoteServer, CancellationToken, Task<T>> work, CancellationToken cancellation);
+
+    /// <summary>
+    /// Lets the server be tried again at once, and closes the connections that aren't in use,
+    /// which may have dropped: after a network change, after the PC wakes from sleep, or when the
+    /// user signs in again.
+    /// </summary>
+    void TryAgainNow();
 }
 
 /// <summary>The PC's side of a server's folder, with Windows' Cloud Files API and file system.</summary>
