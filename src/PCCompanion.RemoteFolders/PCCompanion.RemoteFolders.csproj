@@ -23,6 +23,7 @@
   <ItemGroup>
     <!-- Directly, like the host's, so the files they share in one folder are the same version. -->
     <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="SSH.NET" />
   </ItemGroup>
 
   <ItemGroup>

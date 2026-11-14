@@ -12,6 +12,8 @@ PC Companion is licensed under the [MIT License](LICENSE). The installer also in
 | [MVVM Toolkit](https://github.com/CommunityToolkit/dotnet) (`CommunityToolkit.Mvvm`) | [MIT](https://github.com/CommunityToolkit/dotnet/blob/main/License.md) |
 | [Microsoft.Extensions](https://github.com/dotnet/runtime): `DependencyInjection`, `Logging`, `Options` and `Primitives` | [MIT](https://github.com/dotnet/runtime/blob/main/LICENSE.TXT) |
 | [Serilog](https://github.com/serilog/serilog), [Serilog.Extensions.Logging](https://github.com/serilog/serilog-extensions-logging) and [Serilog.Sinks.File](https://github.com/serilog/serilog-sinks-file) | [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| [SSH.NET](https://github.com/sshnet/SSH.NET) (`SSH.NET`), used by Remote Folders | [MIT](https://github.com/sshnet/SSH.NET/blob/develop/LICENSE) |
+| [Bouncy Castle for .NET](https://github.com/bcgit/bc-csharp) (`BouncyCastle.Cryptography`), used by SSH.NET | [MIT](https://github.com/bcgit/bc-csharp/blob/master/LICENSE.md) |
 | [Time zone database](https://www.iana.org/time-zones): Dynamic Wallpaper's table of time zones and their main cities, made by `scripts\time-zone-places.ps1` | Public domain |
 
 Tools used only to build PC Companion, such as WiX and CsWin32, aren't installed and aren't listed.
