@@ -5484,4 +5484,56 @@
     <value>إجراءات PC Companion</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>إظهار الإجراءات في قائمة ابدأ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>يعثر عليها بحث Windows والمشغّلات التي تقرأ قائمة ابدأ أيضاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>الميزات في قائمة ابدأ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>اختر الميزات التي تظهر إجراءاتها في قائمة ابدأ. يشغّلها الأمر كلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>الإجراءات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>انسخ أمر الإجراء لتشغيله من برنامج نصي أو مربع التشغيل أو مهمة مجدولة أو مشغّل يشغّل الأوامر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>نسخ الأمر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>نسخ أمر {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>تم نسخ أمر {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>تضيف الميزات التي توفر إجراءات، مثل ملفات تعريف الشبكة أو إنهاء التطبيق، إجراءاتها هنا بعد تشغيلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>لا تظهر هنا الإجراءات التي تعمل على النافذة الأمامية، مثل إخفاء التطبيق، لأن المشغّل يترك نافذة أخرى في الأمام. عيّن لها اختصاراً أو زر ماوس بدلاً من ذلك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>فتح الاختصارات وأزرار الماوس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>أثناء تشغيلها، تعمل الإجراءات التي تطلبها برامجك بالأمر مع عمليات التحقق والأسئلة الخاصة بها، ولا يمكن أن يطلبها إلا برامج حسابك على هذا الكمبيوتر التي لا تعمل بتكامل منخفض. توجد الإدخالات في مجلد قائمة ابدأ الخاص بك وتحمل أسماء ملفات التعريف والتطبيقات الخاصة بك. لا تستخدم إجراءات المشغّل الشبكة.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

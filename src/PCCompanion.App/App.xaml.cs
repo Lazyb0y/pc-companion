@@ -189,6 +189,7 @@ public partial class App : Application
             .AddTransient<LockKeysViewModel>()
             .AddTransient<InputLanguagePerAppViewModel>()
             .AddTransient<ShortcutsAndMouseButtonsViewModel>()
+            .AddTransient<LauncherActionsViewModel>()
             .AddTransient<AppWindowsViewModel>()
             .AddTransient<MinimizeToTrayViewModel>()
             .AddTransient<HideAppsViewModel>()

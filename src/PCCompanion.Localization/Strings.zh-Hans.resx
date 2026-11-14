@@ -5244,4 +5244,56 @@
     <value>PC Companion 操作</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>在“开始”中显示操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>Windows 搜索和读取“开始”的启动器也能找到它们。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>“开始”中的功能</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>选择哪些功能的操作显示在“开始”中。命令可运行所有操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>复制操作的命令，即可从脚本、“运行”框、计划任务或可运行命令的启动器运行它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>复制命令</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>复制“{0}”的命令</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>已复制“{0}”的命令。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>提供操作的功能（例如“网络配置文件”或“结束应用”）开启后，会将其操作添加到这里。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>作用于前台窗口的操作（例如“隐藏应用”）不在此处，因为启动器会让另一个窗口留在前台。请改为给它们分配快捷键或鼠标按钮。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>打开“快捷键和鼠标按钮”</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>开启后，你的程序通过命令请求的操作会经过各自的检查和询问后运行，并且只有此电脑上你的帐户中非低完整性级别的程序才能请求。“开始”中的条目位于你自己的“开始”菜单文件夹中，并以你的配置文件和应用命名。启动器操作不使用网络。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

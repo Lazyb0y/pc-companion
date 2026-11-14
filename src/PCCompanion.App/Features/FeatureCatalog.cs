@@ -13,6 +13,7 @@ using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
+using PCCompanion.App.Features.LauncherActions;
 using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
@@ -35,6 +36,7 @@ using PCCompanion.Modules.Files.FolderRules;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Modules.Input.InputLanguagePerApp;
+using PCCompanion.Modules.Input.LauncherActions;
 using PCCompanion.Modules.Input.LockKeys;
 using PCCompanion.Modules.Input.ShortcutsAndMouseButtons;
 using PCCompanion.Modules.Network;
@@ -95,6 +97,7 @@ public static class FeatureCatalog
             new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage), DrawnIcon: "lock-keys"),
             new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage), DrawnIcon: "input-language-per-app"),
             new(ShortcutsAndMouseButtonsFeature.Definition, ShortcutsAndMouseButtonsFeature.CurrentSupport, typeof(ShortcutsAndMouseButtonsPage), DrawnIcon: "shortcuts-and-mouse-buttons", Actions: _ => ShortcutsAndMouseButtonsFeature.OfferedActions()),
+            new(LauncherActionsFeature.Definition, LauncherActionsFeature.CurrentSupport, typeof(LauncherActionsPage)),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [

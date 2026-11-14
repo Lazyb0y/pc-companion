@@ -5292,4 +5292,56 @@
     <value>PC Companion actions</value>
     <comment>Name of the folder in Start that holds Launcher Actions' entries, one for each action. Characters Windows doesn't allow in file names, such as a colon, become spaces.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>Show actions in Start</value>
+    <comment>Header of the switch that puts Launcher Actions' actions in Start, as entries.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>Windows Search and launchers that read Start find them too.</value>
+    <comment>Description of Show actions in Start.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>Features in Start</value>
+    <comment>Header of the list of features, each with a switch for whether its actions are in Start.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>Choose whose actions show in Start. The command runs them all.</value>
+    <comment>Description of Features in Start.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>Actions</value>
+    <comment>Header of the list of the actions available now, each with Copy command.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>Copy an action's command to run it from a script, the Run box, a scheduled task or a launcher that runs commands.</value>
+    <comment>Description of the list of actions.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>Copy command</value>
+    <comment>Button that copies an action's command, such as "C:\Program Files\PC Companion\PCCompanion.exe" --run networkProfiles use Office.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>Copy command for {0}</value>
+    <comment>What screen readers say for Copy command. {0} is the action, such as Use Office.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>Copied the command for {0}.</value>
+    <comment>Shown, and announced by screen readers, after Copy command. {0} is the action, such as Use Office.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>Features that offer actions add them here once they're on, such as Network Profiles or End App.</value>
+    <comment>Shown while only Launcher Actions' own actions are available.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>Actions on the window in front, such as Hide app, aren't here, since a launcher leaves another window in front. Give them a shortcut or a mouse button instead.</value>
+    <comment>Note on the page about the actions launchers don't offer.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>Open Shortcuts &amp; Mouse Buttons</value>
+    <comment>Button on the note about actions on the window in front, which opens the Shortcuts &amp; Mouse Buttons page.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>While it's on, the actions your programs ask for with the command run with their own checks and questions, and only programs of your account on this PC, without low integrity, can ask. The entries in Start are in your own Start menu folder and are named for your profiles and apps. Launcher Actions doesn't use the network.</value>
+    <comment>Launcher Actions' Permissions &amp; data card.</comment>
+  </data>
 </root>

@@ -5292,4 +5292,56 @@
     <value>Actions de PC Companion</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsShowInStartHeader" xml:space="preserve">
+    <value>Afficher les actions dans Démarrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsShowInStartDescription" xml:space="preserve">
+    <value>La recherche Windows et les lanceurs qui lisent Démarrer les trouvent aussi.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesHeader" xml:space="preserve">
+    <value>Fonctionnalités dans Démarrer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsFeaturesDescription" xml:space="preserve">
+    <value>Choisissez les fonctionnalités dont les actions s’affichent dans Démarrer. La commande les exécute toutes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsHeader" xml:space="preserve">
+    <value>Actions</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionsDescription" xml:space="preserve">
+    <value>Copiez la commande d’une action pour l’exécuter depuis un script, la boîte Exécuter, une tâche planifiée ou un lanceur qui exécute des commandes.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommand" xml:space="preserve">
+    <value>Copier la commande</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCopyCommandName" xml:space="preserve">
+    <value>Copier la commande de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsCommandCopied" xml:space="preserve">
+    <value>La commande de {0} a été copiée.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsMoreActionsInfo" xml:space="preserve">
+    <value>Les fonctionnalités qui proposent des actions, comme Profils réseau ou Arrêter une application, les ajoutent ici une fois activées.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsWindowInFrontInfo" xml:space="preserve">
+    <value>Les actions sur la fenêtre au premier plan, comme Masquer l’application, ne figurent pas ici, car un lanceur laisse une autre fenêtre au premier plan. Attribuez-leur plutôt un raccourci ou un bouton de souris.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsOpenShortcuts" xml:space="preserve">
+    <value>Ouvrir Raccourcis et boutons de souris</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsPermissions" xml:space="preserve">
+    <value>Tant qu’elle est activée, les actions que vos programmes demandent avec la commande s’exécutent avec leurs propres vérifications et questions, et seuls les programmes de votre compte sur ce PC, sans intégrité faible, peuvent les demander. Les entrées se trouvent dans votre propre dossier du menu Démarrer et portent le nom de vos profils et applications. Actions du lanceur n’utilise pas le réseau.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
