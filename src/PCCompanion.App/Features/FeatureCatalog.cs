@@ -97,7 +97,7 @@ public static class FeatureCatalog
             new(LockKeysFeature.Definition, LockKeysFeature.CurrentSupport, typeof(LockKeysPage), DrawnIcon: "lock-keys"),
             new(InputLanguagePerAppFeature.Definition, InputLanguagePerAppFeature.CurrentSupport, typeof(InputLanguagePerAppPage), DrawnIcon: "input-language-per-app"),
             new(ShortcutsAndMouseButtonsFeature.Definition, ShortcutsAndMouseButtonsFeature.CurrentSupport, typeof(ShortcutsAndMouseButtonsPage), DrawnIcon: "shortcuts-and-mouse-buttons", Actions: _ => ShortcutsAndMouseButtonsFeature.OfferedActions()),
-            new(LauncherActionsFeature.Definition, LauncherActionsFeature.CurrentSupport, typeof(LauncherActionsPage)),
+            new(LauncherActionsFeature.Definition, LauncherActionsFeature.CurrentSupport, typeof(LauncherActionsPage), DrawnIcon: "launcher-actions"),
         ]),
         new(WindowsModule.Id, "ModuleWindowsName",
         [
