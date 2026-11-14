@@ -23,11 +23,14 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     private readonly IServerConnections _connections;
     private readonly ILogger _logger;
     private readonly int _number;
+    private readonly ChangeJournal _journal;
     private IDisposable? _connection;
     private IDisposable? _watch;
+    private RootPaths? _paths;
     private CancellationTokenSource? _uploading;
 
-    public ServerFolder(RemoteServer server, string userSid, string iconResource, ISyncRootSystem sync, IPlaceholderSystem pc, IServerConnections connections, TimeProvider time, ILogger logger, int number)
+    /// <param name="journalFile">Where the renames and deletes wait while the server can't be reached.</param>
+    public ServerFolder(RemoteServer server, string userSid, string iconResource, ISyncRootSystem sync, IPlaceholderSystem pc, IServerConnections connections, string journalFile, TimeProvider time, ILogger logger, int number)
     {
         _server = server;
         _iconResource = iconResource;
@@ -40,6 +43,14 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
         Listings = new ServerListings(server.Folder, server.RemoteFolder, connections, pc, time, logger, number);
         Downloads = new ServerDownloads(server.RemoteFolder, connections, Listings, time, logger, number);
         Uploads = new ServerUploads(server.Folder, server.RemoteFolder, connections, pc, time, logger, number);
+        _journal = new ChangeJournal(journalFile);
+        if (_journal.WasUnreadable)
+        {
+            LogJournalUnreadable(logger, number);
+        }
+
+        Changes = new ServerChanges(server.RemoteFolder, connections, _journal, Uploads, logger, number);
+        Uploads.Changes = Changes;
     }
 
     /// <summary>The sync root's ID.</summary>
@@ -54,6 +65,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public ServerUploads Uploads { get; }
 
+    public ServerChanges Changes { get; }
+
     /// <summary>The server's state, and when it's tried again.</summary>
     public ConnectionState State => _connections.State;
 
@@ -62,6 +75,7 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     public void Start()
     {
         Directory.CreateDirectory(_server.Folder);
+        _paths = new RootPaths(_server.Folder, VolumePaths.OnVolume(_server.Folder));
         _sync.Register(new SyncRootRegistration(Id, _server.Folder, _server.Name, _iconResource));
         _connection = _sync.Connect(_server.Folder, this, exception => LogRequestFailed(_logger, _number, exception));
 
@@ -74,6 +88,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
             {
                 try
                 {
+                    // Folders a listing marked complete before the provider stopped are listed again.
+                    Listings.ListAllAgainOnNextOpen();
                     Uploads.FindChanges();
                     await Uploads.RunAsync(stop).ConfigureAwait(false);
                 }
@@ -100,6 +116,7 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     {
         Dispose();
         _sync.Unregister(Id);
+        _journal.Delete();
         LogRemoved(_logger, _number);
     }
 
@@ -123,44 +140,158 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public void CancelFetchData(CancelFetchDataNotice notice) => Downloads.Cancel(notice.Path);
 
-    // PC Companion's own changes, such as removing a file deleted on the server, go ahead.
+    // PC Companion's own changes, such as removing a file deleted on the server, go ahead; others
+    // are made on the server first, or go to the journal.
     public void Delete(DeleteRequest request)
     {
-        if (IsOwn(request))
+        if (IsOwn(request) || request.IsUndelete || ChangeOf(request.PathOnVolume) is not { } source)
         {
             request.Allow();
+            return;
         }
-        else
-        {
-            request.Refuse(CloudFileStatus.AccessDenied);
-        }
+
+        Make(request, () => DeleteOf(source.Local, source.Relative, request.IsDirectory, request.Identity));
     }
 
     public void Rename(RenameRequest request)
     {
-        if (IsOwn(request))
+        if (IsOwn(request) || ChangeOf(request.PathOnVolume) is not { } source)
         {
             request.Allow();
+            return;
         }
-        else
+
+        if (!request.IsTargetInSyncRoot)
         {
-            request.Refuse(CloudFileStatus.AccessDenied);
+            // Moving out of the folder, as to the Recycle Bin, deletes it on the server.
+            Make(request, () => DeleteOf(source.Local, source.Relative, request.IsDirectory, request.Identity));
+            return;
         }
+
+        if (ChangeOf(request.TargetPathOnVolume) is not { } target)
+        {
+            request.Refuse(CloudFileStatus.Unsuccessful);
+            return;
+        }
+
+        Make(request, () => new JournalEntry { Kind = JournalKind.Rename, Path = source.Relative, Target = target.Relative, IsDirectory = request.IsDirectory });
+    }
+
+    // Its placeholder, and those in a folder, learn their new paths.
+    public void RenameCompleted(RenameCompletedNotice notice)
+    {
+        if (_paths?.FromVolume(notice.PathOnVolume) is not { } local)
+        {
+            return;
+        }
+
+        Uploads.Changed(local);
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                if (Directory.Exists(local))
+                {
+                    foreach (string path in Directory.EnumerateFileSystemEntries(local, "*", new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0, IgnoreInaccessible = true }))
+                    {
+                        Uploads.Changed(path);
+                    }
+                }
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                LogRequestFailed(_logger, _number, exception);
+            }
+        });
     }
 
     // Windows removes only copies that are in sync, so nothing waiting for the server is lost.
     public void Dehydrate(DehydrateRequest request) => request.Allow();
 
     // A program closed a file it may have written.
-    public void FileClosed(FileClosedNotice notice) => Uploads.Changed(notice.Path);
+    public void FileClosed(FileClosedNotice notice) => Uploads.Changed(_paths?.FromVolume(notice.PathOnVolume) ?? notice.Path);
 
     private static bool IsOwn(CloudFileRequest request) => request.Program?.ProcessId == Environment.ProcessId;
+
+    // The request's file on the PC and below the folder; none for the folder itself.
+    private (string Local, string Relative)? ChangeOf(string pathOnVolume) =>
+        _paths?.FromVolume(pathOnVolume) is { } local && _paths.Relative(local) is { Length: > 0 } relative ? (local, relative) : null;
+
+    // The change runs on the thread pool, and Windows always gets an answer.
+    private void Make(CloudFileRequest request, Func<JournalEntry> change)
+    {
+        _ = Task.Run(async () =>
+        {
+            int status;
+            try
+            {
+                status = await Changes.MakeAsync(change(), CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                LogRequestFailed(_logger, _number, exception);
+                status = CloudFileStatus.Unsuccessful;
+            }
+
+            if (status == CloudFileStatus.Success)
+            {
+                switch (request)
+                {
+                    case DeleteRequest delete:
+                        delete.Allow();
+                        break;
+                    case RenameRequest rename:
+                        rename.Allow();
+                        break;
+                }
+            }
+            else
+            {
+                request.Refuse(status);
+            }
+        });
+    }
+
+    // A delete keeps the versions the PC knew: of the file, or of every file in the folder.
+    private JournalEntry DeleteOf(string local, string relative, bool isDirectory, IReadOnlyList<byte> identityBytes)
+    {
+        if (!isDirectory)
+        {
+            var identity = identityBytes.Count == 0 ? null : ItemIdentity.FromBytes([.. identityBytes]);
+            return new JournalEntry { Kind = JournalKind.Delete, Path = relative, Size = identity?.Size, LastWriteTimeUtc = identity?.LastWriteTimeUtc };
+        }
+
+        var files = new List<JournalFile>();
+        var folders = new Stack<(string Local, string Relative)>();
+        folders.Push((local, relative));
+        while (folders.Count > 0)
+        {
+            var (folder, folderRelative) = folders.Pop();
+            foreach (var item in _pc.Items(folder))
+            {
+                string itemRelative = ItemIdentity.Join(folderRelative, item.Name);
+                if (item.IsDirectory && !item.IsLink)
+                {
+                    folders.Push((item.Path, itemRelative));
+                }
+                else if (!item.IsDirectory && item.Identity is { } known)
+                {
+                    files.Add(new JournalFile(itemRelative, known.Size, known.LastWriteTimeUtc));
+                }
+            }
+        }
+
+        return new JournalEntry { Kind = JournalKind.Delete, Path = relative, IsDirectory = true, Files = files };
+    }
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: its folder is connected.")]
     private static partial void LogStarted(ILogger logger, int server);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: its folder is unregistered.")]
     private static partial void LogRemoved(ILogger logger, int server);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: the journal of changes waiting for the server couldn't be read, so they're lost.")]
+    private static partial void LogJournalUnreadable(ILogger logger, int server);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Server {Server}: uploads stopped.")]
     private static partial void LogUploadsStopped(ILogger logger, int server, Exception exception);

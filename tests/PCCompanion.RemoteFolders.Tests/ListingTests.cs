@@ -373,7 +373,7 @@ public sealed class ProviderServiceTests : IDisposable
     public ProviderServiceTests()
     {
         _service = new ProviderService(_sync, Sid, (server, number) =>
-            new ServerFolder(server, Sid, "icon.ico,0", _sync, new FakePlaceholderSystem(), new FakeConnections(new FakeRemoteServer()), new ManualTimeProvider(), NullLogger.Instance, number), NullLogger.Instance);
+            new ServerFolder(server, Sid, "icon.ico,0", _sync, new FakePlaceholderSystem(), new FakeConnections(new FakeRemoteServer()), System.IO.Path.Join(server.Folder, "..", "pcc-tests-journal-" + server.Id + ".json"), new ManualTimeProvider(), NullLogger.Instance, number), NullLogger.Instance);
     }
 
     public void Dispose() => _service.Dispose();

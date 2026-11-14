@@ -154,6 +154,37 @@ public static class Placeholders
     }
 
     /// <summary>
+    /// Gives a placeholder a new identity, as after it was renamed or moved, and marks it in sync
+    /// when <paramref name="markInSync"/>. Its size, dates and data stay.
+    /// </summary>
+    public static int UpdateIdentity(string path, byte[] identity, bool markInSync)
+    {
+        ArgumentNullException.ThrowIfNull(identity);
+        var flags = markInSync ? CF_UPDATE_FLAGS.CF_UPDATE_FLAG_MARK_IN_SYNC : CF_UPDATE_FLAGS.CF_UPDATE_FLAG_NONE;
+        int result;
+        using (var handle = OpenForAttributes(path))
+        {
+            result = PInvoke.CfUpdatePlaceholder(handle, (CF_FS_METADATA?)null, identity, default, flags).Value;
+        }
+
+        if (result != AccessDenied)
+        {
+            return result;
+        }
+
+        int opened = OplockHandle.Open(path, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var oplock);
+        if (opened != 0)
+        {
+            return opened;
+        }
+
+        using (oplock)
+        {
+            return oplock!.Use(handle => PInvoke.CfUpdatePlaceholder(handle, (CF_FS_METADATA?)null, identity, default, flags).Value);
+        }
+    }
+
+    /// <summary>
     /// Has Windows ask the provider for a folder's contents again the next time a program lists
     /// it, after an answer told Windows the folder was complete.
     /// </summary>

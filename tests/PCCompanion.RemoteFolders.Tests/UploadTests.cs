@@ -421,6 +421,19 @@ public sealed class UploadTests : IDisposable
         }
     }
 
+    [Fact]
+    public async Task AWakeReturnsWithoutAPathWhenNothingIsDue()
+    {
+        var queue = new WaitingChanges(_time);
+        queue.Changed("a");
+
+        var next = queue.NextAsync(TestContext.Current.CancellationToken);
+        queue.Wake();
+
+        Assert.Null(await next.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, TestContext.Current.CancellationToken));
+        Assert.Equal(1, queue.Count);
+    }
+
     private static async Task WaitUntilAsync(Func<bool> condition)
     {
         var until = DateTime.UtcNow.AddSeconds(10);

@@ -100,7 +100,12 @@ public sealed class FakeRemoteServer : IRemoteServer
     public Task RenameAsync(string source, string destination, CancellationToken cancellation)
     {
         Fail();
-        if (!_items.ContainsKey(source) || _items.ContainsKey(destination))
+        if (!_items.ContainsKey(source))
+        {
+            throw new RemoteServerException(RemoteError.NotFound, "No such file.");
+        }
+
+        if (_items.ContainsKey(destination))
         {
             throw new RemoteServerException(RemoteError.Failed, "Failure");
         }
@@ -263,6 +268,16 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
         return 0;
     }
 
+    public List<(string Path, bool MarkInSync)> IdentityUpdates { get; } = [];
+
+    public int UpdateIdentity(string path, byte[] identity, bool markInSync)
+    {
+        IdentityUpdates.Add((path, markInSync));
+        var state = Local[path].State!;
+        Local[path] = (Local[path].IsDirectory, state with { Identity = identity, InSync = markInSync || state.InSync });
+        return 0;
+    }
+
     public int ConvertFolder(string path, byte[] identity)
     {
         Local[path] = (true, State(identity, inSync: true, onlineOnly: false));
@@ -277,7 +292,9 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
 
     public IEnumerable<string> FindChanges(string folder) =>
         [.. Local.Where(pair => pair.Key.StartsWith(folder + "\\", StringComparison.OrdinalIgnoreCase) && !Links.Contains(pair.Key)
-            && (pair.Value.State is null || (!pair.Value.IsDirectory && !pair.Value.State.InSync))).Select(pair => pair.Key)];
+            && (pair.Value.State is null || (!pair.Value.IsDirectory && !pair.Value.State.InSync)
+                || (ItemIdentity.FromBytes([.. pair.Value.State.Identity]) is { } identity && identity.RelativePath != pair.Key[(folder.Length + 1)..].Replace('\\', '/'))))
+            .Select(pair => pair.Key)];
 
     public IDisposable Watch(string folder, Action<string> changed, Action missed)
     {

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ public sealed class WaitingChanges(TimeProvider time)
     private readonly Lock _gate = new();
     private readonly Dictionary<string, DateTimeOffset> _due = new(StringComparer.OrdinalIgnoreCase);
     private TaskCompletionSource _added = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private bool _woken;
 
     /// <summary>How many changes wait.</summary>
     public int Count
@@ -86,8 +88,25 @@ public sealed class WaitingChanges(TimeProvider time)
     /// <summary>Tries a path again after <paramref name="delay"/>, or later if it changed again meanwhile.</summary>
     public void Later(string path, TimeSpan delay) => Set(path, time.GetUtcNow() + delay, later: true);
 
-    /// <summary>Waits for the next path that's due, and takes it from the queue.</summary>
-    public async Task<string> NextAsync(CancellationToken cancellation)
+    /// <summary>Has <see cref="NextAsync"/> return without a path, so its caller can look at other work.</summary>
+    public void Wake()
+    {
+        TaskCompletionSource added;
+        lock (_gate)
+        {
+            _woken = true;
+            added = _added;
+            _added = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        }
+
+        added.TrySetResult();
+    }
+
+    /// <summary>
+    /// Waits for the next path that's due, and takes it from the queue; returns <see langword="null"/>
+    /// when <see cref="Wake"/> was called and nothing is due.
+    /// </summary>
+    public async Task<string?> NextAsync(CancellationToken cancellation)
     {
         while (true)
         {
@@ -117,6 +136,12 @@ public sealed class WaitingChanges(TimeProvider time)
                     }
 
                     wait = left;
+                }
+
+                if (_woken)
+                {
+                    _woken = false;
+                    return null;
                 }
             }
 
@@ -192,6 +217,16 @@ public sealed partial class ServerUploads(
     /// <summary>Raised when a file that changed on the PC and on the server was kept as a conflict copy.</summary>
     public event EventHandler<ConflictEventArgs>? ConflictFound;
 
+    /// <summary>The renames, moves and deletes, whose journal is made on the server before any upload.</summary>
+    public ServerChanges? Changes { get; set; }
+
+    /// <summary>Whether <paramref name="current"/> is the version this PC put at <paramref name="relative"/> and hasn't marked in sync yet.</summary>
+    public bool IsOwnVersion(string relative, RemoteEntry current) =>
+        _uploaded.TryGetValue(relative, out var uploaded) && uploaded.IsSameVersion(current.Size, current.LastWriteTimeUtc);
+
+    /// <summary>Has the worker look at the journal soon, as after a change was written to it.</summary>
+    public void Wake() => _queue.Wake();
+
     /// <summary>Records a change to a file or folder in the server's folder, from the folder's watch or from Windows.</summary>
     public void Changed(string path)
     {
@@ -201,17 +236,29 @@ public sealed partial class ServerUploads(
         }
     }
 
-    /// <summary>Finds the changes made while the provider wasn't running, or that the watch missed: new files and folders, and changed files.</summary>
+    /// <summary>
+    /// Finds the changes made while the provider wasn't running, or that the watch missed: new
+    /// files and folders, changed files, and renames and moves, which go to the journal, a folder's
+    /// once for all in it.
+    /// </summary>
     public void FindChanges()
     {
-        int found = 0;
-        foreach (string path in pc.FindChanges(localRoot))
+        var found = pc.FindChanges(localRoot).OrderBy(path => path.Count(c => c == '\\')).ToList();
+        var moves = new List<(string From, string To)>();
+        foreach (string path in found)
         {
+            if (Changes is { } changes && RelativePath(path) is { Length: > 0 } relative
+                && pc.Inspect(path) is { State: not null, Identity: { } identity } item
+                && identity.RelativePath != relative && WhereItWas(relative, moves) != identity.RelativePath)
+            {
+                changes.Record(new JournalEntry { Kind = JournalKind.Rename, Path = identity.RelativePath, Target = relative, IsDirectory = item.IsDirectory });
+                moves.Add((identity.RelativePath, relative));
+            }
+
             Changed(path);
-            found++;
         }
 
-        LogFoundChanges(logger, serverNumber, found);
+        LogFoundChanges(logger, serverNumber, found.Count, moves.Count);
     }
 
     /// <summary>Uploads the changes as they come, one at a time, until <paramref name="cancellation"/> stops it.</summary>
@@ -223,7 +270,19 @@ public sealed partial class ServerUploads(
             UploadOutcome outcome;
             try
             {
-                path = await _queue.NextAsync(cancellation).ConfigureAwait(false);
+                // Renames and deletes come first, so uploads find the server's files where the PC has them.
+                if (Changes is { Waiting: > 0 } changes && !await changes.ReplayAsync(cancellation).ConfigureAwait(false))
+                {
+                    await connections.State.WaitForRetryAsync(cancellation).ConfigureAwait(false);
+                    continue;
+                }
+
+                if (await _queue.NextAsync(cancellation).ConfigureAwait(false) is not { } next)
+                {
+                    continue;
+                }
+
+                path = next;
                 outcome = await UploadAsync(path, cancellation).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
@@ -271,9 +330,14 @@ public sealed partial class ServerUploads(
     private async Task<UploadOutcome> UploadItemAsync(string path, CancellationToken cancellation)
     {
         string? relative = RelativePath(path);
-        if (relative is not { Length: > 0 } || pc.Inspect(path) is not { } item)
+        if (relative is not { Length: > 0 })
         {
-            // Outside the folder, the folder itself, or gone.
+            // Outside the folder, or the folder itself, as when the worker is woken for the journal.
+            return UploadOutcome.Done;
+        }
+
+        if (pc.Inspect(path) is not { } item)
+        {
             LogNothingToUpload(logger, serverNumber, "gone");
             return UploadOutcome.Done;
         }
@@ -295,6 +359,11 @@ public sealed partial class ServerUploads(
 
             LogNothingToUpload(logger, serverNumber, "stays on the PC");
             return UploadOutcome.Done;
+        }
+
+        if (item.State is not null && item.Identity is { } identity && identity.RelativePath != relative)
+        {
+            return await MovedAsync(path, relative, item, identity, cancellation).ConfigureAwait(false);
         }
 
         if (item.State is { } state && (item.IsDirectory || state.InSync))
@@ -372,10 +441,49 @@ public sealed partial class ServerUploads(
         return UploadOutcome.Done;
     }
 
+    // Renamed or moved on the PC, and on the server: its placeholder learns where it is now. A file
+    // with changes, or one the server doesn't have there as the PC knew it, is uploaded.
+    private async Task<UploadOutcome> MovedAsync(string path, string relative, LocalItem item, ItemIdentity identity, CancellationToken cancellation)
+    {
+        bool unchanged = item.State!.InSync || item.State.ModifiedSize == 0;
+        if (!item.IsDirectory)
+        {
+            if (!unchanged)
+            {
+                return await UploadFileAsync(path, relative, item, cancellation).ConfigureAwait(false);
+            }
+
+            RemoteEntry? current;
+            try
+            {
+                current = await connections.UseAsync((server, token) => server.StatAsync(ItemIdentity.RemotePath(remoteFolder, relative), token), cancellation).ConfigureAwait(false);
+            }
+            catch (RemoteServerException exception)
+            {
+                return Refused(relative, exception);
+            }
+
+            if (current is null || current.IsDirectory || !identity.IsSameVersion(current.Size, current.LastWriteTimeUtc))
+            {
+                return await UploadFileAsync(path, relative, item, cancellation).ConfigureAwait(false);
+            }
+        }
+
+        int result = pc.UpdateIdentity(path, (identity with { RelativePath = relative }).ToBytes(), markInSync: true);
+        if (result != 0)
+        {
+            LogMarkFailed(logger, serverNumber, result);
+            return UploadOutcome.Busy;
+        }
+
+        LogNothingToUpload(logger, serverNumber, "moved");
+        return UploadOutcome.Done;
+    }
+
     private async Task<UploadOutcome> UploadFileAsync(string path, string relative, LocalItem item, CancellationToken cancellation)
     {
-        // The version on the server the PC's copy came from; none for a new file.
-        var version = item.Identity is { IsDirectory: false } known && known.RelativePath == relative ? known : null;
+        // The version on the server the PC's copy came from, also when it moved since; none for a new file.
+        var version = item.Identity is { IsDirectory: false } known ? known : null;
         int opened = pc.OpenForUpload(path, out var file);
         if (opened != 0 || file is null)
         {
@@ -645,6 +753,20 @@ public sealed partial class ServerUploads(
 
     private static string Parent(string relativePath) => relativePath[..Math.Max(0, relativePath.LastIndexOf('/'))];
 
+    // Where an item was before the moves found so far, the deepest first.
+    private static string WhereItWas(string relative, List<(string From, string To)> moves)
+    {
+        foreach (var (from, to) in moves.OrderByDescending(move => move.To.Length))
+        {
+            if (relative == to || relative.StartsWith(to + "/", StringComparison.Ordinal))
+            {
+                return from + relative[to.Length..];
+            }
+        }
+
+        return relative;
+    }
+
     private static string RandomPart() => Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(8));
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: uploaded {Bytes} bytes in {Milliseconds:F0} ms.")]
@@ -656,8 +778,8 @@ public sealed partial class ServerUploads(
     [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: created a folder.")]
     private static partial void LogFolderCreated(ILogger logger, int server);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: found {Count} changes on the PC.")]
-    private static partial void LogFoundChanges(ILogger logger, int server, int count);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: found {Count} changes on the PC, {Moves} of them renames or moves.")]
+    private static partial void LogFoundChanges(ILogger logger, int server, int count, int moves);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: a file to upload is open in a program (0x{Result:X8}); it's tried again later.")]
     private static partial void LogInUse(ILogger logger, int server, int result);

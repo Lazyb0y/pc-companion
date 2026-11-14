@@ -117,6 +117,25 @@ public sealed class CloudFilesTests : IDisposable
     }
 
     [Fact]
+    public void AnOrdinaryFileGetsNoIdentity()
+    {
+        string path = File("plain.txt");
+
+        Assert.Equal(NotACloudFile, Placeholders.UpdateIdentity(path, [1, 2, 3], markInSync: true));
+        Assert.Null(Placeholders.Read(path));
+    }
+
+    [Fact]
+    public void APathOnItsVolumeStartsAtTheVolumesRoot()
+    {
+        string onVolume = VolumePaths.OnVolume(_folder.FullPath);
+
+        Assert.StartsWith("\\", onVolume, StringComparison.Ordinal);
+        Assert.EndsWith(Path.GetFileName(_folder.FullPath), onVolume, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("\\", VolumePaths.OnVolume(Path.GetPathRoot(_folder.FullPath)!));
+    }
+
+    [Fact]
     public void AnIdentityLargerThanWindowsKeepsIsRejected()
     {
         var entry = new PlaceholderEntry("a.txt", new byte[PlaceholderEntry.MaximumIdentityLength + 1], IsDirectory: false, 1, DateTime.UtcNow);
@@ -155,5 +174,7 @@ public sealed class CloudFilesTests : IDisposable
         public void Dehydrate(DehydrateRequest request) => throw new InvalidOperationException();
 
         public void FileClosed(FileClosedNotice notice) => throw new InvalidOperationException();
+
+        public void RenameCompleted(RenameCompletedNotice notice) => throw new InvalidOperationException();
     }
 }

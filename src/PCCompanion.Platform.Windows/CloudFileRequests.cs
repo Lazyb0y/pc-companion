@@ -53,6 +53,7 @@ public abstract class CloudFileRequest
         _transferKey = info->TransferKey;
         _requestKey = info->RequestKey;
         Path = FullPath(info, info->NormalizedPath);
+        PathOnVolume = info->NormalizedPath.Value is null ? string.Empty : info->NormalizedPath.ToString();
         Identity = info->FileIdentity is null || info->FileIdentityLength == 0
             ? []
             : new ReadOnlySpan<byte>(info->FileIdentity, (int)info->FileIdentityLength).ToArray();
@@ -64,6 +65,12 @@ public abstract class CloudFileRequest
 
     /// <summary>The full path of the file or folder.</summary>
     public string Path { get; }
+
+    /// <summary>
+    /// The path of the file or folder on its volume, from the volume's root, such as <c>\Users\Ana\a.txt</c>:
+    /// the same however the volume is reached, also through a folder it's mounted in; see <see cref="VolumePaths.OnVolume"/>.
+    /// </summary>
+    public string PathOnVolume { get; }
 
     /// <summary>What the provider stored in the placeholder when it made it; empty for the sync root itself.</summary>
     public IReadOnlyList<byte> Identity { get; }
@@ -304,6 +311,7 @@ public sealed class RenameRequest : CloudFileRequest
     {
         var flags = parameters->Rename.Flags;
         TargetPath = FullPath(info, parameters->Rename.TargetPath);
+        TargetPathOnVolume = parameters->Rename.TargetPath.Value is null ? string.Empty : parameters->Rename.TargetPath.ToString();
         IsDirectory = (flags & CF_CALLBACK_RENAME_FLAGS.CF_CALLBACK_RENAME_FLAG_IS_DIRECTORY) != 0;
         IsSourceInSyncRoot = (flags & CF_CALLBACK_RENAME_FLAGS.CF_CALLBACK_RENAME_FLAG_SOURCE_IN_SCOPE) != 0;
         IsTargetInSyncRoot = (flags & CF_CALLBACK_RENAME_FLAGS.CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE) != 0;
@@ -311,6 +319,9 @@ public sealed class RenameRequest : CloudFileRequest
 
     /// <summary>The full path it gets.</summary>
     public string TargetPath { get; }
+
+    /// <summary>The path it gets on its volume; see <see cref="CloudFileRequest.PathOnVolume"/>.</summary>
+    public string TargetPathOnVolume { get; }
 
     public bool IsDirectory { get; }
 
@@ -413,6 +424,22 @@ public sealed class FileClosedNotice : CloudFileRequest
     public override int Refuse(int status = CloudFileStatus.Unsuccessful) => 0;
 }
 
+/// <summary>A placeholder was renamed or moved: <see cref="CloudFileRequest.Path"/> is where it is now.</summary>
+public sealed class RenameCompletedNotice : CloudFileRequest
+{
+    internal unsafe RenameCompletedNotice(CF_CALLBACK_INFO* info, CF_CALLBACK_PARAMETERS* parameters)
+        : base(info)
+    {
+        SourcePathOnVolume = parameters->RenameCompletion.SourcePath.Value is null ? string.Empty : parameters->RenameCompletion.SourcePath.ToString();
+        TryAnswer();
+    }
+
+    /// <summary>Where it was, on its volume; see <see cref="CloudFileRequest.PathOnVolume"/>.</summary>
+    public string SourcePathOnVolume { get; }
+
+    public override int Refuse(int status = CloudFileStatus.Unsuccessful) => 0;
+}
+
 /// <summary>
 /// What a sync provider does with Windows' requests. Each method is called on one of Windows'
 /// threads, and should only hand the request on and return: a request can be answered later, from
@@ -433,4 +460,6 @@ public interface ICloudFileRequests
     void Dehydrate(DehydrateRequest request);
 
     void FileClosed(FileClosedNotice notice);
+
+    void RenameCompleted(RenameCompletedNotice notice);
 }
