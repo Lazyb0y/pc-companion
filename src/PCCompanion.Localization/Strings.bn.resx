@@ -5284,4 +5284,8 @@
     <value>PC Companion-এ এমন কোনো অ্যাকশন নেই। {0} পৃষ্ঠা থেকে এর কমান্ড আবার কপি করুন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsEntryName" xml:space="preserve">
+    <value>{0} - {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

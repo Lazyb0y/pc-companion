@@ -5476,4 +5476,8 @@
     <value>لا يحتوي PC Companion على هذا الإجراء. انسخ أمره مرة أخرى من صفحة {0}.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsEntryName" xml:space="preserve">
+    <value>{0} - {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

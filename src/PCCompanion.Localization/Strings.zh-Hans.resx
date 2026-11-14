@@ -5236,4 +5236,8 @@
     <value>PC Companion 没有此操作。请在“{0}”页面上重新复制其命令。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsEntryName" xml:space="preserve">
+    <value>{0} - {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

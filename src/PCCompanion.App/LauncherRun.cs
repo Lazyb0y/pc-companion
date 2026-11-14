@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using PCCompanion.App.Features.LauncherActions;
 using PCCompanion.Core;
+using PCCompanion.Infrastructure;
+using PCCompanion.Infrastructure.Settings;
 using PCCompanion.Modules.Input.LauncherActions;
 using PCCompanion.Platform.Windows;
 
@@ -40,10 +45,13 @@ internal static class LauncherRun
     {
         ArgumentNullException.ThrowIfNull(arguments);
 
-        if (LauncherCommand.Read(arguments[1..]) is not { } action)
+        if (LauncherCommand.Read(arguments[1..]) is not { } asked)
         {
             return LauncherExitCode.NotACommand;
         }
+
+        // IDs ignore case: the host gets them as the features write them.
+        var action = LauncherActionList.WithIdsOf(ReadActions(), asked);
 
         if (!WaitForPipe(LauncherPipe.Name))
         {
@@ -58,6 +66,13 @@ internal static class LauncherRun
         // Off the main thread, which is a single-threaded apartment.
         var answer = Task.Run(() => LauncherPipe.AskAsync(LauncherPipe.Name, action, AnswerWait)).GetAwaiter().GetResult();
         return LauncherCommand.ExitCodeOf(answer);
+    }
+
+    // The actions as the settings are now, the features that are off included.
+    private static IReadOnlyList<LauncherAction> ReadActions()
+    {
+        var settings = new SettingsStore(AppDataPaths.ForCurrentUser(), NullLogger<SettingsStore>.Instance).Load();
+        return LauncherCatalog.Read(featureId => settings.Features.TryGetValue(featureId, out var section) ? section : null, withFeaturesOff: true);
     }
 
     // Starts the host when none runs, and waits for the pipe it serves while Launcher Actions is on.

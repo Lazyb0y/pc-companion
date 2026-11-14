@@ -25,4 +25,29 @@ public sealed class CommandLineTests
     {
         Assert.Equal(expected, CommandLine.SplitArguments(arguments));
     }
+
+    [Theory]
+    [InlineData(new[] { "--run", "networkProfiles", "use", "Office" }, "--run networkProfiles use Office")]
+    [InlineData(new[] { "use", "Office 2" }, "use \"Office 2\"")]
+    [InlineData(new[] { "", "x" }, "\"\" x")]
+    [InlineData(new[] { "say \"hi\"" }, @"""say \""hi\""""")]
+    [InlineData(new[] { @"C:\Folder\" }, @"C:\Folder\")]
+    [InlineData(new[] { @"C:\My Folder\" }, @"""C:\My Folder\\""")]
+    public void ArgumentsJoinAsWindowsProgramsReadThem(string[] arguments, string expected)
+    {
+        Assert.Equal(expected, CommandLine.Join(arguments));
+    }
+
+    [Theory]
+    [InlineData("Office")]
+    [InlineData(" Büro ")]
+    [InlineData("a\\\"b")]
+    [InlineData(@"\\server\share\")]
+    [InlineData("tab\there")]
+    [InlineData("quote \" and backslashes \\\\\" end\\")]
+    [InlineData("مكتب ٢")]
+    public void JoinedArgumentsSplitBackIntoThemselves(string argument)
+    {
+        Assert.Equal(["first", argument, "last"], CommandLine.SplitArguments(CommandLine.Join(["first", argument, "last"])));
+    }
 }
