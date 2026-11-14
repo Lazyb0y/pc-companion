@@ -80,6 +80,9 @@ public static class Placeholders
     // HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)
     private const int NotACloudFile = unchecked((int)0x80070178);
 
+    // E_ACCESSDENIED
+    private const int AccessDenied = unchecked((int)0x80070005);
+
     // HRESULT_FROM_WIN32(ERROR_MORE_DATA): the identity didn't fit, which a 4 KB buffer rules out.
     private const int MoreData = unchecked((int)0x800700EA);
 
@@ -148,6 +151,47 @@ public static class Placeholders
     {
         using var handle = OpenForAttributes(path);
         return PInvoke.CfConvertToPlaceholder(handle, identity, markInSync ? CF_CONVERT_FLAGS.CF_CONVERT_FLAG_MARK_IN_SYNC : CF_CONVERT_FLAGS.CF_CONVERT_FLAG_NONE).Value;
+    }
+
+    /// <summary>
+    /// Has Windows ask the provider for a folder's contents again the next time a program lists
+    /// it, after an answer told Windows the folder was complete.
+    /// </summary>
+    public static int ListAgainOnNextOpen(string folder)
+    {
+        int result;
+        using (var handle = OpenForAttributes(folder))
+        {
+            result = PInvoke.CfUpdatePlaceholder(handle, (CF_FS_METADATA?)null, default(ReadOnlySpan<byte>), default, CF_UPDATE_FLAGS.CF_UPDATE_FLAG_ENABLE_ON_DEMAND_POPULATION).Value;
+        }
+
+        if (result != AccessDenied)
+        {
+            return result;
+        }
+
+        // A handle that reads only attributes may not be enough; one that steps aside for programs is.
+        int opened = OplockHandle.Open(folder, CF_OPEN_FILE_FLAGS.CF_OPEN_FILE_FLAG_WRITE_ACCESS, out var oplock);
+        if (opened != 0)
+        {
+            return opened;
+        }
+
+        using (oplock)
+        {
+            return oplock!.Use(handle => PInvoke.CfUpdatePlaceholder(handle, (CF_FS_METADATA?)null, default(ReadOnlySpan<byte>), default, CF_UPDATE_FLAGS.CF_UPDATE_FLAG_ENABLE_ON_DEMAND_POPULATION).Value);
+        }
+    }
+
+    /// <summary>
+    /// Makes a new folder in a sync root a placeholder with <paramref name="identity"/>, marked in
+    /// sync, whose contents Windows asks the provider for each time a program lists it, as for a
+    /// folder made from the server's listing.
+    /// </summary>
+    public static int ConvertFolder(string path, byte[] identity)
+    {
+        using var handle = OpenForAttributes(path);
+        return PInvoke.CfConvertToPlaceholder(handle, identity, CF_CONVERT_FLAGS.CF_CONVERT_FLAG_MARK_IN_SYNC | CF_CONVERT_FLAGS.CF_CONVERT_FLAG_ENABLE_ON_DEMAND_POPULATION).Value;
     }
 
     /// <summary>

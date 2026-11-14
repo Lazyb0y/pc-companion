@@ -19,22 +19,27 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     private readonly RemoteServer _server;
     private readonly string _iconResource;
     private readonly ISyncRootSystem _sync;
+    private readonly IPlaceholderSystem _pc;
     private readonly IServerConnections _connections;
     private readonly ILogger _logger;
     private readonly int _number;
     private IDisposable? _connection;
+    private IDisposable? _watch;
+    private CancellationTokenSource? _uploading;
 
     public ServerFolder(RemoteServer server, string userSid, string iconResource, ISyncRootSystem sync, IPlaceholderSystem pc, IServerConnections connections, TimeProvider time, ILogger logger, int number)
     {
         _server = server;
         _iconResource = iconResource;
         _sync = sync;
+        _pc = pc;
         _connections = connections;
         _logger = logger;
         _number = number;
         Id = SyncRoots.MakeId(RemoteFoldersProcess.ProviderName, userSid, server.Id);
         Listings = new ServerListings(server.Folder, server.RemoteFolder, connections, pc, time, logger, number);
         Downloads = new ServerDownloads(server.RemoteFolder, connections, Listings, time, logger, number);
+        Uploads = new ServerUploads(server.Folder, server.RemoteFolder, connections, pc, time, logger, number);
     }
 
     /// <summary>The sync root's ID.</summary>
@@ -47,6 +52,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public ServerDownloads Downloads { get; }
 
+    public ServerUploads Uploads { get; }
+
     /// <summary>The server's state, and when it's tried again.</summary>
     public ConnectionState State => _connections.State;
 
@@ -57,6 +64,25 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
         Directory.CreateDirectory(_server.Folder);
         _sync.Register(new SyncRootRegistration(Id, _server.Folder, _server.Name, _iconResource));
         _connection = _sync.Connect(_server.Folder, this, exception => LogRequestFailed(_logger, _number, exception));
+
+        // Changes made while the provider wasn't running are found first, then the watch adds new ones.
+        _watch = _pc.Watch(_server.Folder, Uploads.Changed, () => _ = Task.Run(Uploads.FindChanges));
+        _uploading = new CancellationTokenSource();
+        var stop = _uploading.Token;
+        _ = Task.Run(
+            async () =>
+            {
+                try
+                {
+                    Uploads.FindChanges();
+                    await Uploads.RunAsync(stop).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogUploadsStopped(_logger, _number, exception);
+                }
+            },
+            CancellationToken.None);
         LogStarted(_logger, _number);
     }
 
@@ -80,8 +106,14 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     /// <summary>Disconnects; the folder stays registered.</summary>
     public void Dispose()
     {
+        _uploading?.Cancel();
+        _uploading?.Dispose();
+        _uploading = null;
+        _watch?.Dispose();
+        _watch = null;
         _connection?.Dispose();
         _connection = null;
+        Listings.Dispose();
         _connections.Dispose();
     }
 
@@ -119,9 +151,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     // Windows removes only copies that are in sync, so nothing waiting for the server is lost.
     public void Dehydrate(DehydrateRequest request) => request.Allow();
 
-    public void FileClosed(FileClosedNotice notice)
-    {
-    }
+    // A program closed a file it may have written.
+    public void FileClosed(FileClosedNotice notice) => Uploads.Changed(notice.Path);
 
     private static bool IsOwn(CloudFileRequest request) => request.Program?.ProcessId == Environment.ProcessId;
 
@@ -130,6 +161,9 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: its folder is unregistered.")]
     private static partial void LogRemoved(ILogger logger, int server);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Server {Server}: uploads stopped.")]
+    private static partial void LogUploadsStopped(ILogger logger, int server, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: a request from Windows failed, and was refused.")]
     private static partial void LogRequestFailed(ILogger logger, int server, Exception exception);

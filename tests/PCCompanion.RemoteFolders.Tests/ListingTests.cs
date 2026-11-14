@@ -133,6 +133,79 @@ public sealed class ServerListingsTests : IDisposable
     }
 
     [Fact]
+    public async Task AListingTheProviderAsksForItselfIsAnsweredWithoutTheServer()
+    {
+        var request = new FakeListingRequest([]) { IsFromProvider = true };
+
+        await _listings.HandleAsync(request);
+
+        Assert.Empty(request.Answered!);
+        Assert.False(request.Complete);
+        Assert.Equal(0, _server.Listings);
+        Assert.Empty(_listings.Listed);
+        _time.Advance(ServerListings.ReuseFor);
+        Assert.Empty(_pc.ListedAgain);
+    }
+
+    // Windows can't create a file in a folder it doesn't know is complete.
+    [Fact]
+    public async Task AnAnsweredFolderIsCompleteAndListedAgainWhenItsOpenedAfter30Seconds()
+    {
+        var request = RootRequest();
+
+        await _listings.HandleAsync(request);
+
+        Assert.True(request.Complete);
+        _time.Advance(ServerListings.ReuseFor - TimeSpan.FromSeconds(1));
+        Assert.Empty(_pc.ListedAgain);
+        _time.Advance(TimeSpan.FromSeconds(1));
+        Assert.Equal([Root], _pc.ListedAgain);
+    }
+
+    [Fact]
+    public async Task AFolderAnsweredAgainWaitsAnother30Seconds()
+    {
+        var first = RootRequest();
+        await _listings.HandleAsync(first);
+        _pc.Created(Root, first.Answered!);
+        _time.Advance(TimeSpan.FromSeconds(20));
+
+        var again = RootRequest();
+        await _listings.HandleAsync(again);
+        _time.Advance(TimeSpan.FromSeconds(20));
+
+        Assert.True(again.Complete);
+        Assert.Empty(_pc.ListedAgain);
+        _time.Advance(TimeSpan.FromSeconds(10));
+        Assert.Equal([Root], _pc.ListedAgain);
+    }
+
+    [Fact]
+    public async Task ARefusedListingLeavesTheFolderToBeListedAgain()
+    {
+        _server.Failure = RemoteError.Unreachable;
+        var request = RootRequest();
+
+        await _listings.HandleAsync(request);
+
+        Assert.NotNull(request.Refused);
+        Assert.Null(request.Complete);
+        _time.Advance(ServerListings.ReuseFor);
+        Assert.Empty(_pc.ListedAgain);
+    }
+
+    [Fact]
+    public async Task NothingIsListedAgainOnceTheFolderIsDisconnected()
+    {
+        await _listings.HandleAsync(RootRequest());
+
+        _listings.Dispose();
+        _time.Advance(ServerListings.ReuseFor);
+
+        Assert.Empty(_pc.ListedAgain);
+    }
+
+    [Fact]
     public async Task AListingIsReusedFor30Seconds()
     {
         var first = RootRequest();
