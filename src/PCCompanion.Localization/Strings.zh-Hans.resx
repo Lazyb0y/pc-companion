@@ -5296,4 +5296,8 @@
     <value>开启后，你的程序通过命令请求的操作会经过各自的检查和询问后运行，并且只有此电脑上你的帐户中非低完整性级别的程序才能请求。“开始”中的条目位于你自己的“开始”菜单文件夹中，并以你的配置文件和应用命名。启动器操作不使用网络。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (冲突 {1})</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

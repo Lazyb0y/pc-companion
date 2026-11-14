@@ -5344,4 +5344,8 @@
     <value>While it's on, the actions your programs ask for with the command run with their own checks and questions, and only programs of your account on this PC, without low integrity, can ask. The entries in Start are in your own Start menu folder and are named for your profiles and apps. Launcher Actions doesn't use the network.</value>
     <comment>Launcher Actions' Permissions &amp; data card.</comment>
   </data>
+  <data name="RemoteFoldersConflictName" xml:space="preserve">
+    <value>{0} (conflict {1})</value>
+    <comment>Remote Folders: the name of a conflict copy, the PC's version of a file that also changed on the server. {0} is the file's name without its extension, {1} its date and time; the extension follows. Only characters Windows allows in file names.</comment>
+  </data>
 </root>
