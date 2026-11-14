@@ -4,8 +4,8 @@ using PCCompanion.Core.Features;
 namespace PCCompanion.Infrastructure.Features;
 
 /// <summary>
-/// Gives the feature that runs actions from shortcuts and mouse buttons the running features'
-/// actions, through <see cref="FeatureRunner"/>. The host attaches its feature runner and its UI
+/// Gives the features that run actions from shortcuts, mouse buttons and launchers the running
+/// features' actions, through <see cref="FeatureRunner"/>. The host attaches its feature runner and its UI
 /// thread once its window exists, since the features are created before the runner; until then
 /// no action can run.
 /// </summary>
@@ -29,6 +29,10 @@ public sealed class HostActions : IHostActions
     }
 
     public bool CanRun(FeatureAction action) => _connection is { } connection && connection.Runner.CanRun(action);
+
+    public bool CanRunFromLauncher(FeatureAction action) => _connection is { } connection && connection.Runner.CanRunFromLauncher(action);
+
+    public bool IsRunning(string featureId) => _connection is { } connection && connection.Runner.IsRunning(featureId);
 
     public void Run(FeatureAction action)
     {

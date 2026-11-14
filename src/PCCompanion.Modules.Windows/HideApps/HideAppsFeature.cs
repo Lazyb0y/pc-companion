@@ -122,8 +122,8 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems, IFeature
     /// <summary>The actions Hide Apps offers to shortcuts and mouse buttons, named in the user's language.</summary>
     public static IReadOnlyList<OfferedAction> OfferedActions() =>
     [
-        new(new FeatureAction(Definition.Id, HideAppShortcut), Strings.HideAppsHideAppHeader),
-        new(new FeatureAction(Definition.Id, HideOthersShortcut), Strings.HideAppsHideOthersHeader),
+        new(new FeatureAction(Definition.Id, HideAppShortcut), Strings.HideAppsHideAppHeader) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, HideOthersShortcut), Strings.HideAppsHideOthersHeader) { OnWindowInFront = true },
         new(new FeatureAction(Definition.Id, ShowAllAction), Strings.HideAppsShowAll),
     ];
 
@@ -147,6 +147,9 @@ public sealed partial class HideAppsFeature : IFeature, IHostMenuItems, IFeature
     }
 
     public bool CanRun(FeatureAction action) => _thread is not null && ActionOf(action) is not null;
+
+    // Hide app hides the window in front, and Hide others every window but it.
+    public bool OnWindowInFront(FeatureAction action) => ActionOf(action) is HideAction.HideApp or HideAction.HideOthers;
 
     public void Run(FeatureAction action)
     {

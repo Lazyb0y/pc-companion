@@ -10,8 +10,8 @@ using Xunit;
 
 namespace PCCompanion.Infrastructure.Tests;
 
-// How FeatureRunner and HostActions pass actions from shortcuts and mouse buttons to the features
-// that offer them.
+// How FeatureRunner and HostActions pass actions from shortcuts, mouse buttons and launchers to the
+// features that offer them.
 public sealed class FeatureActionsTests
 {
     private static readonly FeatureAction HideOthers = new("hideApps", "hideOthers");
@@ -92,11 +92,72 @@ public sealed class FeatureActionsTests
     }
 
     [Fact]
+    public void ALauncherCanRunAnActionThatDoesntActOnTheWindowInFront()
+    {
+        using var runner = new FeatureRunner([new FakeActionsFeature("networkProfiles", UseOffice)], _logger);
+
+        Assert.True(runner.CanRunFromLauncher(UseOffice));
+        Assert.False(runner.CanRunFromLauncher(UseOffice with { Target = "Home" }));
+        Assert.False(runner.CanRunFromLauncher(HideOthers));
+    }
+
+    [Fact]
+    public void ALauncherCantRunAnActionOnTheWindowInFront()
+    {
+        using var runner = new FeatureRunner([new FakeActionsFeature("hideApps", HideOthers) { InFront = true }], _logger);
+
+        Assert.True(runner.CanRun(HideOthers));
+        Assert.False(runner.CanRunFromLauncher(HideOthers));
+    }
+
+    [Fact]
+    public void AFeatureWhoseAnswerToALauncherFailsIsStopped()
+    {
+        var network = new FakeActionsFeature("networkProfiles", UseOffice) { CanRunFails = true };
+        using var runner = new FeatureRunner([network], _logger);
+
+        Assert.False(runner.CanRunFromLauncher(UseOffice));
+
+        Assert.Equal(1, network.DisposeCount);
+    }
+
+    [Fact]
+    public void AFeatureRunsWhileItsSectionTurnsItOnUntilItFails()
+    {
+        var network = new FakeActionsFeature("networkProfiles", UseOffice) { RunFails = true };
+        using var runner = new FeatureRunner([network], _logger);
+        Assert.False(runner.IsRunning("networkProfiles"));
+
+        runner.Apply(Settings("networkProfiles", """{ "enabled": true }"""));
+        Assert.True(runner.IsRunning("networkProfiles"));
+        Assert.False(runner.IsRunning("hideApps"));
+
+        runner.Apply(Settings("networkProfiles", """{ "enabled": false }"""));
+        Assert.False(runner.IsRunning("networkProfiles"));
+
+        runner.Apply(Settings("networkProfiles", """{ "enabled": true }"""));
+        runner.Run(UseOffice);
+        Assert.False(runner.IsRunning("networkProfiles"));
+    }
+
+    [Fact]
+    public void AFeatureThisPcDoesntSupportDoesntRun()
+    {
+        using var runner = new FeatureRunner([new FakeActionsFeature("networkProfiles", UseOffice) { IsSupported = false }], _logger);
+
+        runner.Apply(Settings("networkProfiles", """{ "enabled": true }"""));
+
+        Assert.False(runner.IsRunning("networkProfiles"));
+    }
+
+    [Fact]
     public void BeforeTheHostAttachesNoActionCanRun()
     {
         var actions = new HostActions();
 
         Assert.False(actions.CanRun(HideOthers));
+        Assert.False(actions.CanRunFromLauncher(HideOthers));
+        Assert.False(actions.IsRunning("hideApps"));
         actions.Run(HideOthers);
     }
 
@@ -114,6 +175,19 @@ public sealed class FeatureActionsTests
 
         Assert.Equal([HideOthers], hideApps.Ran);
         Assert.True(actions.CanRun(HideOthers));
+        Assert.True(actions.CanRunFromLauncher(HideOthers));
+    }
+
+    [Fact]
+    public void TheHostSaysWhichFeaturesRun()
+    {
+        using var runner = new FeatureRunner([new FakeActionsFeature("hideApps", HideOthers)], _logger);
+        var actions = new HostActions();
+        actions.Attach(runner, _uiThread.Enqueue);
+
+        runner.Apply(Settings("hideApps", """{ "enabled": true }"""));
+
+        Assert.True(actions.IsRunning("hideApps"));
     }
 
     [Fact]
@@ -130,11 +204,22 @@ public sealed class FeatureActionsTests
         Assert.Equal(2, changes);
     }
 
+    private static AppSettings Settings(string featureId, string section)
+    {
+        using var document = JsonDocument.Parse(section);
+        return new AppSettings { Features = new Dictionary<string, JsonElement> { [featureId] = document.RootElement.Clone() } };
+    }
+
     private sealed class FakeActionsFeature(string id, FeatureAction offered) : IFeature, IFeatureActions
     {
         public FeatureInfo Info { get; } = new(id, "test", id + "Name", id + "Description", "");
 
-        public FeatureSupport Support => FeatureSupport.Supported;
+        public FeatureSupport Support => IsSupported ? FeatureSupport.Supported : FeatureSupport.NotSupported("TestNotSupported");
+
+        public bool IsSupported { get; init; } = true;
+
+        // Whether its action acts on the window in front.
+        public bool InFront { get; init; }
 
         public bool RunFails { get; init; }
 
@@ -150,6 +235,8 @@ public sealed class FeatureActionsTests
 
         public bool CanRun(FeatureAction action) =>
             CanRunFails ? throw new InvalidOperationException("The fake feature's answer failed.") : action == offered;
+
+        public bool OnWindowInFront(FeatureAction action) => InFront && action == offered;
 
         public void Run(FeatureAction action)
         {

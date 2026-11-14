@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Core.Settings;
@@ -9,7 +10,7 @@ namespace PCCompanion.Infrastructure.Features;
 
 /// <summary>
 /// Passes each feature its section of the settings, the PC Companion icon's menu its items, and
-/// each action that a shortcut or mouse button runs to the feature that offers it, keeping
+/// each action that a shortcut, mouse button or launcher runs to the feature that offers it, keeping
 /// features apart: one that fails is stopped for the rest of the session and the others keep
 /// running. Call it on the host's UI thread.
 /// </summary>
@@ -17,6 +18,9 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
 {
     private readonly IFeature[] _features = [.. features];
     private readonly HashSet<IFeature> _stopped = [];
+
+    // The features whose sections turned them on when the settings were last applied.
+    private readonly HashSet<IFeature> _on = [];
 
     // The items of the menu that opened last, by their menu IDs.
     private readonly Dictionary<int, MenuItemOwner> _menuItems = [];
@@ -45,7 +49,17 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
                     continue;
                 }
 
-                feature.Apply(settings.Features.TryGetValue(feature.Info.Id, out var section) ? section : null);
+                JsonElement? section = settings.Features.TryGetValue(feature.Info.Id, out var value) ? value : null;
+                if (FeatureSettings.IsEnabled(section))
+                {
+                    _on.Add(feature);
+                }
+                else
+                {
+                    _on.Remove(feature);
+                }
+
+                feature.Apply(section);
             }
             catch (Exception exception)
             {
@@ -76,6 +90,43 @@ public sealed partial class FeatureRunner(IEnumerable<IFeature> features, ILogge
             Stop(owner.Feature, exception);
             return false;
         }
+    }
+
+    /// <summary>
+    /// Whether a running feature offers <paramref name="action"/> and can run it now, and it doesn't
+    /// act on the window in front, so a launcher or the command can run it.
+    /// </summary>
+    public bool CanRunFromLauncher(FeatureAction action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if (Offering(action) is not { } owner)
+        {
+            return false;
+        }
+
+        try
+        {
+            return !owner.Actions.OnWindowInFront(action) && owner.Actions.CanRun(action);
+        }
+        catch (Exception exception)
+        {
+            Stop(owner.Feature, exception);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Whether the feature with the ID <paramref name="featureId"/> runs: its section turned it on,
+    /// it's supported on this PC and it hasn't failed.
+    /// </summary>
+    public bool IsRunning(string featureId)
+    {
+        ArgumentNullException.ThrowIfNull(featureId);
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        return _features.Any(feature => feature.Info.Id == featureId && _on.Contains(feature) && !_stopped.Contains(feature));
     }
 
     /// <summary>

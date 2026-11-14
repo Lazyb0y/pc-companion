@@ -1,8 +1,8 @@
 namespace PCCompanion.Core.Features;
 
 /// <summary>
-/// Implemented by a feature that offers actions that shortcuts and mouse buttons can run, such as
-/// Hide Apps' Hide others. The host asks only a running feature.
+/// Implemented by a feature that offers actions that shortcuts, mouse buttons and launchers can
+/// run, such as Hide Apps' Hide others. The host asks only a running feature.
 /// </summary>
 public interface IFeatureActions
 {
@@ -12,6 +12,13 @@ public interface IFeatureActions
     /// feature already knows.
     /// </summary>
     bool CanRun(FeatureAction action);
+
+    /// <summary>
+    /// Whether <paramref name="action"/> acts on the window in front, as Hide app does, so
+    /// launchers and the command can't run it. Called on the host's UI thread. It says the same as
+    /// <see cref="OfferedAction.OnWindowInFront"/>.
+    /// </summary>
+    bool OnWindowInFront(FeatureAction action) => false;
 
     /// <summary>
     /// Runs <paramref name="action"/>, as the feature's own shortcut or menu item would. Called on

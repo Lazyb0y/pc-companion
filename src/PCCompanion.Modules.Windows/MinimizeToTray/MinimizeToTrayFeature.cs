@@ -93,7 +93,7 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems, IF
 
     /// <summary>The action Minimize to Tray offers to shortcuts and mouse buttons, named in the user's language.</summary>
     public static IReadOnlyList<OfferedAction> OfferedActions() =>
-        [new(new FeatureAction(Definition.Id, SendToTrayShortcut), Strings.MinimizeToTrayActionSendToTray)];
+        [new(new FeatureAction(Definition.Id, SendToTrayShortcut), Strings.MinimizeToTrayActionSendToTray) { OnWindowInFront = true }];
 
     /// <summary>The shortcut Minimize to Tray registers with <paramref name="settings"/> while it's on, with the action it runs.</summary>
     public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(MinimizeToTraySettings settings)
@@ -106,6 +106,8 @@ public sealed partial class MinimizeToTrayFeature : IFeature, IHostMenuItems, IF
     }
 
     public bool CanRun(FeatureAction action) => _thread is not null && IsSendToTray(action);
+
+    public bool OnWindowInFront(FeatureAction action) => IsSendToTray(action);
 
     public void Run(FeatureAction action)
     {

@@ -108,4 +108,13 @@ public sealed class EndAppFeatureTests : IDisposable
         Assert.True(_feature.CanRun(chooseApp));
         Assert.False(_feature.CanRun(chooseApp with { Target = "Notepad" }));
     }
+
+    [Fact]
+    public void ChoosingAnAppDoesntActOnTheWindowInFront()
+    {
+        var offered = Assert.Single(EndAppFeature.OfferedActions());
+
+        Assert.False(offered.OnWindowInFront);
+        Assert.False(((IFeatureActions)_feature).OnWindowInFront(offered.Action));
+    }
 }
