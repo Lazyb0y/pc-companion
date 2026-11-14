@@ -200,10 +200,13 @@ public sealed class ConflictNamesTests
 {
     private static readonly DateTime When = new(2026, 11, 14, 15, 30, 0, DateTimeKind.Local);
 
+    private static string Name(string name, string culture) =>
+        ConflictNames.For(name, When, CultureInfo.GetCultureInfo(culture), CultureInfo.GetCultureInfo(culture));
+
     [Fact]
     public void AConflictCopyKeepsTheExtension()
     {
-        string name = ConflictNames.For("Report.docx", When, CultureInfo.GetCultureInfo("en-US"));
+        string name = Name("Report.docx", "en-US");
 
         Assert.StartsWith("Report (conflict ", name, StringComparison.Ordinal);
         Assert.EndsWith(").docx", name, StringComparison.Ordinal);
@@ -220,7 +223,7 @@ public sealed class ConflictNamesTests
     [InlineData("es-ES")]
     public void ConflictNamesAreValidFileNamesInEveryLanguage(string culture)
     {
-        string name = ConflictNames.For("Report.docx", When, CultureInfo.GetCultureInfo(culture));
+        string name = Name("Report.docx", culture);
 
         Assert.Equal(NamingProblem.None, FileNaming.CheckName(name));
         Assert.EndsWith(".docx", name, StringComparison.Ordinal);
@@ -229,13 +232,45 @@ public sealed class ConflictNamesTests
     [Fact]
     public void TheWordsComeFromTheLanguage()
     {
-        Assert.Contains("Konflikt", ConflictNames.For("a.txt", When, CultureInfo.GetCultureInfo("de-DE")), StringComparison.Ordinal);
+        Assert.Contains("Konflikt", Name("a.txt", "de-DE"), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TheWordsFollowTheLanguageAndTheDateTheRegionalFormats()
+    {
+        string name = ConflictNames.For("a.txt", When, CultureInfo.GetCultureInfo("de-DE"), CultureInfo.GetCultureInfo("en-US"));
+
+        Assert.Contains("Konflikt", name, StringComparison.Ordinal);
+        Assert.Contains("11-14-2026", name, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AnotherConflictCopyGetsANumber()
+    {
+        string name = Name("Report.docx", "en-US");
+
+        string second = ConflictNames.Numbered(name, 2);
+
+        Assert.Equal(name[..^".docx".Length] + " 2.docx", second);
+        Assert.Equal(NamingProblem.None, FileNaming.CheckName(second));
+        Assert.Equal("Makefile 3", ConflictNames.Numbered("Makefile", 3));
+    }
+
+    [Fact]
+    public void ANumberedLongNameStaysShortEnough()
+    {
+        string name = Name(new string('r', 250) + ".docx", "en-US");
+
+        string numbered = ConflictNames.Numbered(name, 12);
+
+        Assert.True(numbered.Length <= FileNaming.MaximumNameLength);
+        Assert.EndsWith(" 12.docx", numbered, StringComparison.Ordinal);
     }
 
     [Fact]
     public void ANameWithoutAnExtensionGetsNone()
     {
-        string name = ConflictNames.For("Makefile", When, CultureInfo.GetCultureInfo("en-US"));
+        string name = Name("Makefile", "en-US");
 
         Assert.StartsWith("Makefile (conflict ", name, StringComparison.Ordinal);
         Assert.EndsWith(")", name, StringComparison.Ordinal);
@@ -244,7 +279,7 @@ public sealed class ConflictNamesTests
     [Fact]
     public void ALongNameIsShortenedBeforeTheExtension()
     {
-        string name = ConflictNames.For(new string('r', 250) + ".docx", When, CultureInfo.GetCultureInfo("en-US"));
+        string name = Name(new string('r', 250) + ".docx", "en-US");
 
         Assert.True(name.Length <= FileNaming.MaximumNameLength);
         Assert.EndsWith(").docx", name, StringComparison.Ordinal);
@@ -255,7 +290,7 @@ public sealed class ConflictNamesTests
     public void TheNameHasNoPathOfItsOwn()
     {
         Assert.Equal("a", Path.GetFileNameWithoutExtension("a.txt"));
-        Assert.DoesNotContain('\\', ConflictNames.For("a.txt", When, CultureInfo.GetCultureInfo("en-US")));
-        Assert.DoesNotContain('/', ConflictNames.For("a.txt", When, CultureInfo.GetCultureInfo("en-US")));
+        Assert.DoesNotContain('\\', Name("a.txt", "en-US"));
+        Assert.DoesNotContain('/', Name("a.txt", "en-US"));
     }
 }

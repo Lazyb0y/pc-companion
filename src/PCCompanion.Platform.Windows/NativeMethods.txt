@@ -342,6 +342,8 @@ GetOverlappedResult
 GetVolumeInformationByHandle
 MoveFileWithProgress
 ReadFile
+SetFileInformationByHandle
+FILE_RENAME_INFO
 DRIVE_FIXED
 DRIVE_REMOVABLE
 DRIVE_REMOTE

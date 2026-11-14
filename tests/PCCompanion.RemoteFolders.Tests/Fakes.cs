@@ -203,6 +203,27 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
     /// <summary>A file a program opens after its upload, before it's marked in sync.</summary>
     public string? OpenedBeforeMark { get; set; }
 
+    /// <summary>A file a program opens after its upload, before it's renamed as a conflict copy.</summary>
+    public string? OpenedBeforeRename { get; set; }
+
+    /// <summary>Renames a file, as Windows does; fails when the name is taken.</summary>
+    public int Move(string path, string newPath)
+    {
+        if (Local.ContainsKey(newPath))
+        {
+            return unchecked((int)0x800700B7);
+        }
+
+        Local[newPath] = Local[path];
+        Local.Remove(path);
+        if (Contents.Remove(path, out var content))
+        {
+            Contents[newPath] = content;
+        }
+
+        return 0;
+    }
+
     public int UploadAttempts { get; private set; }
 
     /// <summary>The folders Windows was told to list again.</summary>
@@ -422,16 +443,30 @@ public sealed class FakeSyncRootSystem : ISyncRootSystem
 /// <summary>A file on the PC opened for an upload.</summary>
 public sealed class FakeUploadSource(FakePlaceholderSystem pc, string path, byte[] content) : IUploadSource
 {
+    private string _path = path;
+
     public long Length => content.Length;
 
     public bool IsClosed { get; private set; }
 
-    public Stream OpenRead() => pc.OpenedDuringUpload == path ? new ClosingStream(this) : new MemoryStream(content, writable: false);
+    public Stream OpenRead() => pc.OpenedDuringUpload == _path ? new ClosingStream(this) : new MemoryStream(content, writable: false);
 
     public int MarkInSync(byte[] identity, bool isPlaceholder)
     {
-        int result = IsClosed ? UploadFile.Closed : pc.MarkUploaded(path, identity);
+        int result = IsClosed ? UploadFile.Closed : pc.MarkUploaded(_path, identity);
         IsClosed |= result == UploadFile.Closed;
+        return result;
+    }
+
+    public int Rename(string newPath)
+    {
+        int result = IsClosed || pc.OpenedBeforeRename == _path ? UploadFile.Closed : pc.Move(_path, newPath);
+        IsClosed |= result == UploadFile.Closed;
+        if (result == 0)
+        {
+            _path = newPath;
+        }
+
         return result;
     }
 

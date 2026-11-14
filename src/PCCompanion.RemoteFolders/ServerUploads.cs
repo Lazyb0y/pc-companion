@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
@@ -42,6 +43,16 @@ public interface IUploadSource : IDisposable
 
     /// <summary>Marks the file as the same as on the server, with its new identity; see <see cref="UploadFile.MarkInSync"/>.</summary>
     int MarkInSync(byte[] identity, bool isPlaceholder);
+
+    /// <summary>Renames the file, as for a conflict copy; see <see cref="UploadFile.Rename"/>.</summary>
+    int Rename(string newPath);
+}
+
+/// <summary>A file changed on the PC and on the server: the PC's version is now <see cref="CopyPath"/>.</summary>
+public sealed class ConflictEventArgs(string copyPath) : EventArgs
+{
+    /// <summary>The PC's version, the conflict copy, next to the server's version.</summary>
+    public string CopyPath { get; } = copyPath;
 }
 
 /// <summary>
@@ -155,7 +166,13 @@ public sealed partial class ServerUploads(
     ILogger logger,
     int serverNumber)
 {
+    // More than this many conflict copies of one file in a minute aren't made.
+    private const int MaximumCopies = 99;
+
     private readonly WaitingChanges _queue = new(time);
+
+    // The conflict copies on the server whose PC copies couldn't be renamed yet, by the file's path.
+    private readonly ConcurrentDictionary<string, string> _pendingCopies = new(StringComparer.OrdinalIgnoreCase);
 
     // The versions this PC put on the server whose copies couldn't be marked in sync, because a
     // program opened them meanwhile: they aren't conflicts when the copy is uploaded again.
@@ -169,8 +186,11 @@ public sealed partial class ServerUploads(
     /// <summary>The files the server refused, by their paths below the server's folder.</summary>
     public IReadOnlyDictionary<string, RemoteError> Failed => _failed;
 
-    /// <summary>The files that also changed on the server, by their paths below the server's folder.</summary>
-    public IReadOnlyCollection<string> Conflicts => (IReadOnlyCollection<string>)_conflicts.Keys;
+    /// <summary>The conflict copies made, by their paths below the server's folder.</summary>
+    public IReadOnlyCollection<string> Conflicts => [.. _conflicts.Keys];
+
+    /// <summary>Raised when a file that changed on the PC and on the server was kept as a conflict copy.</summary>
+    public event EventHandler<ConflictEventArgs>? ConflictFound;
 
     /// <summary>Records a change to a file or folder in the server's folder, from the folder's watch or from Windows.</summary>
     public void Changed(string path)
@@ -366,12 +386,11 @@ public sealed partial class ServerUploads(
         using (file)
         {
             var started = time.GetTimestamp();
-            string remote = ItemIdentity.RemotePath(remoteFolder, relative);
             string temporary = ItemIdentity.RemotePath(remoteFolder, ItemIdentity.Join(Parent(relative), RemoteNames.UploadPrefix + RandomPart()));
-            RemoteEntry? uploaded;
+            Put put;
             try
             {
-                uploaded = await connections.UseAsync((server, token) => PutAsync(server, file, relative, temporary, remote, version, token), cancellation).ConfigureAwait(false);
+                put = await connections.UseAsync((server, token) => PutAsync(server, file, path, relative, temporary, version, token), cancellation).ConfigureAwait(false);
             }
             catch (RemoteServerException) when (file.IsClosed)
             {
@@ -383,14 +402,12 @@ public sealed partial class ServerUploads(
                 return Refused(relative, exception);
             }
 
-            if (uploaded is null)
+            if (put.CopyName is { } copyName)
             {
-                _conflicts[relative] = 0;
-                LogConflict(logger, serverNumber);
-                return UploadOutcome.Conflict;
+                return Conflict(path, relative, item, file, put, copyName);
             }
 
-            var identity = ItemIdentity.Of(Parent(relative), item.Name, isDirectory: false, uploaded.Size, uploaded.LastWriteTimeUtc);
+            var identity = ItemIdentity.Of(Parent(relative), item.Name, isDirectory: false, put.Uploaded.Size, put.Uploaded.LastWriteTimeUtc);
             _uploaded[relative] = identity;
             int marked = file.MarkInSync(identity.ToBytes(), item.State is not null);
             if (marked != 0)
@@ -408,9 +425,71 @@ public sealed partial class ServerUploads(
         }
     }
 
+    // The PC's version is on the server as a conflict copy: the PC's copy takes its name, and the
+    // server's version keeps the original name, as an online-only file.
+    private UploadOutcome Conflict(string path, string relative, LocalItem item, IUploadSource file, Put put, string copyName)
+    {
+        string folder = Path.GetDirectoryName(path)!;
+        string copyPath = Path.Join(folder, copyName);
+        string copyRelative = ItemIdentity.Join(Parent(relative), copyName);
+        var copyIdentity = ItemIdentity.Of(Parent(relative), copyName, isDirectory: false, put.Uploaded.Size, put.Uploaded.LastWriteTimeUtc);
+        _uploaded[copyRelative] = copyIdentity;
+        int renamed = file.Rename(copyPath);
+        if (renamed != 0)
+        {
+            // The copy waits on the server under its name; renaming the PC's copy is tried again.
+            LogCopyRenameFailed(logger, serverNumber, renamed);
+            return UploadOutcome.Busy;
+        }
+
+        _pendingCopies.TryRemove(relative, out _);
+        _conflicts[copyRelative] = 0;
+        int marked = file.MarkInSync(copyIdentity.ToBytes(), item.State is not null);
+        if (marked == 0)
+        {
+            _uploaded.TryRemove(copyRelative, out _);
+        }
+        else
+        {
+            // A program opened the copy meanwhile; it's uploaded again under its own name.
+            LogMarkFailed(logger, serverNumber, marked);
+            _queue.Changed(copyPath);
+        }
+
+        RestoreServerVersion(folder, relative, item.Name, put.ServerVersion!);
+        LogConflict(logger, serverNumber);
+        ConflictFound?.Invoke(this, new ConflictEventArgs(copyPath));
+        return UploadOutcome.Conflict;
+    }
+
+    private void RestoreServerVersion(string folder, string relative, string name, RemoteEntry serverVersion)
+    {
+        var identity = ItemIdentity.Of(Parent(relative), name, serverVersion.IsDirectory, serverVersion.Size, serverVersion.LastWriteTimeUtc);
+        var results = new int[1];
+        int created = pc.Create(folder, [ListingDiff.Placeholder(serverVersion with { Name = name }, identity)], results);
+        if (created != 0 || results[0] != 0)
+        {
+            // The next listing of the folder brings it.
+            LogRestoreFailed(logger, serverNumber, created != 0 ? created : results[0]);
+            return;
+        }
+
+        if (!serverVersion.IsDirectory)
+        {
+            try
+            {
+                pc.MarkFromInternet(Path.Join(folder, name));
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                LogRestoreFailed(logger, serverNumber, exception.HResult);
+            }
+        }
+    }
+
     // Uploads under a temporary name, then puts it in place if the server's file is still the
-    // version the PC's copy came from. Returns the file on the server, or null for a conflict.
-    private async Task<RemoteEntry?> PutAsync(IRemoteServer server, IUploadSource file, string relative, string temporary, string remote, ItemIdentity? version, CancellationToken cancellation)
+    // version the PC's copy came from, or next to it under a conflict name if it isn't.
+    private async Task<Put> PutAsync(IRemoteServer server, IUploadSource file, string path, string relative, string temporary, ItemIdentity? version, CancellationToken cancellation)
     {
         try
         {
@@ -425,6 +504,7 @@ public sealed partial class ServerUploads(
             await server.UploadAsync(content, temporary, cancellation).ConfigureAwait(false);
         }
 
+        string remote = ItemIdentity.RemotePath(remoteFolder, relative);
         try
         {
             var current = await server.StatAsync(remote, cancellation).ConfigureAwait(false);
@@ -438,8 +518,21 @@ public sealed partial class ServerUploads(
             }
             else
             {
-                await DeleteQuietlyAsync(server, temporary).ConfigureAwait(false);
-                return null;
+                string copyName = await CopyNameAsync(server, path, relative, cancellation).ConfigureAwait(false);
+                string copyRemote = ItemIdentity.RemotePath(remoteFolder, ItemIdentity.Join(Parent(relative), copyName));
+                if (await server.StatAsync(copyRemote, cancellation).ConfigureAwait(false) is null)
+                {
+                    await server.RenameAsync(temporary, copyRemote, cancellation).ConfigureAwait(false);
+                }
+                else
+                {
+                    // This PC put the copy there before, and couldn't rename its own copy then.
+                    await server.ReplaceAsync(temporary, copyRemote, cancellation).ConfigureAwait(false);
+                }
+
+                var copy = await server.StatAsync(copyRemote, cancellation).ConfigureAwait(false)
+                    ?? throw new RemoteServerException(RemoteError.NotFound, "The conflict copy isn't on the server.");
+                return new Put(copy, copyName, current);
             }
         }
         catch (Exception)
@@ -448,8 +541,45 @@ public sealed partial class ServerUploads(
             throw;
         }
 
-        return await server.StatAsync(remote, cancellation).ConfigureAwait(false)
+        var uploaded = await server.StatAsync(remote, cancellation).ConfigureAwait(false)
             ?? throw new RemoteServerException(RemoteError.NotFound, "The uploaded file isn't on the server.");
+        return new Put(uploaded, null, null);
+    }
+
+    // The conflict copy's name, in the user's language, free on the server and on the PC; the same
+    // name as before when the PC's copy couldn't be renamed then.
+    private async Task<string> CopyNameAsync(IRemoteServer server, string path, string relative, CancellationToken cancellation)
+    {
+        if (_pendingCopies.TryGetValue(relative, out string? pending))
+        {
+            return pending;
+        }
+
+        string folder = Path.GetDirectoryName(path)!;
+        string first = ConflictNames.For(
+            Path.GetFileName(path),
+            time.GetLocalNow().DateTime,
+            CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture,
+            CultureInfo.CurrentCulture);
+        string name = first;
+        for (int number = 2; ; number++)
+        {
+            string remote = ItemIdentity.RemotePath(remoteFolder, ItemIdentity.Join(Parent(relative), name));
+            if (pc.Inspect(Path.Join(folder, name)) is null && await server.StatAsync(remote, cancellation).ConfigureAwait(false) is null)
+            {
+                break;
+            }
+
+            if (number > MaximumCopies)
+            {
+                throw new RemoteServerException(RemoteError.Failed, "Every conflict copy's name is taken.");
+            }
+
+            name = ConflictNames.Numbered(first, number);
+        }
+
+        _pendingCopies[relative] = name;
+        return name;
     }
 
     // The server's file is the version the PC's copy came from, or the one this PC put there.
@@ -535,8 +665,17 @@ public sealed partial class ServerUploads(
     [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: a program opened a file during its upload; it's tried again later.")]
     private static partial void LogOpenedDuringUpload(ILogger logger, int server);
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: a file changed on the PC and on the server.")]
+    [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: a file changed on the PC and on the server; the PC's version is a conflict copy.")]
     private static partial void LogConflict(ILogger logger, int server);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: a conflict copy couldn't be renamed on the PC (0x{Result:X8}); it's tried again.")]
+    private static partial void LogCopyRenameFailed(ILogger logger, int server, int result);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: the server's version of a conflict waits for the next listing (0x{Result:X8}).")]
+    private static partial void LogRestoreFailed(ILogger logger, int server, int result);
+
+    // What an upload did: the file is in place, or next to the server's version as a conflict copy.
+    private sealed record Put(RemoteEntry Uploaded, string? CopyName, RemoteEntry? ServerVersion);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: an upload failed ({Error}).")]
     private static partial void LogUploadFailed(ILogger logger, int server, RemoteError error);

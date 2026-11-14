@@ -269,6 +269,8 @@ public sealed class UploadSource(UploadFile file) : IUploadSource
 
     public int MarkInSync(byte[] identity, bool isPlaceholder) => file.MarkInSync(identity, isPlaceholder);
 
+    public int Rename(string newPath) => file.Rename(newPath);
+
     public void Dispose() => file.Dispose();
 }
 

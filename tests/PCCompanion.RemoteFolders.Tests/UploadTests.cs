@@ -78,21 +78,37 @@ public sealed class UploadTests : IDisposable
     }
 
     [Fact]
-    public async Task AFileThatAlsoChangedOnTheServerIsAConflictAndBothVersionsStay()
+    public async Task AFileThatAlsoChangedOnTheServerIsKeptAsAConflictCopy()
     {
         Edited("plan.txt", "old", "new on the PC");
         _server.AddFile(Remote("plan.txt"), "new on the server", new DateTime(2026, 11, 2, 0, 0, 0, DateTimeKind.Utc));
+        string? found = null;
+        _uploads.ConflictFound += (_, e) => found = e.CopyPath;
 
         Assert.Equal(UploadOutcome.Conflict, await UploadAsync("plan.txt"));
 
+        // The server's version keeps the name.
         Assert.Equal("new on the server", _server.Content(Remote("plan.txt")));
-        Assert.False(_pc.Read(Local("plan.txt"))!.InSync);
-        Assert.Contains("plan.txt", _uploads.Conflicts);
+        var serverVersion = _pc.Read(Local("plan.txt"))!;
+        Assert.True(serverVersion.InSync);
+        Assert.False(serverVersion.IsDownloaded);
+        Assert.Equal(17, IdentityOf("plan.txt")!.Size);
+        Assert.Contains(Local("plan.txt"), _pc.Marked);
+
+        // The PC's version is the conflict copy, on both sides.
+        string copy = Assert.Single(_uploads.Conflicts);
+        Assert.StartsWith("plan (", copy, StringComparison.Ordinal);
+        Assert.EndsWith(").txt", copy, StringComparison.Ordinal);
+        Assert.Equal("new on the PC", _server.Content(Remote(copy)));
+        Assert.Equal("new on the PC", _pc.Contents[Local(copy)]);
+        Assert.True(_pc.Read(Local(copy))!.InSync);
+        Assert.Equal(copy, IdentityOf(copy)!.RelativePath);
+        Assert.Equal(Local(copy), found);
         AssertNoTemporaryFiles();
     }
 
     [Fact]
-    public async Task ANewFileWhoseNameWasTakenOnTheServerIsAConflict()
+    public async Task ANewFileWhoseNameWasTakenOnTheServerIsKeptAsAConflictCopy()
     {
         _server.AddFile(Remote("report.txt"), "added on the server");
         _pc.AddNewFile(Local("report.txt"), "added on the PC");
@@ -100,7 +116,50 @@ public sealed class UploadTests : IDisposable
         Assert.Equal(UploadOutcome.Conflict, await UploadAsync("report.txt"));
 
         Assert.Equal("added on the server", _server.Content(Remote("report.txt")));
-        Assert.Null(_pc.Read(Local("report.txt")));
+        Assert.False(_pc.Read(Local("report.txt"))!.IsDownloaded);
+        string copy = Assert.Single(_uploads.Conflicts);
+        Assert.Equal("added on the PC", _server.Content(Remote(copy)));
+        Assert.True(_pc.Read(Local(copy))!.InSync);
+    }
+
+    [Fact]
+    public async Task AnotherConflictInTheSameMinuteGetsANumberedCopy()
+    {
+        Edited("plan.txt", "old", "first edit");
+        _server.AddFile(Remote("plan.txt"), "changed on the server", new DateTime(2026, 11, 2, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(UploadOutcome.Conflict, await UploadAsync("plan.txt"));
+        string first = Assert.Single(_uploads.Conflicts);
+
+        _pc.Local[Local("plan.txt")] = (false, FakePlaceholderSystem.NotInSync(_pc.Read(Local("plan.txt"))!));
+        _pc.Contents[Local("plan.txt")] = "second edit";
+        _server.AddFile(Remote("plan.txt"), "changed on the server again", new DateTime(2026, 11, 3, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal(UploadOutcome.Conflict, await UploadAsync("plan.txt"));
+
+        string second = Assert.Single(_uploads.Conflicts, copy => copy != first);
+        Assert.Equal(first[..^".txt".Length] + " 2.txt", second);
+        Assert.Equal("first edit", _server.Content(Remote(first)));
+        Assert.Equal("second edit", _server.Content(Remote(second)));
+    }
+
+    [Fact]
+    public async Task ACopyThatCouldntBeRenamedOnThePcIsntMadeTwice()
+    {
+        Edited("plan.txt", "old", "new on the PC");
+        _server.AddFile(Remote("plan.txt"), "new on the server", new DateTime(2026, 11, 2, 0, 0, 0, DateTimeKind.Utc));
+        _pc.OpenedBeforeRename = Local("plan.txt");
+
+        Assert.Equal(UploadOutcome.Busy, await UploadAsync("plan.txt"));
+        Assert.Empty(_uploads.Conflicts);
+        Assert.Equal("new on the PC", _pc.Contents[Local("plan.txt")]);
+
+        _pc.OpenedBeforeRename = null;
+        Assert.Equal(UploadOutcome.Conflict, await UploadAsync("plan.txt"));
+
+        string copy = Assert.Single(_uploads.Conflicts);
+        Assert.Single(_server.Paths, path => path.StartsWith(Remote("plan ("), StringComparison.Ordinal));
+        Assert.Equal("new on the PC", _server.Content(Remote(copy)));
+        Assert.Equal("new on the server", _server.Content(Remote("plan.txt")));
+        AssertNoTemporaryFiles();
     }
 
     [Fact]
