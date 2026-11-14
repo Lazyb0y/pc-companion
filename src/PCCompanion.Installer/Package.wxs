@@ -247,6 +247,17 @@
     </InstallExecuteSequence>
 
     <!--
+      Uninstalling an all-users install also removes every user's Remote Folders folders, as
+      SYSTEM: each is unregistered with Windows, and its entry leaves the user's navigation pane,
+      also for a user who isn't signed in, whose registry is loaded for the moment. Files on the PC
+      stay in what are then ordinary folders. The uninstalling user's own go with RemoveUserData.
+    -->
+    <CustomAction Id="RemoveAllRemoteFolders" FileRef="ElevatedHelper" ExeCommand="remove-all-remote-folders" Execute="deferred" Impersonate="no" Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="RemoveAllRemoteFolders" Before="RemoveFiles" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE AND ALLUSERS=1" />
+    </InstallExecuteSequence>
+
+    <!--
       Windows starts the host at every sign-in: HKCU for a per-user install, HKLM for all users.
       The host exits at once unless the user turned on Start with Windows. Uninstalling removes the entry.
     -->

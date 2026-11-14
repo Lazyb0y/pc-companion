@@ -290,6 +290,10 @@ PROXY_TYPE_AUTO_PROXY_URL
 PROXY_TYPE_AUTO_DETECT
 GlobalFree
 RegNotifyChangeKeyValue
+RegLoadKey
+RegUnLoadKey
+AdjustTokenPrivileges
+LookupPrivilegeValue
 SetMenuItemInfo
 GetMenuItemCount
 GetClientRect
