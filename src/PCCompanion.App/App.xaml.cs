@@ -21,6 +21,7 @@ using PCCompanion.App.Features.EndApp;
 using PCCompanion.App.Features.FolderRules;
 using PCCompanion.App.Features.HotCorners;
 using PCCompanion.App.Features.InputLanguagePerApp;
+using PCCompanion.App.Features.LauncherActions;
 using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
@@ -121,6 +122,9 @@ public partial class App : Application
         // so the taskbar showed a generic icon for it.
         var launcher = _services.GetRequiredService<HostLauncher>();
         _ = Task.Run(launcher.StartIfNotRunning);
+
+        // Written on the thread pool, as the settings are now and after each save.
+        _services.GetRequiredService<LauncherStartEntries>().Start();
     }
 
     // Without a language setting, .NET and WinUI follow the Windows display language.
@@ -174,6 +178,7 @@ public partial class App : Application
             .AddSingleton<HostLauncher>()
             .AddSingleton<RunAsAdministrator>()
             .AddSingleton<FeatureSettingsEditor>()
+            .AddSingleton<LauncherStartEntries>()
             .AddSingleton<UpdateCheckStore>()
             .AddSingleton<UpdateCheckWatcher>()
             .AddSingleton<GitHubReleaseSource>()

@@ -1,13 +1,15 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using PCCompanion.Core;
 using PCCompanion.Infrastructure;
+using PCCompanion.Modules.Input.LauncherActions;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Host;
 
 /// <summary>
-/// Removes the user's data folder as setup uninstalls PC Companion. Setup runs the host with
+/// Removes the user's data folder, and Launcher Actions' entries in Start, as setup uninstalls PC Companion. Setup runs the host with
 /// <see cref="HostProcess.RemoveDataArgument"/>, and <see cref="HostProcess.KeepSettingsArgument"/>
 /// to keep the settings file, as the user who uninstalls it.
 /// </summary>
@@ -38,5 +40,15 @@ internal static class RemoveDataCommand
         }
 
         UserDataRemoval.Remove(AppDataPaths.ForCurrentUser(), keepSettings);
+
+        // Launcher Actions' entries would start nothing once PC Companion is gone.
+        try
+        {
+            new LauncherStartFolder().Delete();
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            // Left for the user to delete from Start.
+        }
     }
 }

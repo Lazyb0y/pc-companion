@@ -5288,4 +5288,8 @@
     <value>{0} - {1}</value>
     <comment>Name of an action's entry in Start and Windows Search: {0} is the action, such as Use Office, and {1} its feature, such as Network Profiles, or PC Companion for Launcher Actions' own. Translations may change the order and the separator. Characters Windows doesn't allow in file names, such as a colon, become spaces.</comment>
   </data>
+  <data name="LauncherActionsStartFolder" xml:space="preserve">
+    <value>PC Companion actions</value>
+    <comment>Name of the folder in Start that holds Launcher Actions' entries, one for each action. Characters Windows doesn't allow in file names, such as a colon, become spaces.</comment>
+  </data>
 </root>

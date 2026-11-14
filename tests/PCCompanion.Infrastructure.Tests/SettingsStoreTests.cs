@@ -50,6 +50,17 @@ public sealed class SettingsStoreTests : IDisposable
     }
 
     [Fact]
+    public void SavingSaysItSaved()
+    {
+        var saves = 0;
+        _store.Saved += (_, _) => saves++;
+
+        _store.Save(new AppSettings());
+
+        Assert.Equal(1, saves);
+    }
+
+    [Fact]
     public void LoadAndSaveAddDebugEntries()
     {
         _store.Load();
