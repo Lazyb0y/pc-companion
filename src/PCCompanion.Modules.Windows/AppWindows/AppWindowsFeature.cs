@@ -45,8 +45,8 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     /// <summary>The actions App Windows offers to shortcuts and mouse buttons, named in the user's language.</summary>
     public static IReadOnlyList<OfferedAction> OfferedActions() =>
     [
-        new(new FeatureAction(Definition.Id, NextShortcut), Strings.AppWindowsActionNext),
-        new(new FeatureAction(Definition.Id, PreviousShortcut), Strings.AppWindowsActionPrevious),
+        new(new FeatureAction(Definition.Id, NextShortcut), Strings.AppWindowsActionNext) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, PreviousShortcut), Strings.AppWindowsActionPrevious) { OnWindowInFront = true },
     ];
 
     /// <summary>The shortcuts App Windows registers with <paramref name="settings"/> while it's on, each with the action it runs.</summary>
@@ -60,6 +60,9 @@ public sealed partial class AppWindowsFeature(ILogger<AppWindowsFeature> logger,
     }
 
     public bool CanRun(FeatureAction action) => _window is not null && DirectionOf(action) is not null;
+
+    // Both switch among the windows of the app in front.
+    public bool OnWindowInFront(FeatureAction action) => DirectionOf(action) is not null;
 
     // App Windows runs on the host's UI thread, so the switch runs right away.
     public void Run(FeatureAction action)

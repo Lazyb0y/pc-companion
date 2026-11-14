@@ -356,6 +356,15 @@ public sealed class NetworkProfilesFeatureTests : IDisposable
     }
 
     [Fact]
+    public void UsingAProfileDoesntActOnTheWindowInFront()
+    {
+        var offered = Assert.Single(NetworkProfilesFeature.OfferedActions(NetworkProfilesSettings.Read(On(Office))));
+
+        Assert.False(offered.OnWindowInFront);
+        Assert.False(((IFeatureActions)_feature).OnWindowInFront(offered.Action));
+    }
+
+    [Fact]
     public void AnActionSwitchesToTheProfileItNamesAsTheMenuDoes()
     {
         _feature.Apply(On(Office, Home));

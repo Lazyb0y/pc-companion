@@ -413,6 +413,15 @@ public sealed class DisplayProfilesFeatureTests : IDisposable
     }
 
     [Fact]
+    public void UsingAProfileDoesntActOnTheWindowInFront()
+    {
+        var offered = Assert.Single(DisplayProfilesFeature.OfferedActions(new DisplayProfilesSettings { Profiles = [_desk] }));
+
+        Assert.False(offered.OnWindowInFront);
+        Assert.False(((IFeatureActions)_feature).OnWindowInFront(offered.Action));
+    }
+
+    [Fact]
     public void AnActionSwitchesToTheProfileItNamesWithTheSameQuestion()
     {
         StartWith(_desk, _small);

@@ -107,6 +107,15 @@ public sealed class DropDownAppsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ShowingOrHidingAnAppDoesntActOnTheWindowInFront()
+    {
+        var offered = Assert.Single(DropDownAppsFeature.OfferedActions(new DropDownAppsSettings { Apps = [new DropDownApp { Name = "Notes", Program = @"C:\Apps\Notes.exe" }] }));
+
+        Assert.False(offered.OnWindowInFront);
+        Assert.False(((IFeatureActions)_feature).OnWindowInFront(offered.Action));
+    }
+
+    [Fact]
     public void ItSaysWhichKeysEachListedAppsShortcutUses()
     {
         var settings = new DropDownAppsSettings

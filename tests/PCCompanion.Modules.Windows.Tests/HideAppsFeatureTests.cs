@@ -93,6 +93,13 @@ public sealed class HideAppsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void HideAppAndHideOthersActOnTheWindowInFrontAsTheFeatureSays()
+    {
+        Assert.Equal([true, true, false], HideAppsFeature.OfferedActions().Select(offered => offered.OnWindowInFront));
+        Assert.All(HideAppsFeature.OfferedActions(), offered => Assert.Equal(offered.OnWindowInFront, _feature.OnWindowInFront(offered.Action)));
+    }
+
+    [Fact]
     public void ItSaysWhichKeysItsShortcutsUse()
     {
         const HotKeyModifiers WindowsControl = HotKeyModifiers.Windows | HotKeyModifiers.Control;

@@ -100,4 +100,14 @@ public sealed class AppWindowsFeatureTests : IDisposable
         Assert.True(_feature.CanRun(next with { ActionId = "previous" }));
         Assert.False(_feature.CanRun(next with { ActionId = "last" }));
     }
+
+    [Fact]
+    public void BothActionsActOnTheWindowInFrontAsTheFeatureSays()
+    {
+        Assert.All(AppWindowsFeature.OfferedActions(), offered =>
+        {
+            Assert.True(offered.OnWindowInFront);
+            Assert.True(_feature.OnWindowInFront(offered.Action));
+        });
+    }
 }

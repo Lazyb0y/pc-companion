@@ -123,6 +123,15 @@ public sealed class ClipboardActionsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void OnlyTheMenuForTheSelectedTextActsOnTheWindowInFrontAsTheFeatureSays()
+    {
+        var offered = ClipboardActionsFeature.OfferedActions(new ClipboardActionsSettings { SelectedText = true });
+
+        Assert.Equal([false, true], offered.Select(action => action.OnWindowInFront));
+        Assert.All(offered, action => Assert.Equal(action.OnWindowInFront, _feature.OnWindowInFront(action.Action)));
+    }
+
+    [Fact]
     public void ItSaysWhichKeysItsShortcutsUseAndTheSelectedTextsOnlyWithSelectedTextOn()
     {
         const HotKeyModifiers WindowsAlt = HotKeyModifiers.Windows | HotKeyModifiers.Alt;

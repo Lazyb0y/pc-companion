@@ -56,7 +56,7 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
 
         var copied = new OfferedAction(new FeatureAction(Definition.Id, CopiedTextShortcut), Strings.ClipboardActionsActionCopiedText);
         return settings.SelectedText
-            ? [copied, new OfferedAction(new FeatureAction(Definition.Id, SelectedTextShortcut), Strings.ClipboardActionsActionSelectedText)]
+            ? [copied, new OfferedAction(new FeatureAction(Definition.Id, SelectedTextShortcut), Strings.ClipboardActionsActionSelectedText) { OnWindowInFront = true }]
             : [copied];
     }
 
@@ -87,6 +87,10 @@ public sealed partial class ClipboardActionsFeature(IClipboardActionsSystem syst
         && action.FeatureId == Definition.Id
         && action.Target is null
         && (action.ActionId == CopiedTextShortcut || (action.ActionId == SelectedTextShortcut && _settings.SelectedText));
+
+    // The menu for the selected text acts on the text selected in the window in front.
+    public bool OnWindowInFront(FeatureAction action) =>
+        action.FeatureId == Definition.Id && action.Target is null && action.ActionId == SelectedTextShortcut;
 
     public void Run(FeatureAction action)
     {

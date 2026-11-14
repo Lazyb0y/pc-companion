@@ -125,4 +125,13 @@ public sealed class MinimizeToTrayFeatureTests : IDisposable
         Assert.True(_feature.CanRun(sendToTray));
         Assert.False(_feature.CanRun(sendToTray with { ActionId = "bringAllBack" }));
     }
+
+    [Fact]
+    public void SendingToTheTrayActsOnTheWindowInFrontAsTheFeatureSays()
+    {
+        var offered = Assert.Single(MinimizeToTrayFeature.OfferedActions());
+
+        Assert.True(offered.OnWindowInFront);
+        Assert.True(_feature.OnWindowInFront(offered.Action));
+    }
 }
