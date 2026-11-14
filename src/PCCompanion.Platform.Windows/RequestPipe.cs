@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -83,6 +84,24 @@ public sealed class RequestPipe : IDisposable
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or TimeoutException)
         {
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Whether a program serves the pipe named <paramref name="name"/> now, found without
+    /// connecting to it, so that the program isn't kept waiting for a request.
+    /// </summary>
+    public static bool IsServed(string name)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+
+        try
+        {
+            return Directory.EnumerateFiles(@"\\.\pipe\", name).Any();
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return false;
         }
     }
 

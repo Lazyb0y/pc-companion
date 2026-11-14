@@ -22,6 +22,20 @@ public sealed class RequestPipeTests
     }
 
     [Fact]
+    public void APipeIsServedUntilDisposed()
+    {
+        Assert.False(RequestPipe.IsServed(_name));
+
+        using (RequestPipe.Serve(_name, 1024, Task.FromResult, Fail))
+        {
+            Assert.True(RequestPipe.IsServed(_name));
+            Assert.False(RequestPipe.IsServed(_name + ".Other"));
+        }
+
+        Assert.False(RequestPipe.IsServed(_name));
+    }
+
+    [Fact]
     public async Task EachProgramGetsItsOwnAnswer()
     {
         using var pipe = RequestPipe.Serve(_name, 1024, Task.FromResult, Fail);
