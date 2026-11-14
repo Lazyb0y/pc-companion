@@ -53,12 +53,16 @@ public interface IPlaceholderSystem
     /// <summary>Makes a new folder a placeholder; see <see cref="Placeholders.ConvertFolder"/>.</summary>
     int ConvertFolder(string path, byte[] identity);
 
+    /// <summary>Gives a placeholder a new identity; see <see cref="Placeholders.UpdateIdentity"/>.</summary>
+    int UpdateIdentity(string path, byte[] identity, bool markInSync);
+
     /// <summary>Marks a file that stays on the PC as excluded, which File Explorer shows.</summary>
     int Exclude(string path);
 
     /// <summary>
-    /// The new files and folders, and the changed files, in <paramref name="folder"/> and the
-    /// folders below it, without following links.
+    /// The new files and folders, the changed files, and the placeholders renamed or moved since
+    /// they were last on the server, in <paramref name="folder"/> and the folders below it, without
+    /// following links.
     /// </summary>
     IEnumerable<string> FindChanges(string folder);
 
@@ -148,6 +152,18 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
 
     public int ConvertFolder(string path, byte[] identity) => Placeholders.ConvertFolder(path, identity);
 
+    public int UpdateIdentity(string path, byte[] identity, bool markInSync)
+    {
+        try
+        {
+            return Placeholders.UpdateIdentity(path, identity, markInSync);
+        }
+        catch (IOException exception)
+        {
+            return exception.HResult;
+        }
+    }
+
     public int Exclude(string path) => Placeholders.SetPinState(path, PinState.Excluded);
 
     public IEnumerable<string> FindChanges(string folder)
@@ -163,7 +179,8 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
                     continue;
                 }
 
-                if (item.State is null || (!item.IsDirectory && !item.State.InSync && item.State.Pin != PinState.Excluded))
+                if (item.State is null || (!item.IsDirectory && !item.State.InSync && item.State.Pin != PinState.Excluded)
+                    || (item.Identity is { } identity && identity.RelativePath != item.Path[(folder.Length + 1)..].Replace('\\', '/')))
                 {
                     yield return item.Path;
                 }

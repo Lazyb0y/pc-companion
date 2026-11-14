@@ -92,7 +92,7 @@ public sealed unsafe class SyncRootConnection : IDisposable
 
     private static Registration* BuildTable()
     {
-        var table = (Registration*)NativeMemory.AllocZeroed(8, (nuint)sizeof(Registration));
+        var table = (Registration*)NativeMemory.AllocZeroed(9, (nuint)sizeof(Registration));
         table[0] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_FETCH_DATA, &OnFetchData);
         table[1] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_CANCEL_FETCH_DATA, &OnCancelFetchData);
         table[2] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_FETCH_PLACEHOLDERS, &OnFetchPlaceholders);
@@ -100,7 +100,8 @@ public sealed unsafe class SyncRootConnection : IDisposable
         table[4] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_RENAME, &OnRename);
         table[5] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_DEHYDRATE, &OnDehydrate);
         table[6] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_FILE_CLOSE_COMPLETION, &OnFileClosed);
-        table[7] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NONE, null);
+        table[7] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_RENAME_COMPLETION, &OnRenameCompleted);
+        table[8] = new(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NONE, null);
         return table;
     }
 
@@ -127,6 +128,10 @@ public sealed unsafe class SyncRootConnection : IDisposable
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
     private static void OnDehydrate(CF_CALLBACK_INFO* info, CF_CALLBACK_PARAMETERS* parameters) =>
         Dispatch(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_DEHYDRATE, info, parameters);
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+    private static void OnRenameCompleted(CF_CALLBACK_INFO* info, CF_CALLBACK_PARAMETERS* parameters) =>
+        Dispatch(CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_RENAME_COMPLETION, info, parameters);
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
     private static void OnFileClosed(CF_CALLBACK_INFO* info, CF_CALLBACK_PARAMETERS* parameters) =>
@@ -177,6 +182,9 @@ public sealed unsafe class SyncRootConnection : IDisposable
                     break;
                 case CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_FILE_CLOSE_COMPLETION:
                     requests.FileClosed(new FileClosedNotice(info, parameters));
+                    break;
+                case CF_CALLBACK_TYPE.CF_CALLBACK_TYPE_NOTIFY_RENAME_COMPLETION:
+                    requests.RenameCompleted(new RenameCompletedNotice(info, parameters));
                     break;
             }
         }

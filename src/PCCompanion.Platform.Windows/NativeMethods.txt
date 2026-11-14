@@ -340,6 +340,7 @@ GetDriveType
 GetFileInformationByHandleEx
 GetOverlappedResult
 GetVolumeInformationByHandle
+GetVolumePathName
 MoveFileWithProgress
 ReadFile
 SetFileInformationByHandle

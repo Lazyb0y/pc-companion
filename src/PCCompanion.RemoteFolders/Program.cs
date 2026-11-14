@@ -75,6 +75,7 @@ internal static partial class Program
                 sync,
                 pc,
                 ServerConnections.ForSftp(server, ReadSecret, TimeProvider.System, loggers.CreateLogger<ServerConnections>(), number),
+                Path.Combine(paths.Root, "remote-folders", server.Id + ".json"),
                 TimeProvider.System,
                 loggers.CreateLogger<ServerFolder>(),
                 number),

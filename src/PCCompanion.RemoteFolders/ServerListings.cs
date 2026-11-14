@@ -184,6 +184,28 @@ public sealed partial class ServerListings(
         }
     }
 
+    /// <summary>
+    /// Has Windows list every folder on the PC again the next time it's opened, as at start, since
+    /// a folder a listing marked complete before the provider stopped would otherwise stay so.
+    /// </summary>
+    public void ListAllAgainOnNextOpen()
+    {
+        var folders = new Stack<string>();
+        folders.Push(localRoot);
+        while (folders.Count > 0 && !_disposed)
+        {
+            string folder = folders.Pop();
+            ListAgain(string.Empty, folder);
+            foreach (var item in pc.Items(folder))
+            {
+                if (item.IsDirectory && !item.IsLink && item.State is not null)
+                {
+                    folders.Push(item.Path);
+                }
+            }
+        }
+    }
+
     public void Dispose()
     {
         _disposed = true;
