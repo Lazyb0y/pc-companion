@@ -13,6 +13,11 @@ CreateIconIndirect
 CreatePopupMenu
 CreateProcessWithTokenW
 CreateWindowEx
+CredDelete
+CredEnumerate
+CredFree
+CredRead
+CredWrite
 DefWindowProc
 DeleteDC
 DeleteObject
