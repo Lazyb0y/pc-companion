@@ -170,6 +170,8 @@ public sealed class ShortcutsAndMouseButtonsFeatureTests : IDisposable
 
         public bool IsRunning(string featureId) => Runnable.Any(action => action.FeatureId == featureId);
 
+        public FeatureInfo? FindFeature(string featureId) => null;
+
         public void Run(FeatureAction action) => Ran.Add(action);
 
         public void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);

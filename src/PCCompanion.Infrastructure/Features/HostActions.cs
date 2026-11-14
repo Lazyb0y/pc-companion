@@ -34,6 +34,8 @@ public sealed class HostActions : IHostActions
 
     public bool IsRunning(string featureId) => _connection is { } connection && connection.Runner.IsRunning(featureId);
 
+    public FeatureInfo? FindFeature(string featureId) => _connection is { } connection ? connection.Runner.FindFeature(featureId) : null;
+
     public void Run(FeatureAction action)
     {
         ArgumentNullException.ThrowIfNull(action);

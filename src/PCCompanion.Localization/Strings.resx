@@ -5252,4 +5252,36 @@
     <value>While the pointer is over one of these apps, it gets the click itself.</value>
     <comment>Shortcuts &amp; Mouse Buttons editor: below ShortcutsAndMouseButtonsEditorExcludedHeader for a mouse button.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>Launcher Actions</value>
+    <comment>Name of the feature that runs PC Companion's actions from Start, Windows Search, other launchers and a command.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>Run PC Companion's actions from Start, Windows Search, other launchers and a command.</value>
+    <comment>One-sentence description of Launcher Actions, on its page and on Home.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>Lock</value>
+    <comment>Name of Launcher Actions' own action that locks the PC, as an entry in Start and on the page.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>Turn off displays</value>
+    <comment>Name of Launcher Actions' own action that turns off the displays, as an entry in Start and on the page.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>Start the screen saver</value>
+    <comment>Name of Launcher Actions' own action that starts the screen saver, as an entry in Start and on the page.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>{0} is off, so this action can't run.</value>
+    <comment>Notification after a launcher or the command asked for an action of a feature that's off. {0} is the feature's name, such as Network Profiles, which is also the notification's title.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>This action can't run now. Check it on the {0} page.</value>
+    <comment>Notification after a launcher or the command asked for an action that its feature can't run now, such as a profile that no longer exists. {0} is the feature's name, such as Network Profiles, which is also the notification's title.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>PC Companion has no such action. Copy its command again on the {0} page.</value>
+    <comment>Notification after the command asked for an action PC Companion doesn't have, such as one typed by hand. {0} is this feature's name, Launcher Actions, whose page lists the actions with their commands.</comment>
+  </data>
 </root>

@@ -5252,4 +5252,36 @@
     <value>Befindet sich der Mauszeiger über einer dieser Apps, erhält sie den Klick selbst.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>Launcher-Aktionen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>Aktionen von PC Companion über „Start“, die Windows-Suche, andere Launcher und einen Befehl ausführen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>Sperren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>Bildschirme ausschalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>Bildschirmschoner starten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>{0} ist deaktiviert, daher kann diese Aktion nicht ausgeführt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>Diese Aktion kann jetzt nicht ausgeführt werden. Überprüfen Sie sie auf der Seite „{0}“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>PC Companion hat keine solche Aktion. Kopieren Sie den Befehl erneut auf der Seite „{0}“.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

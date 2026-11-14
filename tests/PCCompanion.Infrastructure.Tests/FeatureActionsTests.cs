@@ -158,6 +158,7 @@ public sealed class FeatureActionsTests
         Assert.False(actions.CanRun(HideOthers));
         Assert.False(actions.CanRunFromLauncher(HideOthers));
         Assert.False(actions.IsRunning("hideApps"));
+        Assert.Null(actions.FindFeature("hideApps"));
         actions.Run(HideOthers);
     }
 
@@ -188,6 +189,19 @@ public sealed class FeatureActionsTests
         runner.Apply(Settings("hideApps", """{ "enabled": true }"""));
 
         Assert.True(actions.IsRunning("hideApps"));
+    }
+
+    [Fact]
+    public void TheHostFindsAFeatureRunningOrNot()
+    {
+        using var runner = new FeatureRunner([new FakeActionsFeature("hideApps", HideOthers), new PlainFeature("lockKeys")], _logger);
+        var actions = new HostActions();
+        actions.Attach(runner, _uiThread.Enqueue);
+
+        Assert.Equal("hideApps", actions.FindFeature("hideApps")?.Id);
+        Assert.Equal("lockKeys", actions.FindFeature("lockKeys")?.Id);
+        Assert.Null(actions.FindFeature("HideApps"));
+        Assert.Null(actions.FindFeature("endApp"));
     }
 
     [Fact]

@@ -102,6 +102,23 @@ public static class InputState
     /// <summary>Whether the key with <paramref name="virtualKey"/> is held now, such as one of a shortcut's keys.</summary>
     public static bool IsKeyDown(uint virtualKey) => IsDown((VIRTUAL_KEY)virtualKey);
 
+    /// <summary>
+    /// Whether any key or mouse button is held now, such as before turning off the displays, which
+    /// any input turns back on.
+    /// </summary>
+    public static bool IsAnyKeyOrButtonDown()
+    {
+        for (var key = 1; key < 0xFF; key++)
+        {
+            if (IsDown((VIRTUAL_KEY)key))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     internal static bool IsDown(VIRTUAL_KEY key) => (PInvoke.GetAsyncKeyState((int)key) & 0x8000) != 0;
 }
 

@@ -5444,4 +5444,36 @@
     <value>عندما يكون المؤشر فوق أحد هذه التطبيقات، فإنه يتلقى النقرة بنفسه.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="LauncherActionsName" xml:space="preserve">
+    <value>إجراءات المشغّل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsDescription" xml:space="preserve">
+    <value>شغّل إجراءات PC Companion من قائمة ابدأ وبحث Windows والمشغّلات الأخرى ومن أمر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionLock" xml:space="preserve">
+    <value>تأمين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionTurnOffDisplays" xml:space="preserve">
+    <value>إيقاف تشغيل الشاشات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsActionScreenSaver" xml:space="preserve">
+    <value>بدء شاشة التوقف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationOff" xml:space="preserve">
+    <value>تم إيقاف تشغيل {0}، لذا لا يمكن تشغيل هذا الإجراء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationRefused" xml:space="preserve">
+    <value>لا يمكن تشغيل هذا الإجراء الآن. تحقق منه في صفحة {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="LauncherActionsNotificationUnknown" xml:space="preserve">
+    <value>لا يحتوي PC Companion على هذا الإجراء. انسخ أمره مرة أخرى من صفحة {0}.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
