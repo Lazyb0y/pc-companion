@@ -28,6 +28,11 @@ public sealed class FakeRemoteServer : IRemoteServer
 
     public int Listings { get; private set; }
 
+    /// <summary>Every file and folder on the server.</summary>
+    public IReadOnlyCollection<string> Paths => _items.Keys;
+
+    private DateTime _uploadTime = new(2026, 11, 10, 0, 0, 0, DateTimeKind.Utc);
+
     public void AddFile(string path, string content, DateTime? time = null) => _items[path] = (false, System.Text.Encoding.UTF8.GetBytes(content), time ?? new DateTime(2026, 11, 1, 0, 0, 0, DateTimeKind.Utc));
 
     public void AddFolder(string path) => _items[path] = (true, [], new DateTime(2026, 11, 1, 0, 0, 0, DateTimeKind.Utc));
@@ -73,9 +78,23 @@ public sealed class FakeRemoteServer : IRemoteServer
     public async Task UploadAsync(Stream content, string path, CancellationToken cancellation)
     {
         Fail();
+        if (!_items.TryGetValue(Parent(path), out var folder) || !folder.IsDirectory)
+        {
+            throw new RemoteServerException(RemoteError.NotFound, "No such folder.");
+        }
+
         using var copy = new MemoryStream();
-        await content.CopyToAsync(copy, cancellation).ConfigureAwait(false);
-        _items[path] = (false, copy.ToArray(), DateTime.UtcNow);
+        try
+        {
+            await content.CopyToAsync(copy, cancellation).ConfigureAwait(false);
+        }
+        catch (IOException exception)
+        {
+            throw new RemoteServerException(RemoteError.Failed, "The upload failed.", exception);
+        }
+
+        _uploadTime = _uploadTime.AddSeconds(1);
+        _items[path] = (false, copy.ToArray(), _uploadTime);
     }
 
     public Task RenameAsync(string source, string destination, CancellationToken cancellation)
@@ -168,6 +187,95 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
 
     public List<string> Recycled { get; } = [];
 
+    /// <summary>The content of files on the PC.</summary>
+    public Dictionary<string, string> Contents { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public HashSet<string> Links { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Files a program has open.</summary>
+    public HashSet<string> InUse { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public List<string> Excluded { get; } = [];
+
+    /// <summary>A file a program opens while it's read for an upload.</summary>
+    public string? OpenedDuringUpload { get; set; }
+
+    /// <summary>A file a program opens after its upload, before it's marked in sync.</summary>
+    public string? OpenedBeforeMark { get; set; }
+
+    public int UploadAttempts { get; private set; }
+
+    /// <summary>The folders Windows was told to list again.</summary>
+    public List<string> ListedAgain { get; } = [];
+
+    public int ListAgainOnNextOpen(string folder)
+    {
+        ListedAgain.Add(folder);
+        return 0;
+    }
+
+    public (Action<string> Changed, Action Missed)? Watched { get; private set; }
+
+    public void AddNewFile(string path, string content)
+    {
+        Local[path] = (false, null);
+        Contents[path] = content;
+    }
+
+    public void AddNewFolder(string path) => Local[path] = (true, null);
+
+    public LocalItem? Inspect(string path) =>
+        Local.TryGetValue(path, out var item)
+            ? new LocalItem(Path.GetFileName(path), path, item.IsDirectory, item.State, item.State is { } state ? ItemIdentity.FromBytes([.. state.Identity]) : null) { IsLink = Links.Contains(path) }
+            : null;
+
+    public int OpenForUpload(string path, out IUploadSource? file)
+    {
+        UploadAttempts++;
+        file = null;
+        if (InUse.Contains(path))
+        {
+            return unchecked((int)0x80070020);
+        }
+
+        file = new FakeUploadSource(this, path, System.Text.Encoding.UTF8.GetBytes(Contents[path]));
+        return 0;
+    }
+
+    public int ConvertFolder(string path, byte[] identity)
+    {
+        Local[path] = (true, State(identity, inSync: true, onlineOnly: false));
+        return 0;
+    }
+
+    public int Exclude(string path)
+    {
+        Excluded.Add(path);
+        return 0;
+    }
+
+    public IEnumerable<string> FindChanges(string folder) =>
+        [.. Local.Where(pair => pair.Key.StartsWith(folder + "\\", StringComparison.OrdinalIgnoreCase) && !Links.Contains(pair.Key)
+            && (pair.Value.State is null || (!pair.Value.IsDirectory && !pair.Value.State.InSync))).Select(pair => pair.Key)];
+
+    public IDisposable Watch(string folder, Action<string> changed, Action missed)
+    {
+        Watched = (changed, missed);
+        return new MemoryStream();
+    }
+
+    /// <summary>Marks a file as uploaded, as Windows does through the upload's handle.</summary>
+    public int MarkUploaded(string path, byte[] identity)
+    {
+        if (OpenedBeforeMark == path)
+        {
+            return UploadFile.Closed;
+        }
+
+        Local[path] = (false, State(identity, inSync: true, onlineOnly: false));
+        return 0;
+    }
+
     public int Create(string folder, IReadOnlyList<PlaceholderEntry> entries, Span<int> results)
     {
         for (int i = 0; i < entries.Count; i++)
@@ -193,6 +301,8 @@ public sealed class FakePlaceholderSystem : IPlaceholderSystem
         Local[path] = (identity.IsDirectory, State(identity.ToBytes(), inSync, onlineOnly && !identity.IsDirectory));
 
     public void AddPlainFile(string path) => Local[path] = (false, null);
+
+    public static PlaceholderState NotInSync(PlaceholderState state) => state with { InSync = false };
 
     public IReadOnlyList<LocalItem> Items(string folder) =>
         [.. Local.Where(pair => string.Equals(Path.GetDirectoryName(pair.Key), folder, StringComparison.OrdinalIgnoreCase))
@@ -243,13 +353,19 @@ public sealed class FakeListingRequest(byte[] identity) : IListingRequest
 {
     public IReadOnlyList<byte> Identity => identity;
 
+    public bool IsFromProvider { get; init; }
+
+    /// <summary>Whether the answer told Windows the folder is complete.</summary>
+    public bool? Complete { get; private set; }
+
     public IReadOnlyList<PlaceholderEntry>? Answered { get; private set; }
 
     public int? Refused { get; private set; }
 
-    public int Answer(IReadOnlyList<PlaceholderEntry> entries, Span<int> results)
+    public int Answer(IReadOnlyList<PlaceholderEntry> entries, bool complete, Span<int> results)
     {
         Answered = entries;
+        Complete = complete;
         results.Clear();
         return 0;
     }
@@ -300,5 +416,56 @@ public sealed class FakeSyncRootSystem : ISyncRootSystem
     private sealed class Disconnect(Action action) : IDisposable
     {
         public void Dispose() => action();
+    }
+}
+
+/// <summary>A file on the PC opened for an upload.</summary>
+public sealed class FakeUploadSource(FakePlaceholderSystem pc, string path, byte[] content) : IUploadSource
+{
+    public long Length => content.Length;
+
+    public bool IsClosed { get; private set; }
+
+    public Stream OpenRead() => pc.OpenedDuringUpload == path ? new ClosingStream(this) : new MemoryStream(content, writable: false);
+
+    public int MarkInSync(byte[] identity, bool isPlaceholder)
+    {
+        int result = IsClosed ? UploadFile.Closed : pc.MarkUploaded(path, identity);
+        IsClosed |= result == UploadFile.Closed;
+        return result;
+    }
+
+    public void Dispose()
+    {
+    }
+
+    // A program opens the file: Windows closes the upload's handle.
+    private sealed class ClosingStream(FakeUploadSource file) : Stream
+    {
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => file.Length;
+
+        public override long Position { get; set; }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            file.IsClosed = true;
+            throw new IOException("A program opened the file.", UploadFile.Closed);
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }

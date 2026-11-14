@@ -38,6 +38,36 @@ public interface IPlaceholderSystem
 
     /// <summary>Whether everything in <paramref name="folder"/> is a placeholder with nothing that waits for the server.</summary>
     bool IsAllInSync(string folder);
+
+    /// <summary>Has Windows ask for a folder's contents again; see <see cref="Placeholders.ListAgainOnNextOpen"/>.</summary>
+    /// <exception cref="IOException">The folder can't be opened, for example because it's gone.</exception>
+    int ListAgainOnNextOpen(string folder);
+
+    /// <summary>A file or folder, with its placeholder state, or <see langword="null"/> when it's gone.</summary>
+    LocalItem? Inspect(string path);
+
+    /// <summary>Opens a file for an upload; see <see cref="UploadFile.Open"/>.</summary>
+    /// <returns>Windows' HRESULT, 0 when <paramref name="file"/> is open.</returns>
+    int OpenForUpload(string path, out IUploadSource? file);
+
+    /// <summary>Makes a new folder a placeholder; see <see cref="Placeholders.ConvertFolder"/>.</summary>
+    int ConvertFolder(string path, byte[] identity);
+
+    /// <summary>Marks a file that stays on the PC as excluded, which File Explorer shows.</summary>
+    int Exclude(string path);
+
+    /// <summary>
+    /// The new files and folders, and the changed files, in <paramref name="folder"/> and the
+    /// folders below it, without following links.
+    /// </summary>
+    IEnumerable<string> FindChanges(string folder);
+
+    /// <summary>
+    /// Watches <paramref name="folder"/> and the folders below it: <paramref name="changed"/> gets
+    /// each new, changed or renamed file and folder, and <paramref name="missed"/> is called when
+    /// Windows reported more changes than it could keep. Dispose the watch to stop.
+    /// </summary>
+    IDisposable Watch(string folder, Action<string> changed, Action missed);
 }
 
 /// <summary>Registering and connecting sync roots; tests use a fake.</summary>
@@ -95,12 +125,71 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
         var items = new List<LocalItem>();
         foreach (var entry in info.EnumerateFileSystemInfos("*", new EnumerationOptions { AttributesToSkip = 0, IgnoreInaccessible = true }))
         {
-            var state = Read(entry.FullName);
-            var identity = state is null ? null : ItemIdentity.FromBytes([.. state.Identity]);
-            items.Add(new LocalItem(entry.Name, entry.FullName, entry is DirectoryInfo, state, identity));
+            items.Add(Item(entry));
         }
 
         return items;
+    }
+
+    public LocalItem? Inspect(string path)
+    {
+        FileSystemInfo entry = Directory.Exists(path) ? new DirectoryInfo(path) : new FileInfo(path);
+        return entry.Exists ? Item(entry) : null;
+    }
+
+    public int OpenForUpload(string path, out IUploadSource? file)
+    {
+        int result = UploadFile.Open(path, out var opened);
+        file = opened is null ? null : new UploadSource(opened);
+        return result;
+    }
+
+    public int ListAgainOnNextOpen(string folder) => Placeholders.ListAgainOnNextOpen(folder);
+
+    public int ConvertFolder(string path, byte[] identity) => Placeholders.ConvertFolder(path, identity);
+
+    public int Exclude(string path) => Placeholders.SetPinState(path, PinState.Excluded);
+
+    public IEnumerable<string> FindChanges(string folder)
+    {
+        var folders = new Stack<string>();
+        folders.Push(folder);
+        while (folders.Count > 0)
+        {
+            foreach (var item in Items(folders.Pop()))
+            {
+                if (item.IsLink)
+                {
+                    continue;
+                }
+
+                if (item.State is null || (!item.IsDirectory && !item.State.InSync && item.State.Pin != PinState.Excluded))
+                {
+                    yield return item.Path;
+                }
+
+                if (item.IsDirectory)
+                {
+                    folders.Push(item.Path);
+                }
+            }
+        }
+    }
+
+    public IDisposable Watch(string folder, Action<string> changed, Action missed)
+    {
+        var watcher = new FileSystemWatcher(folder)
+        {
+            IncludeSubdirectories = true,
+            NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite | NotifyFilters.Size,
+            InternalBufferSize = 64 * 1024,
+        };
+        watcher.Created += (_, e) => changed(e.FullPath);
+        watcher.Changed += (_, e) => changed(e.FullPath);
+        watcher.Renamed += (_, e) => changed(e.FullPath);
+        watcher.Error += (_, _) => missed();
+        watcher.EnableRaisingEvents = true;
+        return watcher;
     }
 
     public PlaceholderState? Read(string path)
@@ -144,6 +233,17 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
         return result;
     }
 
+    // A reparse point that isn't a placeholder is a link, which stays on the PC.
+    private LocalItem Item(FileSystemInfo entry)
+    {
+        var state = Read(entry.FullName);
+        var identity = state is null ? null : ItemIdentity.FromBytes([.. state.Identity]);
+        return new LocalItem(entry.Name, entry.FullName, entry is DirectoryInfo, state, identity)
+        {
+            IsLink = state is null && entry.Attributes.HasFlag(FileAttributes.ReparsePoint),
+        };
+    }
+
     public bool IsAllInSync(string folder)
     {
         foreach (var path in Directory.EnumerateFileSystemEntries(folder, "*", new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0, IgnoreInaccessible = true }))
@@ -156,6 +256,20 @@ public sealed class WindowsPlaceholderSystem(RecycleBin recycleBin) : IPlacehold
 
         return true;
     }
+}
+
+/// <summary>A file opened for an upload, through <see cref="UploadFile"/>.</summary>
+public sealed class UploadSource(UploadFile file) : IUploadSource
+{
+    public long Length => file.Length;
+
+    public bool IsClosed => file.IsClosed;
+
+    public Stream OpenRead() => file.OpenRead();
+
+    public int MarkInSync(byte[] identity, bool isPlaceholder) => file.MarkInSync(identity, isPlaceholder);
+
+    public void Dispose() => file.Dispose();
 }
 
 /// <summary>Registering and connecting sync roots with Windows.</summary>

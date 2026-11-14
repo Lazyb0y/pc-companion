@@ -9,7 +9,11 @@ namespace PCCompanion.RemoteFolders;
 
 /// <summary>A file or folder in a folder on the PC, with its placeholder state, if it's a placeholder.</summary>
 /// <param name="Identity">What its placeholder says about it on the server, or <see langword="null"/> when it isn't one of Remote Folders' placeholders, such as a new file.</param>
-public sealed record LocalItem(string Name, string Path, bool IsDirectory, PlaceholderState? State, ItemIdentity? Identity);
+public sealed record LocalItem(string Name, string Path, bool IsDirectory, PlaceholderState? State, ItemIdentity? Identity)
+{
+    /// <summary>Whether it's a symbolic link, a junction or another reparse point that isn't a placeholder: never uploaded or followed.</summary>
+    public bool IsLink { get; init; }
+}
 
 /// <summary>A file on the server whose version isn't the one its placeholder came from.</summary>
 public sealed record ChangedItem(LocalItem Local, RemoteEntry Remote, ItemIdentity NewIdentity);

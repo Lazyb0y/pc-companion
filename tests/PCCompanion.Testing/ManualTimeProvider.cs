@@ -8,10 +8,12 @@ namespace PCCompanion.Testing;
 /// <summary>
 /// A clock that moves only when a test calls <see cref="Advance"/>, for wall-clock time, for the
 /// timestamps that measure elapsed time and for timers. Advancing fires the timers that are due
-/// on the test's thread, periodic ones once per period.
+/// on the test's thread, periodic ones once per period. Other threads may create timers while it
+/// advances.
 /// </summary>
 public sealed class ManualTimeProvider : TimeProvider
 {
+    private readonly Lock _gate = new();
     private readonly List<ManualTimer> _timers = [];
 
     public DateTimeOffset Now { get; set; } = new(2026, 10, 20, 9, 0, 0, TimeSpan.Zero);
@@ -26,7 +28,11 @@ public sealed class ManualTimeProvider : TimeProvider
     {
         var timer = new ManualTimer(this, callback, state);
         timer.Change(dueTime, period);
-        _timers.Add(timer);
+        lock (_gate)
+        {
+            _timers.Add(timer);
+        }
+
         return timer;
     }
 
@@ -37,7 +43,13 @@ public sealed class ManualTimeProvider : TimeProvider
         while (NextDue(end) is { } due)
         {
             Now = due;
-            foreach (var timer in _timers.ToArray())
+            ManualTimer[] timers;
+            lock (_gate)
+            {
+                timers = [.. _timers];
+            }
+
+            foreach (var timer in timers)
             {
                 timer.FireIfDue();
             }
@@ -49,11 +61,14 @@ public sealed class ManualTimeProvider : TimeProvider
     private DateTimeOffset? NextDue(DateTimeOffset end)
     {
         DateTimeOffset? next = null;
-        foreach (var timer in _timers)
+        lock (_gate)
         {
-            if (timer.Due is { } due && due <= end && (next is null || due < next))
+            foreach (var timer in _timers)
             {
-                next = due;
+                if (timer.Due is { } due && due <= end && (next is null || due < next))
+                {
+                    next = due;
+                }
             }
         }
 

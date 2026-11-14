@@ -338,8 +338,10 @@ FILE_ID_INFO
 FILE_STANDARD_INFO
 GetDriveType
 GetFileInformationByHandleEx
+GetOverlappedResult
 GetVolumeInformationByHandle
 MoveFileWithProgress
+ReadFile
 DRIVE_FIXED
 DRIVE_REMOVABLE
 DRIVE_REMOTE

@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -81,9 +84,70 @@ internal sealed class OplockHandle : IDisposable
         }
     }
 
+    /// <summary>
+    /// Reads from <paramref name="offset"/> while Windows keeps the handle open, and returns how
+    /// many bytes it read, or -1 when a program opened the file and Windows closed it.
+    /// </summary>
+    /// <exception cref="IOException">The file can't be read.</exception>
+    public unsafe int Read(Span<byte> buffer, long offset)
+    {
+        if (!PInvoke.CfReferenceProtectedHandle(_protected))
+        {
+            return -1;
+        }
+
+        try
+        {
+            // The handle is asynchronous, and Windows bound it to a completion port of its own, so
+            // .NET can't read it: each read waits for an event, whose low bit keeps the
+            // completion off that port.
+            using var done = new ManualResetEvent(initialState: false);
+            var overlapped = new NativeOverlapped
+            {
+                OffsetLow = unchecked((int)offset),
+                OffsetHigh = (int)(offset >> 32),
+                EventHandle = done.SafeWaitHandle.DangerousGetHandle() | 1,
+            };
+            var handle = (HANDLE)_win32.DangerousGetHandle();
+            uint read = 0;
+            fixed (byte* bytes = buffer)
+            {
+                if (!PInvoke.ReadFile(handle, bytes, (uint)buffer.Length, null, &overlapped))
+                {
+                    var error = (WIN32_ERROR)Marshal.GetLastPInvokeError();
+                    if (error == WIN32_ERROR.ERROR_HANDLE_EOF)
+                    {
+                        return 0;
+                    }
+
+                    if (error != WIN32_ERROR.ERROR_IO_PENDING)
+                    {
+                        throw new IOException($"The file can't be read (error {(int)error}).", HResultOf(error));
+                    }
+                }
+
+                if (!PInvoke.GetOverlappedResult(handle, &overlapped, &read, bWait: true))
+                {
+                    var error = (WIN32_ERROR)Marshal.GetLastPInvokeError();
+                    return error == WIN32_ERROR.ERROR_HANDLE_EOF
+                        ? 0
+                        : throw new IOException($"The file can't be read (error {(int)error}).", HResultOf(error));
+                }
+            }
+
+            return (int)read;
+        }
+        finally
+        {
+            PInvoke.CfReleaseProtectedHandle(_protected);
+        }
+    }
+
     public void Dispose()
     {
         _win32.Dispose();
         _protected.Dispose();
     }
+
+    private static int HResultOf(WIN32_ERROR error) => unchecked((int)0x80070000 | ((int)error & 0xFFFF));
 }

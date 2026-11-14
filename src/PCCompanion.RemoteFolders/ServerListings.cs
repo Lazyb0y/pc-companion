@@ -16,8 +16,15 @@ public interface IListingRequest
     /// <summary>What the folder's placeholder keeps; empty for the server's folder itself.</summary>
     IReadOnlyList<byte> Identity { get; }
 
-    /// <summary>Answers with new entries; Windows asks again the next time the folder is listed.</summary>
-    int Answer(IReadOnlyList<PlaceholderEntry> entries, Span<int> results);
+    /// <summary>Whether the provider itself lists the folder, as when it looks for changes on the PC.</summary>
+    bool IsFromProvider { get; }
+
+    /// <summary>
+    /// Answers with new entries. When <paramref name="complete"/>, Windows treats the folder as
+    /// complete until <see cref="IPlaceholderSystem.ListAgainOnNextOpen"/>; otherwise it asks again
+    /// each time the folder is listed, and can't create files in it.
+    /// </summary>
+    int Answer(IReadOnlyList<PlaceholderEntry> entries, bool complete, Span<int> results);
 
     /// <summary>Fails the listing with <paramref name="status"/>.</summary>
     int Refuse(int status);
@@ -28,13 +35,17 @@ public sealed class ListingRequest(FetchPlaceholdersRequest request) : IListingR
 {
     public IReadOnlyList<byte> Identity => request.Identity;
 
-    public int Answer(IReadOnlyList<PlaceholderEntry> entries, Span<int> results) => request.Answer(entries, complete: false, results);
+    public bool IsFromProvider => request.Program?.ProcessId == Environment.ProcessId;
+
+    public int Answer(IReadOnlyList<PlaceholderEntry> entries, bool complete, Span<int> results) => request.Answer(entries, complete, results);
 
     public int Refuse(int status) => request.Refuse(status);
 }
 
 /// <summary>
-/// Lists a server's folders when Windows asks, and applies what changed on the server. See
+/// Lists a server's folders when Windows asks, and applies what changed on the server. Each answer
+/// tells Windows the folder is complete, since Windows can't create a file in a folder that isn't,
+/// and 30 seconds later the folder is listed again the next time a program opens it. See
 /// "Changes on the server" in docs/features/files/remote-folders.md.
 /// </summary>
 public sealed partial class ServerListings(
@@ -44,7 +55,7 @@ public sealed partial class ServerListings(
     IPlaceholderSystem pc,
     TimeProvider time,
     ILogger logger,
-    int serverNumber)
+    int serverNumber) : IDisposable
 {
     /// <summary>How long a listing is reused: Windows asks again each time a program lists the folder.</summary>
     public static readonly TimeSpan ReuseFor = TimeSpan.FromSeconds(30);
@@ -57,6 +68,8 @@ public sealed partial class ServerListings(
 
     private readonly ConcurrentDictionary<string, DateTimeOffset> _listed = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, IReadOnlyDictionary<HiddenReason, int>> _hidden = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<string, ITimer> _listAgain = new(StringComparer.Ordinal);
+    private volatile bool _disposed;
 
     /// <summary>How many entries on the server can't be shown, by reason, in the folders listed so far.</summary>
     public IReadOnlyDictionary<HiddenReason, int> Hidden =>
@@ -71,6 +84,15 @@ public sealed partial class ServerListings(
         bool answered = false;
         try
         {
+            // The provider looks only at what's on the PC; asking the server would list every
+            // folder, and a complete answer would hide what's on the server from programs.
+            if (request.IsFromProvider)
+            {
+                request.Answer([], complete: false, []);
+                answered = true;
+                return;
+            }
+
             string? relative = RelativeFolder(request.Identity);
             if (relative is null)
             {
@@ -79,21 +101,21 @@ public sealed partial class ServerListings(
                 return;
             }
 
+            string local = ListingDiff.LocalPath(localRoot, relative);
             if (_listed.TryGetValue(relative, out var at) && time.GetUtcNow() - at < ReuseFor)
             {
-                request.Answer([], []);
+                Complete(request, [], [], relative, local);
                 answered = true;
                 return;
             }
 
-            string local = ListingDiff.LocalPath(localRoot, relative);
             bool listedBefore = pc.Items(local).Count > 0;
             var listing = ListAsync(relative);
             var finished = await Task.WhenAny(listing, Task.Delay(listedBefore ? LaterWait : FirstWait, time)).ConfigureAwait(false);
             if (finished != listing)
             {
                 // Windows gets what's known; the rest appears when the listing finishes.
-                request.Answer([], []);
+                Complete(request, [], [], relative, local);
                 answered = true;
                 LogListingSlow(logger, serverNumber);
                 _ = FinishLaterAsync(listing, relative, local);
@@ -110,7 +132,7 @@ public sealed partial class ServerListings(
                 LogListingFailed(logger, serverNumber, exception.Error);
                 if (listedBefore)
                 {
-                    request.Answer([], []);
+                    Complete(request, [], [], relative, local);
                 }
                 else
                 {
@@ -123,7 +145,7 @@ public sealed partial class ServerListings(
 
             var changes = ListingDiff.Compute(relative, remote, pc.Items(local));
             var results = new int[changes.New.Count];
-            int result = request.Answer([.. changes.New.Select(added => added.Entry)], results);
+            int result = Complete(request, [.. changes.New.Select(added => added.Entry)], results, relative, local);
             answered = true;
             if (result != 0)
             {
@@ -162,6 +184,17 @@ public sealed partial class ServerListings(
         }
     }
 
+    public void Dispose()
+    {
+        _disposed = true;
+        foreach (var timer in _listAgain.Values)
+        {
+            timer.Dispose();
+        }
+
+        _listAgain.Clear();
+    }
+
     /// <summary>The Cloud Files status Windows gives programs for a server's error.</summary>
     public static int StatusFor(RemoteError error) => error switch
     {
@@ -181,6 +214,51 @@ public sealed partial class ServerListings(
         }
 
         return ItemIdentity.FromBytes([.. identity]) is { IsDirectory: true } folder ? folder.RelativePath : null;
+    }
+
+    // Answers that the folder is complete, and has Windows ask again once the answer is old.
+    private int Complete(IListingRequest request, IReadOnlyList<PlaceholderEntry> entries, Span<int> results, string relative, string local)
+    {
+        int result = request.Answer(entries, complete: true, results);
+        if (_disposed)
+        {
+            return result;
+        }
+
+        var timer = time.CreateTimer(_ => ListAgain(relative, local), null, ReuseFor, Timeout.InfiniteTimeSpan);
+        _listAgain.AddOrUpdate(relative, timer, (_, old) =>
+        {
+            old.Dispose();
+            return timer;
+        });
+        return result;
+    }
+
+    private void ListAgain(string relative, string local)
+    {
+        if (_listAgain.TryRemove(relative, out var timer))
+        {
+            timer.Dispose();
+        }
+
+        if (_disposed)
+        {
+            return;
+        }
+
+        try
+        {
+            int result = pc.ListAgainOnNextOpen(local);
+            if (result != 0)
+            {
+                LogListAgainFailed(logger, serverNumber, result);
+            }
+        }
+        catch (Exception exception) when (exception is System.IO.IOException or UnauthorizedAccessException)
+        {
+            // The folder is gone, or was renamed; a renamed one is listed when it's opened.
+            LogListAgainFailed(logger, serverNumber, exception.HResult);
+        }
     }
 
     private Task<RemoteListing> ListAsync(string relativeFolder) =>
@@ -312,6 +390,9 @@ public sealed partial class ServerListings(
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: a listing took longer than Windows waits; it's applied when it finishes.")]
     private static partial void LogListingSlow(ILogger logger, int server);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Server {Server}: a folder couldn't be set to be listed again (0x{Result:X8}).")]
+    private static partial void LogListAgainFailed(ILogger logger, int server, int result);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: a folder couldn't be listed ({Error}).")]
     private static partial void LogListingFailed(ILogger logger, int server, RemoteError error);
