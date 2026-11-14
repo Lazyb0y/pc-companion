@@ -5436,4 +5436,456 @@
     <value>It changed on this PC and on {0}, so both versions are kept: yours as {1}, next to it. Select to see it.</value>
     <comment>Text of the notification shown when a file changed on this PC and on the server. {0} is the server's name the user gave it; {1} is the name of the conflict copy, the PC's version, kept next to the server's version, such as "Report (conflict 15-11-2026 10.30).docx". Selecting the notification opens the folder with that copy selected. At most 255 characters.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>Open the files on your SFTP servers from File Explorer, as if they were on this PC.</value>
+    <comment>Remote Folders: the feature's description, on Home and below its name on its page.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>Add server</value>
+    <comment>Remote Folders page: the button that opens the server dialog to add a server.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>Add a server</value>
+    <comment>Remote Folders: the server dialog's title when adding a server.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>Edit server</value>
+    <comment>Remote Folders: the server dialog's title when editing a server.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>Sign in again</value>
+    <comment>Remote Folders: the server dialog's title when it opens from Sign in again, after the server refused the sign-in.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Remote Folders server dialog: the header of the server's name, which is also its folder's name in File Explorer.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>Shown in File Explorer</value>
+    <comment>Remote Folders server dialog: shown in the empty name box before an address is entered; once there's one, the box shows the address, which is the default name.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>Enter a name.</value>
+    <comment>Remote Folders server dialog: below the name box when the name of a server being edited is empty.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>Use {0} characters at most.</value>
+    <comment>Remote Folders server dialog: below the name box when the name is too long. {0} is the most characters, such as 60.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>Windows doesn't allow this as a folder name. Leave out characters such as : * ? and don't end it with a dot or a space.</value>
+    <comment>Remote Folders server dialog: below the name box when Windows doesn't allow the name for a folder.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>Another server has this name.</value>
+    <comment>Remote Folders server dialog: below the name box when another server has the name.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>Address</value>
+    <comment>Remote Folders server dialog: the header of the server's host name or IP address.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>Enter a host name or an IP address, such as nas.example.lan or 192.168.1.10.</value>
+    <comment>Remote Folders server dialog: below the address box when it isn't a host name or an IP address. nas.example.lan and 192.168.1.10 are examples; keep them as they are.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>Port</value>
+    <comment>Remote Folders server dialog: the header of the server's SSH port.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>Enter a number from 1 to 65535.</value>
+    <comment>Remote Folders server dialog: below the port box when it isn't a port number.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>User name</value>
+    <comment>Remote Folders server dialog: the header of the user name on the server.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>Sign in with</value>
+    <comment>Remote Folders server dialog: the header of the list with Password and SSH key.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>Password</value>
+    <comment>Remote Folders server dialog: Sign in with a password.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>SSH key</value>
+    <comment>Remote Folders server dialog: Sign in with an SSH key file.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>Password</value>
+    <comment>Remote Folders server dialog: the header of the password box.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>Key file</value>
+    <comment>Remote Folders server dialog: the header of the SSH key file's path.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>Passphrase, if the key has one</value>
+    <comment>Remote Folders server dialog: the header of the SSH key's passphrase box.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>Leave empty to keep the saved one</value>
+    <comment>Remote Folders server dialog: shown in the empty password or passphrase box of a server being edited.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Remote Folders server dialog: the button next to the key file box.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>Browse for the key file</value>
+    <comment>Remote Folders server dialog: what screen readers say for Browse next to the key file box.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>Choose your SSH key file</value>
+    <comment>Remote Folders: the title of the Open dialog that Browse shows.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>All files</value>
+    <comment>Remote Folders: the file type in the Open dialog that Browse shows.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>The key file isn't there. Enter its full path, or select Browse.</value>
+    <comment>Remote Folders server dialog: below the key file box when there's no file at that path.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>Connect</value>
+    <comment>Remote Folders server dialog: the button that reads the server's key, and then signs in and checks the folder.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>Connecting</value>
+    <comment>Remote Folders server dialog: what screen readers say for the progress ring while Connect runs.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>Enter the server's address, port and user name, then select Connect.</value>
+    <comment>Remote Folders server dialog: below Connect while the address, port or user name is missing.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>Check the server's key below. Once you select I checked this key, PC Companion signs in.</value>
+    <comment>Remote Folders server dialog: below Connect once the server's key is shown and not checked yet. I checked this key is RemoteFoldersKeyChecked.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>Enter how to sign in, then select Connect.</value>
+    <comment>Remote Folders server dialog: below Connect while the password or key file is missing.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>Select Connect to check these details before saving.</value>
+    <comment>Remote Folders server dialog: below Connect when the details changed since they were last checked, so Save waits for Connect.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>Can't reach the server. Check the address and port, and that the server is on and allows SSH.</value>
+    <comment>Remote Folders server dialog: below Connect when the server couldn't be reached.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>The server refused the user name, password or key.</value>
+    <comment>Remote Folders server dialog: below Connect when the server refused the sign-in.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>The key file can't be read, or the passphrase is wrong. Keys in OpenSSH and PuTTY format work.</value>
+    <comment>Remote Folders server dialog: below Connect when the SSH key file can't be read or its passphrase is wrong. OpenSSH and PuTTY are names of key formats.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>The server doesn't allow reading this folder.</value>
+    <comment>Remote Folders server dialog: below Connect when the server doesn't let the user read the folder.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>Couldn't connect to the server.</value>
+    <comment>Remote Folders server dialog: below Connect when it failed for another reason.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>Remote Folders didn't answer. Make sure PC Companion is running, and try again in a moment.</value>
+    <comment>Remote Folders: when Remote Folders' own process, which connects to servers, didn't answer the page.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>The server's key changed since you checked it. Check the new key below.</value>
+    <comment>Remote Folders server dialog: below Connect when a new server's key changed after the user checked it.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>The server's key changed. Close this dialog, and use Trust the new key on the page if you know why.</value>
+    <comment>Remote Folders server dialog: below Connect when the key of a server being edited changed. Trust the new key is RemoteFoldersTrustKey.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>Server key</value>
+    <comment>Remote Folders server dialog: the header above the server's key, its type and SHA-256 fingerprint.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>Make sure this is your server's key before you go on: ask the server's administrator, or run ssh-keygen -lf on the server's key file, such as /etc/ssh/ssh_host_ed25519_key.pub. If someone is between this PC and the server, the key differs.</value>
+    <comment>Remote Folders server dialog: below the server's key. ssh-keygen -lf is a command, and /etc/ssh/ssh_host_ed25519_key.pub a path on the server; keep both as they are.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>I checked this key</value>
+    <comment>Remote Folders server dialog: the check box below the server's key; checking it signs in.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>Folder on the server</value>
+    <comment>Remote Folders server dialog: the header of the folder on the server that the folder on the PC shows.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>Your home folder</value>
+    <comment>Remote Folders server dialog: shown in the empty folder box; Connect fills in the user's home folder on the server.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>This folder isn't on the server, or isn't a folder.</value>
+    <comment>Remote Folders server dialog: below the folder box when the server has no folder there.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>Turn on Remote Folders to connect to a server.</value>
+    <comment>Remote Folders server dialog: a note at the top while the feature is off, so Connect isn't available.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Remote Folders server dialog: the button that saves the server.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Remote Folders: the button that closes a dialog without changing anything.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>Your user folder isn't on an NTFS drive, which Windows needs for these folders, so no server can be added.</value>
+    <comment>Remote Folders page: a warning when the user profile isn't on an NTFS drive, which the Cloud Files API needs.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>Remote Folders isn't running, so files that are only online can't be opened. PC Companion starts it again; if this stays, make sure PC Companion is running.</value>
+    <comment>Remote Folders page: a warning when the feature is on but its process hasn't answered for a while.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>Servers</value>
+    <comment>Remote Folders page: the header of the list of servers.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>Each server gets a folder in File Explorer's navigation pane. A file downloads when you open it, and your changes go back to the server.</value>
+    <comment>Remote Folders page: below Servers.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>No servers yet.</value>
+    <comment>Remote Folders page: in place of the list while there are no servers.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{0} on {1}</value>
+    <comment>Remote Folders page: below a server's name. {0} is the folder on the server, such as /home/ana; {1} is the user, address and port, such as ana@nas.example.lan:22.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Remote Folders page: what screen readers say for a server. {0} is its name; {1} its state, such as Connected, 2 changes waiting.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+    <comment>Remote Folders page: the button that opens a server's folder in File Explorer, and the button after a server was removed.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>Open the folder of {0}</value>
+    <comment>Remote Folders page: what screen readers say for a server's Open folder. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>Sync now</value>
+    <comment>Remote Folders page: the button that lists a server's folders again at once.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>Sync {0} now</value>
+    <comment>Remote Folders page: what screen readers say for a server's Sync now. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Remote Folders page: what screen readers say for a server's More options button, with Edit and Remove. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Remote Folders page: the menu item that opens the server dialog to change a server.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Remote Folders page: the menu item, and the dialog button, that removes a server.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>Not running</value>
+    <comment>Remote Folders page: a server's state while Remote Folders' process isn't running.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>Can't be used</value>
+    <comment>Remote Folders page: the state of a server whose settings this version can't use, such as after a hand edit.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>This version of PC Companion can't use this server's settings, so its folder isn't connected.</value>
+    <comment>Remote Folders page: below a server whose settings this version can't use.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}, last tried at {1}</value>
+    <comment>Remote Folders page: a server's state with the time it was last tried. {0} is the state, such as Can't reach the server; {1} the time, such as 10:42.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>The server refused the password, key or passphrase. PC Companion doesn't try again on its own, so the server doesn't lock your account.</value>
+    <comment>Remote Folders page: below a server whose sign-in failed, with Sign in again.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>Sign in again</value>
+    <comment>Remote Folders page: the button below a server whose sign-in failed; it opens the server dialog to enter the password again.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>The server's key changed, so nothing is sent to it. The server may have been reinstalled, or someone may be between this PC and the server.</value>
+    <comment>Remote Folders page: below a server whose key changed, above the old and new keys.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>Key you checked: {0}</value>
+    <comment>Remote Folders page: the key the user confirmed. {0} is the key, such as ED25519 SHA256:cw03EqRJF5BI2sgaxpgwrVhqZvn675XZNMGjF9bIUoI.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>Key it shows now: {0}</value>
+    <comment>Remote Folders page: the key the server shows now. {0} is the key, such as ED25519 SHA256:cw03EqRJF5BI2sgaxpgwrVhqZvn675XZNMGjF9bIUoI.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>Trust the new key</value>
+    <comment>Remote Folders page: the button below a server whose key changed, and the button of the dialog that asks first.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>Trust the new key of {0}?</value>
+    <comment>Remote Folders: the title of the dialog that asks before trusting a server's new key. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>Only trust it if you know why the key changed, such as after the server was reinstalled. Otherwise, ask the server's administrator first.</value>
+    <comment>Remote Folders: the text of the dialog that asks before trusting a server's new key, above the old and new keys.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>The server doesn't show that key now, so nothing changed. Try again in a moment.</value>
+    <comment>Remote Folders page: when Trust the new key found that the server no longer shows that key.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>The server offers only algorithms that are no longer safe, such as SHA-1 or CBC ciphers. Update its SSH settings to connect.</value>
+    <comment>Remote Folders: when a server offers only algorithms PC Companion refuses. SHA-1 and CBC are names of algorithms.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>Folder on this PC</value>
+    <comment>Remote Folders page: the header of a server's folder on the PC, whose path is shown below it.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>Conflicts</value>
+    <comment>Remote Folders page: the header of a server's conflict copies.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>These files changed both on the server and on this PC, so both versions were kept. They're listed until you open the folder.</value>
+    <comment>Remote Folders page: below Conflicts.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>Changes that couldn't be made</value>
+    <comment>Remote Folders page: the header of the deletes, renames and uploads the server refused.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>{0} wasn't deleted: {1}</value>
+    <comment>Remote Folders page: a delete the server refused. {0} is the file's path in the folder; {1} the reason, such as the server doesn't allow it.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>{0} wasn't renamed to {1}: {2}</value>
+    <comment>Remote Folders page: a rename or move the server refused. {0} is the old path in the folder; {1} the new path; {2} the reason, such as the server doesn't allow it.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>{0} wasn't uploaded: {1}</value>
+    <comment>Remote Folders page: a file the server didn't take. {0} is the file's path in the folder; {1} the reason, such as the server doesn't allow it.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>the server couldn't be reached</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>the server's key changed</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>signing in failed</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>it's no longer on the server</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>the server doesn't allow it</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>the server refused</value>
+    <comment>Remote Folders page: why a change wasn't made, after a colon in RemoteFoldersSkippedDelete and the like.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>Entries that can't be shown</value>
+    <comment>Remote Folders page: the header of how many entries on the server can't be shown on the PC, by reason.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Remote Folders page: a reason entries can't be shown and how many. {0} is the reason, such as Names Windows doesn't allow; {1} the number.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>Names Windows doesn't allow</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>Names or paths that are too long</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>Names that aren't valid UTF-8</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many. UTF-8 is the name of a text encoding.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>Names that differ from another only in case</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many: Windows treats names that differ only in uppercase and lowercase letters as the same.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>PC Companion's temporary files</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>Entries after the first 100,000 of a folder</value>
+    <comment>Remote Folders page: why entries can't be shown, followed by how many: a folder shows its first 100,000 entries.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>Where the folders are</value>
+    <comment>Remote Folders page: the header of the card with the folder that holds the servers' folders, whose path is shown below it.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>Open Remote Folders</value>
+    <comment>Remote Folders page: the button that opens the folder Remote Folders, which holds the servers' folders, in File Explorer. The folder's name stays in English, so translations may say open folder.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>Files that are only online can't be opened while Remote Folders is off or PC Companion isn't running. Files on this PC open as usual.</value>
+    <comment>Remote Folders page: a note below the servers.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>Connects only to the servers you add, with SSH, and checks each server's key against the one you confirmed. Sends a server only your sign-in and the files and changes you make in its folder. Passwords and passphrases are kept in Windows Credential Manager for this PC only; key files are only read. Doesn't log server addresses, user names or file names.</value>
+    <comment>Remote Folders page: the Permissions &amp; data card's description.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>Remove {0}?</value>
+    <comment>Remote Folders: the title of the dialog that asks before removing a server. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>Its folder is disconnected from the server: files that are only online disappear, and files on this PC stay in an ordinary folder. Its password or passphrase is deleted.</value>
+    <comment>Remote Folders: the text of the dialog that asks before removing a server.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_one" xml:space="preserve">
+    <value>{0} change hasn't reached the server yet. It stays in the folder on this PC, but won't be uploaded.</value>
+    <comment>Plural form "one". Remote Folders: in the dialog that asks before removing a server, when changes made on the PC haven't reached it. {0} is the number.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0} changes haven't reached the server yet. They stay in the folder on this PC, but won't be uploaded.</value>
+    <comment>Plural form "other". Remote Folders: in the dialog that asks before removing a server, when changes made on the PC haven't reached it. {0} is the number.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>Remove anyway</value>
+    <comment>Remote Folders: the button of the dialog that asks before removing a server, when changes wait for it.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>{0} was removed. Its files on this PC are in an ordinary folder now.</value>
+    <comment>Remote Folders page: a note after a server was removed, with Open folder. {0} is the server's name.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>Windows Credential Manager didn't save the password, so nothing was saved. Try again.</value>
+    <comment>Remote Folders page: when Windows Credential Manager refused to save or delete a password, so the server wasn't saved.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>There's no free folder name for this server in Remote Folders. Choose another name.</value>
+    <comment>Remote Folders page: when every folder name for a new server is taken. Remote Folders here is the folder's name, which stays in English.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>The folder isn't there anymore.</value>
+    <comment>Remote Folders page: when the folder to open is gone.</comment>
+  </data>
 </root>

@@ -5436,4 +5436,456 @@
     <value>Sie wurde auf diesem PC und auf {0} geändert, daher bleiben beide Versionen erhalten: Ihre als „{1}“ daneben. Wählen Sie diese Benachrichtigung aus, um sie anzuzeigen.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>Öffnen Sie die Dateien Ihrer SFTP-Server im Datei-Explorer, als wären sie auf diesem PC.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>Server hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>Server hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>Server bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>Erneut anmelden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>Im Datei-Explorer angezeigt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>Geben Sie einen Namen ein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>Verwenden Sie höchstens {0} Zeichen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>Windows lässt diesen Ordnernamen nicht zu. Lassen Sie Zeichen wie : * ? weg, und beenden Sie ihn nicht mit einem Punkt oder Leerzeichen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>Ein anderer Server hat diesen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>Adresse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>Geben Sie einen Hostnamen oder eine IP-Adresse ein, z. B. nas.example.lan oder 192.168.1.10.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>Port</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>Geben Sie eine Zahl von 1 bis 65535 ein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>Benutzername</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>Anmelden mit</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>Kennwort</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>SSH-Schlüssel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>Kennwort</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>Schlüsseldatei</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>Passphrase, falls der Schlüssel eine hat</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>Leer lassen, um die gespeicherte Angabe beizubehalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>Durchsuchen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>Nach der Schlüsseldatei suchen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>SSH-Schlüsseldatei auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>Alle Dateien</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>Die Schlüsseldatei ist nicht vorhanden. Geben Sie ihren vollständigen Pfad ein, oder wählen Sie „Durchsuchen“ aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>Verbinden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>Verbindung wird hergestellt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>Geben Sie Adresse, Port und Benutzernamen des Servers ein, und wählen Sie dann „Verbinden“ aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>Prüfen Sie unten den Schlüssel des Servers. Sobald Sie „Ich habe diesen Schlüssel geprüft“ auswählen, meldet sich PC Companion an.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>Geben Sie an, wie Sie sich anmelden, und wählen Sie dann „Verbinden“ aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>Wählen Sie „Verbinden“ aus, um diese Angaben vor dem Speichern zu prüfen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>Der Server ist nicht erreichbar. Prüfen Sie Adresse und Port und ob der Server eingeschaltet ist und SSH zulässt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>Der Server hat den Benutzernamen, das Kennwort oder den Schlüssel abgelehnt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>Die Schlüsseldatei kann nicht gelesen werden, oder die Passphrase ist falsch. Schlüssel im OpenSSH- und PuTTY-Format funktionieren.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>Der Server lässt das Lesen dieses Ordners nicht zu.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>Es konnte keine Verbindung mit dem Server hergestellt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>Remoteordner hat nicht geantwortet. Stellen Sie sicher, dass PC Companion ausgeführt wird, und versuchen Sie es gleich noch einmal.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>Der Schlüssel des Servers hat sich geändert, seit Sie ihn geprüft haben. Prüfen Sie unten den neuen Schlüssel.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>Der Schlüssel des Servers hat sich geändert. Schließen Sie dieses Dialogfeld, und verwenden Sie auf der Seite „Neuem Schlüssel vertrauen“, wenn Sie den Grund kennen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>Serverschlüssel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>Stellen Sie sicher, dass dies der Schlüssel Ihres Servers ist, bevor Sie fortfahren: Fragen Sie den Administrator des Servers, oder führen Sie ssh-keygen -lf für die Schlüsseldatei des Servers aus, z. B. /etc/ssh/ssh_host_ed25519_key.pub. Steht jemand zwischen diesem PC und dem Server, unterscheidet sich der Schlüssel.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>Ich habe diesen Schlüssel geprüft</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>Ordner auf dem Server</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>Ihr Basisordner</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>Dieser Ordner ist nicht auf dem Server, oder es ist kein Ordner.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>Aktivieren Sie Remoteordner, um eine Verbindung mit einem Server herzustellen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>Ihr Benutzerordner befindet sich nicht auf einem NTFS-Laufwerk, das Windows für diese Ordner benötigt, daher kann kein Server hinzugefügt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>Remoteordner wird nicht ausgeführt, daher können reine Onlinedateien nicht geöffnet werden. PC Companion startet es erneut; wenn dieser Hinweis bleibt, stellen Sie sicher, dass PC Companion ausgeführt wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>Server</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>Jeder Server erhält einen Ordner im Navigationsbereich des Datei-Explorers. Eine Datei wird beim Öffnen heruntergeladen, und Ihre Änderungen gehen zurück an den Server.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>Noch keine Server.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{0} auf {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>Ordner von {0} öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>Jetzt synchronisieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>{0} jetzt synchronisieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>Weitere Optionen für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>Bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>Entfernen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>Wird nicht ausgeführt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>Nicht verwendbar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>Diese Version von PC Companion kann die Einstellungen dieses Servers nicht verwenden, daher ist sein Ordner nicht verbunden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}, zuletzt versucht um {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>Der Server hat das Kennwort, den Schlüssel oder die Passphrase abgelehnt. PC Companion versucht es nicht selbst erneut, damit der Server Ihr Konto nicht sperrt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>Erneut anmelden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>Der Schlüssel des Servers hat sich geändert, daher wird nichts an ihn gesendet. Der Server wurde möglicherweise neu installiert, oder jemand steht zwischen diesem PC und dem Server.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>Geprüfter Schlüssel: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>Aktueller Schlüssel: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>Neuem Schlüssel vertrauen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>Dem neuen Schlüssel von {0} vertrauen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>Vertrauen Sie ihm nur, wenn Sie wissen, warum sich der Schlüssel geändert hat, etwa nach einer Neuinstallation des Servers. Fragen Sie andernfalls zuerst den Administrator des Servers.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>Der Server zeigt diesen Schlüssel gerade nicht, daher wurde nichts geändert. Versuchen Sie es gleich noch einmal.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>Der Server bietet nur Algorithmen an, die nicht mehr sicher sind, z. B. SHA-1 oder CBC-Verschlüsselungen. Aktualisieren Sie seine SSH-Einstellungen, um eine Verbindung herzustellen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>Ordner auf diesem PC</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>Konflikte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>Diese Dateien wurden auf dem Server und auf diesem PC geändert, daher wurden beide Versionen behalten. Sie werden aufgeführt, bis Sie den Ordner öffnen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>Änderungen, die nicht vorgenommen werden konnten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>{0} wurde nicht gelöscht: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>{0} wurde nicht in {1} umbenannt: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>{0} wurde nicht hochgeladen: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>der Server war nicht erreichbar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>der Schlüssel des Servers hat sich geändert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>die Anmeldung ist fehlgeschlagen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>es ist nicht mehr auf dem Server</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>der Server lässt es nicht zu</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>der Server hat abgelehnt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>Einträge, die nicht angezeigt werden können</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>Namen, die Windows nicht zulässt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>Zu lange Namen oder Pfade</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>Namen, die kein gültiges UTF-8 sind</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>Namen, die sich von einem anderen nur in der Groß-/Kleinschreibung unterscheiden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>Temporäre Dateien von PC Companion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>Einträge nach den ersten 100.000 eines Ordners</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>Speicherort der Ordner</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>Ordner öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>Reine Onlinedateien können nicht geöffnet werden, solange Remoteordner deaktiviert ist oder PC Companion nicht ausgeführt wird. Dateien auf diesem PC werden wie gewohnt geöffnet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>Stellt nur mit den Servern, die Sie hinzufügen, eine Verbindung über SSH her und prüft den Schlüssel jedes Servers anhand des von Ihnen bestätigten. Sendet einem Server nur Ihre Anmeldung sowie die Dateien und Änderungen in seinem Ordner. Kennwörter und Passphrasen werden in der Windows-Anmeldeinformationsverwaltung nur für diesen PC gespeichert; Schlüsseldateien werden nur gelesen. Protokolliert keine Serveradressen, Benutzernamen oder Dateinamen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>{0} entfernen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>Sein Ordner wird vom Server getrennt: Reine Onlinedateien verschwinden, und Dateien auf diesem PC bleiben in einem gewöhnlichen Ordner. Sein Kennwort bzw. seine Passphrase wird gelöscht.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_one" xml:space="preserve">
+    <value>{0} Änderung hat den Server noch nicht erreicht. Sie bleibt im Ordner auf diesem PC, wird aber nicht hochgeladen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0} Änderungen haben den Server noch nicht erreicht. Sie bleiben im Ordner auf diesem PC, werden aber nicht hochgeladen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>Trotzdem entfernen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>{0} wurde entfernt. Seine Dateien auf diesem PC befinden sich jetzt in einem gewöhnlichen Ordner.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>Die Windows-Anmeldeinformationsverwaltung hat das Kennwort nicht gespeichert, daher wurde nichts gespeichert. Versuchen Sie es erneut.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>Im Ordner „Remote Folders“ ist für diesen Server kein Ordnername mehr frei. Wählen Sie einen anderen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>Der Ordner ist nicht mehr vorhanden.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

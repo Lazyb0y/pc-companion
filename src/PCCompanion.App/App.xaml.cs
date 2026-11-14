@@ -26,6 +26,7 @@ using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
+using PCCompanion.App.Features.RemoteFolders;
 using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
@@ -203,6 +204,7 @@ public partial class App : Application
             .AddTransient<NetworkProfilesViewModel>()
             .AddTransient<FolderRulesViewModel>()
             .AddTransient<DriveActionsViewModel>()
+            .AddTransient<RemoteFoldersViewModel>()
             .AddTransient<DisplayProfilesViewModel>()
             .BuildServiceProvider();
     }

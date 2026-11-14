@@ -5644,4 +5644,472 @@
     <value>تغيّر على هذا الكمبيوتر وعلى {0}، لذا تم الاحتفاظ بالإصدارين: إصدارك باسم {1} بجانبه. حدد لرؤيته.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>افتح الملفات الموجودة على خوادم SFTP من مستكشف الملفات، كما لو كانت على هذا الكمبيوتر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>إضافة خادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>إضافة خادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>تحرير الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>تسجيل الدخول مرة أخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>الاسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>يظهر في مستكشف الملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>أدخل اسمًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>استخدم {0} حرفًا كحد أقصى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>لا يسمح Windows بهذا الاسم لمجلد. احذف أحرفًا مثل : * ? ولا تُنهِه بنقطة أو مسافة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>يحمل خادم آخر هذا الاسم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>العنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>أدخل اسم مضيف أو عنوان IP، مثل nas.example.lan أو 192.168.1.10.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>المنفذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>أدخل رقمًا من 1 إلى 65535.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>اسم المستخدم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>تسجيل الدخول باستخدام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>كلمة المرور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>مفتاح SSH</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>كلمة المرور</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>ملف المفتاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>عبارة المرور، إن كانت للمفتاح عبارة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>اتركه فارغًا للاحتفاظ بالقيمة المحفوظة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>استعراض</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>استعراض ملف المفتاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>اختر ملف مفتاح SSH</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>كل الملفات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>ملف المفتاح غير موجود. أدخل مساره الكامل، أو حدد «استعراض».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>اتصال</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>جارٍ الاتصال</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>أدخل عنوان الخادم ومنفذه واسم المستخدم، ثم حدد «اتصال».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>تحقق من مفتاح الخادم أدناه. بمجرد أن تحدد «تحققت من هذا المفتاح»، يسجّل PC Companion الدخول.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>أدخل طريقة تسجيل الدخول، ثم حدد «اتصال».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>حدد «اتصال» للتحقق من هذه التفاصيل قبل الحفظ.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>تعذّر الوصول إلى الخادم. تحقق من العنوان والمنفذ، ومن أن الخادم قيد التشغيل ويسمح بـ SSH.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>رفض الخادم اسم المستخدم أو كلمة المرور أو المفتاح.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>تتعذر قراءة ملف المفتاح، أو أن عبارة المرور خاطئة. تعمل المفاتيح بتنسيقي OpenSSH وPuTTY.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>لا يسمح الخادم بقراءة هذا المجلد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>تعذّر الاتصال بالخادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>لم تستجب المجلدات البعيدة. تأكد من أن PC Companion قيد التشغيل، ثم حاول مرة أخرى بعد قليل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>تغيّر مفتاح الخادم منذ أن تحققت منه. تحقق من المفتاح الجديد أدناه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>تغيّر مفتاح الخادم. أغلق مربع الحوار هذا، واستخدم «الثقة بالمفتاح الجديد» في الصفحة إن كنت تعرف السبب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>مفتاح الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>تأكد من أن هذا هو مفتاح خادمك قبل المتابعة: اسأل مسؤول الخادم، أو شغّل ssh-keygen -lf على ملف مفتاح الخادم، مثل /etc/ssh/ssh_host_ed25519_key.pub. إذا كان أحدهم بين هذا الكمبيوتر والخادم، فسيختلف المفتاح.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>تحققت من هذا المفتاح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>المجلد على الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>مجلدك الرئيسي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>هذا المجلد غير موجود على الخادم، أو ليس مجلدًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>شغّل المجلدات البعيدة للاتصال بخادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>حفظ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>إلغاء الأمر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>مجلد المستخدم الخاص بك ليس على محرك أقراص NTFS، الذي يحتاجه Windows لهذه المجلدات، لذا لا يمكن إضافة أي خادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>المجلدات البعيدة لا تعمل، لذا لا يمكن فتح الملفات المتوفرة عبر الإنترنت فقط. يعيد PC Companion تشغيلها؛ إذا بقيت هذه الرسالة، فتأكد من أن PC Companion قيد التشغيل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>الخوادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>يحصل كل خادم على مجلد في جزء التنقل في مستكشف الملفات. يتم تنزيل الملف عند فتحه، وتعود تغييراتك إلى الخادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>لا توجد خوادم بعد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{0} على {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}، {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>فتح المجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>فتح مجلد {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>مزامنة الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>مزامنة {0} الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>مزيد من الخيارات لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>تحرير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>إزالة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>لا يعمل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>لا يمكن استخدامه</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>لا يمكن لهذا الإصدار من PC Companion استخدام إعدادات هذا الخادم، لذا مجلده غير متصل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}، آخر محاولة في {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>رفض الخادم كلمة المرور أو المفتاح أو عبارة المرور. لا يعيد PC Companion المحاولة من تلقاء نفسه، حتى لا يقفل الخادم حسابك.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>تسجيل الدخول مرة أخرى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>تغيّر مفتاح الخادم، لذا لا يُرسل إليه أي شيء. ربما أُعيد تثبيت الخادم، أو ربما يوجد أحدهم بين هذا الكمبيوتر والخادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>المفتاح الذي تحققت منه: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>المفتاح الذي يعرضه الآن: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>الثقة بالمفتاح الجديد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>هل تريد الثقة بالمفتاح الجديد لـ {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>لا تثق به إلا إذا كنت تعرف سبب تغيّر المفتاح، مثل إعادة تثبيت الخادم. وإلا، فاسأل مسؤول الخادم أولاً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>لا يعرض الخادم هذا المفتاح الآن، لذا لم يتغير شيء. حاول مرة أخرى بعد قليل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>لا يقدّم الخادم إلا خوارزميات لم تعد آمنة، مثل SHA-1 أو تشفير CBC. حدّث إعدادات SSH الخاصة به للاتصال.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>المجلد على هذا الكمبيوتر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>التعارضات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>تغيّرت هذه الملفات على الخادم وعلى هذا الكمبيوتر معًا، لذا تم الاحتفاظ بالنسختين. تظهر هنا حتى تفتح المجلد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>تغييرات تعذّر إجراؤها</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>لم يتم حذف {0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>لم تتم إعادة تسمية {0} إلى {1}: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>لم يتم تحميل {0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>تعذّر الوصول إلى الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>تغيّر مفتاح الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>فشل تسجيل الدخول</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>لم يعد موجودًا على الخادم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>لا يسمح الخادم بذلك</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>رفض الخادم ذلك</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>عناصر لا يمكن عرضها</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>أسماء لا يسمح بها Windows</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>أسماء أو مسارات طويلة جدًا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>أسماء ليست UTF-8 صالحة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>أسماء لا تختلف عن غيرها إلا في حالة الأحرف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>ملفات PC Companion المؤقتة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>عناصر بعد أول 100,000 عنصر في مجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>مكان المجلدات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>فتح المجلد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>لا يمكن فتح الملفات المتوفرة عبر الإنترنت فقط أثناء إيقاف المجلدات البعيدة أو عدم تشغيل PC Companion. تُفتح الملفات الموجودة على هذا الكمبيوتر كالمعتاد.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>يتصل فقط بالخوادم التي تضيفها، عبر SSH، ويتحقق من مفتاح كل خادم مقابل المفتاح الذي أكدته. لا يرسل إلى الخادم إلا بيانات تسجيل دخولك والملفات والتغييرات التي تجريها في مجلده. تُحفظ كلمات المرور وعبارات المرور في إدارة بيانات الاعتماد في Windows لهذا الكمبيوتر فقط؛ وتُقرأ ملفات المفاتيح فقط. لا يسجّل عناوين الخوادم أو أسماء المستخدمين أو أسماء الملفات.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>هل تريد إزالة {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>يُفصل مجلده عن الخادم: تختفي الملفات المتوفرة عبر الإنترنت فقط، وتبقى الملفات الموجودة على هذا الكمبيوتر في مجلد عادي. تُحذف كلمة المرور أو عبارة المرور الخاصة به.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_zero" xml:space="preserve">
+    <value>لا توجد تغييرات لم تصل إلى الخادم.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_one" xml:space="preserve">
+    <value>تغيير واحد لم يصل إلى الخادم بعد. سيبقى في المجلد على هذا الكمبيوتر، لكن لن يتم تحميله.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_two" xml:space="preserve">
+    <value>تغييران لم يصلا إلى الخادم بعد. سيبقيان في المجلد على هذا الكمبيوتر، لكن لن يتم تحميلهما.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_few" xml:space="preserve">
+    <value>{0} تغييرات لم تصل إلى الخادم بعد. ستبقى في المجلد على هذا الكمبيوتر، لكن لن يتم تحميلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_many" xml:space="preserve">
+    <value>{0} تغييرًا لم تصل إلى الخادم بعد. ستبقى في المجلد على هذا الكمبيوتر، لكن لن يتم تحميلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0} تغيير لم تصل إلى الخادم بعد. ستبقى في المجلد على هذا الكمبيوتر، لكن لن يتم تحميلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>إزالة على أي حال</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>تمت إزالة {0}. ملفاته على هذا الكمبيوتر موجودة الآن في مجلد عادي.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>لم تحفظ إدارة بيانات الاعتماد في Windows كلمة المرور، لذا لم يتم حفظ أي شيء. حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>لا يوجد اسم مجلد متاح لهذا الخادم في Remote Folders. اختر اسمًا آخر.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>لم يعد المجلد موجودًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

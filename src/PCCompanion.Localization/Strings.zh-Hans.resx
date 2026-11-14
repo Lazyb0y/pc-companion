@@ -5384,4 +5384,452 @@
     <value>它在此电脑和 {0} 上都已更改，因此两个版本都会保留：你的版本以 {1} 的名称放在旁边。选择以查看。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>在文件资源管理器中打开 SFTP 服务器上的文件，就像它们在此电脑上一样。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>添加服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>添加服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>编辑服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>重新登录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>显示在文件资源管理器中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>输入名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>最多使用 {0} 个字符。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>Windows 不允许使用此文件夹名称。请去掉 : * ? 等字符，并且不要以句点或空格结尾。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>另一台服务器已使用此名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>地址</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>输入主机名或 IP 地址，例如 nas.example.lan 或 192.168.1.10。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>端口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>输入 1 到 65535 之间的数字。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>用户名</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>登录方式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>密码</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>SSH 密钥</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>密码</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>密钥文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>密码短语（如果密钥有）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>留空以保留已保存的内容</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>浏览</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>浏览密钥文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>选择你的 SSH 密钥文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>所有文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>密钥文件不存在。请输入其完整路径，或选择“浏览”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>连接</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>正在连接</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>输入服务器的地址、端口和用户名，然后选择“连接”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>请检查下方的服务器密钥。选择“我已检查此密钥”后，PC Companion 将登录。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>输入登录方式，然后选择“连接”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>选择“连接”以在保存前检查这些详细信息。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>无法访问服务器。请检查地址和端口，并确认服务器已开启且允许 SSH。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>服务器拒绝了用户名、密码或密钥。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>无法读取密钥文件，或密码短语错误。支持 OpenSSH 和 PuTTY 格式的密钥。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>服务器不允许读取此文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>无法连接到服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>远程文件夹没有响应。请确保 PC Companion 正在运行，然后稍后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>自你检查后，服务器密钥已更改。请检查下方的新密钥。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>服务器密钥已更改。如果你知道原因，请关闭此对话框，然后在页面上使用“信任新密钥”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>服务器密钥</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>继续之前，请确保这是你的服务器的密钥：询问服务器管理员，或在服务器的密钥文件（例如 /etc/ssh/ssh_host_ed25519_key.pub）上运行 ssh-keygen -lf。如果有人在此电脑和服务器之间，密钥就会不同。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>我已检查此密钥</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>服务器上的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>你的主文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>服务器上没有此文件夹，或者它不是文件夹。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>打开远程文件夹以连接到服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>你的用户文件夹不在 NTFS 驱动器上，而 Windows 需要 NTFS 才能使用这些文件夹，因此无法添加服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>远程文件夹未运行，因此无法打开仅联机的文件。PC Companion 会重新启动它；如果此提示一直存在，请确保 PC Companion 正在运行。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>每台服务器都会在文件资源管理器的导航窗格中获得一个文件夹。打开文件时会下载它，你的更改会传回服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>还没有服务器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{1} 上的 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}，{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>打开文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>打开 {0} 的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>立即同步</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>立即同步 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>未运行</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>无法使用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>此版本的 PC Companion 无法使用此服务器的设置，因此其文件夹未连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}，上次尝试时间为 {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>服务器拒绝了密码、密钥或密码短语。PC Companion 不会自行重试，以免服务器锁定你的帐户。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>重新登录</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>服务器密钥已更改，因此不会向其发送任何内容。服务器可能已重新安装，也可能有人在此电脑和服务器之间。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>你检查过的密钥：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>现在显示的密钥：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>信任新密钥</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>信任 {0} 的新密钥?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>只有在你知道密钥更改的原因（例如服务器重新安装后）时才信任它。否则，请先询问服务器管理员。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>服务器现在未显示该密钥，因此未做任何更改。请稍后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>服务器仅提供不再安全的算法，例如 SHA-1 或 CBC 加密。请更新其 SSH 设置以进行连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>此电脑上的文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>冲突</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>这些文件在服务器和此电脑上都已更改，因此两个版本都已保留。在你打开文件夹之前，它们会一直列在这里。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>无法进行的更改</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>未删除 {0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>未将 {0} 重命名为 {1}：{2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>未上传 {0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>无法访问服务器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>服务器密钥已更改</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>登录失败</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>它已不在服务器上</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>服务器不允许</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>服务器拒绝了</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>无法显示的项目</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>Windows 不允许的名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>过长的名称或路径</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>不是有效 UTF-8 的名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>仅大小写与另一个不同的名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>PC Companion 的临时文件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>文件夹中前 100,000 个之后的项目</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>文件夹位置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>打开文件夹</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>当远程文件夹关闭或 PC Companion 未运行时，无法打开仅联机的文件。此电脑上的文件可以照常打开。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>仅通过 SSH 连接到你添加的服务器，并根据你确认的密钥检查每台服务器的密钥。只向服务器发送你的登录信息以及你在其文件夹中的文件和更改。密码和密码短语保存在 Windows 凭据管理器中，仅限此电脑；密钥文件只会被读取。不会在日志中记录服务器地址、用户名或文件名。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>其文件夹将与服务器断开连接：仅联机的文件会消失，此电脑上的文件会保留在一个普通文件夹中。其密码或密码短语将被删除。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0} 项更改尚未到达服务器。它们会保留在此电脑上的文件夹中，但不会上传。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>仍然删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>已删除 {0}。它在此电脑上的文件现在位于一个普通文件夹中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>Windows 凭据管理器未保存密码，因此未保存任何内容。请重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>Remote Folders 中没有可用于此服务器的文件夹名称。请选择其他名称。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>该文件夹已不存在。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

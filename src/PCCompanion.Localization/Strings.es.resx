@@ -5436,4 +5436,456 @@
     <value>Cambió en este equipo y en {0}, así que se conservan ambas versiones: la tuya como {1}, a su lado. Selecciona para verla.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>Abre los archivos de tus servidores SFTP desde el Explorador de archivos, como si estuvieran en este equipo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>Agregar servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>Agregar un servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>Editar servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>Volver a iniciar sesión</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>Nombre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>Se muestra en el Explorador de archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>Escribe un nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>Usa {0} caracteres como máximo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>Windows no permite este nombre de carpeta. Quita caracteres como : * ? y no lo termines con un punto o un espacio.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>Otro servidor tiene este nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>Dirección</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>Escribe un nombre de host o una dirección IP, como nas.example.lan o 192.168.1.10.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>Puerto</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>Escribe un número del 1 al 65535.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>Nombre de usuario</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>Iniciar sesión con</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>Contraseña</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>Clave SSH</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>Contraseña</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>Archivo de clave</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>Frase de contraseña, si la clave tiene una</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>Déjalo vacío para conservar el valor guardado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>Examinar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>Buscar el archivo de clave</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>Elige tu archivo de clave SSH</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>Todos los archivos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>El archivo de clave no está ahí. Escribe su ruta completa o selecciona Examinar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>Conectar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>Conectando</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>Escribe la dirección, el puerto y el nombre de usuario del servidor y, luego, selecciona Conectar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>Comprueba abajo la clave del servidor. En cuanto selecciones Comprobé esta clave, PC Companion inicia sesión.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>Indica cómo iniciar sesión y, luego, selecciona Conectar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>Selecciona Conectar para comprobar estos datos antes de guardar.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>No se puede acceder al servidor. Comprueba la dirección y el puerto, y que el servidor esté encendido y permita SSH.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>El servidor rechazó el nombre de usuario, la contraseña o la clave.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>No se puede leer el archivo de clave o la frase de contraseña no es correcta. Funcionan las claves en formato OpenSSH y PuTTY.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>El servidor no permite leer esta carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>No se pudo conectar con el servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>Carpetas remotas no respondió. Asegúrate de que PC Companion se esté ejecutando y vuelve a intentarlo en un momento.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>La clave del servidor cambió desde que la comprobaste. Comprueba la nueva clave abajo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>La clave del servidor cambió. Cierra este cuadro de diálogo y usa Confiar en la nueva clave en la página si sabes por qué.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>Clave del servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>Asegúrate de que esta es la clave de tu servidor antes de seguir: pregunta al administrador del servidor o ejecuta ssh-keygen -lf en el archivo de clave del servidor, como /etc/ssh/ssh_host_ed25519_key.pub. Si alguien está entre este equipo y el servidor, la clave es distinta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>Comprobé esta clave</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>Carpeta en el servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>Tu carpeta personal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>Esta carpeta no está en el servidor o no es una carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>Activa Carpetas remotas para conectarte a un servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>Guardar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>Tu carpeta de usuario no está en una unidad NTFS, que Windows necesita para estas carpetas, así que no se puede agregar ningún servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>Carpetas remotas no se está ejecutando, así que no se pueden abrir los archivos que solo están en línea. PC Companion lo vuelve a iniciar; si este aviso no desaparece, asegúrate de que PC Companion se esté ejecutando.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>Servidores</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>Cada servidor obtiene una carpeta en el panel de navegación del Explorador de archivos. Un archivo se descarga al abrirlo, y tus cambios vuelven al servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>Todavía no hay servidores.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{0} en {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>Abrir carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>Abrir la carpeta de {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>Sincronizar ahora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>Sincronizar {0} ahora</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>Más opciones para {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>Editar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>Quitar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>No se está ejecutando</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>No se puede usar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>Esta versión de PC Companion no puede usar la configuración de este servidor, así que su carpeta no está conectada.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}, último intento a las {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>El servidor rechazó la contraseña, la clave o la frase de contraseña. PC Companion no vuelve a intentarlo por su cuenta, para que el servidor no bloquee tu cuenta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>Volver a iniciar sesión</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>La clave del servidor cambió, así que no se le envía nada. Puede que el servidor se haya reinstalado o que alguien esté entre este equipo y el servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>Clave que comprobaste: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>Clave que muestra ahora: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>Confiar en la nueva clave</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>¿Confiar en la nueva clave de {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>Confía en ella solo si sabes por qué cambió la clave, por ejemplo, tras reinstalar el servidor. Si no, pregunta antes al administrador del servidor.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>El servidor no muestra esa clave ahora, así que no cambió nada. Vuelve a intentarlo en un momento.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>El servidor solo ofrece algoritmos que ya no son seguros, como SHA-1 o cifrados CBC. Actualiza su configuración de SSH para conectarte.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>Carpeta en este equipo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>Conflictos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>Estos archivos cambiaron tanto en el servidor como en este equipo, así que se conservaron las dos versiones. Aparecen aquí hasta que abras la carpeta.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>Cambios que no se pudieron hacer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>{0} no se eliminó: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>{0} no se cambió de nombre a {1}: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>{0} no se cargó: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>no se pudo acceder al servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>la clave del servidor cambió</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>no se pudo iniciar sesión</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>ya no está en el servidor</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>el servidor no lo permite</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>el servidor lo rechazó</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>Elementos que no se pueden mostrar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>Nombres que Windows no permite</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>Nombres o rutas demasiado largos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>Nombres que no son UTF-8 válido</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>Nombres que solo se diferencian de otro en mayúsculas y minúsculas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>Archivos temporales de PC Companion</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>Elementos después de los primeros 100.000 de una carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>Dónde están las carpetas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>Abrir carpeta</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>Los archivos que solo están en línea no se pueden abrir mientras Carpetas remotas esté desactivado o PC Companion no se esté ejecutando. Los archivos de este equipo se abren como siempre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>Se conecta solo a los servidores que agregues, con SSH, y comprueba la clave de cada servidor con la que confirmaste. Solo envía a un servidor tu inicio de sesión y los archivos y cambios que hagas en su carpeta. Las contraseñas y frases de contraseña se guardan en el Administrador de credenciales de Windows solo para este equipo; los archivos de clave solo se leen. No registra direcciones de servidores, nombres de usuario ni nombres de archivo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>¿Quitar {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>Su carpeta se desconecta del servidor: los archivos que solo están en línea desaparecen, y los archivos de este equipo se quedan en una carpeta normal. Se elimina su contraseña o frase de contraseña.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_one" xml:space="preserve">
+    <value>{0} cambio todavía no llegó al servidor. Se queda en la carpeta de este equipo, pero no se cargará.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0} cambios todavía no llegaron al servidor. Se quedan en la carpeta de este equipo, pero no se cargarán.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>Quitar de todos modos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>Se quitó {0}. Sus archivos de este equipo están ahora en una carpeta normal.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>El Administrador de credenciales de Windows no guardó la contraseña, así que no se guardó nada. Vuelve a intentarlo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>No hay ningún nombre de carpeta libre para este servidor en Remote Folders. Elige otro nombre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>La carpeta ya no está.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
