@@ -127,6 +127,21 @@ internal static partial class Program
         NetworkChange.NetworkAddressChanged += networkChanged;
         WatchResume(() => TryAgainNow("wake from sleep"), logger);
 
+        // The settings app and the host ask through the pipe; without it, the folders still work.
+        var answers = new ProviderPipe(
+            () =>
+            {
+                lock (applying)
+                {
+                    return [.. service.Folders.Values];
+                }
+            },
+            ServerTest.TestAsync,
+            ServerTest.ReadKeyAsync,
+            TimeProvider.System,
+            loggers.CreateLogger<ProviderPipe>());
+        using var pipe = ServePipe(answers, logger);
+
         watcher.Changed += (_, _) => Apply();
         Apply();
 
@@ -163,6 +178,19 @@ internal static partial class Program
             // The host already ended.
             LogHostEnded(logger);
             stop.Set();
+        }
+    }
+
+    private static RequestPipe? ServePipe(ProviderPipe answers, ILogger logger)
+    {
+        try
+        {
+            return RequestPipe.Serve(RemoteFoldersPipe.Name, RemoteFoldersPipe.MaximumRequestLength, answers.AnswerAsync, exception => LogPipeFailed(logger, exception));
+        }
+        catch (Win32Exception exception)
+        {
+            LogPipeFailed(logger, exception);
+            return null;
         }
     }
 
@@ -267,6 +295,9 @@ internal static partial class Program
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Waking from sleep can't be watched, so servers are tried again only on their own schedule.")]
     private static partial void LogResumeWatchFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The pipe for the settings app and the host failed.")]
+    private static partial void LogPipeFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Critical, Message = "The process stopped because of an unhandled exception.")]
     private static partial void LogCrash(ILogger logger, Exception? exception);

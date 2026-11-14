@@ -214,6 +214,9 @@ public sealed partial class ServerUploads(
     /// <summary>The conflict copies made, by their paths below the server's folder.</summary>
     public IReadOnlyCollection<string> Conflicts => [.. _conflicts.Keys];
 
+    /// <summary>Forgets the conflict copies made so far, once the user opened the folder.</summary>
+    public void ClearConflicts() => _conflicts.Clear();
+
     /// <summary>Raised when a file that changed on the PC and on the server was kept as a conflict copy.</summary>
     public event EventHandler<ConflictEventArgs>? ConflictFound;
 

@@ -416,7 +416,8 @@ public sealed partial class ServerConnections : IServerConnections
         }
         catch (RemoteServerException exception)
         {
-            LogConnectFailed(_logger, _number, exception.Error);
+            string kind = exception.InnerException?.GetType().Name ?? "none";
+            LogConnectFailed(_logger, _number, exception.Error, kind);
             State.Failed(exception);
             throw;
         }
@@ -434,8 +435,8 @@ public sealed partial class ServerConnections : IServerConnections
     [LoggerMessage(Level = LogLevel.Information, Message = "Server {Server}: {Status}.")]
     private static partial void LogStatus(ILogger logger, int server, ServerStatus status);
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: connecting failed ({Error}).")]
-    private static partial void LogConnectFailed(ILogger logger, int server, RemoteError error);
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Server {Server}: connecting failed ({Error}, {Kind}).")]
+    private static partial void LogConnectFailed(ILogger logger, int server, RemoteError error, string kind);
 
     // One connection, used by one request at a time, and closed after a while without use.
     private sealed class Slot : IDisposable
