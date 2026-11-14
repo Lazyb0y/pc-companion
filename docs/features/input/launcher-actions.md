@@ -74,21 +74,27 @@ public interface IHostActions
     // On the host's UI thread. Whether a running feature offers the action and can run it now,
     // and it doesn't act on the window in front.
     bool CanRunFromLauncher(FeatureAction action);
+
+    // On the host's UI thread. Whether the feature is on, supported and hasn't failed.
+    bool IsRunning(string featureId);
+
+    // The feature with that ID, running or not, or null, so a refusal can name it.
+    FeatureInfo? FindFeature(string featureId);
 }
 ```
 
 - **The settings app** reads `OnWindowInFront` from each catalog entry's `Actions`, and **the host** asks the running feature. A test checks that both agree for every feature.
 - **The host gives `IHostActions` to this feature too,** so Shortcuts & Mouse Buttons is no longer the only one that takes it. Modules still reference only Core, Platform.Windows and Localization.
-- **Why an action can't run:** the host tells a feature that isn't running, because it's off or not supported on this PC, from an action the running feature refuses now, for the notification.
+- **Why an action can't run:** the host tells a feature that isn't running, because it's off or not supported on this PC, from an action the running feature refuses now, for the notification, with `IsRunning`, and names the feature with `FindFeature`. It can't name the action itself: only the settings app has the actions' names.
 
 ## The command
 
-- **`PCCompanion.exe --run <feature> <action> [<target>]`:** the feature's ID, the action's ID and, for an action on a profile or an app, the profile's name or the app's app ID or program, as Copy command writes it. IDs ignore case. A target is matched as its feature matches it: profile names ignore case and spaces around them.
+- **`PCCompanion.exe --run <feature> <action> [<target>]`:** the feature's ID, the action's ID and, for an action on a profile or an app, the profile's name or the app's app ID or program, as Copy command writes it. IDs ignore case: the command reads the settings and matches them with the actions of the features, on or off, so the host gets them as the features write them. A target is matched as its feature matches it: profile names ignore case and spaces around them.
 - **`PCCompanion.exe` handles it first,** in `Program.Main`, before Windows App SDK and WinUI start. It opens no window, and doesn't open or show the settings app, also while the settings app is open.
 - **Steps:**
   1. Checks the arguments: two or three after `--run`, IDs of ASCII letters and digits of up to 64 characters, and a target of up to 256 characters without control characters. Otherwise it exits with 2.
-  2. Finds the host's window. With no host running, it starts one as the settings app does, also through Always run as administrator's task, and waits up to 10 seconds for the pipe.
-  3. Lets the host bring a window to the front, with `AllowSetForegroundWindow` for the host's process, as a second host launch does. A program the user just started may do this, and End App, Drop-down Apps, the Clipboard Actions menu and Display Profiles' question need it (spike).
+  2. Looks for the pipe without connecting to it. With no host running, it starts one as the settings app does, also through Always run as administrator's task, and waits up to 10 seconds for the pipe, as for a host that's starting; a host that runs without the pipe gets 1 second, as just after the feature was turned on.
+  3. Lets the host bring a window to the front, with `AllowSetForegroundWindow` for the process of the host's window, which it waits up to 2 seconds for, as a second host launch does. A program the user just started may do this, and End App, Drop-down Apps, the Clipboard Actions menu and Display Profiles' question need it (spike).
   4. Sends the request through the pipe, waits up to 5 seconds for the answer, and exits.
 - **Exit codes:**
   - 0: the host started the action;
@@ -101,9 +107,9 @@ public interface IHostActions
 ## Start entries
 
 - **The settings app writes them:** a shortcut file for each action, in `%APPDATA%\Microsoft\Windows\Start Menu\Programs\PC Companion actions`, which starts `PCCompanion.exe` from PC Companion's folder with the action's `--run` arguments.
-- **When:** each time the settings app starts, and after each save that changes the list: this feature or another feature with actions turned on or off, **Show actions in Start** or a feature's switch below it, profiles and Drop-down Apps' apps added, renamed or removed, and PC Companion's language. It compares the list with the folder, so a save that changes nothing writes nothing.
+- **When:** each time the settings app starts, and after each save that changes the list: this feature or another feature with actions turned on or off, **Show actions in Start** or a feature's switch below it, and profiles and Drop-down Apps' apps added, renamed or removed. PC Companion's language changes when the settings app starts again, and the entries with it. It compares the list with the folder, reading each entry, so a save that changes nothing writes nothing.
 - **Never with admin rights:** the settings app never runs as administrator, so writing in a folder of the user's can't be turned against admin rights. The host, which may run as administrator, never writes the entries.
-- **Only that folder:** it writes the entries it lists, replacing older ones, and deletes any other file there, deleting links themselves rather than what they lead to. Turning off the feature or **Show actions in Start** deletes the folder.
+- **Only that folder:** it writes the entries it lists, replacing older ones, and deletes any other file there, deleting links themselves rather than what they lead to. A hidden file, `PCCompanion.LauncherActions`, marks the folder as PC Companion's, so it's found again after its name changed with the language; a folder in its place that's a link is deleted, not written through. Turning off the feature or **Show actions in Start** deletes the folder.
 - **Names:** "<action> - <feature>", such as "Use Office - Network Profiles", from a string that translations can reorder; this feature's own actions are "Turn off displays - PC Companion". The folder's name is translated too, and the folder is renamed with the language.
   - Characters that Windows doesn't allow in file names, which profile names may have, become spaces. A colon matters most: it saved the entry's name as a file without the `.lnk` extension, with the rest in a hidden part of the file (an alternate data stream), and nothing showed in Start (spike).
   - Names are cut to 80 characters, and a name that's already taken gets " (2)", " (3)" and so on.
@@ -116,10 +122,11 @@ public interface IHostActions
 - **While the feature is on,** it serves a named pipe, `PCCompanion.Actions.<session ID>`, through `RequestPipe`. Only the user's own account and the system can open it, and it rejects programs on other PCs. Low-integrity processes and apps in app containers can't open it (spike).
 - **A request** is one JSON message of up to 2 KB, such as `{"feature":"networkProfiles","action":"use","target":"Office"}`. The answer is `{"result":"ran"}`, `"refused"` or `"invalid"`.
 - **Checks:** the rules of the command's first step, then, on the host's UI thread, `IHostActions.CanRunFromLauncher`, or this feature's own check for its own actions. Then it runs the action with `IHostActions.Run`, or itself.
-- **A refused request** shows a notification, through `IHostNotifications`:
-  - a feature that isn't running: "Network Profiles is off, so Use Office can't run.";
-  - an action its feature refuses: "Use Office can't run now. Check it on the Network Profiles page.";
-  - selecting it opens the feature's page. Windows shows only PC Companion's last notification, so many refusals in a row show one.
+- **A refused request** shows a notification, through `IHostNotifications`, titled with the feature's name:
+  - a feature that isn't running: "Network Profiles is off, so this action can't run.";
+  - an action its feature refuses: "This action can't run now. Check it on the Network Profiles page.";
+  - an action PC Companion doesn't have, such as one typed by hand: "PC Companion has no such action. Copy its command again on the Launcher Actions page.";
+  - selecting it opens the feature's page, or this feature's. Windows shows only PC Companion's last notification, so many refusals in a row show one.
 - **Requests run one at a time,** in the order they arrive.
 
 ## With the other features
@@ -131,11 +138,11 @@ public interface IHostActions
 
 ## Threads
 
-- **The command** is a short process of its own: its main thread checks the arguments and waits for the pipe, at most about 15 seconds when it starts the host. It has no window.
+- **The command** is a short process of its own: its main thread checks the arguments, reads the settings and waits for the pipe, at most about 17 seconds when it starts the host. It has no window.
 - **The host's thread pool** runs the pipe, and reads and checks each request.
 - **The host's UI thread** checks whether the action can run and runs it through its feature, as for a shortcut: microseconds, besides the action's own work, which its feature already keeps off the UI thread. It also shows the notification.
 - **The wait before Turn off displays and Start the screen saver** is a timer on the host's UI thread that reads the keys' and buttons' state (`GetAsyncKeyState`) every 50 ms, for up to 10 seconds. Then it posts the request to its own window (`ShellActions`), which waits for nothing.
-- **The settings app** writes the Start entries on the thread pool, never on its UI thread.
+- **The settings app** writes the Start entries on the thread pool, never on its UI thread, one update after the other: its UI thread copies the settings after each save, which the settings store reports.
 - **Nothing waits for another app:** no message is sent to another program's window.
 - **Failures:** a pipe that stops working is logged, and the feature stops for the rest of the session, like a failing `Apply`; the other features keep running.
 
@@ -164,8 +171,8 @@ Two spikes ran in Windows Sandbox on Windows 11 24H2 (build 26100), with a test 
 - **Feature page:**
   - the on/off switch;
   - **Show actions in Start**, on by default, described as "Windows Search and launchers that read Start find them too.";
-  - **Features in Start**, an expander with a switch for each feature that offers actions, all on by default, unavailable while **Show actions in Start** is off;
-  - **Actions**, a list of the actions available now, each with its name and **Copy command**; with none, it says which features to turn on;
+  - **Features in Start**, an expander with a switch for each feature that has actions for launchers, which names them, and one for this feature's own, named PC Companion, all on by default, unavailable while **Show actions in Start** is off;
+  - **Actions**, a list of the actions available now, each with its name, its feature and **Copy command**, which copies the whole command, with `PCCompanion.exe`'s full path, in quotes when it has a space, and says which command it copied; while only this feature's own are there, a note says that features that offer actions add them once they're on;
   - a note that actions on the window in front, such as Hide app, need a shortcut, with a button that opens Shortcuts & Mouse Buttons;
   - a **Permissions & data** card.
 - **The icon** is drawn as [Icons](../../design/icons.md) says, and reviewed like the others.
@@ -224,7 +231,7 @@ Two spikes ran in Windows Sandbox on Windows 11 24H2 (build 26100), with a test 
 - **Logs:**
   - **Debug entries:** an action ran from the command, by its feature and action IDs; a request was refused, and why.
   - **Never** profile names, app names or app IDs, paths, or which program asked.
-  - **Warnings:** a request that isn't valid, and a pipe that stops working; in the settings app's log, an entry that couldn't be written.
+  - **Warnings:** a request that isn't valid, and a pipe that stops working; in the settings app's log, entries that couldn't be written, by the kind of error and its code, without paths, since entries are named for profiles and apps.
 - **Network:** none. `PRIVACY.md` gets a line on Launcher Actions.
 - **Rights:** the command runs with the rights it was started with, and the entries never ask for admin rights. The host runs each action with its own rights. Turning the feature off stops the pipe and deletes the entries.
 
@@ -237,7 +244,7 @@ Two spikes ran in Windows Sandbox on Windows 11 24H2 (build 26100), with a test 
 ## Accessibility and localization
 
 - **Names** in Start and on the page are in PC Companion's language. Translations can change the separator and the order, and right-to-left languages are laid out right to left.
-- **Keyboard and screen readers:** the page's cards work as on the other pages. **Copy command** is named "Copy command for <action>", and announces that the command was copied.
+- **Keyboard and screen readers:** the page's cards work as on the other pages. **Copy command** is named "Copy command for <action>", and "Copied the command for <action>." is shown below the list and announced.
 - **Strings** are translated like the other pages', marked "Needs native review."
 
 ## Testing
@@ -251,7 +258,7 @@ Two spikes ran in Windows Sandbox on Windows 11 24H2 (build 26100), with a test 
   - **the settings:** defaults, the spec's example, and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/LauncherActions.ps1`), with a test network profile and test windows:
   - **the entries:** turning the feature on writes them, with their names, arguments, description, icon and mark; switching a feature off deletes its entries; renaming the profile renames its entry; in Arabic, they're named in Arabic; turning the feature off deletes the folder;
-  - **the command:** using the test profile changes the proxy settings and exits with 0; an unknown profile exits with 1 and shows the notification; wrong arguments exit with 2; with the feature off, it exits with 3; with no host running, it starts the host and runs; a low-integrity copy is refused, and a medium-integrity copy reaches the host, which runs as administrator in the Sandbox; the time from start to exit is logged;
+  - **the command:** using the test profile switches to it and exits with 0, also with its IDs in other case; an unknown profile exits with 1, and the host logs why without the name; wrong arguments exit with 2; with the feature off, it exits with 3; with no host running, it starts the host and runs; a test client labeled low integrity can't open the pipe, one labeled medium reaches the host, which runs as administrator in the Sandbox, and a request that isn't one is answered invalid; the time from start to exit is in the report;
   - **Start:** the Windows key, an entry's name and Enter run its action;
   - **the front:** End App's chooser comes to the front from Start and from the Run box, and Esc ends it;
   - **the page** in English and Arabic, light and dark, with screenshots, and the App group's layout checks;

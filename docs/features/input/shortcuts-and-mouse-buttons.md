@@ -81,7 +81,7 @@ public interface IHostActions
 ```
 
 - **A feature that offers actions** implements `IFeatureActions`, as it does `IHostMenuItems`. `Target` is a profile's name or a Drop-down app's app ID or program, read by the feature that offers the action.
-- **The host** gives `IHostActions` to this feature, the only one that takes it. So modules still reference only Core, Platform.Windows and Localization; see [Projects](../../architecture/features.md#projects).
+- **The host** gives `IHostActions` to this feature and to [Launcher Actions](launcher-actions.md), which runs the same actions from Start and a command, except those on the window in front. So modules still reference only Core, Platform.Windows and Localization; see [Projects](../../architecture/features.md#projects).
 - **The settings app** lists the actions from each feature's catalog entry: an `Actions` function reads the feature's section and returns its actions with their names, such as "Use Office". A feature without one offers none.
 - **Failures:** a feature whose `CanRun` or `Run` fails is stopped, like one whose menu choice fails.
 - **The front:** Windows lets a process bring a window to the front right after it got a shortcut (`WM_HOTKEY`), so actions take the front as after their feature's own shortcut. After a mouse button, see [The unassigned key](#the-unassigned-key).
