@@ -5436,4 +5436,456 @@
     <value>এটি এই পিসিতে এবং {0}-এ বদলেছে, তাই দুটি সংস্করণই রাখা হয়েছে: আপনারটি পাশে {1} নামে। দেখতে নির্বাচন করুন।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="RemoteFoldersDescription" xml:space="preserve">
+    <value>ফাইল এক্সপ্লোরার থেকে আপনার SFTP সার্ভারের ফাইলগুলো খুলুন, যেন সেগুলো এই পিসিতেই আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddServer" xml:space="preserve">
+    <value>সার্ভার যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddTitle" xml:space="preserve">
+    <value>একটি সার্ভার যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEditTitle" xml:space="preserve">
+    <value>সার্ভার সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgainTitle" xml:space="preserve">
+    <value>আবার সাইন ইন করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameHeader" xml:space="preserve">
+    <value>নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNamePlaceholder" xml:space="preserve">
+    <value>ফাইল এক্সপ্লোরারে দেখানো হয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameMissing" xml:space="preserve">
+    <value>একটি নাম লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameTooLong" xml:space="preserve">
+    <value>সর্বোচ্চ {0}টি অক্ষর ব্যবহার করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInvalid" xml:space="preserve">
+    <value>Windows ফোল্ডারের নাম হিসেবে এটি অনুমতি দেয় না। : * ? এর মতো অক্ষর বাদ দিন, এবং শেষে বিন্দু বা স্পেস রাখবেন না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNameInUse" xml:space="preserve">
+    <value>অন্য একটি সার্ভারের এই নাম আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressHeader" xml:space="preserve">
+    <value>ঠিকানা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersAddressInvalid" xml:space="preserve">
+    <value>একটি হোস্ট নাম বা IP ঠিকানা লিখুন, যেমন nas.example.lan বা 192.168.1.10।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortHeader" xml:space="preserve">
+    <value>পোর্ট</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPortInvalid" xml:space="preserve">
+    <value>1 থেকে 65535 পর্যন্ত একটি সংখ্যা লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersUserNameHeader" xml:space="preserve">
+    <value>ব্যবহারকারীর নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHeader" xml:space="preserve">
+    <value>যা দিয়ে সাইন ইন করবেন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInPassword" xml:space="preserve">
+    <value>পাসওয়ার্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInKey" xml:space="preserve">
+    <value>SSH কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPasswordHeader" xml:space="preserve">
+    <value>পাসওয়ার্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileHeader" xml:space="preserve">
+    <value>কী ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPassphraseHeader" xml:space="preserve">
+    <value>পাসফ্রেজ, যদি কী-তে থাকে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeepSecretPlaceholder" xml:space="preserve">
+    <value>সংরক্ষিতটি রাখতে ফাঁকা রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersBrowseKeyFileName" xml:space="preserve">
+    <value>কী ফাইল ব্রাউজ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogTitle" xml:space="preserve">
+    <value>আপনার SSH কী ফাইল বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileDialogFilter" xml:space="preserve">
+    <value>সব ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyFileNotFound" xml:space="preserve">
+    <value>কী ফাইলটি সেখানে নেই। এর পুরো পাথ লিখুন, অথবা «ব্রাউজ করুন» নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnect" xml:space="preserve">
+    <value>সংযোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnecting" xml:space="preserve">
+    <value>সংযোগ করা হচ্ছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEnterDetailsHint" xml:space="preserve">
+    <value>সার্ভারের ঠিকানা, পোর্ট ও ব্যবহারকারীর নাম লিখুন, তারপর «সংযোগ করুন» নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCheckKeyHint" xml:space="preserve">
+    <value>নিচে সার্ভারের কী যাচাই করুন। «আমি এই কী যাচাই করেছি» নির্বাচন করলেই PC Companion সাইন ইন করবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInHint" xml:space="preserve">
+    <value>কীভাবে সাইন ইন করবেন তা দিন, তারপর «সংযোগ করুন» নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectHint" xml:space="preserve">
+    <value>সংরক্ষণের আগে এই বিবরণ যাচাই করতে «সংযোগ করুন» নির্বাচন করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectUnreachable" xml:space="preserve">
+    <value>সার্ভারে পৌঁছানো যাচ্ছে না। ঠিকানা ও পোর্ট যাচাই করুন, এবং সার্ভারটি চালু আছে ও SSH অনুমতি দেয় কি না দেখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectSignInFailed" xml:space="preserve">
+    <value>সার্ভার ব্যবহারকারীর নাম, পাসওয়ার্ড বা কী প্রত্যাখ্যান করেছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyFile" xml:space="preserve">
+    <value>কী ফাইলটি পড়া যাচ্ছে না, অথবা পাসফ্রেজ ভুল। OpenSSH ও PuTTY ফরম্যাটের কী কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectPermissionDenied" xml:space="preserve">
+    <value>সার্ভার এই ফোল্ডার পড়ার অনুমতি দেয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectFailed" xml:space="preserve">
+    <value>সার্ভারের সাথে সংযোগ করা যায়নি।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectNoAnswer" xml:space="preserve">
+    <value>রিমোট ফোল্ডার সাড়া দেয়নি। PC Companion চলছে কি না নিশ্চিত করুন, এবং একটু পরে আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedNew" xml:space="preserve">
+    <value>আপনি যাচাই করার পর সার্ভারের কী বদলে গেছে। নিচে নতুন কী যাচাই করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConnectKeyChangedEdit" xml:space="preserve">
+    <value>সার্ভারের কী বদলে গেছে। এই ডায়ালগ বন্ধ করুন, আর কারণ জানলে পৃষ্ঠায় «নতুন কী বিশ্বাস করুন» ব্যবহার করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyHeader" xml:space="preserve">
+    <value>সার্ভারের কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyExplanation" xml:space="preserve">
+    <value>এগোনোর আগে নিশ্চিত হোন যে এটি আপনার সার্ভারের কী: সার্ভারের অ্যাডমিনিস্ট্রেটরকে জিজ্ঞেস করুন, অথবা সার্ভারের কী ফাইলে ssh-keygen -lf চালান, যেমন /etc/ssh/ssh_host_ed25519_key.pub। কেউ এই পিসি ও সার্ভারের মাঝখানে থাকলে কী আলাদা হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChecked" xml:space="preserve">
+    <value>আমি এই কী যাচাই করেছি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderHeader" xml:space="preserve">
+    <value>সার্ভারের ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoteFolderPlaceholder" xml:space="preserve">
+    <value>আপনার হোম ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotFound" xml:space="preserve">
+    <value>এই ফোল্ডারটি সার্ভারে নেই, অথবা এটি ফোল্ডার নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTurnOnToConnect" xml:space="preserve">
+    <value>সার্ভারের সাথে সংযোগ করতে রিমোট ফোল্ডার চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSave" xml:space="preserve">
+    <value>সংরক্ষণ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCancel" xml:space="preserve">
+    <value>বাতিল করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotNtfs" xml:space="preserve">
+    <value>আপনার ব্যবহারকারী ফোল্ডার NTFS ড্রাইভে নেই, যা এই ফোল্ডারগুলোর জন্য Windows-এর দরকার, তাই কোনো সার্ভার যোগ করা যাবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotRunning" xml:space="preserve">
+    <value>রিমোট ফোল্ডার চলছে না, তাই শুধু অনলাইনে থাকা ফাইল খোলা যাবে না। PC Companion এটি আবার চালু করে; এই বার্তা থেকে গেলে PC Companion চলছে কি না নিশ্চিত করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersHeader" xml:space="preserve">
+    <value>সার্ভার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServersDescription" xml:space="preserve">
+    <value>প্রতিটি সার্ভার ফাইল এক্সপ্লোরারের নেভিগেশন পেনে একটি ফোল্ডার পায়। কোনো ফাইল খুললে সেটি ডাউনলোড হয়, আর আপনার পরিবর্তনগুলো সার্ভারে ফিরে যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoServers" xml:space="preserve">
+    <value>এখনো কোনো সার্ভার নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerSummary" xml:space="preserve">
+    <value>{1}-এ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersServerAccessibleName" xml:space="preserve">
+    <value>{0}, {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolder" xml:space="preserve">
+    <value>ফোল্ডার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenFolderName" xml:space="preserve">
+    <value>{0}-এর ফোল্ডার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNow" xml:space="preserve">
+    <value>এখনই সিঙ্ক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSyncNowName" xml:space="preserve">
+    <value>{0} এখনই সিঙ্ক করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersMoreName" xml:space="preserve">
+    <value>{0}-এর জন্য আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersEdit" xml:space="preserve">
+    <value>সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemove" xml:space="preserve">
+    <value>সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateStopped" xml:space="preserve">
+    <value>চলছে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersStateNotUsable" xml:space="preserve">
+    <value>ব্যবহার করা যাবে না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotUsableProblem" xml:space="preserve">
+    <value>PC Companion-এর এই সংস্করণ এই সার্ভারের সেটিংস ব্যবহার করতে পারে না, তাই এর ফোল্ডার সংযুক্ত নয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersLastTried" xml:space="preserve">
+    <value>{0}, শেষ চেষ্টা {1}-এ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInFailedProblem" xml:space="preserve">
+    <value>সার্ভার পাসওয়ার্ড, কী বা পাসফ্রেজ প্রত্যাখ্যান করেছে। PC Companion নিজে থেকে আবার চেষ্টা করে না, যাতে সার্ভার আপনার অ্যাকাউন্ট লক না করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSignInAgain" xml:space="preserve">
+    <value>আবার সাইন ইন করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyChangedProblem" xml:space="preserve">
+    <value>সার্ভারের কী বদলে গেছে, তাই এতে কিছু পাঠানো হয় না। সার্ভারটি হয়তো আবার ইনস্টল করা হয়েছে, অথবা কেউ এই পিসি ও সার্ভারের মাঝখানে থাকতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOldKey" xml:space="preserve">
+    <value>আপনার যাচাই করা কী: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNewKey" xml:space="preserve">
+    <value>এখন দেখানো কী: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustKey" xml:space="preserve">
+    <value>নতুন কী বিশ্বাস করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustTitle" xml:space="preserve">
+    <value>{0}-এর নতুন কী বিশ্বাস করবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersTrustMessage" xml:space="preserve">
+    <value>কী কেন বদলেছে তা জানলেই কেবল এটি বিশ্বাস করুন, যেমন সার্ভার আবার ইনস্টল করার পরে। নইলে আগে সার্ভারের অ্যাডমিনিস্ট্রেটরকে জিজ্ঞেস করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersKeyNotShownNow" xml:space="preserve">
+    <value>সার্ভার এখন সেই কী দেখাচ্ছে না, তাই কিছু বদলানো হয়নি। একটু পরে আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoSafeAlgorithmProblem" xml:space="preserve">
+    <value>সার্ভার শুধু এমন অ্যালগরিদম দেয় যা আর নিরাপদ নয়, যেমন SHA-1 বা CBC সাইফার। সংযোগ করতে এর SSH সেটিংস আপডেট করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderOnPcHeader" xml:space="preserve">
+    <value>এই পিসির ফোল্ডার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsHeader" xml:space="preserve">
+    <value>দ্বন্দ্ব</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersConflictsDescription" xml:space="preserve">
+    <value>এই ফাইলগুলো সার্ভার ও এই পিসি দুই জায়গাতেই বদলেছে, তাই দুটি সংস্করণই রাখা হয়েছে। আপনি ফোল্ডারটি না খোলা পর্যন্ত এগুলো তালিকায় থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNotMadeHeader" xml:space="preserve">
+    <value>যে পরিবর্তনগুলো করা যায়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedDelete" xml:space="preserve">
+    <value>{0} মোছা হয়নি: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersSkippedRename" xml:space="preserve">
+    <value>{0}-এর নাম বদলে {1} করা হয়নি: {2}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFailedUpload" xml:space="preserve">
+    <value>{0} আপলোড করা হয়নি: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonUnreachable" xml:space="preserve">
+    <value>সার্ভারে পৌঁছানো যায়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonKeyChanged" xml:space="preserve">
+    <value>সার্ভারের কী বদলে গেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonSignInFailed" xml:space="preserve">
+    <value>সাইন-ইন ব্যর্থ হয়েছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonNotFound" xml:space="preserve">
+    <value>এটি আর সার্ভারে নেই</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonPermissionDenied" xml:space="preserve">
+    <value>সার্ভার এর অনুমতি দেয় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersReasonFailed" xml:space="preserve">
+    <value>সার্ভার প্রত্যাখ্যান করেছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenHeader" xml:space="preserve">
+    <value>যে এন্ট্রিগুলো দেখানো যায় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenLine" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenInvalidName" xml:space="preserve">
+    <value>যে নাম Windows অনুমতি দেয় না</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooLong" xml:space="preserve">
+    <value>অতিরিক্ত লম্বা নাম বা পাথ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenNotUtf8" xml:space="preserve">
+    <value>যে নাম বৈধ UTF-8 নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenSameNameOtherCase" xml:space="preserve">
+    <value>যে নাম অন্য একটি থেকে শুধু বড়-ছোট হাতের অক্ষরে আলাদা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenOwnTemporaryFile" xml:space="preserve">
+    <value>PC Companion-এর অস্থায়ী ফাইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersHiddenTooMany" xml:space="preserve">
+    <value>কোনো ফোল্ডারের প্রথম ১,০০,০০০টির পরের এন্ট্রি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersWhereHeader" xml:space="preserve">
+    <value>ফোল্ডারগুলো কোথায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOpenRemoteFolders" xml:space="preserve">
+    <value>ফোল্ডার খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersOffNote" xml:space="preserve">
+    <value>রিমোট ফোল্ডার বন্ধ থাকলে বা PC Companion না চললে শুধু অনলাইনে থাকা ফাইল খোলা যায় না। এই পিসির ফাইলগুলো যথারীতি খোলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersPermissions" xml:space="preserve">
+    <value>শুধু আপনার যোগ করা সার্ভারগুলোর সাথে SSH দিয়ে সংযোগ করে, এবং প্রতিটি সার্ভারের কী আপনার নিশ্চিত করা কী-এর সাথে মিলিয়ে দেখে। কোনো সার্ভারে শুধু আপনার সাইন-ইন এবং এর ফোল্ডারে আপনার করা ফাইল ও পরিবর্তন পাঠায়। পাসওয়ার্ড ও পাসফ্রেজ শুধু এই পিসির জন্য Windows ক্রেডেনশিয়াল ম্যানেজারে রাখা হয়; কী ফাইল শুধু পড়া হয়। সার্ভারের ঠিকানা, ব্যবহারকারীর নাম বা ফাইলের নাম লগ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveTitle" xml:space="preserve">
+    <value>{0} সরিয়ে দেবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveMessage" xml:space="preserve">
+    <value>এর ফোল্ডার সার্ভার থেকে বিচ্ছিন্ন হবে: শুধু অনলাইনে থাকা ফাইলগুলো চলে যাবে, আর এই পিসির ফাইলগুলো একটি সাধারণ ফোল্ডারে থাকবে। এর পাসওয়ার্ড বা পাসফ্রেজ মুছে ফেলা হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_one" xml:space="preserve">
+    <value>{0}টি পরিবর্তন এখনো সার্ভারে পৌঁছায়নি। এটি এই পিসির ফোল্ডারে থাকবে, কিন্তু আপলোড হবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveChangesWaiting_other" xml:space="preserve">
+    <value>{0}টি পরিবর্তন এখনো সার্ভারে পৌঁছায়নি। এগুলো এই পিসির ফোল্ডারে থাকবে, কিন্তু আপলোড হবে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoveAnyway" xml:space="preserve">
+    <value>তবুও সরিয়ে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersRemoved" xml:space="preserve">
+    <value>{0} সরিয়ে দেওয়া হয়েছে। এই পিসিতে এর ফাইলগুলো এখন একটি সাধারণ ফোল্ডারে আছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersCredentialFailed" xml:space="preserve">
+    <value>Windows ক্রেডেনশিয়াল ম্যানেজার পাসওয়ার্ড সংরক্ষণ করেনি, তাই কিছুই সংরক্ষণ করা হয়নি। আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersNoFolderName" xml:space="preserve">
+    <value>Remote Folders-এ এই সার্ভারের জন্য কোনো খালি ফোল্ডারের নাম নেই। অন্য একটি নাম বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="RemoteFoldersFolderNotThere" xml:space="preserve">
+    <value>ফোল্ডারটি আর নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

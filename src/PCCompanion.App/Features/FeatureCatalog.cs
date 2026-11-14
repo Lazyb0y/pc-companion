@@ -18,6 +18,7 @@ using PCCompanion.App.Features.LockKeys;
 using PCCompanion.App.Features.MiddleClickPaste;
 using PCCompanion.App.Features.MinimizeToTray;
 using PCCompanion.App.Features.NetworkProfiles;
+using PCCompanion.App.Features.RemoteFolders;
 using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
@@ -33,6 +34,7 @@ using PCCompanion.Modules.Display.DisplayProfiles;
 using PCCompanion.Modules.Files;
 using PCCompanion.Modules.Files.DriveActions;
 using PCCompanion.Modules.Files.FolderRules;
+using PCCompanion.Modules.Files.RemoteFolders;
 using PCCompanion.Modules.Input;
 using PCCompanion.Modules.Input.HotCorners;
 using PCCompanion.Modules.Input.InputLanguagePerApp;
@@ -126,6 +128,7 @@ public static class FeatureCatalog
         [
             new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage), DrawnIcon: "folder-rules"),
             new(DriveActionsFeature.Definition, DriveActionsFeature.CurrentSupport, typeof(DriveActionsPage), DrawnIcon: "drive-actions"),
+            new(RemoteFoldersFeature.Definition, RemoteFoldersFeature.CurrentSupport, typeof(RemoteFoldersPage)),
         ]),
         new(DisplayModule.Id, "ModuleDisplayName",
         [
