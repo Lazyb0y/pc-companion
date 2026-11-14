@@ -304,6 +304,20 @@ public sealed class ServerListingsTests : IDisposable
     }
 
     [Fact]
+    public async Task AKeptFileThatChangedOnTheServerIsUpdatedAndStaysKept()
+    {
+        string a = System.IO.Path.Join(Root, "a.txt");
+        _pc.AddPlaceholder(a, ItemIdentity.Of("", "a.txt", false, 1, DateTime.UnixEpoch), onlineOnly: false);
+        _pc.Pin(a, PinState.Pinned);
+
+        await _listings.HandleAsync(RootRequest());
+
+        Assert.Equal(3, ItemIdentity.FromBytes([.. _pc.Local[a].State!.Identity])!.Size);
+        Assert.False(_pc.Local[a].State!.IsDownloaded);
+        Assert.Equal(PinState.Pinned, _pc.Local[a].State!.Pin);
+    }
+
+    [Fact]
     public async Task FilesDeletedOnTheServerLeaveThePcUnlessTheyHaveChanges()
     {
         string online = System.IO.Path.Join(Root, "online.txt");

@@ -24,6 +24,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     private readonly ILogger _logger;
     private readonly int _number;
     private readonly ChangeJournal _journal;
+    private readonly TimeProvider _time;
+    private ITimer? _refreshKept;
     private IDisposable? _connection;
     private IDisposable? _watch;
     private RootPaths? _paths;
@@ -36,6 +38,7 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
         _iconResource = iconResource;
         _sync = sync;
         _pc = pc;
+        _time = time;
         _connections = connections;
         _logger = logger;
         _number = number;
@@ -67,6 +70,9 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
 
     public ServerChanges Changes { get; }
 
+    /// <summary>Always keep on this device and Free up space; there once the folder is started.</summary>
+    public ServerKeeping? Keeping { get; private set; }
+
     /// <summary>The server's state, and when it's tried again.</summary>
     public ConnectionState State => _connections.State;
 
@@ -79,10 +85,47 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
         _sync.Register(new SyncRootRegistration(Id, _server.Folder, _server.Name, _iconResource));
         _connection = _sync.Connect(_server.Folder, this, exception => LogRequestFailed(_logger, _number, exception));
 
+        var keeping = new ServerKeeping(_paths, _pc, Listings, _connections, _time, _logger, _number);
+        Keeping = keeping;
+
         // Changes made while the provider wasn't running are found first, then the watch adds new ones.
-        _watch = _pc.Watch(_server.Folder, Uploads.Changed, () => _ = Task.Run(Uploads.FindChanges));
+        _watch = _pc.Watch(
+            _server.Folder,
+            path =>
+            {
+                Uploads.Changed(path);
+                keeping.Changed(path);
+            },
+            () => _ = Task.Run(Uploads.FindChanges));
         _uploading = new CancellationTokenSource();
         var stop = _uploading.Token;
+        _ = Task.Run(
+            async () =>
+            {
+                try
+                {
+                    keeping.FindPinned(keptFoldersOnly: false);
+                    await keeping.RunAsync(stop).ConfigureAwait(false);
+                }
+                catch (Exception exception)
+                {
+                    LogUploadsStopped(_logger, _number, exception);
+                }
+            },
+            CancellationToken.None);
+
+        // Kept folders are listed every 10 minutes while the server can be reached.
+        _refreshKept = _time.CreateTimer(
+            _ =>
+            {
+                if (_connections.State.FailFast() is null)
+                {
+                    keeping.FindPinned(keptFoldersOnly: true);
+                }
+            },
+            null,
+            ServerKeeping.RefreshEvery,
+            ServerKeeping.RefreshEvery);
         _ = Task.Run(
             async () =>
             {
@@ -123,6 +166,8 @@ public sealed partial class ServerFolder : ICloudFileRequests, IDisposable
     /// <summary>Disconnects; the folder stays registered.</summary>
     public void Dispose()
     {
+        _refreshKept?.Dispose();
+        _refreshKept = null;
         _uploading?.Cancel();
         _uploading?.Dispose();
         _uploading = null;

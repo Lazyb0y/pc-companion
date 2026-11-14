@@ -171,6 +171,19 @@ public sealed class ItemIdentityTests
         Assert.Throws<InvalidOperationException>(() => new ItemIdentity(longest + "a", false, 1, When).ToBytes());
     }
 
+    [Fact]
+    public void ALinkOnTheServerIsKeptInTheIdentity()
+    {
+        var link = ItemIdentity.Of("docs", "shared", isDirectory: true, 0, When) with { IsLink = true };
+        var folder = ItemIdentity.Of("docs", "shared", isDirectory: true, 0, When);
+
+        Assert.Equal(link, ItemIdentity.FromBytes(link.ToBytes()));
+        Assert.True(ItemIdentity.FromBytes(link.ToBytes())!.IsLink);
+        Assert.False(ItemIdentity.FromBytes(folder.ToBytes())!.IsLink);
+        Assert.Equal(3, link.ToBytes()[1]);
+        Assert.Equal(1, folder.ToBytes()[1]);
+    }
+
     [Theory]
     [InlineData(new byte[0])]
     [InlineData(new byte[] { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97 })]

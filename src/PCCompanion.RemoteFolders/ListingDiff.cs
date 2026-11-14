@@ -61,7 +61,7 @@ public static class ListingDiff
         var onServer = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var entry in selection.Shown)
         {
-            var identity = ItemIdentity.Of(relativeFolder, entry.Name, entry.IsDirectory, entry.Size, entry.LastWriteTimeUtc);
+            var identity = ItemIdentity.Of(relativeFolder, entry.Name, entry.IsDirectory, entry.Size, entry.LastWriteTimeUtc) with { IsLink = entry.IsLink };
             if (!ItemIdentity.Fits(identity.RelativePath))
             {
                 hidden[HiddenReason.TooLong] = hidden.GetValueOrDefault(HiddenReason.TooLong) + 1;
