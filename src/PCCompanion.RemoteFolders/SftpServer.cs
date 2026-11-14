@@ -122,7 +122,28 @@ public sealed class SftpServer : IRemoteServer
                 throw new RemoteServerException(RemoteError.KeyNotTrusted, "The server's key isn't the one the user confirmed.", exception) { PresentedKey = presented };
             }
 
-            throw Map(exception);
+            var failure = Map(exception);
+            if (presented is null && failure.Error == RemoteError.NoSafeAlgorithm && await OfferedKeyAsync(signIn, cancellation).ConfigureAwait(false) is { } offered)
+            {
+                throw new RemoteServerException(RemoteError.KeyNotTrusted, "The server no longer offers a key of the confirmed type.", exception) { PresentedKey = offered };
+            }
+
+            throw failure;
+        }
+    }
+
+    // A server that no longer offers the confirmed key's type, as after it was reinstalled with
+    // other keys, presents no key when it's asked for that type only: its key changed, and the key
+    // it offers now is the one the user may trust. Null when it offers no key PC Companion allows.
+    private static async Task<ServerKey?> OfferedKeyAsync(SftpSignIn signIn, CancellationToken cancellation)
+    {
+        try
+        {
+            return await ReadKeyAsync(signIn.Host, signIn.Port, cancellation).ConfigureAwait(false);
+        }
+        catch (RemoteServerException)
+        {
+            return null;
         }
     }
 
