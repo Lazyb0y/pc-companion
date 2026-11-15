@@ -363,6 +363,22 @@ public sealed class UploadTests : IDisposable
     }
 
     [Fact]
+    public async Task ARenamedFolderLearnsItsNewPathFromTheWorker()
+    {
+        _pc.AddPlaceholder(Local("papers"), ItemIdentity.Of("", "docs", true, 0, default));
+        using var stop = new CancellationTokenSource();
+        var worker = _uploads.RunAsync(stop.Token);
+
+        _uploads.Changed(Local("papers"));
+        Assert.Equal(1, _uploads.Waiting);
+
+        await AdvanceUntilAsync(() => ItemIdentity.FromBytes([.. _pc.Read(Local("papers"))!.Identity])!.RelativePath == "papers");
+        await WaitUntilAsync(() => _uploads.Waiting == 0);
+        await stop.CancelAsync();
+        await worker.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
     public async Task TheWorkerUploadsAChangeOnceItHasBeenQuiet()
     {
         _pc.AddNewFile(Local("notes.txt"), "from the PC");
