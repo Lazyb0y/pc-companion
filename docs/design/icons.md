@@ -72,6 +72,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Network Profiles | A Wi-Fi symbol | An orange bookmark | Sky |
 | Folder Rules | A yellow folder | A blue funnel | Yellow, with an app blue funnel |
 | Drive Actions | A USB stick | An orange bolt | Green |
+| Remote Folders | A server, two units with white lights | A yellow folder, at the bottom right | Sky |
 | Display Profiles | A monitor | An orange bookmark | App blue |
 
 ### Colors

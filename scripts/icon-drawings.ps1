@@ -834,4 +834,32 @@ foreach ($icon in $dynamicWallpaper) {
     Write-Drawing "dynamic-wallpaper-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
+# Remote Folders, in sky: a server, two stacked units, the upper one in the main tone and the
+# lower one in the deep tone, each with a white light, the upper one also with a white slot, and a
+# folder at its bottom right in yellow, as folders are in File Explorer: the server's files in a
+# folder on the PC. Back is the folder back's outline. The one-color version cuts the lights and
+# the slot out, keeps the folder's back and front apart with a cut Cut wide, and cuts Cut wide
+# round the folder; the units are already apart.
+$remoteFolders = @(
+    @{ Size = 32; Units = @(@(1, 3, 30, 12, 2.5), @(1, 17, 30, 12, 2.5)); Lights = @(@(6, 9, 1.7), @(6, 23, 1.7)); Slot = 10, 8, 7, 2, 1
+        Back = 'M15 19.5A1.5 1.5 0 0 1 16.5 18H20.5L22.5 20H29.5A1.5 1.5 0 0 1 31 21.5V24H15Z'; Front = 15, 22, 16, 9, 1.5; Cut = 1.2 }
+    @{ Size = 20; Units = @(@(2, 3, 16, 6, 1.5), @(2, 11, 16, 6, 1.5)); Lights = @(@(4.9, 6, 1.1), @(4.9, 14, 1.1)); Slot = 7, 5.3, 4, 1.4, 0.7
+        Back = 'M9 11A1 1 0 0 1 10 10H12.5L13.5 11H17A1 1 0 0 1 18 12V14H9Z'; Front = 9, 12.5, 9, 5.5, 1; Cut = 1 }
+)
+foreach ($icon in $remoteFolders) {
+    $lights = @($icon.Lights | ForEach-Object { Get-EllipsePath $_[0] $_[1] $_[2] $_[2] })
+    $body = @((Get-Rect $icon.Units[0] ' fill="url(#sky-main)"'), (Get-Rect $icon.Units[1] ' fill="url(#sky-deep)"')) +
+        @($lights | ForEach-Object { "<path fill=`"$white`" d=`"$_`"/>" }) + @(Get-Rect $icon.Slot " fill=`"$white`"") +
+        @("<path fill=`"url(#yellow-back)`" d=`"$($icon.Back)`"/>", (Get-Rect $icon.Front ' fill="url(#yellow)"'))
+    Write-Drawing "remote-folders-$($icon.Size)" $icon.Size (@(Get-Gradient 'sky-main') + @(Get-Gradient 'sky-deep') + @(Get-Gradient 'yellow-back') + @(Get-Gradient 'yellow')) $body
+    $server = Join-Shape (ConvertTo-Shape (Get-RectPath $icon.Units[0])) (ConvertTo-Shape (Get-RectPath $icon.Units[1]))
+    foreach ($light in $lights) { $server = Remove-Shape $server (ConvertTo-Shape $light) }
+    $server = Remove-Shape $server (ConvertTo-Shape (Get-RectPath $icon.Slot))
+    $front = Get-RectPath $icon.Front
+    $pcFolder = Join-Shape (Remove-Shape (ConvertTo-Shape $icon.Back) (Get-GrownShape $front (2 * $icon.Cut))) (ConvertTo-Shape $front)
+    $server = Remove-Shape $server (Get-GrownShape $front (2 * $icon.Cut))
+    $server = Remove-Shape $server (Get-GrownShape $icon.Back (2 * $icon.Cut))
+    Write-Drawing "remote-folders-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $server $pcFolder))
+}
+
 Write-Host "Wrote the drawings in $folder"

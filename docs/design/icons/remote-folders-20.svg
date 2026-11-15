@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <linearGradient id="sky-main" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#29C3FF"/>
+            <stop offset="1" stop-color="#2764E7"/>
+        </linearGradient>
+        <linearGradient id="sky-deep" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0094F0"/>
+            <stop offset="1" stop-color="#2052CB"/>
+        </linearGradient>
+        <linearGradient id="yellow-back" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFA43D"/>
+            <stop offset="1" stop-color="#E67505"/>
+        </linearGradient>
+        <linearGradient id="yellow" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFE06B"/>
+            <stop offset="1" stop-color="#FAB500"/>
+        </linearGradient>
+    </defs>
+    <rect x="2" y="3" width="16" height="6" rx="1.5" fill="url(#sky-main)"/>
+    <rect x="2" y="11" width="16" height="6" rx="1.5" fill="url(#sky-deep)"/>
+    <path fill="#FFFFFF" d="M3.8 6A1.1 1.1 0 1 0 6 6A1.1 1.1 0 1 0 3.8 6Z"/>
+    <path fill="#FFFFFF" d="M3.8 14A1.1 1.1 0 1 0 6 14A1.1 1.1 0 1 0 3.8 14Z"/>
+    <rect x="7" y="5.3" width="4" height="1.4" rx="0.7" fill="#FFFFFF"/>
+    <path fill="url(#yellow-back)" d="M9 11A1 1 0 0 1 10 10H12.5L13.5 11H17A1 1 0 0 1 18 12V14H9Z"/>
+    <rect x="9" y="12.5" width="9" height="5.5" rx="1" fill="url(#yellow)"/>
+</svg>
