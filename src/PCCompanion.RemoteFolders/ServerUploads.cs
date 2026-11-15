@@ -232,20 +232,26 @@ public sealed partial class ServerUploads(
 
     /// <summary>
     /// Records a change to a file or folder in the server's folder, from the folder's watch or from
-    /// Windows. A folder that's on the server where its placeholder says needs nothing, so it isn't a
-    /// change waiting: Windows and the provider change its placeholder as it's listed, such as every
-    /// time it's listed again. A folder renamed or moved on the PC learns its new path from the worker.
+    /// Windows, unless it needs nothing; see <see cref="NeedsWork"/>.
     /// </summary>
     public void Changed(string path)
     {
-        if (RelativePath(path) is not { Length: > 0 } relative
-            || (pc.Inspect(path) is { IsDirectory: true, State: not null } folder && (folder.Identity is null || folder.Identity.RelativePath == relative)))
+        if (RelativePath(path) is { Length: > 0 } relative && NeedsWork(pc.Inspect(path), relative))
         {
-            return;
+            _queue.Changed(path);
         }
-
-        _queue.Changed(path);
     }
+
+    // A file that stays on the PC, once it's excluded, and a folder that's on the server where its
+    // placeholder says need nothing, so they aren't changes waiting: Windows and the provider change
+    // a folder's placeholder as it's listed, such as every time it's listed again. A folder renamed
+    // or moved on the PC learns its new path from the worker.
+    private static bool NeedsWork(LocalItem? item, string relative) => item switch
+    {
+        { State.Pin: PinState.Excluded } => false,
+        { IsDirectory: true, State: not null } folder => folder.Identity is { } identity && identity.RelativePath != relative,
+        _ => true,
+    };
 
     /// <summary>
     /// Finds the changes made while the provider wasn't running, or that the watch missed: new
