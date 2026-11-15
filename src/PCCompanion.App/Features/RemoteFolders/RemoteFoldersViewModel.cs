@@ -40,8 +40,8 @@ public sealed partial class RemoteServerItem : ObservableObject
         Index = index;
         Server = server;
         Name = server.Name.Trim();
-        Summary = ReadingOrder.Format(RemoteFoldersViewModel.SummaryFormat, RemoteFoldersText.Isolated(server.RemoteFolder), RemoteFoldersText.Isolated(RemoteServerCheck.Address(server)));
-        FolderText = RemoteFoldersText.Isolated(server.Folder);
+        Summary = ReadingOrder.Format(RemoteFoldersViewModel.SummaryFormat, RemoteFoldersText.LeftToRight(server.RemoteFolder), RemoteFoldersText.LeftToRight(RemoteServerCheck.Address(server)));
+        FolderText = RemoteFoldersText.LeftToRight(server.Folder);
         IsUsable = server.IsUsable;
         OpenFolderName = Format(RemoteFoldersViewModel.OpenFolderFormat, Name);
         SyncNowName = Format(RemoteFoldersViewModel.SyncNowFormat, Name);
@@ -225,8 +225,8 @@ public sealed partial class RemoteServerItem : ObservableObject
         PresentedKey = known is { State: RemoteServerState.KeyChanged, PresentedKey: { } presented } ? presented : null;
         CanTrustKey = PresentedKey is not null;
         KeyChange = PresentedKey is { } key && Server.HostKey is { } old
-            ? ReadingOrder.Format(RemoteFoldersViewModel.OldKeyFormat, RemoteFoldersText.Isolated(RemoteServerCheck.KeyText(old))) + Environment.NewLine
-                + Format(RemoteFoldersViewModel.NewKeyFormat, RemoteFoldersText.Isolated(RemoteServerCheck.KeyText(key)))
+            ? ReadingOrder.Format(RemoteFoldersViewModel.OldKeyFormat, RemoteFoldersText.LeftToRight(RemoteServerCheck.KeyText(old))) + Environment.NewLine
+                + Format(RemoteFoldersViewModel.NewKeyFormat, RemoteFoldersText.LeftToRight(RemoteServerCheck.KeyText(key)))
             : string.Empty;
         Conflicts = known is null ? string.Empty : RemoteFoldersText.Conflicts(known.Conflicts);
         NotMade = known is null ? string.Empty : RemoteFoldersText.NotMade(known.Skipped, known.FailedUploads);
@@ -277,7 +277,7 @@ public sealed partial class RemoteFoldersViewModel : FeatureViewModel<RemoteFold
     {
         _logger = logger;
         RootFolder = RemoteServerCheck.RootFolder(_userProfile);
-        RootFolderText = RemoteFoldersText.Isolated(RootFolder);
+        RootFolderText = RemoteFoldersText.LeftToRight(RootFolder);
         IsProfileSupported = IsOnNtfs(_userProfile);
         PropertyChanged += (_, e) =>
         {

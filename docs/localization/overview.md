@@ -29,7 +29,7 @@
 - WinUI text and Windows notifications take a line's direction from its first letter. So in Arabic, a line that starts with a name, path or address in Latin letters, such as "Photos على files.example.com", would read left to right, with its parts in the wrong order. `ReadingOrder.Line` and `ReadingOrder.Format` start such a line with a right-to-left mark (U+200F), which shows as nothing, in right-to-left languages, and leave other languages unchanged.
 - The mark goes on every line shown on its own that's built from a format, and on notifications. A string that can start with a key name, such as "Ctrl + middle click", uses `{app:Localized Key=..., Line=True}` in XAML.
 - Parts put into another line don't need a mark. Screen reader names, shortcuts made only of key names, which read left to right as Windows shows them, file names and logs get none.
-- Windows menus, task dialogs and the notices PC Companion draws take their direction from their right-to-left layout, so they need no mark. Unicode isolates (U+2066 to U+2069) don't set a line's direction in WinUI, and Windows menus draw them as boxes.
+- Windows menus, task dialogs and the notices PC Companion draws take their direction from their right-to-left layout, so they need no mark. Unicode isolates (U+2066 to U+2069) don't work there: WinUI ignores them and Windows menus draw them as boxes. A value that must keep its own order within a line, such as a path, is wrapped in a left-to-right embedding (U+202A to U+202C) instead.
 
 ## Tests
 

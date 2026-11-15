@@ -73,7 +73,7 @@ function Select-SignIn([string] $Choice) {
     return $true
 }
 # The page's texts, without the marks that keep addresses and keys left to right.
-function Get-PageText { @(Get-WindowText | ForEach-Object { $_ -replace "[\u2066\u2069]", '' }) }
+function Get-PageText { @(Get-WindowText | ForEach-Object { $_ -replace "[\u202A\u202C]", '' }) }
 function Get-Servers { @((Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.remoteFolders.servers) }
 function Test-Credential([string] $Target) { [bool] ((cmdkey /list) -match [regex]::Escape($Target)) }
 function Test-RegistryKey([string] $Key) { & reg.exe query $Key 2>$null | Out-Null; $LASTEXITCODE -eq 0 }
