@@ -59,8 +59,12 @@ internal sealed partial class TrayController(SettingsAppLauncher settingsApp, Fe
     /// <summary>Raised when the user chooses the update item that <see cref="ShowUpdate"/> put in the menu.</summary>
     public event EventHandler<UpdateChosenEventArgs>? UpdateChosen;
 
-    /// <summary>Shows a notification from the tray icon. Returns false when Windows refused.</summary>
-    public bool ShowNotification(string title, string text) => _icon?.ShowNotification(title, text) ?? false;
+    /// <summary>
+    /// Shows a notification from the tray icon. Returns false when Windows refused. Windows takes
+    /// each line's direction from its first letter, so the title and text start with the
+    /// language's direction mark, for a title such as a drive's name followed by "is connected".
+    /// </summary>
+    public bool ShowNotification(string title, string text) => _icon?.ShowNotification(ReadingOrder.Line(title), ReadingOrder.Line(text)) ?? false;
 
     /// <param name="window">The host's window, created with <see cref="HostProcess.WindowClassName"/>.</param>
     public void Show(MessageWindow window)
