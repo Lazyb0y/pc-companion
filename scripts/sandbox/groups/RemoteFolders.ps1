@@ -494,6 +494,8 @@ Test-Check 'select Remote Folders in Arabic' (Show-Page 'المجلدات الب
 Start-Sleep -Seconds 2
 Save-Screenshot 'rf-12b-page-arabic-dark'
 Test-Check 'the page is in Arabic' ((Get-PageText) -contains 'الخوادم') ((Get-PageText) -join ' | ')
+$summaries = @(Get-PageText | Where-Object { $_.Contains(' على ') -and $_.Contains('@') })
+Test-Check 'in Arabic, a server''s line starts with a right-to-left mark' ($summaries.Count -gt 0 -and @($summaries | Where-Object { -not $_.StartsWith([string] [char] 0x200F, [StringComparison]::Ordinal) }).Count -eq 0) (($summaries | ForEach-Object { $_.Replace([string] [char] 0x200F, '<RLM>') }) -join ' | ')
 [void] (Close-SettingsApp)
 Set-Look $null 'Light'
 [void] (Open-Page)
