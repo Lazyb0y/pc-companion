@@ -468,7 +468,6 @@ Test-Check 'the host logged the move by number' ($hostLog -match 'Folder Rules f
 # used. Add folder, the switches, moving and deleting a rule and removing a folder save at once,
 # and keyboard focus stays near what changed, though the list is built again.
 function Get-FolderRulesSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.folderRules }
-function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
 
 # A menu item of the settings app, by its name: a folder in the list can have the same name. The
 # condition's name isn't $condition, which in Wait-Until's script block would be Wait-Until's own.
@@ -520,7 +519,7 @@ Start-Sleep -Seconds 1
 Test-Check 'Move down moves the rule' (Invoke-AppMenuItem 'Move down')
 $order = { (@((Get-FolderRulesSettings).folders)[0].rules | ForEach-Object { $_.name }) -join ', ' }
 Test-Check 'the page saves the new order' (Wait-Until { (& $order) -eq 'PDFs, Notes, Pictures, Logs, To the card' } 5) (& $order)
-Test-Check 'focus stays on the rule that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for Pictures' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the rule that moved' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Pictures' } 3) (Get-AppFocusedName)
 
 [void] (Invoke-AppElement 'More options for Notes')
 Start-Sleep -Seconds 1
@@ -528,7 +527,7 @@ Test-Check 'Delete asks first' ((Invoke-AppMenuItem 'Delete') -and (Wait-Until {
 Start-Sleep -Seconds 1
 [void] (Invoke-AppElement 'Delete')
 Test-Check 'the page deletes the rule' (Wait-Until { (& $order) -eq 'PDFs, Pictures, Logs, To the card' } 5) (& $order)
-Test-Check 'focus goes to the rule''s folder' (Wait-Until { (Get-FocusedName) -eq 'More options for Inbox' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the rule''s folder' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Inbox' } 3) (Get-AppFocusedName)
 
 [void] (Invoke-AppElement 'More options for Desktop')
 Start-Sleep -Seconds 1
@@ -536,7 +535,7 @@ Test-Check 'Remove asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until {
 Start-Sleep -Seconds 1
 [void] (Invoke-AppElement 'Remove')
 Test-Check 'the page removes the folder' (Wait-Until { @((Get-FolderRulesSettings).folders).Count -eq 6 } 5) ((Get-FolderRulesSettings).folders.path -join ', ')
-Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-FocusedName) -eq 'More options for FolderRulesAppData' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the folder before it' (Wait-Until { (Get-AppFocusedName) -eq 'More options for FolderRulesAppData' } 3) (Get-AppFocusedName)
 Save-Screenshot '15b-folder-rules-page-changed'
 
 # The rule editor lists the files there that the rule would act on as it's edited, shows problems
@@ -557,7 +556,7 @@ Save-Screenshot '15c-folder-rules-editor'
 Test-Check 'Save the rule' ((Test-AppEnabled 'Save') -and (Invoke-AppElement 'Save'))
 $last = { @(@((Get-FolderRulesSettings).folders)[0].rules) | Select-Object -Last 1 }
 Test-Check 'the page saves the new rule' (Wait-Until { $rule = & $last; ($rule.name -eq 'Test PDFs') -and ((@($rule.extensions) -join ',') -eq 'pdf') -and ($rule.destination -eq $sorted) -and ($rule.action -eq 'Move') } 5) ((& $last) | ConvertTo-Json -Compress -Depth 4)
-Test-Check 'focus goes to the new rule' (Wait-Until { (Get-FocusedName) -eq 'Edit Test PDFs' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the new rule' (Wait-Until { (Get-AppFocusedName) -eq 'Edit Test PDFs' } 3) (Get-AppFocusedName)
 Test-Check 'Edit opens the rule' ((Invoke-AppElement 'Edit Test PDFs') -and (Wait-Until { Find-AppElement 'Edit the rule' } 5) -and ((Get-AppBox 'Name') -eq 'Test PDFs')) (Get-AppBox 'Name')
 [void] (Invoke-AppElement 'Cancel')
 Start-Sleep -Seconds 1
@@ -603,7 +602,7 @@ Test-Check 'the history shows the move' (Wait-Until { Find-AppText "Moved to $so
 
 Test-Check 'Undo puts the file back' ((Invoke-AppElement 'Undo after.pdf') -and (Wait-Until { (Test-Path "$inbox\after.pdf") -and -not (Test-Path "$sorted\pdf\after.pdf") } 10))
 Test-Check 'and the history says so' (Wait-Until { Find-AppText "Moved to $sorted\pdf\after.pdf Put back with Undo." } 10)
-Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-FocusedName) -eq 'Refresh' } 3) (Get-FocusedName)
+Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-AppFocusedName) -eq 'Refresh' } 3) (Get-AppFocusedName)
 Save-Screenshot '15f-folder-rules-history'
 
 Test-Check 'Open Recycle Bin opens it' ((Invoke-AppElement 'Open Recycle Bin') -and (Wait-Until { Find-TopWindow 'Recycle Bin' } 15))

@@ -300,7 +300,6 @@ Test-Check 'the logs hold no drive names, labels or folders' (($hostLog -notmatc
 # has; renaming, When connected, Eject when done, moving and removing an action, and removing a
 # drive save at once, with focus near what changed. Without the host, the page says so.
 function Get-DriveActionsSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.driveActions }
-function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
 
 # An element of the settings app with the name and the control type, such as a menu item or a
 # radio button, since the page has texts with the same names. The condition's name isn't
@@ -398,7 +397,7 @@ Test-Check 'Add adds the chosen disk' ((Invoke-AppElement 'NEWDRIVE (T:)') -and 
 $added = @((Get-DriveActionsSettings).drives)[2]
 Test-Check 'with the ID file the disk has, its label and its serial number''s hash' (($added.id -eq [IO.File]::ReadAllText('T:\.pccompanion-drive')) -and ($added.name -eq 'NEWDRIVE') -and ($added.volumeSerial -eq (Get-SerialHash (Get-VolumeSerial 'T')))) ($added | ConvertTo-Json -Compress -Depth 4)
 Test-Check 'and the page shows it connected' (Wait-Until { Find-AppText 'Connected as T:' } 10)
-Test-Check 'focus goes to the new drive' (Wait-Until { (Get-FocusedName) -eq 'More options for NEWDRIVE' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the new drive' (Wait-Until { (Get-AppFocusedName) -eq 'More options for NEWDRIVE' } 3) (Get-AppFocusedName)
 
 [void] (Invoke-AppButton 'More options for NEWDRIVE')
 Start-Sleep -Seconds 1
@@ -408,7 +407,7 @@ Start-Sleep -Seconds 1
 Test-Check 'a name another drive has is refused' ((Wait-Until { Find-AppText 'Another drive in the list has this name.' } 3) -and -not (Test-AppEnabled 'Rename'))
 [void] (Set-AppBox 'Name' 'Work drive')
 Test-Check 'a new one is saved' ((Invoke-DialogButton 'Rename NEWDRIVE' 'Rename') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].name -eq 'Work drive' } 5))
-Test-Check 'and focus goes back to the drive' (Wait-Until { (Get-FocusedName) -eq 'More options for Work drive' } 3) (Get-FocusedName)
+Test-Check 'and focus goes back to the drive' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Work drive' } 3) (Get-AppFocusedName)
 Test-Check 'When connected saves the choice' ((Select-ListItem 'When Work drive is connected' 'Do nothing') -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].whenConnected -eq 'Nothing' } 5))
 Test-Check 'Eject when done saves the switch' ((Set-Toggle 'Eject Work drive when done' $true) -and (Wait-Until { @((Get-DriveActionsSettings).drives)[2].ejectWhenDone -eq $true } 5))
 
@@ -425,7 +424,7 @@ Test-Check 'a destination outside the drive''s folders is refused' ((Wait-Until 
 Save-Screenshot '15k-drive-actions-editor'
 $newAction = { @(@((Get-DriveActionsSettings).drives)[2].actions)[0] }
 Test-Check 'Save adds the backup' ((Test-AppEnabled 'Save') -and (Invoke-DialogButton 'Add an action' 'Save') -and (Wait-Until { $a = & $newAction; ($a.action -eq 'BackUp') -and ($a.destination -eq 'Laptop') -and (@($a.folders)[0] -eq $myDocuments) } 5)) ((& $newAction) | ConvertTo-Json -Compress -Depth 4)
-Test-Check 'focus goes to the new action' (Wait-Until { (Get-FocusedName) -eq 'Edit action 1 of Work drive' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the new action' (Wait-Until { (Get-AppFocusedName) -eq 'Edit action 1 of Work drive' } 3) (Get-AppFocusedName)
 
 Test-Check 'Edit opens an action' ((Invoke-AppButton 'Edit action 1 of Camera cards') -and (Wait-Until { Find-AppDialog 'Edit the action' } 5) -and ((Get-AppBox 'From') -eq 'DCIM')) (Get-AppBox 'From')
 Start-Sleep -Seconds 1
@@ -437,12 +436,12 @@ Test-Check 'and the Windows folder' ((Wait-Until { Find-AppText 'It''s in the Wi
 [void] (Set-AppBox 'To' "$pictures\{year}")
 $cardsImport = { @(@((Get-DriveActionsSettings).drives)[0].actions)[0] }
 Test-Check 'Save saves the import' ((Invoke-DialogButton 'Edit the action' 'Save') -and (Wait-Until { $a = & $cardsImport; ((@($a.extensions) -join ',') -eq 'jpg') -and ($a.destination -eq "$pictures\{year}") } 5)) ((& $cardsImport) | ConvertTo-Json -Compress -Depth 4)
-Test-Check 'and focus goes back to it' (Wait-Until { (Get-FocusedName) -eq 'Edit action 1 of Camera cards' } 3) (Get-FocusedName)
+Test-Check 'and focus goes back to it' (Wait-Until { (Get-AppFocusedName) -eq 'Edit action 1 of Camera cards' } 3) (Get-AppFocusedName)
 
 [void] (Invoke-AppButton 'More options for action 2 of Camera cards')
 Start-Sleep -Seconds 1
 Test-Check 'Move up moves the action' ((Invoke-AppMenuItem 'Move up') -and (Wait-Until { (Get-ActionKinds 0) -eq 'OpenFolder,Import' } 5)) (Get-ActionKinds 0)
-Test-Check 'focus stays on the action that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for action 1 of Camera cards' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the action that moved' (Wait-Until { (Get-AppFocusedName) -eq 'More options for action 1 of Camera cards' } 3) (Get-AppFocusedName)
 [void] (Invoke-AppButton 'More options for action 1 of Camera cards')
 Start-Sleep -Seconds 1
 Test-Check 'removing an action asks first' ((Invoke-AppMenuItem 'Remove') -and (Wait-Until { Find-AppDialog 'Remove this action?' } 5))
@@ -485,7 +484,7 @@ if ($undoRun) { $undoRun.GetCurrentPattern([System.Windows.Automation.InvokePatt
 Test-Check 'Undo of a run asks first' (($null -ne $undoRun) -and (Wait-Until { Find-AppDialog 'Undo the import?' } 5))
 Start-Sleep -Seconds 1
 Test-Check 'and sends the copy to the Recycle Bin' ((Invoke-DialogButton 'Undo the import?' 'Undo') -and (Wait-Until { -not (Test-Path "$importedTo\IMG_0001.JPG") } 15))
-Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-FocusedName) -eq 'Refresh' } 3) (Get-FocusedName)
+Test-Check 'and focus goes to Refresh' (Wait-Until { (Get-AppFocusedName) -eq 'Refresh' } 3) (Get-AppFocusedName)
 Test-Check 'Open Recycle Bin opens it' ((Invoke-AppElement 'Open Recycle Bin') -and (Wait-Until { Find-TopWindow 'Recycle Bin' } 15))
 $recycleBin = Find-TopWindow 'Recycle Bin'
 if ($recycleBin) { $recycleBin.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() }

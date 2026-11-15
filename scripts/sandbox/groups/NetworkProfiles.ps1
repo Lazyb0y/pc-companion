@@ -432,13 +432,12 @@ Test-Check 'the editor shows the profile' (((Get-AppBox 'Name') -eq 'Office') -a
 Start-Sleep -Seconds 2
 Test-Check 'the page saves the edited name' (@((Get-NetworkProfilesSettings).profiles)[1].name -eq 'Office & lab')
 # Keyboard focus stays on the profile an action changed, though the list is rebuilt.
-function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
 Test-Check 'More options opens the profile''s menu' (Invoke-AppElement 'More options for Home')
 Start-Sleep -Seconds 1
 Test-Check 'Move up moves the profile' (Invoke-AppElement 'Move up')
 Start-Sleep -Seconds 2
 Test-Check 'the page saves the new order' ((@((Get-NetworkProfilesSettings).profiles) | ForEach-Object { $_.name }) -join ', ' -eq 'Original settings, Home, Office & lab, Copy') ((@((Get-NetworkProfilesSettings).profiles) | ForEach-Object { $_.name }) -join ', ')
-Test-Check 'focus stays on the profile that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for Home' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the profile that moved' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Home' } 3) (Get-AppFocusedName)
 [void] (Invoke-AppElement 'More options for Copy')
 Start-Sleep -Seconds 1
 Test-Check 'Delete asks first' ((Invoke-AppElement 'Delete') -and (Wait-Until { Find-AppElement 'Delete Copy?' } 5))
@@ -446,7 +445,7 @@ Start-Sleep -Seconds 1
 [void] (Invoke-AppElement 'Delete')
 Start-Sleep -Seconds 2
 Test-Check 'the page deletes the profile' (@((Get-NetworkProfilesSettings).profiles).Count -eq 3)
-Test-Check 'focus goes to the profile before the deleted one' (Wait-Until { (Get-FocusedName) -eq 'More options for Office & lab' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the profile before the deleted one' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Office & lab' } 3) (Get-AppFocusedName)
 
 # Use switches Windows' settings; In use follows them, also when another program changes them.
 $use = Find-AppElement 'Use Office & lab'
@@ -454,12 +453,12 @@ if ($use) { $use.SetFocus() }
 Test-Check 'Use switches to the profile' (Invoke-AppElement 'Use Office & lab')
 Test-Check 'Windows uses the profile''s settings' (Wait-Until { (Get-Proxy) -eq '3|proxy.office.test:8080|*.office.test;10.*;<local>|' } 5) (Get-Proxy)
 Test-Check 'In use moves to the profile' (Wait-Until { -not (Find-AppElement 'Use Office & lab') } 5)
-Test-Check 'focus goes from Use to the profile''s Edit' (Wait-Until { (Get-FocusedName) -eq 'Edit Office & lab' } 3) (Get-FocusedName)
+Test-Check 'focus goes from Use to the profile''s Edit' (Wait-Until { (Get-AppFocusedName) -eq 'Edit Office & lab' } 3) (Get-AppFocusedName)
 Save-Screenshot '14c-network-profiles-in-use'
 [NetworkProfilesCheck]::Write(9, '-', '-', '-')
 Test-Check 'In use follows a change another program makes' (Wait-Until { (-not (Find-AppElement 'Use Home')) -and (Find-AppElement 'Use Office & lab') } 5)
 Start-Sleep -Seconds 1
-Test-Check 'and focus stays where it was' ((Get-FocusedName) -eq 'Edit Office & lab') (Get-FocusedName)
+Test-Check 'and focus stays where it was' ((Get-AppFocusedName) -eq 'Edit Office & lab') (Get-AppFocusedName)
 Test-Check 'Open opens Windows'' Proxy page' ((Invoke-AppElement 'Open') -and (Wait-Until { (Get-Processes 'SystemSettings').Count -gt 0 } 15))
 
 # A change saved in Windows Settings' Proxy page moves In use, as one another program makes does:

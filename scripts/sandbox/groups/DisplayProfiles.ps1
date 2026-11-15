@@ -14,7 +14,6 @@ $remoteNote = "Display profiles aren't available in a remote session"
 
 function Get-DisplayProfilesSettings { (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.displayProfiles }
 function Get-AppLog { (Get-ChildItem $logs -Filter 'app-*.log' -ErrorAction SilentlyContinue | ForEach-Object { Get-Content $_.FullName -Raw }) -join "`n" }
-function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
 
 # The items of each open menu, as screen readers get them: "name" or "name (dimmed)", one menu per string.
 function Get-MenuItems {
@@ -138,7 +137,7 @@ Test-Check 'Save is on for the new name' (Wait-Until { Test-AppEnabled 'Save' } 
 Test-Check 'Save the name' (Invoke-AppElement 'Save')
 Start-Sleep -Seconds 2
 Test-Check 'the page saves the new name and keeps the setup' ((@((Get-DisplayProfilesSettings).profiles)[0].name -eq 'Desk & lamp') -and (@(@((Get-DisplayProfilesSettings).profiles)[0].displays).Count -eq 2))
-Test-Check 'focus stays on the renamed profile' (Wait-Until { (Get-FocusedName) -eq 'More options for Desk & lamp' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the renamed profile' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Desk & lamp' } 3) (Get-AppFocusedName)
 
 # Move and delete.
 Test-Check 'More options opens Presenting''s menu' (Invoke-AppElement 'More options for Presenting')
@@ -147,7 +146,7 @@ Test-Check 'Move up moves the profile' (Invoke-AppElement 'Move up')
 Start-Sleep -Seconds 2
 $order = (@((Get-DisplayProfilesSettings).profiles) | ForEach-Object { $_.name }) -join ', '
 Test-Check 'the page saves the new order' ($order -eq 'Desk & lamp, Presenting, TV & sofa') $order
-Test-Check 'focus stays on the profile that moved' (Wait-Until { (Get-FocusedName) -eq 'More options for Presenting' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the profile that moved' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Presenting' } 3) (Get-AppFocusedName)
 Test-Check 'More options opens TV & sofa''s menu' (Invoke-AppElement 'More options for TV & sofa')
 Start-Sleep -Seconds 1
 Test-Check 'Delete asks first' ((Invoke-AppElement 'Delete') -and (Wait-Until { Find-AppElement 'Delete TV & sofa?' } 5))
@@ -155,7 +154,7 @@ Start-Sleep -Seconds 1
 Test-Check 'confirm Delete' (Invoke-AppElement 'Delete')
 Start-Sleep -Seconds 2
 Test-Check 'the page deletes the profile' (@((Get-DisplayProfilesSettings).profiles).Count -eq 2)
-Test-Check 'focus goes to the profile before the deleted one' (Wait-Until { (Get-FocusedName) -eq 'More options for Presenting' } 3) (Get-FocusedName)
+Test-Check 'focus goes to the profile before the deleted one' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Presenting' } 3) (Get-AppFocusedName)
 
 # The PC Companion icon's menu: the note, and every profile dimmed.
 [void] (Close-SettingsApp)

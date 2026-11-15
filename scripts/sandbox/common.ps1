@@ -187,6 +187,41 @@ function Get-AppWindow {
     return [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
 }
 
+# The name of the element that has the keyboard focus, read with the settings window in front.
+# When the settings app closes while a notification is on the screen, the notification takes the
+# front and the focus, and keeps them while there's no input, as in the Sandbox; no window can take
+# the front from it then. So a notification in front goes to Notification Center first, as its
+# close button sends it, and a queued notification can come next. From another window, such as the
+# desktop, Windows lets this script give the front away only after input, so a press of a key that
+# has no use comes first.
+function Get-AppFocusedName {
+    try {
+        $window = Get-AppWindow
+        if ($window) {
+            $handle = [IntPtr] $window.Current.NativeWindowHandle
+            $dismissButton = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'DismissButton')
+            for ($attempt = 0; $attempt -lt 6 -and [Win32]::GetForegroundWindow() -ne $handle; $attempt++) {
+                $front = [Win32]::GetForegroundWindow()
+                if ([Win32]::WindowClass($front) -eq 'Windows.UI.Core.CoreWindow') {
+                    $dismiss = [System.Windows.Automation.AutomationElement]::FromHandle($front).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $dismissButton)
+                    if ($dismiss) {
+                        Write-Report '[NOTE] A notification had the front, so it went to Notification Center before the keyboard focus was read.'
+                        $dismiss.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+                    }
+                    # The next notification takes a moment to come in, without its button until then.
+                    Start-Sleep -Milliseconds 500
+                }
+                Send-Key 0xE8
+                if ([Win32]::SetForegroundWindow($handle)) { Start-Sleep -Milliseconds 500 }
+            }
+        }
+    }
+    catch {
+        Write-Report "[NOTE] Bringing the settings window to the front failed: $($_.Exception.Message)"
+    }
+    try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' }
+}
+
 function Select-NavigationItem([string] $Name) {
     $window = Get-AppWindow
     if (-not $window) { return $false }

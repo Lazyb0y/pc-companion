@@ -12,8 +12,6 @@
 # The group runs near the end, since it uninstalls PC Companion: just for the user, and then for
 # all users, which also removes a signed-out user's folders.
 
-function Get-FocusedName { try { [System.Windows.Automation.AutomationElement]::FocusedElement.Current.Name } catch { '' } }
-
 # An element of the settings app with the name and the control type, since the page and its
 # dialogs have texts with the same names as buttons.
 function Find-AppTyped([string] $Name, [System.Windows.Automation.ControlType] $Type) {
@@ -47,15 +45,6 @@ function Invoke-DialogButton([string] $Dialog, [string] $Name) {
     return $true
 }
 function Test-ButtonEnabled([string] $Name) { $found = Find-AppTyped $Name ([System.Windows.Automation.ControlType]::Button); ($null -ne $found) -and $found.Current.IsEnabled }
-# Whether the button has the settings app's keyboard focus. Windows keeps a notification on the
-# screen while there's no input, as in the Sandbox, and the notification has the focus then, so the
-# settings window comes to the front first.
-function Test-ButtonFocused([string] $Name) {
-    $window = Get-AppWindow
-    if ($window) { [void] [Win32]::SetForegroundWindow([IntPtr] $window.Current.NativeWindowHandle) }
-    $found = Find-AppTyped $Name ([System.Windows.Automation.ControlType]::Button)
-    ($null -ne $found) -and ($found.Current.HasKeyboardFocus -or (Get-FocusedName) -eq $Name)
-}
 function Set-Password([string] $Value) {
     $window = Get-AppWindow
     if (-not $window) { return $false }
@@ -433,7 +422,7 @@ Test-Check 'the address can''t change' (-not (Find-AppBox 'Address').Current.IsE
 [void] (Set-AppBox 'Name' 'Home')
 Test-Check 'a new name saves without Connect' ((Wait-Until { Test-ButtonEnabled 'Save' } 3) -and (Invoke-AppButton 'Save') -and (Wait-Until { @(Get-Servers)[0].name -eq 'Home' } 5))
 Test-Check 'and the folder keeps its path' (@(Get-Servers)[0].folder -eq $homeServer)
-Test-Check 'focus stays on the server' (Wait-Until { Test-ButtonFocused 'More options for Home' } 3) (Get-FocusedName)
+Test-Check 'focus stays on the server' (Wait-Until { (Get-AppFocusedName) -eq 'More options for Home' } 3) (Get-AppFocusedName)
 
 # A server that no longer offers the confirmed key's type, as after it was set up again with other
 # keys: its key changed too, and its new key is trusted.
@@ -465,7 +454,7 @@ Test-Check 'and its credential' (-not (Test-Credential $credential))
 Test-Check 'and its folder unregistered' (Wait-Until { (Get-SyncRoots).Count -eq 0 } 15) ((Get-SyncRoots) -join ', ')
 Test-Check 'its downloaded files stay' ([IO.File]::ReadAllText($file) -match 'edited on the PC')
 Test-Check 'the page offers the folder' (Wait-Until { Find-AppText 'Home was removed. Its files on this PC are in an ordinary folder now.' } 5)
-Test-Check 'focus goes to Add server' (Wait-Until { Test-ButtonFocused 'Add server' } 3) (Get-FocusedName)
+Test-Check 'focus goes to Add server' (Wait-Until { (Get-AppFocusedName) -eq 'Add server' } 3) (Get-AppFocusedName)
 Save-Screenshot 'rf-10-removed'
 
 # A server with an SSH key file and no passphrase: no credential, the address as its name, and
