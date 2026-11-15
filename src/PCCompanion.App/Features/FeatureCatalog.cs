@@ -128,7 +128,7 @@ public static class FeatureCatalog
         [
             new(FolderRulesFeature.Definition, FolderRulesFeature.CurrentSupport, typeof(FolderRulesPage), DrawnIcon: "folder-rules"),
             new(DriveActionsFeature.Definition, DriveActionsFeature.CurrentSupport, typeof(DriveActionsPage), DrawnIcon: "drive-actions"),
-            new(RemoteFoldersFeature.Definition, RemoteFoldersFeature.CurrentSupport, typeof(RemoteFoldersPage)),
+            new(RemoteFoldersFeature.Definition, RemoteFoldersFeature.CurrentSupport, typeof(RemoteFoldersPage), DrawnIcon: "remote-folders"),
         ]),
         new(DisplayModule.Id, "ModuleDisplayName",
         [
