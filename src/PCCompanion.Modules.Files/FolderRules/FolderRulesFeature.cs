@@ -13,10 +13,13 @@ namespace PCCompanion.Modules.Files.FolderRules;
 /// Moves, copies, renames and sorts files as they arrive in the folders the user chose. See
 /// docs/features/files/folder-rules.md.
 /// </summary>
-public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFolder dataFolder, string pipeName, TimeProvider time, ILogger<FolderRulesFeature> logger) : IFeature
+public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFolder dataFolder, string pipeName, TimeProvider time, ILogger<FolderRulesFeature> logger, TimeSpan? stopTimeout = null) : IFeature
 {
-    // How long the host waits as it exits for the thread to finish the file it's handling.
+    // How long the host waits as it exits for the thread to finish the file it's handling. Tests
+    // wait longer, since a busy PC can take more than a second to stop the thread.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(1);
+
+    private readonly TimeSpan _stopTimeout = stopTimeout ?? StopTimeout;
 
     private readonly HistoryStore _store = new(Path.Join(dataFolder.Path, HistoryStore.FileName));
     private readonly SpecialFolders _places = SpecialFolders.ForCurrentUser(dataFolder.Path);
@@ -107,9 +110,9 @@ public sealed partial class FolderRulesFeature(IFolderRulesSystem system, DataFo
     public void Dispose()
     {
         Stop();
-        if (_stopped is { } stopped && !stopped.Join(StopTimeout))
+        if (_stopped is { } stopped && !stopped.Join(_stopTimeout))
         {
-            LogNotStoppedInTime(logger, StopTimeout.TotalSeconds);
+            LogNotStoppedInTime(logger, _stopTimeout.TotalSeconds);
         }
 
         _stopped = null;

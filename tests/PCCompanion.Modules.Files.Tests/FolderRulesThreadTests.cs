@@ -62,7 +62,9 @@ public sealed class FolderRulesThreadTests : IDisposable
     private void Start(FolderRulesSettings settings)
     {
         _thread = new FolderRulesThread(settings, _system, _store, Places, _time, _drives, _pipeName, _logger);
-        Assert.True(_system.WaitUntil(system => settings.Folders.All(folder => system.IsWatching(folder.Path))));
+
+        // A busy PC can take more than the usual 10 seconds to start the thread.
+        Assert.True(_system.WaitUntil(system => settings.Folders.All(folder => system.IsWatching(folder.Path)), TimeSpan.FromSeconds(30)));
     }
 
     // Moves the clock on until the condition holds, while the thread's timer checks the files.

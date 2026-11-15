@@ -30,7 +30,9 @@ public sealed class FolderRulesFeatureTests : IDisposable
 
     public FolderRulesFeatureTests()
     {
-        _feature = new FolderRulesFeature(_system, new DataFolder(_data.FullPath), "PCCompanion.Tests." + Guid.NewGuid().ToString("N"), new ManualTimeProvider(), _logger);
+        // Disposing waits until the thread has ended, also on a busy PC, so the tests never look
+        // at a thread that's still stopping, or delete the data folder while it writes there.
+        _feature = new FolderRulesFeature(_system, new DataFolder(_data.FullPath), "PCCompanion.Tests." + Guid.NewGuid().ToString("N"), new ManualTimeProvider(), _logger, TimeSpan.FromSeconds(30));
     }
 
     public void Dispose()
