@@ -27,6 +27,7 @@ public sealed class LayeredWindow : IDisposable
     private HWND _handle;
     private HWND _toolTip;
     private string _toolTipText = string.Empty;
+    private bool _toolTipRightToLeft;
     private bool _tracking;
 
     /// <param name="className">A window class name that is unique to the app, so other processes can find the window.</param>
@@ -213,7 +214,12 @@ public sealed class LayeredWindow : IDisposable
     /// Sets the tooltip shown while the pointer rests on the window. Lines are separated by
     /// <c>\n</c>.
     /// </summary>
-    public unsafe void SetToolTip(string text)
+    /// <param name="text">The tooltip's text.</param>
+    /// <param name="rightToLeft">
+    /// Whether the lines read right to left, as in right-to-left languages. Otherwise Windows reads
+    /// every line left to right, whatever its letters.
+    /// </param>
+    public unsafe void SetToolTip(string text, bool rightToLeft = false)
     {
         ArgumentNullException.ThrowIfNull(text);
         ObjectDisposedException.ThrowIf(_handle.IsNull, this);
@@ -228,25 +234,28 @@ public sealed class LayeredWindow : IDisposable
             }
         }
 
-        if (!adding && text == _toolTipText)
+        if (!adding && text == _toolTipText && rightToLeft == _toolTipRightToLeft)
         {
             return;
         }
 
+        // Changing the direction changes the tool's flags, which updating its text keeps.
+        var message = adding ? PInvoke.TTM_ADDTOOLW : rightToLeft != _toolTipRightToLeft ? PInvoke.TTM_SETTOOLINFOW : PInvoke.TTM_UPDATETIPTEXTW;
         _toolTipText = text;
+        _toolTipRightToLeft = rightToLeft;
         var lines = text.Replace("\n", "\r\n", StringComparison.Ordinal);
         fixed (char* textPointer = lines)
         {
             var tool = new TTTOOLINFOW
             {
                 cbSize = (uint)sizeof(TTTOOLINFOW),
-                uFlags = TOOLTIP_FLAGS.TTF_IDISHWND | TOOLTIP_FLAGS.TTF_SUBCLASS,
+                uFlags = TOOLTIP_FLAGS.TTF_IDISHWND | TOOLTIP_FLAGS.TTF_SUBCLASS | (rightToLeft ? TOOLTIP_FLAGS.TTF_RTLREADING : 0),
                 hwnd = _handle,
                 uId = (nuint)_handle.Value,
                 lpszText = textPointer,
             };
 
-            PInvoke.SendMessage(_toolTip, adding ? PInvoke.TTM_ADDTOOLW : PInvoke.TTM_UPDATETIPTEXTW, 0, (nint)(&tool));
+            PInvoke.SendMessage(_toolTip, message, 0, (nint)(&tool));
         }
     }
 

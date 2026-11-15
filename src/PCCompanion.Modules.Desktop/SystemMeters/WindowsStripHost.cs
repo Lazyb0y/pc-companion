@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using PCCompanion.Localization;
 using PCCompanion.Platform.Windows;
 
@@ -123,7 +124,7 @@ internal sealed class WindowsStripHost : IStripHost
         {
             _description = description;
             _window.SetTitle(description);
-            _window.SetToolTip(description);
+            _window.SetToolTip(description, Languages.Resolve(CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft);
         }
     }
 

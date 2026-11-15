@@ -115,6 +115,16 @@ public sealed class LayeredWindowTests
     }
 
     [Fact]
+    public void TheToolTipCanReadRightToLeftAndBack()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+
+        window.SetToolTip("Memory: 61%", rightToLeft: true);
+        window.SetToolTip("Memory: 62%", rightToLeft: true);
+        window.SetToolTip("Memory: 62%");
+    }
+
+    [Fact]
     public void PointerInputRaisesTheWindowsEvents()
     {
         using var window = new LayeredWindow(UniqueClassName(), "Test");
