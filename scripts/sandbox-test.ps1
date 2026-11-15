@@ -10,6 +10,10 @@ runs the groups of checks in scripts\sandbox\groups inside it, with scripts\sand
 all of them, or Smoke and the ones chosen with -Checks. The Sandbox window closes when the checks
 finish. The report, screenshots and logs are written to TestResults\sandbox.
 
+For a group that needs a test SFTP server, as RemoteFolders does, it downloads OpenSSH for Windows
+from GitHub the first time, checks its SHA-256 and keeps it in TestResults\openssh. The Sandbox
+gets a copy and still has no networking.
+
 Needs the Windows Sandbox feature. Only one Sandbox can run at a time. Keep the Sandbox window open
 and the mouse outside it: some checks move the pointer inside the Sandbox, which doesn't work while
 the window is minimized.
@@ -90,6 +94,18 @@ if ($Checks) {
 $networkGroups = @(@(if ($groups -eq 'All') { $available } else { $groups -split ',' }) |
     Where-Object { (Get-Content (Join-Path $PSScriptRoot "sandbox\groups\$_.ps1") -TotalCount 5) -contains '# Networking: on' })
 $networking = if ($networkGroups.Count -gt 0) { 'Default' } else { 'Disable' }
+
+# A group that needs a test SFTP server says so with a "# Needs: OpenSSH" line at its top. It runs
+# one with OpenSSH for Windows from this release, for this PC's architecture.
+$openSshGroups = @(@(if ($groups -eq 'All') { $available } else { $groups -split ',' }) |
+    Where-Object { (Get-Content (Join-Path $PSScriptRoot "sandbox\groups\$_.ps1") -TotalCount 5) -contains '# Needs: OpenSSH' })
+$openSshRelease = 'https://github.com/PowerShell/Win32-OpenSSH/releases/download/10.4.0.0p1-Preview'
+$openSshZip = if ($platform -eq 'ARM64') {
+    @{ Name = 'OpenSSH-ARM64.zip'; Sha256 = 'D2B1928225479FEC9E0C938F527FDB5ED676446CCA1BBCC5AF84ACA1F272842E' }
+} else {
+    @{ Name = 'OpenSSH-Win64.zip'; Sha256 = 'B67FF8BECD203502190EC42AC7787C24C2CD3325ED7700485FE7A1C83D2A7957' }
+}
+$openSshFolder = Join-Path $testResults 'openssh'
 
 if (-not (Test-Path $sandbox)) {
     throw 'Windows Sandbox is not turned on. Turn on the "Windows Sandbox" Windows feature and restart.'
@@ -232,6 +248,39 @@ New-Item -ItemType Directory -Force -Path $results | Out-Null
 
 function ConvertTo-Xml([string] $Text) { [System.Security.SecurityElement]::Escape($Text) }
 
+# OpenSSH for Windows, downloaded once and used only if it's the file expected.
+$openSshMapping = ''
+if ($openSshGroups.Count -gt 0) {
+    $openSshPath = Join-Path $openSshFolder $openSshZip.Name
+    if (-not ((Test-Path $openSshPath) -and ((Get-FileHash $openSshPath -Algorithm SHA256).Hash -eq $openSshZip.Sha256))) {
+        Write-Host "Downloading $($openSshZip.Name) for $($openSshGroups -join ', ')..."
+        New-Item -ItemType Directory -Force -Path $openSshFolder | Out-Null
+        $download = Join-Path $testResults 'openssh.download'
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+        $progress = $ProgressPreference
+        $ProgressPreference = 'SilentlyContinue'
+        try {
+            Invoke-WebRequest -Uri "$openSshRelease/$($openSshZip.Name)" -OutFile $download -UseBasicParsing
+        } finally {
+            $ProgressPreference = $progress
+        }
+        $hash = (Get-FileHash $download -Algorithm SHA256).Hash
+        if ($hash -ne $openSshZip.Sha256) {
+            Remove-Item $download -Force
+            throw "The downloaded $($openSshZip.Name) isn't the file expected: its SHA-256 is $hash, not $($openSshZip.Sha256)."
+        }
+        Move-Item $download $openSshPath -Force
+    }
+    $openSshMapping = @"
+
+    <MappedFolder>
+      <HostFolder>$(ConvertTo-Xml $openSshFolder)</HostFolder>
+      <SandboxFolder>C:\Test\openssh</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+"@
+}
+
 Set-Content -Path $configuration -Encoding utf8 -Value @"
 <Configuration>
   <Networking>$networking</Networking>
@@ -255,7 +304,7 @@ Set-Content -Path $configuration -Encoding utf8 -Value @"
       <HostFolder>$(ConvertTo-Xml $results)</HostFolder>
       <SandboxFolder>C:\Test\results</SandboxFolder>
       <ReadOnly>false</ReadOnly>
-    </MappedFolder>
+    </MappedFolder>$openSshMapping
   </MappedFolders>
   <LogonCommand>
     <Command>powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Test\scripts\run-checks.ps1 -Groups $groups -SmartAppControl $SmartAppControl</Command>
