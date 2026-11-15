@@ -68,7 +68,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
             .. _catalog.OtherShortcuts.Select(other => new OtherShortcutItem(
                 TriggerText.Of(other.Modifiers, other.Key, _layout),
                 other.Action.FullName,
-                Format(OpenFeatureFormat, other.Action.FeatureName),
+                ReadingOrder.Format(OpenFeatureFormat, other.Action.FeatureName),
                 new RelayCommand(() => ShowFeature(other.Action.Feature.Info.Id)))),
         ];
         RefreshTriggers();
@@ -165,7 +165,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
         var actionName = named?.FullName
             ?? (feature is null
                 ? Strings.ShortcutsAndMouseButtonsUnknownActionName
-                : Format(ActionNameFormat, Localized.GetString(feature.Info.NameKey), action.Target ?? Strings.ShortcutsAndMouseButtonsUnavailableActionName));
+                : ReadingOrder.Format(ActionNameFormat, Localized.GetString(feature.Info.NameKey), action.Target ?? Strings.ShortcutsAndMouseButtonsUnavailableActionName));
 
         var (warning, page) = WarningOf(checkedTrigger, input, feature, named, layouts);
         var pageFeature = page is null ? null : FeatureCatalog.Find(page);
@@ -175,7 +175,7 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
             actionName,
             trigger.MouseButton is not null && trigger.Shortcut is null ? MouseGlyph : KeyboardGlyph,
             warning,
-            pageFeature is null ? null : Format(OpenFeatureFormat, Localized.GetString(pageFeature.Info.NameKey)),
+            pageFeature is null ? null : ReadingOrder.Format(OpenFeatureFormat, Localized.GetString(pageFeature.Info.NameKey)),
             pageFeature is null ? null : new RelayCommand(() => ShowFeature(pageFeature.Info.Id)),
             Format(EditFormat, input),
             Format(MoreFormat, input));
@@ -218,13 +218,13 @@ public sealed class ShortcutsAndMouseButtonsViewModel : FeatureViewModel<Shortcu
         {
             // Windows doesn't say who has it, but it may be another feature's shortcut.
             return _catalog.OtherShortcuts.FirstOrDefault(other => other.Input == used) is { } other
-                ? (Format(TakenFormat, other.Action.FeatureName), other.Action.Feature.Info.Id)
+                ? (ReadingOrder.Format(TakenFormat, other.Action.FeatureName), other.Action.Feature.Info.Id)
                 : (ShortcutStatus.RefusedNote(input), null);
         }
 
         if (used.Key is { } key && ShortcutRules.AltGrConflict(used.Modifiers, key, layouts, KeyboardLayout.TypedWithAltGr) is { } typed)
         {
-            return (KeyboardLanguage.NameOf(typed.Layout) is { } language ? Format(AltGrFormat, language, input, typed.Text) : Format(AltGrOtherLayoutFormat, input, typed.Text), null);
+            return (KeyboardLanguage.NameOf(typed.Layout) is { } language ? ReadingOrder.Format(AltGrFormat, language, input, typed.Text) : ReadingOrder.Format(AltGrOtherLayoutFormat, input, typed.Text), null);
         }
 
         return (null, null);

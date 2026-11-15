@@ -720,12 +720,12 @@ public sealed partial class DynamicWallpaperViewModel : FeatureViewModel<Dynamic
             .Take(DynamicWallpaperCheck.MaximumDisplays)
             .Select((display, index) => display.BuiltIn ? Strings.DynamicWallpaperBuiltInDisplay
                 : display.Name.Trim().Length > 0 ? display.Name.Trim()
-                : string.Format(CultureInfo.CurrentCulture, UnnamedDisplayFormat, (index + 1).ToString(CultureInfo.CurrentCulture)))
+                : ReadingOrder.Format(UnnamedDisplayFormat, (index + 1).ToString(CultureInfo.CurrentCulture)))
             .ToList();
         return
         [
             .. names.Select((name, index) => names.Count(other => other == name) > 1
-                ? string.Format(CultureInfo.CurrentCulture, TwinDisplayFormat, name, names.Take(index + 1).Count(other => other == name).ToString(CultureInfo.CurrentCulture))
+                ? ReadingOrder.Format(TwinDisplayFormat, name, names.Take(index + 1).Count(other => other == name).ToString(CultureInfo.CurrentCulture))
                 : name),
         ];
     }
@@ -756,7 +756,7 @@ public sealed partial class DynamicWallpaperViewModel : FeatureViewModel<Dynamic
             }
 
             item.Source = source.Folder is { Length: > 0 } folder
-                ? string.Format(CultureInfo.CurrentCulture, FolderFormat, Path.GetFileName(Path.TrimEndingDirectorySeparator(folder)))
+                ? ReadingOrder.Format(FolderFormat, Path.GetFileName(Path.TrimEndingDirectorySeparator(folder)))
                 : source.Picture is { Length: > 0 } picture ? Path.GetFileName(picture) : Strings.DynamicWallpaperNoPicture;
             item.Problem = item.ShowsTime && item.Period.Index < timeProblems.Count && timeProblems[item.Period.Index] == TimeProblem.SameTime
                 ? Strings.DynamicWallpaperProblemSameTime
@@ -824,14 +824,13 @@ public sealed partial class DynamicWallpaperViewModel : FeatureViewModel<Dynamic
         Today.Clear();
         foreach (var span in spans)
         {
-            var range = string.Format(CultureInfo.CurrentCulture, TimeRangeFormat, LocalTime(span.Start, zone), LocalTime(span.End, zone));
+            var range = ReadingOrder.Format(TimeRangeFormat, LocalTime(span.Start, zone), LocalTime(span.End, zone));
             Today.Add(new TodayItem(DynamicWallpaperText.NameOf(span.Period, span.Period.Kind == ChangeWith.Times ? TimeOf(span.Period.Index) : null), range));
         }
 
         TimeZoneName = zone.DisplayName;
         NoPlaceInfo = settings.ChangeWith != ChangeWith.Sun || place is not null ? null
-            : string.Format(
-                CultureInfo.CurrentCulture,
+            : ReadingOrder.Format(
                 settings.Location == LocationSource.Coordinates ? NoCoordinatesFormat : NoPlaceFormat,
                 DynamicWallpaperText.FormatTime(WallpaperPlanner.FixedSunrise),
                 DynamicWallpaperText.FormatTime(WallpaperPlanner.FixedSunset));

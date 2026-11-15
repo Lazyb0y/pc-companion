@@ -234,15 +234,15 @@ public sealed partial class DisplayProfilesViewModel : FeatureViewModel<DisplayP
             DisplayProfilesAnswerStatus.Kept or DisplayProfilesAnswerStatus.Asking or DisplayProfilesAnswerStatus.AlreadyInUse
                 => answer.NotAsInProfile.Count == 0
                     ? string.Empty
-                    : string.Format(CultureInfo.CurrentCulture, NotAsInProfileFormat, item.Name, DisplayProfilesText.Names(profile, answer.NotAsInProfile)),
+                    : ReadingOrder.Format(NotAsInProfileFormat, item.Name, DisplayProfilesText.Names(profile, answer.NotAsInProfile)),
             DisplayProfilesAnswerStatus.Refused when answer.ModesNotOffered.Count > 0
-                => string.Format(CultureInfo.CurrentCulture, ModesNotOfferedFormat, item.Name, DisplayProfilesText.Names(profile, answer.ModesNotOffered)),
+                => ReadingOrder.Format(ModesNotOfferedFormat, item.Name, DisplayProfilesText.Names(profile, answer.ModesNotOffered)),
             DisplayProfilesAnswerStatus.Refused
-                => string.Format(CultureInfo.CurrentCulture, RefusedFormat, item.Name, answer.ErrorCode.ToString(CultureInfo.CurrentCulture)),
+                => ReadingOrder.Format(RefusedFormat, item.Name, answer.ErrorCode.ToString(CultureInfo.CurrentCulture)),
             DisplayProfilesAnswerStatus.NotConnected
-                => string.Format(CultureInfo.CurrentCulture, NotConnectedFormat, item.Name),
+                => ReadingOrder.Format(NotConnectedFormat, item.Name),
             DisplayProfilesAnswerStatus.Failed
-                => string.Format(CultureInfo.CurrentCulture, CantReadFormat, answer.ErrorCode.ToString(CultureInfo.CurrentCulture)),
+                => ReadingOrder.Format(CantReadFormat, answer.ErrorCode.ToString(CultureInfo.CurrentCulture)),
             DisplayProfilesAnswerStatus.UnknownProfile => Strings.DisplayProfilesUseNotRead,
             DisplayProfilesAnswerStatus.RemoteSession => Strings.DisplayProfilesRemoteInfo,
             _ => Strings.DisplayProfilesUseNoAnswer,

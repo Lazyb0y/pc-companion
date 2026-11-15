@@ -115,8 +115,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
         _startWithWindows = settings.General.StartWithWindows;
 
-        LogsRetention = PluralStrings.Format("GeneralLogsRetention", FileLoggingExtensions.RetentionDays);
-        Version = string.Format(CultureInfo.CurrentCulture, VersionFormat, App.InformationalVersion.Split('+')[0]);
+        LogsRetention = ReadingOrder.Line(PluralStrings.Format("GeneralLogsRetention", FileLoggingExtensions.RetentionDays));
+        Version = ReadingOrder.Format(VersionFormat, App.InformationalVersion.Split('+')[0]);
         MarkUpdateSeen();
     }
 
@@ -229,8 +229,8 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
     /// <summary>When detailed logging is on, when it turns off; otherwise what it does.</summary>
     public string DetailedLoggingDescription => _detailedLogging.Until is { } until
-        ? string.Format(CultureInfo.CurrentCulture, DetailedLoggingOnUntilFormat, until.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
-        : PluralStrings.Format("GeneralDetailedLoggingDescription", (int)DetailedLogging.Duration.TotalHours);
+        ? ReadingOrder.Format(DetailedLoggingOnUntilFormat, until.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
+        : ReadingOrder.Line(PluralStrings.Format("GeneralDetailedLoggingDescription", (int)DetailedLogging.Duration.TotalHours));
 
     /// <summary>Whether the host asks GitHub once a day whether a newer version is available.</summary>
     public bool CheckForUpdates
@@ -256,7 +256,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
 
     /// <summary>The banner's text, with the newer version and this one.</summary>
     public string UpdateMessage => _newerVersion is { } version
-        ? string.Format(CultureInfo.CurrentCulture, UpdateAvailableFormat, version, App.CurrentVersion)
+        ? ReadingOrder.Format(UpdateAvailableFormat, version, App.CurrentVersion)
         : string.Empty;
 
     /// <summary>
@@ -275,7 +275,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     public string UpdateStatus => _checkingNow ? Strings.GeneralUpdateStatusChecking
         : _checkNowProblem == CheckNowResult.NoAnswer ? Strings.GeneralUpdateStatusNoAnswer
         : _checkNowProblem == CheckNowResult.Failed ? Strings.GeneralUpdateStatusFailed
-        : _newerVersion is { } version ? string.Format(CultureInfo.CurrentCulture, UpdateStatusAvailableFormat, version)
+        : _newerVersion is { } version ? ReadingOrder.Format(UpdateStatusAvailableFormat, version)
         : _lastCheck is not null ? Strings.GeneralUpdateStatusUpToDate
         : Strings.GeneralUpdateStatusNotChecked;
 
@@ -283,7 +283,7 @@ public sealed partial class GeneralViewModel : ObservableObject, IDisposable
     public string? UpdateStatusDetail => !CheckNowAvailable ? Strings.GeneralUpdateCheckNowUnavailable
         : _checkNowProblem == CheckNowResult.NoAnswer ? Strings.GeneralUpdateStatusNoAnswerHint
         : _checkNowProblem == CheckNowResult.Failed ? Strings.GeneralUpdateStatusFailedHint
-        : _lastCheck is { } last ? string.Format(CultureInfo.CurrentCulture, LastCheckFormat, last.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
+        : _lastCheck is { } last ? ReadingOrder.Format(LastCheckFormat, last.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
         : null;
 
     /// <summary>True when the last change couldn't be saved.</summary>

@@ -134,7 +134,7 @@ public sealed partial class FolderRulesHistoryViewModel : ObservableObject
                 index,
                 entry.Name,
                 FolderRulesText.Of(entry),
-                string.Format(CultureInfo.CurrentCulture, WhenFormat, entry.Time.ToLocalTime().ToString("g", CultureInfo.CurrentCulture), entry.Rule),
+                ReadingOrder.Format(WhenFormat, entry.Time.ToLocalTime().ToString("g", CultureInfo.CurrentCulture), entry.Rule),
                 entry.Undone is null && entry.Outcome is HistoryOutcome.Moved or HistoryOutcome.Copied or HistoryOutcome.Renamed,
                 string.Format(CultureInfo.CurrentCulture, UndoFormat, entry.Name)));
         }

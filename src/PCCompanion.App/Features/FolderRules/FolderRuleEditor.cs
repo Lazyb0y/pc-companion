@@ -608,7 +608,7 @@ public sealed partial class FolderRuleEditor : ObservableObject
         }
 
         FilesStatus = status;
-        MatchCount = status.Length > 0 && items.Count == 0 ? string.Empty : string.Format(CultureInfo.CurrentCulture, MatchCountFormat, items.Count(item => item.IsMatch), total);
+        MatchCount = status.Length > 0 && items.Count == 0 ? string.Empty : ReadingOrder.Format(MatchCountFormat, items.Count(item => item.IsMatch), total);
     }
 
     // Runs on the thread pool, which may read the file's mark.
@@ -632,19 +632,19 @@ public sealed partial class FolderRuleEditor : ObservableObject
 
         var results = matcher.Explain(facts, now, ReadMark);
         var isMatch = results.All(result => result.Matches);
-        var details = string.Join(" · ", results.Select(result => string.Format(
+        var details = ReadingOrder.Line(string.Join(" · ", results.Select(result => string.Format(
             CultureInfo.CurrentCulture,
             result.Matches ? MatchesFormat : NoMatchFormat,
             ConditionName(result.Condition),
-            ValueOf(result.Condition, matcher.Rule, file, ReadMark))));
+            ValueOf(result.Condition, matcher.Rule, file, ReadMark)))));
 
         var outcome = !isMatch ? Strings.FolderRulesFileNotIncluded : FolderRuleActions.Plan(_folder, matcher, file, _places, _zone) switch
         {
             null => Strings.FolderRulesFileNotIncluded,
-            { Naming: not NamingProblem.None } plan => string.Format(CultureInfo.CurrentCulture, StaysFormat, FolderRulesText.Of(plan.Naming)),
-            { Action: FolderRuleAction.Move } plan => string.Format(CultureInfo.CurrentCulture, MoveFormat, Path.Join(plan.Destination, plan.NewName)),
-            { Action: FolderRuleAction.Copy } plan => string.Format(CultureInfo.CurrentCulture, CopyFormat, Path.Join(plan.Destination, plan.NewName)),
-            { Action: FolderRuleAction.Rename } plan => string.Format(CultureInfo.CurrentCulture, RenameFormat, plan.NewName),
+            { Naming: not NamingProblem.None } plan => ReadingOrder.Format(StaysFormat, FolderRulesText.Of(plan.Naming)),
+            { Action: FolderRuleAction.Move } plan => ReadingOrder.Format(MoveFormat, Path.Join(plan.Destination, plan.NewName)),
+            { Action: FolderRuleAction.Copy } plan => ReadingOrder.Format(CopyFormat, Path.Join(plan.Destination, plan.NewName)),
+            { Action: FolderRuleAction.Rename } plan => ReadingOrder.Format(RenameFormat, plan.NewName),
             _ => Strings.FolderRulesSummaryRecycleBin,
         };
 

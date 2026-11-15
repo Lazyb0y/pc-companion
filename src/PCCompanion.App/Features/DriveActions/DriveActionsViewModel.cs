@@ -202,14 +202,14 @@ public sealed partial class DriveItem : ObservableObject
         CanRunNow = !HasProblem && Recognized is not null && !IsRunning;
         Status = IsRunning
             ? Strings.DriveActionsStatusRunning
-            : recognized.Length > 0 ? Format(DriveActionsViewModel.ConnectedFormat, letters)
-            : locked is not null ? Format(DriveActionsViewModel.LockedFormat, DriveActionsText.Letter(locked.Letter))
+            : recognized.Length > 0 ? ReadingOrder.Format(DriveActionsViewModel.ConnectedFormat, letters)
+            : locked is not null ? ReadingOrder.Format(DriveActionsViewModel.LockedFormat, DriveActionsText.Letter(locked.Letter))
             : Strings.DriveActionsStatusNotConnected;
 
         var lookAlike = drives.FirstOrDefault(drive => drive.Outcome == RecognitionOutcome.LookAlike);
         var notRecognized = drives.FirstOrDefault(drive => drive.Outcome == RecognitionOutcome.NotRecognized);
-        LookAlike = lookAlike is null ? string.Empty : Format(DriveActionsViewModel.LookAlikeFormat, DriveActionsText.Letter(lookAlike.Letter));
-        NotRecognized = notRecognized is null ? string.Empty : Format(DriveActionsViewModel.NotRecognizedFormat, DriveActionsText.Letter(notRecognized.Letter));
+        LookAlike = lookAlike is null ? string.Empty : ReadingOrder.Format(DriveActionsViewModel.LookAlikeFormat, DriveActionsText.Letter(lookAlike.Letter));
+        NotRecognized = notRecognized is null ? string.Empty : ReadingOrder.Format(DriveActionsViewModel.NotRecognizedFormat, DriveActionsText.Letter(notRecognized.Letter));
         Other = lookAlike ?? notRecognized;
     }
 
@@ -425,7 +425,7 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
 
         if (trimmed.Length > DriveActionsSettings.MaximumNameLength)
         {
-            return string.Format(CultureInfo.CurrentCulture, NameTooLongFormat, DriveActionsSettings.MaximumNameLength);
+            return ReadingOrder.Format(NameTooLongFormat, DriveActionsSettings.MaximumNameLength);
         }
 
         return Settings.Drives.Where((_, at) => at != index).Any(drive => string.Equals(drive.Name.Trim(), trimmed, StringComparison.OrdinalIgnoreCase))
@@ -583,11 +583,11 @@ public sealed partial class DriveActionsViewModel : FeatureViewModel<DriveAction
     {
         null => Strings.DriveActionsNotAnswering,
         DriveActionsAnswerStatus.CantAdd => DriveActionsText.Of(answer.AddProblem),
-        DriveActionsAnswerStatus.Failed => string.Format(CultureInfo.CurrentCulture, AddFailedFormat, answer.ErrorCode),
+        DriveActionsAnswerStatus.Failed => ReadingOrder.Format(AddFailedFormat, answer.ErrorCode),
         _ => Strings.DriveActionsAddGone,
     };
 
-    private static string TooMany() => string.Format(CultureInfo.CurrentCulture, DrivesTooManyFormat, DriveActionsSettings.MaximumDrives);
+    private static string TooMany() => ReadingOrder.Format(DrivesTooManyFormat, DriveActionsSettings.MaximumDrives);
 
     // A name no drive in the list has, ignoring case: the name, or the name with a number, which
     // a long name makes room for.

@@ -175,11 +175,11 @@ public sealed partial class NetworkProfilesViewModel : FeatureViewModel<NetworkP
             case SwitchResult.NotApplied:
                 LogNotApplied(_logger, number);
                 _windows = outcome.After;
-                UseProblem = string.Format(CultureInfo.CurrentCulture, UseFailedFormat, item.Name);
+                UseProblem = ReadingOrder.Format(UseFailedFormat, item.Name);
                 break;
             case SwitchResult.Refused:
                 LogRefused(_logger, number, outcome.Error);
-                UseProblem = string.Format(CultureInfo.CurrentCulture, UseFailedFormat, item.Name);
+                UseProblem = ReadingOrder.Format(UseFailedFormat, item.Name);
                 break;
             default:
                 SetRestrictions(outcome.Restrictions);

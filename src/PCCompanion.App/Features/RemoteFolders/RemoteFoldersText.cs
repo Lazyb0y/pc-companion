@@ -28,7 +28,7 @@ public static class RemoteFoldersText
     {
         ServerProblem.None => string.Empty,
         ServerProblem.NoName => Strings.RemoteFoldersNameMissing,
-        ServerProblem.NameTooLong => string.Format(CultureInfo.CurrentCulture, NameTooLongFormat, RemoteFoldersSettings.MaximumNameLength.ToString("N0", CultureInfo.CurrentCulture)),
+        ServerProblem.NameTooLong => ReadingOrder.Format(NameTooLongFormat, RemoteFoldersSettings.MaximumNameLength.ToString("N0", CultureInfo.CurrentCulture)),
         ServerProblem.InvalidName => Strings.RemoteFoldersNameInvalid,
         ServerProblem.NameInUse => Strings.RemoteFoldersNameInUse,
         ServerProblem.NoAddress or ServerProblem.InvalidAddress => Strings.RemoteFoldersAddressInvalid,
@@ -76,9 +76,9 @@ public static class RemoteFoldersText
             state = string.Format(CultureInfo.CurrentCulture, LastTriedFormat, state, last.ToLocalTime().ToString("t", CultureInfo.CurrentCulture));
         }
 
-        return status is { ChangesWaiting: > 0 } waiting
+        return ReadingOrder.Line(status is { ChangesWaiting: > 0 } waiting
             ? string.Format(CultureInfo.CurrentCulture, WithChangesFormat, state, PluralStrings.Format("RemoteFoldersChangesWaiting", waiting.ChangesWaiting))
-            : state;
+            : state);
     }
 
     /// <summary>The conflict copies, one path below the server's folder per line.</summary>
@@ -94,7 +94,7 @@ public static class RemoteFoldersText
             ? string.Format(CultureInfo.CurrentCulture, SkippedRenameFormat, Path(change.Path), Path(change.Target ?? string.Empty), Reason(change.Failure))
             : string.Format(CultureInfo.CurrentCulture, SkippedDeleteFormat, Path(change.Path), Reason(change.Failure)))
             .Concat(failed.Select(upload => string.Format(CultureInfo.CurrentCulture, FailedUploadFormat, Path(upload.Path), Reason(upload.Failure))));
-        return string.Join(Environment.NewLine, lines);
+        return ReadingOrder.Line(string.Join(Environment.NewLine, lines));
     }
 
     /// <summary>How many entries on the server can't be shown, one reason per line, without their names.</summary>
@@ -106,7 +106,7 @@ public static class RemoteFoldersText
             .Where(pair => pair.Key != HiddenReason.None && pair.Value > 0)
             .OrderBy(pair => pair.Key)
             .Select(pair => string.Format(CultureInfo.CurrentCulture, HiddenLineFormat, HiddenReasonText(pair.Key), pair.Value.ToString("N0", CultureInfo.CurrentCulture)));
-        return string.Join(Environment.NewLine, lines);
+        return ReadingOrder.Line(string.Join(Environment.NewLine, lines));
     }
 
     private static string HiddenReasonText(HiddenReason reason) => reason switch

@@ -16,7 +16,7 @@ public sealed record CatalogAction(CatalogFeature Feature, FeatureAction Action,
     private static readonly CompositeFormat FullNameFormat = CompositeFormat.Parse(Strings.ShortcutsAndMouseButtonsActionName);
 
     /// <summary>The name the page shows, such as "Hide Apps: Hide others".</summary>
-    public string FullName => string.Format(CultureInfo.CurrentCulture, FullNameFormat, FeatureName, Name);
+    public string FullName => ReadingOrder.Format(FullNameFormat, FeatureName, Name);
 }
 
 /// <summary>

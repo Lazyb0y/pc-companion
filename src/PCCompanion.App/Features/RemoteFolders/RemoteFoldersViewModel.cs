@@ -40,7 +40,7 @@ public sealed partial class RemoteServerItem : ObservableObject
         Index = index;
         Server = server;
         Name = server.Name.Trim();
-        Summary = Format(RemoteFoldersViewModel.SummaryFormat, RemoteFoldersText.Isolated(server.RemoteFolder), RemoteFoldersText.Isolated(RemoteServerCheck.Address(server)));
+        Summary = ReadingOrder.Format(RemoteFoldersViewModel.SummaryFormat, RemoteFoldersText.Isolated(server.RemoteFolder), RemoteFoldersText.Isolated(RemoteServerCheck.Address(server)));
         FolderText = RemoteFoldersText.Isolated(server.Folder);
         IsUsable = server.IsUsable;
         OpenFolderName = Format(RemoteFoldersViewModel.OpenFolderFormat, Name);
@@ -225,7 +225,7 @@ public sealed partial class RemoteServerItem : ObservableObject
         PresentedKey = known is { State: RemoteServerState.KeyChanged, PresentedKey: { } presented } ? presented : null;
         CanTrustKey = PresentedKey is not null;
         KeyChange = PresentedKey is { } key && Server.HostKey is { } old
-            ? Format(RemoteFoldersViewModel.OldKeyFormat, RemoteFoldersText.Isolated(RemoteServerCheck.KeyText(old))) + Environment.NewLine
+            ? ReadingOrder.Format(RemoteFoldersViewModel.OldKeyFormat, RemoteFoldersText.Isolated(RemoteServerCheck.KeyText(old))) + Environment.NewLine
                 + Format(RemoteFoldersViewModel.NewKeyFormat, RemoteFoldersText.Isolated(RemoteServerCheck.KeyText(key)))
             : string.Empty;
         Conflicts = known is null ? string.Empty : RemoteFoldersText.Conflicts(known.Conflicts);
@@ -484,7 +484,7 @@ public sealed partial class RemoteFoldersViewModel : FeatureViewModel<RemoteFold
 
         LogRemoved(_logger, index + 1);
         _removedFolder = Directory.Exists(server.Folder) ? server.Folder : null;
-        Removed = _removedFolder is null ? string.Empty : string.Format(CultureInfo.CurrentCulture, RemovedFormat, server.Name.Trim());
+        Removed = _removedFolder is null ? string.Empty : ReadingOrder.Format(RemovedFormat, server.Name.Trim());
     }
 
     /// <summary>Trusts the key the server shows now, once the provider checked that it still does.</summary>

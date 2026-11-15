@@ -28,14 +28,14 @@
                 <controls:ChoiceCard
                     Description="{app:Localized Key=TitleBarActionsShiftMiddleClickDescription}"
                     Glyph="&#xE962;"
-                    Header="{app:Localized Key=TitleBarActionsShiftMiddleClickHeader}"
+                    Header="{app:Localized Key=TitleBarActionsShiftMiddleClickHeader, Line=True}"
                     ItemsSource="{x:Bind ViewModel.ClickActions}"
                     SelectedItem="{x:Bind ViewModel.SelectedShiftMiddleClick, Mode=TwoWay}" />
 
                 <controls:ChoiceCard
                     Description="{app:Localized Key=TitleBarActionsControlMiddleClickDescription}"
                     Glyph="&#xE962;"
-                    Header="{app:Localized Key=TitleBarActionsControlMiddleClickHeader}"
+                    Header="{app:Localized Key=TitleBarActionsControlMiddleClickHeader, Line=True}"
                     ItemsSource="{x:Bind ViewModel.ClickActions}"
                     SelectedItem="{x:Bind ViewModel.SelectedControlMiddleClick, Mode=TwoWay}" />
 
@@ -51,7 +51,7 @@
                 <controls:ChoiceCard
                     Description="{app:Localized Key=TitleBarActionsControlWheelDescription}"
                     Glyph="&#xE962;"
-                    Header="{app:Localized Key=TitleBarActionsControlWheelHeader}"
+                    Header="{app:Localized Key=TitleBarActionsControlWheelHeader, Line=True}"
                     ItemsSource="{x:Bind ViewModel.WheelActions}"
                     SelectedItem="{x:Bind ViewModel.SelectedControlWheel, Mode=TwoWay}" />
 

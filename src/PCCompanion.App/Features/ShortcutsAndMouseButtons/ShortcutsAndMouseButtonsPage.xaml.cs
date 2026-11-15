@@ -59,7 +59,7 @@ public sealed partial class ShortcutsAndMouseButtonsPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, item.Input),
+            Title = ReadingOrder.Format(DeleteTitleFormat, item.Input),
             PrimaryButtonText = Strings.ShortcutsAndMouseButtonsDelete,
             CloseButtonText = Strings.ShortcutsAndMouseButtonsCancel,
             DefaultButton = ContentDialogButton.Close,

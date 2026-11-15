@@ -125,7 +125,7 @@ public sealed partial class RemoteFoldersPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, TrustTitleFormat, item.Name),
+            Title = ReadingOrder.Format(TrustTitleFormat, item.Name),
             Content = new StackPanel
             {
                 Spacing = 12,
@@ -166,7 +166,7 @@ public sealed partial class RemoteFoldersPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, RemoveTitleFormat, item.Name),
+            Title = ReadingOrder.Format(RemoveTitleFormat, item.Name),
             Content = new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap },
             PrimaryButtonText = item.ChangesWaiting > 0 ? Strings.RemoteFoldersRemoveAnyway : Strings.RemoteFoldersRemove,
             CloseButtonText = Strings.RemoteFoldersCancel,

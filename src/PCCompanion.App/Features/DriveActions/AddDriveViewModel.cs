@@ -70,11 +70,11 @@ public sealed partial class AddDriveViewModel(DriveActionsViewModel page) : Obse
         {
             var name = drive.Label.Trim().Length > 0 ? drive.Label.Trim() : DriveActionsText.Of(drive.Kind);
             var details = drive.AddProblem == AddProblem.None
-                ? string.Format(CultureInfo.CurrentCulture, DetailsFormat, DriveActionsText.Of(drive.Kind), ByteSizes.Format(drive.Size))
+                ? ReadingOrder.Format(DetailsFormat, DriveActionsText.Of(drive.Kind), ByteSizes.Format(drive.Size))
                 : DriveActionsText.Of(drive.AddProblem);
             Choices.Add(new AddDriveChoice(
                 Choices.Count,
-                string.Format(CultureInfo.CurrentCulture, NameFormat, name, DriveActionsText.Letter(drive.Letter)),
+                ReadingOrder.Format(NameFormat, name, DriveActionsText.Letter(drive.Letter)),
                 details,
                 drive.AddProblem == AddProblem.None,
                 drive));

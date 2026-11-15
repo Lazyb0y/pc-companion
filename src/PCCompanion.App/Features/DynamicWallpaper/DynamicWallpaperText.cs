@@ -22,7 +22,7 @@ public static class DynamicWallpaperText
             _ => Strings.DynamicWallpaperPeriodNight,
         },
         ChangeWith.WindowsMode => period.Index == 0 ? Strings.DynamicWallpaperPeriodLight : Strings.DynamicWallpaperPeriodDark,
-        _ => string.Format(CultureInfo.CurrentCulture, PeriodTimeFormat, time is { } at ? FormatTime(at) : "?"),
+        _ => ReadingOrder.Format(PeriodTimeFormat, time is { } at ? FormatTime(at) : "?"),
     };
 
     /// <summary>A time in the user's regional format, 12-hour or 24-hour, such as 7:00 PM.</summary>
