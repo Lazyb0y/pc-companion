@@ -363,6 +363,17 @@ public sealed class UploadTests : IDisposable
     }
 
     [Fact]
+    public void AFileThatStaysOnThePcIsntAChangeWaiting()
+    {
+        _pc.AddPlaceholder(Local("Thumbs.db"), ItemIdentity.Of("", "Thumbs.db", false, 10, default), inSync: false, onlineOnly: false);
+        _pc.Pin(Local("Thumbs.db"), PinState.Excluded);
+
+        _uploads.FindChanges();
+
+        Assert.Equal(0, _uploads.Waiting);
+    }
+
+    [Fact]
     public async Task ARenamedFolderLearnsItsNewPathFromTheWorker()
     {
         _pc.AddPlaceholder(Local("papers"), ItemIdentity.Of("", "docs", true, 0, default));
