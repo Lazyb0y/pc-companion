@@ -1,4 +1,5 @@
-﻿# Languages: Arabic, right to left with the dark theme, and Bangla with the light theme.
+﻿# Languages: Arabic, right to left with the dark theme, also for lines that start with a name in
+# Latin letters, and Bangla with the light theme.
 
 # Arabic with the dark theme, as the General page saves them; the host follows the change.
 Start-Process $hostExe
@@ -32,6 +33,40 @@ Test-Check 'tray menu requested in Arabic' (Send-TrayEvent $WM_CONTEXTMENU $menu
 Start-Sleep -Seconds 2
 Save-Screenshot '06-tray-menu-arabic'
 Test-Check 'the tray menu closes in Arabic' (Close-TrayMenu)
+
+# Lines that start with a name in Latin letters read right to left in Arabic: they start with a
+# right-to-left mark (U+200F), so the name comes first, on the right.
+$rightToLeftMark = [string] [char] 0x200F
+function Test-RightToLeftLine([string] $Name, [string] $Page, [string] $Start, [string] $Screenshot) {
+    $shown = Show-Page $Page
+    Start-Sleep -Milliseconds 1500
+    Save-Screenshot $Screenshot
+    $lines = @(Get-WindowText | Where-Object { $_.StartsWith($Start, [StringComparison]::Ordinal) -or $_.StartsWith($rightToLeftMark + $Start, [StringComparison]::Ordinal) })
+    $marked = @($lines | Where-Object { $_.StartsWith($rightToLeftMark, [StringComparison]::Ordinal) })
+    Test-Check $Name ($shown -and $lines.Count -gt 0 -and $marked.Count -eq $lines.Count) (($lines | ForEach-Object { $_.Replace($rightToLeftMark, '<RLM>') }) -join ' | ')
+}
+[void] (Close-SettingsApp)
+$photos = Join-Path $env:PUBLIC 'Pictures\Photos'
+New-Item -ItemType Directory -Force -Path $photos | Out-Null
+$display = [ordered] @{
+    model = 'DELA0A3'; serial = ''; connection = '\\?\DISPLAY#DELA0A3#5&1f2e3d4c&0&UID4352#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}'; builtIn = $false; name = 'DELL U2720Q'
+    on = $true; main = $true; x = 0; y = 0; width = 2560; height = 1440; refreshRate = [ordered] @{ numerator = 60000; denominator = 1000 }; orientation = 'Landscape'; hdr = $false
+}
+Write-Settings (@{
+    schemaVersion = 1
+    general = @{ language = 'ar'; theme = 'Dark'; startWithWindows = $false }
+    features = @{
+        displayProfiles = @{ enabled = $false; profiles = @([ordered] @{ name = 'Desk'; displays = @($display) }) }
+        dynamicWallpaper = [ordered] @{ enabled = $false; changeWith = 'WindowsMode'; location = 'TimeZone'; fit = 'Fill'; windowsMode = [ordered] @{ light = @{ folder = $photos }; dark = @{ folder = $photos } } }
+    }
+} | ConvertTo-Json -Depth 8)
+Start-Sleep -Seconds 2
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-RightToLeftLine 'in Arabic, a display''s line reads right to left' 'ملفات تعريف العرض' 'DELL U2720Q: ' '05c-display-profiles-arabic-line'
+Test-RightToLeftLine 'in Arabic, a folder''s line reads right to left' 'خلفية ديناميكية' 'Photos (' '05d-dynamic-wallpaper-arabic-line'
+Test-RightToLeftLine 'in Arabic, a header that starts with a key reads right to left' 'إجراءات شريط العنوان' 'Ctrl + ' '05e-title-bar-actions-arabic-line'
 
 # Bangla with the light theme.
 [void] (Close-SettingsApp)
