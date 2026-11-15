@@ -35,7 +35,7 @@ public sealed class ShortcutStatus(string feature, Func<bool> isOn)
 
     /// <summary>The warning note at a refused shortcut, such as "Another program uses Ctrl + Alt + Esc, so this shortcut does nothing here."</summary>
     /// <param name="keys">The shortcut as the page shows it.</param>
-    public static string RefusedNote(string keys) => string.Format(CultureInfo.CurrentCulture, RefusedFormat, keys);
+    public static string RefusedNote(string keys) => ReadingOrder.Format(RefusedFormat, keys);
 
     /// <summary>Starts reading, now and every 2 seconds, until <see cref="Stop"/>. Call it on the page's thread.</summary>
     public void Start()

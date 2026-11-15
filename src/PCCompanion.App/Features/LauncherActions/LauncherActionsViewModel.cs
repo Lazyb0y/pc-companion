@@ -124,6 +124,6 @@ public sealed partial class LauncherActionsViewModel : FeatureViewModel<Launcher
         var package = new DataPackage();
         package.SetText(LauncherActionList.Command(program, action.Action));
         Clipboard.SetContent(package);
-        Copied = string.Format(CultureInfo.CurrentCulture, CopiedFormat, action.Name);
+        Copied = ReadingOrder.Format(CopiedFormat, action.Name);
     }
 }

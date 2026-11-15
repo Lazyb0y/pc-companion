@@ -90,7 +90,7 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
         }
     }
 
-    public string ActivationDelayText => string.Format(CultureInfo.CurrentCulture, DelayFormat, Settings.ActivationDelayMilliseconds);
+    public string ActivationDelayText => ReadingOrder.Format(DelayFormat, Settings.ActivationDelayMilliseconds);
 
     public static double MaximumActivationDelay => HotCornersSettings.MaximumActivationDelayMilliseconds;
 
@@ -379,10 +379,10 @@ public sealed partial class CornerViewModel : ObservableObject
 /// </summary>
 public sealed class CornerResultItem(CornerResult result)
 {
-    public string Text { get; } = CornerResultText.Describe(result);
+    public string Text { get; } = ReadingOrder.Line(CornerResultText.Describe(result));
 
     /// <summary>When it happened, and how many times in a row.</summary>
-    public string When { get; } = CornerResultText.When(result);
+    public string When { get; } = ReadingOrder.Line(CornerResultText.When(result));
 
     /// <summary>A check mark for an action that ran, otherwise an information icon.</summary>
     public string Glyph { get; } = result.Kind == CornerResultKind.Ran ? "" : "";

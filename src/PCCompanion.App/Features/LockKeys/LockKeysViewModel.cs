@@ -98,7 +98,7 @@ public sealed partial class LockKeysViewModel : FeatureViewModel<LockKeysSetting
     }
 
     /// <summary>The duration in seconds, such as "2 s" or "1,5 s", in the user's number format.</summary>
-    public string DurationText => string.Format(CultureInfo.CurrentCulture, DurationFormat, Settings.DurationMilliseconds / 1000.0);
+    public string DurationText => ReadingOrder.Format(DurationFormat, Settings.DurationMilliseconds / 1000.0);
 
     public bool IgnoreFullScreenApps
     {

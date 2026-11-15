@@ -50,7 +50,7 @@ public sealed partial class DriveRunNowViewModel(ConnectedDriveInfo drive, strin
     private string _status = string.Empty;
     private bool _isLoaded;
 
-    public string Title { get; } = string.Format(CultureInfo.CurrentCulture, TitleFormat, name);
+    public string Title { get; } = ReadingOrder.Format(TitleFormat, name);
 
     /// <summary>The files the imports would copy.</summary>
     public ObservableCollection<RunNowFile> Files { get; } = [];
@@ -92,13 +92,13 @@ public sealed partial class DriveRunNowViewModel(ConnectedDriveInfo drive, strin
                 Files.Add(new RunNowFile(
                     action.Action,
                     file.Path,
-                    file.ImportedBefore ? string.Format(CultureInfo.CurrentCulture, ImportedBeforeFormat, goesTo) : goesTo,
+                    ReadingOrder.Line(file.ImportedBefore ? string.Format(CultureInfo.CurrentCulture, ImportedBeforeFormat, goesTo) : goesTo),
                     !file.ImportedBefore));
             }
 
             if (action.Action >= 0 && action.Action < actions.Count && actions[action.Action].KnownAction == DriveActionKind.BackUp)
             {
-                Backups.Add(string.Format(CultureInfo.CurrentCulture, BackUpFormat, PluralStrings.Format("DriveActionsRunNowFiles", action.Copies), ByteSizes.Format(action.Bytes)));
+                Backups.Add(ReadingOrder.Format(BackUpFormat, PluralStrings.Format("DriveActionsRunNowFiles", action.Copies), ByteSizes.Format(action.Bytes)));
             }
         }
 

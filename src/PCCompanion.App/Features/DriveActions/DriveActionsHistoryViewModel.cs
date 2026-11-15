@@ -131,7 +131,7 @@ public sealed partial class DriveActionsHistoryViewModel : ObservableObject
         {
             null => Strings.DriveActionsHistoryNotRunning,
             { Status: DriveActionsAnswerStatus.Done, NotUndone: 0 } => string.Empty,
-            { Status: DriveActionsAnswerStatus.Done } => string.Format(CultureInfo.CurrentCulture, UndoneFormat, answer.Undone, answer.NotUndone),
+            { Status: DriveActionsAnswerStatus.Done } => ReadingOrder.Format(UndoneFormat, answer.Undone, answer.NotUndone),
             _ => Strings.DriveActionsUndoRefused,
         };
         await LoadAsync().ConfigureAwait(true);

@@ -141,7 +141,7 @@ public sealed partial class DisplayProfilesPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, UpdateTitleFormat, ViewModel.Profiles[index].Name),
+            Title = ReadingOrder.Format(UpdateTitleFormat, ViewModel.Profiles[index].Name),
             Content = Strings.DisplayProfilesUpdateContent,
             PrimaryButtonText = Strings.DisplayProfilesUpdateButton,
             CloseButtonText = Strings.DisplayProfilesCancel,
@@ -169,7 +169,7 @@ public sealed partial class DisplayProfilesPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, ViewModel.Profiles[index].Name),
+            Title = ReadingOrder.Format(DeleteTitleFormat, ViewModel.Profiles[index].Name),
             PrimaryButtonText = Strings.DisplayProfilesDelete,
             CloseButtonText = Strings.DisplayProfilesCancel,
             DefaultButton = ContentDialogButton.Close,

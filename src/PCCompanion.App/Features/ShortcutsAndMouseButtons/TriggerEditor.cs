@@ -191,7 +191,7 @@ public sealed partial class TriggerEditor : ObservableObject
     /// <summary>Why the mouse button can't be saved, or an empty string.</summary>
     public string ButtonProblem =>
         ButtonInput is { } input && _triggers.FirstOrDefault(known => known.Input == input) is { } other
-            ? string.Format(CultureInfo.CurrentCulture, SameButtonFormat, other.Name)
+            ? ReadingOrder.Format(SameButtonFormat, other.Name)
             : string.Empty;
 
     public bool HasButtonProblem => ButtonProblem.Length > 0;
@@ -239,7 +239,7 @@ public sealed partial class TriggerEditor : ObservableObject
         SelectedAction?.Action is { } action
         && action.Feature.Info.Id != ShortcutsAndMouseButtonsFeature.Definition.Id
         && !_settings.IsEnabled(action.Feature.Info.Id)
-            ? string.Format(CultureInfo.CurrentCulture, FeatureOffFormat, action.FeatureName)
+            ? ReadingOrder.Format(FeatureOffFormat, action.FeatureName)
             : string.Empty;
 
     public bool HasActionNote => ActionNote.Length > 0;
@@ -439,11 +439,11 @@ public sealed partial class TriggerEditor : ObservableObject
         ShortcutCheckProblem.UnknownKey => Strings.ShortcutsAndMouseButtonsEditorUnknownKey,
         ShortcutCheckProblem.NeedsModifier => Strings.ShortcutsAndMouseButtonsEditorNeedsModifier,
         ShortcutCheckProblem.Reserved => Strings.ShortcutsAndMouseButtonsEditorReserved,
-        ShortcutCheckProblem.SameAsFeature => string.Format(CultureInfo.CurrentCulture, SameAsFeatureFormat, check.Other?.Name),
-        ShortcutCheckProblem.SameAsTrigger => string.Format(CultureInfo.CurrentCulture, SameAsTriggerFormat, check.Other?.Name),
+        ShortcutCheckProblem.SameAsFeature => ReadingOrder.Format(SameAsFeatureFormat, check.Other?.Name),
+        ShortcutCheckProblem.SameAsTrigger => ReadingOrder.Format(SameAsTriggerFormat, check.Other?.Name),
         ShortcutCheckProblem.AltGr when check.AltGr is { } typed => KeyboardLanguage.NameOf(typed.Layout) is { } language
-            ? string.Format(CultureInfo.CurrentCulture, AltGrFormat, language, ShortcutText, typed.Text)
-            : string.Format(CultureInfo.CurrentCulture, AltGrOtherLayoutFormat, ShortcutText, typed.Text),
+            ? ReadingOrder.Format(AltGrFormat, language, ShortcutText, typed.Text)
+            : ReadingOrder.Format(AltGrOtherLayoutFormat, ShortcutText, typed.Text),
         ShortcutCheckProblem.Taken => Strings.ShortcutsAndMouseButtonsEditorTaken,
         _ => string.Empty,
     };

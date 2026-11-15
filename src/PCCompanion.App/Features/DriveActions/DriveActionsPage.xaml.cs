@@ -87,7 +87,7 @@ public sealed partial class DriveActionsPage : Page
         };
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, RenameTitleFormat, ViewModel.Drives[index].Name),
+            Title = ReadingOrder.Format(RenameTitleFormat, ViewModel.Drives[index].Name),
             Content = new StackPanel { Spacing = 8, MinWidth = 320, Children = { box, problem } },
             PrimaryButtonText = Strings.DriveActionsRename,
             CloseButtonText = Strings.DriveActionsCancel,
@@ -125,7 +125,7 @@ public sealed partial class DriveActionsPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, RemoveTitleFormat, ViewModel.Drives[index].Name),
+            Title = ReadingOrder.Format(RemoveTitleFormat, ViewModel.Drives[index].Name),
             Content = Strings.DriveActionsRemoveText,
             PrimaryButtonText = Strings.DriveActionsRemove,
             CloseButtonText = Strings.DriveActionsCancel,
@@ -152,7 +152,7 @@ public sealed partial class DriveActionsPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, UseThisDriveTitleFormat, ViewModel.Drives[index].Name),
+            Title = ReadingOrder.Format(UseThisDriveTitleFormat, ViewModel.Drives[index].Name),
             Content = Strings.DriveActionsUseThisDriveText,
             PrimaryButtonText = Strings.DriveActionsUseThisDrive,
             CloseButtonText = Strings.DriveActionsCancel,

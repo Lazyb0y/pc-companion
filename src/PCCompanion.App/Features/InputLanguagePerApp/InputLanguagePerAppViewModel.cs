@@ -129,7 +129,7 @@ public sealed partial class InputLanguagePerAppViewModel : FeatureViewModel<Inpu
         : Strings.InputLanguagePerAppAdministratorInfo;
 
     private static string NameOf(InputMethod inputMethod) => inputMethod.LayoutName is { } layout
-        ? string.Format(CultureInfo.CurrentCulture, InputMethodFormat, inputMethod.LanguageName, layout)
+        ? ReadingOrder.Format(InputMethodFormat, inputMethod.LanguageName, layout)
         : inputMethod.LanguageName;
 
     private InputMethodOption? OptionOf(string? identifier) =>

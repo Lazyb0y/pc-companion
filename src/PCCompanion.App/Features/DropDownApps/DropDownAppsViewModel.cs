@@ -93,7 +93,7 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
     /// <summary>A line for each listed app whose shortcut Windows refused, naming the shortcut and the app.</summary>
     public string ShortcutRefusedInfo => string.Join(Environment.NewLine, Settings.Apps
         .Where(app => app.Shortcut != DropDownShortcut.None && _shortcutStatus.Refused.Contains(app.Shortcut.ToString()))
-        .Select(app => string.Format(CultureInfo.CurrentCulture, RefusedFormat, NameOf(app.Shortcut), app.Name)));
+        .Select(app => ReadingOrder.Format(RefusedFormat, NameOf(app.Shortcut), app.Name)));
 
     /// <summary>Reads which shortcuts Windows refused from the host while the page shows. Call it on the page's thread.</summary>
     public void StartShortcutStatus() => _shortcutStatus.Start();
@@ -328,10 +328,10 @@ public sealed partial class DropDownAppsViewModel : FeatureViewModel<DropDownApp
 /// </summary>
 public sealed class DropDownResultItem(DropDownResult result, IReadOnlyList<DropDownApp> apps)
 {
-    public string Text { get; } = DropDownResultText.Describe(result, apps);
+    public string Text { get; } = ReadingOrder.Line(DropDownResultText.Describe(result, apps));
 
     /// <summary>When it happened, and how many times in a row.</summary>
-    public string When { get; } = DropDownResultText.When(result);
+    public string When { get; } = ReadingOrder.Line(DropDownResultText.When(result));
 
     /// <summary>A check mark for a shortcut that did what it was pressed for, otherwise an information icon.</summary>
     public string Glyph { get; } = DropDownResultText.IsDone(result.Outcome) ? "" : "";

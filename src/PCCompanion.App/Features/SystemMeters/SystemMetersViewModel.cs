@@ -53,7 +53,7 @@ public sealed partial class SystemMetersViewModel : FeatureViewModel<SystemMeter
             new(StripIcons.OneColor, Strings.SystemMetersIconsOneColor),
             new(StripIcons.None, Strings.SystemMetersIconsNone),
         ];
-        IntervalOptions = [.. Intervals.Select(seconds => new IntervalOption(seconds, PluralStrings.Format("SystemMetersIntervalSeconds", seconds)))];
+        IntervalOptions = [.. Intervals.Select(seconds => new IntervalOption(seconds, ReadingOrder.Line(PluralStrings.Format("SystemMetersIntervalSeconds", seconds))))];
 
         _selectedShowOn = ShowOnOptions.First(option => option.ShowOn == Settings.ShowOn);
         _selectedLayout = LayoutOptions.First(option => option.Layout == Settings.Layout);

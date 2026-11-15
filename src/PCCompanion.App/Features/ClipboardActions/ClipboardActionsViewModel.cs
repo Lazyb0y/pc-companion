@@ -177,12 +177,12 @@ public sealed partial class ClipboardActionsViewModel : FeatureViewModel<Clipboa
     {
         if (problem.Length > 0)
         {
-            return string.Format(CultureInfo.CurrentCulture, ProblemFormat, problem);
+            return ReadingOrder.Format(ProblemFormat, problem);
         }
 
         return rule.KnownAction == ClipboardRuleAction.RunProgram
-            ? string.Format(CultureInfo.CurrentCulture, ProgramFormat, Path.GetFileName(rule.Program))
-            : string.Format(CultureInfo.CurrentCulture, AddressFormat, ClipboardRuleCheck.BuildAddress(rule.Address, "text")?.Host);
+            ? ReadingOrder.Format(ProgramFormat, Path.GetFileName(rule.Program))
+            : ReadingOrder.Format(AddressFormat, ClipboardRuleCheck.BuildAddress(rule.Address, "text")?.Host);
     }
 
     private void SaveRules(IReadOnlyList<ClipboardRule> rules)

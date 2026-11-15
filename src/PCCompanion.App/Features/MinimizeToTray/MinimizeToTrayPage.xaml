@@ -33,7 +33,7 @@
                 <controls:SwitchCard
                     Description="{app:Localized Key=MinimizeToTrayShiftMinimizeDescription}"
                     Glyph="&#xE921;"
-                    Header="{app:Localized Key=MinimizeToTrayShiftMinimizeHeader}"
+                    Header="{app:Localized Key=MinimizeToTrayShiftMinimizeHeader, Line=True}"
                     IsOn="{x:Bind ViewModel.ShiftMinimize, Mode=TwoWay}" />
 
                 <controls:AppList

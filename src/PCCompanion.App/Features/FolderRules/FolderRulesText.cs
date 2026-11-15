@@ -38,7 +38,7 @@ public static class FolderRulesText
         FolderProblem.SystemFolder => Strings.FolderRulesFolderSystem,
         FolderProblem.InvalidPart => Strings.FolderRulesRuleInvalidPart,
         FolderProblem.AlreadyWatched => Strings.FolderRulesFolderAlreadyWatched,
-        FolderProblem.TooMany => string.Format(CultureInfo.CurrentCulture, FolderTooManyFormat, FolderRulesSettings.MaximumFolders),
+        FolderProblem.TooMany => ReadingOrder.Format(FolderTooManyFormat, FolderRulesSettings.MaximumFolders),
         _ => string.Empty,
     };
 
@@ -58,12 +58,12 @@ public static class FolderRulesText
         RuleProblem.InvalidSitePattern => Strings.FolderRulesRuleInvalidSitePattern,
         RuleProblem.UnknownAction => Strings.FolderRulesRuleUnknownAction,
         RuleProblem.NoDestination => Strings.FolderRulesRuleNoDestination,
-        RuleProblem.DestinationNotAllowed => string.Format(CultureInfo.CurrentCulture, DestinationFormat, Of(FolderChecks.CheckDestination(rule.Destination, places))),
+        RuleProblem.DestinationNotAllowed => ReadingOrder.Format(DestinationFormat, Of(FolderChecks.CheckDestination(rule.Destination, places))),
         RuleProblem.DestinationIsOwnFolder => Strings.FolderRulesRuleDestinationIsOwnFolder,
         RuleProblem.NoNewName => Strings.FolderRulesRuleNoNewName,
         RuleProblem.InvalidNewName => Strings.FolderRulesRuleInvalidNewName,
         RuleProblem.UnknownIfExists => Strings.FolderRulesRuleUnknownIfExists,
-        RuleProblem.TooMany => string.Format(CultureInfo.CurrentCulture, RuleTooManyFormat, FolderRulesSettings.MaximumRules),
+        RuleProblem.TooMany => ReadingOrder.Format(RuleTooManyFormat, FolderRulesSettings.MaximumRules),
         _ => string.Empty,
     };
 
@@ -95,7 +95,7 @@ public static class FolderRulesText
             _ => string.Format(CultureInfo.CurrentCulture, SkippedFormat, Of(entry.Reason, entry)),
         };
 
-        return entry.Undone is null ? what : string.Format(CultureInfo.CurrentCulture, UndoneFormat, what);
+        return ReadingOrder.Line(entry.Undone is null ? what : string.Format(CultureInfo.CurrentCulture, UndoneFormat, what));
     }
 
     /// <summary>What Undo did, or why it didn't, or an empty string when it put the file back.</summary>
@@ -112,7 +112,7 @@ public static class FolderRulesText
             FolderRulesAnswerStatus.Blocked => Strings.FolderRulesUndoBlocked,
             FolderRulesAnswerStatus.NoRecycleBin => Strings.FolderRulesUndoNoRecycleBin,
             FolderRulesAnswerStatus.Kept => Strings.FolderRulesUndoKept,
-            FolderRulesAnswerStatus.Failed => string.Format(CultureInfo.CurrentCulture, UndoFailedFormat, answer.ErrorCode),
+            FolderRulesAnswerStatus.Failed => ReadingOrder.Format(UndoFailedFormat, answer.ErrorCode),
             _ => Strings.FolderRulesUndoRefused,
         };
     }
@@ -137,14 +137,14 @@ public static class FolderRulesText
     {
         if (problem.Length > 0)
         {
-            return string.Format(CultureInfo.CurrentCulture, ProblemFormat, problem);
+            return ReadingOrder.Format(ProblemFormat, problem);
         }
 
         return rule.KnownAction switch
         {
-            FolderRuleAction.Move => string.Format(CultureInfo.CurrentCulture, MoveFormat, rule.Destination.Trim()),
-            FolderRuleAction.Copy => string.Format(CultureInfo.CurrentCulture, CopyFormat, rule.Destination.Trim()),
-            FolderRuleAction.Rename => string.Format(CultureInfo.CurrentCulture, RenameFormat, rule.NewName.Trim()),
+            FolderRuleAction.Move => ReadingOrder.Format(MoveFormat, rule.Destination.Trim()),
+            FolderRuleAction.Copy => ReadingOrder.Format(CopyFormat, rule.Destination.Trim()),
+            FolderRuleAction.Rename => ReadingOrder.Format(RenameFormat, rule.NewName.Trim()),
             _ => Strings.FolderRulesSummaryRecycleBin,
         };
     }

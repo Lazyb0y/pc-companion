@@ -142,7 +142,7 @@ public sealed partial class NetworkProfilesPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, ViewModel.Profiles[index].Name),
+            Title = ReadingOrder.Format(DeleteTitleFormat, ViewModel.Profiles[index].Name),
             PrimaryButtonText = Strings.NetworkProfilesDelete,
             CloseButtonText = Strings.NetworkProfilesCancel,
             DefaultButton = ContentDialogButton.Close,

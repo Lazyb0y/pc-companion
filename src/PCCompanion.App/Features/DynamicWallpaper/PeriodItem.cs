@@ -106,7 +106,7 @@ public sealed partial class PeriodItem : ObservableObject
         }
     }
 
-    public string Description => Problem is null ? Source : string.Format(CultureInfo.CurrentCulture, ProblemFormat, Source, Problem);
+    public string Description => Problem is null ? Source : ReadingOrder.Format(ProblemFormat, Source, Problem);
 
     /// <summary>Windows' thumbnail of the picture or folder; <see langword="null"/> while there's none.</summary>
     public ImageSource? Thumbnail

@@ -86,7 +86,7 @@ public sealed partial class FolderRulesPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, RemoveTitleFormat, ViewModel.Folders[index].Name),
+            Title = ReadingOrder.Format(RemoveTitleFormat, ViewModel.Folders[index].Name),
             Content = Strings.FolderRulesRemoveText,
             PrimaryButtonText = Strings.FolderRulesRemove,
             CloseButtonText = Strings.FolderRulesCancel,
@@ -169,7 +169,7 @@ public sealed partial class FolderRulesPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, ViewModel.Folders[folder].Rules[rule].Name),
+            Title = ReadingOrder.Format(DeleteTitleFormat, ViewModel.Folders[folder].Rules[rule].Name),
             PrimaryButtonText = Strings.FolderRulesDelete,
             CloseButtonText = Strings.FolderRulesCancel,
             DefaultButton = ContentDialogButton.Close,

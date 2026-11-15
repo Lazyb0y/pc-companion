@@ -41,7 +41,7 @@ public static class NetworkProfilesText
 
         if (problem != ProfileProblem.None)
         {
-            return string.Format(CultureInfo.CurrentCulture, ProblemFormat, Problem(problem));
+            return ReadingOrder.Format(ProblemFormat, Problem(problem));
         }
 
         var parts = new List<string>();
@@ -61,9 +61,9 @@ public static class NetworkProfilesText
             parts.Add(Strings.NetworkProfilesSummaryDetect);
         }
 
-        return parts.Count == 0 ? Strings.NetworkProfilesSummaryNoProxy : string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", parts);
+        return parts.Count == 0 ? Strings.NetworkProfilesSummaryNoProxy : ReadingOrder.Line(string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", parts));
     }
 
     private static string TooLong(int maximum) =>
-        string.Format(CultureInfo.CurrentCulture, TooLongFormat, maximum.ToString("N0", CultureInfo.CurrentCulture));
+        ReadingOrder.Format(TooLongFormat, maximum.ToString("N0", CultureInfo.CurrentCulture));
 }

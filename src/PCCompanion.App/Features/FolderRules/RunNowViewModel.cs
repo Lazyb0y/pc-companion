@@ -63,7 +63,7 @@ public sealed partial class RunNowViewModel : ObservableObject
         ArgumentNullException.ThrowIfNull(name);
 
         _folder = folder;
-        Title = string.Format(CultureInfo.CurrentCulture, TitleFormat, name);
+        Title = ReadingOrder.Format(TitleFormat, name);
     }
 
     public string Title { get; }
@@ -93,7 +93,7 @@ public sealed partial class RunNowViewModel : ObservableObject
         var answer = await FolderRulesHost.AskAsync(new FolderRulesRequest { Kind = FolderRulesRequestKind.RunNowList, Folder = _folder }, FolderRulesHost.ListTimeout).ConfigureAwait(true);
         foreach (var file in answer is { Status: FolderRulesAnswerStatus.Done } ? answer.Files : [])
         {
-            var choice = new RunNowChoice(file, What(file), string.Format(CultureInfo.CurrentCulture, RuleFormat, file.Rule));
+            var choice = new RunNowChoice(file, What(file), ReadingOrder.Format(RuleFormat, file.Rule));
             choice.PropertyChanged += OnChoiceChanged;
             Files.Add(choice);
         }
@@ -102,7 +102,7 @@ public sealed partial class RunNowViewModel : ObservableObject
         {
             null => Strings.FolderRulesRunNowNotRunning,
             { Status: FolderRulesAnswerStatus.Refused } => Strings.FolderRulesRunNowRefused,
-            { Status: FolderRulesAnswerStatus.Failed } => string.Format(CultureInfo.CurrentCulture, ListFailedFormat, answer.ErrorCode),
+            { Status: FolderRulesAnswerStatus.Failed } => ReadingOrder.Format(ListFailedFormat, answer.ErrorCode),
             _ when Files.Count == 0 => Strings.FolderRulesRunNowNone,
             _ => string.Empty,
         };
@@ -125,10 +125,10 @@ public sealed partial class RunNowViewModel : ObservableObject
 
     private static string What(RunNowFile file) => file switch
     {
-        { Naming: not NamingProblem.None } => string.Format(CultureInfo.CurrentCulture, StaysFormat, FolderRulesText.Of(file.Naming)),
-        { Action: FolderRuleAction.Move } => string.Format(CultureInfo.CurrentCulture, MoveFormat, Path.Join(file.Destination, file.NewName)),
-        { Action: FolderRuleAction.Copy } => string.Format(CultureInfo.CurrentCulture, CopyFormat, Path.Join(file.Destination, file.NewName)),
-        { Action: FolderRuleAction.Rename } => string.Format(CultureInfo.CurrentCulture, RenameFormat, file.NewName),
+        { Naming: not NamingProblem.None } => ReadingOrder.Format(StaysFormat, FolderRulesText.Of(file.Naming)),
+        { Action: FolderRuleAction.Move } => ReadingOrder.Format(MoveFormat, Path.Join(file.Destination, file.NewName)),
+        { Action: FolderRuleAction.Copy } => ReadingOrder.Format(CopyFormat, Path.Join(file.Destination, file.NewName)),
+        { Action: FolderRuleAction.Rename } => ReadingOrder.Format(RenameFormat, file.NewName),
         _ => Strings.FolderRulesSummaryRecycleBin,
     };
 

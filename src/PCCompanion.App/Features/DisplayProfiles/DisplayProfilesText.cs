@@ -27,10 +27,10 @@ public static class DisplayProfilesText
     {
         DisplayProfileProblem.None => string.Empty,
         DisplayProfileProblem.NoName => Strings.DisplayProfilesNameMissing,
-        DisplayProfileProblem.NameTooLong => string.Format(CultureInfo.CurrentCulture, TooLongFormat, DisplayProfileCheck.MaximumNameLength.ToString("N0", CultureInfo.CurrentCulture)),
+        DisplayProfileProblem.NameTooLong => ReadingOrder.Format(TooLongFormat, DisplayProfileCheck.MaximumNameLength.ToString("N0", CultureInfo.CurrentCulture)),
         DisplayProfileProblem.InvalidName => Strings.DisplayProfilesNameInvalid,
         DisplayProfileProblem.NameInUse => Strings.DisplayProfilesNameInUse,
-        DisplayProfileProblem.TooManyDisplays => string.Format(CultureInfo.CurrentCulture, TooManyDisplaysFormat, DisplayProfileCheck.MaximumDisplays.ToString("N0", CultureInfo.CurrentCulture)),
+        DisplayProfileProblem.TooManyDisplays => ReadingOrder.Format(TooManyDisplaysFormat, DisplayProfileCheck.MaximumDisplays.ToString("N0", CultureInfo.CurrentCulture)),
         DisplayProfileProblem.InvalidDisplay => Strings.DisplayProfilesProblemInvalidDisplay,
         DisplayProfileProblem.SameDisplayTwice => Strings.DisplayProfilesProblemSameDisplayTwice,
         DisplayProfileProblem.NoDisplayOn => Strings.DisplayProfilesProblemNoDisplayOn,
@@ -44,7 +44,7 @@ public static class DisplayProfilesText
 
     /// <summary>Why a profile isn't in the menu, such as "Not in the menu: displays overlap."</summary>
     public static string NotInMenu(DisplayProfileProblem problem) =>
-        string.Format(CultureInfo.CurrentCulture, ProblemFormat, Problem(problem));
+        ReadingOrder.Format(ProblemFormat, Problem(problem));
 
     /// <summary>
     /// A display's name: its name from its EDID, Built-in display for a laptop's own, or Display
@@ -73,7 +73,7 @@ public static class DisplayProfilesText
         ArgumentNullException.ThrowIfNull(profile);
 
         return profile.Displays.Select((display, index) =>
-            string.Format(CultureInfo.CurrentCulture, LineFormat, DisplayName(profile, index), Details(display)));
+            ReadingOrder.Format(LineFormat, DisplayName(profile, index), Details(display)));
     }
 
     /// <summary>The note on a profile that can't be used now, naming the displays that aren't connected.</summary>
@@ -86,7 +86,7 @@ public static class DisplayProfilesText
             .Select((display, index) => (display, index))
             .Where(pair => pair.display.On && recognition.Displays[pair.index] is null)
             .Select(pair => DisplayName(profile, pair.index));
-        return string.Format(CultureInfo.CurrentCulture, NotConnectedFormat, string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", missing));
+        return ReadingOrder.Format(NotConnectedFormat, string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", missing));
     }
 
     /// <summary>The profile's displays at these places, by name, for notes after Use.</summary>

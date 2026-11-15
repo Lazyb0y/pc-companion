@@ -65,7 +65,7 @@ public sealed partial class ClipboardActionsPage : Page
 
         var dialog = new ContentDialog
         {
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, ViewModel.Rules[index].Name),
+            Title = ReadingOrder.Format(DeleteTitleFormat, ViewModel.Rules[index].Name),
             PrimaryButtonText = Strings.ClipboardActionsDelete,
             CloseButtonText = Strings.ClipboardActionsCancel,
             DefaultButton = ContentDialogButton.Close,

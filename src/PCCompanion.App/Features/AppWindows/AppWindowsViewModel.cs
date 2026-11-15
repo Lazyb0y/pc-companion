@@ -59,10 +59,10 @@ public sealed partial class AppWindowsViewModel : FeatureViewModel<AppWindowsSet
     public bool PreviousRefused => _shortcutStatus.Refused.Contains(AppWindowsFeature.PreviousShortcut);
 
     /// <summary>The note that names the refused shortcut that goes to the next window.</summary>
-    public string NextRefusedInfo => string.Format(CultureInfo.CurrentCulture, RefusedFormat, KeysOf(back: false));
+    public string NextRefusedInfo => ReadingOrder.Format(RefusedFormat, KeysOf(back: false));
 
     /// <summary>The note that names the refused shortcut with Shift.</summary>
-    public string PreviousRefusedInfo => string.Format(CultureInfo.CurrentCulture, RefusedFormat, KeysOf(back: true));
+    public string PreviousRefusedInfo => ReadingOrder.Format(RefusedFormat, KeysOf(back: true));
 
     public IReadOnlyList<ShortcutOption> Shortcuts { get; }
 

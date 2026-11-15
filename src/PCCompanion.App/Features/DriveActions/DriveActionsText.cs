@@ -40,7 +40,7 @@ public static class DriveActionsText
         DriveProblem.UnknownWhenConnected => Strings.DriveActionsDriveUnknownWhenConnected,
         DriveProblem.NotAdded => Strings.DriveActionsDriveNotAdded,
         DriveProblem.SecondCameraCards => Strings.DriveActionsDriveSecondCameraCards,
-        DriveProblem.TooMany => string.Format(CultureInfo.CurrentCulture, DrivesTooManyFormat, DriveActionsSettings.MaximumDrives),
+        DriveProblem.TooMany => ReadingOrder.Format(DrivesTooManyFormat, DriveActionsSettings.MaximumDrives),
         _ => string.Empty,
     };
 
@@ -56,15 +56,15 @@ public static class DriveActionsText
             ActionProblem.InvalidDriveFolder => Strings.DriveActionsActionInvalidDriveFolder,
             ActionProblem.NoTypes => Strings.DriveActionsActionNoTypes,
             ActionProblem.InvalidType => Strings.DriveActionsActionInvalidType,
-            ActionProblem.DestinationNotAllowed => string.Format(CultureInfo.CurrentCulture, DestinationFormat, Of(FolderChecks.CheckDestination(action.Destination, places))),
+            ActionProblem.DestinationNotAllowed => ReadingOrder.Format(DestinationFormat, Of(FolderChecks.CheckDestination(action.Destination, places))),
             ActionProblem.UnknownIfExists => Strings.DriveActionsActionUnknownIfExists,
             ActionProblem.NotForCameraCards => Strings.DriveActionsActionNotForCameraCards,
             ActionProblem.NoFolders => Strings.DriveActionsActionNoFolders,
-            ActionProblem.TooManyFolders => string.Format(CultureInfo.CurrentCulture, FoldersTooManyFormat, DriveActionsSettings.MaximumFolders),
-            ActionProblem.FolderNotAllowed => string.Format(CultureInfo.CurrentCulture, FolderFormat, FolderReason(action, places)),
+            ActionProblem.TooManyFolders => ReadingOrder.Format(FoldersTooManyFormat, DriveActionsSettings.MaximumFolders),
+            ActionProblem.FolderNotAllowed => ReadingOrder.Format(FolderFormat, FolderReason(action, places)),
             ActionProblem.SameFolderName => Strings.DriveActionsActionSameFolderName,
             ActionProblem.InvalidFolder => Strings.DriveActionsActionInvalidFolder,
-            ActionProblem.TooMany => string.Format(CultureInfo.CurrentCulture, ActionsTooManyFormat, DriveActionsSettings.MaximumActions),
+            ActionProblem.TooMany => ReadingOrder.Format(ActionsTooManyFormat, DriveActionsSettings.MaximumActions),
             _ => string.Empty,
         };
     }
@@ -125,21 +125,20 @@ public static class DriveActionsText
 
         if (problem.Length > 0)
         {
-            return string.Format(CultureInfo.CurrentCulture, ProblemFormat, problem);
+            return ReadingOrder.Format(ProblemFormat, problem);
         }
 
         return action.KnownAction switch
         {
-            DriveActionKind.Import when action.From.Length == 0 => string.Format(CultureInfo.CurrentCulture, ImportDriveFormat, action.Destination.Trim()),
-            DriveActionKind.Import => string.Format(CultureInfo.CurrentCulture, ImportFormat, action.From, action.Destination.Trim()),
-            DriveActionKind.BackUp => string.Format(
-                CultureInfo.CurrentCulture,
+            DriveActionKind.Import when action.From.Length == 0 => ReadingOrder.Format(ImportDriveFormat, action.Destination.Trim()),
+            DriveActionKind.Import => ReadingOrder.Format(ImportFormat, action.From, action.Destination.Trim()),
+            DriveActionKind.BackUp => ReadingOrder.Format(
                 BackUpFormat,
                 string.Join(CultureInfo.CurrentCulture.TextInfo.ListSeparator + " ", action.Folders.Select(FolderName)),
                 action.Destination),
             _ when action.Folder.Length == 0 => Strings.DriveActionsSummaryOpenDrive,
-            _ when DriveActionsCheck.IsDriveFolder(action.Folder, allowRoot: false) => string.Format(CultureInfo.CurrentCulture, OpenDriveFolderFormat, action.Folder),
-            _ => string.Format(CultureInfo.CurrentCulture, OpenFolderFormat, action.Folder),
+            _ when DriveActionsCheck.IsDriveFolder(action.Folder, allowRoot: false) => ReadingOrder.Format(OpenDriveFolderFormat, action.Folder),
+            _ => ReadingOrder.Format(OpenFolderFormat, action.Folder),
         };
     }
 
@@ -184,7 +183,7 @@ public static class DriveActionsText
             RunOutcome.Ejected or RunOutcome.Removed => Strings.DriveActionsStoppedRemoved,
             _ => Strings.DriveActionsStopped,
         });
-        return string.Join(Environment.NewLine, lines);
+        return ReadingOrder.Line(string.Join(Environment.NewLine, lines));
     }
 
     /// <summary>What happened to a file of a run, and whether Undo put it back.</summary>
@@ -200,7 +199,7 @@ public static class DriveActionsText
             _ => string.Format(CultureInfo.CurrentCulture, FileSkippedFormat, Of(file.Reason, file.ErrorCode)),
         };
 
-        return file.Undone ? string.Format(CultureInfo.CurrentCulture, FileUndoneFormat, what) : what;
+        return ReadingOrder.Line(file.Undone ? string.Format(CultureInfo.CurrentCulture, FileUndoneFormat, what) : what);
     }
 
     private static string Of(FileSkip reason, int errorCode) => reason switch
