@@ -35,7 +35,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   - **User name**.
   - **Sign in with:** **Password**, or **SSH key** with the key file, in OpenSSH or PuTTY format, and its passphrase if it has one. Ed25519, ECDSA and RSA keys work.
   - **Name:** the folder's name, the server's address by default. It must be a valid folder name and differ from the other servers'.
-- **Connect** connects, signs in and shows the server's key; see [Server keys](#server-keys). It then fills in **Folder on the server** with the user's home folder, which the user can change, and checks that the folder can be read.
+- **Connect** reads the server's key, without signing in, and shows it; see [Server keys](#server-keys). Once the user checks **I checked this key**, PC Companion signs in, fills in **Folder on the server** with the user's home folder when it's empty, which the user can change, and checks that the folder can be read.
 - **Save** is available once the key is confirmed and the folder can be read. The folder is created in `%USERPROFILE%\Remote Folders`, with a number added when a folder with that name is there, and appears in File Explorer.
 - **Editing a server:** its name, which changes the name File Explorer shows, and how it signs in. The folder on the PC keeps its first name. A new address, port, user or folder on the server is another server, so the user removes it and adds the new one.
 - **Removing a server** asks first. When changes are still waiting, it says how many, and offers to remove it anyway. PC Companion then disconnects the folder from the server:
@@ -53,7 +53,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   - on this PC: downloaded, which Windows may free up again when space runs low, if Storage Sense is on;
   - always kept: kept with **Always keep on this device**, and downloaded again after a change on the server;
   - waiting: changed on the PC and not yet on the server.
-- **Folders** are listed from the server when they're first opened. Windows then asks again each time a program lists them, since PC Companion never tells it a folder is complete; see [Changes on the server](#changes-on-the-server).
+- **Folders** are listed from the server when they're first opened. PC Companion tells Windows each listing is complete, since Windows can't create files in a folder it would still ask about, and 30 seconds later has it ask again the next time a program lists the folder; see [Changes on the server](#changes-on-the-server).
 - **Hidden files:** names that start with a dot, which Linux hides, get the hidden attribute, so File Explorer shows them only with **Hidden items** on.
 - **Thumbnails:** File Explorer shows online-only files with their type's icon and doesn't download them for a thumbnail.
 - **Names Windows can't show:** see [Names from the server](#names-from-the-server).
@@ -76,14 +76,14 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   2. It uploads it under a temporary name in the same folder on the server, `.pcc-upload-<random>`.
   3. Just before the rename, it checks that the file on the server is still the version the PC's copy came from, by its size and modification time; see [Conflicts](#conflicts).
   4. It renames the temporary file over the original with the `posix-rename@openssh.com` extension, so the file on the server is never half written. On a server without that extension, where a plain rename can't replace a file, it renames the original out of the way, renames the new file into place, then deletes the original, so a failure at any step leaves one whole version on the server.
-  5. It marks the PC's copy as in sync, only if it didn't change during the upload (`CfSetInSyncState` with the USN read before), and remembers the new version.
+  5. It marks the PC's copy as in sync through the same handle, and remembers the new version. Windows closes the handle as soon as a program opens the file, so a copy that may have changed during the upload is never marked in sync; it's uploaded again.
 - **New files** are uploaded the same way; **new folders** are created at once.
 - **Renames and moves** inside the folder are made on the server before Windows completes them, without replacing a file there. **Deletes** delete the file on the server first. When the server refuses, Windows refuses too, and the program says the operation was unsuccessful.
 - **Moving a file out of the folder** downloads it, then deletes it on the server, so it moves to the PC. **Copying** it out only downloads it.
 - **The Recycle Bin:** Windows deletes an online-only file for good, without downloading it, and moves a downloaded file to the Recycle Bin. Either way, the file is deleted on the server. A file restored from the Recycle Bin is uploaded again, as a new file.
 - **Files that stay on the PC:** names programs use for their temporary and lock files, `~$*`, `~*.tmp`, `.~lock.*#`, `Thumbs.db` and `desktop.ini`, are never uploaded. Windows shows them as excluded.
-- **While the server can't be reached:** changes to files wait. Renames, moves, deletes and new folders are made on the PC and written to a journal, `remote-folders\<server ID>.json` in the data folder, and made on the server, in order, when it's back, with the same checks. One that can't be made, such as a rename to a name that's now taken, is skipped, and the page lists it.
-- **While PC Companion isn't running:** Windows lets the user delete files without asking it, as the spike showed. A deleted file can't be told apart from one added on the server meanwhile, so it comes back at the next start; nothing is deleted on the server. If Windows allows renames and moves then too, a renamed or moved file is renamed on the server at the next start, since its placeholder still says where it came from.
+- **While the server can't be reached:** changes to files and new folders wait. Renames, moves and deletes are made on the PC and written to a journal, `remote-folders\<server ID>.json` in the data folder, and made on the server, in order, when it's back, with the same checks. One that can't be made, such as a rename to a name that's now taken, is skipped, and the page lists it.
+- **While PC Companion isn't running:** Windows lets the user edit files on the PC, and delete, rename and move files without asking it, but refuses new files in the folder. A deleted file can't be told apart from one added on the server meanwhile, so it comes back at the next start; nothing is deleted on the server. A renamed or moved file or folder is renamed on the server at the next start, since its placeholder still says where it came from, and its placeholder then learns its new path; an edited file is uploaded.
 
 ## Changes on the server
 
@@ -110,6 +110,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
 
 - **Adding a server:** the dialog shows the server's key, its type and SHA-256 fingerprint as OpenSSH shows it, such as `ED25519 SHA256:cw03EqRJF5BI2sgaxpgwrVhqZvn675XZNMGjF9bIUoI`, and explains how to check it: ask the server's administrator, or run `ssh-keygen -lf` on the server's key file. **Save** needs **I checked this key** to be checked. PC Companion keeps the key's type and fingerprint in the settings.
 - **Every connection** checks the key. Later connections ask the server for that type of key only, so an update that prefers another type of key never brings up a key the user didn't confirm.
+- **A server that no longer offers a key of the confirmed type,** as after it was set up again with other keys, has a changed key too, and the page shows the key it offers now.
 - **A changed key** stops the connection before anything is sent, including the password. The server's state becomes **Server key changed**, a notification says so, and nothing connects until the user acts. The page shows the old and new fingerprints, explains that the server may have been reinstalled or that someone may be in between, and offers **Trust the new key**, which asks first.
 - **Algorithms:** only current ones, with SSH.NET's strict key exchange against the Terrapin attack:
   - key exchange: `mlkem768x25519-sha256`, `sntrup761x25519-sha512`, `curve25519-sha256`, ECDH on NIST curves, and Diffie-Hellman groups 14 and 16 with SHA-2;
@@ -129,7 +130,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   - starts with `.pcc-upload-`, PC Companion's own temporary files.
 - The page says how many entries each server has that can't be shown, and why, without their names. Nothing is renamed: a renamed copy couldn't go back to the server under its own name.
 - **Paths:** every entry is created by Windows inside the folder from its parent's placeholder and its own checked name, so no name can reach outside the folder. A folder with more than 100,000 entries shows the first 100,000, and the page says so.
-- **Links on the server** are shown as what they point to, as `stat` reports it. A link that can't be followed isn't shown. Downloading a folder kept on this device doesn't follow links to folders, so a loop on the server can't fill the PC.
+- **Links on the server** are shown as what they point to, a folder or a file with the size `stat` reports, with the link's own modification time. A link that can't be followed isn't shown. Downloading a folder kept on this device doesn't follow links to folders, so a loop on the server can't fill the PC.
 - **Links on the PC:** a symbolic link or junction created in the folder isn't uploaded, and PC Companion never follows one when it reads files for an upload.
 - **Attributes and permissions** from the server aren't copied, except the hidden attribute for names that start with a dot. Times are the server's modification time.
 
@@ -142,13 +143,13 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   - **Sign-in failed:** the password, key or passphrase was refused;
   - **Server key changed;**
   - with the number of changes waiting, conflicts and entries that can't be shown.
-- **Unreachable:** a connection that isn't made within 10 seconds, or is refused, makes the server unreachable. Requests then fail at once. PC Companion tries again on the next request after 30 seconds, and on its own, while changes wait, after 30 seconds, then 1, 2 and every 5 minutes; and at once when Windows reports a network change or the PC wakes from sleep.
+- **Unreachable:** a connection that isn't made within 10 seconds, or is refused, makes the server unreachable. Requests then fail at once. PC Companion tries again on the next request after 30 seconds, and on its own, while changes wait, after 30 seconds, then 1, 2 and every 5 minutes; and at once when Windows reports a network change or the PC wakes from sleep, or the user selects **Sync now** or **Sign in again**. Connections that work stay open then, and a network change or waking from sleep closes only idle ones: in testing, closing several at once left an OpenSSH for Windows server refusing new connections until it was restarted.
 - **Sign-in failed** isn't retried on its own, so a server that locks accounts after failed sign-ins doesn't lock the user's. A notification says so, and the page offers **Sign in again**.
 - While connected, SSH keepalives go every 30 seconds, so a dropped connection is noticed within about a minute.
 
 ## The PC Companion icon's menu
 
-- A **Remote Folders** submenu lists the servers with their states, such as "Home server: 2 changes waiting", each with **Open folder**, and **Sync now** for all of them. The host builds it from the provider's last status, without asking the provider while the menu opens.
+- A **Remote Folders** submenu lists the servers with their states, such as "Home server: 2 changes waiting", each with **Open folder**, and **Sync now** for all of them. The host builds it from the provider's last status, which it reads every 10 seconds, without asking the provider while the menu opens.
 - The notifications, for conflicts, sign-ins that failed, changed server keys and a provider that keeps crashing, show from the PC Companion icon, as other features' do: the provider asks the host through the pipe.
 
 ## Credentials
@@ -165,7 +166,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
   - **Other rights:** it must run with the user's own rights, as File Explorer does, even while the host runs as administrator, and code that reads a server's data should never run elevated.
   - **Crashes an error boundary can't catch:** the SSH code parses whatever a server sends, and a stack overflow or a fatal error in it would end every feature in the host.
 - **Who starts it:** the host, while Remote Folders is on, and never with admin rights: a host elevated through UAC starts it with the token of the Windows shell, as it starts programs for features; see [Always run as administrator](../general/run-as-administrator.md#between-the-host-and-other-programs). One runs per user session. It exits when the feature is turned off, when the host asks it to, and when the host's process ends. When it ends unexpectedly, the host starts it again after 1, 10 and 60 seconds; after a fourth crash within an hour, it waits until the settings change, with a notification and the reason on the page.
-- **While it isn't running,** folders stay registered: files on the PC open, online-only files fail with Windows' message that the provider isn't running, and folders never opened look empty. Turning the feature off says so.
+- **While it isn't running,** folders stay registered: files on the PC open, online-only files fail with Windows' message that the provider isn't running, or that it exited unexpectedly after it crashed, and folders never opened look empty. Turning the feature off says so. While the host starts the provider, the page shows **Starting**, and when the provider hasn't answered for 15 seconds, a note says Remote Folders isn't running.
 - **In the host:**
   - **the UI thread** runs `Apply`, which starts or stops the process on the thread pool, and builds the icon's submenu from the last status;
   - **the thread pool** reads the provider's status and requests for notifications from its pipe.
@@ -189,7 +190,7 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
 
 - **Feature page:**
   - the on/off switch;
-  - **Servers,** a list with **Add server**; for each server its name, `user@address:port`, the folder on the server, its state, its problem if any, with **Sign in again** or **Trust the new key** for those problems, the changes waiting, conflicts, changes that couldn't be made and entries that can't be shown, **Open folder**, **Sync now**, and **More options** with **Edit** and **Remove**;
+  - **Servers,** a list with **Add server**; for each server its name, `user@address:port`, the folder on the server, its state, its problem if any, with **Sign in again** or **Trust the new key** for those problems, the changes waiting, conflicts, changes that couldn't be made and entries that can't be shown, **Open folder**, **Sync now**, and **More options** with **Edit** and **Remove**. A server's card opens by itself when it has a problem, conflicts, changes that couldn't be made or entries that can't be shown;
   - where the folders are, with **Open Remote Folders**;
   - a note that files that are online only can't be opened while Remote Folders is off or PC Companion isn't running;
   - a **Permissions & data** card.
@@ -232,14 +233,14 @@ Open the files on an SFTP server from File Explorer, as if they were on the PC: 
 - PC Companion connects only to the servers the user adds, with SSH, to the address and port given. Windows resolves the server's name. It connects when a folder is listed, a file is downloaded or uploaded, a change waits, a folder kept on this device is looked at again every 10 minutes, the user selects **Connect**, **Sync now** or **Sign in again**, or after a failure as in [Offline and reconnecting](#offline-and-reconnecting). It sends keepalives every 30 seconds while connected, and closes the connection after 5 minutes without activity.
 - It sends the server the user name and the password or a signature with the key, the names and contents of the files the user saves there and the changes they make, and nothing about the PC. It makes no other connection for this feature.
 - **`PRIVACY.md`** gets a line:
-  - "**Remote Folders:** connects only to the servers you add, with SSH, when you open, save or change files in their folders, every 10 minutes for folders you keep on this device, and when you select **Sync now**, and checks each server's key against the one you confirmed. It sends the server only your sign-in and the files and changes you make there. Your servers' addresses, user names, folders and confirmed keys are in `settings.json`; passwords and key passphrases are in Windows Credential Manager, for this PC only; your key files are only read. Files you open are kept in your `Remote Folders` folder, and changes made while a server can't be reached wait in `remote-folders`, with the files' names, until the server has them. Every downloaded file gets a Mark of the Web, without the server's address. The logs hold no server addresses, user names, folders or file names."
+  - "**Remote Folders:** connects only to the servers you add, with SSH, when you open, save or change files in their folders, every 10 minutes for folders you keep on this device, when you select **Connect**, **Sync now** or **Sign in again**, and again after a failure, and checks each server's key against the one you confirmed before it signs in. It sends the server only your sign-in and the files and changes you make there. Your servers' addresses, user names, folders and confirmed keys are in `settings.json`; passwords and key passphrases are in Windows Credential Manager, for this PC only; your key files are only read. Files you open are kept in your `Remote Folders` folder, and changes made while a server can't be reached wait in `remote-folders`, with the files' names, until the server has them. Every downloaded file gets a Mark of the Web, without the server's address. The logs hold no server addresses, user names, folders or file names. Uninstalling removes the folders from File Explorer, leaving the files on your PC in ordinary folders, and, unless you keep your settings, the passwords and passphrases."
   - and `remote-folders` in the list of files PC Companion stores.
 
 ## Installer
 
 - **New files** in the install folder: `PCCompanion.RemoteFolders.exe`, with `Renci.SshNet.dll` and `BouncyCastle.Cryptography.dll`, both MIT. `ThirdPartyNotices.txt` and `NOTICE.md` list them.
 - **Closing before an upgrade or uninstall:** the host's `--exit` stops the provider and waits for it, as it waits for the settings app, and `CloseApplication` covers `PCCompanion.RemoteFolders.exe` too.
-- **Uninstalling** for the user who uninstalls: the host's `--remove-data`, which runs as the user, also disconnects and unregisters each of the user's PC Companion folders, as **Remove** does, and deletes the credentials. Online-only files disappear; files on the PC, with waiting changes, stay, in ordinary folders. With `KEEPSETTINGS=1`, the servers stay in the settings, and after a new install their folders are registered again and ask for their passwords again.
+- **Uninstalling** for the user who uninstalls: the host's `--remove-data`, which runs as the user, also disconnects and unregisters each of the user's PC Companion folders, as **Remove** does, and deletes the credentials. Online-only files disappear; files on the PC, with waiting changes, stay, in ordinary folders. With `KEEPSETTINGS=1`, the servers stay in the settings with their passwords and passphrases, and after a new install their folders are registered again.
 - **Other users of an all-users install:** their folders would stay registered without a provider, and Windows would refuse to open their online-only files. The elevated uninstall step, which runs as SYSTEM, also unregisters every sync root whose ID starts with `PCCompanion!`, for every user. Their credentials stay in their own vaults, which only they can open, like their data folders.
 - Nothing is registered by the installer: each user's folders are registered by the app, per user, without admin rights.
 
@@ -336,7 +337,11 @@ Two spikes in Windows Sandbox (Windows 11 24H2, build 26100, Cloud Files integra
   - A server key that didn't match the confirmed one stopped the connection in 55 ms, before signing in.
   - Plain SFTP rename over an existing file fails; `posix-rename@openssh.com` replaces it.
   - A stopped server dropped the connection at once; connecting was refused after about 2 seconds, and connecting again after it was back took 142 ms.
-- **Not checked yet,** in the implementation's own spike or by hand: Windows 10; the provider without admin rights while the host has them, with UAC on; registering again with a new name; renames and moves while the provider isn't connected; unregistering another user's folders as SYSTEM; a virtual disk mounted at the profile's `Remote Folders` folder for the Sandbox checks; File Explorer's question before deleting an online-only file; saves by Office and other apps; Storage Sense; Windows Search; long paths; real networks; Linux servers and NAS servers; and keyboard-interactive sign-in.
+- **Found while implementing,** in Windows Sandbox:
+  - A listing answered without marking the folder complete made creating a file in it fail with `0x80070781`, as Windows asked for the folder again, so listings are answered complete; see [The folder in File Explorer](#the-folder-in-file-explorer).
+  - While the provider's process wasn't running, creating a file in the folder failed with `0x801F0005`, and edits and renames went ahead; after its process was ended, online-only files failed with "The cloud file provider exited unexpectedly."
+  - Renames made while the provider wasn't running reached the server at its next start; unregistering a signed-out user's folders as SYSTEM, with their registry loaded for the moment, worked; and a virtual disk mounted at the profile's `Remote Folders` folder took the Sandbox checks' folders.
+- **Not checked yet,** by hand: Windows 10; the provider without admin rights while the host has them, with UAC on; registering again with a new name; File Explorer's question before deleting an online-only file; saves by Office and other apps; Storage Sense; Windows Search; long paths; real networks; Linux servers and NAS servers; and keyboard-interactive sign-in.
 
 ## Testing
 
@@ -351,21 +356,21 @@ Two spikes in Windows Sandbox (Windows 11 24H2, build 26100, Cloud Files integra
   - **server keys:** the check, the pinned key type, and the refused algorithms;
   - **the pipe:** its messages and its checks of requests;
   - **the settings:** defaults, the spec's example, unknown values, and a section that can't be read.
-- **Sandbox checks** (`scripts/sandbox/groups/RemoteFolders.ps1`), with OpenSSH for Windows installed in the Sandbox only, from a release pinned by version and SHA-256, which `sandbox-test.ps1` downloads once and keeps outside the repository; a test account with a password and a key; and a virtual NTFS disk mounted at `%USERPROFILE%\Remote Folders`, since Windows Sandbox can't register folders on its own drive. The connections stay inside the Sandbox, which keeps networking off:
+- **Sandbox checks** (`scripts/sandbox/groups/RemoteFolders.ps1`), with OpenSSH for Windows installed in the Sandbox only, from a release pinned by version and SHA-256, which `sandbox-test.ps1` downloads once and keeps in `TestResults`, which Git ignores; a test account with a password and a key; and a virtual NTFS disk mounted at `%USERPROFILE%\Remote Folders`, since Windows Sandbox can't register folders on its own drive. The connections stay inside the Sandbox, which keeps networking off:
   - **adding:** the dialog adds a server with a password and one with a key, shows the key's fingerprint, and saves only once it's confirmed; the folder appears in the navigation pane's registry and in File Explorer;
   - **files:** listing, opening, **Always keep on this device**, **Free up space**, saving a change, a new file and folder, a rename, a move, a delete, the Recycle Bin, and a move out of the folder, each checked on the server;
   - **server changes:** a file added, changed and deleted on the server shows on the next listing; a kept file is downloaded again;
   - **conflicts:** a file changed on both sides gives a conflict copy on the server and on the PC;
   - **offline:** with the server stopped, an online-only file fails with error 388, and the next request at once; an edit waits, a rename goes to the journal, and both reach the server when it's back;
-  - **refusals:** a wrong password gives **Sign-in failed**, and a confirmed key changed in `settings.json` gives **Server key changed**, with nothing sent;
-  - **the provider:** ending its process starts it again, and the host's **Exit** stops it;
+  - **refusals:** a password changed on the server gives **Sign-in failed** and **Sign in again**; a key changed on the server, or a server that no longer offers the confirmed key's type, gives **Server key changed**, with nothing sent, and **Trust the new key**;
+  - **the provider:** ending its process starts it again, and the host's `--exit`, as **Exit** in its menu, stops it;
   - **removing:** the folder is unregistered, files on the PC stay, and the credential is gone;
   - **Mark of the Web** on downloaded files, without `HostUrl`;
   - **logs** without the server's address, the user name or file names;
-  - **uninstalling** unregisters the folders and deletes the credentials;
+  - **uninstalling** just for the user unregisters the folders and deletes the credentials; for all users, it also unregisters a signed-out user's folders;
   - **the page** in English and Arabic, light and dark, with screenshots;
   - no feature holds the host's UI thread, as every group checks.
-- **What the Sandbox can't check:** Windows 10, UAC on, real networks, Linux and NAS servers, sleep, and other users.
+- **What the Sandbox can't check:** Windows 10, UAC on, real networks, Linux and NAS servers, sleep, and other users signed in at the same time.
 - **By hand:**
   - a Linux server with OpenSSH, and a NAS, over the local network and over the internet, with a password and a key;
   - large files of several GB, and a slow or lossy connection such as Wi-Fi or a VPN;
@@ -373,5 +378,6 @@ Two spikes in Windows Sandbox (Windows 11 24H2, build 26100, Cloud Files integra
   - saving from Word, Excel, Notepad, Paint and a code editor, and File Explorer's question before deleting;
   - Storage Sense, Windows Search, Microsoft Defender scans, and long paths;
   - Always run as administrator with UAC on, where the provider runs without admin rights;
-  - two users on an all-users install, and uninstalling it;
+  - two users signed in on an all-users install, both with servers;
+  - selecting a conflict notification, which opens the folder with the copy selected, also for names with spaces and commas;
   - Narrator on the page and the dialog, a right-to-left language, Windows 10 and ARM64.
