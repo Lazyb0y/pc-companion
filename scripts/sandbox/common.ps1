@@ -990,5 +990,9 @@ $dataFolder = Join-Path $env:LOCALAPPDATA 'PCCompanion'
 $logs = Join-Path $dataFolder 'Logs'
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
 $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-$menuX = $screen.Width - 300
-$menuY = $screen.Height - 100
+# Where the checks open tray menus: in the upper left of the screen, rather than near the tray.
+# Windows shows notifications in the bottom-right corner and keeps them there while there's no
+# input, as in the Sandbox, so one that an earlier check left can come in over a menu there and
+# take the click meant for it. Up here, the menu and the submenus it opens to the right stay clear.
+$menuX = 100
+$menuY = 100
