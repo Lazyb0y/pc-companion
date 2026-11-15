@@ -45,13 +45,77 @@ function Select-AnyMenuItem([string] $Name) {
     return $true
 }
 
-# Opens the PC Companion icon's menu, then its Display profile submenu.
+# Puts the host's window in front before the checks open its menu, and returns whether it got there.
+# Without the front, the menu opens, but UI Automation reads its items as empty. When the user opens
+# the icon's menu, Explorer lets the host take the front; a posted message doesn't. A notification left
+# on the screen takes the front when the settings app closes and keeps it while there's no input, as in
+# the Sandbox; no window can take the front from it then. So a notification in front goes to
+# Notification Center first, as its close button sends it, until none is left in front: a queued one
+# can come next. Windows lets this script give the front away only after input, so a press of a key
+# that has no use comes first. The host also gets the right to take the front itself, as Explorer
+# gives it.
+function Set-HostFront {
+    $hostWindow = [Win32]::FindWindow('PCCompanion.Host', $null)
+    $hostProcess = Get-Processes 'PCCompanion.Host' | Select-Object -First 1
+    if ($hostWindow -eq [IntPtr]::Zero -or -not $hostProcess) { return $false }
+    $dismissButton = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::AutomationIdProperty, 'DismissButton')
+    $dismissed = 0
+    for ($attempt = 0; $attempt -lt 40 -and [Win32]::GetForegroundWindow() -ne $hostWindow; $attempt++) {
+        $front = [Win32]::GetForegroundWindow()
+        if ([Win32]::WindowClass($front) -eq 'Windows.UI.Core.CoreWindow') {
+            try {
+                $dismiss = [System.Windows.Automation.AutomationElement]::FromHandle($front).FindFirst([System.Windows.Automation.TreeScope]::Descendants, $dismissButton)
+                if ($dismiss) {
+                    $dismiss.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+                    $dismissed++
+                }
+            }
+            catch {
+                Write-Report "[NOTE] Sending a notification to Notification Center failed: $($_.Exception.Message)"
+            }
+            # The notification takes a moment to slide away, and the next one to come in, without its
+            # button until then.
+            Start-Sleep -Milliseconds 500
+        }
+        Send-Key 0xE8
+        if ([Win32]::SetForegroundWindow($hostWindow)) { Start-Sleep -Milliseconds 300 }
+    }
+    if ($dismissed -gt 0) { Write-Report "[NOTE] Notifications had the front, so $dismissed went to Notification Center before the tray menu opened." }
+    Send-Key 0xE8
+    [void] [Win32]::AllowSetForegroundWindow([uint32] $hostProcess.Id)
+    return [Win32]::GetForegroundWindow() -eq $hostWindow
+}
+
+# Opens the PC Companion icon's menu and returns whether UI Automation reads it. When the host doesn't
+# have the front with its menu open, UI Automation can't read the menu, so it's closed and opened
+# again, once.
+function Open-HostMenu {
+    $hostWindow = [Win32]::FindWindow('PCCompanion.Host', $null)
+    for ($try = 1; $try -le 2; $try++) {
+        [void] (Set-HostFront)
+        $opened = (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY) -and (Wait-Until { (Get-MenuItems) -match 'Exit' } 5)
+        $front = [Win32]::GetForegroundWindow()
+        if ($front -eq $hostWindow -or $try -eq 2) { break }
+        Write-Report "[NOTE] The host didn't have the front with its menu open ('$([Win32]::WindowClass($front))' had it), so the menu opened again."
+        [void] (Close-TrayMenu)
+    }
+    return $opened
+}
+
+# Opens the PC Companion icon's menu, then its Display profile submenu. When either doesn't open, a
+# screenshot shows what was on the screen, and the detail names the window in front.
 function Open-ProfileMenu {
-    if (-not (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)) { return $false }
-    if (-not (Wait-Until { (Get-MenuItems) -match 'Exit' } 5)) { return $false }
-    Start-Sleep -Milliseconds 500
-    if (-not (Select-AnyMenuItem 'Display profile')) { return $false }
-    $opened = Wait-Until { (Get-MenuItems) -match 'Display Profiles settings' } 5
+    $opened = Open-HostMenu
+    if ($opened) {
+        Start-Sleep -Milliseconds 500
+        $opened = (Select-AnyMenuItem 'Display profile') -and (Wait-Until { (Get-MenuItems) -match 'Display Profiles settings' } 5)
+    }
+    $script:menuProblem = ''
+    if (-not $opened) {
+        $front = [Win32]::GetForegroundWindow()
+        $script:menuProblem = if ($front -eq [IntPtr]::Zero) { 'no window in front' } else { "in front: '$([Win32]::WindowClass($front))'" }
+        Save-Screenshot '16x-display-profiles-menu-failed'
+    }
     Start-Sleep -Milliseconds 300
     return $opened
 }
@@ -158,21 +222,22 @@ Test-Check 'focus goes to the profile before the deleted one' (Wait-Until { (Get
 
 # The PC Companion icon's menu: the note, and every profile dimmed.
 [void] (Close-SettingsApp)
-Test-Check 'the PC Companion icon''s menu has the Display profile submenu' (Open-ProfileMenu)
+Test-Check 'the PC Companion icon''s menu has the Display profile submenu' (Open-ProfileMenu) $script:menuProblem
 # UI Automation lists a submenu's items under its item in the menu too.
 $menus = Get-MenuItems
 Test-Check 'the submenu notes the remote session and dims the profiles' (($menus -join ' || ') -like "*Display profile | $remoteNote (dimmed) | Desk & lamp (dimmed) | Presenting (dimmed) | Display Profiles settings | Settings | Exit*") ($menus -join ' || ')
 Test-Check 'choose Display Profiles settings' (Select-AnyMenuItem 'Display Profiles settings')
 Test-Check 'the settings app opens on the Display Profiles page' ((Wait-Until { Get-AppWindow } 15) -and (Wait-Until { Find-AppElement 'Add from current setup' } 10))
 
-# Turned off, the submenu is gone.
+# Turned off, the submenu is gone. A menu that a failed check above left open would be read instead
+# of the new one, so it's closed first.
+[void] (Close-TrayMenu)
 [void] (Close-SettingsApp)
 Write-DisplayProfilesSettings $false @($desk, $presenting)
 Test-Check 'the host stops Display Profiles' (Wait-Until { (Get-HostLog) -match 'Display Profiles stopped\.' } 10)
-[void] (Send-TrayEvent $WM_CONTEXTMENU $menuX $menuY)
-[void] (Wait-Until { (Get-MenuItems) -match 'Exit' } 5)
+$opened = Open-HostMenu
 $menus = Get-MenuItems
-Test-Check 'turned off, the menu has no Display profile submenu' (-not (($menus -join ' ') -match 'Display profile')) ($menus -join ' || ')
+Test-Check 'turned off, the menu has no Display profile submenu' ($opened -and -not (($menus -join ' ') -match 'Display profile')) ($menus -join ' || ')
 [void] (Close-TrayMenu)
 
 $logText = "$(Get-HostLog)`n$(Get-AppLog)"
