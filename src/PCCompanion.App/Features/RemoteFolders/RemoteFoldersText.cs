@@ -19,9 +19,11 @@ public static class RemoteFoldersText
     private static readonly CompositeFormat FailedUploadFormat = CompositeFormat.Parse(Strings.RemoteFoldersFailedUpload);
     private static readonly CompositeFormat HiddenLineFormat = CompositeFormat.Parse(Strings.RemoteFoldersHiddenLine);
 
-    // Paths are isolated as left to right, so they read the same within a sentence in any language.
-    private const char LeftToRightIsolate = '\u2066';
-    private const char PopIsolate = '\u2069';
+    // Paths are embedded as left to right, so they read the same within a sentence in any language.
+    // Embeddings rather than isolates, which WinUI ignores, so a path's first slash would move to the
+    // other end in a right-to-left line.
+    private const char LeftToRightEmbedding = '\u202A';
+    private const char PopDirectionalFormatting = '\u202C';
 
     /// <summary>What's wrong with a box of the server dialog, or an empty string for nothing.</summary>
     public static string Problem(ServerProblem problem) => problem switch
@@ -129,8 +131,8 @@ public static class RemoteFoldersText
         _ => Strings.RemoteFoldersReasonFailed,
     };
 
-    /// <summary>A path, address or key isolated as left to right, so it reads the same within text in any language.</summary>
-    public static string Isolated(string text) => LeftToRightIsolate + text + PopIsolate;
+    /// <summary>A path, address or key embedded as left to right, so it reads the same within text in any language.</summary>
+    public static string LeftToRight(string text) => LeftToRightEmbedding + text + PopDirectionalFormatting;
 
-    private static string Path(string path) => Isolated(path);
+    private static string Path(string path) => LeftToRight(path);
 }
