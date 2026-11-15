@@ -9,7 +9,8 @@ namespace PCCompanion.Platform.Windows.Tests;
 /// <summary>
 /// Opens ordinary files of the test's own for an upload. Windows' oplock handle works on any
 /// file, so stepping aside for programs is checked here; marking in sync needs a sync root, so
-/// that is checked in Windows Sandbox only.
+/// that is checked in Windows Sandbox only. Where Windows' Cloud Files filter doesn't answer, as on
+/// the build machines, the checks of its answers are skipped; see <see cref="CloudFilesFilter"/>.
 /// </summary>
 public sealed class UploadFileTests : IDisposable
 {
@@ -118,18 +119,18 @@ public sealed class UploadFileTests : IDisposable
         Assert.Equal(0, UploadFile.Open(path, out var file));
         using (file)
         {
-            Assert.Equal(NotUnderASyncRoot, file!.MarkInSync([1, 2, 3], isPlaceholder: false));
-            Assert.Equal(NotACloudFile, file.MarkInSync([1, 2, 3], isPlaceholder: true));
+            CloudFilesFilter.AssertAnswer(NotUnderASyncRoot, file!.MarkInSync([1, 2, 3], isPlaceholder: false));
+            CloudFilesFilter.AssertAnswer(NotACloudFile, file.MarkInSync([1, 2, 3], isPlaceholder: true));
         }
 
-        Assert.Null(Placeholders.Read(path));
+        Assert.Null(CloudFilesFilter.Read(path));
     }
 
     [Fact]
     public void AFolderOutsideASyncRootIsntConverted()
     {
         Assert.NotEqual(0, Placeholders.ConvertFolder(_folder.FullPath, [1, 2, 3]));
-        Assert.Null(Placeholders.Read(_folder.FullPath));
+        Assert.Null(CloudFilesFilter.Read(_folder.FullPath));
     }
 
     [Fact]
