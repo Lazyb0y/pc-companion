@@ -9,7 +9,9 @@ namespace PCCompanion.Platform.Windows.Tests;
 /// <summary>
 /// Calls the Cloud Files API on ordinary files and folders of the test's own, outside any sync
 /// root, so Windows refuses every request and nothing on this PC changes. Registering a sync root
-/// adds a folder to File Explorer, so that is checked in Windows Sandbox only.
+/// adds a folder to File Explorer, so that is checked in Windows Sandbox only. Where Windows' Cloud
+/// Files filter doesn't answer, as on the build machines, the checks of its answers are skipped;
+/// see <see cref="CloudFilesFilter"/>.
 /// </summary>
 public sealed class CloudFilesTests : IDisposable
 {
@@ -33,8 +35,8 @@ public sealed class CloudFilesTests : IDisposable
     [Fact]
     public void AnOrdinaryFileIsNotAPlaceholder()
     {
-        Assert.Null(Placeholders.Read(File("plain.txt")));
-        Assert.Null(Placeholders.Read(_folder.FullPath));
+        Assert.Null(CloudFilesFilter.Read(File("plain.txt")));
+        Assert.Null(CloudFilesFilter.Read(_folder.FullPath));
     }
 
     [Fact]
@@ -48,8 +50,8 @@ public sealed class CloudFilesTests : IDisposable
     {
         string path = File("plain.txt");
 
-        Assert.Equal(NotACloudFile, Placeholders.SetInSync(path, inSync: true));
-        Assert.Equal(NotACloudFile, Placeholders.Dehydrate(path));
+        CloudFilesFilter.AssertAnswer(NotACloudFile, Placeholders.SetInSync(path, inSync: true));
+        CloudFilesFilter.AssertAnswer(NotACloudFile, Placeholders.Dehydrate(path));
         Assert.Equal("content", System.IO.File.ReadAllText(path));
     }
 
@@ -59,7 +61,7 @@ public sealed class CloudFilesTests : IDisposable
     {
         string path = File("plain.txt");
 
-        Assert.Equal(0, Placeholders.SetPinState(path, PinState.Pinned));
+        CloudFilesFilter.AssertAnswer(0, Placeholders.SetPinState(path, PinState.Pinned));
         Assert.True(System.IO.File.GetAttributes(path).HasFlag((FileAttributes)0x00080000));
         Assert.Equal(0, Placeholders.SetPinState(path, PinState.Unspecified));
         Assert.False(System.IO.File.GetAttributes(path).HasFlag((FileAttributes)0x00080000));
@@ -88,7 +90,7 @@ public sealed class CloudFilesTests : IDisposable
         string path = File("plain.txt");
 
         Assert.NotEqual(0, Placeholders.Convert(path, [1, 2, 3], markInSync: true));
-        Assert.Null(Placeholders.Read(path));
+        Assert.Null(CloudFilesFilter.Read(path));
     }
 
     [Fact]
@@ -96,11 +98,12 @@ public sealed class CloudFilesTests : IDisposable
     {
         string path = File("plain.txt");
 
-        Assert.Equal(NotACloudFile, Placeholders.Update(path, null, [1, 2, 3], PlaceholderUpdate.MarkInSync));
+        int result = Placeholders.Update(path, null, [1, 2, 3], PlaceholderUpdate.MarkInSync);
 
         // The handle Windows owned was closed once, by Windows: the file opens and reads as before.
         Assert.Equal("content", System.IO.File.ReadAllText(path));
-        Assert.Null(Placeholders.Read(path));
+        CloudFilesFilter.AssertAnswer(NotACloudFile, result);
+        Assert.Null(CloudFilesFilter.Read(path));
     }
 
     [Fact]
@@ -121,8 +124,8 @@ public sealed class CloudFilesTests : IDisposable
     {
         string path = File("plain.txt");
 
-        Assert.Equal(NotACloudFile, Placeholders.UpdateIdentity(path, [1, 2, 3], markInSync: true));
-        Assert.Null(Placeholders.Read(path));
+        CloudFilesFilter.AssertAnswer(NotACloudFile, Placeholders.UpdateIdentity(path, [1, 2, 3], markInSync: true));
+        Assert.Null(CloudFilesFilter.Read(path));
     }
 
     [Fact]
