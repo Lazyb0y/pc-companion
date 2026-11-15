@@ -232,15 +232,19 @@ public sealed partial class ServerUploads(
 
     /// <summary>
     /// Records a change to a file or folder in the server's folder, from the folder's watch or from
-    /// Windows. A folder that's on the server needs nothing, so it isn't a change waiting: Windows
-    /// and the provider change its placeholder as it's listed, such as every time it's listed again.
+    /// Windows. A folder that's on the server where its placeholder says needs nothing, so it isn't a
+    /// change waiting: Windows and the provider change its placeholder as it's listed, such as every
+    /// time it's listed again. A folder renamed or moved on the PC learns its new path from the worker.
     /// </summary>
     public void Changed(string path)
     {
-        if (RelativePath(path) is { Length: > 0 } && pc.Inspect(path) is not { IsDirectory: true, State: not null })
+        if (RelativePath(path) is not { Length: > 0 } relative
+            || (pc.Inspect(path) is { IsDirectory: true, State: not null } folder && (folder.Identity is null || folder.Identity.RelativePath == relative)))
         {
-            _queue.Changed(path);
+            return;
         }
+
+        _queue.Changed(path);
     }
 
     /// <summary>

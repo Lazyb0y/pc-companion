@@ -294,8 +294,8 @@ public sealed class ChangesTests : IDisposable
         Assert.Equal(2, journal.Count);
         Assert.Equal(Rename("docs", "papers", isDirectory: true), journal.First);
 
-        // The files wait to be checked; the folders are on the server, so they need nothing.
-        Assert.Equal(3, _uploads.Waiting);
+        // The files wait to be checked, and the moved folders to learn their new paths.
+        Assert.Equal(5, _uploads.Waiting);
     }
 
     [Fact]
