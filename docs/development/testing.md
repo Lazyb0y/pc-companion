@@ -89,5 +89,6 @@ A run of every group takes about 56 minutes, and building the installer about a 
 
 - A feature with runtime behavior worth checking gets a group: `scripts\sandbox\groups\<Feature>.ps1`, and an entry in `$startStates` in `run-checks.ps1` with what it starts from. Groups that remove PC Companion or install it for all users go last.
 - A group opens what it needs, such as the settings app, and doesn't rely on another group. Helpers that more than one group uses go in `common.ps1`.
+- Checks of where the settings app puts keyboard focus read it with `Get-AppFocusedName`, which brings the settings window to the front first. When the settings app closes while a notification is on the screen, such as one an earlier group left, the notification takes the front and the keyboard focus and keeps them while there's no input, as in the Sandbox, and no other window can take the front from it. So the helper first sends a notification that has the front to Notification Center, as its close button does, and the report notes it.
 - A group that needs the network starts with a `# Networking: on` line, and turns the update check off in the settings it writes. Other groups keep networking off.
 - A group that needs a test SFTP server starts with a `# Needs: OpenSSH` line, and sets up the server in the Sandbox from `C:\Test\openssh`.

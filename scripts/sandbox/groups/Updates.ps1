@@ -197,8 +197,8 @@ Test-Check 'General says this version is up to date' (Wait-Until { (Get-WindowTe
 $saved = Get-Content $resultFile -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
 Test-Check 'Check now saves the result' (($saved.latestVersion -eq '0.0.1') -and ($saved.notifiedVersion -eq '9.9.9')) "latest: $($saved.latestVersion); notified: $($saved.notifiedVersion)"
 Test-Check 'the app logs Check now' ((Get-AppLog) -match 'Checking for updates, as Check now was selected\.')
-$focused = [System.Windows.Automation.AutomationElement]::FocusedElement
-Test-Check 'the keyboard focus stays on Check now' ($focused -and ($focused.Current.Name -eq 'Check now')) "focused: $(if ($focused) { $focused.Current.Name })"
+$focused = Get-AppFocusedName
+Test-Check 'the keyboard focus stays on Check now' ($focused -eq 'Check now') "focused: $focused"
 
 # A newer version shows the banner, with the check off, and no notification.
 Set-Answer 'v9.9.10'

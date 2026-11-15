@@ -262,8 +262,8 @@ $langA = Join-Path $languageFolder 'lang-a.exe'
 $langB = Join-Path $languageFolder 'lang-b.exe'
 Test-Check 'Running app adds it with the first input method' (Wait-Until { $apps = @((Get-LanguageSettings).apps); ($apps.Count -eq 1) -and ($apps[0].program -eq $langA) -and ($apps[0].inputMethod -eq '0409:00000409') } 5) "saved: $(Get-LanguageSettings | ConvertTo-Json -Compress)"
 Start-Sleep -Seconds 1
-$focused = [System.Windows.Automation.AutomationElement]::FocusedElement
-Test-Check 'the focus goes to the new app''s language list' ($focused.Current.Name -eq 'Language for lang-a') "focused: $($focused.Current.Name)"
+$focused = Get-AppFocusedName
+Test-Check 'the focus goes to the new app''s language list' ($focused -eq 'Language for lang-a') "focused: $focused"
 Test-Check 'choose German for the app' (Select-ListItem 'Language for lang-a' 'German (Germany) – German')
 Start-Sleep -Seconds 1
 Test-Check 'the page saves the app''s input method' (@((Get-LanguageSettings).apps)[0].inputMethod -eq '0407:00000407') "saved: $(Get-LanguageSettings | ConvertTo-Json -Compress)"
