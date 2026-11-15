@@ -6,7 +6,8 @@ pointer, and shuts Windows down at the end.
 
 .DESCRIPTION
 Inputs:  C:\Test\msi\PCCompanion-*.msi, and C:\Test\upgrade with another build of the same version
-         and the next version (read-only).
+         and the next version (read-only); C:\Test\openssh with OpenSSH for Windows, for the groups
+         that need a test SFTP server (read-only).
 Outputs: C:\Test\results: report.txt with one PASS or FAIL line per check, a folder for each group
          with its screenshots, the app and host logs and the install logs, and done.txt when
          finished.
@@ -66,6 +67,7 @@ $startStates = [ordered] @{
     DisplayProfiles = 'Installed'
     Logging = 'Installed'
     Updates = 'Installed'
+    RemoteFolders = 'Installed'
     Setup = 'Installed'
     RunAsAdmin = 'NotInstalled'
     Dialogs = 'NotInstalled'
