@@ -33,13 +33,15 @@
       "pccompanion.infrastructure": {
         "type": "Project",
         "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "PCCompanion.Core": "[0.2.0, )"
+          "PCCompanion.Core": "[0.6.0, )"
         }
       },
       "pccompanion.logging": {
         "type": "Project",
         "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[11.0.0, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Extensions.Logging": "[10.0.0, )",
           "Serilog.Sinks.File": "[7.0.0, )"
@@ -59,9 +61,9 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "CentralTransitive",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "G2GrGWNAPZBsii2F6AU8n+JT2tC1/I0Ml/e9ZyNCgPjf3hZqronP7o0X91aAynCmVeae8KkSIUNXXeXCNRmdVQ=="
+        "requested": "[11.0.0, )",
+        "resolved": "11.0.0",
+        "contentHash": "a2c4Kp55miXT6G+DSb75pczXQJHgNMzPyZEyMxrrKxuQrgvctcDWJWD9fVe/uGbQdu4Z0c3B7AVKp1DXmD64nQ=="
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "CentralTransitive",
@@ -98,6 +100,7 @@
         }
       }
     },
+    "net10.0-windows10.0.19041/linux-x64": {},
     "net10.0-windows10.0.19041/win-arm64": {},
     "net10.0-windows10.0.19041/win-x64": {}
   }
