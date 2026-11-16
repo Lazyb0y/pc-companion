@@ -12,6 +12,7 @@ Tests, and the checks to run before a pull request, are in [Testing](testing.md)
 
 - .NET 10 (LTS). The SDK is pinned in `global.json` and rolls forward to the latest installed feature band, which Visual Studio updates replace. It never rolls forward to previews.
 - Package versions are set centrally in `Directory.Packages.props`. `packages.lock.json` files are committed.
+- Each program sets its runtime identifier, `win-arm64` for `ARM64` and `win-x64` for any other platform, so a restore without a platform, such as Dependabot's on Linux, doesn't add the build machine's runtime to the lock files, which would fail CI's locked restore.
 - `Directory.Build.props` enables nullable reference types, `latest-recommended` analyzers and warnings as errors.
 - Vulnerability advisories: low and moderate are warnings; high and critical fail the build.
 - Release builds aren't trimmed. The default Windows SDK projection has trim warnings, and Release-only trimming breaks locked restore.

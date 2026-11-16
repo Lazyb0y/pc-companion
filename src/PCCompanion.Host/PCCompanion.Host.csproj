@@ -9,7 +9,8 @@
     <AssemblyTitle>PC Companion</AssemblyTitle>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
-    <RuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</RuntimeIdentifier>
+    <!-- x64 also when no platform is given, as when Dependabot restores on Linux, so the lock files never list the build machine's runtime. -->
+    <RuntimeIdentifier Condition="'$(Platform)' != 'ARM64'">win-x64</RuntimeIdentifier>
     <RuntimeIdentifier Condition="'$(Platform)' == 'ARM64'">win-arm64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <!-- Like the settings app, so the files both install in one folder are the same. -->
