@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: nuget
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: build
       include: scope
@@ -23,7 +23,7 @@ updates:
   - package-ecosystem: dotnet-sdk
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: build
       include: scope
@@ -35,7 +35,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     commit-message:
       prefix: ci
       include: scope
