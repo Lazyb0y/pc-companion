@@ -11,6 +11,7 @@ Tests, and the checks to run before a pull request, are in [Testing](testing.md)
 ## Configuration
 
 - .NET 10 (LTS). The SDK is pinned in `global.json` and rolls forward to the latest installed feature band, which Visual Studio updates replace. It never rolls forward to previews.
+- The programs are self-contained, so a release carries the .NET runtime of the SDK that built it: keep `global.json` on the latest .NET 10 SDK, for its security fixes. The `Microsoft.Extensions` packages stay on 10.x, in step with the runtime. Dependabot offers neither a new major SDK nor new major versions of these packages, and it updates the packages together.
 - Package versions are set centrally in `Directory.Packages.props`. `packages.lock.json` files are committed.
 - Each program sets its runtime identifier, `win-arm64` for `ARM64` and `win-x64` for any other platform, so a restore without a platform, such as Dependabot's on Linux, doesn't add the build machine's runtime to the lock files, which would fail CI's locked restore.
 - `Directory.Build.props` enables nullable reference types, `latest-recommended` analyzers and warnings as errors.
