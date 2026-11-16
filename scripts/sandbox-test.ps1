@@ -32,7 +32,7 @@ release. It must be for this PC's architecture. The Sandbox gets a copy of it wi
 Windows puts on downloaded files, so the checks don't stop at Windows' security warnings.
 
 .PARAMETER TimeoutMinutes
-How long to wait for the checks to finish: by default 60 minutes, or 90 when Smart App Control isn't
+How long to wait for the checks to finish: by default 90 minutes, or 120 when Smart App Control isn't
 off.
 
 .PARAMETER SmartAppControl
@@ -73,7 +73,7 @@ $testResults = Join-Path $root 'TestResults'
 $results = Join-Path $testResults 'sandbox'
 $configuration = Join-Path $testResults 'sandbox.wsb'
 if (-not $PSBoundParameters.ContainsKey('TimeoutMinutes')) {
-    $TimeoutMinutes = if ($SmartAppControl -eq 'Off') { 60 } else { 90 }
+    $TimeoutMinutes = if ($SmartAppControl -eq 'Off') { 90 } else { 120 }
 }
 
 # The groups are the scripts in scripts\sandbox\groups; run-checks.ps1 runs them in its own order.
