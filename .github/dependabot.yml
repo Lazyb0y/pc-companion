@@ -7,10 +7,18 @@ updates:
     commit-message:
       prefix: build
       include: scope
-    # WiX stays on version 5; see docs/development/packaging.md.
+    # WiX stays on version 5; see docs/development/packaging.md. The Microsoft.Extensions packages stay on
+    # the major version of the .NET runtime the programs ship; see docs/development/build.md.
     ignore:
       - dependency-name: "WixToolset.*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "Microsoft.Extensions.*"
+        update-types: ["version-update:semver-major"]
+    # The Microsoft.Extensions packages depend on each other, so they update in one pull request.
+    groups:
+      microsoft-extensions:
+        patterns:
+          - "Microsoft.Extensions.*"
 
   - package-ecosystem: dotnet-sdk
     directory: /
@@ -19,6 +27,10 @@ updates:
     commit-message:
       prefix: build
       include: scope
+    # The SDK stays on .NET 10, whose runtime the programs ship; see docs/development/build.md.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
