@@ -458,7 +458,11 @@ public sealed class TopLevelWindowsTests
     [Fact]
     public void AWindowWhoseThreadHandlesNoMessagesForFiveSecondsIsNotResponding()
     {
+        // The test runner reuses its threads, and a thread that already has windows and hasn't
+        // handled its messages for 5 seconds makes a new window count as not responding at once,
+        // so this thread handles its messages first.
         using var own = new MessageWindow(UniqueClassName());
+        RunPostedMessages();
         Assert.False(TopLevelWindows.IsNotResponding(own.Handle));
 
         // The thread handles its messages once, so Windows counts it as started, then stops
