@@ -552,3 +552,4 @@ UiaAppendRuntimeId
 SafeArrayCreateVector
 SafeArrayPutElement
 UIA_EVENT_ID
+SC_CLOSE

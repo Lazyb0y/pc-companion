@@ -17,6 +17,13 @@ public static class FullScreenCheck
         _ => environment.FindWindowFrontToBack(window => Decide(window, display)) ?? false,
     };
 
+    /// <summary>
+    /// Whether <paramref name="window"/> itself is full screen: it covers the display it's on
+    /// without a frame, as a browser after F11 does.
+    /// </summary>
+    public static bool Covers(nint window) =>
+        TopLevelWindows.PlaceOf(window) is { } place && Displays.AreaOf(window) is { } display && Decide(place, display) == true;
+
     // Null passes over the window to the next one.
     private static bool? Decide(WindowPlace window, Rectangle display)
     {

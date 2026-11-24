@@ -399,6 +399,69 @@ public static class TopLevelWindows
     /// <summary>The DPI <paramref name="window"/> is drawn at: 96 at 100% scale.</summary>
     public static uint Dpi(nint window) => PInvoke.GetDpiForWindow(new HWND(window));
 
+    /// <summary>
+    /// Shows another program's <paramref name="window"/> in its current state, so a snapped
+    /// window comes back snapped, and activates it (<c>SW_SHOW</c>). Returns false when Windows
+    /// refused. It doesn't wait.
+    /// </summary>
+    public static bool ShowAsItWas(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOW);
+
+    /// <summary>
+    /// Shows another program's <paramref name="window"/> restored from maximized or minimized, at
+    /// its normal rectangle, and activates it (<c>SW_SHOWNORMAL</c>). It doesn't wait.
+    /// </summary>
+    public static bool ShowRestored(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOWNORMAL);
+
+    /// <summary>
+    /// Shows another program's <paramref name="window"/> maximized on the display of its normal
+    /// rectangle, and activates it (<c>SW_SHOWMAXIMIZED</c>). It doesn't wait.
+    /// </summary>
+    public static bool ShowMaximized(nint window) => PInvoke.ShowWindowAsync(new HWND(window), SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED);
+
+    /// <summary>
+    /// Gives another program's hidden <paramref name="window"/> a normal rectangle and keeps it
+    /// hidden; a hidden maximized window stays maximized. Returns false when Windows refused. It
+    /// waits for the window's program, so don't call it on a thread that must not wait.
+    /// </summary>
+    /// <param name="normalBounds">The normal rectangle, with its invisible borders, in screen coordinates.</param>
+    public static unsafe bool SetHiddenPlacement(nint window, Rectangle normalBounds)
+    {
+        var workspace = ToWorkspace(window, normalBounds);
+        var placement = new WINDOWPLACEMENT
+        {
+            length = (uint)sizeof(WINDOWPLACEMENT),
+            showCmd = SHOW_WINDOW_CMD.SW_HIDE,
+            rcNormalPosition = new RECT(workspace.Left, workspace.Top, workspace.Right, workspace.Bottom),
+        };
+        return PInvoke.SetWindowPlacement(new HWND(window), in placement);
+    }
+
+    /// <summary>Whether the user can resize <paramref name="window"/>: it has a sizing border (<c>WS_THICKFRAME</c>).</summary>
+    public static bool IsResizable(nint window) =>
+        (((WINDOW_STYLE)(uint)PInvoke.GetWindowLongPtr(new HWND(window), WINDOW_LONG_PTR_INDEX.GWL_STYLE)) & WINDOW_STYLE.WS_THICKFRAME) != 0;
+
+    /// <summary>
+    /// Asks another program's <paramref name="window"/> to close, as its Close button does
+    /// (<c>SC_CLOSE</c>, posted), so its app can ask about unsaved changes. It doesn't wait.
+    /// </summary>
+    public static bool AskToClose(nint window) => PostSystemCommand(window, PInvoke.SC_CLOSE);
+
+    /// <summary>
+    /// <paramref name="window"/>'s place and the styles that tell an app's window from overlays,
+    /// as <see cref="FindFrontToBack"/> reads them, or <see langword="null"/> when it has closed.
+    /// </summary>
+    public static WindowPlace? PlaceOf(nint window)
+    {
+        var handle = new HWND(window);
+        if (!PInvoke.IsWindow(handle))
+        {
+            return null;
+        }
+
+        var shell = PInvoke.GetShellWindow();
+        return ReadPlace(handle, shell.IsNull ? 0 : ProcessIdOf(shell));
+    }
+
     /// <summary>Whether <paramref name="window"/> is maximized, shown or hidden.</summary>
     public static bool IsMaximized(nint window) => PInvoke.IsZoomed(new HWND(window));
 
