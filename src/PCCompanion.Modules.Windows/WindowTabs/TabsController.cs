@@ -9,7 +9,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Windows.WindowTabs;
 
 /// <summary>
-/// Window Tabs' decisions: making groups from dropped windows, switching their tabs, following
+/// Window Tabs' decisions: making groups from dropped windows and from the keyboard, switching their tabs, following
 /// what the windows' apps do, and never losing a hidden tab. See docs/features/windows/window-tabs.md.
 /// Use it on the feature's thread.
 /// </summary>
@@ -205,11 +205,11 @@ public sealed partial class TabsController : IDisposable
 
         if (drag.StripTarget is { } target && _groups.Contains(target))
         {
-            Join(target, window, drag.Insertion);
+            Join(target, window, drag.Insertion, keys: false);
         }
         else if (drag.TitleTarget != 0)
         {
-            JoinWindow(drag.TitleTarget, window);
+            JoinWindow(drag.TitleTarget, window, keys: false);
         }
         else if (drag.OverRefused != TabRefusal.None)
         {
@@ -384,6 +384,37 @@ public sealed partial class TabsController : IDisposable
     public void MoveBack() => Move(-1);
 
     /// <summary>
+    /// Adds the window in front to the group of the window behind it, or starts a group of the
+    /// two, as Windows + Ctrl + T does. A tab in front moves to that group.
+    /// </summary>
+    public void GroupFrontWithBehind() => GroupWithBehind(_system.RootOwner(_system.ForegroundWindow), keys: true);
+
+    /// <summary>Takes the tab in front out of its group, as Windows + Ctrl + Shift + T does.</summary>
+    public void TakeOutFront() => TakeOutOf(_system.RootOwner(_system.ForegroundWindow));
+
+    /// <summary>
+    /// Adds <paramref name="window"/> to the group of the window behind it, or starts a group of
+    /// the two, as Windows + Ctrl + T does for the window in front.
+    /// </summary>
+    public void GroupWithBehind(nint window) => GroupWithBehind(window, keys: false);
+
+    /// <summary>
+    /// Takes <paramref name="window"/> out of its group, as Windows + Ctrl + Shift + T does for the
+    /// window in front. It must be its group's tab in front.
+    /// </summary>
+    public void TakeOutOf(nint window)
+    {
+        if (GroupOfFront(window) is not { } group)
+        {
+            LogNotATab(_logger);
+            _system.PlayWarning();
+            return;
+        }
+
+        TakeOut(group, group.Front, at: null);
+    }
+
+    /// <summary>
     /// Brings every hidden tab back on the taskbar, minimized, without taking the front, and ends
     /// every group, as when PC Companion exits or the session ends. Returns how many came back.
     /// </summary>
@@ -498,6 +529,61 @@ public sealed partial class TabsController : IDisposable
         group.Strip.Announce(_position(to + 1, group.Tabs.Count));
     }
 
+    // The window becomes the tab in front at the place of the window behind it, as a window dropped
+    // on that window's title bar does.
+    private void GroupWithBehind(nint window, bool keys)
+    {
+        var own = GroupOf(window);
+        if (own is not null && FrontOf(own) != window)
+        {
+            LogNotATab(_logger);
+            _system.PlayWarning();
+            return;
+        }
+
+        if ((window == 0 ? TabRefusal.Gone : _system.Check(window)) is var refusal and not TabRefusal.None)
+        {
+            Refuse(refusal);
+            return;
+        }
+
+        var behind = WindowBehind(window, own);
+        if (behind == 0)
+        {
+            LogNothingBehind(_logger);
+            _system.PlayWarning();
+            return;
+        }
+
+        if (own is not null)
+        {
+            Detach(own, own.Front, "the user moved it to the group behind");
+        }
+
+        JoinWindow(behind, window, keys);
+    }
+
+    // The front-most shown window behind the window on its display that can be a tab, or that is a
+    // group's tab in front.
+    private nint WindowBehind(nint window, Group? own)
+    {
+        var display = _system.DisplayOf(window)?.Bounds;
+        foreach (var other in _system.WindowsBehind(window))
+        {
+            if (own?.Tabs.Contains(other) == true || _system.DisplayOf(other)?.Bounds != display)
+            {
+                continue;
+            }
+
+            if (GroupOfFront(other) is not null || (GroupOf(other) is null && _system.Check(other) == TabRefusal.None))
+            {
+                return other;
+            }
+        }
+
+        return 0;
+    }
+
     private Group NewGroup(nint first)
     {
         var group = new Group(_newStrip());
@@ -512,11 +598,11 @@ public sealed partial class TabsController : IDisposable
         return group;
     }
 
-    private void JoinWindow(nint target, nint window)
+    private void JoinWindow(nint target, nint window, bool keys)
     {
         if (GroupOfFront(target) is { } existing)
         {
-            Join(existing, window, existing.Tabs.Count);
+            Join(existing, window, existing.Tabs.Count, keys);
             return;
         }
 
@@ -529,10 +615,12 @@ public sealed partial class TabsController : IDisposable
         var group = NewGroup(target);
         ShowStrip(group);
         LogMade(_logger);
-        Join(group, window, 1);
+        Join(group, window, 1, keys);
     }
 
-    private void Join(Group group, nint window, int insertion)
+    // keys: from a shortcut, so a strip over its window's top shows for a moment and the tab's
+    // position is announced.
+    private void Join(Group group, nint window, int insertion, bool keys)
     {
         if (group.Tabs.Contains(window))
         {
@@ -562,7 +650,7 @@ public sealed partial class TabsController : IDisposable
         _system.Watch(_system.ProcessIdOf(window));
         UpdateShared();
         LogJoined(_logger, group.Tabs.Count);
-        Switch(group, index, keys: false, close: false);
+        Switch(group, index, keys, close: false);
     }
 
     private void Refuse(TabRefusal refusal)
@@ -825,7 +913,6 @@ public sealed partial class TabsController : IDisposable
         }
 
         var window = group.Tabs[index];
-        var wasFront = index == group.Front;
         var frame = group.Frame;
         var dpi = (int)(_system.DisplayOf(window)?.Dpi ?? 96);
         var offset = StripLayout.Scale(TakeOutOffset, dpi);
@@ -833,17 +920,7 @@ public sealed partial class TabsController : IDisposable
             ? new Rectangle(point.X - Math.Min(frame.Width / 2, StripLayout.Scale(100, dpi)), point.Y - StripLayout.Scale(16, dpi), frame.Width, frame.Height)
             : frame with { X = frame.X + (_rightToLeft ? -offset : offset), Y = frame.Y + offset };
 
-        RemoveTab(group, window);
-        LogLeft(_logger, "the user took it out", group.Tabs.Count);
-        if (wasFront)
-        {
-            ShowAfterLoss(group, index, activate: false);
-        }
-        else
-        {
-            EndIfAlone(group);
-        }
-
+        Detach(group, index, "the user took it out");
         if (!frame.IsEmpty && !_system.IsMaximized(window))
         {
             _system.Place(window, RectLike(window, place));
@@ -893,18 +970,8 @@ public sealed partial class TabsController : IDisposable
         if (_groups.Find(other => other != group && other.Place is { } shown && shown.Contains(drop.Point)) is { } target)
         {
             var window = group.Tabs[drop.Index];
-            var wasFront = drop.Index == group.Front;
-            RemoveTab(group, window);
-            if (wasFront)
-            {
-                ShowAfterLoss(group, drop.Index, activate: false);
-            }
-            else
-            {
-                EndIfAlone(group);
-            }
-
-            Join(target, window, target.Place!.InsertionAt(target.Place.ToStrip(drop.Point)));
+            Detach(group, drop.Index, "the user moved it to another group");
+            Join(target, window, target.Place!.InsertionAt(target.Place.ToStrip(drop.Point)), keys: false);
             return;
         }
 
@@ -933,6 +1000,24 @@ public sealed partial class TabsController : IDisposable
             case TabMenuItem.Settings:
                 _openSettings();
                 break;
+        }
+    }
+
+    // Takes a tab out of its group, as it leaves or moves to another group: when it was in front,
+    // the next tab shows in its place, and a group of one ends. It doesn't show or hide the tab.
+    private void Detach(Group group, int index, string why)
+    {
+        var window = group.Tabs[index];
+        var wasFront = index == group.Front;
+        RemoveTab(group, window);
+        LogLeft(_logger, why, group.Tabs.Count);
+        if (wasFront)
+        {
+            ShowAfterLoss(group, index, activate: false);
+        }
+        else
+        {
+            EndIfAlone(group);
         }
     }
 
@@ -1372,6 +1457,12 @@ public sealed partial class TabsController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs refused a window: {Refusal}.")]
     private static partial void LogRefused(ILogger logger, TabRefusal refusal);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs found no window behind that can be a tab to group with.")]
+    private static partial void LogNothingBehind(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs: the window isn't a group's tab in front.")]
+    private static partial void LogNotATab(ILogger logger);
 
     private readonly record struct Insets(int Left, int Top, int Right, int Bottom);
 

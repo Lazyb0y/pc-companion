@@ -155,6 +155,29 @@ public sealed class WindowsTabsSystem : ITabsSystem, IDisposable
         return found;
     }
 
+    public IReadOnlyList<nint> WindowsBehind(nint window)
+    {
+        var found = new List<nint>();
+        var passed = false;
+        var ownProcess = (uint)Environment.ProcessId;
+        TopLevelWindows.FindFrontToBack(place =>
+        {
+            if (!passed)
+            {
+                passed = place.Handle == window;
+            }
+            else if (!place.IsCloaked && !place.IsMinimized && !place.IsClickThrough && !place.IsNoActivate && !place.IsToolWindow
+                && TopLevelWindows.ProcessIdOf(place.Handle) != ownProcess && TopLevelWindows.MayHaveTaskbarButton(place.Handle))
+            {
+                found.Add(place.Handle);
+            }
+
+            return null;
+        });
+
+        return found;
+    }
+
     public DisplayDetails? DisplayOf(nint window) => Displays.Of(window);
 
     public bool Place(nint window, Rectangle bounds) => TopLevelWindows.Place(window, bounds);

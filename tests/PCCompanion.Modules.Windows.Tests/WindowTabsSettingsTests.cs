@@ -11,7 +11,7 @@ public sealed class WindowTabsSettingsTests
     public void WithoutASectionTheFeatureIsOffWithDroppingAndTheWindowsControlShortcuts()
     {
         Assert.Equal(
-            new WindowTabsSettings { Enabled = false, GroupByDropping = true, SwitchShortcuts = TabSwitchShortcuts.WindowsControlPage },
+            new WindowTabsSettings { Enabled = false, GroupByDropping = true, SwitchShortcuts = TabSwitchShortcuts.WindowsControlPage, GroupShortcuts = TabGroupShortcuts.WindowsControlT },
             WindowTabsSettings.Read(null));
     }
 
@@ -22,7 +22,8 @@ public sealed class WindowTabsSettingsTests
             {
               "enabled": true,
               "groupByDropping": true,
-              "switchShortcuts": "WindowsControlPage"
+              "switchShortcuts": "WindowsControlPage",
+              "groupShortcuts": "WindowsControlT"
             }
             """));
 
@@ -38,7 +39,7 @@ public sealed class WindowTabsSettingsTests
     [Fact]
     public void WriteThenReadReturnsTheSameSettings()
     {
-        var settings = new WindowTabsSettings { Enabled = true, GroupByDropping = false, SwitchShortcuts = TabSwitchShortcuts.WindowsAltPage };
+        var settings = new WindowTabsSettings { Enabled = true, GroupByDropping = false, SwitchShortcuts = TabSwitchShortcuts.WindowsAltPage, GroupShortcuts = TabGroupShortcuts.None };
 
         Assert.Equal(settings, WindowTabsSettings.Read(settings.Write()));
     }
@@ -46,7 +47,10 @@ public sealed class WindowTabsSettingsTests
     [Fact]
     public void AnUnknownShortcutNumberIsKeptAsItIs()
     {
-        Assert.Equal((TabSwitchShortcuts)9, WindowTabsSettings.Read(Section("""{ "switchShortcuts": 9 }""")).SwitchShortcuts);
+        var settings = WindowTabsSettings.Read(Section("""{ "switchShortcuts": 9, "groupShortcuts": 7 }"""));
+
+        Assert.Equal((TabSwitchShortcuts)9, settings.SwitchShortcuts);
+        Assert.Equal((TabGroupShortcuts)7, settings.GroupShortcuts);
     }
 
     [Fact]

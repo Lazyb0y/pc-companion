@@ -132,7 +132,13 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
     public nint WindowAt(Point point, nint except) =>
         _order.FirstOrDefault(window => window.Handle != except && window.Shown && window.Owner == 0 && window.Visible.Contains(point))?.Handle ?? 0;
 
-    public DisplayDetails? DisplayOf(nint window) => Find(window) is { } found ? new DisplayDetails(Display, WorkArea, found.Dpi) : null;
+    public IReadOnlyList<nint> WindowsBehind(nint window) =>
+        [.. _order.SkipWhile(other => other.Handle != window).Skip(1)
+            .Where(other => other.Shown && other.Owner == 0 && !other.Minimized && !other.Cloaked)
+            .Select(other => other.Handle)];
+
+    public DisplayDetails? DisplayOf(nint window) =>
+        Find(window) is { } found ? new DisplayDetails(found.Display, found.Display == Display ? WorkArea : found.Display, found.Dpi) : null;
 
     // Moving a window that isn't maximized moves its normal place too.
     public bool Place(nint window, Rectangle bounds) => Do(window, $"place {window} {Deflate(bounds)}", found =>
@@ -313,6 +319,9 @@ internal sealed class FakeTabWindow(nint handle)
 
     /// <summary>The scale of the display the window is on.</summary>
     public uint Dpi { get; set; } = 96;
+
+    /// <summary>The display the window is on.</summary>
+    public Rectangle Display { get; set; } = FakeTabsSystem.Display;
 
     public bool Refused { get; set; }
 

@@ -19,6 +19,13 @@ public sealed record WindowTabsSettings : IFeatureSettings<WindowTabsSettings>
     /// </summary>
     public TabSwitchShortcuts SwitchShortcuts { get; set; } = TabSwitchShortcuts.WindowsControlPage;
 
+    /// <summary>
+    /// The shortcuts that add the window in front to the group of the window behind it, and with
+    /// Shift take the tab in front out of its group. A number in the file reads as any value, named
+    /// or not; an unknown one registers none.
+    /// </summary>
+    public TabGroupShortcuts GroupShortcuts { get; set; } = TabGroupShortcuts.WindowsControlT;
+
     /// <summary>Reads the feature's section, or returns the defaults when there is none.</summary>
     /// <exception cref="JsonException">The section doesn't match the format.</exception>
     public static WindowTabsSettings Read(JsonElement? section) =>
@@ -44,4 +51,18 @@ public enum TabSwitchShortcuts
 
     /// <summary>The Windows key and Alt with Page Down and Page Up.</summary>
     WindowsAltPage,
+}
+
+/// <summary>
+/// The shortcuts that group windows from the keyboard: the key with T to add the window in front
+/// to the group of the window behind it, and with Shift to take the tab in front out of its group.
+/// The names are stored in the settings file, so never rename one.
+/// </summary>
+public enum TabGroupShortcuts
+{
+    /// <summary>No shortcuts.</summary>
+    None,
+
+    /// <summary>The Windows key and Ctrl with T.</summary>
+    WindowsControlT,
 }

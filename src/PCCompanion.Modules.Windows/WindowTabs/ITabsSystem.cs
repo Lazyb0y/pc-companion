@@ -62,6 +62,13 @@ public interface ITabsSystem
     /// </summary>
     nint WindowAt(Point point, nint except);
 
+    /// <summary>
+    /// The shown windows behind <paramref name="window"/> in the order of windows, the front-most
+    /// first, that the taskbar shows, other than minimized windows, windows on another virtual
+    /// desktop and PC Companion's own; none when <paramref name="window"/> isn't shown.
+    /// </summary>
+    IReadOnlyList<nint> WindowsBehind(nint window);
+
     /// <summary>The display a window is mostly on.</summary>
     DisplayDetails? DisplayOf(nint window);
 
