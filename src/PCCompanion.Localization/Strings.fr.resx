@@ -5888,4 +5888,32 @@
     <value>Le dossier n’existe plus.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>Onglets de fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>Regroupez les fenêtres de différentes applications dans une seule fenêtre à onglets, et passez de l’une à l’autre d’un clic ou avec un raccourci.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>Retirer du groupe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>Fermer la fenêtre</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>Paramètres des onglets de fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>Onglets : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>Onglet {0} sur {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

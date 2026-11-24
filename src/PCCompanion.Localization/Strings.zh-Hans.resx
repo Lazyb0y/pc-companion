@@ -5832,4 +5832,32 @@
     <value>该文件夹已不存在。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>窗口标签页</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>将不同应用的窗口组合到一个带标签页的窗口中，并通过单击或快捷键在它们之间切换。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>移出组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>关闭窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>窗口标签页设置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>标签页：{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>第 {0} 个标签页，共 {1} 个</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

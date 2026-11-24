@@ -5888,4 +5888,32 @@
     <value>The folder isn't there anymore.</value>
     <comment>Remote Folders page: when the folder to open is gone.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>Window Tabs</value>
+    <comment>Feature name: navigation pane, Home and the Window Tabs page; also what screen readers call a tab strip without tabs.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>Group windows of different apps into one window with tabs, and switch between them with a click or a shortcut.</value>
+    <comment>Window Tabs: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>Move out of group</value>
+    <comment>Window Tabs: item in a tab's right-click menu; takes the tab's window out of its group, as a window of its own.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>Close window</value>
+    <comment>Window Tabs: item in a tab's right-click menu; asks the tab's window to close, as its Close button does.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>Window Tabs settings</value>
+    <comment>Window Tabs: item in a tab's right-click menu; opens the feature's page. Window Tabs is WindowTabsName.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>Tabs: {0}</value>
+    <comment>Window Tabs: what screen readers call a group's tab strip. {0} is the title of the window in front.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>Tab {0} of {1}</value>
+    <comment>Window Tabs: what screen readers announce as a tab comes to the front. {0} is the tab's place in the strip, from 1; {1} is the number of tabs in the group.</comment>
+  </data>
 </root>
