@@ -5888,4 +5888,32 @@
     <value>ফোল্ডারটি আর নেই।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>উইন্ডো ট্যাব</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>বিভিন্ন অ্যাপের উইন্ডো ট্যাবসহ একটি উইন্ডোতে একত্র করুন, এবং একটি ক্লিক বা শর্টকাটে সেগুলোর মধ্যে বদল করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>গ্রুপ থেকে সরিয়ে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>উইন্ডো বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>উইন্ডো ট্যাব সেটিংস</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>ট্যাব: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>{1}টির মধ্যে {0} নম্বর ট্যাব</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

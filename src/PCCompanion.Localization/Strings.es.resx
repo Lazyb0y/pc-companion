@@ -5888,4 +5888,32 @@
     <value>La carpeta ya no está.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>Pestañas de ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>Agrupa ventanas de distintas aplicaciones en una sola ventana con pestañas y cambia entre ellas con un clic o un método abreviado.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>Sacar del grupo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>Cerrar ventana</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>Configuración de Pestañas de ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>Pestañas: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>Pestaña {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

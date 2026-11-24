@@ -5888,4 +5888,32 @@
     <value>Der Ordner ist nicht mehr vorhanden.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsName" xml:space="preserve">
+    <value>Fenster-Tabs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsDescription" xml:space="preserve">
+    <value>Fenster verschiedener Apps in einem Fenster mit Tabs zusammenfassen und mit einem Klick oder einer Tastenkombination zwischen ihnen wechseln.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
+    <value>Aus der Gruppe nehmen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCloseWindow" xml:space="preserve">
+    <value>Fenster schließen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSettings" xml:space="preserve">
+    <value>Einstellungen für Fenster-Tabs</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsListName" xml:space="preserve">
+    <value>Tabs: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsTabPosition" xml:space="preserve">
+    <value>Tab {0} von {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
