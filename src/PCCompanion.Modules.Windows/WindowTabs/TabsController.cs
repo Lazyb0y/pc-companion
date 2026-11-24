@@ -281,7 +281,16 @@ public sealed partial class TabsController : IDisposable
         }
 
         var index = group.Tabs.IndexOf(window);
-        if (index == group.Front || index == group.Chosen)
+
+        // The tab in front shows once its app does it, as after the tab before it left the group,
+        // and its strip comes back with it.
+        if (index == group.Front)
+        {
+            ShowStrip(group);
+            return;
+        }
+
+        if (index == group.Chosen)
         {
             return;
         }
