@@ -156,7 +156,7 @@ public interface IHostActions
 
 ### Full screen and a captured pointer
 
-- **While the window in front is full screen on its display,** mouse-button triggers pause: their claims are removed, so the buttons reach the app, and the hook isn't set at all unless another feature claims. The check is Hot Corners' (`FullScreenCheck`), for the display of the window in front.
+- **While the window in front is full screen on its display,** mouse-button triggers pause: their claims are removed, so the buttons reach the app, and the hook isn't set at all unless another feature claims. The check is the one Hot Corners uses (`FullScreenCheck` in `PCCompanion.Platform.Windows`), for the display of the window in front.
 - **When it's checked:** each time another window comes to the front, and when the window in front changes its place or size, which an out-of-context WinEvent hook (`EVENT_OBJECT_LOCATIONCHANGE`) reports for that window's process only, set again at each change of the window in front.
 - **While an app confines the pointer to part of the screen, or hides it,** as games and virtual machines do, the hook lets the buttons through. It checks at each press (`GetClipCursor`, `GetCursorInfo`), which calls no other program.
 - **The setting:** **Pause mouse buttons while an app is full screen**, on by default. The captured pointer check always applies.

@@ -72,7 +72,7 @@ Show a short notice on screen when Caps Lock, Num Lock or Scroll Lock turns on o
 ## Full screen
 
 - **Don't show while an app is full screen**, on by default: the notice and the badge don't show while an app is full screen on the display where they would. An app that's full screen on another display doesn't stop them.
-- Full screen is decided with Hot Corners' rules, by the same code: a borderless window covering the display, ignoring overlays and always-on-top windows that don't cover it; exclusive full screen on the display of the window in front; and presentation mode on every display. See [Full screen and a captured pointer](hot-corners.md#full-screen-and-a-captured-pointer). The code is in the module's `FullScreen` folder, which both features use.
+- Full screen is decided with Hot Corners' rules, by the same code: a borderless window covering the display, ignoring overlays and always-on-top windows that don't cover it; exclusive full screen on the display of the window in front; and presentation mode on every display. See [Full screen and a captured pointer](hot-corners.md#full-screen-and-a-captured-pointer). The code is `FullScreenCheck` in `PCCompanion.Platform.Windows`, which Hot Corners and other features use too.
 - Exclusive full screen skips the notice even with this setting off: a window can't show over it, and trying can take a game out of full screen.
 - Like Hot Corners, the check reads the windows front to back until one decides, once for each notice, and sends no messages to other apps' windows.
 - A skipped notice logs why at Debug level.

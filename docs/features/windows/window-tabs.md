@@ -98,7 +98,7 @@ Group windows of different apps into one window with tabs, and switch between th
 
 - **Drawn by PC Companion,** pixel by pixel (`LayeredWindow`, which grows a way to be placed in the order of windows rather than always on top), with the strip drawing System Meters uses moved to `PCCompanion.Platform.Windows` so both features share it.
 - **Light and dark:** it follows the app mode (Choose your app mode), as apps' title bars do, read with `WindowsTheme`, and is drawn again when the mode, the accent color or high contrast changes.
-- **High contrast:** the strip uses the high contrast colors: button face and button text for tabs, highlight and highlight text for the tab in front, and a window-text border.
+- **High contrast:** the strip uses the high contrast colors: the window color behind the tabs, window text for their titles, the highlight color behind the tab in front with its title in the window color, and window text for the line under it and a border around the strip. The drop highlight uses the highlight color.
 - **Corners:** rounded at the top on Windows 11, square on Windows 10, as the windows there are.
 - **Text:** Segoe UI Variable on Windows 11 and Segoe UI on Windows 10, at title bar size, following Windows' Text size (`WindowsTheme.TextScale`). Icons keep their size, as on PC Companion's pages.
 - **Right to left:** in right-to-left languages, the strip stands at the window's right edge, the tabs run right to left, and each icon is right of its title. Titles show as the apps write them, read in the language's direction.
@@ -138,7 +138,7 @@ Group windows of different apps into one window with tabs, and switch between th
 ## While windows are tabs
 
 - **Minimized:** minimizing the tab in front, from its button, Windows + Down, Show desktop or Hide Apps, minimizes the group: the strip hides, and the hidden tabs stay hidden (`EVENT_SYSTEM_MINIMIZESTART`). Restoring it brings the strip back.
-- **Full screen:** while the tab in front covers its display without a frame, as Hot Corners decides (its check moves to `PCCompanion.Platform.Windows`, so both modules share it), such as a browser after F11, the strip hides and the tab shortcuts play the warning sound. In the spike, Edge's full screen was recognized and the strip came back after it.
+- **Full screen:** while the tab in front covers its display without a frame, as Hot Corners decides (its check is in `PCCompanion.Platform.Windows`, which both modules use), such as a browser after F11, the strip hides and the tab shortcuts play the warning sound. In the spike, Edge's full screen was recognized and the strip came back after it.
 - **The app shows a hidden tab itself,** as for a reminder or a second launch (`EVENT_OBJECT_SHOW`): the app wins. That tab becomes the tab in front, at the group's place, and the old one is hidden, as the spike did. When the group's tab in front is on another virtual desktop then, the window leaves the group instead, since it showed on the desktop that's showing.
 - **The app hides its tab in front itself,** as when it closes to its notification icon: the window leaves the group, and the next tab shows in its place. Window Tabs never shows a window its app hid.
 - **A tab closes, or its app ends** (`EVENT_OBJECT_DESTROY`): its tab goes. When it was in front, the next tab shows, or the one before the last, and takes the front if the closed window had it.
