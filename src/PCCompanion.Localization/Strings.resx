@@ -5920,4 +5920,52 @@
     <value>its window is a tab in Window Tabs, so it can't drop down</value>
     <comment>Drop-down Apps page: {1} of DropDownAppsResult, when the app's window is in a group of Window Tabs (WindowTabsName).</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>Making a group</value>
+    <comment>Window Tabs page: the card that says how to make a group of windows with tabs.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>Drag a window by its title bar and drop it on another window's tabs, or hold Ctrl as you drop it on another window's title bar. Click a tab to show its window. To take a window out, drag its tab off the strip, or right-click the tab and choose Move out of group.</value>
+    <comment>Window Tabs page: below WindowTabsMakingHeader. Move out of group is WindowTabsMoveOutOfGroup.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>Group by dropping with Ctrl</value>
+    <comment>Window Tabs page: setting name; an on/off switch.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>Holding Ctrl as you drop a window on another window's title bar groups the two. Dropping a window on a group's tabs works either way.</value>
+    <comment>Window Tabs page: below WindowTabsGroupByDroppingHeader.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>Switch tabs</value>
+    <comment>Window Tabs page: setting name, and the screen reader name of its list of shortcuts.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>Shows the next or previous tab of the window in front. With Shift, moves the tab in front along the strip.</value>
+    <comment>Window Tabs page: below WindowTabsSwitchHeader.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Windows logo key + Ctrl + Page Down / Page Up</value>
+    <comment>Window Tabs page: shortcuts in the list: Page Down shows the next tab, Page Up the previous one. Use the language's names for the Windows logo key, Ctrl, Page Down and Page Up, as in the other shortcuts.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Windows logo key + Alt + Page Down / Page Up</value>
+    <comment>Window Tabs page: shortcuts in the list: Page Down shows the next tab, Page Up the previous one. Use the language's names for the Windows logo key, Alt, Page Down and Page Up, as in the other shortcuts.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Window Tabs page: the item of the shortcut list that turns the shortcuts off.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>Some windows can't be tabs: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, windows that can't be resized, and windows with a dialog open, such as Save. Neither can minimized or full-screen windows, Drop-down Apps' windows, or windows that Minimize to Tray put in the tray. Windows' warning sound plays when a window can't join a group.</value>
+    <comment>Window Tabs page: the windows that can't be tabs, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog. Drop-down Apps is DropDownAppsName, and Minimize to Tray MinimizeToTrayName.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>Some windows can't be tabs: those of apps such as Settings that Windows shows in a shared frame, windows that can't be resized, and windows with a dialog open, such as Save. Neither can minimized or full-screen windows, Drop-down Apps' windows, or windows that Minimize to Tray put in the tray. Windows' warning sound plays when a window can't join a group. PC Companion runs as administrator, so windows of apps running as administrator can be tabs too.</value>
+    <comment>Window Tabs page: shown instead of WindowTabsCantBeTabsInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>While a window is dragged, reads where the pointer is, whether Ctrl is held and which window is under the pointer. Reads each tab's title and icon to draw the tab, and which window comes to the front; titles stay in memory only. Hides, shows, moves and resizes the tabs, and marks hidden ones so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Makes no network connections and sends nothing.</value>
+    <comment>Window Tabs page: below FeaturePermissionsHeader.</comment>
+  </data>
 </root>

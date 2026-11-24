@@ -5920,4 +5920,52 @@
     <value>এর উইন্ডোটি উইন্ডো ট্যাবের একটি ট্যাব, তাই এটি নেমে আসতে পারে না</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>গ্রুপ তৈরি করা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>কোনো উইন্ডো তার শিরোনাম বার ধরে টেনে অন্য উইন্ডোর ট্যাবের উপর ছাড়ুন, অথবা অন্য উইন্ডোর শিরোনাম বারে ছাড়ার সময় Ctrl চেপে ধরুন। কোনো ট্যাবের উইন্ডো দেখাতে ট্যাবটিতে ক্লিক করুন। কোনো উইন্ডো বের করতে, তার ট্যাব স্ট্রিপ থেকে টেনে বাইরে আনুন, অথবা ট্যাবে ডান-ক্লিক করে গ্রুপ থেকে সরিয়ে নিন বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>Ctrl দিয়ে ছেড়ে গ্রুপ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>অন্য উইন্ডোর শিরোনাম বারে কোনো উইন্ডো ছাড়ার সময় Ctrl চেপে ধরলে দুটি উইন্ডো একটি গ্রুপ হয়। কোনো গ্রুপের ট্যাবে উইন্ডো ছাড়লে সবসময়ই কাজ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>ট্যাব বদলান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>সামনের উইন্ডোর পরের বা আগের ট্যাব দেখায়। Shift সহ, সামনের ট্যাবটি স্ট্রিপে সরায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Windows লোগো কী + Ctrl + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Windows লোগো কী + Alt + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>কোনোটি নয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>কিছু উইন্ডো ট্যাব হতে পারে না: অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডো, সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, যেসব উইন্ডোর আকার বদলানো যায় না, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। ছোট করা বা পূর্ণ স্ক্রিনের উইন্ডো, ড্রপ-ডাউন অ্যাপের উইন্ডো, এবং "বিজ্ঞপ্তি এলাকায় ছোট করুন" যেসব উইন্ডো বিজ্ঞপ্তি এলাকায় রেখেছে, সেগুলোও পারে না। কোনো উইন্ডো গ্রুপে যোগ দিতে না পারলে Windows-এর সতর্কতা শব্দ বাজে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>কিছু উইন্ডো ট্যাব হতে পারে না: সেটিংসের মতো যে অ্যাপগুলো Windows একটি শেয়ার করা ফ্রেমে দেখায় সেগুলোর উইন্ডো, যেসব উইন্ডোর আকার বদলানো যায় না, এবং খোলা ডায়ালগসহ উইন্ডো, যেমন সংরক্ষণ। ছোট করা বা পূর্ণ স্ক্রিনের উইন্ডো, ড্রপ-ডাউন অ্যাপের উইন্ডো, এবং "বিজ্ঞপ্তি এলাকায় ছোট করুন" যেসব উইন্ডো বিজ্ঞপ্তি এলাকায় রেখেছে, সেগুলোও পারে না। কোনো উইন্ডো গ্রুপে যোগ দিতে না পারলে Windows-এর সতর্কতা শব্দ বাজে। PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোও ট্যাব হতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>কোনো উইন্ডো টানার সময় পয়েন্টার কোথায়, Ctrl চাপা আছে কিনা এবং পয়েন্টারের নিচে কোন উইন্ডো তা পড়ে। ট্যাব আঁকতে প্রতিটি ট্যাবের শিরোনাম ও আইকন পড়ে, এবং কোন উইন্ডো সামনে আসে তা পড়ে; শিরোনাম শুধু মেমরিতে থাকে। ট্যাবগুলো লুকায়, দেখায়, সরায় ও আকার বদলায়, এবং লুকানোগুলো চিহ্নিত করে, যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
