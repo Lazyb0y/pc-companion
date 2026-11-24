@@ -49,7 +49,9 @@ Group windows of different apps into one window with tabs, and switch between th
 
 ### From the keyboard
 
-- **Windows + Ctrl + T** adds the window in front to the group of the window behind it, or starts a group of the two. The window behind is the front-most shown window under it that can be a tab, on the same display, not minimized and not on another virtual desktop. The window in front becomes the tab in front, at that window's place.
+- **Windows + Ctrl + T** adds the window in front to the group of the window behind it, or starts a group of the two. The window behind is the front-most shown window behind it in the order of windows that can be a tab, or that is a group's tab in front, on the same display, not minimized and not on another virtual desktop. The window in front becomes the tab in front, at that window's place, and goes after the group's last tab.
+- **A tab in front** moves to the group behind it, as its tab does when it's dragged onto that group's strip, and its old group shows its next tab.
+- **When it can't group,** as when the window in front can't be a tab or no window behind it can, Windows' warning sound plays.
 - **Windows + Ctrl + Shift + T** takes the tab in front out of its group. It stays shown, moved 32 effective pixels down and to the right (to the left in right-to-left languages), so the group's next tab shows behind it.
 - **Group from the keyboard** on the page offers Windows + Ctrl + T or None.
 
@@ -80,7 +82,7 @@ Group windows of different apps into one window with tabs, and switch between th
 ### Where it is
 
 - **Above the window:** the strip stands on the top edge of the window in front's visible frame (`DWMWA_EXTENDED_FRAME_BOUNDS`), from its left edge, or its right edge in right-to-left languages, like the tab of a folder. It covers nothing of the window: the spike showed a strip inside the title bar covering File Explorer's tabs and the window's buttons.
-- **No room above,** as for a maximized window or one that touches the top of the work area: the strip goes over the top of the window, and shows only while the pointer rests within 2 effective pixels of the window's top edge for 400 ms, while the pointer is on the strip, for 1.5 seconds after a tab switch from the keyboard, and during a drag that could drop on it. A quick click at the top, as on a browser's tabs, isn't delayed. The pointer's position is read every 50 ms only while such a strip's group is in front or its strip shows.
+- **No room above,** as for a maximized window or one that touches the top of the work area: the strip goes over the top of the window, and shows only while the pointer rests within 2 effective pixels of the window's top edge for 400 ms, while the pointer is on the strip, for 1.5 seconds after a tab switch or a grouping from the keyboard, and during a drag that could drop on it. A quick click at the top, as on a browser's tabs, isn't delayed. The pointer's position is read every 50 ms only while such a strip's group is in front or its strip shows.
 - **Its height** is 32 effective pixels at the display's scale. **Its width:** each tab is up to 200 effective pixels wide; tabs narrow to fit the window's width, down to 40, which shows only the icon. Past that, the strip is wider than the window.
 - **It follows the window in front,** on every move and size change (`EVENT_OBJECT_LOCATIONCHANGE` for that window's process). In the spike, following a drag took 0.3 to 0.4 ms per move on the feature's thread, and the strip was in place in every frame but one.
 - **Its place in the order of windows:** right above the window in front, never always on top, so other windows cover it as they cover the window. When the window comes to the front (`EVENT_SYSTEM_FOREGROUND`), the strip is put back right above it.
@@ -201,8 +203,8 @@ Group windows of different apps into one window with tabs, and switch between th
 - **Minimize to Tray** refuses a window that's a tab, with its warning sound, as it refuses Drop-down Apps' windows, and a window in the tray can't be a tab: it's hidden.
 - **Drop-down Apps** doesn't take a tab as an app's drop-down window, and a drop-down window can't be a tab.
 - **The shared sets:** the module keeps the windows that are tabs in a set that Minimize to Tray and Drop-down Apps read, as they share `HideAppsMinimized` and `DropDownWindows`; Window Tabs reads theirs. Their specs get a line on Window Tabs with the code.
-- **Title Bar Actions** acts on a group's tab in front as on any window: Minimize minimizes the group, and Send to back sends the group back, with its strip. Minimize to tray plays the warning sound, as Minimize to Tray refuses the tab. Its click actions also offer **Add to the group behind** and **Take out of group**, which do what Windows + Ctrl + T and Windows + Ctrl + Shift + T do, for the clicked window; Title Bar Actions' spec gets them when they're built.
-- **Shortcuts & Mouse Buttons** can run **Next tab**, **Previous tab**, **Move tab forward**, **Move tab back**, **Add to the group behind** and **Take out of group** from the user's own shortcuts and mouse buttons while Window Tabs is on (`IFeatureActions`). They act on the window in front, so launchers can't run them. See [How features offer actions](../input/shortcuts-and-mouse-buttons.md#how-features-offer-actions).
+- **Title Bar Actions** acts on a group's tab in front as on any window: Minimize minimizes the group, and Send to back sends the group back, with its strip. Minimize to tray plays the warning sound, as Minimize to Tray refuses the tab. Its click actions also offer **Add to the group behind** and **Move out of group**, which do what Windows + Ctrl + T and Windows + Ctrl + Shift + T do, for the clicked window, through `WindowRequests`; see [With the other features](title-bar-actions.md#with-the-other-features).
+- **Shortcuts & Mouse Buttons** can run **Next tab**, **Previous tab**, **Move tab forward**, **Move tab back**, **Add to the group behind** and **Move out of group** from the user's own shortcuts and mouse buttons while Window Tabs is on (`IFeatureActions`). They act on the window in front, so launchers can't run them. See [How features offer actions](../input/shortcuts-and-mouse-buttons.md#how-features-offer-actions).
 - **End App** ends a tab's app like any other; its tabs go.
 - **Window Rules** ([#26](https://github.com/Lazyb0y/pc-companion/issues/26)) can put a window in a group by rule, and **Window shading** ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) shades a group's tab in front, with its strip staying, once those features exist; their specs say how.
 - **With either feature off,** nothing changes.
@@ -305,7 +307,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - **Settings and the file** can only choose shortcuts and switches, and group windows of the listed apps that are already open, so a changed file can't make PC Companion do more.
 - **The mark:** as for Minimize to Tray, another program running as the user could mark its own hidden windows, or another app's, so that PC Companion shows them at its next start; it could show them itself just as well. Windows refuses a program without admin rights the mark on a window of an app running as administrator.
 - **Logs:**
-  - **Debug entries** when a group is made, joined, switched or left, or ends, with the number of tabs and why, and when a window can't be a tab and why.
+  - **Debug entries** when a group is made, joined, switched or left, or ends, with the number of tabs and why, when a window can't be a tab and why, and when no window behind can be grouped with.
   - **Never** titles, app IDs, names or paths, which can name documents, profiles or users.
   - **Warnings** when Windows refuses a shortcut, and when the settings section or the file can't be read.
   - **An error** when a failure stops the feature.
@@ -344,8 +346,8 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
   - **UI Automation:** the tab list's names, positions, the tab in front, and choosing a tab;
   - **the settings:** defaults, the spec's example, unknown shortcut choices and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/WindowTabs.ps1`), with test windows the checks start, painted in solid colors:
-  - **the page:** the Home switch turns the feature on with its defaults, and the page saves each setting; with a test program holding Windows + Ctrl + Page Down, the page shows its note until the program lets it go and a setting changes;
-  - **making a group:** a test window dragged with `SendInput` and dropped with Ctrl on another's title bar makes a group: the strip shows, the other window is hidden and marked, and the taskbar lists one window; one dropped on the strip joins it; one dropped without Ctrl doesn't; Windows + Ctrl + T and Windows + Ctrl + Shift + T group and ungroup;
+  - **the page:** the Home switch turns the feature on with its defaults, and the page saves each setting; with a test program holding Windows + Ctrl + Page Down, and then one holding Windows + Ctrl + T, the page shows its note until the program lets it go and a setting changes;
+  - **making a group:** a test window dragged with `SendInput` and dropped with Ctrl on another's title bar makes a group: the strip shows, the other window is hidden and marked, and the taskbar lists one window; one dropped on the strip joins it; one dropped without Ctrl doesn't; Windows + Ctrl + T groups the window in front with the window behind it, at its place, and Windows + Ctrl + Shift + T takes it out again, beside the group;
   - **switching:** a click on a tab and the shortcuts show each tab in the group's place, in front, and screen samples at the tab's center never show what's behind the group; with Shift, a tab moves;
   - **dragging and resizing:** the strip follows, and the hidden tabs have the new place when the drag ends; the host logs the time per move;
   - **maximized and snapped:** a maximized group shows each tab maximized and restores them to the same place; a snapped tab hidden and shown again is snapped;
