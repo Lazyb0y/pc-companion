@@ -58,7 +58,7 @@ Do something useful when a drive is connected: import a camera card's photos int
   - **On another PC,** the drive is recognized once it's added there too; that PC writes no second ID file, and records the same one.
   - **Two identical drives** have different IDs and serials.
   - **A look-alike drive** with the same name isn't recognized. To pass as the drive, another drive needs a copy of the ID file and the same serial numbers, which only someone who has had the drive in hand can make, and who could read the drive itself. Only BitLocker To Go keeps the files on a drive from someone who has it; see [Security and privacy](#security-and-privacy).
-- **A drive with the ID file whose serials don't match**, such as a copy of the drive or the same card in another card reader, isn't recognized, nothing is copied to or from it, and a notification says so: "A drive with Backup drive's ID was connected, but it isn't the same drive. Nothing was copied." The page shows it with **Use this drive**, which records its serials after the user confirms.
+- **A drive with the ID file whose serials don't match**, such as a copy of the drive or the same card in another card reader, isn't recognized, nothing is copied to or from it, and a notification says so: "Backup drive: not the same drive", with "A drive with this drive's ID was connected, but it isn't the same drive. Nothing was copied." The page shows it with **Use this drive**, which records its serials after the user confirms.
 - **Serial numbers are kept hashed,** as Display Profiles keeps a display's serial number: the first 16 hexadecimal digits of the SHA-256 of the number and the text `PCCompanion.DriveActions`. They're never shown or logged.
 - **The ID file** holds only the ID. Deleting it, or formatting the drive, makes the drive unknown to PC Companion; the page then shows it as not recognized, with **Add again**.
 - The volume's GUID path isn't used: it comes from data on the disk, which a copy of the disk has too, as the spike showed.
@@ -116,15 +116,15 @@ A drive's actions run in their order, one at a time. A drive with no action can 
 
 ### The notification when done
 
-- Each run ends with a notification: the drive's name, what each action did, such as "Imported 132 photos" or "Backed up 45 files, 3 skipped", and "You can remove the drive", "The drive was ejected" or why the run stopped. Selecting it opens the history on the page.
-- A run that acts at once also starts with one: "Backing up to Backup drive. Don't remove the drive."
+- Each run ends with a notification: the drive's name, what each action did, such as "Imported 132 photos" or "Backed up 45 files, 3 skipped", and "You can remove the drive", "The drive was ejected" or why the run stopped. Selecting it opens Drive Actions' page, which shows the history.
+- A run that acts at once also starts with one, with the drive's name: "Running its actions. Don't remove the drive."
 
 ## When a drive arrives
 
 ### Asking first or acting at once
 
 - Each drive has **When connected:** **Ask first**, the default, **Act at once**, or **Do nothing**.
-- **Ask first:** a notification, "Backup drive is connected. Select to back up Documents and Pictures." Selecting it runs the actions, once PC Companion has recognized the drive again; ignoring or dismissing it does nothing. Selecting it after the drive was removed does nothing.
+- **Ask first:** a notification, "Backup drive is connected", with "Select to run its actions." Selecting it runs the actions, once PC Companion has recognized the drive again; ignoring or dismissing it does nothing. Selecting it after the drive was removed does nothing.
 - **Do nothing:** the drive stays in the list, and **Run actions** on the page and in the PC Companion icon's menu still run its actions.
 - **Run actions** on the page and in the menu run a connected drive's actions at any time.
 
@@ -371,17 +371,16 @@ A spike in Windows Sandbox (Windows 11 24H2, build 26100), with a .NET 10 helper
   - **the pipe:** its messages and its checks of requests;
   - **the settings:** defaults, the spec's example, unknown values, limits and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/DriveActions.ps1`), on virtual disks the checks create with diskpart:
-  - **adding:** **Add a drive** lists the disks with their kinds, writes the ID file and saves the drive;
-  - **arrival:** a recognized disk that arrives gets the question, and selecting it, sent to the PC Companion icon as the Updates group sends it, runs its actions; **Act at once** runs them at once; **Do nothing** does nothing, and **Run actions** in the menu runs them;
-  - **imports:** a disk with `DCIM\100TEST` and `DCIM\101TEST` is recognized as Camera cards, and its photos are copied into month folders, once; attached again, nothing is copied again; a conflict adds a number;
-  - **look-alikes:** a disk with the same label, one with a copy of the ID file and another serial, and a reformatted disk get nothing, and the copy of the ID file brings the warning;
-  - **backups:** new and changed files are copied; a copy changed on the disk and a read-only copy stay; files deleted on the PC stay on the disk; a file with a Mark of the Web isn't copied to an exFAT disk; a file over 4 GB, sparse on the PC, isn't copied to a FAT32 disk, with its reason; a disk too small for the backup gets nothing, and the history says how much it needs;
-  - **pulling out:** detaching a disk during a backup stops the run, keeps the old copy, and the unfinished copy is deleted when the disk is attached again;
-  - **locked:** with the session's lock and unlock sent to the feature's window as Windows sends them, as the System Meters group does, a disk attached while locked gets nothing until the unlock, then the question, also with **Act at once**; a disk attached before the host starts gets the question;
-  - **BitLocker:** a disk encrypted with `manage-bde` and a recovery password, attached locked, gets nothing until it's unlocked, and is then recognized and handled;
-  - **undo:** Undo of an imported file and of a run sends the copies to the Recycle Bin;
-  - **the pipe** refuses requests for disks that aren't connected or in the settings;
-  - **the page:** drives, actions and history, in English and Arabic, light and dark, with screenshots, and its changes saved with keyboard focus near what changed;
+  - **camera cards:** a disk with a `DCIM` folder is recognized as a camera card, and **Act at once** imports its photos into a month folder and leaves a file of another type; attached again, no photo gets a second copy;
+  - **ejecting:** with **Eject when done**, Windows is asked to eject the disk after its actions, and refuses for a virtual disk, which stays;
+  - **backups:** the backup drive, recognized by its ID file and serial number, gets the question, and nothing is copied until it's selected, sent to the PC Companion icon as the Updates group sends it; a folder is then backed up with its subfolders, leaving no unfinished copy; attached again, it asks again, and a changed file replaces its copy and is the only one copied;
+  - **unfinished copies:** an unfinished copy, as a disk pulled out during a copy leaves, is deleted by the next backup, which then copies the file, and the other copies stay; the copy is too fast to pull the disk out during it, so the check leaves the unfinished copy itself;
+  - **look-alikes:** a disk with a copy of the ID file and another serial number gets nothing; the page shows it, and **Use this drive** asks first and records its serial number, so the host then recognizes it as the backup drive;
+  - **BitLocker:** a card encrypted with `manage-bde` and a recovery password arrives locked, gets nothing until it's unlocked, and is then imported;
+  - **locked:** with the session's lock and unlock sent to the feature's window as Windows sends them, as the System Meters group does, nothing runs or asks while it's locked, and the card is asked about once it's unlocked, though it acts at once otherwise; drives connected before the host starts are asked about;
+  - **the pipe:** the host lists the drives with their kinds; **Run now** lists a card's photos and imports only those checked; the history comes newest first; Undo sends a copy to the Recycle Bin; and **Add a drive** writes a new disk's ID file, hidden and system, and gives its entry;
+  - **the page:** the drives with their status and actions, the notes about AutoPlay and BitLocker, **Add a drive**, renaming, **When connected**, **Eject when done**, the action editor, moving and removing actions and drives, **Run now**, the history with Undo and **Clear history**, and **Open AutoPlay settings**, with its changes saved and keyboard focus near what changed; and the page without the host;
+  - the history file has the runs, and the logs hold no drive names, labels or folders;
   - no feature holds the host's UI thread, as every group checks.
 - **What the Sandbox can't check:** USB drives, card readers and their cards, hardware serials, ejecting, which Windows refuses for virtual disks, notifications, which the Sandbox doesn't show, AutoPlay, a really locked session, Narrator and Windows 10.
 - **By hand:**
@@ -390,10 +389,11 @@ A spike in Windows Sandbox (Windows 11 24H2, build 26100), with a .NET 10 helper
   - **Eject when done**, also with a program keeping the drive open;
   - a card reader with and without a card, a card put in while the reader is connected, and an SD card from a camera, formatted in it;
   - a USB disk, and a Thunderbolt or USB4 disk;
-  - BitLocker To Go with a password and with automatic unlocking, and the Shell's BitLocker property on encrypted and plain drives;
+  - BitLocker To Go with a password and with automatic unlocking;
   - notifications: selecting one from the toast and later from the notification center, two in a row, and with Do not disturb on;
   - AutoPlay set to ask, at the same arrival;
   - locking the PC, connecting a drive, and unlocking; switching users;
   - Controlled folder access with imports into Pictures;
   - Always run as administrator with UAC on, where Drive Actions pauses;
-  - Narrator on the page and the notifications, a right-to-left language, and Windows 10.
+  - **Do nothing**, with **Run actions** in the PC Companion icon's menu;
+  - Narrator on the page and the notifications, a right-to-left language, the dark mode, and Windows 10.

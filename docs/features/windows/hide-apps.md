@@ -178,7 +178,6 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 
 - **Hiding windows off the taskbar,** as macOS hides apps: the app would look closed, Windows shows Store apps in its shared app frame again, and windows could be lost. Minimize to Tray does it for one window, with an icon to bring it back.
 - **A list of apps that Hide others leaves alone,** such as a music player: later.
-- **A shortcut for Show all:** later, with shortcuts as triggers ([#39](https://github.com/Lazyb0y/pc-companion/issues/39)).
 - **Hide app and Hide others in the PC Companion icon's menu:** once the menu opens, the taskbar is in front, so there's no app in front to act on.
 - **A Hot Corners action:** Hot Corners is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
 - **Hiding apps automatically after a time without use, muting hidden apps, or hiding their notification icons,** as some tools do.
@@ -208,7 +207,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 
 ## Accessibility and localization
 
-- **Keyboard:** both shortcuts. **Show all hidden windows** is in the PC Companion icon's menu, which Windows + B and the arrow keys reach.
+- **Keyboard:** both shortcuts. **Show all hidden windows** is in the PC Companion icon's menu, which Windows + B and the arrow keys reach, and Shortcuts & Mouse Buttons can give it a shortcut of the user's own.
 - **Screen readers:** after Hide app, Windows moves the focus to the next window, which screen readers announce. Hide others and bringing windows back leave the focus where it is. Hide Apps announces nothing of its own: the host has no UI Automation provider. The page says what each shortcut does.
 - **Colors and layout:** the page and the menu follow the Windows mode, dark or light, and high contrast, and are laid out right to left in right-to-left languages.
 - The page works with the keyboard alone, and every switch and list has a label for screen readers.
