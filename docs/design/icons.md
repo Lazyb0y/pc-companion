@@ -63,6 +63,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Minimize to Tray | A window with a white arrow down to the taskbar, which has a tray icon | | Green |
 | Hide Apps | Two apps as rounded squares: one in front, split along its diagonal, and a hidden one behind it, a dashed outline in the deeper orange | | Violet |
 | Drop-down Apps | A screen with a panel hanging from its top edge, with a white chevron | | App blue |
+| Window Tabs | A window with a row of tabs across its top, in the deepest tone: the tab in front joined to the window's body, and an orange tab behind it | | Green |
 | Title Bar Actions | A window with a blue title bar | A blue mouse with an orange wheel | Sky |
 | End App | An app window | A red stop sign with a white bar | Violet |
 | System Meters | Three bars, from light and short to deep and tall | | Green |
@@ -91,7 +92,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Color | Used for | Fill |
 |---|---|---|
 | Paper | Paper, plastic and a window's content | `#F8FAFF` → `#DCE6FF` |
-| Orange | Second objects; it's the app icon's amber | `#FFD25E` → `#FF8A3C` |
+| Orange | Second objects, and the tab behind in Window Tabs; it's the app icon's amber | `#FFD25E` → `#FF8A3C` |
 | Yellow | Folders: the front, then the back; the back's deeper orange is also the hidden app of Hide Apps | `#FFE06B` → `#FAB500`, `#FFA43D` → `#E67505` |
 | Red | Stop signs | `#F83F54` → `#CA2134` |
 | White | Symbols on an object | `#FFFFFF` |

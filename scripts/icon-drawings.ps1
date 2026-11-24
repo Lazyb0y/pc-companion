@@ -622,6 +622,32 @@ foreach ($icon in $dropDownApps) {
     Write-Drawing "drop-down-apps-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $screen $hanging))
 }
 
+# Window Tabs, in green: a window with a row of tabs across its top in the deepest tone, Row's x,
+# y, width, height and the radius of its top corners. The tab in front, Front's x, y, width and
+# corner radius, is joined to the window's body, Body's x, y, width, height and the radius of its
+# bottom corners, in the main tone, and the tab behind it, Back, is orange. The one-color version
+# keeps the tabs apart from the row with cuts Cut wide.
+$windowTabs = @(
+    @{ Size = 32; Row = 1, 2, 30, 8, 2.5; Front = 3, 4, 12, 1.5; Back = 17, 5, 11, 1.5; Body = 1, 10, 30, 20, 2.5; Cut = 1.2 }
+    @{ Size = 20; Row = 2, 2, 16, 6, 1.5; Front = 3, 3, 7, 1; Back = 11, 4, 6, 1; Body = 2, 8, 16, 10, 1.5; Cut = 1 }
+)
+foreach ($icon in $windowTabs) {
+    $rx, $ry, $rw, $rh, $rr = $icon.Row
+    $bottom = $ry + $rh
+    $row = Get-TitleBarPath @($rx, $ry, $rw, $rh, $rr) $rh
+    $tx, $ty, $tw, $tr = $icon.Front
+    $x, $y, $w, $h, $r = $icon.Body
+    $front = "M$(F $tx) $(F ($ty + $tr))A$(F $tr) $(F $tr) 0 0 1 $(F ($tx + $tr)) $(F $ty)H$(F ($tx + $tw - $tr))A$(F $tr) $(F $tr) 0 0 1 $(F ($tx + $tw)) $(F ($ty + $tr))V$(F $y)" +
+        "H$(F ($x + $w))V$(F ($y + $h - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w - $r)) $(F ($y + $h))H$(F ($x + $r))A$(F $r) $(F $r) 0 0 1 $(F $x) $(F ($y + $h - $r))V$(F $y)H$(F $tx)Z"
+    $bx, $by, $bw, $br = $icon.Back
+    $back = "M$(F $bx) $(F ($by + $br))A$(F $br) $(F $br) 0 0 1 $(F ($bx + $br)) $(F $by)H$(F ($bx + $bw - $br))A$(F $br) $(F $br) 0 0 1 $(F ($bx + $bw)) $(F ($by + $br))V$(F $bottom)H$(F $bx)Z"
+    $body = @("<path fill=`"url(#green-deepest)`" d=`"$row`"/>", "<path fill=`"url(#green-main)`" d=`"$front`"/>", "<path fill=`"url(#orange)`" d=`"$back`"/>")
+    Write-Drawing "window-tabs-$($icon.Size)" $icon.Size (@(Get-Gradient 'green-deepest') + @(Get-Gradient 'green-main') + @(Get-Gradient 'orange')) $body
+    $shape = Remove-Shape (Remove-Shape (ConvertTo-Shape $row) (Get-GrownShape $front (2 * $icon.Cut))) (Get-GrownShape $back (2 * $icon.Cut))
+    $shape = Join-Shape (Join-Shape $shape (ConvertTo-Shape $front)) (ConvertTo-Shape $back)
+    Write-Drawing "window-tabs-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
+}
+
 # Title Bar Actions, in sky: a window in the main tone, its title bar above paper, and a mouse at
 # its bottom right in the app icon's deep blue with an orange wheel, for the middle click and the
 # wheel the feature uses on title bars. The one-color version cuts the paper out, and Cut wide
