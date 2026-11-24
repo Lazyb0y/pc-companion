@@ -475,6 +475,23 @@ public sealed class TabsControllerTests : IDisposable
     }
 
     [Fact]
+    public void WhenTheTabInFrontLeavesTheStripComesBackWithTheNextTabOnceItShows()
+    {
+        GroupThree();
+        _system[Mail].Hung = true;
+
+        _strips[0].Drop(2, new Point(1200, 900));
+        Run();
+        _system.Respond(Mail);
+        Run();
+
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.True(_system[Mail].Shown);
+        Assert.True(_strips[0].Shown);
+        Assert.Equal([Notes, Mail], _strips[0].View!.Tabs);
+    }
+
+    [Fact]
     public void DroppingATabOnAnotherGroupsStripMovesItThere()
     {
         Group(Notes, Mail);
