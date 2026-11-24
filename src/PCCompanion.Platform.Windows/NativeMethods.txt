@@ -529,3 +529,8 @@ IPersistFile
 SLGP_FLAGS
 PKEY_AppUserModel_ExcludeFromShowInNewInstall
 MODIFIERKEYS_FLAGS
+SetCapture
+GetCapture
+ReleaseCapture
+WM_CAPTURECHANGED
+HWND_TOP

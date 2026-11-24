@@ -12,9 +12,9 @@ using Windows.Win32.UI.WindowsAndMessaging;
 namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// A window the app draws pixel by pixel, with transparency, that stays on top of other windows
-/// and never takes the focus, such as a strip on the taskbar or a notice. It isn't on the taskbar
-/// or in Alt + Tab. Create, use and dispose it on one thread, which must run a
+/// A window the app draws pixel by pixel, with transparency, that stays on top of other windows,
+/// or takes a place in their order, and never takes the focus, such as a strip on the taskbar, a
+/// notice or a window's tab strip. It isn't on the taskbar or in Alt + Tab. Create, use and dispose it on one thread, which must run a
 /// <see cref="MessageLoop"/>.
 /// </summary>
 public sealed class LayeredWindow : IDisposable
@@ -36,8 +36,12 @@ public sealed class LayeredWindow : IDisposable
     /// Whether all of the window lets clicks and the pointer through to what's below it, as a
     /// notice does; it then raises no pointer events. Otherwise only fully transparent pixels do.
     /// </param>
+    /// <param name="topmost">
+    /// Whether the window stays on top of other windows. Otherwise it takes a place in their order,
+    /// as with <see cref="PlaceAbove"/>, so other windows can cover it.
+    /// </param>
     /// <exception cref="Win32Exception">Windows refused the window.</exception>
-    public unsafe LayeredWindow(string className, string title, bool clickThrough = false)
+    public unsafe LayeredWindow(string className, string title, bool clickThrough = false, bool topmost = true)
     {
         ArgumentException.ThrowIfNullOrEmpty(className);
         ArgumentNullException.ThrowIfNull(title);
@@ -63,7 +67,12 @@ public sealed class LayeredWindow : IDisposable
             }
         }
 
-        var style = WINDOW_EX_STYLE.WS_EX_LAYERED | WINDOW_EX_STYLE.WS_EX_TOPMOST | WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE;
+        var style = WINDOW_EX_STYLE.WS_EX_LAYERED | WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE;
+        if (topmost)
+        {
+            style |= WINDOW_EX_STYLE.WS_EX_TOPMOST;
+        }
+
         if (clickThrough)
         {
             style |= WINDOW_EX_STYLE.WS_EX_TRANSPARENT;
@@ -102,6 +111,14 @@ public sealed class LayeredWindow : IDisposable
 
     /// <summary>Raised for the other messages the window receives, such as those every top-level window gets.</summary>
     public event EventHandler<WindowMessageEventArgs>? MessageReceived;
+
+    /// <summary>
+    /// Raised for each move of the pointer over the window, or anywhere while the window has it
+    /// (<see cref="CapturePointer"/>), and for each press and release of the left button and each
+    /// release of the right one, with the position in the window's pixels. <see cref="Clicked"/>
+    /// and <see cref="MenuRequested"/> are raised too.
+    /// </summary>
+    public event EventHandler<WindowPointerEventArgs>? PointerInput;
 
     public nint Handle => _handle;
 
@@ -293,6 +310,59 @@ public sealed class LayeredWindow : IDisposable
             SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER);
     }
 
+    /// <summary>
+    /// Puts the window right above <paramref name="window"/> in the order of windows, without taking
+    /// the focus, so it shows above that window and below the windows in front of it. Returns
+    /// whether it's there.
+    /// </summary>
+    public bool PlaceAbove(nint window)
+    {
+        ObjectDisposedException.ThrowIf(_handle.IsNull, this);
+
+        var above = PInvoke.GetWindow(new HWND(window), GET_WINDOW_CMD.GW_HWNDPREV);
+        if (above == _handle)
+        {
+            return true;
+        }
+
+        // A window that doesn't stay on top can't go between windows that do: right above the
+        // front-most window that doesn't is the top of its band.
+        var after = above.IsNull || (TopLevelWindows.IsTopmost(above) && !TopLevelWindows.IsTopmost(_handle)) ? HWND.HWND_TOP : above;
+        return PInvoke.SetWindowPos(_handle, after, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER);
+    }
+
+    /// <summary>
+    /// Makes the window stay on top of other windows, or no longer, without taking the focus, as
+    /// while it's a target for something being dragged. Returns whether Windows did it.
+    /// </summary>
+    public bool SetTopmost(bool topmost)
+    {
+        ObjectDisposedException.ThrowIf(_handle.IsNull, this);
+
+        return PInvoke.SetWindowPos(_handle, topmost ? HWND.HWND_TOPMOST : HWND.HWND_NOTOPMOST, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER);
+    }
+
+    /// <summary>
+    /// Gets the pointer's moves and button releases wherever the pointer goes, as during a drag,
+    /// until <see cref="ReleasePointer"/>, or until Windows gives them to another window, which
+    /// raises <see cref="PointerInput"/> with <see cref="WindowPointerAction.CaptureLost"/>.
+    /// </summary>
+    public void CapturePointer()
+    {
+        ObjectDisposedException.ThrowIf(_handle.IsNull, this);
+
+        PInvoke.SetCapture(_handle);
+    }
+
+    /// <summary>Lets the pointer's input go to the windows under it again.</summary>
+    public void ReleasePointer()
+    {
+        if (!_handle.IsNull && PInvoke.GetCapture() == _handle)
+        {
+            PInvoke.ReleaseCapture();
+        }
+    }
+
     public void Dispose()
     {
         if (_handle.IsNull)
@@ -353,6 +423,10 @@ public sealed class LayeredWindow : IDisposable
         return toolTip;
     }
 
+    // Mouse messages carry the position in the window's pixels as two signed 16-bit numbers.
+    private void RaisePointerInput(WindowPointerAction action, LPARAM lParam) =>
+        PointerInput?.Invoke(this, new WindowPointerEventArgs(action, new Point((short)(lParam.Value & 0xFFFF), (short)((lParam.Value >> 16) & 0xFFFF))));
+
     private void SetPointerOver(bool over)
     {
         if (over == IsPointerOver)
@@ -384,6 +458,7 @@ public sealed class LayeredWindow : IDisposable
                 }
 
                 SetPointerOver(true);
+                RaisePointerInput(WindowPointerAction.Moved, lParam);
                 return (LRESULT)0;
 
             case PInvoke.WM_MOUSELEAVE:
@@ -391,13 +466,23 @@ public sealed class LayeredWindow : IDisposable
                 SetPointerOver(false);
                 return (LRESULT)0;
 
+            case PInvoke.WM_LBUTTONDOWN:
+                RaisePointerInput(WindowPointerAction.LeftDown, lParam);
+                return (LRESULT)0;
+
             case PInvoke.WM_LBUTTONUP:
+                RaisePointerInput(WindowPointerAction.LeftUp, lParam);
                 Clicked?.Invoke(this, EventArgs.Empty);
                 return (LRESULT)0;
 
             case PInvoke.WM_RBUTTONUP:
+                RaisePointerInput(WindowPointerAction.RightUp, lParam);
                 PInvoke.GetCursorPos(out var point);
                 MenuRequested?.Invoke(this, new TrayMenuEventArgs(point.X, point.Y));
+                return (LRESULT)0;
+
+            case PInvoke.WM_CAPTURECHANGED:
+                RaisePointerInput(WindowPointerAction.CaptureLost, (LPARAM)0);
                 return (LRESULT)0;
         }
 
@@ -407,7 +492,7 @@ public sealed class LayeredWindow : IDisposable
             handler(this, args);
             if (args.Handled)
             {
-                return (LRESULT)0;
+                return (LRESULT)args.Result;
             }
         }
 
