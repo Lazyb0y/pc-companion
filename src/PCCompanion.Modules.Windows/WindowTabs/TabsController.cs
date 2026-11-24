@@ -211,9 +211,9 @@ public sealed partial class TabsController : IDisposable
         {
             JoinWindow(drag.TitleTarget, window);
         }
-        else if (drag.OverRefused)
+        else if (drag.OverRefused != TabRefusal.None)
         {
-            _system.PlayWarning();
+            Refuse(drag.OverRefused);
         }
     }
 
@@ -1157,34 +1157,41 @@ public sealed partial class TabsController : IDisposable
         Group? stripTarget = null;
         var insertion = -1;
         nint titleTarget = 0;
-        var overRefused = false;
+        var overRefused = TabRefusal.None;
         if (_system.PointerPosition is { } point)
         {
-            if (drag.Refusal == TabRefusal.None)
+            // A window that can't be a tab, dropped on a strip, is refused there.
+            foreach (var group in _groups)
             {
-                foreach (var group in _groups)
+                if (group.Place is { } place && FrontOf(group) != drag.Window && place.Contains(point))
                 {
-                    if (group.Place is { } place && FrontOf(group) != drag.Window && place.Contains(point))
+                    if (drag.Refusal == TabRefusal.None)
                     {
                         stripTarget = group;
                         insertion = place.InsertionAt(place.ToStrip(point));
-                        break;
                     }
+                    else
+                    {
+                        overRefused = drag.Refusal;
+                    }
+
+                    break;
                 }
             }
 
-            if (stripTarget is null && _settings.GroupByDropping && _system.IsControlHeld)
+            if (stripTarget is null && overRefused == TabRefusal.None && _settings.GroupByDropping && _system.IsControlHeld)
             {
                 var under = _system.WindowAt(point, drag.Window);
                 if (under != 0 && DropBand(under) is { } band && band.Contains(point))
                 {
-                    if (drag.Refusal == TabRefusal.None && (GroupOfFront(under) is not null || _system.Check(under) == TabRefusal.None))
+                    var refusal = drag.Refusal != TabRefusal.None || GroupOfFront(under) is not null ? drag.Refusal : _system.Check(under);
+                    if (refusal == TabRefusal.None)
                     {
                         titleTarget = under;
                     }
                     else
                     {
-                        overRefused = true;
+                        overRefused = refusal;
                     }
                 }
             }
@@ -1425,6 +1432,7 @@ public sealed partial class TabsController : IDisposable
 
         public nint TitleTarget { get; set; }
 
-        public bool OverRefused { get; set; }
+        // Why the window under the pointer, or the dragged one, can't group; None when it can or there's none.
+        public TabRefusal OverRefused { get; set; }
     }
 }
