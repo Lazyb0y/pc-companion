@@ -37,6 +37,7 @@ Give PC Companion's actions keyboard shortcuts and mouse buttons of your own, su
 | End App | Choose an app to end | Starts choosing, as Ctrl + Alt + Esc |
 | Drop-down Apps | Show or hide *app*, for each listed app | As the app's own shortcut |
 | App Windows | Next window of the app, Previous window of the app | As Alt + the key above Tab, and with Shift |
+| Window Tabs | Next tab, Previous tab, Move tab forward, Move tab back, Add to the group behind, Move out of group | As Window Tabs' shortcuts, Windows + Ctrl + Page Down, Page Up and T, and with Shift |
 | Clipboard Actions | Actions for the copied text, Actions for the selected text | Opens the menu, as Windows + Alt + V and Windows + Alt + S; the second needs Selected text on |
 | Display Profiles | Use *profile*, for each profile | Switches, with the same question and revert as the menu |
 | Network Profiles | Use *profile*, for each profile | Switches, with the same checks as the menu |

@@ -124,10 +124,12 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 | Send to back | Puts the window behind every other window; when it was in front, the next window comes to the front, as with Alt + Esc | `TopLevelWindows.SendToBack` (`HWND_BOTTOM`), then `SetForegroundWindow` on the next window that the taskbar shows |
 | Minimize to tray | Sends the window to the notification area | Through [Minimize to Tray](minimize-to-tray.md); see [With the other features](#with-the-other-features) |
 | Hide app | Minimizes every window of the window's app, as the taskbar groups them | Through [Hide Apps](hide-apps.md)' Hide app, for the clicked window's app rather than the app in front |
+| Add to the group behind | Adds the window to the group of the window behind it, or groups the two, with tabs | Through [Window Tabs](window-tabs.md), as Windows + Ctrl + T does for the window in front |
+| Move out of group | Takes the window out of its group, beside it | Through [Window Tabs](window-tabs.md), as Windows + Ctrl + Shift + T does for the window in front |
 
 - **The same action** runs whether the window is in front or behind; Send to back gives the front away only when the window had it.
 - **An always-on-top window** goes behind every other window and loses always-on-top, as with `HWND_BOTTOM`. So Send to back skips such windows, with the warning sound.
-- **A window without a Minimize button** (`TopLevelWindows.HasMinimizeButton`) isn't minimized, sent to the tray or hidden, with the warning sound.
+- **A window without a Minimize button** (`TopLevelWindows.HasMinimizeButton`) isn't minimized, sent to the tray or hidden, with the warning sound. Window Tabs' actions don't need one.
 
 ### The wheel
 
@@ -176,7 +178,8 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 
 - **Minimize to tray** passes the window to [Minimize to Tray](minimize-to-tray.md), which sends it as its shortcut does, with its own rules. It refuses Store apps in the shared frame, windows with a dialog open, apps running as administrator while it can't hide them, and Drop-down Apps' windows; for each, the warning sound plays.
 - **Hide app** passes the window to [Hide Apps](hide-apps.md), which minimizes every window of that window's app as Hide app does, with its own rules.
-- **While Minimize to Tray or Hide Apps is off,** the action plays the warning sound, and the click is still kept. The page offers both actions all the time, with a note that they need their feature turned on.
+- **Add to the group behind** and **Move out of group** pass the window to [Window Tabs](window-tabs.md), which does for it what Windows + Ctrl + T and Windows + Ctrl + Shift + T do for the window in front, with its own rules: the window behind is the front-most one behind the clicked window, on its display, that can be a tab, and only a group's tab in front can be moved out. When it can't, Window Tabs plays the warning sound.
+- **While Minimize to Tray, Hide Apps or Window Tabs is off,** the action plays the warning sound, and the click is still kept. The page offers every action all the time, with a note that they need their feature turned on.
 - **How:** within the module, a request carries the window to the other feature's thread (`WindowRequests`), as the features already share `HideAppsMinimized` and `DropDownWindows`. Each feature sets its part as it starts and clears it as it stops.
 - **Shift + Minimize:** when Shift + middle-click is set to **Minimize** and Minimize to Tray's **Shift + Minimize** is on, the window minimizes with Shift held, so Minimize to Tray takes it to the tray, as it does a click on the Minimize button with Shift held.
 - **Drop-down Apps' windows:** Minimize hides a shown drop-down window, as Drop-down Apps does whenever one is minimized. Minimize to tray and Hide app leave drop-down windows alone, as those features do.
@@ -253,7 +256,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
   - **Middle-click**, **Shift + middle-click** and **Ctrl + middle-click**, each a list of the click actions;
   - **Wheel** and **Ctrl + wheel**, each a list of the wheel actions;
   - **Apps that keep their title-bar clicks**, with **Running app**, **Program file** and **Remove**;
-  - a note that Minimize to tray and Hide app need Minimize to Tray and Hide Apps turned on, shown while an action needs a feature that's off;
+  - a note that Minimize to tray and Hide app need Minimize to Tray and Hide Apps turned on, and another that Add to the group behind and Move out of group need Window Tabs turned on, each shown while an action needs a feature that's off;
   - a note about the windows that get nothing, including apps running as administrator;
   - a **Permissions & data** card.
 - **When the feature is first turned on:** middle-click is Minimize, the other clicks and the wheel are None, and no app is listed.
@@ -278,7 +281,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 }
 ```
 
-- `middleClick`, `shiftMiddleClick`, `controlMiddleClick`: `None`, `Minimize`, `SendToBack`, `MinimizeToTray` or `HideApp`.
+- `middleClick`, `shiftMiddleClick`, `controlMiddleClick`: `None`, `Minimize`, `SendToBack`, `MinimizeToTray`, `HideApp`, `AddToGroupBehind` or `TakeOutOfGroup`.
 - `wheel`, `controlWheel`: `None` or `Opacity`.
 - `name` is shown on the page only.
 
@@ -325,7 +328,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
   - It keeps only the middle-click and wheel notches it claimed, and lets everything else through unchanged.
   - Positions and clicks are compared, never stored or logged.
   - It runs in PC Companion's process and loads no code into other apps.
-- **Changes:** other apps' windows. It minimizes them, sends them to the back, gives the front to the next window, changes their opacity and style, and adds and removes its mark on them. It passes windows to Minimize to Tray and Hide Apps. It sends no input to other apps and writes no file.
+- **Changes:** other apps' windows. It minimizes them, sends them to the back, gives the front to the next window, changes their opacity and style, and adds and removes its mark on them. It passes windows to Minimize to Tray, Hide Apps and Window Tabs. It sends no input to other apps and writes no file.
 - **Logs:**
   - **Debug entries** for each click or notch on a title bar: which click, which action, whether the hook kept it or it was let through, and why nothing ran, such as a listed app, a window that doesn't respond, a window Windows keeps it from or a feature that's off; and when it claims the title bar under the pointer and removes the claim, as the hook is set and removed.
   - **Never** titles, app IDs, names, paths or pointer positions, which can name documents, profiles or users.
@@ -382,6 +385,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
     - Minimize posted, and refused without a Minimize button;
     - Send to back, giving the front away only from the window in front, and skipping always-on-top windows;
     - Minimize to tray and Hide app passed on, and the warning sound while their feature is off;
+    - Window Tabs' two actions passed on, also for a window without a Minimize button, and the warning sound while Window Tabs is off;
   - **opacity:**
     - notches added up from smaller steps, 10% per notch, 20% to 100%;
     - the style removed at 100% only when PC Companion added it;
@@ -409,7 +413,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
     - a listed app's title bar gets no action, and the host logs why;
     - with the host labeled Medium integrity, a test window running as administrator gets no action, and the host logs why;
   - **the hook:** it's set only while the pointer is on a title bar, as the host's log shows;
-  - **the other features:** with Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide its app; with them off, the warning sound plays and the host logs why;
+  - **the other features:** with Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide its app, and with Window Tabs on, its actions group the window with the one behind it and take it out again; with them off, the warning sound plays and the host logs why;
   - **the page** in English and Arabic, in light and dark, with screenshots;
   - no feature holds the host's UI thread, as every group checks.
 - The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
