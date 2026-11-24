@@ -23,6 +23,13 @@ public static class WindowsTheme
     // Gives the current colors at each call.
     private static readonly Lazy<UISettings> ColorSettings = new(() => new UISettings());
 
+    /// <summary>Whether the app mode is dark, which apps' windows and their title bars follow.</summary>
+    public static bool IsAppDark()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+        return key?.GetValue("AppsUseLightTheme") is 0;
+    }
+
     /// <summary>Whether the Windows mode is dark.</summary>
     public static bool IsDark()
     {

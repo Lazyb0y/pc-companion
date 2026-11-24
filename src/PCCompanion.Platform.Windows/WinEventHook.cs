@@ -24,6 +24,18 @@ public sealed class WinEventHook : IDisposable
     /// </summary>
     public const uint DesktopSwitchEvent = 0x0020;
 
+    /// <summary>The user started to move or resize a window (<c>EVENT_SYSTEM_MOVESIZESTART</c>).</summary>
+    public const uint MoveSizeStartEvent = 0x000A;
+
+    /// <summary>The user finished moving or resizing a window (<c>EVENT_SYSTEM_MOVESIZEEND</c>).</summary>
+    public const uint MoveSizeEndEvent = 0x000B;
+
+    /// <summary>Windows hid a window from sight, as when its virtual desktop isn't showing (<c>EVENT_OBJECT_CLOAKED</c>).</summary>
+    public const uint ObjectCloakedEvent = 0x8017;
+
+    /// <summary>Windows brought a cloaked window back in sight (<c>EVENT_OBJECT_UNCLOAKED</c>).</summary>
+    public const uint ObjectUncloakedEvent = 0x8018;
+
     /// <summary>A window started to minimize (<c>EVENT_SYSTEM_MINIMIZESTART</c>).</summary>
     public const uint MinimizeStartEvent = 0x0016;
 

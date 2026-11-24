@@ -686,6 +686,71 @@ public sealed class TopLevelWindowsTests
     }
 
     // Cloaked first, so it never appears.
+    [Fact]
+    public void SetHiddenPlacementGivesAHiddenWindowANormalRectangleAndKeepsItHidden()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        var bounds = new Rectangle(90, 60, 520, 340);
+
+        Assert.True(TopLevelWindows.SetHiddenPlacement(window.Handle, bounds));
+
+        Assert.False(TopLevelWindows.IsVisible(window.Handle));
+        Assert.Equal(new WindowPlacement(bounds, WindowState.Normal, RestoresMaximized: false), TopLevelWindows.Placement(window.Handle));
+    }
+
+    [Fact]
+    public void AWindowIsResizableOnlyWithItsSizingBorder()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        const int Style = -16; // GWL_STYLE
+        const long SizingBorder = 0x00040000; // WS_THICKFRAME
+        var style = (long)GetWindowLongPtr(window.Handle, Style);
+
+        SetWindowLongPtr(window.Handle, Style, (nint)(style & ~SizingBorder));
+        Assert.False(TopLevelWindows.IsResizable(window.Handle));
+        SetWindowLongPtr(window.Handle, Style, (nint)(style | SizingBorder));
+        Assert.True(TopLevelWindows.IsResizable(window.Handle));
+    }
+
+    [Fact]
+    public void AskingToClosePostsTheCloseCommand()
+    {
+        using var window = new MessageWindow(UniqueClassName());
+        const nuint CloseCommand = 0xF060; // SC_CLOSE
+        var commands = new List<nuint>();
+
+        // Handled here, so Windows doesn't close the window.
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message == SystemCommandMessage)
+            {
+                commands.Add(e.WParam & 0xFFF0);
+                e.Handled = true;
+            }
+        };
+
+        Assert.True(TopLevelWindows.AskToClose(window.Handle));
+        RunPostedMessages();
+
+        Assert.Equal([CloseCommand], commands);
+        Assert.True(TopLevelWindows.Exists(window.Handle));
+    }
+
+    [Fact]
+    public void PlaceOfReadsAWindowAsFindingDoesAndNothingForAClosedOne()
+    {
+        var window = new MessageWindow(UniqueClassName());
+        var handle = window.Handle;
+        var bounds = new Rectangle(40, 50, 300, 200);
+        Assert.True(TopLevelWindows.Place(handle, bounds));
+
+        var place = TopLevelWindows.PlaceOf(handle);
+        window.Dispose();
+
+        Assert.Equal(bounds, place?.Bounds);
+        Assert.Null(TopLevelWindows.PlaceOf(handle));
+    }
+
     private static void Show(nint window)
     {
         Assert.True(WindowCloak.Set(window, cloaked: true));
