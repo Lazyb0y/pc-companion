@@ -1,14 +1,13 @@
 using System;
 using System.Drawing;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.FullScreen;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// Reads what <see cref="FullScreenCheck"/> needs from Windows: its full-screen state, the window
 /// in front's display and the windows from front to back.
 /// </summary>
-internal sealed class WindowsFullScreenEnvironment : IFullScreenEnvironment
+public sealed class WindowsFullScreenEnvironment : IFullScreenEnvironment
 {
     public FullScreenMode FullScreenMode => Foreground.FullScreenMode;
 

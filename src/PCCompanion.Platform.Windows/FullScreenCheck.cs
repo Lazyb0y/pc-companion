@@ -1,13 +1,12 @@
 using System.Drawing;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.FullScreen;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
-/// Whether an app is full screen on a display, for the module's features. See "Full screen and a
-/// captured pointer" in docs/features/input/hot-corners.md.
+/// Whether an app is full screen on a display, for the features that stay out of its way. See
+/// "Full screen and a captured pointer" in docs/features/input/hot-corners.md.
 /// </summary>
-internal static class FullScreenCheck
+public static class FullScreenCheck
 {
     public static bool IsFullScreen(IFullScreenEnvironment environment, Rectangle display) => environment.FullScreenMode switch
     {

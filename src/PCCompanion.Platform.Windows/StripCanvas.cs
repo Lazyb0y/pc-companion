@@ -1,11 +1,10 @@
 using System;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Desktop.SystemMeters;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// Premultiplied 32-bit pixels (alpha, red, green and blue, from the high byte down), row by row
-/// from the top, that the strip is drawn into.
+/// from the top, that a window drawn pixel by pixel, such as System Meters' strip, is drawn into.
 /// </summary>
 public sealed class StripCanvas
 {

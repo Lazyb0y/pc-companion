@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core;
 using PCCompanion.Core.Features;
-using PCCompanion.Modules.Input.FullScreen;
 using PCCompanion.Modules.Input.Notice;
 using PCCompanion.Platform.Windows;
 
