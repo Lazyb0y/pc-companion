@@ -109,7 +109,7 @@ public static class FeatureCatalog
             new(MinimizeToTrayFeature.Definition, MinimizeToTrayFeature.CurrentSupport, typeof(MinimizeToTrayPage), DrawnIcon: "minimize-to-tray", Actions: _ => MinimizeToTrayFeature.OfferedActions(), Shortcuts: section => MinimizeToTrayFeature.Shortcuts(MinimizeToTraySettings.Read(section))),
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps", Actions: _ => HideAppsFeature.OfferedActions(), Shortcuts: section => HideAppsFeature.Shortcuts(HideAppsSettings.Read(section))),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps", Actions: section => DropDownAppsFeature.OfferedActions(DropDownAppsSettings.Read(section)), Shortcuts: section => DropDownAppsFeature.Shortcuts(DropDownAppsSettings.Read(section))),
-            new(WindowTabsFeature.Definition, WindowTabsFeature.CurrentSupport, typeof(WindowTabsPage), DrawnIcon: "window-tabs"),
+            new(WindowTabsFeature.Definition, WindowTabsFeature.CurrentSupport, typeof(WindowTabsPage), DrawnIcon: "window-tabs", Actions: _ => WindowTabsFeature.OfferedActions(), Shortcuts: section => WindowTabsFeature.Shortcuts(WindowTabsSettings.Read(section))),
             new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
             new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage), DrawnIcon: "end-app", Actions: _ => EndAppFeature.OfferedActions(), Shortcuts: section => EndAppFeature.Shortcuts(EndAppSettings.Read(section))),
         ]),

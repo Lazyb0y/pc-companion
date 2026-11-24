@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.DropDownApps;
@@ -92,6 +93,42 @@ public sealed class WindowTabsFeatureTests : IDisposable
         _feature.Apply(Section(Quiet));
 
         Assert.True(_feature.CanRun(action));
+    }
+
+    [Fact]
+    public void ItOffersItsSixActionsOnTheWindowInFront()
+    {
+        Assert.Equal(
+            ["nextTab", "previousTab", "moveTabForward", "moveTabBack", "addToGroupBehind", "takeOutOfGroup"],
+            WindowTabsFeature.OfferedActions().Select(offered => offered.Action.ActionId));
+        Assert.All(WindowTabsFeature.OfferedActions(), offered =>
+        {
+            Assert.Equal("windowTabs", offered.Action.FeatureId);
+            Assert.True(offered.OnWindowInFront);
+            Assert.False(string.IsNullOrWhiteSpace(offered.Name));
+        });
+    }
+
+    [Fact]
+    public void ItSaysWhichKeysItsShortcutsUse()
+    {
+        static FeatureAction Action(string id) => new("windowTabs", id);
+        var windowsControl = HotKeyModifiers.Windows | HotKeyModifiers.Control;
+
+        Assert.Equal(
+            [
+                (Action("nextTab"), ShortcutKeys.OfVirtualKey(windowsControl, 0x22)),
+                (Action("previousTab"), ShortcutKeys.OfVirtualKey(windowsControl, 0x21)),
+                (Action("moveTabForward"), ShortcutKeys.OfVirtualKey(windowsControl | HotKeyModifiers.Shift, 0x22)),
+                (Action("moveTabBack"), ShortcutKeys.OfVirtualKey(windowsControl | HotKeyModifiers.Shift, 0x21)),
+                (Action("addToGroupBehind"), ShortcutKeys.OfVirtualKey(windowsControl, 0x54)),
+                (Action("takeOutOfGroup"), ShortcutKeys.OfVirtualKey(windowsControl | HotKeyModifiers.Shift, 0x54)),
+            ],
+            WindowTabsFeature.Shortcuts(new WindowTabsSettings()));
+        Assert.Equal(
+            [(Action("nextTab"), ShortcutKeys.OfVirtualKey(HotKeyModifiers.Windows | HotKeyModifiers.Alt, 0x22))],
+            WindowTabsFeature.Shortcuts(new WindowTabsSettings { SwitchShortcuts = TabSwitchShortcuts.WindowsAltPage, GroupShortcuts = TabGroupShortcuts.None }).Take(1));
+        Assert.Empty(WindowTabsFeature.Shortcuts(new WindowTabsSettings { SwitchShortcuts = (TabSwitchShortcuts)9, GroupShortcuts = (TabGroupShortcuts)7 }));
     }
 
     [Fact]

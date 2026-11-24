@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
+using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Platform.Windows;
 
@@ -89,6 +91,48 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    /// <summary>The actions Window Tabs offers to shortcuts and mouse buttons, named in the user's language.</summary>
+    public static IReadOnlyList<OfferedAction> OfferedActions() =>
+    [
+        new(new FeatureAction(Definition.Id, NextTabAction), Strings.WindowTabsActionNextTab) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, PreviousTabAction), Strings.WindowTabsActionPreviousTab) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, MoveTabForwardAction), Strings.WindowTabsActionMoveTabForward) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, MoveTabBackAction), Strings.WindowTabsActionMoveTabBack) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, AddToGroupBehindAction), Strings.WindowTabsActionAddToGroupBehind) { OnWindowInFront = true },
+        new(new FeatureAction(Definition.Id, TakeOutOfGroupAction), Strings.WindowTabsMoveOutOfGroup) { OnWindowInFront = true },
+    ];
+
+    /// <summary>The shortcuts Window Tabs registers with <paramref name="settings"/> while it's on, each with the action it runs.</summary>
+    public static IReadOnlyList<(FeatureAction Action, ShortcutKeys Keys)> Shortcuts(WindowTabsSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        var shortcuts = new List<(FeatureAction, ShortcutKeys)>();
+        HotKeyModifiers? switchKeys = settings.SwitchShortcuts switch
+        {
+            TabSwitchShortcuts.WindowsControlPage => HotKeyModifiers.Windows | HotKeyModifiers.Control,
+            TabSwitchShortcuts.WindowsAltPage => HotKeyModifiers.Windows | HotKeyModifiers.Alt,
+            _ => null,
+        };
+
+        if (switchKeys is { } modifiers)
+        {
+            shortcuts.Add((new FeatureAction(Definition.Id, NextTabAction), ShortcutKeys.OfVirtualKey(modifiers, WindowTabsThread.PageDown)));
+            shortcuts.Add((new FeatureAction(Definition.Id, PreviousTabAction), ShortcutKeys.OfVirtualKey(modifiers, WindowTabsThread.PageUp)));
+            shortcuts.Add((new FeatureAction(Definition.Id, MoveTabForwardAction), ShortcutKeys.OfVirtualKey(modifiers | HotKeyModifiers.Shift, WindowTabsThread.PageDown)));
+            shortcuts.Add((new FeatureAction(Definition.Id, MoveTabBackAction), ShortcutKeys.OfVirtualKey(modifiers | HotKeyModifiers.Shift, WindowTabsThread.PageUp)));
+        }
+
+        if (settings.GroupShortcuts == TabGroupShortcuts.WindowsControlT)
+        {
+            var groupKeys = HotKeyModifiers.Windows | HotKeyModifiers.Control;
+            shortcuts.Add((new FeatureAction(Definition.Id, AddToGroupBehindAction), ShortcutKeys.OfVirtualKey(groupKeys, WindowTabsThread.KeyT)));
+            shortcuts.Add((new FeatureAction(Definition.Id, TakeOutOfGroupAction), ShortcutKeys.OfVirtualKey(groupKeys | HotKeyModifiers.Shift, WindowTabsThread.KeyT)));
+        }
+
+        return shortcuts;
+    }
 
     public bool CanRun(FeatureAction action) => _thread is not null && ControllerAction(action) is not null;
 

@@ -5968,4 +5968,36 @@
     <value>Mientras se arrastra una ventana, lee dónde está el puntero, si Ctrl está presionada y qué ventana hay bajo el puntero. Lee el título y el icono de cada pestaña para dibujarla, y qué ventana pasa a primer plano; los títulos solo se guardan en memoria. Oculta, muestra, mueve y cambia el tamaño de las pestañas, y marca las ocultas para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. No establece conexiones de red y no envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>Pestaña siguiente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>Pestaña anterior</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>Mover la pestaña hacia adelante</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>Mover la pestaña hacia atrás</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>Agregar al grupo de atrás</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>Agrupar con el teclado</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>Agrega la ventana en primer plano al grupo de la ventana que tiene detrás, o agrupa las dos. Con Mayús, saca la pestaña en primer plano de su grupo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Ctrl + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

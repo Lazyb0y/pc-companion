@@ -5898,7 +5898,7 @@
   </data>
   <data name="WindowTabsMoveOutOfGroup" xml:space="preserve">
     <value>Move out of group</value>
-    <comment>Window Tabs: item in a tab's right-click menu; takes the tab's window out of its group, as a window of its own.</comment>
+    <comment>Window Tabs: item in a tab's right-click menu; takes the tab's window out of its group, as a window of its own. Also an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page, and an action in Title Bar Actions' click lists, which take the window in front, or the clicked one, out of its group.</comment>
   </data>
   <data name="WindowTabsCloseWindow" xml:space="preserve">
     <value>Close window</value>
@@ -5954,7 +5954,7 @@
   </data>
   <data name="WindowTabsSwitchNone" xml:space="preserve">
     <value>None</value>
-    <comment>Window Tabs page: the item of the shortcut list that turns the shortcuts off.</comment>
+    <comment>Window Tabs page: the item of the shortcut lists that turns the shortcuts off.</comment>
   </data>
   <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
     <value>Some windows can't be tabs: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, windows that can't be resized, and windows with a dialog open, such as Save. Neither can minimized or full-screen windows, Drop-down Apps' windows, or windows that Minimize to Tray put in the tray. Windows' warning sound plays when a window can't join a group.</value>
@@ -5967,5 +5967,37 @@
   <data name="WindowTabsPermissions" xml:space="preserve">
     <value>While a window is dragged, reads where the pointer is, whether Ctrl is held and which window is under the pointer. Reads each tab's title and icon to draw the tab, and which window comes to the front; titles stay in memory only. Hides, shows, moves and resizes the tabs, and marks hidden ones so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Makes no network connections and sends nothing.</value>
     <comment>Window Tabs page: below FeaturePermissionsHeader.</comment>
+  </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>Next tab</value>
+    <comment>Window Tabs: an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page; shows the next tab of the group in front.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>Previous tab</value>
+    <comment>Window Tabs: an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page; shows the previous tab of the group in front.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>Move tab forward</value>
+    <comment>Window Tabs: an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page; moves the tab in front one place along its strip, toward the last tab.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>Move tab back</value>
+    <comment>Window Tabs: an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page; moves the tab in front one place along its strip, toward the first tab.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>Add to the group behind</value>
+    <comment>Window Tabs: an action that shortcuts and mouse buttons can run on the Shortcuts &amp; Mouse Buttons page, and an action in Title Bar Actions' click lists; adds the window to the group of the window behind it, or groups the two.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>Group from the keyboard</value>
+    <comment>Window Tabs page: setting name, and the screen reader name of its list of shortcuts.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>Adds the window in front to the group of the window behind it, or groups the two. With Shift, takes the tab in front out of its group.</value>
+    <comment>Window Tabs page: below WindowTabsGroupKeysHeader.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Windows logo key + Ctrl + T</value>
+    <comment>Window Tabs page: shortcuts in the list: T adds the window in front to the group behind it, and with Shift takes the tab in front out. Use the language's names for the Windows logo key and Ctrl, as in the other shortcuts.</comment>
   </data>
 </root>

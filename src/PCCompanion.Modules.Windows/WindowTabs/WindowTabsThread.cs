@@ -23,9 +23,9 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
     // WM_QUERYENDSESSION, which Windows sends before it asks apps to close at sign-out.
     private const uint QueryEndSession = 0x0011;
 
-    private const uint PageUp = 0x21;
-    private const uint PageDown = 0x22;
-    private const uint KeyT = 0x54;
+    internal const uint PageUp = 0x21;
+    internal const uint PageDown = 0x22;
+    internal const uint KeyT = 0x54;
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;

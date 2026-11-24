@@ -5968,4 +5968,36 @@
     <value>Liest beim Ziehen eines Fensters, wo der Zeiger ist, ob Strg gedrückt ist und welches Fenster unter dem Zeiger liegt. Liest Titel und Symbol jedes Tabs, um den Tab zu zeichnen, und welches Fenster in den Vordergrund kommt; Titel bleiben nur im Arbeitsspeicher. Blendet die Tabs aus und ein, verschiebt sie, ändert ihre Größe und markiert ausgeblendete, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>Nächster Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>Vorheriger Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>Tab eine Stelle weiter verschieben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>Tab eine Stelle zurück verschieben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>Zur Gruppe dahinter hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>Mit der Tastatur gruppieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>Fügt das Fenster im Vordergrund der Gruppe des Fensters dahinter hinzu oder gruppiert die beiden. Mit Umschalt wird der vordere Tab aus seiner Gruppe genommen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Windows-Logo-Taste + Strg + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

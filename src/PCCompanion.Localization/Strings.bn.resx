@@ -5968,4 +5968,36 @@
     <value>কোনো উইন্ডো টানার সময় পয়েন্টার কোথায়, Ctrl চাপা আছে কিনা এবং পয়েন্টারের নিচে কোন উইন্ডো তা পড়ে। ট্যাব আঁকতে প্রতিটি ট্যাবের শিরোনাম ও আইকন পড়ে, এবং কোন উইন্ডো সামনে আসে তা পড়ে; শিরোনাম শুধু মেমরিতে থাকে। ট্যাবগুলো লুকায়, দেখায়, সরায় ও আকার বদলায়, এবং লুকানোগুলো চিহ্নিত করে, যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>পরের ট্যাব</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>আগের ট্যাব</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>ট্যাব এক ঘর এগিয়ে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>ট্যাব এক ঘর পিছিয়ে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>পেছনের গ্রুপে যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>কিবোর্ড থেকে গ্রুপ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>সামনের উইন্ডোকে তার পেছনের উইন্ডোর গ্রুপে যোগ করে, অথবা দুটিকে একসাথে গ্রুপ করে। Shift সহ, সামনের ট্যাবটি তার গ্রুপ থেকে সরিয়ে নেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Windows লোগো কী + Ctrl + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
