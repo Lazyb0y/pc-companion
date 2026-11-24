@@ -23,6 +23,7 @@ public sealed class TabsControllerTests : IDisposable
     private readonly List<FakeTabStrip> _strips = [];
     private readonly FakeDropHighlight _highlight = new();
     private readonly WindowTabsWindows _shared = new();
+    private readonly RecordingLogger<TabsController> _logger = new();
     private readonly TabsController _controller;
     private int _settingsOpened;
 
@@ -40,7 +41,7 @@ public sealed class TabsControllerTests : IDisposable
             _highlight,
             _clock,
             _thread.Enqueue,
-            new RecordingLogger<TabsController>(),
+            _logger,
             _shared,
             rightToLeft: false,
             (index, count) => $"Tab {index} of {count}",
@@ -155,6 +156,23 @@ public sealed class TabsControllerTests : IDisposable
         Assert.Empty(_controller.Groups);
         Assert.Equal(2, _system.Warnings);
         Assert.True(_system[Notes].Shown);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("refused a window: RunsAsAdministrator", StringComparison.Ordinal));
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("refused a window: SharedAppFrame", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AWindowThatCantBeATabDroppedOnAStripIsRefusedThere()
+    {
+        Group(Notes, Mail);
+        _system[Report].Refusal = TabRefusal.NotResizable;
+        var place = _strips[0].View!.Place;
+
+        DropOn(Report, new Point(place.Bounds.Left + 10, place.Bounds.Top + 10), control: false);
+
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.Equal(1, _system.Warnings);
+        Assert.True(_system[Report].Shown);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("refused a window: NotResizable", StringComparison.Ordinal));
     }
 
     [Fact]
