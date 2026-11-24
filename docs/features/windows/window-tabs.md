@@ -80,7 +80,7 @@ Group windows of different apps into one window with tabs, and switch between th
 ### Where it is
 
 - **Above the window:** the strip stands on the top edge of the window in front's visible frame (`DWMWA_EXTENDED_FRAME_BOUNDS`), from its left edge, or its right edge in right-to-left languages, like the tab of a folder. It covers nothing of the window: the spike showed a strip inside the title bar covering File Explorer's tabs and the window's buttons.
-- **No room above,** as for a maximized window or one that touches the top of the work area: the strip goes over the top of the window, and shows only while the pointer rests within 2 effective pixels of the window's top edge for 400 ms, while the pointer is on the strip, for 1.5 seconds after a tab switch from the keyboard, and during a drag that could drop on it. A quick click at the top, as on a browser's tabs, isn't delayed. The pointer is watched only then, with `RawPointerMonitor`, which every feature shares.
+- **No room above,** as for a maximized window or one that touches the top of the work area: the strip goes over the top of the window, and shows only while the pointer rests within 2 effective pixels of the window's top edge for 400 ms, while the pointer is on the strip, for 1.5 seconds after a tab switch from the keyboard, and during a drag that could drop on it. A quick click at the top, as on a browser's tabs, isn't delayed. The pointer's position is read every 50 ms only while such a strip's group is in front or its strip shows.
 - **Its height** is 32 effective pixels at the display's scale. **Its width:** each tab is up to 200 effective pixels wide; tabs narrow to fit the window's width, down to 40, which shows only the icon. Past that, the strip is wider than the window.
 - **It follows the window in front,** on every move and size change (`EVENT_OBJECT_LOCATIONCHANGE` for that window's process). In the spike, following a drag took 0.3 to 0.4 ms per move on the feature's thread, and the strip was in place in every frame but one.
 - **Its place in the order of windows:** right above the window in front, never always on top, so other windows cover it as they cover the window. When the window comes to the front (`EVENT_SYSTEM_FOREGROUND`), the strip is put back right above it.
@@ -190,7 +190,8 @@ Group windows of different apps into one window with tabs, and switch between th
 ## Apps running as administrator
 
 - Windows keeps the windows of apps running as administrator away from programs that don't run as administrator. The spike, with a copy labeled to run without admin rights, confirmed that Windows refuses to move, hide, mark or place such a window (error 5), and still reports its moves.
-- **So without admin rights,** such a window can't be a tab: dropping it or the shortcut plays the warning sound, and the page says that Always run as administrator lets it be one.
+- **So without admin rights,** such a window can't be a tab: dropping it on a strip or the shortcut plays the warning sound, and the page says that Always run as administrator lets it be one.
+- **Ctrl while such a window is in front:** Windows doesn't tell a program without admin rights which keys are held while a window of an app running as administrator is in front (`GetAsyncKeyState` returns nothing then), so dropping such a window with Ctrl on a title bar does nothing, without the sound, as the Sandbox checks showed.
 - **With Always run as administrator, or UAC off,** every window can be a tab.
 
 ## With the other features
@@ -211,13 +212,13 @@ Group windows of different apps into one window with tabs, and switch between th
 - **Its own thread:** Window Tabs runs on a thread of its own, derived from `MessageLoopThread<TSettings>`, as [Threads and processes](../../architecture/features.md#threads-and-processes) requires: the strips must answer clicks and screen readers at once, a drag reports a move at every frame, and the shortcuts and hooks need a message loop. Its thread is a single-threaded apartment, as UI Automation needs.
 - **The host's UI thread** runs only:
   - `Apply`, which reads the section and passes it to the feature's thread;
-  - on the first `Apply`, looking for windows left marked: it reads every top-level window's properties, which waits for no program;
-  - the pointer events of `RawPointerMonitor`, while a strip is shown only at its window's top edge: each compares the pointer with one rectangle and passes a change to the feature's thread.
+  - on the first `Apply`, looking for windows left marked: it reads every top-level window's properties, which waits for no program.
 - **The feature's thread** has its own hidden window and runs everything else:
   - the strips' windows: drawing, clicks, drags, tooltips, menus and their UI Automation providers;
   - the drop highlight;
   - the shortcuts;
   - the WinEvent hooks, following drags, and placing the strips;
+  - reading the pointer's position every 50 ms, only while a strip shown at its window's top edge is in front or shown, to tell when the pointer rests there;
   - showing, hiding, moving, marking and bringing windows to the front;
   - reading titles, icons and app identity;
   - `WM_QUERYENDSESSION` and the warning sound.
@@ -284,7 +285,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - Windows 10 version 2004 and later, and Windows 11.
 - **The APIs are documented** and in every supported version:
   - windows: `ShowWindowAsync`, `SetWindowPos`, `SetWindowPlacement`, `GetWindowPlacement`, `SetForegroundWindow`, `GetLastActivePopup`, `IsWindowEnabled`, `IsHungAppWindow`, `EnumWindows`, `GetWindowText`, `SetProp`, `GetProp`, `RemoveProp` and `PostMessage`;
-  - events, keys and the pointer: `SetWinEventHook`, `RegisterHotKey`, `GetAsyncKeyState`, `GetCursorPos` and raw input;
+  - events, keys and the pointer: `SetWinEventHook`, `RegisterHotKey`, `GetAsyncKeyState` and `GetCursorPos`;
   - displays and composition: `DwmGetWindowAttribute`, `DwmFlush`, `UpdateLayeredWindow`, `MonitorFromWindow`, `GetMonitorInfo` and `GetDpiForMonitor`;
   - UI Automation: `UiaReturnRawElementProvider` and `UiaRaiseNotificationEvent`;
   - the session: `SetProcessShutdownParameters` and `MessageBeep`.
@@ -314,7 +315,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 ## Performance
 
 - **With no groups,** the global hooks for moves, the foreground, minimizing and cloaking report events, which are dropped at once unless a window that could be a tab is dragged. No timer runs.
-- **With groups,** each process with tabs has hooks whose events for its other windows are dropped at once. The pointer is watched only while a strip shown at its window's top edge is in front.
+- **With groups,** each process with tabs has hooks whose events for its other windows are dropped at once. The pointer's position is read every 50 ms only while a strip shown at its window's top edge is in front or shown.
 - **A drag** moves only the strip, 0.3 to 0.4 ms per move in the spike. Hidden tabs get their place once, when it ends.
 - **A switch** shows one window and hides one, with the work on the feature's thread taking 1 to 13 ms in the spike, most of it drawing the spike's strip, then waits two frames on the thread pool.
 - **The strip** is drawn again only when its tabs, their titles or icons, its size, the colors or the scale change.
@@ -326,7 +327,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - **Colors:** the strip follows the app mode, dark or light, the accent color and high contrast; see [Look](#look).
 - **Motion:** the strip has no animation.
 - **Right to left:** the strip, its menu and its tooltips are laid out right to left in right-to-left languages; see [Look](#look).
-- **Strings:** the menu's items, the notification and the page are translated like the other pages', marked "Needs native review." "Tab 2 of 3" uses Windows' plural rules (ICU) for each language.
+- **Strings:** the menu's items, the notification and the page are translated like the other pages', marked "Needs native review." "Tab 2 of 3" names a position, not an amount, so its words don't change with the number and it needs no plural forms.
 
 ## Testing
 
