@@ -55,6 +55,7 @@ $startStates = [ordered] @{
     MinimizeToTray = 'Installed'
     HideApps = 'Installed'
     DropDownApps = 'Installed'
+    WindowTabs = 'Installed'
     TitleBarActions = 'Installed'
     EndApp = 'Installed'
     SystemMeters = 'Installed'
