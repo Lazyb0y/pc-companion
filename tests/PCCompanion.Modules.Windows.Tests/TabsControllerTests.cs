@@ -338,6 +338,116 @@ public sealed class TabsControllerTests : IDisposable
     }
 
     [Fact]
+    public void TheGroupShortcutPutsTheWindowInFrontInFrontOfTheWindowBehindIt()
+    {
+        _controller.GroupFrontWithBehind();
+        Run();
+
+        Assert.Equal([[Mail, Notes]], _controller.Groups);
+        Assert.Equal([Notes], _controller.Fronts);
+        Assert.Equal(new Rectangle(100, 100, 800, 500), _system[Notes].Visible);
+        Assert.False(_system[Mail].Shown);
+        Assert.Equal(Notes, _system.ForegroundWindow);
+        Assert.Equal(["Tab 2 of 2"], _strips[0].Announcements);
+    }
+
+    [Fact]
+    public void TheGroupShortcutJoinsTheGroupBehindPastWindowsThatCantBeTabs()
+    {
+        Group(Notes, Mail);
+        _system.Add(Other + 1, new Rectangle(200, 200, 300, 300)).Refusal = TabRefusal.NotResizable;
+        _system.Activate(Report);
+
+        _controller.GroupFrontWithBehind();
+        Run();
+
+        Assert.Equal([[Notes, Mail, Report]], _controller.Groups);
+        Assert.Equal([Report], _controller.Fronts);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
+    public void TheGroupShortcutMovesATabInFrontToTheGroupBehind()
+    {
+        Group(Notes, Mail);
+
+        _controller.GroupFrontWithBehind();
+        Run();
+
+        Assert.Equal([[Report, Mail]], _controller.Groups);
+        Assert.Equal([Mail], _controller.Fronts);
+        Assert.Equal(new Rectangle(150, 150, 700, 450), _system[Mail].Visible);
+        Assert.True(_system[Notes].Shown);
+        Assert.False(_system.Marks.ContainsKey(Notes));
+        Assert.True(_strips[0].Disposed);
+    }
+
+    [Fact]
+    public void TheWindowBehindIsOnTheSameDisplayAndShown()
+    {
+        _system[Mail].Display = new Rectangle(1920, 0, 1920, 1080);
+        _system[Report].Minimized = true;
+
+        _controller.GroupFrontWithBehind();
+        Run();
+
+        Assert.Equal([[Other, Notes]], _controller.Groups);
+    }
+
+    [Fact]
+    public void WithNothingBehindOrAWindowThatCantBeATabInFrontTheGroupShortcutPlaysTheWarningSound()
+    {
+        _system.Activate(Other);
+        _system[Mail].Enabled = false;
+        _system[Report].Cloaked = true;
+        _system[Notes].Refusal = TabRefusal.SharedAppFrame;
+
+        _controller.GroupFrontWithBehind();
+        _system.Activate(Mail);
+        _controller.GroupFrontWithBehind();
+        Run();
+
+        Assert.Empty(_controller.Groups);
+        Assert.Equal(2, _system.Warnings);
+    }
+
+    [Fact]
+    public void TheTakeOutShortcutShowsTheTabInFrontBesideItsGroup()
+    {
+        GroupThree();
+
+        _controller.TakeOutFront();
+        Run();
+
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.Equal([Mail], _controller.Fronts);
+        Assert.True(_system[Mail].Shown);
+        Assert.Equal(NotesFrame with { X = 332, Y = 232 }, _system[Report].Visible);
+        Assert.Equal(Report, _system.ForegroundWindow);
+
+        _controller.TakeOutFront();
+        Assert.Equal(1, _system.Warnings);
+    }
+
+    [Fact]
+    public void GroupingAndTakingOutActOnTheGivenWindow()
+    {
+        _controller.GroupWithBehind(Mail);
+        Run();
+
+        Assert.Equal([[Report, Mail]], _controller.Groups);
+        Assert.Empty(_strips[0].Announcements);
+
+        _controller.TakeOutOf(Report);
+        Assert.Equal(1, _system.Warnings);
+
+        _controller.TakeOutOf(Mail);
+        Run();
+        Assert.Empty(_controller.Groups);
+        Assert.True(_system[Report].Shown);
+    }
+
+    [Fact]
     public void AnAppShowingItsHiddenTabBringsItToTheFront()
     {
         Group(Notes, Mail);
