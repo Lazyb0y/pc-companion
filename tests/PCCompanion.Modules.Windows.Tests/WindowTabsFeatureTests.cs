@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.WindowTabs;
 using PCCompanion.Platform.Windows;
@@ -15,7 +16,7 @@ namespace PCCompanion.Modules.Windows.Tests;
 // registered, and windows left marked are looked for among made-up ones.
 public sealed class WindowTabsFeatureTests : IDisposable
 {
-    private const string Quiet = """{ "enabled": true, "groupByDropping": false, "switchShortcuts": "None" }""";
+    private const string Quiet = """{ "enabled": true, "groupByDropping": false, "switchShortcuts": "None", "groupShortcuts": "None" }""";
 
     private readonly RecordingLogger<WindowTabsFeature> _logger = new();
     private readonly FakeTabsSystem _left = new(action => action());
@@ -72,6 +73,36 @@ public sealed class WindowTabsFeatureTests : IDisposable
 
         _feature.Apply(Section("""{ "enabled": false }"""));
         Assert.False(_feature.IsRunning);
+    }
+
+    [Theory]
+    [InlineData("nextTab")]
+    [InlineData("previousTab")]
+    [InlineData("moveTabForward")]
+    [InlineData("moveTabBack")]
+    [InlineData("addToGroupBehind")]
+    [InlineData("takeOutOfGroup")]
+    public void ItsActionsActOnTheWindowInFrontAndRunOnlyWhileItRuns(string id)
+    {
+        var action = new FeatureAction("windowTabs", id);
+
+        Assert.True(_feature.OnWindowInFront(action));
+        Assert.False(_feature.CanRun(action));
+
+        _feature.Apply(Section(Quiet));
+
+        Assert.True(_feature.CanRun(action));
+    }
+
+    [Fact]
+    public void ItRunsNoOtherAction()
+    {
+        _feature.Apply(Section(Quiet));
+
+        Assert.False(_feature.CanRun(new FeatureAction("windowTabs", "closeTab")));
+        Assert.False(_feature.CanRun(new FeatureAction("windowTabs", "nextTab", "Office")));
+        Assert.False(_feature.CanRun(new FeatureAction("appWindows", "nextTab")));
+        Assert.False(_feature.OnWindowInFront(new FeatureAction("windowTabs", "closeTab")));
     }
 
     [Fact]

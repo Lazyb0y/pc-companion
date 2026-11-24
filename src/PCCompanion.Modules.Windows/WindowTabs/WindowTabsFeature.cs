@@ -11,10 +11,21 @@ namespace PCCompanion.Modules.Windows.WindowTabs;
 /// Groups windows of different apps into one window with tabs, and switches between them with a
 /// click or a shortcut. See docs/features/windows/window-tabs.md.
 /// </summary>
-public sealed partial class WindowTabsFeature : IFeature
+public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
 {
     /// <summary>The name of the switch shortcuts in <see cref="ShortcutRefusals"/>.</summary>
     public const string SwitchShortcutsName = "switchTabs";
+
+    /// <summary>The name of the group shortcuts in <see cref="ShortcutRefusals"/>.</summary>
+    public const string GroupShortcutsName = "groupTabs";
+
+    // The actions' IDs, which shortcuts and mouse buttons store, so never change one.
+    public const string NextTabAction = "nextTab";
+    public const string PreviousTabAction = "previousTab";
+    public const string MoveTabForwardAction = "moveTabForward";
+    public const string MoveTabBackAction = "moveTabBack";
+    public const string AddToGroupBehindAction = "addToGroupBehind";
+    public const string TakeOutOfGroupAction = "takeOutOfGroup";
 
     // How long the host waits as it exits for the hidden tabs to go back on the taskbar.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
@@ -78,6 +89,20 @@ public sealed partial class WindowTabsFeature : IFeature
     public FeatureSupport Support => CurrentSupport;
 
     public bool IsRunning => _thread is not null;
+
+    public bool CanRun(FeatureAction action) => _thread is not null && ControllerAction(action) is not null;
+
+    // Every one acts on the window in front, as the feature's shortcuts do.
+    public bool OnWindowInFront(FeatureAction action) => ControllerAction(action) is not null;
+
+    // The feature's thread runs it, as for its own shortcut.
+    public void Run(FeatureAction action)
+    {
+        if (ControllerAction(action) is { } run)
+        {
+            _thread?.Run(run);
+        }
+    }
 
     public void Apply(JsonElement? settings)
     {
@@ -157,6 +182,18 @@ public sealed partial class WindowTabsFeature : IFeature
 
         _stopped = null;
     }
+
+    private static Action<TabsController>? ControllerAction(FeatureAction action) =>
+        action.FeatureId != Definition.Id || action.Target is not null ? null : action.ActionId switch
+        {
+            NextTabAction => static controller => controller.Next(),
+            PreviousTabAction => static controller => controller.Previous(),
+            MoveTabForwardAction => static controller => controller.MoveForward(),
+            MoveTabBackAction => static controller => controller.MoveBack(),
+            AddToGroupBehindAction => static controller => controller.GroupFrontWithBehind(),
+            TakeOutOfGroupAction => static controller => controller.TakeOutFront(),
+            _ => null,
+        };
 
     // Doesn't wait: a new thread waits for this one before it starts.
     private void Stop()
