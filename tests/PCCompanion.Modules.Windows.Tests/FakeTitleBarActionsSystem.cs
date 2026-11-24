@@ -40,6 +40,14 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
 
     public bool HideAppsRuns { get; set; } = true;
 
+    /// <summary>The windows passed on to Window Tabs to group, which takes them while <see cref="TabsRun"/>.</summary>
+    public List<nint> GroupedBehind { get; } = [];
+
+    /// <summary>The windows passed on to Window Tabs to take out of their groups.</summary>
+    public List<nint> TakenOut { get; } = [];
+
+    public bool TabsRun { get; set; } = true;
+
     public int Sounds { get; private set; }
 
     public int HookSetAgain { get; private set; }
@@ -102,6 +110,26 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
         }
 
         return HideAppsRuns;
+    }
+
+    public bool AddToGroupBehind(nint window)
+    {
+        if (TabsRun)
+        {
+            GroupedBehind.Add(window);
+        }
+
+        return TabsRun;
+    }
+
+    public bool TakeOutOfGroup(nint window)
+    {
+        if (TabsRun)
+        {
+            TakenOut.Add(window);
+        }
+
+        return TabsRun;
     }
 
     public void PlayWarningSound() => Sounds++;

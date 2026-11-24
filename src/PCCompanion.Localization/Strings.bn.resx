@@ -6000,4 +6000,8 @@
     <value>Windows লোগো কী + Ctrl + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>পেছনের গ্রুপে যোগ করুন ও গ্রুপ থেকে সরিয়ে নিন অ্যাকশন শুধু তখনই কাজ করে যখন উইন্ডো ট্যাব বৈশিষ্ট্যটি চালু থাকে। ততক্ষণ এর বদলে Windows-এর সতর্কতা শব্দ বাজে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

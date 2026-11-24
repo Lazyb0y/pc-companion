@@ -56,5 +56,9 @@ public sealed class WindowsTitleBarActionsSystem(PointerHook hook, WindowRequest
 
     public bool HideApp(nint window) => requests.HideApp(window);
 
+    public bool AddToGroupBehind(nint window) => requests.AddToGroupBehind(window);
+
+    public bool TakeOutOfGroup(nint window) => requests.TakeOutOfGroup(window);
+
     public void PlayWarningSound() => WarningSound.Play();
 }

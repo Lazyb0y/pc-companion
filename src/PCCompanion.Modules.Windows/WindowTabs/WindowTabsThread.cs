@@ -77,6 +77,21 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
         });
     }
 
+    /// <summary>
+    /// Runs <paramref name="action"/> with the controller on the feature's thread, for a click on a
+    /// title bar. Returns false while the feature's thread doesn't run, as when it's starting or failed.
+    /// </summary>
+    public bool RunFromTitleBar(Action<TabsController> action)
+    {
+        if (_tabber is null)
+        {
+            return false;
+        }
+
+        Run(action);
+        return true;
+    }
+
     protected override IDisposable Open(MessageWindow window)
     {
         var tabber = new Tabber(this, window);

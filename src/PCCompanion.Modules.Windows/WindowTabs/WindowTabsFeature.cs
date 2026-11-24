@@ -37,6 +37,7 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
     private readonly ILogger<WindowTabsFeature> _logger;
     private readonly WindowTabsWindows _shared;
     private readonly DropDownWindows _dropDown;
+    private readonly WindowRequests _requests;
     private readonly ShortcutRefusals _refusals;
     private readonly Func<ITabsSystem> _recoverySystem;
     private WindowTabsThread? _thread;
@@ -47,23 +48,26 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
 
     /// <param name="shared">The tabs, which Minimize to Tray and Drop-down Apps leave alone.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which can't be tabs.</param>
+    /// <param name="requests">Where Title Bar Actions passes on windows to group or take out.</param>
     /// <param name="refusals">Where the feature says whether Windows refused its shortcuts.</param>
-    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, ShortcutRefusals refusals)
-        : this(commands, time, logger, shared, dropDown, refusals, () => new WindowsTabsSystem(null, action => action(), null))
+    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals)
+        : this(commands, time, logger, shared, dropDown, requests, refusals, () => new WindowsTabsSystem(null, action => action(), null))
     {
     }
 
     /// <param name="shared">The tabs, which Minimize to Tray and Drop-down Apps leave alone.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which can't be tabs.</param>
+    /// <param name="requests">Where Title Bar Actions passes on windows to group or take out.</param>
     /// <param name="refusals">Where the feature says whether Windows refused its shortcuts.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, ShortcutRefusals refusals, Func<ITabsSystem> recoverySystem)
+    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals, Func<ITabsSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(shared);
         ArgumentNullException.ThrowIfNull(dropDown);
+        ArgumentNullException.ThrowIfNull(requests);
         ArgumentNullException.ThrowIfNull(refusals);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
@@ -72,6 +76,7 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         _logger = logger;
         _shared = shared;
         _dropDown = dropDown;
+        _requests = requests;
         _refusals = refusals;
         _recoverySystem = recoverySystem;
 
@@ -205,8 +210,12 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
 
         if (_thread is null)
         {
-            _thread = new WindowTabsThread(read, _time, _logger, _commands, _shared, _dropDown, _stopped, _refusals);
+            var thread = new WindowTabsThread(read, _time, _logger, _commands, _shared, _dropDown, _stopped, _refusals);
+            _thread = thread;
             _stopped = null;
+            _requests.SetWindowTabs(
+                window => thread.RunFromTitleBar(controller => controller.GroupWithBehind(window)),
+                window => thread.RunFromTitleBar(controller => controller.TakeOutOf(window)));
         }
         else
         {
@@ -247,6 +256,7 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
             return;
         }
 
+        _requests.SetWindowTabs(null, null);
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
     }

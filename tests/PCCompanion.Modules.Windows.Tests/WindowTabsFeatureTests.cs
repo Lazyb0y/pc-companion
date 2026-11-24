@@ -21,12 +21,13 @@ public sealed class WindowTabsFeatureTests : IDisposable
 
     private readonly RecordingLogger<WindowTabsFeature> _logger = new();
     private readonly FakeTabsSystem _left = new(action => action());
+    private readonly WindowRequests _requests = new();
     private readonly WindowTabsFeature _feature;
     private int _recoveries;
 
     public WindowTabsFeatureTests()
     {
-        _feature = new WindowTabsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new WindowTabsWindows(), new DropDownWindows(), new ShortcutRefusals(), () =>
+        _feature = new WindowTabsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new WindowTabsWindows(), new DropDownWindows(), _requests, new ShortcutRefusals(), () =>
         {
             _recoveries++;
             return _left;
@@ -140,6 +141,18 @@ public sealed class WindowTabsFeatureTests : IDisposable
         Assert.False(_feature.CanRun(new FeatureAction("windowTabs", "nextTab", "Office")));
         Assert.False(_feature.CanRun(new FeatureAction("appWindows", "nextTab")));
         Assert.False(_feature.OnWindowInFront(new FeatureAction("windowTabs", "closeTab")));
+    }
+
+    [Fact]
+    public void WhileItsOffItTakesNoWindowFromATitleBar()
+    {
+        Assert.False(_requests.AddToGroupBehind(1));
+
+        _feature.Apply(Section(Quiet));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.False(_requests.AddToGroupBehind(1));
+        Assert.False(_requests.TakeOutOfGroup(1));
     }
 
     [Fact]

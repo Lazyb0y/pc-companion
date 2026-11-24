@@ -41,6 +41,8 @@
 
                 <controls:Note IsOpen="{x:Bind ViewModel.NeedsFeatures, Mode=OneWay}" Message="{app:Localized Key=TitleBarActionsNeedsFeaturesInfo}" />
 
+                <controls:Note IsOpen="{x:Bind ViewModel.NeedsWindowTabs, Mode=OneWay}" Message="{app:Localized Key=TitleBarActionsNeedsWindowTabsInfo}" />
+
                 <controls:ChoiceCard
                     Description="{app:Localized Key=TitleBarActionsWheelDescription}"
                     Glyph="&#xE962;"

@@ -6000,4 +6000,8 @@
     <value>Tecla del logotipo de Windows + Ctrl + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>Las acciones Agregar al grupo de atrás y Sacar del grupo solo funcionan mientras la característica Pestañas de ventanas está activada. Hasta entonces, se reproduce en su lugar el sonido de advertencia de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

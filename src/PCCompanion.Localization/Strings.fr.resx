@@ -6000,4 +6000,8 @@
     <value>Touche du logo Windows + Ctrl + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>Les actions Ajouter au groupe derrière et Retirer du groupe ne fonctionnent que quand la fonctionnalité Onglets de fenêtres est activée. D’ici là, le son d’avertissement de Windows retentit à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

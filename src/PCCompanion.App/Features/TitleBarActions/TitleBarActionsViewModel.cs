@@ -9,6 +9,7 @@ using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
+using PCCompanion.Modules.Windows.WindowTabs;
 
 namespace PCCompanion.App.Features.TitleBarActions;
 
@@ -37,6 +38,8 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
             new(TitleBarClickAction.SendToBack, Strings.TitleBarActionsSendToBack),
             new(TitleBarClickAction.MinimizeToTray, Strings.TitleBarActionsMinimizeToTray),
             new(TitleBarClickAction.HideApp, Strings.TitleBarActionsHideApp),
+            new(TitleBarClickAction.AddToGroupBehind, Strings.WindowTabsActionAddToGroupBehind),
+            new(TitleBarClickAction.TakeOutOfGroup, Strings.WindowTabsMoveOutOfGroup),
         ];
         WheelActions =
         [
@@ -108,6 +111,14 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         (Chooses(TitleBarClickAction.MinimizeToTray) && !_editor.IsEnabled(MinimizeToTrayFeature.Definition.Id))
         || (Chooses(TitleBarClickAction.HideApp) && !_editor.IsEnabled(HideAppsFeature.Definition.Id));
 
+    /// <summary>
+    /// Whether a click is set to Add to the group behind or Move out of group while Window Tabs is
+    /// off, as it was when the page opened.
+    /// </summary>
+    public bool NeedsWindowTabs =>
+        (Chooses(TitleBarClickAction.AddToGroupBehind) || Chooses(TitleBarClickAction.TakeOutOfGroup))
+        && !_editor.IsEnabled(WindowTabsFeature.Definition.Id);
+
     /// <summary>Which windows get no actions, with the host's rights now.</summary>
     public string LeftOutInfo => HostLauncher.RunsAsAdministrator(_appSettings.General)
         ? Strings.TitleBarActionsLeftOutInfoOn
@@ -125,6 +136,7 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         if (value is not null && Change(current, value.Action, () => changed(value.Action), propertyName))
         {
             OnPropertyChanged(nameof(NeedsFeatures));
+            OnPropertyChanged(nameof(NeedsWindowTabs));
         }
     }
 
