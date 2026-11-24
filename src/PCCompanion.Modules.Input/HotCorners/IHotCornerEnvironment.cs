@@ -1,5 +1,4 @@
 using System.Drawing;
-using PCCompanion.Modules.Input.FullScreen;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;

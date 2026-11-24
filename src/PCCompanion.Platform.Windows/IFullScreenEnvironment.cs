@@ -1,8 +1,7 @@
 using System;
 using System.Drawing;
-using PCCompanion.Platform.Windows;
 
-namespace PCCompanion.Modules.Input.FullScreen;
+namespace PCCompanion.Platform.Windows;
 
 /// <summary>
 /// What <see cref="FullScreenCheck"/> reads from Windows, so tests can supply it instead.
