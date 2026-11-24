@@ -92,3 +92,4 @@ public interface IFeature : IDisposable
 4. Page, with `FeatureHeader`, and its view model, a `FeatureViewModel<TSettings>`, in `src/PCCompanion.App/Features/<Feature>/`, and an entry in `FeatureCatalog.cs`.
 5. Strings with translations marked "Needs native review."
 6. Tests, Sandbox checks, docs, and `NOTICE.md` and `ThirdPartyNotices.txt` if a new package ships.
+7. Its testing task on GitHub, for what needs testing by hand; a change to an existing feature updates that feature's task instead. See [Testing tasks](../development/testing.md#testing-tasks).

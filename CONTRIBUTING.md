@@ -15,7 +15,7 @@ Thanks for your interest in PC Companion. Everyone taking part follows the [code
 3. Keep each commit to one logical change that builds with no warnings. Write commit messages in the [Conventional Commits](https://www.conventionalcommits.org/) style and reference the issue, for example `fix(host): keep the tray icon after Explorer restarts (#42)`.
 4. Add or update tests. Tests use their own temporary data and never touch windows or files they didn't create.
 5. Update the documentation in `docs/` when behavior changes.
-6. Open a pull request using the template. The required checks must pass and the branch must be up to date with `main`; the maintainer merges with "Rebase and merge".
+6. Open a pull request using the template. Say in it what needs testing by hand, and link the feature's testing task, its "Test <feature> by hand" issue: the maintainer keeps one for each feature and adds your changes to it, as [Testing tasks](docs/development/testing.md#testing-tasks) describes. The required checks must pass and the branch must be up to date with `main`; the maintainer merges with "Rebase and merge".
 
 ## Guidelines
 

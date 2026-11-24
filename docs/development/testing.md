@@ -95,3 +95,24 @@ A run of every group takes about 65 minutes, and building the installer about a 
 - A group that needs a test SFTP server starts with a `# Needs: OpenSSH` line, and sets up the server in the Sandbox from `C:\Test\openssh`.
 - A group opens a tray menu at `$menuX`, `$menuY` from `common.ps1`, in the upper left of the screen. Windows shows notifications in the bottom-right corner and keeps them there while there's no input, as in the Sandbox, so one that an earlier check left can cover a menu there and take its click.
 - UI Automation reads a tray menu's items as empty when no window has the front. A posted message, unlike a click on the icon, doesn't let the host take the front, and a notification that has it keeps it until it leaves, after which nothing has it. So before DisplayProfiles opens its tray menu, `Set-HostFront` sends a notification in front to Notification Center, as `Get-AppFocusedName` does, and puts the host's window in front; the report notes how many notifications went.
+
+## Testing tasks
+
+Every feature has one testing task on GitHub: an issue for the maintainer to test by hand what unit tests and Windows Sandbox can't check, such as real hardware, several displays and scales, UAC on, Windows 10, ARM64, Narrator and other programs. It's titled "Test <feature> by hand" and has the feature's area label. Parts of the app that aren't one feature, such as the tray icon, the feature icons or Windows 10 and ARM64, can have a testing task of their own, kept the same way.
+
+A testing task holds:
+
+- **What's covered:** what the unit tests and the feature's Sandbox group check, and how the Sandbox differs from a real PC.
+- **Test scenarios:** a checkbox for each, from the "By hand" part of the Testing section of the feature's spec, under a bold heading for each part of the feature when there are many.
+- **Acceptance criteria:** what must hold for the feature to pass, from its spec.
+- **Reporting:** a comment with the Windows version, the architecture and the hardware used, and anything that didn't match.
+- **Changes to retest:** a dated entry for each change to the feature since the task was written, or "None yet."
+- **Related:** the spec, and the issues and pull requests that built or changed the feature.
+
+The lifecycle:
+
+1. **A new feature** gets its testing task in the task that finishes it, linked in the task report and the pull request.
+2. **A change to a feature,** its behavior or its code, a fix included, updates the feature's existing testing task. Search the issues, open and closed, for it, and never create a second one. Add a dated entry under "Changes to retest" with what changed, in which issue or pull request, the areas it affects, new test scenarios and the regression checks that apply. Add checkboxes for new checks, untick those that need running again, and comment asking for a retest. A closed testing task is reopened first. A change that touches several features, or a part of the app with its own testing task, updates each of their tasks.
+3. **The maintainer runs the checks,** comments with the results, and closes the task once everything passes. Feature issues close when their work is done; testing tasks stay open until then.
+
+Creating, editing, reopening and commenting on testing tasks needs no separate request from the maintainer (2026-11-24); every other change on GitHub still does.
