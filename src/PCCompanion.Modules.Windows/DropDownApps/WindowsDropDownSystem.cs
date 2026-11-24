@@ -34,6 +34,7 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     private readonly MessageWindow? _window;
     private readonly Action<Action> _guard;
     private readonly IHostCommands? _commands;
+    private readonly WindowTabsWindows? _tabs;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, (WinEventHook Shows, WinEventHook Minimizes)> _watched = [];
     private readonly List<Task> _placements = [];
@@ -41,13 +42,15 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     /// <param name="window">The feature thread's window, where reports and results arrive.</param>
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
     /// <param name="commands">Starts apps for the user.</param>
-    public WindowsDropDownSystem(MessageWindow? window, Action<Action> guard, IHostCommands? commands)
+    /// <param name="tabs">Window Tabs' tabs, which can't drop down.</param>
+    public WindowsDropDownSystem(MessageWindow? window, Action<Action> guard, IHostCommands? commands, WindowTabsWindows? tabs = null)
     {
         ArgumentNullException.ThrowIfNull(guard);
 
         _window = window;
         _guard = guard;
         _commands = commands;
+        _tabs = tabs;
     }
 
     public event EventHandler<nint>? WindowShown;
@@ -98,6 +101,8 @@ public sealed class WindowsDropDownSystem : IDropDownSystem, IDisposable
     public bool IsEnabled(nint window) => TopLevelWindows.IsEnabled(window);
 
     public bool IsTopmost(nint window) => TopLevelWindows.IsTopmost(window);
+
+    public bool IsTab(nint window) => _tabs?.Contains(window) ?? false;
 
     public string ClassName(nint window) => TopLevelWindows.ClassName(window);
 

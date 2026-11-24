@@ -246,6 +246,17 @@ public sealed class DropDownControllerTests : IDisposable
     }
 
     [Fact]
+    public void AWindowThatsATabDoesntDropDown()
+    {
+        var window = _system.Add(1, program: NotesProgram);
+        _system.Tabs.Add(1);
+
+        Press(DropDownShortcut.WindowsControlAboveTab);
+
+        AssertRefused(window, 0, DropDownOutcome.WindowTab);
+    }
+
+    [Fact]
     public void AWindowWithADialogOpenDoesntDropDown()
     {
         var window = _system.Add(1, program: NotesProgram);

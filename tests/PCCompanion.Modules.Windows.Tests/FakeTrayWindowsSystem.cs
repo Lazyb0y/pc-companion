@@ -76,6 +76,10 @@ internal sealed class FakeTrayWindowsSystem : ITrayWindowsSystem
 
     public bool IsDropDown(nint window) => DropDown.Contains(window);
 
+    public HashSet<nint> Tabs { get; } = [];
+
+    public bool IsTab(nint window) => Tabs.Contains(window);
+
     public string ClassName(nint window) => Windows.TryGetValue(window, out var listed) ? listed.ClassName : string.Empty;
 
     public string Title(nint window) => Windows.TryGetValue(window, out var listed) ? listed.Title : string.Empty;

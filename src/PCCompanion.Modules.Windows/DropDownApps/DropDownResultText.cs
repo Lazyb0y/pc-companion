@@ -55,6 +55,7 @@ public static class DropDownResultText
         DropDownOutcome.Started => Strings.DropDownAppsResultStarted,
         DropDownOutcome.RunsAsAdministrator => Strings.DropDownAppsResultRunsAsAdministrator,
         DropDownOutcome.SharedAppFrame => Strings.DropDownAppsResultSharedAppFrame,
+        DropDownOutcome.WindowTab => Strings.DropDownAppsResultWindowTab,
         DropDownOutcome.DialogOpen => Strings.DropDownAppsResultDialogOpen,
         DropDownOutcome.ProgramMissing => Strings.DropDownAppsResultProgramMissing,
         DropDownOutcome.AppIdNotFound => Strings.DropDownAppsResultAppIdNotFound,

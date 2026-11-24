@@ -107,6 +107,10 @@ internal sealed class FakeDropDownSystem(ManualTimeProvider clock) : IDropDownSy
 
     public bool IsTopmost(nint window) => Find(window)?.Topmost ?? false;
 
+    public HashSet<nint> Tabs { get; } = [];
+
+    public bool IsTab(nint window) => Tabs.Contains(window);
+
     public string ClassName(nint window) => Find(window)?.ClassName ?? string.Empty;
 
     public uint ProcessIdOf(nint window) => Find(window)?.ProcessId ?? 0;

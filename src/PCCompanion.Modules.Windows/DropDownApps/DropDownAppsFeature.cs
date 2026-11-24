@@ -26,6 +26,7 @@ public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
     private readonly ILogger<DropDownAppsFeature> _logger;
     private readonly Func<IDropDownSystem> _recoverySystem;
     private readonly DropDownWindows _shared;
+    private readonly WindowTabsWindows _tabs;
     private readonly DropDownResults _results;
     private readonly ShortcutRefusals _refusals;
     private DropDownAppsThread? _thread;
@@ -37,21 +38,24 @@ public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
     private bool _askedToEndFirst;
 
     /// <param name="shared">The drop-down windows, which Hide Apps and Minimize to Tray leave alone.</param>
+    /// <param name="tabs">Window Tabs' tabs, which can't drop down.</param>
     /// <param name="refusals">Where the feature says which of its shortcuts Windows refused.</param>
-    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared, ShortcutRefusals refusals)
-        : this(commands, time, logger, shared, refusals, () => new WindowsDropDownSystem(null, action => action(), null))
+    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared, WindowTabsWindows tabs, ShortcutRefusals refusals)
+        : this(commands, time, logger, shared, tabs, refusals, () => new WindowsDropDownSystem(null, action => action(), null))
     {
     }
 
     /// <param name="shared">The drop-down windows, which Hide Apps and Minimize to Tray leave alone.</param>
+    /// <param name="tabs">Window Tabs' tabs, which can't drop down.</param>
     /// <param name="refusals">Where the feature says which of its shortcuts Windows refused.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared, ShortcutRefusals refusals, Func<IDropDownSystem> recoverySystem)
+    public DropDownAppsFeature(IHostCommands commands, TimeProvider time, ILogger<DropDownAppsFeature> logger, DropDownWindows shared, WindowTabsWindows tabs, ShortcutRefusals refusals, Func<IDropDownSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(shared);
+        ArgumentNullException.ThrowIfNull(tabs);
         ArgumentNullException.ThrowIfNull(refusals);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
@@ -59,6 +63,7 @@ public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
         _time = time;
         _logger = logger;
         _shared = shared;
+        _tabs = tabs;
         _refusals = refusals;
         _recoverySystem = recoverySystem;
         _results = new DropDownResults(time);
@@ -190,7 +195,7 @@ public sealed partial class DropDownAppsFeature : IFeature, IFeatureActions
         _settings = read;
         if (_thread is null)
         {
-            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _results, _stopped, _refusals);
+            _thread = new DropDownAppsThread(read, _commands, _time, _logger, _shared, _tabs, _results, _stopped, _refusals);
             _stopped = null;
             _resultsPipe = ServeResults();
         }

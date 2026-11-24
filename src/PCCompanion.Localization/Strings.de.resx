@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Manche Fenster können nicht in den Infobereich: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus.</value>
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus. Fenster, die Tabs in Fenster-Tabs sind, bleiben bei ihrer Gruppe.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Manche Fenster können nicht in den Infobereich: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. PC Companion wird als Administrator ausgeführt, daher gehen auch Fenster von Apps, die als Administrator ausgeführt werden, in den Infobereich. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus.</value>
+    <value>Manche Fenster können nicht in den Infobereich: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn die Tastenkombination ein Fenster nicht senden kann, ertönt der Warnton von Windows. Umschalt + Minimieren minimiert das Fenster dann wie gewohnt. PC Companion wird als Administrator ausgeführt, daher gehen auch Fenster von Apps, die als Administrator ausgeführt werden, in den Infobereich. Auch Fenster von Drop-down-Apps kommen nicht in den Infobereich: Ihre eigene Tastenkombination blendet sie aus. Fenster, die Tabs in Fenster-Tabs sind, bleiben bei ihrer Gruppe.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
@@ -3013,11 +3013,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfo" xml:space="preserve">
-    <value>Manche Fenster können nicht herunterklappen: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn eine Tastenkombination ein Fenster nicht anzeigen oder ausblenden kann, ertönt der Warnton von Windows, und unter „Letzte Ergebnisse“ steht, warum.</value>
+    <value>Manche Fenster können nicht herunterklappen: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn eine Tastenkombination ein Fenster nicht anzeigen oder ausblenden kann, ertönt der Warnton von Windows, und unter „Letzte Ergebnisse“ steht, warum. Fenster, die Tabs in Fenster-Tabs sind, können ebenfalls nicht herunterklappen.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
-    <value>Manche Fenster können nicht herunterklappen: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn eine Tastenkombination ein Fenster nicht anzeigen oder ausblenden kann, ertönt der Warnton von Windows, und unter „Letzte Ergebnisse“ steht, warum. PC Companion wird als Administrator ausgeführt, daher klappen auch Fenster von Apps herunter, die als Administrator ausgeführt werden.</value>
+    <value>Manche Fenster können nicht herunterklappen: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Wenn eine Tastenkombination ein Fenster nicht anzeigen oder ausblenden kann, ertönt der Warnton von Windows, und unter „Letzte Ergebnisse“ steht, warum. PC Companion wird als Administrator ausgeführt, daher klappen auch Fenster von Apps herunter, die als Administrator ausgeführt werden. Fenster, die Tabs in Fenster-Tabs sind, können ebenfalls nicht herunterklappen.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsPermissions" xml:space="preserve">
@@ -5914,6 +5914,10 @@
   </data>
   <data name="WindowTabsTabPosition" xml:space="preserve">
     <value>Tab {0} von {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultWindowTab" xml:space="preserve">
+    <value>ihr Fenster ist ein Tab in Fenster-Tabs, daher kann es nicht herunterklappen</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

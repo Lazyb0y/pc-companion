@@ -25,6 +25,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
     private readonly ILogger _logger;
     private readonly ShortcutRefusals? _refusals;
     private readonly DropDownWindows _shared;
+    private readonly WindowTabsWindows _tabs;
     private readonly DropDownResults _results;
 
     // Set on the feature's thread while its message loop runs; read on others.
@@ -32,7 +33,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
 
     /// <param name="shared">The drop-down windows as Hide Apps and Minimize to Tray read them.</param>
     /// <param name="results">The recent results, which the feature gives the settings app.</param>
-    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, DropDownResults results, DropDownAppsThread? previous = null, ShortcutRefusals? refusals = null)
+    public DropDownAppsThread(DropDownAppsSettings settings, IHostCommands commands, TimeProvider time, ILogger logger, DropDownWindows shared, WindowTabsWindows tabs, DropDownResults results, DropDownAppsThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Drop-down Apps", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
@@ -45,6 +46,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
         _time = time;
         _logger = logger;
         _shared = shared;
+        _tabs = tabs;
         _results = results;
         _refusals = refusals;
         Start();
@@ -121,7 +123,7 @@ public sealed partial class DropDownAppsThread : MessageLoopThread<DropDownAppsS
             _owner = owner;
             _window = window;
             Action<Action> post = action => window.BeginInvoke(() => owner.Guard(action));
-            _system = new WindowsDropDownSystem(window, owner.Guard, owner._commands);
+            _system = new WindowsDropDownSystem(window, owner.Guard, owner._commands, owner._tabs);
             Controller = new DropDownController(_system, owner._time, post, owner._logger, owner._shared);
             _shortcuts = new ShortcutKeeper(new WindowsShortcutEnvironment(window), owner._time, post);
             ShortcutKeeperLog.Attach(_shortcuts, owner._logger, "Drop-down Apps");

@@ -32,6 +32,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     private readonly ShortcutRefusals? _refusals;
     private readonly HideAppsMinimized _hideApps;
     private readonly DropDownWindows _dropDown;
+    private readonly WindowTabsWindows _tabs;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Tray? _tray;
@@ -39,7 +40,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
     // The feature thread's own: whether an icon's menu is open.
     private bool _menuOpen;
 
-    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, DropDownWindows dropDown, MinimizeToTrayThread? previous = null, ShortcutRefusals? refusals = null)
+    public MinimizeToTrayThread(MinimizeToTraySettings settings, IHostCommands commands, TimeProvider time, ILogger logger, HideAppsMinimized hideApps, DropDownWindows dropDown, WindowTabsWindows tabs, MinimizeToTrayThread? previous = null, ShortcutRefusals? refusals = null)
         : base("Minimize to Tray", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(commands);
@@ -47,12 +48,14 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(hideApps);
         ArgumentNullException.ThrowIfNull(dropDown);
+        ArgumentNullException.ThrowIfNull(tabs);
 
         _commands = commands;
         _time = time;
         _logger = logger;
         _hideApps = hideApps;
         _dropDown = dropDown;
+        _tabs = tabs;
         _refusals = refusals;
         Start();
     }
@@ -230,7 +233,7 @@ public sealed partial class MinimizeToTrayThread : MessageLoopThread<MinimizeToT
         {
             _owner = owner;
             _window = window;
-            _system = new WindowsTrayWindowsSystem(window, owner.Guard, owner._hideApps, owner._dropDown);
+            _system = new WindowsTrayWindowsSystem(window, owner.Guard, owner._hideApps, owner._dropDown, owner._tabs);
             _icons = new WindowsTrayIcons(window);
             Controller = new TrayController(_system, _icons, owner._time, action => window.BeginInvoke(() => owner.Guard(action)), owner._logger);
 

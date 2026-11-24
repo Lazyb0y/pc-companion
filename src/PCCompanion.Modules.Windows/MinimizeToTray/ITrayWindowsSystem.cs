@@ -39,6 +39,9 @@ public interface ITrayWindowsSystem : IAppIdentityReader
     /// <summary>Whether the window is a drop-down window, which Drop-down Apps hides and shows itself.</summary>
     bool IsDropDown(nint window);
 
+    /// <summary>Whether the window is one of Window Tabs' tabs, which minimizes and hides with its group.</summary>
+    bool IsTab(nint window);
+
     string ClassName(nint window);
 
     string Title(nint window);
@@ -159,6 +162,9 @@ public enum SendOutcome
 
     /// <summary>A drop-down window, which Drop-down Apps hides and shows itself.</summary>
     DropDownWindow,
+
+    /// <summary>One of Window Tabs' tabs, which minimizes and hides with its group.</summary>
+    WindowTab,
 }
 
 /// <summary>Why a window left the tray.</summary>

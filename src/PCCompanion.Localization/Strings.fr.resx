@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque.</value>
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque. Les fenêtres qui sont des onglets dans Onglets de fenêtres restent avec leur groupe.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. PC Companion est exécuté en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur vont aussi dans la zone de notification. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque.</value>
+    <value>Certaines fenêtres ne peuvent pas aller dans la zone de notification : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand le raccourci ne peut pas envoyer une fenêtre, le son d’avertissement de Windows retentit. Maj + Réduire réduit alors la fenêtre comme d’habitude. PC Companion est exécuté en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur vont aussi dans la zone de notification. Les fenêtres d’Applications déroulantes ne vont pas non plus dans la zone de notification : leur propre raccourci les masque. Les fenêtres qui sont des onglets dans Onglets de fenêtres restent avec leur groupe.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
@@ -3013,11 +3013,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfo" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas se dérouler : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand un raccourci ne peut pas afficher ou masquer une fenêtre, le son d’avertissement de Windows retentit et Résultats récents indique pourquoi.</value>
+    <value>Certaines fenêtres ne peuvent pas se dérouler : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand un raccourci ne peut pas afficher ou masquer une fenêtre, le son d’avertissement de Windows retentit et Résultats récents indique pourquoi. Les fenêtres qui sont des onglets dans Onglets de fenêtres ne peuvent pas non plus se dérouler.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
-    <value>Certaines fenêtres ne peuvent pas se dérouler : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand un raccourci ne peut pas afficher ou masquer une fenêtre, le son d’avertissement de Windows retentit et Résultats récents indique pourquoi. PC Companion s’exécute en tant qu’administrateur, donc les fenêtres des applications exécutées en tant qu’administrateur se déroulent aussi.</value>
+    <value>Certaines fenêtres ne peuvent pas se dérouler : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Quand un raccourci ne peut pas afficher ou masquer une fenêtre, le son d’avertissement de Windows retentit et Résultats récents indique pourquoi. PC Companion s’exécute en tant qu’administrateur, donc les fenêtres des applications exécutées en tant qu’administrateur se déroulent aussi. Les fenêtres qui sont des onglets dans Onglets de fenêtres ne peuvent pas non plus se dérouler.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsPermissions" xml:space="preserve">
@@ -5914,6 +5914,10 @@
   </data>
   <data name="WindowTabsTabPosition" xml:space="preserve">
     <value>Onglet {0} sur {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultWindowTab" xml:space="preserve">
+    <value>sa fenêtre est un onglet dans Onglets de fenêtres, elle ne peut donc pas se dérouler</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
