@@ -108,6 +108,12 @@ public enum TitleBarClickAction
 
     /// <summary>Minimizes every window of the window's app, through Hide Apps.</summary>
     HideApp,
+
+    /// <summary>Adds the window to the group of the window behind it, through Window Tabs.</summary>
+    AddToGroupBehind,
+
+    /// <summary>Takes the window out of its group, through Window Tabs.</summary>
+    TakeOutOfGroup,
 }
 
 /// <summary>What the wheel on a title bar does.</summary>

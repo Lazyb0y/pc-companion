@@ -6000,4 +6000,8 @@
     <value>Windows logo key + Ctrl + T</value>
     <comment>Window Tabs page: shortcuts in the list: T adds the window in front to the group behind it, and with Shift takes the tab in front out. Use the language's names for the Windows logo key and Ctrl, as in the other shortcuts.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>Add to the group behind and Move out of group work only while Window Tabs is on. Until then, Windows' warning sound plays instead.</value>
+    <comment>Title Bar Actions page: shown while a click is set to Add to the group behind (WindowTabsActionAddToGroupBehind) or Move out of group (WindowTabsMoveOutOfGroup) and Window Tabs (WindowTabsName) is off.</comment>
+  </data>
 </root>

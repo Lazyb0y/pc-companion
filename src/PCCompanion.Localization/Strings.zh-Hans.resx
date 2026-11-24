@@ -5944,4 +5944,8 @@
     <value>Windows 徽标键 + Ctrl + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>“添加到后面的组”和“移出组”操作仅在“窗口标签页”功能打开时有效。在此之前，会改为播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

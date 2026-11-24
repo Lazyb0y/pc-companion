@@ -182,13 +182,36 @@ public sealed class TitleBarControllerTests : IDisposable
         Assert.Equal(0, _system.Sounds);
     }
 
+    [Fact]
+    public void AddToTheGroupBehindAndTakeOutOfGroupPassTheWindowOnToWindowTabs()
+    {
+        _controller.Configure(new TitleBarActionsSettings
+        {
+            Enabled = true,
+            ShiftMiddleClick = TitleBarClickAction.AddToGroupBehind,
+            ControlMiddleClick = TitleBarClickAction.TakeOutOfGroup,
+        });
+        _system.WithoutMinimizeButton.Add(Window);
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(new PointerTrigger(PointerButton.Middle, PointerKeys.Shift), OnTitleBar, 0, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(new PointerTrigger(PointerButton.Middle, PointerKeys.Control), OnTitleBar, 0, 2));
+
+        Assert.Equal([Window], _system.GroupedBehind);
+        Assert.Equal([Window], _system.TakenOut);
+        Assert.Empty(_system.Minimized);
+        Assert.Equal(0, _system.Sounds);
+    }
+
     [Theory]
     [InlineData(TitleBarClickAction.MinimizeToTray)]
     [InlineData(TitleBarClickAction.HideApp)]
+    [InlineData(TitleBarClickAction.AddToGroupBehind)]
+    [InlineData(TitleBarClickAction.TakeOutOfGroup)]
     public void WhileTheirFeatureIsOffTheClickIsStillKeptAndTheWarningSoundPlays(TitleBarClickAction action)
     {
         _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = action });
-        (_system.TrayRuns, _system.HideAppsRuns) = (false, false);
+        (_system.TrayRuns, _system.HideAppsRuns, _system.TabsRun) = (false, false, false);
         MoveTo(OnTitleBar);
 
         _controller.OnKept(new KeptPointerInputEventArgs(MiddleClick, OnTitleBar, 0, 1));

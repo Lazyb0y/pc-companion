@@ -52,6 +52,18 @@ public interface ITitleBarActionsSystem
     /// </summary>
     bool HideApp(nint window);
 
+    /// <summary>
+    /// Passes the window on to Window Tabs, which adds it to the group of the window behind it on
+    /// its thread, or plays the warning sound itself. Returns false while Window Tabs doesn't run.
+    /// </summary>
+    bool AddToGroupBehind(nint window);
+
+    /// <summary>
+    /// Passes the window on to Window Tabs, which takes it out of its group on its thread, or plays
+    /// the warning sound itself. Returns false while Window Tabs doesn't run.
+    /// </summary>
+    bool TakeOutOfGroup(nint window);
+
     /// <summary>Plays Windows' warning sound.</summary>
     void PlayWarningSound();
 }

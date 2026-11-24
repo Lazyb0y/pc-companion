@@ -6224,4 +6224,8 @@
     <value>مفتاح شعار Windows + Ctrl + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>لا يعمل الإجراءان «إضافة إلى المجموعة في الخلف» و«إخراج من المجموعة» إلا أثناء تشغيل الميزة «علامات تبويب النوافذ». وحتى ذلك الحين، يُشغَّل صوت التحذير في Windows بدلاً منهما.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

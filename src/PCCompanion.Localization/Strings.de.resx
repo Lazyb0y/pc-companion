@@ -6000,4 +6000,8 @@
     <value>Windows-Logo-Taste + Strg + T</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
+    <value>Die Aktionen „Zur Gruppe dahinter hinzufügen“ und „Aus der Gruppe nehmen“ funktionieren nur, solange die Funktion „Fenster-Tabs“ eingeschaltet ist. Bis dahin erklingt stattdessen der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
