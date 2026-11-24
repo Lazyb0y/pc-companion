@@ -79,7 +79,7 @@ After each implemented task, provide:
 2. Files added or modified
 3. Important decisions and rationale
 4. Test and validation results
-5. Manual verification instructions, if required
+5. Manual verification instructions, if required, and links to the testing tasks the work created or updated (see section 7)
 6. Known limitations or remaining concerns
 7. Suggested Git commit message
 
@@ -103,4 +103,5 @@ Do not treat perceived convenience, best practices or technical necessity as per
 - GitHub is used for planning, issues, the project board, releases and the site.
 - Read-only checks with the GitHub CLI (`gh`) are fine.
 - Any change on GitHub needs the maintainer's explicit request for that action. That includes creating or editing issues, labels, milestones or project items, changing settings, and publishing releases.
+- One standing exception (maintainer, 2026-11-24): testing tasks. Every feature has one "Test <feature> by hand" issue for the maintainer to test it by hand. A task that adds a feature creates it; a task that changes a feature updates the existing one instead of creating another, with a dated "Changes to retest" entry, then comments asking for a retest, reopening it first if it's closed. Creating, editing, reopening and commenting on testing tasks needs no separate request. [AGENTS.md](../../AGENTS.md#testing) and [Testing](../development/testing.md#testing-tasks) describe them.
 - The maintainer manages the project board. Agents work on it with `gh` only when asked.

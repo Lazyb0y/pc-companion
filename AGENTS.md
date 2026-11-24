@@ -10,11 +10,11 @@ These rules are mandatory. The full policy is in [docs/project/change-control.md
 - If the maintainer says "do not change anything", the repository is read-only until they authorize changes again.
 - Work in small tasks: propose the next task, wait for authorization, implement only that task, validate it, report and stop.
 - Never stage, commit, push, publish releases or rewrite Git history without explicit permission. Never overwrite or discard existing changes without approval.
-- Make no changes on GitHub (issues, labels, milestones, project items, settings, releases) unless the maintainer asks for that action. Read-only `gh` commands are fine.
+- Make no changes on GitHub (issues, labels, milestones, project items, settings, releases) unless the maintainer asks for that action. Read-only `gh` commands are fine. Testing tasks are the one standing exception; see [Testing](#testing).
 - Discuss significant decisions first: present alternatives and trade-offs, recommend one and let the maintainer decide.
 - Never silently remove, contradict or weaken existing requirements, including when editing this file.
 
-After each task, report: summary, files changed, decisions and rationale, validation results, manual verification steps, remaining concerns and a suggested conventional commit message.
+After each task, report: summary, files changed, decisions and rationale, validation results, manual verification steps, links to the testing tasks created or updated, remaining concerns and a suggested conventional commit message.
 
 ## Project
 
@@ -88,6 +88,11 @@ Guiding principles: incremental delivery, human-controlled changes, modular arch
 - Ask before UI tests that move the mouse or take focus, and before disruptive, elevated or system-changing tests (use Windows Sandbox or a VM). Don't install software without approval.
 - `scripts/sandbox-test.ps1` runs the installer, settings app and host checks in Windows Sandbox, in groups: `-Checks <Group>` runs only that group after a short smoke check, and no `-Checks` runs every group. [Testing](docs/development/testing.md) lists the groups and which ones a change needs. Extend the feature's group in `scripts/sandbox/groups`, or add one, when a feature adds runtime behavior worth checking.
 - Report what was and wasn't tested. Never claim that a test passed if you didn't run it.
+- **Testing tasks.** Every feature has one testing task on GitHub: a "Test <feature> by hand" issue with the feature's area label, for the maintainer to test what unit tests and Windows Sandbox can't. It holds the test scenarios as checkboxes, the acceptance criteria and a "Changes to retest" section. [Testing tasks](docs/development/testing.md#testing-tasks) describes them in full.
+  - A task that adds a feature creates its testing task.
+  - A task that changes a feature's behavior or code, a fix included, updates the feature's existing testing task, found by searching the issues, open and closed; it never creates a second one for the same feature. It adds a dated entry under "Changes to retest" with what changed, the areas it affects, new test scenarios and the regression checks that apply, adds checkboxes for new checks and unticks those that need running again. It then comments asking for a retest, reopening the task first if it's closed.
+  - A change to several features, or to a part of the app with its own testing task, such as the tray icon, updates each of their tasks.
+  - The maintainer asked for these tasks once for all work (2026-11-24), so creating, editing, reopening and commenting on testing tasks needs no separate request. Every other change on GitHub still does.
 
 ## Git and GitHub
 

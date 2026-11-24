@@ -9,4 +9,5 @@ Closes #
 - [ ] One logical change, and the solution builds with no warnings.
 - [ ] Tests added or updated where relevant.
 - [ ] Documentation updated where relevant.
+- [ ] Testing task created, or the existing one updated, for each feature changed.
 - [ ] No hardcoded user-facing strings.
