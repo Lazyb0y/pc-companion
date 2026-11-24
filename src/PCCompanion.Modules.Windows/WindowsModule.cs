@@ -6,6 +6,7 @@ using PCCompanion.Modules.Windows.EndApp;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
+using PCCompanion.Modules.Windows.WindowTabs;
 
 namespace PCCompanion.Modules.Windows;
 
@@ -24,10 +25,12 @@ public static class WindowsModule
         services.AddSingleton<HideAppsMinimized>();
         services.AddSingleton<DropDownWindows>();
         services.AddSingleton<WindowRequests>();
+        services.AddSingleton<WindowTabsWindows>();
         services.AddSingleton<IFeature, AppWindowsFeature>();
         services.AddSingleton<IFeature, MinimizeToTrayFeature>();
         services.AddSingleton<IFeature, HideAppsFeature>();
         services.AddSingleton<IFeature, DropDownAppsFeature>();
+        services.AddSingleton<IFeature, WindowTabsFeature>();
         services.AddSingleton<IFeature, TitleBarActionsFeature>();
         services.AddSingleton<IFeature, EndAppFeature>();
         return services;
