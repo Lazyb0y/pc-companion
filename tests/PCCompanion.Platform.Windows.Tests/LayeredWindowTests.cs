@@ -12,6 +12,7 @@ namespace PCCompanion.Platform.Windows.Tests;
 public sealed class LayeredWindowTests
 {
     private const uint MouseMove = 0x0200;
+    private const uint LeftButtonDown = 0x0201;
     private const uint LeftButtonUp = 0x0202;
     private const uint RightButtonUp = 0x0205;
     private static readonly Rectangle OffScreen = new(-30000, -30000, 4, 2);
@@ -218,8 +219,118 @@ public sealed class LayeredWindowTests
         using var again = new WinEventHook(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, skipOwnProcess: true);
     }
 
+    [Fact]
+    public void AWindowThatDoesntStayOnTopIsStillAToolWindowThatDoesNotTakeTheFocus()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test", topmost: false);
+
+        var style = (long)GetWindowLongPtr(window.Handle, -20); // GWL_EXSTYLE
+        Assert.Equal(0x08080080L, style & 0x08080088L); // WS_EX_NOACTIVATE, WS_EX_LAYERED, WS_EX_TOOLWINDOW, not WS_EX_TOPMOST
+        Assert.False(TopLevelWindows.MayHaveTaskbarButton(window.Handle));
+    }
+
+    [Fact]
+    public void PlaceAboveTakesAPlaceRightAboveTheWindowAndBelowTheOnesInFront()
+    {
+        using var strip = new LayeredWindow(UniqueClassName(), "Strip", topmost: false);
+        using var below = new LayeredWindow(UniqueClassName(), "Below", topmost: false);
+        using var front = new LayeredWindow(UniqueClassName(), "Front", topmost: false);
+        strip.Show(new uint[8], OffScreen);
+        below.Show(new uint[8], OffScreen);
+        front.Show(new uint[8], OffScreen);
+
+        Assert.True(strip.PlaceAbove(below.Handle));
+        Assert.True(TopLevelWindows.IsInFrontOf(strip.Handle, below.Handle));
+        Assert.True(TopLevelWindows.IsInFrontOf(front.Handle, strip.Handle));
+        Assert.True(strip.PlaceAbove(below.Handle));
+    }
+
+    [Fact]
+    public void SetTopmostPutsTheWindowOnTopAndTakesItOff()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test", topmost: false);
+        window.Show(new uint[8], OffScreen);
+
+        // Windows puts a window on top only while its process may bring windows to the front, and
+        // otherwise reports success and leaves it, as the topmost test of TopLevelWindows says.
+        Assert.True(window.SetTopmost(true));
+        if (!TopLevelWindows.IsTopmost(window.Handle))
+        {
+            Assert.Skip("Windows doesn't let this process put windows on top now, as while the user works in another app.");
+        }
+
+        Assert.True(window.SetTopmost(false));
+        Assert.False(TopLevelWindows.IsTopmost(window.Handle));
+    }
+
+    [Fact]
+    public void PointerInputReportsEachActionWithItsPosition()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+        window.Show(new uint[8], OffScreen);
+        var input = new List<(WindowPointerAction, Point)>();
+        window.PointerInput += (_, e) => input.Add((e.Action, e.Position));
+
+        PostMessage(window.Handle, LeftButtonDown, 0, Position(3, 1));
+        PostMessage(window.Handle, MouseMove, 0, Position(-2, 5));
+        PostMessage(window.Handle, LeftButtonUp, 0, Position(7, 0));
+        PostMessage(window.Handle, RightButtonUp, 0, Position(1, 1));
+        RunPostedMessages();
+
+        Assert.Equal(
+            [
+                (WindowPointerAction.LeftDown, new Point(3, 1)),
+                (WindowPointerAction.Moved, new Point(-2, 5)),
+                (WindowPointerAction.LeftUp, new Point(7, 0)),
+                (WindowPointerAction.RightUp, new Point(1, 1)),
+            ],
+            input);
+    }
+
+    [Fact]
+    public void ReleasingThePointerReportsTheCaptureLost()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+        window.Show(new uint[8], OffScreen);
+        var actions = new List<WindowPointerAction>();
+        window.PointerInput += (_, e) => actions.Add(e.Action);
+
+        window.CapturePointer();
+        Assert.Equal(window.Handle, GetCapture());
+        window.ReleasePointer();
+
+        Assert.NotEqual(window.Handle, GetCapture());
+        Assert.Equal([WindowPointerAction.CaptureLost], actions);
+    }
+
+    [Fact]
+    public void AHandledMessageReturnsTheHandlersResult()
+    {
+        using var window = new LayeredWindow(UniqueClassName(), "Test");
+        const uint Question = 0x0400 + 7; // WM_USER + 7
+        window.MessageReceived += (_, e) =>
+        {
+            if (e.Message == Question)
+            {
+                e.Handled = true;
+                e.Result = 42;
+            }
+        };
+
+        Assert.Equal(42, SendMessage(window.Handle, Question, 0, 0));
+    }
+
+    // A mouse message's position: x in the low 16 bits and y in the high 16 bits, each signed.
+    private static nint Position(int x, int y) => (nint)(((y & 0xFFFF) << 16) | (x & 0xFFFF));
+
     [DllImport("user32.dll", EntryPoint = "PostMessageW")]
     private static extern bool PostMessage(nint window, uint message, nuint wParam, nint lParam);
+
+    [DllImport("user32.dll", EntryPoint = "SendMessageW")]
+    private static extern nint SendMessage(nint window, uint message, nuint wParam, nint lParam);
+
+    [DllImport("user32.dll")]
+    private static extern nint GetCapture();
 
     [DllImport("user32.dll")]
     private static extern bool IsWindowVisible(nint window);

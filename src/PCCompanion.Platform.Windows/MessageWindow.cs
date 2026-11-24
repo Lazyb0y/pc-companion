@@ -206,7 +206,7 @@ public sealed class MessageWindow : IDisposable
             handler(this, args);
             if (args.Handled)
             {
-                return (LRESULT)0;
+                return (LRESULT)args.Result;
             }
         }
 
