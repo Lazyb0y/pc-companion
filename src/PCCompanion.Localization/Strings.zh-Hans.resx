@@ -5864,4 +5864,52 @@
     <value>其窗口是窗口标签页中的标签页，因此无法下拉</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>创建组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>按住窗口的标题栏将其拖放到另一个窗口的标签页上，或在将其拖放到另一个窗口的标题栏时按住 Ctrl。单击标签页可显示其窗口。若要移出窗口，请将其标签页拖出标签栏，或右键单击该标签页并选择“移出组”。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>按住 Ctrl 拖放以分组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>将窗口拖放到另一个窗口的标题栏时按住 Ctrl，会将两者分为一组。将窗口拖放到组的标签页上则始终有效。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>切换标签页</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>显示前台窗口的下一个或上一个标签页。按住 Shift 时，在标签栏中移动前台标签页。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Windows 徽标键 + Ctrl + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Windows 徽标键 + Alt + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>无</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>有些窗口无法成为标签页：以管理员身份运行的应用的窗口、Windows 在共享框架中显示的应用（如“设置”）的窗口、无法调整大小的窗口，以及打开了对话框（如“保存”）的窗口。最小化或全屏的窗口、下拉应用的窗口，以及“最小化到通知区域”放入通知区域的窗口也不行。窗口无法加入组时，会播放 Windows 警告声。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>有些窗口无法成为标签页：Windows 在共享框架中显示的应用（如“设置”）的窗口、无法调整大小的窗口，以及打开了对话框（如“保存”）的窗口。最小化或全屏的窗口、下拉应用的窗口，以及“最小化到通知区域”放入通知区域的窗口也不行。窗口无法加入组时，会播放 Windows 警告声。PC Companion 以管理员身份运行，因此以管理员身份运行的应用的窗口也能成为标签页。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>拖动窗口时，读取指针位置、是否按住了 Ctrl 以及指针下方是哪个窗口。读取每个标签页的标题和图标以绘制标签页，并读取哪个窗口进入前台；标题仅保存在内存中。隐藏、显示、移动标签页并调整其大小，并标记隐藏的标签页，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。不建立网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

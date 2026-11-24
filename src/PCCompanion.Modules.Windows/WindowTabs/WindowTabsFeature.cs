@@ -66,7 +66,7 @@ public sealed partial class WindowTabsFeature : IFeature
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
-    public static FeatureInfo Definition { get; } = new("windowTabs", WindowsModule.Id, "WindowTabsName", "WindowTabsDescription", "");
+    public static FeatureInfo Definition { get; } = new("windowTabs", WindowsModule.Id, "WindowTabsName", "WindowTabsDescription", "\uE7C4");
 
     /// <summary>
     /// Whether this PC can run Window Tabs, for the settings app, which doesn't create the feature.

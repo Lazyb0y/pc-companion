@@ -30,6 +30,7 @@ using PCCompanion.App.Features.RemoteFolders;
 using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
+using PCCompanion.App.Features.WindowTabs;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
 using PCCompanion.Core.Settings;
@@ -195,6 +196,7 @@ public partial class App : Application
             .AddTransient<MinimizeToTrayViewModel>()
             .AddTransient<HideAppsViewModel>()
             .AddTransient<DropDownAppsViewModel>()
+            .AddTransient<WindowTabsViewModel>()
             .AddTransient<TitleBarActionsViewModel>()
             .AddTransient<EndAppViewModel>()
             .AddTransient<SystemMetersViewModel>()

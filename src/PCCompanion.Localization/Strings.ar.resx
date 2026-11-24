@@ -6144,4 +6144,52 @@
     <value>نافذته علامة تبويب في علامات تبويب النوافذ، لذا لا يمكن أن تنسدل</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>إنشاء مجموعة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>اسحب نافذة من شريط عنوانها وأفلتها على علامات تبويب نافذة أخرى، أو اضغط باستمرار على Ctrl أثناء إفلاتها على شريط عنوان نافذة أخرى. انقر فوق علامة تبويب لإظهار نافذتها. لإخراج نافذة، اسحب علامة تبويبها خارج الشريط، أو انقر بزر الماوس الأيمن فوق علامة التبويب واختر «إخراج من المجموعة».</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>التجميع بالإفلات مع Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>يؤدي الضغط باستمرار على Ctrl أثناء إفلات نافذة على شريط عنوان نافذة أخرى إلى تجميع النافذتين. ويعمل إفلات نافذة على علامات تبويب مجموعة في كل الأحوال.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>التبديل بين علامات التبويب</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>يُظهر علامة التبويب التالية أو السابقة للنافذة في المقدمة. ومع Shift، ينقل علامة التبويب الأمامية على الشريط.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>مفتاح شعار Windows + Ctrl + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>مفتاح شعار Windows + Alt + Page Down / Page Up</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>بلا</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ أن تكون علامات تبويب: نوافذ التطبيقات التي تعمل كمسؤول، ونوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي لا يمكن تغيير حجمها، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». ولا يمكن ذلك أيضًا للنوافذ المصغّرة أو المعروضة بملء الشاشة، ولا لنوافذ التطبيقات المنسدلة، ولا للنوافذ التي وضعها «التصغير إلى منطقة الإعلامات» في منطقة الإعلامات. يُصدر Windows صوت التحذير عندما لا يمكن لنافذة الانضمام إلى مجموعة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>لا يمكن لبعض النوافذ أن تكون علامات تبويب: نوافذ تطبيقات مثل «الإعدادات» يعرضها Windows في إطار مشترك، والنوافذ التي لا يمكن تغيير حجمها، والنوافذ التي فيها مربع حوار مفتوح، مثل «حفظ». ولا يمكن ذلك أيضًا للنوافذ المصغّرة أو المعروضة بملء الشاشة، ولا لنوافذ التطبيقات المنسدلة، ولا للنوافذ التي وضعها «التصغير إلى منطقة الإعلامات» في منطقة الإعلامات. يُصدر Windows صوت التحذير عندما لا يمكن لنافذة الانضمام إلى مجموعة. يعمل PC Companion كمسؤول، لذا يمكن لنوافذ التطبيقات التي تعمل كمسؤول أن تكون علامات تبويب أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>أثناء سحب نافذة، يقرأ موضع المؤشر وما إذا كان Ctrl مضغوطًا والنافذة الموجودة تحت المؤشر. يقرأ عنوان كل علامة تبويب وأيقونتها لرسمها، والنافذة التي تنتقل إلى المقدمة؛ تبقى العناوين في الذاكرة فقط. يُخفي علامات التبويب ويُظهرها وينقلها ويغيّر حجمها، ويضع علامة على المخفية منها حتى تعود بعد أي عطل، دون خطّاف للوحة المفاتيح أو الماوس ودون تشغيل أي تعليمات برمجية في التطبيقات الأخرى. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

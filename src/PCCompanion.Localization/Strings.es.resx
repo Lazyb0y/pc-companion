@@ -5920,4 +5920,52 @@
     <value>su ventana es una pestaña de Pestañas de ventanas, así que no puede desplegarse</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>Crear un grupo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>Arrastra una ventana por su barra de título y suéltala sobre las pestañas de otra ventana, o mantén presionada Ctrl mientras la sueltas sobre la barra de título de otra ventana. Haz clic en una pestaña para mostrar su ventana. Para sacar una ventana, arrastra su pestaña fuera de la barra o haz clic con el botón derecho en la pestaña y elige Sacar del grupo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>Agrupar al soltar con Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>Si mantienes presionada Ctrl al soltar una ventana sobre la barra de título de otra, las dos se agrupan. Soltar una ventana sobre las pestañas de un grupo funciona siempre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>Cambiar de pestaña</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>Muestra la pestaña siguiente o anterior de la ventana en primer plano. Con Mayús, mueve la pestaña en primer plano por la barra.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Ctrl + Av Pág / Re Pág</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Tecla del logotipo de Windows + Alt + Av Pág / Re Pág</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>Ninguno</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>Algunas ventanas no pueden ser pestañas: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido, las ventanas cuyo tamaño no se puede cambiar y las ventanas con un cuadro de diálogo abierto, como Guardar. Tampoco las ventanas minimizadas o en pantalla completa, las ventanas de Aplicaciones desplegables ni las ventanas que Minimizar en el área de notificación envió al área de notificación. Cuando una ventana no puede unirse a un grupo, suena la advertencia de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>Algunas ventanas no pueden ser pestañas: las de aplicaciones como Configuración que Windows muestra en un marco compartido, las ventanas cuyo tamaño no se puede cambiar y las ventanas con un cuadro de diálogo abierto, como Guardar. Tampoco las ventanas minimizadas o en pantalla completa, las ventanas de Aplicaciones desplegables ni las ventanas que Minimizar en el área de notificación envió al área de notificación. Cuando una ventana no puede unirse a un grupo, suena la advertencia de Windows. PC Companion se ejecuta como administrador, así que las ventanas de las aplicaciones que se ejecutan como administrador también pueden ser pestañas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>Mientras se arrastra una ventana, lee dónde está el puntero, si Ctrl está presionada y qué ventana hay bajo el puntero. Lee el título y el icono de cada pestaña para dibujarla, y qué ventana pasa a primer plano; los títulos solo se guardan en memoria. Oculta, muestra, mueve y cambia el tamaño de las pestañas, y marca las ocultas para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. No establece conexiones de red y no envía nada.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

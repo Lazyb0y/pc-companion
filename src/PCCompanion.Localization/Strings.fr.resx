@@ -5920,4 +5920,52 @@
     <value>sa fenêtre est un onglet dans Onglets de fenêtres, elle ne peut donc pas se dérouler</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>Créer un groupe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>Faites glisser une fenêtre par sa barre de titre et déposez-la sur les onglets d’une autre fenêtre, ou maintenez Ctrl enfoncée en la déposant sur la barre de titre d’une autre fenêtre. Cliquez sur un onglet pour afficher sa fenêtre. Pour sortir une fenêtre, faites glisser son onglet hors de la barre, ou cliquez avec le bouton droit sur l’onglet et choisissez Retirer du groupe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>Regrouper en déposant avec Ctrl</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>Maintenir Ctrl enfoncée en déposant une fenêtre sur la barre de titre d’une autre fenêtre regroupe les deux. Déposer une fenêtre sur les onglets d’un groupe fonctionne dans tous les cas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>Changer d’onglet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>Affiche l’onglet suivant ou précédent de la fenêtre au premier plan. Avec Maj, déplace l’onglet au premier plan dans la barre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + Page suiv. / Page préc.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Touche du logo Windows + Alt + Page suiv. / Page préc.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>Aucun</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>Certaines fenêtres ne peuvent pas être des onglets : celles des applications exécutées en tant qu’administrateur, celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, les fenêtres qui ne peuvent pas être redimensionnées et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Ni les fenêtres réduites ou en plein écran, ni les fenêtres d’Applications déroulantes, ni celles que Réduire dans la zone de notification y a placées. Le son d’avertissement de Windows retentit quand une fenêtre ne peut pas rejoindre un groupe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>Certaines fenêtres ne peuvent pas être des onglets : celles d’applications comme Paramètres que Windows affiche dans un cadre partagé, les fenêtres qui ne peuvent pas être redimensionnées et les fenêtres où une boîte de dialogue est ouverte, comme Enregistrer. Ni les fenêtres réduites ou en plein écran, ni les fenêtres d’Applications déroulantes, ni celles que Réduire dans la zone de notification y a placées. Le son d’avertissement de Windows retentit quand une fenêtre ne peut pas rejoindre un groupe. PC Companion s’exécute en tant qu’administrateur, donc les fenêtres des applications exécutées en tant qu’administrateur peuvent aussi être des onglets.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>Pendant qu’une fenêtre est déplacée, lit où se trouve le pointeur, si Ctrl est enfoncée et quelle fenêtre se trouve sous le pointeur. Lit le titre et l’icône de chaque onglet pour le dessiner, et quelle fenêtre passe au premier plan ; les titres restent uniquement en mémoire. Masque, affiche, déplace et redimensionne les onglets, et marque ceux qui sont masqués pour qu’ils reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

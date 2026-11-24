@@ -5920,4 +5920,52 @@
     <value>ihr Fenster ist ein Tab in Fenster-Tabs, daher kann es nicht herunterklappen</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsMakingHeader" xml:space="preserve">
+    <value>Eine Gruppe bilden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsMakingDescription" xml:space="preserve">
+    <value>Ziehen Sie ein Fenster an seiner Titelleiste auf die Tabs eines anderen Fensters, oder halten Sie Strg gedrückt, während Sie es auf der Titelleiste eines anderen Fensters ablegen. Klicken Sie auf einen Tab, um sein Fenster anzuzeigen. Um ein Fenster herauszunehmen, ziehen Sie seinen Tab aus der Leiste, oder klicken Sie mit der rechten Maustaste auf den Tab, und wählen Sie „Aus der Gruppe nehmen“.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingHeader" xml:space="preserve">
+    <value>Mit Strg durch Ablegen gruppieren</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupByDroppingDescription" xml:space="preserve">
+    <value>Wenn Sie beim Ablegen eines Fensters auf der Titelleiste eines anderen Fensters Strg gedrückt halten, werden beide gruppiert. Das Ablegen eines Fensters auf den Tabs einer Gruppe funktioniert immer.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchHeader" xml:space="preserve">
+    <value>Tabs wechseln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchDescription" xml:space="preserve">
+    <value>Zeigt den nächsten oder vorherigen Tab des Fensters im Vordergrund an. Mit Umschalt wird der vordere Tab in der Leiste verschoben.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsControlPage" xml:space="preserve">
+    <value>Windows-Logo-Taste + Strg + Bild-ab / Bild-auf</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchWindowsAltPage" xml:space="preserve">
+    <value>Windows-Logo-Taste + Alt + Bild-ab / Bild-auf</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsSwitchNone" xml:space="preserve">
+    <value>Keine</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfo" xml:space="preserve">
+    <value>Manche Fenster können keine Tabs sein: die von Apps, die als Administrator ausgeführt werden, von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, Fenster, deren Größe sich nicht ändern lässt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Ebenso wenig minimierte Fenster oder Fenster im Vollbild, Fenster von Drop-down-Apps oder Fenster, die „In den Infobereich minimieren“ in den Infobereich gesendet hat. Wenn ein Fenster keiner Gruppe beitreten kann, ertönt der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsCantBeTabsInfoOn" xml:space="preserve">
+    <value>Manche Fenster können keine Tabs sein: die von Apps wie „Einstellungen“, die Windows in einem gemeinsamen Rahmen anzeigt, Fenster, deren Größe sich nicht ändern lässt, und Fenster mit einem geöffneten Dialogfeld wie „Speichern“. Ebenso wenig minimierte Fenster oder Fenster im Vollbild, Fenster von Drop-down-Apps oder Fenster, die „In den Infobereich minimieren“ in den Infobereich gesendet hat. Wenn ein Fenster keiner Gruppe beitreten kann, ertönt der Warnton von Windows. PC Companion wird als Administrator ausgeführt, daher können auch Fenster von Apps, die als Administrator ausgeführt werden, Tabs sein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsPermissions" xml:space="preserve">
+    <value>Liest beim Ziehen eines Fensters, wo der Zeiger ist, ob Strg gedrückt ist und welches Fenster unter dem Zeiger liegt. Liest Titel und Symbol jedes Tabs, um den Tab zu zeichnen, und welches Fenster in den Vordergrund kommt; Titel bleiben nur im Arbeitsspeicher. Blendet die Tabs aus und ein, verschiebt sie, ändert ihre Größe und markiert ausgeblendete, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
