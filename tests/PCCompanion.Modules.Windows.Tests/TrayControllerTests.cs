@@ -691,6 +691,40 @@ public sealed class TrayControllerTests : IDisposable
         Assert.Equal(0, _system.Warnings);
     }
 
+    [Fact]
+    public void TheShortcutRefusesATabWithTheWarning()
+    {
+        var window = _system.Add(1);
+        _system.Tabs.Add(1);
+        _system.ForegroundWindow = 1;
+
+        Assert.Equal(SendOutcome.WindowTab, _tray.SendFront());
+
+        Assert.True(window.Visible);
+        Assert.False(window.Marked);
+        Assert.Empty(_icons.Icons);
+        Assert.Equal(1, _system.Warnings);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void AMinimizedTabStaysWithItsGroup(bool shiftHeld)
+    {
+        ListApp(@"C:\Apps\App.exe");
+        var window = _system.Add(1);
+        window.Minimized = true;
+        _system.IsShiftHeld = shiftHeld;
+        _system.Tabs.Add(1);
+
+        _tray.OnMinimizeStart(1);
+        _clock.Advance(TimeSpan.FromMilliseconds(100));
+
+        Assert.True(window.Visible);
+        Assert.Empty(_icons.Icons);
+        Assert.Equal(0, _system.Warnings);
+    }
+
     private void ListApp(string program) =>
         _tray.Apply(new MinimizeToTraySettings { Enabled = true, MinimizedApps = [new ListedApp { Name = "App", Program = program }] });
 }

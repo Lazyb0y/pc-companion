@@ -2641,11 +2641,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta.</value>
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta. Las ventanas que son pestañas de Pestañas de ventanas se quedan con su grupo.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. PC Companion se ejecuta como administrador, así que las ventanas de aplicaciones que se ejecutan como administrador también van al área de notificación. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta.</value>
+    <value>Algunas ventanas no pueden ir al área de notificación: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando el método abreviado no puede enviar una ventana, suena la advertencia de Windows. Mayús + Minimizar minimiza entonces la ventana como de costumbre. PC Companion se ejecuta como administrador, así que las ventanas de aplicaciones que se ejecutan como administrador también van al área de notificación. Las ventanas de Aplicaciones desplegables tampoco van al área de notificación: su propio método abreviado las oculta. Las ventanas que son pestañas de Pestañas de ventanas se quedan con su grupo.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
@@ -3013,11 +3013,11 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfo" xml:space="preserve">
-    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo.</value>
+    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones que se ejecutan como administrador, las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo. Las ventanas que son pestañas de Pestañas de ventanas tampoco pueden desplegarse.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
-    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo. PC Companion se ejecuta como administrador, así que las ventanas de las aplicaciones que se ejecutan como administrador también se despliegan.</value>
+    <value>Algunas ventanas no pueden desplegarse: las de aplicaciones como Configuración que Windows muestra en un marco compartido y las ventanas con un cuadro de diálogo abierto, como Guardar. Cuando un método abreviado no puede mostrar ni ocultar una ventana, suena la advertencia de Windows y Resultados recientes indica el motivo. PC Companion se ejecuta como administrador, así que las ventanas de las aplicaciones que se ejecutan como administrador también se despliegan. Las ventanas que son pestañas de Pestañas de ventanas tampoco pueden desplegarse.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="DropDownAppsPermissions" xml:space="preserve">
@@ -5914,6 +5914,10 @@
   </data>
   <data name="WindowTabsTabPosition" xml:space="preserve">
     <value>Pestaña {0} de {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="DropDownAppsResultWindowTab" xml:space="preserve">
+    <value>su ventana es una pestaña de Pestañas de ventanas, así que no puede desplegarse</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

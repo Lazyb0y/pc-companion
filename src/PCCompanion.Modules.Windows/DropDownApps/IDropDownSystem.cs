@@ -52,6 +52,9 @@ public interface IDropDownSystem : IAppIdentityReader, ISlideSystem
 
     bool IsTopmost(nint window);
 
+    /// <summary>Whether the window is one of Window Tabs' tabs, which can't drop down.</summary>
+    bool IsTab(nint window);
+
     string ClassName(nint window);
 
     uint ProcessIdOf(nint window);
@@ -175,6 +178,9 @@ public enum DropDownOutcome
 
     /// <summary>Another program has the app's shortcut.</summary>
     ShortcutTaken,
+
+    /// <summary>The window is one of Window Tabs' tabs, which hides and shows with its group.</summary>
+    WindowTab,
 }
 
 /// <summary>What happened for the listed app at <paramref name="AppIndex"/>, from 0.</summary>

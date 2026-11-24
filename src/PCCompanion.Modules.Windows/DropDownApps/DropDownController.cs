@@ -500,6 +500,12 @@ public sealed partial class DropDownController : IDisposable
             return;
         }
 
+        if (_system.IsTab(handle))
+        {
+            Refuse(index, DropDownOutcome.WindowTab);
+            return;
+        }
+
         if (!_system.IsEnabled(handle))
         {
             Refuse(index, DropDownOutcome.DialogOpen);

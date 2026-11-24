@@ -85,6 +85,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - Store apps that run as desktop apps, such as Windows Terminal and most new apps, have ordinary windows and drop down.
 - **A window with a dialog open,** such as a Save dialog, recognized by the window being disabled (`IsWindowEnabled`): hiding a Windows Forms dialog cancels it, as minimizing its window does, and an app can't be told apart in advance. The window stays where it is.
 - **The desktop, the taskbar and the shell's other windows,** which the taskbar doesn't show.
+- **Window Tabs' tabs,** which hide and show with their group, and a drop-down window can't be a tab; see [With the other features](window-tabs.md#with-the-other-features). Window Tabs keeps the windows that are tabs in a set, within the module, that Drop-down Apps reads, as Window Tabs reads the drop-down windows.
 - **The warning sound:** when a press can't show, hide or start the app's window, Windows' warning sound plays (`MessageBeep` with `MB_ICONEXCLAMATION`), and a recent result says why.
 - The page lists what can't drop down and why. Its note about apps running as administrator follows the host's rights, read from its process when the page opens, as App Windows' note does.
 - Each case is logged at Debug level with its reason, never with the app.
@@ -252,6 +253,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - shown, hidden, brought to the front, brought from another desktop, or started;
   - the app runs as administrator;
   - the app is a Store app in Windows' shared frame;
+  - the window is a tab in Window Tabs;
   - the window has a dialog open;
   - the program is missing or isn't an `.exe`, or the app ID isn't in Start's Apps folder;
   - Windows couldn't start the program, or it needs admin rights;

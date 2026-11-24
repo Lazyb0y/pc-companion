@@ -2641,11 +2641,11 @@
     <comment>Minimize to Tray page: note with the OpenTaskbarSettings button. Use Windows' names for the hidden icons menu and the taskbar settings.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfo" xml:space="preserve">
-    <value>Some windows can't go to the tray: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them.</value>
+    <value>Some windows can't go to the tray: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them. Nor do tabs in Window Tabs, which stay with their group.</value>
     <comment>Minimize to Tray page: the windows that can't go to the tray, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog.</comment>
   </data>
   <data name="MinimizeToTrayCantGoInfoOn" xml:space="preserve">
-    <value>Some windows can't go to the tray: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. PC Companion runs as administrator, so windows of apps running as administrator go to the tray too. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them.</value>
+    <value>Some windows can't go to the tray: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when the shortcut can't send a window. Shift + Minimize then minimizes the window as usual. PC Companion runs as administrator, so windows of apps running as administrator go to the tray too. Drop-down Apps' windows don't go to the tray either: their own shortcut hides them. Nor do tabs in Window Tabs, which stay with their group.</value>
     <comment>Minimize to Tray page: shown instead of MinimizeToTrayCantGoInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="MinimizeToTrayPermissions" xml:space="preserve">
@@ -3013,11 +3013,11 @@
     <comment>Drop-down Apps page: {1} of DropDownAppsResult.</comment>
   </data>
   <data name="DropDownAppsCantDropInfo" xml:space="preserve">
-    <value>Some windows can't drop down: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why.</value>
+    <value>Some windows can't drop down: those of apps running as administrator, of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why. Nor can tabs in Window Tabs.</value>
     <comment>Drop-down Apps page: the windows that can't drop down, shown while PC Companion runs without admin rights. Settings is the Windows Settings app, and Save a Save dialog.</comment>
   </data>
   <data name="DropDownAppsCantDropInfoOn" xml:space="preserve">
-    <value>Some windows can't drop down: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why. PC Companion runs as administrator, so windows of apps running as administrator drop down too.</value>
+    <value>Some windows can't drop down: those of apps such as Settings that Windows shows in a shared frame, and windows with a dialog open, such as Save. Windows' warning sound plays when a shortcut can't show or hide a window, and Recent results says why. PC Companion runs as administrator, so windows of apps running as administrator drop down too. Nor can tabs in Window Tabs.</value>
     <comment>Drop-down Apps page: shown instead of DropDownAppsCantDropInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="DropDownAppsPermissions" xml:space="preserve">
@@ -5915,5 +5915,9 @@
   <data name="WindowTabsTabPosition" xml:space="preserve">
     <value>Tab {0} of {1}</value>
     <comment>Window Tabs: what screen readers announce as a tab comes to the front. {0} is the tab's place in the strip, from 1; {1} is the number of tabs in the group.</comment>
+  </data>
+  <data name="DropDownAppsResultWindowTab" xml:space="preserve">
+    <value>its window is a tab in Window Tabs, so it can't drop down</value>
+    <comment>Drop-down Apps page: {1} of DropDownAppsResult, when the app's window is in a group of Window Tabs (WindowTabsName).</comment>
   </data>
 </root>
