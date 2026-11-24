@@ -25,6 +25,7 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
 
     private const uint PageUp = 0x21;
     private const uint PageDown = 0x22;
+    private const uint KeyT = 0x54;
 
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
@@ -58,6 +59,23 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
 
     /// <summary>Brings the hidden tabs back on the taskbar at once, from any thread, as the host crashes.</summary>
     public void ReleaseNow() => _tabber?.Controller.ReleaseNow();
+
+    /// <summary>
+    /// Runs <paramref name="action"/> with the controller on the feature's thread, as for an action
+    /// of Shortcuts &amp; Mouse Buttons, without waiting for it.
+    /// </summary>
+    public void Run(Action<TabsController> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        Post(() =>
+        {
+            if (_tabber is { } tabber)
+            {
+                action(tabber.Controller);
+            }
+        });
+    }
 
     protected override IDisposable Open(MessageWindow window)
     {
@@ -98,8 +116,8 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs' thread ended.")]
     private static partial void LogStopped(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs applied its settings: group by dropping {GroupByDropping}, switch shortcuts {SwitchShortcuts}.")]
-    private static partial void LogApplied(ILogger logger, bool groupByDropping, TabSwitchShortcuts switchShortcuts);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs applied its settings: group by dropping {GroupByDropping}, switch shortcuts {SwitchShortcuts}, group shortcuts {GroupShortcuts}.")]
+    private static partial void LogApplied(ILogger logger, bool groupByDropping, TabSwitchShortcuts switchShortcuts, TabGroupShortcuts groupShortcuts);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs brought {Count} hidden tabs back on the taskbar: {Why}.")]
     private static partial void LogReleased(ILogger logger, int count, string why);
@@ -109,6 +127,9 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "The Window Tabs switch shortcuts in the settings are unknown, so there are none.")]
     private static partial void LogUnknownShortcuts(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The Window Tabs group shortcuts in the settings are unknown, so there are none.")]
+    private static partial void LogUnknownGroupShortcuts(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Window Tabs failed, so it's stopped until PC Companion restarts.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
@@ -124,8 +145,12 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
         private readonly WindowsTabsSystem _system;
         private readonly DropHighlight _highlight;
         private readonly List<WinEventHook> _hooks = [];
-        private readonly List<HotKey> _shortcuts = [];
-        private TabSwitchShortcuts? _registered;
+        private readonly List<HotKey> _switchShortcuts = [];
+        private readonly List<HotKey> _groupShortcuts = [];
+        private TabSwitchShortcuts? _switchRegistered;
+        private TabGroupShortcuts? _groupRegistered;
+        private bool _switchRefused;
+        private bool _groupRefused;
 
         public Tabber(WindowTabsThread owner, MessageWindow window)
         {
@@ -186,8 +211,10 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
         public void Apply(WindowTabsSettings settings)
         {
             Controller.Apply(settings);
-            Register(settings.SwitchShortcuts);
-            LogApplied(_owner._logger, settings.GroupByDropping, settings.SwitchShortcuts);
+            RegisterSwitch(settings.SwitchShortcuts);
+            RegisterGroup(settings.GroupShortcuts);
+            _owner._refusals?.Set(WindowTabsFeature.Definition.Id, Refused());
+            LogApplied(_owner._logger, settings.GroupByDropping, settings.SwitchShortcuts, settings.GroupShortcuts);
         }
 
         // Every hidden tab goes back on the taskbar before the hooks and the window go.
@@ -201,10 +228,8 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             }
 
             Controller.Dispose();
-            foreach (var shortcut in _shortcuts)
-            {
-                shortcut.Dispose();
-            }
+            Unregister(_switchShortcuts);
+            Unregister(_groupShortcuts);
 
             foreach (var hook in _hooks)
             {
@@ -229,27 +254,48 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             _hooks.Add(hook);
         }
 
-        // The shortcuts are registered again only when they changed, or when Windows refused one before.
-        private void Register(TabSwitchShortcuts shortcuts)
+        private static void Unregister(List<HotKey> shortcuts)
         {
-            if (shortcuts == _registered && (_shortcuts.Count == 4 || shortcuts == TabSwitchShortcuts.None))
-            {
-                return;
-            }
-
-            foreach (var shortcut in _shortcuts)
+            foreach (var shortcut in shortcuts)
             {
                 shortcut.Dispose();
             }
 
-            _shortcuts.Clear();
-            _registered = shortcuts;
+            shortcuts.Clear();
+        }
+
+        private List<string> Refused()
+        {
+            var refused = new List<string>();
+            if (_switchRefused)
+            {
+                refused.Add(WindowTabsFeature.SwitchShortcutsName);
+            }
+
+            if (_groupRefused)
+            {
+                refused.Add(WindowTabsFeature.GroupShortcutsName);
+            }
+
+            return refused;
+        }
+
+        // The shortcuts are registered again only when they changed, or when Windows refused one before.
+        private void RegisterSwitch(TabSwitchShortcuts shortcuts)
+        {
+            if (shortcuts == _switchRegistered && !_switchRefused)
+            {
+                return;
+            }
+
+            Unregister(_switchShortcuts);
+            _switchRegistered = shortcuts;
+            _switchRefused = false;
             var keys = shortcuts switch
             {
-                TabSwitchShortcuts.None => (HotKeyModifiers?)null,
                 TabSwitchShortcuts.WindowsControlPage => HotKeyModifiers.Windows | HotKeyModifiers.Control,
                 TabSwitchShortcuts.WindowsAltPage => HotKeyModifiers.Windows | HotKeyModifiers.Alt,
-                _ => null,
+                _ => (HotKeyModifiers?)null,
             };
 
             if (keys is not { } modifiers)
@@ -259,19 +305,41 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
                     LogUnknownShortcuts(_owner._logger);
                 }
 
-                _owner._refusals?.Set(WindowTabsFeature.Definition.Id, []);
                 return;
             }
 
-            var refused = false;
-            refused |= !Add(modifiers, PageDown, "next tab", Controller.Next);
-            refused |= !Add(modifiers, PageUp, "previous tab", Controller.Previous);
-            refused |= !Add(modifiers | HotKeyModifiers.Shift, PageDown, "move tab forward", Controller.MoveForward);
-            refused |= !Add(modifiers | HotKeyModifiers.Shift, PageUp, "move tab back", Controller.MoveBack);
-            _owner._refusals?.Set(WindowTabsFeature.Definition.Id, refused ? [WindowTabsFeature.SwitchShortcutsName] : []);
+            _switchRefused |= !Add(_switchShortcuts, modifiers, PageDown, "next tab", Controller.Next);
+            _switchRefused |= !Add(_switchShortcuts, modifiers, PageUp, "previous tab", Controller.Previous);
+            _switchRefused |= !Add(_switchShortcuts, modifiers | HotKeyModifiers.Shift, PageDown, "move tab forward", Controller.MoveForward);
+            _switchRefused |= !Add(_switchShortcuts, modifiers | HotKeyModifiers.Shift, PageUp, "move tab back", Controller.MoveBack);
         }
 
-        private bool Add(HotKeyModifiers modifiers, uint key, string name, Action press)
+        private void RegisterGroup(TabGroupShortcuts shortcuts)
+        {
+            if (shortcuts == _groupRegistered && !_groupRefused)
+            {
+                return;
+            }
+
+            Unregister(_groupShortcuts);
+            _groupRegistered = shortcuts;
+            _groupRefused = false;
+            if (shortcuts != TabGroupShortcuts.WindowsControlT)
+            {
+                if (shortcuts != TabGroupShortcuts.None)
+                {
+                    LogUnknownGroupShortcuts(_owner._logger);
+                }
+
+                return;
+            }
+
+            var modifiers = HotKeyModifiers.Windows | HotKeyModifiers.Control;
+            _groupRefused |= !Add(_groupShortcuts, modifiers, KeyT, "add to the group behind", Controller.GroupFrontWithBehind);
+            _groupRefused |= !Add(_groupShortcuts, modifiers | HotKeyModifiers.Shift, KeyT, "take out of group", Controller.TakeOutFront);
+        }
+
+        private bool Add(List<HotKey> shortcuts, HotKeyModifiers modifiers, uint key, string name, Action press)
         {
             var hotKey = HotKey.Register(_window, modifiers, key);
             if (hotKey is null)
@@ -281,7 +349,7 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             }
 
             hotKey.Pressed += (_, _) => _owner.Guard(press);
-            _shortcuts.Add(hotKey);
+            shortcuts.Add(hotKey);
             return true;
         }
 
