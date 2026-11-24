@@ -41,6 +41,18 @@
                     Message="{x:Bind ViewModel.ShortcutRefusedInfo, Mode=OneWay}"
                     Severity="Warning" />
 
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=WindowTabsGroupKeysDescription}"
+                    Glyph="&#xE765;"
+                    Header="{app:Localized Key=WindowTabsGroupKeysHeader}"
+                    ItemsSource="{x:Bind ViewModel.GroupOptions}"
+                    SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}" />
+
+                <controls:Note
+                    IsOpen="{x:Bind ViewModel.GroupShortcutRefused, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.GroupShortcutRefusedInfo}"
+                    Severity="Warning" />
+
                 <controls:Note Margin="0,16,0,0" Message="{x:Bind ViewModel.CantBeTabsInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=WindowTabsPermissions}" />

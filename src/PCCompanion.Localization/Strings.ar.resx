@@ -6192,4 +6192,36 @@
     <value>أثناء سحب نافذة، يقرأ موضع المؤشر وما إذا كان Ctrl مضغوطًا والنافذة الموجودة تحت المؤشر. يقرأ عنوان كل علامة تبويب وأيقونتها لرسمها، والنافذة التي تنتقل إلى المقدمة؛ تبقى العناوين في الذاكرة فقط. يُخفي علامات التبويب ويُظهرها وينقلها ويغيّر حجمها، ويضع علامة على المخفية منها حتى تعود بعد أي عطل، دون خطّاف للوحة المفاتيح أو الماوس ودون تشغيل أي تعليمات برمجية في التطبيقات الأخرى. لا يُجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>علامة التبويب التالية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>علامة التبويب السابقة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>نقل علامة التبويب إلى الأمام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>نقل علامة التبويب إلى الخلف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>إضافة إلى المجموعة في الخلف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>التجميع من لوحة المفاتيح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>يضيف النافذة في المقدمة إلى مجموعة النافذة التي خلفها، أو يجمع النافذتين. ومع Shift، يُخرج علامة التبويب الأمامية من مجموعتها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>مفتاح شعار Windows + Ctrl + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

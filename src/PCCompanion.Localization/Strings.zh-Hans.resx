@@ -5912,4 +5912,36 @@
     <value>拖动窗口时，读取指针位置、是否按住了 Ctrl 以及指针下方是哪个窗口。读取每个标签页的标题和图标以绘制标签页，并读取哪个窗口进入前台；标题仅保存在内存中。隐藏、显示、移动标签页并调整其大小，并标记隐藏的标签页，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>下一个标签页</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>上一个标签页</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>标签页向后移一位</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>标签页向前移一位</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>添加到后面的组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>使用键盘分组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>将前台窗口添加到其后面窗口的组中，或将两者分为一组。按住 Shift 时，将前台标签页移出其组。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Windows 徽标键 + Ctrl + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

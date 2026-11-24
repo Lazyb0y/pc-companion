@@ -5968,4 +5968,36 @@
     <value>Pendant qu’une fenêtre est déplacée, lit où se trouve le pointeur, si Ctrl est enfoncée et quelle fenêtre se trouve sous le pointeur. Lit le titre et l’icône de chaque onglet pour le dessiner, et quelle fenêtre passe au premier plan ; les titres restent uniquement en mémoire. Masque, affiche, déplace et redimensionne les onglets, et marque ceux qui sont masqués pour qu’ils reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. N’établit aucune connexion réseau et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowTabsActionNextTab" xml:space="preserve">
+    <value>Onglet suivant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionPreviousTab" xml:space="preserve">
+    <value>Onglet précédent</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabForward" xml:space="preserve">
+    <value>Déplacer l’onglet vers l’avant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionMoveTabBack" xml:space="preserve">
+    <value>Déplacer l’onglet vers l’arrière</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsActionAddToGroupBehind" xml:space="preserve">
+    <value>Ajouter au groupe derrière</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysHeader" xml:space="preserve">
+    <value>Grouper au clavier</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupKeysDescription" xml:space="preserve">
+    <value>Ajoute la fenêtre au premier plan au groupe de la fenêtre située derrière elle, ou groupe les deux. Avec Maj, retire l’onglet au premier plan de son groupe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsGroupWindowsControlT" xml:space="preserve">
+    <value>Touche du logo Windows + Ctrl + T</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
