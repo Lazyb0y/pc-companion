@@ -69,7 +69,7 @@ Roll a window up to its title bar, to see and use what's behind it without movin
 
 - **Title Bar Actions** gets **Roll up** for each middle-click and for the wheel, none of which has it until the user chooses it:
   - **as a click action,** it rolls up the window whose title bar was clicked;
-  - **as the wheel's action,** turning the wheel up on a title bar rolls the window up, and turning it down on its rolled-up title bar rolls it down. Each direction does one thing, so more notches, or a wheel that bounces, never roll a window up and down again.
+  - **as the wheel's action,** turning the wheel up on a title bar rolls the window up, and turning it down on its rolled-up title bar rolls it down. Each direction does one thing, so more notches, or a wheel that bounces, never roll a window up and down again: Title Bar Actions rolls a window up once for each turn of the wheel, and for a second after the wheel rolled a window down, Window Shading doesn't roll it up again.
   - It goes through `WindowRequests` (`RollUp`), as Title Bar Actions' other actions for other features do. While Window Shading is off, the action plays the warning sound and the page says so at the action.
 - **Shortcuts & Mouse Buttons** gets **Roll up the window in front**, **Roll down the last rolled-up window** and **Roll down all**.
 - **The PC Companion icon's menu** gets **Roll down all** while a window is rolled up.

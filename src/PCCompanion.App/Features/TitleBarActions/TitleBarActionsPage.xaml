@@ -57,6 +57,8 @@
                     ItemsSource="{x:Bind ViewModel.WheelActions}"
                     SelectedItem="{x:Bind ViewModel.SelectedControlWheel, Mode=TwoWay}" />
 
+                <controls:Note IsOpen="{x:Bind ViewModel.NeedsWindowShading, Mode=OneWay}" Message="{app:Localized Key=TitleBarActionsNeedsWindowShadingInfo}" />
+
                 <controls:AppList
                     Apps="{x:Bind ViewModel.ExcludedApps}"
                     Description="{app:Localized Key=TitleBarActionsAppsDescription}"

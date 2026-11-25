@@ -17,6 +17,7 @@ public sealed class TitleBarControllerTests : IDisposable
     private static readonly Point OnTab = new(150, 120);
     private static readonly PointerTrigger MiddleClick = new(PointerButton.Middle, PointerKeys.None);
     private static readonly PointerTrigger Wheel = new(PointerButton.Wheel, PointerKeys.None);
+    private static readonly PointerTrigger ControlWheel = new(PointerButton.Wheel, PointerKeys.Control);
     private static readonly ListedApp Listed = new() { Name = "App", Program = @"C:\Apps\10.exe" };
 
     private readonly FakeTitleBarWindows _windows = new();
@@ -208,10 +209,11 @@ public sealed class TitleBarControllerTests : IDisposable
     [InlineData(TitleBarClickAction.HideApp)]
     [InlineData(TitleBarClickAction.AddToGroupBehind)]
     [InlineData(TitleBarClickAction.TakeOutOfGroup)]
+    [InlineData(TitleBarClickAction.RollUp)]
     public void WhileTheirFeatureIsOffTheClickIsStillKeptAndTheWarningSoundPlays(TitleBarClickAction action)
     {
         _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = action });
-        (_system.TrayRuns, _system.HideAppsRuns, _system.TabsRun) = (false, false, false);
+        (_system.TrayRuns, _system.HideAppsRuns, _system.TabsRun, _system.ShadingRuns) = (false, false, false, false);
         MoveTo(OnTitleBar);
 
         _controller.OnKept(new KeptPointerInputEventArgs(MiddleClick, OnTitleBar, 0, 1));
@@ -219,6 +221,21 @@ public sealed class TitleBarControllerTests : IDisposable
         Assert.Contains(MiddleClick, _system.Claimed!.Triggers);
         Assert.Equal(1, _system.Sounds);
         Assert.Contains(_logger.Entries, entry => entry.Message.Contains("FeatureOff", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void RollUpPassesTheWindowOnToWindowShadingEvenWithoutAMinimizeButton()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, MiddleClick = TitleBarClickAction.RollUp });
+        _system.WithoutMinimizeButton.Add(Window);
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(MiddleClick, OnTitleBar, 0, 1));
+
+        Assert.Equal([Window], _system.RolledUp);
+        Assert.Empty(_system.Minimized);
+        Assert.Equal(0, _system.Sounds);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("RollUp (Kept)", StringComparison.Ordinal));
     }
 
     [Theory]
@@ -471,6 +488,82 @@ public sealed class TitleBarControllerTests : IDisposable
 
         Assert.Equal(100, _opacity.OpacityOf(Window));
         Assert.Empty(_opacity.Marks);
+    }
+
+    [Fact]
+    public void EachWheelRunsItsOwnAction()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.Opacity, ControlWheel = TitleBarWheelAction.RollUp });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(ControlWheel, OnTitleBar, 120, 2));
+
+        Assert.Equal(3, _system.Claimed!.Triggers.Count);
+        Assert.Contains(ControlWheel, _system.Claimed.Triggers);
+        Assert.Equal(90, _opacity.OpacityOf(Window));
+        Assert.Equal([Window], _system.RolledUp);
+    }
+
+    [Fact]
+    public void TheWheelTurnedUpRollsTheWindowUpOnceForATurn()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.RollUp });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 1));
+        _clock.Advance(TimeSpan.FromMilliseconds(600));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 240, 2));
+        _clock.Advance(TimeSpan.FromMilliseconds(600));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 3));
+        Assert.Equal([Window], _system.RolledUp);
+
+        _clock.Advance(TimeSpan.FromSeconds(1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 4));
+
+        Assert.Equal([Window, Window], _system.RolledUp);
+        Assert.Equal(100, _opacity.OpacityOf(Window));
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("rolled the window up (Kept)", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TheWheelTurnedDownDoesNothingAndABounceUpIsTheSameTurn()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.RollUp });
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, -120, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 2));
+
+        Assert.Empty(_system.RolledUp);
+        Assert.Equal(0, _system.Sounds);
+    }
+
+    [Fact]
+    public void WhileWindowShadingIsOffTheWheelPlaysTheWarningSoundOnceForATurn()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.RollUp });
+        _system.ShadingRuns = false;
+        MoveTo(OnTitleBar);
+
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 1));
+        _controller.OnKept(new KeptPointerInputEventArgs(Wheel, OnTitleBar, 120, 2));
+
+        Assert.Equal(1, _system.Sounds);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("didn't roll the window up: FeatureOff", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ANotchLetThroughStillRollsTheWindowUp()
+    {
+        _controller.Configure(new TitleBarActionsSettings { Enabled = true, Wheel = TitleBarWheelAction.RollUp });
+        MoveTo(OnTitleBar);
+        _system.Outcomes[5] = PointerInputOutcome.LetThrough;
+
+        _controller.OnPointerInput(new PointerInputEventArgs(PointerButtonChanges.Wheel, 120, 5));
+        _clock.Advance(TitleBarController.CheckDelay);
+
+        Assert.Equal([Window], _system.RolledUp);
     }
 
     private void MoveTo(Point point)

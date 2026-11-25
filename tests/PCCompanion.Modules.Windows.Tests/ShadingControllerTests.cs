@@ -176,6 +176,21 @@ public sealed class ShadingControllerTests : IDisposable
     }
 
     [Fact]
+    public void AWindowTheWheelRolledDownIsntRolledUpAgainForAMoment()
+    {
+        _controller.RollUp(Mail);
+        _system.Strips[0].Wheel(-120);
+
+        _controller.RollUp(Mail);
+        Assert.Equal(0, _controller.Count);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("just after the wheel rolled it down", StringComparison.Ordinal));
+
+        _clock.Advance(TimeSpan.FromSeconds(1));
+        _controller.RollUp(Mail);
+        Assert.Equal(1, _controller.Count);
+    }
+
+    [Fact]
     public void TheStripsMenuRollsDownOrCloses()
     {
         _controller.RollUp(Mail);

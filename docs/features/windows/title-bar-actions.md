@@ -126,10 +126,11 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 | Hide app | Minimizes every window of the window's app, as the taskbar groups them | Through [Hide Apps](hide-apps.md)' Hide app, for the clicked window's app rather than the app in front |
 | Add to the group behind | Adds the window to the group of the window behind it, or groups the two, with tabs | Through [Window Tabs](window-tabs.md), as Windows + Ctrl + T does for the window in front |
 | Move out of group | Takes the window out of its group, beside it | Through [Window Tabs](window-tabs.md), as Windows + Ctrl + Shift + T does for the window in front |
+| Roll up | Rolls the window up to its title bar | Through [Window Shading](window-shading.md); see [With the other features](#with-the-other-features) |
 
 - **The same action** runs whether the window is in front or behind; Send to back gives the front away only when the window had it.
 - **An always-on-top window** goes behind every other window and loses always-on-top, as with `HWND_BOTTOM`. So Send to back skips such windows, with the warning sound.
-- **A window without a Minimize button** (`TopLevelWindows.HasMinimizeButton`) isn't minimized, sent to the tray or hidden, with the warning sound. Window Tabs' actions don't need one.
+- **A window without a Minimize button** (`TopLevelWindows.HasMinimizeButton`) isn't minimized, sent to the tray or hidden, with the warning sound. Window Tabs' actions and Roll up don't need one.
 
 ### The wheel
 
@@ -137,8 +138,10 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 |---|---|
 | None | The wheel reaches the app |
 | Change opacity | Each notch up makes the window more opaque and each notch down more transparent, by 10%, between 20% and 100% |
+| Roll up | Turned up, it rolls the window up to its title bar, through [Window Shading](window-shading.md); turned down, it does nothing |
 
 - **Smaller steps,** as from mice that scroll smoothly, add up until they make a notch (120).
+- **Roll up once for each turn:** notches on a window less than a second apart are one turn, which rolls it up once, so more notches, or a wheel that bounces back up after turning down, don't pass the window on again. A rolled-up window's strip rolls it down when the wheel turns down on it; see [Rolling down](window-shading.md#rolling-down).
 - **How:** the window gets the layered style (`WS_EX_LAYERED` with `SetWindowLongPtr`), and its opacity is set with `SetLayeredWindowAttributes` and `LWA_ALPHA`.
 - **Back to 100%:** the style is removed again, unless the window had it before.
 - **The spike** faded Edge (drawn with DirectComposition), Settings with its content, File Explorer's XAML parts, Character Map and test windows, and kept their rounded corners.
@@ -179,7 +182,8 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 - **Minimize to tray** passes the window to [Minimize to Tray](minimize-to-tray.md), which sends it as its shortcut does, with its own rules. It refuses Store apps in the shared frame, windows with a dialog open, apps running as administrator while it can't hide them, and Drop-down Apps' windows; for each, the warning sound plays.
 - **Hide app** passes the window to [Hide Apps](hide-apps.md), which minimizes every window of that window's app as Hide app does, with its own rules.
 - **Add to the group behind** and **Move out of group** pass the window to [Window Tabs](window-tabs.md), which does for it what Windows + Ctrl + T and Windows + Ctrl + Shift + T do for the window in front, with its own rules: the window behind is the front-most one behind the clicked window, on its display, that can be a tab, and only a group's tab in front can be moved out. When it can't, Window Tabs plays the warning sound.
-- **While Minimize to Tray, Hide Apps or Window Tabs is off,** the action plays the warning sound, and the click is still kept. The page offers every action all the time, with a note that they need their feature turned on.
+- **Roll up** passes the window to [Window Shading](window-shading.md), which rolls it up with its own rules. The strip of a rolled-up window is PC Companion's own window, which handles its own clicks and wheel, so Title Bar Actions leaves it alone. When the window can't be rolled up, Window Shading plays the warning sound.
+- **While Minimize to Tray, Hide Apps, Window Tabs or Window Shading is off,** the action plays the warning sound, and the click is still kept. The page offers every action all the time, with a note that they need their feature turned on.
 - **How:** within the module, a request carries the window to the other feature's thread (`WindowRequests`), as the features already share `HideAppsMinimized` and `DropDownWindows`. Each feature sets its part as it starts and clears it as it stops.
 - **Shift + Minimize:** when Shift + middle-click is set to **Minimize** and Minimize to Tray's **Shift + Minimize** is on, the window minimizes with Shift held, so Minimize to Tray takes it to the tray, as it does a click on the Minimize button with Shift held.
 - **Drop-down Apps' windows:** Minimize hides a shown drop-down window, as Drop-down Apps does whenever one is minimized. Minimize to tray and Hide app leave drop-down windows alone, as those features do.
@@ -257,7 +261,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
   - **Middle-click**, **Shift + middle-click** and **Ctrl + middle-click**, each a list of the click actions;
   - **Wheel** and **Ctrl + wheel**, each a list of the wheel actions;
   - **Apps that keep their title-bar clicks**, with **Running app**, **Program file** and **Remove**;
-  - a note that Minimize to tray and Hide app need Minimize to Tray and Hide Apps turned on, and another that Add to the group behind and Move out of group need Window Tabs turned on, each shown while an action needs a feature that's off;
+  - a note that Minimize to tray and Hide app need Minimize to Tray and Hide Apps turned on, another that Add to the group behind and Move out of group need Window Tabs turned on, and a third that Roll up needs Window Shading turned on, each shown while an action needs a feature that's off;
   - a note about the windows that get nothing, including apps running as administrator;
   - a **Permissions & data** card.
 - **When the feature is first turned on:** middle-click is Minimize, the other clicks and the wheel are None, and no app is listed.
@@ -297,7 +301,6 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 - **Move to another display:** dragging the title bar and Windows + Shift + an arrow key do it.
 - **Maximize vertically or horizontally:** double-clicking the top border and Windows + Shift + Up do it.
 - **Minimize the other windows:** Windows' title-bar shake and Hide Apps' Hide others do it.
-- **Roll up:** comes with Window Shading ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) as a click and wheel action; see [Actions](window-shading.md#actions) in its spec.
 - **Move to another virtual desktop:** [#30](https://github.com/Lazyb0y/pc-companion/issues/30), which needs undocumented APIs.
 - **Different actions for the window in front and the windows behind it,** as KDE Plasma offers: one action per click keeps the page short, and Send to back already handles the window in front.
 - **Actions for each app:** [#361](https://github.com/Lazyb0y/pc-companion/issues/361).

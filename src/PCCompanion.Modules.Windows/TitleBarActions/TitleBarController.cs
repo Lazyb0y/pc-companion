@@ -29,6 +29,9 @@ public sealed partial class TitleBarController : IDisposable
     // How far the wheel turns for a notch.
     private const int Notch = 120;
 
+    // How long after a notch on a window more notches on it are the same turn, which rolls it up once.
+    private static readonly TimeSpan WheelTurnTime = TimeSpan.FromSeconds(1);
+
     private readonly ITitleBarWindows _windows;
     private readonly ITitleBarActionsSystem _system;
     private readonly TimeProvider _time;
@@ -40,12 +43,14 @@ public sealed partial class TitleBarController : IDisposable
     private readonly ITimer _settleTimer;
     private readonly List<RawClick> _clicks = [];
     private Dictionary<PointerTrigger, TitleBarClickAction> _actions = [];
-    private HashSet<PointerTrigger> _wheel = [];
+    private Dictionary<PointerTrigger, TitleBarWheelAction> _wheel = [];
     private nint _claimed;
     private bool _timerSet;
     private nint _wheelWindow;
     private int _wheelTurned;
     private nint _soundedFor;
+    private nint _rollUpWindow;
+    private long _rollUpAt;
 
     /// <param name="opacity">Changes the windows' opacity on the wheel, on this controller's thread.</param>
     /// <param name="post">Runs an action on this controller's thread, from the timer's.</param>
@@ -88,17 +93,10 @@ public sealed partial class TitleBarController : IDisposable
         Add(actions, PointerKeys.Shift, settings.ShiftMiddleClick);
         Add(actions, PointerKeys.Control, settings.ControlMiddleClick);
         _actions = actions;
-        _wheel = [];
-        if (settings.Wheel == TitleBarWheelAction.Opacity)
-        {
-            _wheel.Add(new PointerTrigger(PointerButton.Wheel, PointerKeys.None));
-        }
-
-        if (settings.ControlWheel == TitleBarWheelAction.Opacity)
-        {
-            _wheel.Add(new PointerTrigger(PointerButton.Wheel, PointerKeys.Control));
-        }
-
+        var wheel = new Dictionary<PointerTrigger, TitleBarWheelAction>();
+        AddWheel(wheel, PointerKeys.None, settings.Wheel);
+        AddWheel(wheel, PointerKeys.Control, settings.ControlWheel);
+        _wheel = wheel;
         UpdateClaim();
     }
 
@@ -113,7 +111,7 @@ public sealed partial class TitleBarController : IDisposable
         if (button is { } pressed && _windows.PointerPosition is { } point)
         {
             var trigger = new PointerTrigger(pressed, _system.HeldKeys);
-            if (_actions.ContainsKey(trigger) || _wheel.Contains(trigger))
+            if (_actions.ContainsKey(trigger) || _wheel.ContainsKey(trigger))
             {
                 _clicks.Add(new RawClick(input.Time, trigger, point, input.WheelDelta, WasClaimed: _claimed != 0, _time.GetTimestamp()));
                 ScheduleCheck();
@@ -131,7 +129,8 @@ public sealed partial class TitleBarController : IDisposable
 
         var isWheel = input.Trigger.Button == PointerButton.Wheel;
         var action = TitleBarClickAction.None;
-        if (isWheel ? !_wheel.Contains(input.Trigger) : !_actions.TryGetValue(input.Trigger, out action))
+        var wheelAction = TitleBarWheelAction.None;
+        if (isWheel ? !_wheel.TryGetValue(input.Trigger, out wheelAction) : !_actions.TryGetValue(input.Trigger, out action))
         {
             return;
         }
@@ -147,7 +146,7 @@ public sealed partial class TitleBarController : IDisposable
 
         if (isWheel)
         {
-            Turn(window, input.WheelDelta, ClickPath.Kept);
+            Turn(wheelAction, window, input.WheelDelta, ClickPath.Kept);
         }
         else
         {
@@ -175,7 +174,7 @@ public sealed partial class TitleBarController : IDisposable
         SetTimer(false);
         _settleTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         Release();
-        (_wheelWindow, _wheelTurned, _soundedFor) = (0, 0, 0);
+        (_wheelWindow, _wheelTurned, _soundedFor, _rollUpWindow) = (0, 0, 0, 0);
         return _opacity.PutBackAll();
     }
 
@@ -194,6 +193,14 @@ public sealed partial class TitleBarController : IDisposable
         }
     }
 
+    private static void AddWheel(Dictionary<PointerTrigger, TitleBarWheelAction> wheel, PointerKeys keys, TitleBarWheelAction action)
+    {
+        if (action != TitleBarWheelAction.None && Enum.IsDefined(action))
+        {
+            wheel[new PointerTrigger(PointerButton.Wheel, keys)] = action;
+        }
+    }
+
     private void UpdateClaim()
     {
         if (_finder.Spot is not { } spot || (_actions.Count == 0 && _wheel.Count == 0))
@@ -203,7 +210,7 @@ public sealed partial class TitleBarController : IDisposable
         }
 
         var area = new Rectangle(spot.Point.X - SpotMargin, spot.Point.Y - SpotMargin, (2 * SpotMargin) + 1, (2 * SpotMargin) + 1);
-        _system.Claim(new PointerClaim(area, _actions.Keys.Concat(_wheel).ToHashSet()));
+        _system.Claim(new PointerClaim(area, _actions.Keys.Concat(_wheel.Keys).ToHashSet()));
         if (_claimed == 0)
         {
             LogClaimed(_logger);
@@ -243,9 +250,9 @@ public sealed partial class TitleBarController : IDisposable
             }
 
             var found = TitleBarCheck.Elsewhere;
-            if (click.Trigger.Button == PointerButton.Wheel)
+            if (click.Trigger.Button == PointerButton.Wheel && _wheel.TryGetValue(click.Trigger, out var wheelAction))
             {
-                found = _finder.Check(click.Point, window => Turn(window, click.WheelDelta, ClickPath.LetThrough));
+                found = _finder.Check(click.Point, window => Turn(wheelAction, window, click.WheelDelta, ClickPath.LetThrough));
             }
             else if (_actions.TryGetValue(click.Trigger, out var action))
             {
@@ -298,6 +305,9 @@ public sealed partial class TitleBarController : IDisposable
             case TitleBarClickAction.AddToGroupBehind or TitleBarClickAction.TakeOutOfGroup:
                 PassToTabs(action, window, click, path);
                 break;
+            case TitleBarClickAction.RollUp:
+                PassToShading(window, click, path);
+                break;
         }
     }
 
@@ -348,6 +358,19 @@ public sealed partial class TitleBarController : IDisposable
         }
     }
 
+    // Window Shading carries it out on its thread, with its own rules and warning sound.
+    private void PassToShading(nint window, PointerKeys click, ClickPath path)
+    {
+        if (!_system.RollUp(window))
+        {
+            Refuse(click, TitleBarClickAction.RollUp, TitleBarRefusal.FeatureOff);
+        }
+        else
+        {
+            LogRan(_logger, click, TitleBarClickAction.RollUp, path);
+        }
+    }
+
     // When the window had the front, the next window gets it, as with Alt + Esc.
     private void SendToBack(nint window, PointerKeys click, ClickPath path)
     {
@@ -375,7 +398,7 @@ public sealed partial class TitleBarController : IDisposable
 
     // The wheel's smaller steps add up to notches, for one window at a time. A window whose opacity
     // can't change plays the warning sound once.
-    private void Turn(nint window, short delta, ClickPath path)
+    private void Turn(TitleBarWheelAction action, nint window, short delta, ClickPath path)
     {
         if (window != _wheelWindow)
         {
@@ -387,6 +410,12 @@ public sealed partial class TitleBarController : IDisposable
         _wheelTurned -= notches * Notch;
         if (notches == 0)
         {
+            return;
+        }
+
+        if (action == TitleBarWheelAction.RollUp)
+        {
+            RollUpOnWheel(window, notches, path);
             return;
         }
 
@@ -407,6 +436,29 @@ public sealed partial class TitleBarController : IDisposable
                 }
 
                 break;
+        }
+    }
+
+    // Turned up, the wheel rolls the window up once for a turn, however many notches it has or
+    // however it bounces; turned down, it does nothing, as a rolled-up window's strip rolls it down.
+    private void RollUpOnWheel(nint window, int notches, ClickPath path)
+    {
+        var now = _time.GetTimestamp();
+        var sameTurn = window == _rollUpWindow && _time.GetElapsedTime(_rollUpAt, now) < WheelTurnTime;
+        (_rollUpWindow, _rollUpAt) = (window, now);
+        if (notches < 0 || sameTurn)
+        {
+            return;
+        }
+
+        if (_system.RollUp(window))
+        {
+            LogRolledUp(_logger, path);
+        }
+        else
+        {
+            _system.PlayWarningSound();
+            LogRollUpRefused(_logger);
         }
     }
 
@@ -443,6 +495,12 @@ public sealed partial class TitleBarController : IDisposable
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar didn't change the window's opacity: {Reason}.")]
     private static partial void LogOpacityRefused(ILogger logger, OpacityStep reason);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar rolled the window up ({Path}).")]
+    private static partial void LogRolledUp(ILogger logger, ClickPath path);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions: the wheel on a title bar didn't roll the window up: FeatureOff.")]
+    private static partial void LogRollUpRefused(ILogger logger);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "Title Bar Actions sent a window to the back, but Windows didn't give the front to the next window.")]
     private static partial void LogFrontNotGiven(ILogger logger);
 
@@ -469,7 +527,7 @@ public enum TitleBarRefusal
     /// <summary>The window is always on top, which sending it to the back would take away.</summary>
     AlwaysOnTop,
 
-    /// <summary>The feature that carries out the action, Minimize to Tray, Hide Apps or Window Tabs, is off.</summary>
+    /// <summary>The feature that carries out the action, Minimize to Tray, Hide Apps, Window Tabs or Window Shading, is off.</summary>
     FeatureOff,
 
     /// <summary>Windows refused.</summary>

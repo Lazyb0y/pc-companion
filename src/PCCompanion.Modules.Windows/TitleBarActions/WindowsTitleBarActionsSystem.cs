@@ -60,6 +60,8 @@ public sealed class WindowsTitleBarActionsSystem(PointerHook hook, WindowRequest
 
     public bool TakeOutOfGroup(nint window) => requests.TakeOutOfGroup(window);
 
+    public bool RollUp(nint window) => requests.RollUp(window);
+
     public void OpacityChanged(nint window, int percent) => requests.OpacityChanged(window, percent);
 
     public void PlayWarningSound() => WarningSound.Play();
