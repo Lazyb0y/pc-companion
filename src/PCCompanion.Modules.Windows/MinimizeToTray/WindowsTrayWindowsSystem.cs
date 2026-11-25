@@ -29,6 +29,7 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     private readonly Action<Action> _guard;
     private readonly HideAppsMinimized? _hideApps;
     private readonly DropDownWindows? _dropDown;
+    private readonly ShadedWindows? _shaded;
     private readonly WindowTabsWindows? _tabs;
     private readonly WindowsAppIdentityReader _identity = new();
     private readonly Dictionary<uint, (WinEventHook Shows, WinEventHook Titles)> _watched = [];
@@ -38,7 +39,8 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     /// <param name="hideApps">The windows Hide Apps minimized, which stay on the taskbar.</param>
     /// <param name="dropDown">The drop-down windows, which Drop-down Apps hides and shows itself.</param>
     /// <param name="tabs">Window Tabs' tabs, which minimize and hide with their groups.</param>
-    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard, HideAppsMinimized? hideApps = null, DropDownWindows? dropDown = null, WindowTabsWindows? tabs = null)
+    /// <param name="shaded">The windows Window Shading rolled up, which it minimizes and brings back itself.</param>
+    public WindowsTrayWindowsSystem(MessageWindow? window, Action<Action> guard, HideAppsMinimized? hideApps = null, DropDownWindows? dropDown = null, WindowTabsWindows? tabs = null, ShadedWindows? shaded = null)
     {
         ArgumentNullException.ThrowIfNull(guard);
 
@@ -46,6 +48,7 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
         _guard = guard;
         _hideApps = hideApps;
         _dropDown = dropDown;
+        _shaded = shaded;
         _tabs = tabs;
     }
 
@@ -82,6 +85,8 @@ public sealed class WindowsTrayWindowsSystem : ITrayWindowsSystem, IDisposable
     public bool IsMinimizedByHideApps(nint window) => _hideApps?.Contains(window) ?? false;
 
     public bool IsDropDown(nint window) => _dropDown?.Contains(window) ?? false;
+
+    public bool IsRolledUp(nint window) => _shaded?.Contains(window) ?? false;
 
     public bool IsTab(nint window) => _tabs?.Contains(window) ?? false;
 

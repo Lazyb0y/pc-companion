@@ -71,6 +71,11 @@ internal sealed class FakeTrayWindowsSystem : ITrayWindowsSystem
 
     public bool IsMinimizedByHideApps(nint window) => MinimizedByHideApps.Contains(window);
 
+    /// <summary>The windows Window Shading rolled up.</summary>
+    public HashSet<nint> RolledUp { get; } = [];
+
+    public bool IsRolledUp(nint window) => RolledUp.Contains(window);
+
     /// <summary>The drop-down windows.</summary>
     public HashSet<nint> DropDown { get; } = [];
 

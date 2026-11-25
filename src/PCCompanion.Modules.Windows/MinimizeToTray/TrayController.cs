@@ -118,10 +118,12 @@ public sealed partial class TrayController : IDisposable
         }
 
         // Hide Apps brings back the windows it minimized, so they stay on the taskbar, Drop-down
-        // Apps hides a drop-down window that's minimized itself, and a tab minimizes its group.
+        // Apps hides a drop-down window that's minimized itself, a tab minimizes its group, and
+        // Window Shading minimizes the windows it rolls up.
         var leftAlone = _system.IsDropDown(window) ? SendOutcome.DropDownWindow
             : _system.IsTab(window) ? SendOutcome.WindowTab
             : _system.IsMinimizedByHideApps(window) ? SendOutcome.MinimizedByHideApps
+            : _system.IsRolledUp(window) ? SendOutcome.RolledUp
             : SendOutcome.Sent;
         if (leftAlone != SendOutcome.Sent)
         {
@@ -428,6 +430,12 @@ public sealed partial class TrayController : IDisposable
         if (_system.IsMinimizedByHideApps(window))
         {
             LogNotSent(_logger, SendWay.ListedApp, SendOutcome.MinimizedByHideApps);
+            return;
+        }
+
+        if (_system.IsRolledUp(window))
+        {
+            LogNotSent(_logger, SendWay.ListedApp, SendOutcome.RolledUp);
             return;
         }
 
