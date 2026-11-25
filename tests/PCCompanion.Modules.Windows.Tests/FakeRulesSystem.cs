@@ -74,7 +74,7 @@ internal sealed class FakeRulesSystem : IRulesSystem
 
     public Rectangle? Bounds(nint window) => _windows.TryGetValue(window, out var found) ? Inflate(found.Visible) : null;
 
-    public Rectangle? VisibleBounds(nint window) => _windows.TryGetValue(window, out var found) ? found.Visible : null;
+    public Rectangle? VisibleBounds(nint window) => _windows.TryGetValue(window, out var found) && !found.FrameGone ? found.Visible : null;
 
     public WindowPlacement? Placement(nint window) =>
         _windows.TryGetValue(window, out var found) ? new WindowPlacement(found.Normal, found.State, RestoresMaximized: false) : null;
@@ -212,6 +212,9 @@ internal sealed class FakeRuledWindow(nint handle)
     public nint Handle { get; } = handle;
 
     public Rectangle Visible { get; set; }
+
+    /// <summary>Whether its visible frame can't be read, as when its app destroys it as it's read.</summary>
+    public bool FrameGone { get; set; }
 
     public Rectangle Normal { get; set; }
 
