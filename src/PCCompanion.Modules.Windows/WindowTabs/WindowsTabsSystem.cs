@@ -178,6 +178,35 @@ public sealed class WindowsTabsSystem : ITabsSystem, IDisposable
         return found;
     }
 
+    public IReadOnlyList<nint> TaskbarWindows()
+    {
+        var found = new List<nint>();
+        var ownProcess = (uint)Environment.ProcessId;
+        TopLevelWindows.FindFrontToBack(place =>
+        {
+            if (!place.IsCloaked && !place.IsClickThrough && !place.IsNoActivate && !place.IsToolWindow
+                && TopLevelWindows.ProcessIdOf(place.Handle) != ownProcess && TopLevelWindows.MayHaveTaskbarButton(place.Handle))
+            {
+                found.Add(place.Handle);
+            }
+
+            return null;
+        });
+
+        return found;
+    }
+
+    public AppOfWindow? AppOf(nint window)
+    {
+        if (!TopLevelWindows.Exists(window))
+        {
+            return null;
+        }
+
+        var processId = TopLevelWindows.ProcessIdOf(window);
+        return new AppOfWindow(AppIdentity.OfWindow(window), AppIdentity.OfPackagedProcess(processId), AppIdentity.ProgramPath(processId), processId);
+    }
+
     public DisplayDetails? DisplayOf(nint window) => Displays.Of(window);
 
     public bool Place(nint window, Rectangle bounds) => TopLevelWindows.Place(window, bounds);
@@ -194,6 +223,8 @@ public sealed class WindowsTabsSystem : ITabsSystem, IDisposable
     public bool Hide(nint window) => TopLevelWindows.Hide(window);
 
     public bool ShowMinimized(nint window) => TopLevelWindows.ShowMinimized(window);
+
+    public bool RestoreWithoutActivating(nint window) => TopLevelWindows.RestoreWithoutActivating(window);
 
     public bool Activate(nint window) => TopLevelWindows.Activate(window);
 

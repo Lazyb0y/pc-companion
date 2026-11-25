@@ -481,6 +481,175 @@ public sealed class TabsControllerTests : IDisposable
     }
 
     [Fact]
+    public void AGroupIsKeptWithItsTabsAppsAndTheOneInFrontAsItChanges()
+    {
+        var changes = 0;
+        _controller.KeptChanged += (_, _) => changes++;
+
+        Group(Notes, Mail);
+
+        var kept = Assert.Single(_controller.Kept);
+        Assert.Equal([Tab(Notes), Tab(Mail)], kept.Tabs);
+        Assert.Equal(1, kept.Front);
+        Assert.True(changes > 0);
+
+        _strips[0].Choose(0);
+        Run();
+        Assert.Equal(0, Assert.Single(_controller.Kept).Front);
+
+        _controller.MoveForward();
+        Assert.Equal([Tab(Mail), Tab(Notes)], Assert.Single(_controller.Kept).Tabs);
+    }
+
+    [Fact]
+    public void AGroupThatEndsIsForgottenButOneThatEndsAsWindowTabsStopsIsKept()
+    {
+        Group(Notes, Mail);
+        _controller.TakeOutFront();
+        Run();
+        Assert.Empty(_controller.Kept);
+
+        Group(Notes, Mail);
+        _controller.ReleaseAll();
+        Run();
+
+        Assert.Empty(_controller.Groups);
+        Assert.Equal([Tab(Notes), Tab(Mail)], Assert.Single(_controller.Kept).Tabs);
+    }
+
+    [Fact]
+    public void TurningKeepGroupsOffForgetsTheGroupsAndTurningItOnKeepsTheOnesThereAre()
+    {
+        Group(Notes, Mail);
+
+        _controller.Apply(new WindowTabsSettings { Enabled = true, KeepGroups = false });
+        Assert.Empty(_controller.Kept);
+        _strips[0].Choose(0);
+        Run();
+        Assert.Empty(_controller.Kept);
+
+        _controller.Apply(new WindowTabsSettings { Enabled = true });
+        Assert.Equal(0, Assert.Single(_controller.Kept).Front);
+    }
+
+    [Fact]
+    public void AKeptGroupIsMadeAgainAtItsTabInFrontsPlaceOnceEachOfItsAppsHasAWindow()
+    {
+        const nint Paint = 42;
+        _system.ForegroundWindow = Other;
+        var ended = 0;
+        _controller.RegroupingEnded += (_, _) => ended++;
+
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(Mail), Tab(Paint)], Front = 1 }], Until(60));
+        Run();
+        Assert.Empty(_controller.Groups);
+        Assert.True(_controller.IsRegrouping);
+
+        _system.Add(Paint, new Rectangle(10, 10, 500, 400));
+        _controller.OnNewWindow(Paint);
+        Advance(TimeSpan.FromMilliseconds(150));
+
+        Assert.Equal([[Notes, Mail, Paint]], _controller.Groups);
+        Assert.Equal([Mail], _controller.Fronts);
+        Assert.Equal(new Rectangle(100, 100, 800, 500), _system[Mail].Visible);
+        Assert.True(_system[Mail].Shown);
+        Assert.False(_system[Notes].Shown);
+        Assert.False(_system[Paint].Shown);
+        Assert.Equal(new Rectangle(100, 100, 800, 500), _system[Notes].Visible);
+        Assert.True(_system.Marks.ContainsKey(Notes) && _system.Marks.ContainsKey(Paint));
+        Assert.Equal(Other, _system.ForegroundWindow);
+        Assert.True(_strips[0].Shown);
+        Assert.False(_controller.IsRegrouping);
+        Assert.Equal(1, ended);
+        Assert.Equal(1, Assert.Single(_controller.Kept).Front);
+    }
+
+    [Fact]
+    public void TheWindowInFrontStaysInFrontWhenItsGroupIsMadeAgain()
+    {
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(Mail)], Front = 1 }], Until(60));
+        Run();
+
+        Assert.Equal([Notes], _controller.Fronts);
+        Assert.True(_system[Notes].Shown);
+        Assert.False(_system[Mail].Shown);
+    }
+
+    [Fact]
+    public void OnceTheMinuteIsUpAKeptGroupIsMadeOfTheWindowsThere()
+    {
+        _system.ForegroundWindow = Other;
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(42), Tab(Mail)], Front = 1 }], Until(60));
+
+        for (var second = 0; second < 59; second++)
+        {
+            _clock.Advance(TimeSpan.FromSeconds(1));
+            Run();
+        }
+
+        Assert.Empty(_controller.Groups);
+        _clock.Advance(TimeSpan.FromSeconds(1));
+        Run();
+
+        // Without the window of the tab in front, the front-most window is in front.
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.Equal([Notes], _controller.Fronts);
+        Assert.False(_controller.IsRegrouping);
+    }
+
+    [Fact]
+    public void AMinimizedTabInFrontMakesAMinimizedGroupWhoseTabsComeBackRestored()
+    {
+        _system.ForegroundWindow = Other;
+        _system[Mail].Minimized = true;
+        _system[Notes].Minimized = true;
+
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(Mail)], Front = 1 }], Until(60));
+        Run();
+
+        Assert.Equal([Mail], _controller.Fronts);
+        Assert.True(_system[Mail].Minimized);
+        Assert.False(_system[Notes].Shown);
+        Assert.False(_strips[0].Shown);
+
+        _system[Mail].Minimized = false;
+        _controller.OnMinimizeEnd(Mail);
+        _strips[0].Choose(0);
+        Run();
+
+        Assert.True(_system[Notes].Shown);
+        Assert.False(_system[Notes].Minimized);
+        Assert.Contains($"show {Notes} Restored", _system.Calls);
+    }
+
+    [Fact]
+    public void WindowsInAGroupOrThatCantBeTabsArentTaken()
+    {
+        Group(Notes, Mail);
+        _system.ForegroundWindow = Other;
+        _system[Report].Refusal = TabRefusal.NotResizable;
+
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(Report)] }, new KeptGroup { Tabs = [Tab(Report), Tab(Other)] }], Until(1));
+        _clock.Advance(TimeSpan.FromSeconds(2));
+        Run();
+
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.False(_controller.IsRegrouping);
+    }
+
+    [Fact]
+    public void WithKeepGroupsOffNothingIsMadeAgain()
+    {
+        _controller.Apply(new WindowTabsSettings { Enabled = true, KeepGroups = false });
+
+        _controller.StartRegrouping([new KeptGroup { Tabs = [Tab(Notes), Tab(Mail)] }], Until(60));
+        Run();
+
+        Assert.Empty(_controller.Groups);
+        Assert.False(_controller.IsRegrouping);
+    }
+
+    [Fact]
     public void AnAppHidingItsTabInFrontTakesItOutAndTheNextShows()
     {
         GroupThree();
@@ -799,6 +968,10 @@ public sealed class TabsControllerTests : IDisposable
         _system.RunFrames();
         return _thread.Count > 0;
     }
+
+    private static KeptTab Tab(nint window) => new() { Program = FakeTabsSystem.AppProgram(window) };
+
+    private long Until(int seconds) => _clock.GetTimestamp() + TimeSpan.FromSeconds(seconds).Ticks;
 
     private void Advance(TimeSpan time)
     {

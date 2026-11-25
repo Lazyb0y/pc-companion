@@ -10,7 +10,8 @@ namespace PCCompanion.Modules.Windows.WindowTabs;
 
 /// <summary>
 /// Window Tabs' decisions: making groups from dropped windows and from the keyboard, switching their tabs, following
-/// what the windows' apps do, and never losing a hidden tab. See docs/features/windows/window-tabs.md.
+/// what the windows' apps do, keeping groups for after a restart and making them again, and never losing a hidden
+/// tab. See docs/features/windows/window-tabs.md.
 /// Use it on the feature's thread.
 /// </summary>
 public sealed partial class TabsController : IDisposable
@@ -22,6 +23,11 @@ public sealed partial class TabsController : IDisposable
     private static readonly TimeSpan RestTime = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan RevealLinger = TimeSpan.FromMilliseconds(500);
     private static readonly TimeSpan RevealAfterKeys = TimeSpan.FromSeconds(1.5);
+
+    // How often kept groups' windows are looked for while groups wait to be made again, and how
+    // soon after a window shows.
+    private static readonly TimeSpan RegroupInterval = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan RegroupSoon = TimeSpan.FromMilliseconds(100);
 
     // Frames to wait after the new tab shows before the old one hides, so there's never a frame
     // with neither (spike).
@@ -49,10 +55,17 @@ public sealed partial class TabsController : IDisposable
 
     // The scale of the display each hidden tab was hidden on.
     private readonly Dictionary<nint, uint> _hiddenDpi = [];
+
+    // Keep groups after a restart: the groups kept, and each tab's app, read once as it joins.
+    private readonly KeptGroups _kept = new();
+    private readonly Dictionary<nint, KeptTab?> _apps = [];
     private readonly List<ITimer> _timers = [];
     private WindowTabsSettings _settings = new();
     private Drag? _drag;
     private ITimer? _pointerTimer;
+    private ITimer? _regroupTimer;
+    private ITimer? _regroupSoon;
+    private long _regroupUntil;
     private nint _lastForeground;
     private bool _disposed;
 
@@ -106,11 +119,38 @@ public sealed partial class TabsController : IDisposable
     /// <summary>The window of each group's tab in front, in the order of <see cref="Groups"/>.</summary>
     public IReadOnlyList<nint> Fronts => [.. _groups.Select(group => group.Front >= 0 ? group.FrontWindow : 0)];
 
+    /// <summary>The groups kept for Keep groups after a restart, as <c>window-tabs.json</c> keeps them.</summary>
+    public IReadOnlyList<KeptGroup> Kept => _kept.Saved;
+
+    /// <summary>Whether groups read from the file wait to be made again, and windows that show are looked at.</summary>
+    public bool IsRegrouping => _regroupTimer is not null;
+
+    /// <summary>Raised on the feature's thread when what's kept for Keep groups after a restart changed.</summary>
+    public event EventHandler? KeptChanged;
+
+    /// <summary>Raised on the feature's thread when no group read from the file waits any more.</summary>
+    public event EventHandler? RegroupingEnded;
+
     public void Apply(WindowTabsSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
+        var keeping = _settings.KeepGroups;
         _settings = settings;
+
+        // Turning Keep groups after a restart off forgets every group; turning it on keeps the ones there are.
+        if (keeping && !settings.KeepGroups)
+        {
+            StopRegrouping();
+            if (_kept.ForgetAll())
+            {
+                KeptChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        else if (!keeping && settings.KeepGroups)
+        {
+            KeepAll();
+        }
     }
 
     /// <summary>
@@ -415,11 +455,53 @@ public sealed partial class TabsController : IDisposable
     }
 
     /// <summary>
+    /// Makes the groups read from <c>window-tabs.json</c> again, as Keep groups after a restart
+    /// does: each as soon as each of its apps has a shown or minimized window in no group, and at
+    /// <paramref name="until"/>, a timestamp of the controller's clock, with the windows there then
+    /// when there are at least two. It looks once a second, and soon after <see cref="OnNewWindow"/>.
+    /// </summary>
+    public void StartRegrouping(IReadOnlyList<KeptGroup?> groups, long until)
+    {
+        ArgumentNullException.ThrowIfNull(groups);
+
+        if (_disposed || !_settings.KeepGroups)
+        {
+            return;
+        }
+
+        var read = _kept.Load(groups);
+        LogKeptRead(_logger, read);
+        if (_kept.Waiting == 0)
+        {
+            return;
+        }
+
+        _regroupUntil = until;
+        _regroupTimer ??= _time.CreateTimer(_ => _post(Regroup), null, RegroupInterval, RegroupInterval);
+        Regroup();
+    }
+
+    /// <summary>A window showed, in any app: while groups wait to be made again, its app's may be there now.</summary>
+    public void OnNewWindow(nint window)
+    {
+        if (IsRegrouping && _regroupSoon is null && GroupOf(window) is null)
+        {
+            After(ref _regroupSoon, RegroupSoon, () =>
+            {
+                _regroupSoon = null;
+                Regroup();
+            });
+        }
+    }
+
+    /// <summary>
     /// Brings every hidden tab back on the taskbar, minimized, without taking the front, and ends
-    /// every group, as when PC Companion exits or the session ends. Returns how many came back.
+    /// every group, as when PC Companion exits or the session ends; the groups stay kept, so the
+    /// next start makes them again. Returns how many came back.
     /// </summary>
     public int ReleaseAll()
     {
+        StopRegrouping();
         var count = 0;
         foreach (var group in _groups.ToList())
         {
@@ -435,7 +517,7 @@ public sealed partial class TabsController : IDisposable
                 _system.Unmark(tab);
             }
 
-            EndGroup(group, "Window Tabs stopped");
+            EndGroup(group, "Window Tabs stopped", keep: true);
         }
 
         EndDrag();
@@ -476,6 +558,8 @@ public sealed partial class TabsController : IDisposable
         _timers.Clear();
         _pointerTimer?.Dispose();
         _pointerTimer = null;
+        _regroupTimer?.Dispose();
+        _regroupTimer = null;
         foreach (var group in _groups)
         {
             group.Strip.Dispose();
@@ -524,6 +608,7 @@ public sealed partial class TabsController : IDisposable
 
         (group.Tabs[to], group.Tabs[group.Front]) = (group.Tabs[group.Front], group.Tabs[to]);
         group.Front = to;
+        KeepAll();
         Reveal(group, RevealAfterKeys);
         ShowStrip(group);
         group.Strip.Announce(_position(to + 1, group.Tabs.Count));
@@ -709,7 +794,7 @@ public sealed partial class TabsController : IDisposable
             _expectShown.Add(window);
         }
 
-        _system.Show(window, group.Maximized ? TabShow.Maximized : _system.IsMaximized(window) ? TabShow.Restored : TabShow.AsItWas);
+        _system.Show(window, ShowFor(group, window));
         ShowOwned(group, window);
         _system.Activate(window);
         if (keys)
@@ -860,9 +945,8 @@ public sealed partial class TabsController : IDisposable
         }
     }
 
-    // After the tab in front closed or its app hid it, the next tab, or the one before the last,
-    // shows in its place.
-    // Shows the tab that takes the place of the one that left, and returns it, or 0 when none was left.
+    // After the tab in front closed, left or its app hid it, the next tab, or the one before the
+    // last, shows in its place. Returns that tab, or 0 when none was left.
     private nint ShowAfterLoss(Group group, int removed, bool activate)
     {
         if (group.Tabs.Count == 0)
@@ -888,12 +972,12 @@ public sealed partial class TabsController : IDisposable
 
         if (activate || group.Maximized)
         {
-            _system.Show(window, group.Maximized ? TabShow.Maximized : TabShow.AsItWas);
+            _system.Show(window, group.Maximized ? TabShow.Maximized : _system.IsMinimized(window) ? TabShow.Restored : TabShow.AsItWas);
             _system.Activate(window);
         }
         else
         {
-            _system.ShowWithoutActivating(window);
+            ShowQuietly(window);
         }
 
         ShowOwned(group, window);
@@ -932,7 +1016,7 @@ public sealed partial class TabsController : IDisposable
         _system.Unmark(window);
         if (!_system.IsVisible(window))
         {
-            _system.Show(window, TabShow.AsItWas);
+            _system.Show(window, _system.IsMinimized(window) ? TabShow.Restored : TabShow.AsItWas);
         }
 
         ShowOwned(group, window);
@@ -961,6 +1045,7 @@ public sealed partial class TabsController : IDisposable
         group.Tabs.Insert(to, window);
         group.Front = group.Tabs.IndexOf(front);
         group.Chosen = chosen == 0 ? -1 : group.Tabs.IndexOf(chosen);
+        KeepAll();
         ShowStrip(group);
     }
 
@@ -1061,6 +1146,7 @@ public sealed partial class TabsController : IDisposable
         _system.Unwatch(_system.ProcessIdOf(window));
         _expectShown.Remove(window);
         _expectHidden.Remove(window);
+        _apps.Remove(window);
     }
 
     // A group with one tab left ends, and that window stays an ordinary window.
@@ -1078,7 +1164,7 @@ public sealed partial class TabsController : IDisposable
             if (_system.Exists(last) && !_system.IsVisible(last))
             {
                 ShowOwned(group, last);
-                _system.ShowWithoutActivating(last);
+                ShowQuietly(last);
             }
         }
 
@@ -1086,11 +1172,18 @@ public sealed partial class TabsController : IDisposable
         return true;
     }
 
-    private void EndGroup(Group group, string why)
+    // A group that ends is forgotten, unless it ends as Window Tabs stops (keep), so the next start
+    // makes it again.
+    private void EndGroup(Group group, string why, bool keep = false)
     {
         if (!_groups.Remove(group))
         {
             return;
+        }
+
+        if (!keep && _kept.Forget(group.Key))
+        {
+            KeptChanged?.Invoke(this, EventArgs.Empty);
         }
 
         foreach (var tab in group.Tabs)
@@ -1385,6 +1478,164 @@ public sealed partial class TabsController : IDisposable
         }
 
         Volatile.Write(ref _hidden, [.. hidden]);
+        KeepAll();
+    }
+
+    // Keeps each group as it is now, while Keep groups after a restart is on.
+    private void KeepAll()
+    {
+        if (!_settings.KeepGroups)
+        {
+            return;
+        }
+
+        var changed = false;
+        foreach (var group in _groups.Where(group => group.Front >= 0))
+        {
+            changed |= _kept.Keep(group.Key, [.. group.Tabs.Select(AppOf)], group.Front);
+        }
+
+        if (changed)
+        {
+            KeptChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private KeptTab? AppOf(nint window)
+    {
+        if (!_apps.TryGetValue(window, out var app))
+        {
+            app = _system.AppOf(window) is { } found ? KeptTab.Of(found) : null;
+            _apps[window] = app;
+        }
+
+        return app;
+    }
+
+    // Looks for the windows of the groups that wait to be made again among the windows in no group
+    // that can be tabs, minimized ones too, and stops once none waits or the time is up.
+    private void Regroup()
+    {
+        if (!IsRegrouping)
+        {
+            return;
+        }
+
+        var final = _time.GetTimestamp() >= _regroupUntil;
+        var candidates = new List<(nint, AppOfWindow)>();
+        foreach (var window in _system.TaskbarWindows())
+        {
+            if (GroupOf(window) is null && _system.AppOf(window) is { } app && _kept.Wants(app)
+                && _system.Check(window) is TabRefusal.None or TabRefusal.Minimized)
+            {
+                candidates.Add((window, app));
+            }
+        }
+
+        foreach (var found in _kept.Match(candidates, final))
+        {
+            MakeAgain(found);
+        }
+
+        if (final || _kept.Waiting == 0)
+        {
+            StopRegrouping();
+        }
+    }
+
+    private void StopRegrouping()
+    {
+        if (_regroupTimer is null)
+        {
+            return;
+        }
+
+        _regroupTimer.Dispose();
+        _regroupTimer = null;
+        CancelTimer(ref _regroupSoon);
+        var notMade = _kept.Waiting;
+        LogRegroupingEnded(_logger, notMade);
+        _kept.StopWaiting();
+        RegroupingEnded?.Invoke(this, EventArgs.Empty);
+    }
+
+    // Makes a kept group again: the window of its tab in front stays as it is, minimized too, and
+    // the others hide behind it, in its place. The window the user is in stays in front, so it
+    // doesn't hide as they work in it.
+    private void MakeAgain(KeptRegroup found)
+    {
+        var inFront = found.Windows.ToList().IndexOf(_system.RootOwner(_system.ForegroundWindow));
+        var frontIndex = inFront >= 0 ? inFront : found.Front;
+        var front = found.Windows[frontIndex];
+        var group = NewGroup(front);
+        group.Key = found.Key;
+        group.Tabs.Clear();
+        group.Tabs.AddRange(found.Windows);
+        group.Front = frontIndex;
+        if (_system.IsMinimized(front))
+        {
+            group.Minimized = true;
+            if (_system.Placement(front) is { } placement)
+            {
+                group.Frame = Deflate(placement.NormalBounds, InsetsOf(front));
+                group.Maximized = placement.RestoresMaximized;
+            }
+        }
+        else
+        {
+            ReadPlace(group, front);
+        }
+
+        LogMadeAgain(_logger, found.Windows.Count);
+        foreach (var window in found.Windows.Where(window => window != front))
+        {
+            if (!_groups.Contains(group))
+            {
+                return;
+            }
+
+            RecordInsets(window);
+            _system.Watch(_system.ProcessIdOf(window));
+            PutAway(group, window);
+        }
+
+        if (!_groups.Contains(group))
+        {
+            return;
+        }
+
+        if (!group.Minimized)
+        {
+            Sync(group);
+        }
+        else if (!group.Frame.IsEmpty)
+        {
+            foreach (var tab in group.Tabs.Where(tab => tab != front))
+            {
+                _system.SetHiddenPlacementLater(tab, RectLike(tab, group.Frame));
+            }
+        }
+
+        UpdateShared();
+        ShowStrip(group);
+    }
+
+    // A minimized window, as a tab made again from a minimized window, comes back restored.
+    private TabShow ShowFor(Group group, nint window) =>
+        group.Maximized ? TabShow.Maximized
+        : _system.IsMaximized(window) || _system.IsMinimized(window) ? TabShow.Restored
+        : TabShow.AsItWas;
+
+    private void ShowQuietly(nint window)
+    {
+        if (_system.IsMinimized(window))
+        {
+            _system.RestoreWithoutActivating(window);
+        }
+        else
+        {
+            _system.ShowWithoutActivating(window);
+        }
     }
 
     private void RecordInsets(nint window)
@@ -1483,6 +1734,15 @@ public sealed partial class TabsController : IDisposable
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs: the window isn't a group's tab in front.")]
     private static partial void LogNotATab(ILogger logger);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs read {Count} kept groups to make again.")]
+    private static partial void LogKeptRead(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs made a kept group again, with {Count} tabs.")]
+    private static partial void LogMadeAgain(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs stopped looking for kept groups' windows; {Count} groups weren't made again.")]
+    private static partial void LogRegroupingEnded(ILogger logger, int count);
+
     private readonly record struct Insets(int Left, int Top, int Right, int Bottom);
 
     private sealed class Group(ITabStrip strip)
@@ -1491,6 +1751,9 @@ public sealed partial class TabsController : IDisposable
         public ITimer? FrameTimer;
 
         public ITabStrip Strip { get; } = strip;
+
+        /// <summary>What the group is kept by for Keep groups after a restart.</summary>
+        public object Key { get; set; } = new();
 
         public List<nint> Tabs { get; } = [];
 

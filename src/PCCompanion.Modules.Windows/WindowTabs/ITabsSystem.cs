@@ -69,6 +69,15 @@ public interface ITabsSystem
     /// </summary>
     IReadOnlyList<nint> WindowsBehind(nint window);
 
+    /// <summary>
+    /// The windows the taskbar shows, shown or minimized, the front-most first, other than windows
+    /// on another virtual desktop and PC Companion's own.
+    /// </summary>
+    IReadOnlyList<nint> TaskbarWindows();
+
+    /// <summary>The app the window belongs to, as the taskbar groups apps, or <see langword="null"/> when it's gone.</summary>
+    AppOfWindow? AppOf(nint window);
+
     /// <summary>The display a window is mostly on.</summary>
     DisplayDetails? DisplayOf(nint window);
 
@@ -85,6 +94,9 @@ public interface ITabsSystem
 
     /// <summary>Shows a window minimized on the taskbar, without activating it.</summary>
     bool ShowMinimized(nint window);
+
+    /// <summary>Shows a minimized window as it was before it was minimized, without activating it.</summary>
+    bool RestoreWithoutActivating(nint window);
 
     /// <summary>Brings a shown window, or its open dialog, to the front.</summary>
     bool Activate(nint window);

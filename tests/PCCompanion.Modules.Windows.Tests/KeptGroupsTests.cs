@@ -183,6 +183,18 @@ public sealed class KeptGroupsTests
     }
 
     [Fact]
+    public void AnAppIsWantedOnlyWhileAGroupWithATabOfItWaits()
+    {
+        _kept.Load([new KeptGroup { Tabs = [Mail, Notes] }]);
+
+        Assert.True(_kept.Wants(App(appId: "Mail")));
+        Assert.False(_kept.Wants(App(appId: "Report")));
+
+        _kept.StopWaiting();
+        Assert.False(_kept.Wants(App(appId: "Mail")));
+    }
+
+    [Fact]
     public void AGroupNotFoundIsKeptWhenTheWaitingStops()
     {
         _kept.Load([new KeptGroup { Tabs = [Mail, Notes] }]);

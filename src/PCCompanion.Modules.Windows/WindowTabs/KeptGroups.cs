@@ -230,6 +230,14 @@ public sealed class KeptGroups
         return found;
     }
 
+    /// <summary>Whether a group that waits to be made again has a tab of <paramref name="app"/>.</summary>
+    public bool Wants(AppOfWindow app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+
+        return _entries.Exists(entry => entry.Waiting && entry.Tabs.Any(tab => tab?.Matches(app) == true));
+    }
+
     /// <summary>No group waits any more, as once the 60 seconds are up; those not made stay kept.</summary>
     public void StopWaiting()
     {
