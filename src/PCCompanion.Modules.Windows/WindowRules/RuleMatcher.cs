@@ -216,6 +216,9 @@ public sealed record RuleOutcome
     /// <summary>The number in the list of the rule whose place this is, for a remembered place.</summary>
     public int PlaceRule { get; init; } = -1;
 
+    /// <summary>The key of the rule whose place this is, which a remembered place is kept by.</summary>
+    public string? PlaceKey { get; init; }
+
     public OpenChoice? Open { get; init; }
 
     public bool OnTop { get; init; }
@@ -224,6 +227,9 @@ public sealed record RuleOutcome
 
     /// <summary>The number in the list of the rule whose opacity this is, for an opacity from the wheel.</summary>
     public int OpacityRule { get; init; } = -1;
+
+    /// <summary>The key of the rule whose opacity this is, which an opacity from the wheel is kept by.</summary>
+    public string? OpacityKey { get; init; }
 
     public bool HideFromTaskbar { get; init; }
 
@@ -259,10 +265,12 @@ public sealed record RuleOutcome
                 Display = outcome.Display ?? rule.Display,
                 Place = outcome.Place ?? rule.Place,
                 PlaceRule = outcome.Place is null && rule.Place is not null ? index : outcome.PlaceRule,
+                PlaceKey = outcome.Place is null && rule.Place is not null ? RememberedPlaces.KeyOf(rule) : outcome.PlaceKey,
                 Open = outcome.Open ?? rule.KnownOpen,
                 OnTop = outcome.OnTop || rule.OnTop,
                 Opacity = outcome.Opacity ?? rule.Opacity,
                 OpacityRule = outcome.Opacity is null && rule.Opacity is not null ? index : outcome.OpacityRule,
+                OpacityKey = outcome.Opacity is null && rule.Opacity is not null ? RememberedPlaces.KeyOf(rule) : outcome.OpacityKey,
                 HideFromTaskbar = outcome.HideFromTaskbar || rule.HideFromTaskbar,
                 TabOf = outcome.TabOf ?? rule.TabOf,
                 ApplyOnDisplayChange = outcome.ApplyOnDisplayChange || rule.ApplyOnDisplayChange,

@@ -1,7 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Modules.Windows.WindowRules;
 using PCCompanion.Platform.Windows;
 using PCCompanion.Testing;
@@ -19,19 +21,22 @@ public sealed class WindowRulesFeatureTests : IDisposable
     private readonly RecordingLogger<WindowRulesFeature> _logger = new();
     private readonly string _pipe = SnapshotPipe.ForSession($"PCCompanion.WindowRules.Tests.{Guid.NewGuid():N}");
     private readonly FakeRulesSystem _left = new();
+    private readonly TemporaryFolder _folder = new();
     private readonly WindowRulesFeature _feature;
     private int _recoveries;
 
     public WindowRulesFeatureTests()
     {
-        _feature = new WindowRulesFeature(TimeProvider.System, _logger, new DropDownWindows(), new WindowTabsWindows(), new WindowRequests(), _pipe, () =>
-        {
-            _recoveries++;
-            return _left;
-        });
+        _feature = Create(isUacElevated: false);
     }
 
-    public void Dispose() => _feature.Dispose();
+    private string FilePath => System.IO.Path.Combine(_folder.FullPath, RememberedPlacesStore.FileName);
+
+    public void Dispose()
+    {
+        _feature.Dispose();
+        _folder.Dispose();
+    }
 
     [Fact]
     public void TheFeatureIsInTheWindowsModule()
@@ -65,6 +70,43 @@ public sealed class WindowRulesFeatureTests : IDisposable
         Assert.Empty(_left.Marks);
         Assert.Equal(1, _recoveries);
         Assert.Contains(_logger.Entries, entry => entry.Message.Contains("put back 1 windows", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TurningItOffDeletesWhatRulesRemember()
+    {
+        System.IO.File.WriteAllText(FilePath, """{ "version": 1, "rules": [] }""");
+
+        _feature.Apply(Section("""{ "enabled": false }"""));
+        _feature.Dispose();
+
+        Assert.False(System.IO.File.Exists(FilePath));
+    }
+
+    [Fact]
+    public void AsAdministratorAfterAUacPromptTheFileIsLeftAlone()
+    {
+        System.IO.File.WriteAllText(FilePath, "{ not json");
+        using var feature = Create(isUacElevated: true);
+
+        feature.Apply(Section($$"""{ "enabled": true, "rules": [ { "app": {{MadeUp}}, "onTop": true } ] }"""));
+        feature.Apply(Section("""{ "enabled": false }"""));
+        feature.Dispose();
+
+        Assert.True(System.IO.File.Exists(FilePath));
+        Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("remembered places can't be read", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void AFileThatCantBeReadIsLeftWithAWarning()
+    {
+        System.IO.File.WriteAllText(FilePath, "{ not json");
+
+        _feature.Apply(Section($$"""{ "enabled": true, "rules": [ { "app": {{MadeUp}}, "onTop": true } ] }"""));
+
+        Assert.True(SpinWait.SpinUntil(
+            () => _logger.Entries.Any(entry => entry.Level == LogLevel.Warning && entry.Message.Contains("remembered places can't be read", StringComparison.Ordinal)),
+            TimeSpan.FromSeconds(10)));
     }
 
     [Fact]
@@ -107,6 +149,13 @@ public sealed class WindowRulesFeatureTests : IDisposable
 
         Assert.Null(answer);
     }
+
+    private WindowRulesFeature Create(bool isUacElevated) =>
+        new(TimeProvider.System, _logger, new DataFolder(_folder.FullPath), isUacElevated, new DropDownWindows(), new WindowTabsWindows(), new WindowRequests(), _pipe, () =>
+        {
+            _recoveries++;
+            return _left;
+        });
 
     // The feature's thread serves the pipe once it has started.
     private async Task<WindowRulesAnswer?> AskUntilServedAsync(WindowRulesRequest request)

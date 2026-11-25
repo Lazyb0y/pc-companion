@@ -18,6 +18,9 @@ public sealed class WindowRequests
     // Read on Window Rules' thread.
     private volatile Func<nint, nint, bool>? _groupWith;
 
+    // Read on Title Bar Actions' thread.
+    private volatile Action<nint, int>? _opacityChanged;
+
     /// <summary>Sends <paramref name="window"/> to the tray. Returns false while Minimize to Tray doesn't run.</summary>
     public bool SendToTray(nint window) => _sendToTray?.Invoke(window) ?? false;
 
@@ -39,6 +42,15 @@ public sealed class WindowRequests
 
     /// <summary>Window Tabs sets how it groups a window with another as it starts, and null as it stops.</summary>
     public void SetGroupWith(Func<nint, nint, bool>? groupWith) => _groupWith = groupWith;
+
+    /// <summary>
+    /// Tells Window Rules that Title Bar Actions' wheel gave <paramref name="window"/> the opacity
+    /// <paramref name="percent"/>, for rules that remember it. Any thread can call it.
+    /// </summary>
+    public void OpacityChanged(nint window, int percent) => _opacityChanged?.Invoke(window, percent);
+
+    /// <summary>Window Rules sets how it hears of the wheel's opacity as it starts, and null as it stops.</summary>
+    public void SetOpacityChanged(Action<nint, int>? opacityChanged) => _opacityChanged = opacityChanged;
 
     /// <summary>Minimize to Tray sets how it takes a window as it starts, and null as it stops.</summary>
     public void SetTray(Func<nint, bool>? sendToTray) => _sendToTray = sendToTray;

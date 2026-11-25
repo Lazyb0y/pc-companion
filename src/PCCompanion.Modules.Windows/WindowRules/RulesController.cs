@@ -77,6 +77,9 @@ public sealed partial class RulesController : IDisposable
     /// <summary>The rules in use.</summary>
     public RuleSet Rules { get; private set; } = RuleSet.Empty;
 
+    /// <summary>The places and opacities rules remember, which the feature keeps in <c>window-rules.json</c>.</summary>
+    public RememberedPlaces Remembered { get; } = new();
+
     /// <summary>The windows rules matched or that wait for their title, for tests.</summary>
     public IReadOnlyCollection<nint> RuledWindows => _windows.Keys;
 
@@ -98,6 +101,12 @@ public sealed partial class RulesController : IDisposable
 
         var rules = new RuleSet(settings.Rules);
         Rules = rules;
+
+        // What deleted rules remembered is forgotten; rules that are off keep theirs.
+        Remembered.Keep(rules.Rules
+            .Where(rule => rule.Place is { KnownWhich: PlaceChoice.Remembered } || rule.Opacity is { KnownWhich: OpacityChoice.Wheel })
+            .Select(RememberedPlaces.KeyOf)
+            .ToHashSet(StringComparer.Ordinal));
         if (rules.LeftOut > 0)
         {
             LogRulesLeftOut(_logger, rules.LeftOut, WindowRulesSettings.MaximumRules);
@@ -232,6 +241,21 @@ public sealed partial class RulesController : IDisposable
         }
 
         _held.OnMinimizeStart(window);
+    }
+
+    /// <summary>The user finished moving or sizing a window: a rule that remembers keeps where it is.</summary>
+    public void OnMoveSizeEnd(nint window) => Record(window);
+
+    /// <summary>A window was hidden, as when it closes: a rule that remembers keeps where it was.</summary>
+    public void OnHidden(nint window) => Record(window);
+
+    /// <summary>Title Bar Actions' wheel gave a window an opacity: a rule whose opacity is the wheel's keeps it.</summary>
+    public void OnWheelOpacity(nint window, int percent)
+    {
+        if (_windows.TryGetValue(window, out var ruled) && ruled.Outcome is { Opacity.KnownWhich: OpacityChoice.Wheel, OpacityKey: { } key })
+        {
+            Remembered.RememberOpacity(key, Math.Clamp(percent, RuleOpacity.Lowest, 100));
+        }
     }
 
     /// <summary>A window was restored: one held off the taskbar loses its button again.</summary>
@@ -453,6 +477,53 @@ public sealed partial class RulesController : IDisposable
         }
     }
 
+    // Where a window of a rule that remembers is, as the user left it, maximized or not.
+    private void Record(nint window)
+    {
+        if (!_windows.TryGetValue(window, out var ruled) || ruled.Grouped
+            || ruled.Outcome is not { Place.KnownWhich: PlaceChoice.Remembered, PlaceKey: { } key }
+            || _system.Placement(window) is not { } placement)
+        {
+            return;
+        }
+
+        var frame = placement.State == WindowState.Normal
+            ? _system.VisibleBounds(window)
+            : RulePlacement.WithoutUsualBorders(placement.NormalBounds, _system.Dpi(window));
+        if (frame is not { } shown || _system.DisplayAt(shown) is not { } display)
+        {
+            return;
+        }
+
+        var maximized = placement.State == WindowState.Maximized || (placement.State == WindowState.Minimized && placement.RestoresMaximized);
+        Remembered.Remember(key, _system.DisplaySet, display.Display, shown, display.WorkArea, maximized);
+    }
+
+    // A window that would open exactly over another open window of the rule moves down and to
+    // the right, as many times as needed while it fits the work area.
+    private Rectangle Offset(RuledWindow ruled, Rectangle frame, Rectangle workArea, string key, uint dpi)
+    {
+        var step = (int)Math.Round(32 * dpi / 96.0);
+        var taken = _windows.Values
+            .Where(other => other != ruled && other.Outcome.PlaceKey == key && _system.Exists(other.Window))
+            .Select(other => _system.VisibleBounds(other.Window))
+            .OfType<Rectangle>()
+            .ToList();
+        var placed = frame;
+        while (taken.Contains(placed))
+        {
+            var next = new Rectangle(placed.X + step, placed.Y + step, placed.Width, placed.Height);
+            if (next.Right > workArea.Right || next.Bottom > workArea.Bottom)
+            {
+                return frame;
+            }
+
+            placed = next;
+        }
+
+        return placed;
+    }
+
     // The front-most other window of the app, shown on the desktop that's showing.
     private nint TabTarget(nint window, ListedApp app)
     {
@@ -467,9 +538,13 @@ public sealed partial class RulesController : IDisposable
         return 0;
     }
 
-    // A fixed opacity; one from the wheel comes with remembered places.
-    private static int? OpacityOf(RuleOutcome outcome) =>
-        outcome.Opacity is { KnownWhich: OpacityChoice.Fixed } opacity ? Math.Clamp(opacity.Percent, RuleOpacity.Lowest, RuleOpacity.Highest) : null;
+    // A fixed opacity, or the one the wheel last gave a window of the rule, if any.
+    private int? OpacityOf(RuleOutcome outcome) => outcome.Opacity?.KnownWhich switch
+    {
+        OpacityChoice.Fixed => Math.Clamp(outcome.Opacity.Percent, RuleOpacity.Lowest, RuleOpacity.Highest),
+        OpacityChoice.Wheel when outcome.OpacityKey is { } key => Remembered.OpacityOf(key),
+        _ => null,
+    };
 
     // The rules changed: what a window gets is worked out again from its title now, without placing it.
     private void Rematch(RuledWindow ruled)
@@ -529,6 +604,16 @@ public sealed partial class RulesController : IDisposable
             _ => null,
         } ?? from;
 
+        // A remembered place is on the display it was left on, or the main one when that's gone.
+        Rectangle? remembered = null;
+        var open = outcome.Open;
+        if (outcome is { Place.KnownWhich: PlaceChoice.Remembered, PlaceKey: { } key } && Remembered.Find(key, _system.DisplaySet) is { Display: { } display } place)
+        {
+            to = _system.WorkAreaOf(display) ?? _system.MainWorkArea ?? from;
+            remembered = Offset(ruled, place.FrameIn(to), to, key, dpi);
+            open ??= place.Maximized ? OpenChoice.Maximized : null;
+        }
+
         // A maximized or minimized window is placed by its normal rectangle, without its borders.
         var visible = placement.State == WindowState.Normal ? _system.VisibleBounds(window) : RulePlacement.WithoutUsualBorders(placement.NormalBounds, dpi);
         if (visible is not { } current)
@@ -536,9 +621,9 @@ public sealed partial class RulesController : IDisposable
             return;
         }
 
-        var frame = RulePlacement.Frame(current, from, to, outcome.Place, movesDisplay: to != from);
+        var frame = RulePlacement.Frame(current, from, to, outcome.Place, movesDisplay: to != from, remembered);
         var normal = frame is { } placed ? RulePlacement.WithUsualBorders(placed, dpi) : placement.NormalBounds;
-        switch (outcome.Open)
+        switch (open)
         {
             case OpenChoice.Maximized:
                 _system.SetPlacement(window, normal, WindowState.Maximized);

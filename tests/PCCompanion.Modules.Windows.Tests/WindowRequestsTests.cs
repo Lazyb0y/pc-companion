@@ -18,6 +18,20 @@ public sealed class WindowRequestsTests
     }
 
     [Fact]
+    public void WindowRulesHearsOfTheWheelsOpacityUntilItStops()
+    {
+        var heard = new List<(nint, int)>();
+        _requests.OpacityChanged(1, 50);
+
+        _requests.SetOpacityChanged((window, percent) => heard.Add((window, percent)));
+        _requests.OpacityChanged(2, 60);
+        _requests.SetOpacityChanged(null);
+        _requests.OpacityChanged(3, 70);
+
+        Assert.Equal([(2, 60)], heard);
+    }
+
+    [Fact]
     public void WindowTabsGroupsAWindowWithAnotherUntilItStops()
     {
         var grouped = new List<(nint, nint)>();

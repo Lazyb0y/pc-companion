@@ -288,6 +288,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 - `open`: `Normal`, `Maximized` or `Minimized`; left out, the app chooses.
 - `opacity.which`: `Fixed` with `percent`, from 20 to 90 in steps of 10, or `Wheel`.
 - An action that's left out, or `false`, is off.
+- `id`: a key the settings app gives each rule as it's added, which what the rule remembers is kept by, so renaming or moving it keeps that; a hand-written rule without one is known by its name.
 
 ## Not included
 

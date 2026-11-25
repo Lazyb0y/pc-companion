@@ -71,6 +71,15 @@ public interface IRulesSystem
     /// <summary>The work area of the display with the pointer.</summary>
     Rectangle? PointerWorkArea { get; }
 
+    /// <summary>
+    /// The set of connected displays, by their models and serial numbers, which places are
+    /// remembered for; the same displays give the same set on any connection.
+    /// </summary>
+    string DisplaySet { get; }
+
+    /// <summary>The display a frame is mostly on, as a rule keeps a chosen one, with its work area.</summary>
+    (RuleDisplay Display, Rectangle WorkArea)? DisplayAt(Rectangle frame);
+
     /// <summary>A chosen display's work area, or <see langword="null"/> when it isn't connected.</summary>
     Rectangle? WorkAreaOf(RuleDisplay display);
 

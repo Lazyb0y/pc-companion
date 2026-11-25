@@ -132,5 +132,10 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
         return TabsRun;
     }
 
+    /// <summary>The opacities the wheel gave windows, as Window Rules hears of them.</summary>
+    public List<(nint Window, int Percent)> Opacities { get; } = [];
+
+    public void OpacityChanged(nint window, int percent) => Opacities.Add((window, percent));
+
     public void PlayWarningSound() => Sounds++;
 }
