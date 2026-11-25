@@ -306,6 +306,34 @@ public sealed class RulesControllerTests : IDisposable
     }
 
     [Fact]
+    public void AfterTheDisplaysChangeTheWindowsOfRulesThatSaySoArePlacedAgain()
+    {
+        Use(
+            new WindowRule { App = Mail, Title = new RuleTitle { Text = "Again" }, Place = Place("RightHalf"), ApplyOnDisplayChange = true },
+            new WindowRule { App = Mail, Place = Place("LeftHalf") });
+        _system.Add(New, Start, title: "Again");
+        _system.Add(3, Start, title: "Again").Arranged = true;
+        _system.Add(4, Start, title: "Once");
+        foreach (var window in new nint[] { New, 3, 4 })
+        {
+            _controller.OnShown(window);
+            _controller.OnMoveSizeStart(window);
+            _system[window].Visible = Start;
+        }
+
+        _controller.OnDisplaysChanged();
+        Run(TimeSpan.FromSeconds(1));
+        _controller.OnDisplaysChanged();
+        Run(TimeSpan.FromSeconds(1));
+        Assert.Equal(Start, _system[New].Visible);
+        Run(TimeSpan.FromSeconds(1));
+
+        Assert.Equal(RightHalf, _system[New].Visible);
+        Assert.Equal(Start, _system[3].Visible);
+        Assert.Equal(Start, _system[4].Visible);
+    }
+
+    [Fact]
     public void RulesThatCantBeUsedAreLogged()
     {
         Use(new WindowRule { App = Mail }, new WindowRule { App = Mail, OnTop = true });

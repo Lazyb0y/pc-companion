@@ -48,11 +48,15 @@ public sealed partial class RulesController : IDisposable
     // Windows that rules matched, or that wait for their title, until they close.
     private readonly Dictionary<nint, RuledWindow> _windows = [];
 
+    /// <summary>How long after the displays last changed the windows are placed again.</summary>
+    public static readonly TimeSpan DisplayWait = TimeSpan.FromSeconds(2);
+
     // How long after Explorer restarts the buttons it added again are removed.
     private static readonly TimeSpan TaskbarSettle = TimeSpan.FromSeconds(2);
 
     private readonly HeldActions _held;
     private ITimer? _taskbarCreated;
+    private ITimer? _displaysChanged;
     private bool _started;
 
     public RulesController(IRulesSystem system, TimeProvider time, Action<Action> post, ILogger logger)
@@ -246,6 +250,17 @@ public sealed partial class RulesController : IDisposable
         _taskbarCreated = _time.CreateTimer(_ => _post(_held.OnTaskbarCreated), null, TaskbarSettle, Timeout.InfiniteTimeSpan);
     }
 
+    /// <summary>
+    /// The displays changed, as when one is connected or disconnected or a display profile
+    /// switched: 2 seconds after the last change, the open windows of rules with Apply again when
+    /// the displays change are placed again, except snapped and full-screen windows.
+    /// </summary>
+    public void OnDisplaysChanged()
+    {
+        _displaysChanged?.Dispose();
+        _displaysChanged = _time.CreateTimer(_ => _post(PlaceAgain), null, DisplayWait, Timeout.InfiniteTimeSpan);
+    }
+
     /// <summary>Puts back what rules hold at once, from any thread, as the host crashes. Returns how many windows.</summary>
     public int ReleaseNow() => _held.ReleaseAll();
 
@@ -304,6 +319,8 @@ public sealed partial class RulesController : IDisposable
         _held.ReleaseAll();
         _taskbarCreated?.Dispose();
         _taskbarCreated = null;
+        _displaysChanged?.Dispose();
+        _displaysChanged = null;
         foreach (var ruled in _windows.Values)
         {
             EndSettling(ruled);
@@ -383,6 +400,29 @@ public sealed partial class RulesController : IDisposable
         }
 
         Hold(ruled);
+    }
+
+    private void PlaceAgain()
+    {
+        var placed = 0;
+        foreach (var ruled in _windows.Values.ToList())
+        {
+            var outcome = ruled.Outcome;
+            if (ruled.Grouped || !outcome.ApplyOnDisplayChange || !outcome.Places || !_system.Exists(ruled.Window)
+                || _system.IsArranged(ruled.Window) || _system.IsFullScreen(ruled.Window))
+            {
+                continue;
+            }
+
+            ruled.UserMoved = false;
+            Place(ruled, outcome);
+            placed++;
+        }
+
+        if (placed > 0)
+        {
+            LogPlacedAgain(_logger, placed);
+        }
     }
 
     // A window open as the rules start: it gets what its rules hold, without being placed.
@@ -663,6 +703,9 @@ public sealed partial class RulesController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules applied rules {Rules} to a window: {Actions}.")]
     private static partial void LogApplied(ILogger logger, string rules, string actions);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The displays changed, so Window Rules placed {Count} windows again.")]
+    private static partial void LogPlacedAgain(ILogger logger, int count);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules asked Window Tabs to open a window as a tab.")]
     private static partial void LogGrouped(ILogger logger);
