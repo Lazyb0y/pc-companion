@@ -14,6 +14,11 @@ namespace PCCompanion.Modules.Windows.WindowRules;
 /// </summary>
 public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
 {
+    /// <summary>The mark's name, which PC Companion keeps from one version to the next.</summary>
+    public const string MarkName = "PCCompanion.WindowRules";
+
+    private static readonly Lazy<WindowMark> Marks = new(() => new WindowMark(MarkName));
+
     // Within the host's wait for the feature's thread as it exits.
     private static readonly TimeSpan PlacementWait = TimeSpan.FromSeconds(1.5);
 
@@ -127,8 +132,51 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
 
     public bool Place(nint window, Rectangle bounds) => TopLevelWindows.Place(window, bounds);
 
-    // One placement at a time for each window, after the one before it, as each waits for the app.
-    public void SetPlacement(nint window, Rectangle normalBounds, WindowState show)
+    public void SetPlacement(nint window, Rectangle normalBounds, WindowState show) => Queue(window, () => TopLevelWindows.SetPlacement(window, normalBounds, show));
+
+    public bool IsMinimized(nint window) => TopLevelWindows.IsMinimized(window);
+
+    public bool IsTopmost(nint window) => TopLevelWindows.IsTopmost(window);
+
+    public bool SetTopmost(nint window, bool topmost) => TopLevelWindows.SetTopmost(window, topmost);
+
+    public void RemoveTaskbarButton(nint window) => Queue(window, () => TaskbarButtons.Remove(window));
+
+    public void AddTaskbarButton(nint window) => Queue(window, () => TaskbarButtons.Add(window));
+
+    public bool IsLayered(nint window) => LayeredStyle.IsLayered(window);
+
+    public LayeredAttributes? LayeredAttributes(nint window) => LayeredStyle.Read(window);
+
+    // Giving a window the layered style waits for its app; its opacity is set once it has the style.
+    public void SetOpacity(nint window, LayeredAttributes attributes, bool addLayered) => Queue(window, () =>
+    {
+        if (!addLayered || LayeredStyle.SetLayered(window, true))
+        {
+            LayeredStyle.Set(window, attributes);
+        }
+    });
+
+    public void PutBackOpacity(nint window, bool removeLayered, LayeredAttributes? own) => Queue(window, () =>
+    {
+        LayeredStyle.Set(window, own ?? new LayeredAttributes(0, 255, LayeredEffects.Alpha));
+        if (removeLayered)
+        {
+            LayeredStyle.SetLayered(window, false);
+        }
+    });
+
+    public bool Mark(nint window, nint value) => Marks.Value.Set(window, value);
+
+    public nint MarkOf(nint window) => Marks.Value.Value(window);
+
+    public void Unmark(nint window) => Marks.Value.Remove(window);
+
+    public IReadOnlyList<nint> Marked() => Marks.Value.FindMarked();
+
+    // Calls that wait for an app or for Explorer run on the thread pool, one at a time for each
+    // window, after the one before it, so they happen in the order they were asked for.
+    private void Queue(nint window, Action work)
     {
         foreach (var done in _placements.Where(placement => placement.Value.IsCompleted).Select(placement => placement.Key).ToList())
         {
@@ -136,7 +184,7 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
         }
 
         var before = _placements.GetValueOrDefault(window) ?? Task.CompletedTask;
-        _placements[window] = before.ContinueWith(_ => TopLevelWindows.SetPlacement(window, normalBounds, show), TaskScheduler.Default);
+        _placements[window] = before.ContinueWith(_ => work(), TaskScheduler.Default);
     }
 
     public void Follow(nint window)

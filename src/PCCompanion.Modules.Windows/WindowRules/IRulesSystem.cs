@@ -87,6 +87,48 @@ public interface IRulesSystem
     /// </summary>
     void SetPlacement(nint window, Rectangle normalBounds, WindowState show);
 
+    bool IsMinimized(nint window);
+
+    bool IsTopmost(nint window);
+
+    /// <summary>Puts the window on top of the windows that aren't, or takes it off, without waiting.</summary>
+    bool SetTopmost(nint window, bool topmost);
+
+    /// <summary>Removes the window's taskbar button, which also takes it out of Alt + Tab, on the thread pool.</summary>
+    void RemoveTaskbarButton(nint window);
+
+    /// <summary>Adds the window's taskbar button back, on the thread pool.</summary>
+    void AddTaskbarButton(nint window);
+
+    /// <summary>Whether the window has the layered style.</summary>
+    bool IsLayered(nint window);
+
+    /// <summary>The opacity and color key a layered window shows with, or <see langword="null"/> when it draws itself.</summary>
+    LayeredAttributes? LayeredAttributes(nint window);
+
+    /// <summary>
+    /// Shows the window with <paramref name="attributes"/>, first giving it the layered style when
+    /// <paramref name="addLayered"/>, which waits for the app, on the thread pool.
+    /// </summary>
+    void SetOpacity(nint window, LayeredAttributes attributes, bool addLayered);
+
+    /// <summary>
+    /// Puts the window's opacity back: its own <paramref name="own"/> attributes, and without the
+    /// layered style when <paramref name="removeLayered"/>, on the thread pool.
+    /// </summary>
+    void PutBackOpacity(nint window, bool removeLayered, LayeredAttributes? own);
+
+    /// <summary>Marks the window with <paramref name="value"/>, which says what rules changed. Returns false when Windows refused.</summary>
+    bool Mark(nint window, nint value);
+
+    /// <summary>The value of the window's mark, or 0 when it has none.</summary>
+    nint MarkOf(nint window);
+
+    void Unmark(nint window);
+
+    /// <summary>The top-level windows that carry the mark.</summary>
+    IReadOnlyList<nint> Marked();
+
     /// <summary>Hears of the window's moves through <see cref="WindowMoved"/>, until <see cref="Unfollow"/>.</summary>
     void Follow(nint window);
 

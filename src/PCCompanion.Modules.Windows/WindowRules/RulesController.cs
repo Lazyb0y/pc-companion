@@ -48,6 +48,11 @@ public sealed partial class RulesController : IDisposable
     // Windows that rules matched, or that wait for their title, until they close.
     private readonly Dictionary<nint, RuledWindow> _windows = [];
 
+    // How long after Explorer restarts the buttons it added again are removed.
+    private static readonly TimeSpan TaskbarSettle = TimeSpan.FromSeconds(2);
+
+    private readonly HeldActions _held;
+    private ITimer? _taskbarCreated;
     private bool _started;
 
     public RulesController(IRulesSystem system, TimeProvider time, Action<Action> post, ILogger logger)
@@ -61,6 +66,7 @@ public sealed partial class RulesController : IDisposable
         _time = time;
         _post = post;
         _logger = logger;
+        _held = new HeldActions(system);
         _system.WindowMoved += (_, window) => OnMoved(window);
     }
 
@@ -70,13 +76,17 @@ public sealed partial class RulesController : IDisposable
     /// <summary>The windows rules matched or that wait for their title, for tests.</summary>
     public IReadOnlyCollection<nint> RuledWindows => _windows.Keys;
 
+    /// <summary>The windows that rules hold on top, translucent or off the taskbar, for tests.</summary>
+    public IReadOnlyCollection<nint> HeldWindows => _held.Windows;
+
     /// <summary>Whether <paramref name="window"/>'s app moves are still watched, for tests.</summary>
     public bool IsSettling(nint window) => _windows.TryGetValue(window, out var ruled) && ruled.Settling;
 
     /// <summary>
     /// Uses new rules. The first time, and whenever the rules start again after there were none,
-    /// the windows open now count as not new, so they're never placed without Apply now. Windows
-    /// already matched are matched again by their title now, without being placed.
+    /// the windows open now count as not new, so they're never placed without Apply now, but they
+    /// get the actions their rules hold. Windows already matched are matched again by their title
+    /// now, without being placed.
     /// </summary>
     public void Apply(WindowRulesSettings settings)
     {
@@ -106,6 +116,7 @@ public sealed partial class RulesController : IDisposable
             foreach (var window in _system.TaskbarWindows())
             {
                 _seen.Add(window);
+                Adopt(window);
             }
         }
 
@@ -186,6 +197,7 @@ public sealed partial class RulesController : IDisposable
     /// <summary>A window closed: it's forgotten, as Windows reuses handles.</summary>
     public void OnDestroyed(nint window)
     {
+        _held.Forget(window);
         _seen.Remove(window);
         _cloaked.Remove(window);
         if (_windows.Remove(window, out var ruled))
@@ -204,14 +216,44 @@ public sealed partial class RulesController : IDisposable
         }
     }
 
-    /// <summary>A window started to minimize: its place isn't watched any more.</summary>
+    /// <summary>
+    /// A window started to minimize: its place isn't watched any more, and one held off the
+    /// taskbar gets its button back while it's minimized.
+    /// </summary>
     public void OnMinimizeStart(nint window)
     {
         if (_windows.TryGetValue(window, out var ruled))
         {
             EndSettling(ruled);
         }
+
+        _held.OnMinimizeStart(window);
     }
+
+    /// <summary>A window was restored: one held off the taskbar loses its button again.</summary>
+    public void OnMinimizeEnd(nint window) => _held.OnMinimizeEnd(window);
+
+    /// <summary>A window came to the front: one held on top whose app took it off is put back.</summary>
+    public void OnForeground(nint window) => _held.OnForeground(window);
+
+    /// <summary>
+    /// Explorer restarted and adds every window's button again: 2 seconds later, the windows held
+    /// off the taskbar lose theirs again.
+    /// </summary>
+    public void OnTaskbarCreated()
+    {
+        _taskbarCreated?.Dispose();
+        _taskbarCreated = _time.CreateTimer(_ => _post(_held.OnTaskbarCreated), null, TaskbarSettle, Timeout.InfiniteTimeSpan);
+    }
+
+    /// <summary>Puts back what rules hold at once, from any thread, as the host crashes. Returns how many windows.</summary>
+    public int ReleaseNow() => _held.ReleaseAll();
+
+    /// <summary>
+    /// Puts back the windows left marked by a PC Companion that ended without putting them back:
+    /// off the top, their own opacity and their taskbar buttons. Returns how many.
+    /// </summary>
+    public static int Recover(IRulesSystem system) => HeldActions.Recover(system);
 
     /// <summary>
     /// Applies <paramref name="rule"/>, as the page shows it, to the open windows it matches,
@@ -246,6 +288,7 @@ public sealed partial class RulesController : IDisposable
                 Place(ruled, outcome);
             }
 
+            _held.Apply(window, outcome.OnTop, OpacityOf(outcome), outcome.HideFromTaskbar);
             applied++;
         }
 
@@ -255,9 +298,12 @@ public sealed partial class RulesController : IDisposable
 
     public void Dispose() => Stop();
 
-    // With no rules to use, nothing is watched, and the windows open when rules start again count as not new.
+    // With no rules to use, nothing is watched or held, and the windows open when rules start again count as not new.
     private void Stop()
     {
+        _held.ReleaseAll();
+        _taskbarCreated?.Dispose();
+        _taskbarCreated = null;
         foreach (var ruled in _windows.Values)
         {
             EndSettling(ruled);
@@ -322,11 +368,40 @@ public sealed partial class RulesController : IDisposable
 
         var placementChanged = before is null
             || before.Display != outcome.Display || before.Place != outcome.Place || before.Open != outcome.Open;
-        if (outcome.Places && placementChanged && !ruled.UserMoved)
+        if (outcome.Places && placementChanged && !ruled.UserMoved && !ruled.WasOpen)
         {
             Place(ruled, outcome);
         }
+
+        Hold(ruled);
     }
+
+    // A window open as the rules start: it gets what its rules hold, without being placed.
+    private void Adopt(nint window)
+    {
+        if (_system.Check(window) != RuleRefusal.None || _system.Facts(window) is not { } facts)
+        {
+            return;
+        }
+
+        var match = Rules.Match(facts);
+        if (match.Matched.Count == 0)
+        {
+            return;
+        }
+
+        var ruled = Ruled(window);
+        ruled.Matched = match.Matched;
+        ruled.Outcome = Rules.Combine(match.Matched);
+        Hold(ruled);
+    }
+
+    private void Hold(RuledWindow ruled) =>
+        _held.Apply(ruled.Window, ruled.Outcome.OnTop, OpacityOf(ruled.Outcome), ruled.Outcome.HideFromTaskbar);
+
+    // A fixed opacity; one from the wheel comes with remembered places.
+    private static int? OpacityOf(RuleOutcome outcome) =>
+        outcome.Opacity is { KnownWhich: OpacityChoice.Fixed } opacity ? Math.Clamp(opacity.Percent, RuleOpacity.Lowest, RuleOpacity.Highest) : null;
 
     // The rules changed: what a window gets is worked out again from its title now, without placing it.
     private void Rematch(RuledWindow ruled)
@@ -338,8 +413,9 @@ public sealed partial class RulesController : IDisposable
 
         var match = Rules.Match(facts);
         ruled.Matched = match.Matched;
-        ruled.Waiting = Elapsed(ruled.ReadyAt) <= TitleWait ? match.Waiting : [];
+        ruled.Waiting = !ruled.WasOpen && Elapsed(ruled.ReadyAt) <= TitleWait ? match.Waiting : [];
         ruled.Outcome = Rules.Combine(match.Matched);
+        Hold(ruled);
         if (ruled.Matched.Count == 0 && ruled.Waiting.Count == 0)
         {
             EndSettling(ruled);
@@ -361,7 +437,7 @@ public sealed partial class RulesController : IDisposable
     {
         if (!_windows.TryGetValue(window, out var ruled))
         {
-            ruled = new RuledWindow(window, _time.GetTimestamp());
+            ruled = new RuledWindow(window, _time.GetTimestamp()) { WasOpen = true };
             _windows[window] = ruled;
         }
 
@@ -602,6 +678,9 @@ public sealed partial class RulesController : IDisposable
         public int Applies { get; set; }
 
         public bool UserMoved { get; set; }
+
+        // Open before the rules started, or applied to with Apply now: never placed by a late title.
+        public bool WasOpen { get; init; }
 
         public bool Settling { get; set; }
 

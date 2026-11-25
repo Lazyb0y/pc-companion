@@ -66,7 +66,22 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
 
     protected override void OnStopped() => LogStopped(_logger);
 
-    protected override void OnFailed(Exception exception) => LogFailed(_logger, exception);
+    /// <summary>Puts back what rules hold at once, from any thread, as the host crashes.</summary>
+    public void ReleaseNow() => _ruler?.Controller.ReleaseNow();
+
+    // A failure puts back what rules hold, as stopping does.
+    protected override void OnFailed(Exception exception)
+    {
+        LogFailed(_logger, exception);
+        try
+        {
+            _ruler?.Controller.ReleaseNow();
+        }
+        catch (Exception release)
+        {
+            LogReleaseFailed(_logger, release);
+        }
+    }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules started on its own thread.")]
     private static partial void LogStarted(ILogger logger);
@@ -79,6 +94,12 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Window Rules failed, so it's stopped until PC Companion restarts.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Window Rules couldn't put back the windows it changed after a failure.")]
+    private static partial void LogReleaseFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules put back {Count} windows: {Why}.")]
+    private static partial void LogReleased(ILogger logger, int count, string why);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Window Rules can't serve the settings app's pipe (error {ErrorCode}), so Apply now doesn't work.")]
     private static partial void LogPipeNotServed(ILogger logger, int errorCode);
@@ -94,6 +115,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         private readonly WindowsRulesSystem _system;
         private readonly List<WinEventHook> _hooks = [];
         private readonly RequestPipe? _pipe;
+        private readonly uint _taskbarCreated = MessageWindow.RegisterMessage("TaskbarCreated");
 
         public Ruler(WindowRulesThread owner, MessageWindow window)
         {
@@ -123,10 +145,17 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             LogApplied(_owner._logger, Controller.Rules.Matchers.Count, Controller.IsWatching);
         }
 
+        // Every window rules changed gets back what it had before the hooks and the window go.
         public void Dispose()
         {
             _pipe?.Dispose();
             Unhook();
+            var released = Controller.ReleaseNow();
+            if (released > 0)
+            {
+                LogReleased(_owner._logger, released, "Window Rules stopped");
+            }
+
             Controller.Dispose();
             _system.Dispose();
             _owner._ruler = null;
@@ -155,7 +184,18 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             Add(WinEventHook.ObjectUncloakedEvent, WinEventHook.ObjectUncloakedEvent, (_, window) => Controller.OnUncloaked(window));
             Add(WinEventHook.ObjectNameChangeEvent, WinEventHook.ObjectNameChangeEvent, (_, window) => Controller.OnTitleChanged(window));
             Add(WinEventHook.MoveSizeStartEvent, WinEventHook.MoveSizeStartEvent, (_, window) => Controller.OnMoveSizeStart(window));
-            Add(WinEventHook.MinimizeStartEvent, WinEventHook.MinimizeStartEvent, (_, window) => Controller.OnMinimizeStart(window));
+            Add(WinEventHook.MinimizeStartEvent, WinEventHook.MinimizeEndEvent, (type, window) =>
+            {
+                if (type == WinEventHook.MinimizeStartEvent)
+                {
+                    Controller.OnMinimizeStart(window);
+                }
+                else
+                {
+                    Controller.OnMinimizeEnd(window);
+                }
+            });
+            Add(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, (_, window) => Controller.OnForeground(window));
             _window.MessageReceived += OnMessageReceived;
         }
 
@@ -187,12 +227,17 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             _hooks.Add(hook);
         }
 
-        // The displays are read again after they change, for rules with a chosen display.
+        // The displays are read again after they change, for rules with a chosen display, and
+        // buttons Explorer adds again as it restarts are removed again.
         private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
         {
             if (Displays.IsChangeMessage(e.Message))
             {
                 _owner.Guard(() => _system.RefreshDisplays());
+            }
+            else if (e.Message == _taskbarCreated)
+            {
+                _owner.Guard(Controller.OnTaskbarCreated);
             }
         }
 
