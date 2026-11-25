@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.DropDownApps;
@@ -29,8 +33,13 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
     public const string AddToGroupBehindAction = "addToGroupBehind";
     public const string TakeOutOfGroupAction = "takeOutOfGroup";
 
-    // How long the host waits as it exits for the hidden tabs to go back on the taskbar.
+    // How long the host waits as it exits for the hidden tabs to go back on the taskbar, and then
+    // for the kept groups to be written.
     private static readonly TimeSpan StopTimeout = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan FileTimeout = TimeSpan.FromSeconds(1);
+
+    // How long after the host starts the groups read from window-tabs.json wait for their windows.
+    private static readonly TimeSpan RegroupTime = TimeSpan.FromSeconds(60);
 
     private readonly IHostCommands _commands;
     private readonly TimeProvider _time;
@@ -40,31 +49,46 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
     private readonly WindowRequests _requests;
     private readonly ShortcutRefusals _refusals;
     private readonly Func<ITabsSystem> _recoverySystem;
+    private readonly KeptGroupsStore _store;
+    private readonly bool _isUacElevated;
+    private readonly long _regroupUntil;
+
+    // The file's reads, writes and deletes run on the thread pool one after another, in order,
+    // asked for from the host's UI thread and the feature's thread.
+    private readonly Lock _fileGate = new();
+    private Task _fileWork = Task.CompletedTask;
+
+    // Whether the file was deleted since the last write, so it isn't deleted again at each save of the settings.
+    private bool _fileDeleted;
     private WindowTabsThread? _thread;
     private WindowTabsThread? _stopped;
     private bool _failed;
     private bool _recovered;
     private bool _askedToEndFirst;
 
+    /// <param name="dataFolder">Where <c>window-tabs.json</c> keeps the groups for after a restart.</param>
     /// <param name="shared">The tabs, which Minimize to Tray and Drop-down Apps leave alone.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which can't be tabs.</param>
     /// <param name="requests">Where Title Bar Actions passes on windows to group or take out.</param>
     /// <param name="refusals">Where the feature says whether Windows refused its shortcuts.</param>
-    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals)
-        : this(commands, time, logger, shared, dropDown, requests, refusals, () => new WindowsTabsSystem(null, action => action(), null))
+    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, DataFolder dataFolder, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals)
+        : this(commands, time, logger, dataFolder, Elevation.IsUacElevated, shared, dropDown, requests, refusals, () => new WindowsTabsSystem(null, action => action(), null))
     {
     }
 
+    /// <param name="dataFolder">Where <c>window-tabs.json</c> keeps the groups for after a restart.</param>
+    /// <param name="isUacElevated">Whether the host runs as administrator after a UAC prompt, when the file isn't used.</param>
     /// <param name="shared">The tabs, which Minimize to Tray and Drop-down Apps leave alone.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which can't be tabs.</param>
     /// <param name="requests">Where Title Bar Actions passes on windows to group or take out.</param>
     /// <param name="refusals">Where the feature says whether Windows refused its shortcuts.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals, Func<ITabsSystem> recoverySystem)
+    public WindowTabsFeature(IHostCommands commands, TimeProvider time, ILogger<WindowTabsFeature> logger, DataFolder dataFolder, bool isUacElevated, WindowTabsWindows shared, DropDownWindows dropDown, WindowRequests requests, ShortcutRefusals refusals, Func<ITabsSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(commands);
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(dataFolder);
         ArgumentNullException.ThrowIfNull(shared);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(requests);
@@ -79,6 +103,9 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         _requests = requests;
         _refusals = refusals;
         _recoverySystem = recoverySystem;
+        _store = new KeptGroupsStore(Path.Join(dataFolder.Path, KeptGroupsStore.FileName));
+        _isUacElevated = isUacElevated;
+        _regroupUntil = time.GetTimestamp() + (long)(RegroupTime.TotalSeconds * time.TimestampFrequency);
 
         // A crash ends the host without stopping the feature, so the hidden tabs go back on the taskbar first.
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
@@ -191,10 +218,17 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
             return;
         }
 
+        // Turning the feature off forgets the kept groups.
         if (!read.Enabled)
         {
+            DeleteFile();
             Stop();
             return;
+        }
+
+        if (!read.KeepGroups)
+        {
+            DeleteFile();
         }
 
         // Windows then asks the host before other apps when the session ends, so the hidden tabs
@@ -208,9 +242,10 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
             }
         }
 
+        var keeps = read.KeepGroups && !_isUacElevated;
         if (_thread is null)
         {
-            var thread = new WindowTabsThread(read, _time, _logger, _commands, _shared, _dropDown, _stopped, _refusals);
+            var thread = new WindowTabsThread(read, _time, _logger, _commands, _shared, _dropDown, _stopped, _refusals, keeps, ReadFile, SaveFile);
             _thread = thread;
             _stopped = null;
             _requests.SetWindowTabs(
@@ -219,11 +254,12 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         }
         else
         {
+            _thread.Keeps = keeps;
             _thread.Update(read);
         }
     }
 
-    // The host disposes features twice as it exits, so the thread is waited for only once.
+    // The host disposes features twice as it exits, so the thread and the file are waited for only once.
     public void Dispose()
     {
         AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
@@ -234,6 +270,17 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         }
 
         _stopped = null;
+        Task fileWork;
+        lock (_fileGate)
+        {
+            fileWork = _fileWork;
+            _fileWork = Task.CompletedTask;
+        }
+
+        if (!fileWork.Wait(FileTimeout))
+        {
+            LogFileNotDoneInTime(_logger, FileTimeout.TotalSeconds);
+        }
     }
 
     private static Action<TabsController>? ControllerAction(FeatureAction action) =>
@@ -259,6 +306,119 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         _requests.SetWindowTabs(null, null);
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
+    }
+
+    // The feature's thread asks for the kept groups as it starts: during the minute after the host
+    // started, they're read and passed back to it to be made again.
+    private void ReadFile(WindowTabsThread thread)
+    {
+        if (_isUacElevated || _time.GetTimestamp() >= _regroupUntil)
+        {
+            return;
+        }
+
+        OnFileThread(() =>
+        {
+            var groups = _store.Load(out var readable);
+            if (!readable)
+            {
+                LogUnreadableFile(_logger);
+            }
+
+            if (groups.Count > 0)
+            {
+                thread.StartRegrouping(groups, _regroupUntil);
+            }
+        });
+    }
+
+    // The feature's thread passes the kept groups after a change and as it stops. They're written
+    // only if the thread still keeps them when it's their turn, so a write asked for before the
+    // feature or Keep groups after a restart was turned off doesn't bring the file back.
+    private void SaveFile(WindowTabsThread thread, IReadOnlyList<KeptGroup> groups)
+    {
+        lock (_fileGate)
+        {
+            _fileDeleted = false;
+        }
+
+        OnFileThread(() =>
+        {
+            if (!thread.Keeps)
+            {
+                return;
+            }
+
+            try
+            {
+                _store.Save(groups);
+                LogFileSaved(_logger, groups.Count);
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                LogFileNotSaved(_logger, exception);
+            }
+        });
+    }
+
+    // Forgetting deletes the file, once, unless the host runs as administrator after a UAC
+    // prompt, when a program without admin rights could have put a link in its place. Neither the
+    // thread nor one still stopping writes the groups again.
+    private void DeleteFile()
+    {
+        if (_thread is not null)
+        {
+            _thread.Keeps = false;
+        }
+
+        if (_stopped is not null)
+        {
+            _stopped.Keeps = false;
+        }
+
+        lock (_fileGate)
+        {
+            if (_fileDeleted || _isUacElevated)
+            {
+                return;
+            }
+
+            _fileDeleted = true;
+        }
+
+        OnFileThread(() =>
+        {
+            try
+            {
+                _store.Delete();
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                LogFileNotDeleted(_logger, exception);
+            }
+        });
+    }
+
+    private void OnFileThread(Action work)
+    {
+        lock (_fileGate)
+        {
+            _fileWork = _fileWork.ContinueWith(
+                _ =>
+                {
+                    try
+                    {
+                        work();
+                    }
+                    catch (Exception exception)
+                    {
+                        LogFileWorkFailed(_logger, exception);
+                    }
+                },
+                CancellationToken.None,
+                TaskContinuationOptions.None,
+                TaskScheduler.Default);
+        }
     }
 
     // Runs on the crashing thread; nothing here may throw.
@@ -288,4 +448,22 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Window Tabs couldn't bring its hidden tabs back on the taskbar as PC Companion crashed.")]
     private static partial void LogReleaseFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Window Tabs' kept groups can't be read, so none are made again; the file is replaced at the next save.")]
+    private static partial void LogUnreadableFile(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs saved {Count} kept groups.")]
+    private static partial void LogFileSaved(ILogger logger, int count);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Window Tabs couldn't save its kept groups.")]
+    private static partial void LogFileNotSaved(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Window Tabs couldn't delete its kept groups.")]
+    private static partial void LogFileNotDeleted(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Window Tabs' work on its kept groups failed.")]
+    private static partial void LogFileWorkFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Window Tabs' kept groups weren't written within {Seconds} s.")]
+    private static partial void LogFileNotDoneInTime(ILogger logger, double seconds);
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Core.Features;
 using PCCompanion.Localization;
@@ -33,13 +34,30 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
     private readonly WindowTabsWindows _shared;
     private readonly DropDownWindows _dropDown;
     private readonly ShortcutRefusals? _refusals;
+    private readonly Action<WindowTabsThread>? _readKept;
+    private readonly Action<WindowTabsThread, IReadOnlyList<KeptGroup>>? _saveKept;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Tabber? _tabber;
+    private volatile bool _keeps;
 
     /// <param name="shared">The tabs as Minimize to Tray and Drop-down Apps read them.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which can't be tabs.</param>
-    public WindowTabsThread(WindowTabsSettings settings, TimeProvider time, ILogger logger, IHostCommands commands, WindowTabsWindows shared, DropDownWindows dropDown, WindowTabsThread? previous = null, ShortcutRefusals? refusals = null)
+    /// <param name="keeps">Whether the kept groups may be read and written, as <see cref="Keeps"/>.</param>
+    /// <param name="readKept">Reads the kept groups off the thread as it starts, and passes them back with <see cref="StartRegrouping"/>.</param>
+    /// <param name="saveKept">Writes the kept groups off the thread, after a change and as it stops.</param>
+    public WindowTabsThread(
+        WindowTabsSettings settings,
+        TimeProvider time,
+        ILogger logger,
+        IHostCommands commands,
+        WindowTabsWindows shared,
+        DropDownWindows dropDown,
+        WindowTabsThread? previous = null,
+        ShortcutRefusals? refusals = null,
+        bool keeps = false,
+        Action<WindowTabsThread>? readKept = null,
+        Action<WindowTabsThread, IReadOnlyList<KeptGroup>>? saveKept = null)
         : base("Window Tabs", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(time);
@@ -54,8 +72,25 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
         _shared = shared;
         _dropDown = dropDown;
         _refusals = refusals;
+        _keeps = keeps;
+        _readKept = readKept;
+        _saveKept = saveKept;
         Start();
     }
+
+    /// <summary>
+    /// Whether the kept groups may be written to <c>window-tabs.json</c>: Keep groups after a
+    /// restart is on and the host doesn't run as administrator after a UAC prompt. Set it from any
+    /// thread; a write checks it as it's done.
+    /// </summary>
+    public bool Keeps
+    {
+        get => _keeps;
+        set => _keeps = value;
+    }
+
+    /// <summary>Makes the kept groups read from the file again, on the feature's thread, until <paramref name="until"/>.</summary>
+    public void StartRegrouping(IReadOnlyList<KeptGroup?> groups, long until) => Post(() => _tabber?.StartRegrouping(groups, until));
 
     /// <summary>Brings the hidden tabs back on the taskbar at once, from any thread, as the host crashes.</summary>
     public void ReleaseNow() => _tabber?.Controller.ReleaseNow();
@@ -131,8 +166,8 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs' thread ended.")]
     private static partial void LogStopped(ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs applied its settings: group by dropping {GroupByDropping}, switch shortcuts {SwitchShortcuts}, group shortcuts {GroupShortcuts}.")]
-    private static partial void LogApplied(ILogger logger, bool groupByDropping, TabSwitchShortcuts switchShortcuts, TabGroupShortcuts groupShortcuts);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs applied its settings: group by dropping {GroupByDropping}, switch shortcuts {SwitchShortcuts}, group shortcuts {GroupShortcuts}, keep groups {KeepGroups}.")]
+    private static partial void LogApplied(ILogger logger, bool groupByDropping, TabSwitchShortcuts switchShortcuts, TabGroupShortcuts groupShortcuts, bool keepGroups);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Tabs brought {Count} hidden tabs back on the taskbar: {Why}.")]
     private static partial void LogReleased(ILogger logger, int count, string why);
@@ -155,6 +190,9 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
     // What runs on the feature's thread: the controller, its hooks, the strips and the shortcuts.
     private sealed class Tabber : IDisposable
     {
+        // How long after a change the kept groups are written.
+        private static readonly TimeSpan SaveDelay = TimeSpan.FromSeconds(5);
+
         private readonly WindowTabsThread _owner;
         private readonly MessageWindow _window;
         private readonly WindowsTabsSystem _system;
@@ -166,6 +204,9 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
         private TabGroupShortcuts? _groupRegistered;
         private bool _switchRefused;
         private bool _groupRefused;
+        private WinEventHook? _newWindows;
+        private ITimer? _save;
+        private bool _unsaved;
 
         public Tabber(WindowTabsThread owner, MessageWindow window)
         {
@@ -219,6 +260,13 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             _system.TitleChanged += (_, changed) => Controller.OnTitleChanged(changed);
             _system.WindowMoved += (_, moved) => Controller.OnLocationChange(moved);
             _window.MessageReceived += OnMessageReceived;
+            Controller.KeptChanged += (_, _) => ScheduleSave();
+            Controller.RegroupingEnded += (_, _) => StopWatchingNewWindows();
+
+            if (owner.Keeps)
+            {
+                owner._readKept?.Invoke(owner);
+            }
         }
 
         public TabsController Controller { get; }
@@ -229,10 +277,30 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             RegisterSwitch(settings.SwitchShortcuts);
             RegisterGroup(settings.GroupShortcuts);
             _owner._refusals?.Set(WindowTabsFeature.Definition.Id, Refused());
-            LogApplied(_owner._logger, settings.GroupByDropping, settings.SwitchShortcuts, settings.GroupShortcuts);
+            LogApplied(_owner._logger, settings.GroupByDropping, settings.SwitchShortcuts, settings.GroupShortcuts, settings.KeepGroups);
         }
 
-        // Every hidden tab goes back on the taskbar before the hooks and the window go.
+        public void StartRegrouping(IReadOnlyList<KeptGroup?> groups, long until)
+        {
+            Controller.StartRegrouping(groups, until);
+            if (Controller.IsRegrouping && _newWindows is null)
+            {
+                // A window that shows in any app may be one a kept group waits for; out of
+                // context, the hook runs no code in other apps.
+                var hook = new WinEventHook(WinEventHook.ObjectShowEvent, WinEventHook.ObjectShowEvent, skipOwnProcess: true);
+                hook.Raised += (_, e) => _owner.Guard(() =>
+                {
+                    if (e.IsAboutWindow)
+                    {
+                        Controller.OnNewWindow(e.Window);
+                    }
+                });
+                _newWindows = hook;
+            }
+        }
+
+        // Every hidden tab goes back on the taskbar before the hooks and the window go, and the
+        // groups stay kept.
         public void Dispose()
         {
             _window.MessageReceived -= OnMessageReceived;
@@ -241,6 +309,10 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             {
                 LogReleased(_owner._logger, released, "Window Tabs stopped");
             }
+
+            SaveNow();
+            _save?.Dispose();
+            StopWatchingNewWindows();
 
             Controller.Dispose();
             Unregister(_switchShortcuts);
@@ -254,6 +326,34 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
             _highlight.Dispose();
             _system.Dispose();
             _owner._tabber = null;
+        }
+
+        private void StopWatchingNewWindows()
+        {
+            _newWindows?.Dispose();
+            _newWindows = null;
+        }
+
+        private void ScheduleSave()
+        {
+            _unsaved = true;
+            if (_save is null && _owner.Keeps)
+            {
+                _save = _owner._time.CreateTimer(_ => _window.BeginInvoke(() => _owner.Guard(SaveNow)), null, SaveDelay, Timeout.InfiniteTimeSpan);
+            }
+        }
+
+        private void SaveNow()
+        {
+            _save?.Dispose();
+            _save = null;
+            if (!_unsaved || !_owner.Keeps)
+            {
+                return;
+            }
+
+            _unsaved = false;
+            _owner._saveKept?.Invoke(_owner, Controller.Kept);
         }
 
         private void Hook(uint first, uint last, Action<uint, nint> handle)
@@ -384,6 +484,8 @@ public sealed partial class WindowTabsThread : MessageLoopThread<WindowTabsSetti
                 {
                     LogReleased(_owner._logger, released, "the session may end");
                 }
+
+                SaveNow();
             });
         }
     }
