@@ -14,10 +14,12 @@ using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.App.Features.WindowRules;
 
-/// <summary>An open window the rule matches, as the editor lists it.</summary>
+/// <summary>An open window the rule matches, as the editor lists it: its app, and its title when it has one.</summary>
 public sealed record MatchedWindow(string App, string Title)
 {
-    public override string ToString() => Title.Length == 0 ? App : $"{App}: {Title}";
+    private static readonly CompositeFormat LineFormat = CompositeFormat.Parse(Strings.WindowRulesSummaryApp);
+
+    public override string ToString() => Title.Length == 0 ? App : ReadingOrder.Format(LineFormat, App, Title);
 }
 
 /// <summary>
@@ -93,7 +95,7 @@ public sealed partial class WindowRuleEditor : ObservableObject
         if (rule.Display is { KnownWhich: DisplayChoice.Chosen } chosen)
         {
             _displays.Add(chosen);
-            DisplayChoices.Add(string.Format(CultureInfo.CurrentCulture, NotConnectedFormat, DisplayName(chosen)));
+            DisplayChoices.Add(ReadingOrder.Format(NotConnectedFormat, DisplayName(chosen)));
             _display = 2;
         }
         else
@@ -442,7 +444,7 @@ public sealed partial class WindowRuleEditor : ObservableObject
             else
             {
                 _displays.Add(chosen);
-                DisplayChoices.Add(string.Format(CultureInfo.CurrentCulture, NotConnectedFormat, DisplayName(chosen)));
+                DisplayChoices.Add(ReadingOrder.Format(NotConnectedFormat, DisplayName(chosen)));
                 _display = _displays.Count - 1;
             }
 
@@ -520,7 +522,7 @@ public sealed partial class WindowRuleEditor : ObservableObject
 
         var others = _otherRules.Count(other => other.Enabled && new RuleMatcher(other) is { IsUsable: true } otherMatcher
             && _open.Any(open => matcher.MatchesApp(open.Window.Facts) && otherMatcher.MatchesApp(open.Window.Facts)));
-        Matches = PluralStrings.Format("WindowRulesMatches", Matched.Count)
-            + (others > 0 ? " " + PluralStrings.Format("WindowRulesAlsoMatched", others) : string.Empty);
+        Matches = ReadingOrder.Line(PluralStrings.Format("WindowRulesMatches", Matched.Count)
+            + (others > 0 ? " " + PluralStrings.Format("WindowRulesAlsoMatched", others) : string.Empty));
     }
 }

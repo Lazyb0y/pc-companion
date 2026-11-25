@@ -58,6 +58,7 @@ Write-Settings (@{
     features = @{
         displayProfiles = @{ enabled = $false; profiles = @([ordered] @{ name = 'Desk'; displays = @($display) }) }
         dynamicWallpaper = [ordered] @{ enabled = $false; changeWith = 'WindowsMode'; location = 'TimeZone'; fit = 'Fill'; windowsMode = [ordered] @{ light = @{ folder = $photos }; dark = @{ folder = $photos } } }
+        windowRules = @{ enabled = $false; rules = @([ordered] @{ name = 'Notes on top'; app = [ordered] @{ name = 'Notepad'; program = 'C:\Windows\notepad.exe' }; onTop = $true }) }
     }
 } | ConvertTo-Json -Depth 8)
 Start-Sleep -Seconds 2
@@ -67,6 +68,7 @@ Start-Sleep -Seconds 3
 Test-RightToLeftLine 'in Arabic, a display''s line reads right to left' 'ملفات تعريف العرض' 'DELL U2720Q: ' '05c-display-profiles-arabic-line'
 Test-RightToLeftLine 'in Arabic, a folder''s line reads right to left' 'خلفية ديناميكية' 'Photos (' '05d-dynamic-wallpaper-arabic-line'
 Test-RightToLeftLine 'in Arabic, a header that starts with a key reads right to left' 'إجراءات شريط العنوان' 'Ctrl + ' '05e-title-bar-actions-arabic-line'
+Test-RightToLeftLine 'in Arabic, a rule''s line reads right to left' 'قواعد النوافذ' 'Notepad: ' '05f-window-rules-arabic-line'
 
 # Bangla with the light theme.
 [void] (Close-SettingsApp)
