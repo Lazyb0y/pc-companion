@@ -6456,4 +6456,104 @@
     <value>শিরোনামহীন উইন্ডো</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>উইন্ডো গোটানো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>পেছনে কী আছে দেখতে ও ব্যবহার করতে একটি উইন্ডো তার টাইটেল বার পর্যন্ত গুটিয়ে নিন, তারপর আবার খুলে দিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}, গোটানো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>খুলে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>বন্ধ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>সামনের উইন্ডো গুটিয়ে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>সবশেষে গোটানো উইন্ডো খুলে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>সব উইন্ডো খুলে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>কীভাবে উইন্ডো গোটাবেন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>টাইটেল বার অ্যাকশনে মাঝের ক্লিক বা চাকার জন্য গুটিয়ে নিন বেছে নিন, অথবা শর্টকাট ও মাউস বাটনে কোনো শর্টকাট বা মাউস বাটনের জন্য একটি গোটানোর অ্যাকশন বেছে নিন। গোটানো টাইটেল বারে ক্লিক, তার ওপর চাকা নিচে ঘোরানো, টাস্কবার বা Alt + Tab উইন্ডোটি খুলে দেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>গোটানো থাকাকালীন সবার ওপরে রাখুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>গোটানো টাইটেল বারগুলো অন্য উইন্ডোর ওপরে থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>হোভার করে খুলে দিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>পয়েন্টার টাইটেল বারে থাকলে উইন্ডো সামনে না এসে খুলে যায়, এবং পয়েন্টার সরে গেলে আবার গুটিয়ে যায়, যদি না আপনি তাতে ক্লিক করেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>এত সময় পরে খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>এত সময় পরে আবার গোটান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} সেকেন্ড</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>পূর্ণ স্ক্রিন উইন্ডো, ডায়ালগ খোলা থাকা উইন্ডো, উইন্ডো ট্যাবের ট্যাব এবং টাইটেল বার ছাড়া উইন্ডো গোটানো যায় না। গোটানো উইন্ডো মিনিমাইজ করা থাকে, তাই সেটি সবসময় টাস্কবারে ও Alt + Tab-এ থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>PC Companion অ্যাডমিন অধিকার ছাড়া চললে অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডো গোটানো যায় না। সেগুলোও গোটাতে সাধারণ পৃষ্ঠায় সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোও গোটানো যায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>উইন্ডো গোটানোর সময় এর টাইটেল বার কোথায় শেষ, এর অবস্থান ও বাটনগুলো পড়ে; টাইটেল বারের ছবি Windows আঁকে, যা PC Companion কখনো পড়ে না। আপনার অনুরোধে গোটানো উইন্ডো মিনিমাইজ, রিস্টোর, সরানো ও বন্ধ করে, এবং সেগুলোতে চিহ্ন দেয় যাতে ক্র্যাশের পরে সেগুলো ফিরে আসে। কোনো কীবোর্ড হুক ব্যবহার করে না, অন্য অ্যাপে কোনো কোড চালায় না, শুধু নিজের সেটিংস সংরক্ষণ করে এবং কোনো নেটওয়ার্ক সংযোগ করে না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>গুটিয়ে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>গুটিয়ে নিন অ্যাকশন শুধু তখনই কাজ করে যখন উইন্ডো গোটানো বৈশিষ্ট্যটি চালু থাকে। ততক্ষণ এর বদলে Windows-এর সতর্কতা শব্দ বাজে।</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

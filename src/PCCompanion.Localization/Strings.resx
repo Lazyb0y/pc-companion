@@ -6456,4 +6456,104 @@
     <value>Window without a title</value>
     <comment>Window Rules: Pick a window's name for a window without a title.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>Window Shading</value>
+    <comment>Feature name: navigation pane, Home and the Window Shading page. Shading is rolling a window up to its title bar.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>Roll a window up to its title bar to see and use what's behind it, and roll it down again.</value>
+    <comment>Window Shading: one-sentence description below the feature name.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}, rolled up</value>
+    <comment>The name screen readers read for a rolled-up window's title bar; {0} is the window's title, such as "Mail, rolled up".</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>Roll down</value>
+    <comment>Menu of a rolled-up window's title bar: brings the window back as it was.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>Close</value>
+    <comment>Menu of a rolled-up window's title bar: closes the window. Use the name of the Close button in Windows' title bars.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>Roll up the window in front</value>
+    <comment>Shortcuts &amp; Mouse Buttons: an action Window Shading offers.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>Roll down the last rolled-up window</value>
+    <comment>Shortcuts &amp; Mouse Buttons: an action Window Shading offers.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>Roll down all windows</value>
+    <comment>The PC Companion icon's menu, shown while a window is rolled up, and an action in Shortcuts &amp; Mouse Buttons.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>How to roll windows up</value>
+    <comment>Window Shading page: header of the note that says how to roll windows up.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>Choose Roll up for a middle-click or the wheel in Title Bar Actions, or a roll-up action for a shortcut or mouse button in Shortcuts &amp; Mouse Buttons. A click on a rolled-up title bar, the wheel turned down on it, the taskbar or Alt + Tab rolls the window down.</value>
+    <comment>Window Shading page: below WindowShadingHowHeader. Roll up is the action's name in those features' lists. Use the feature names as translated.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>Keep on top while rolled up</value>
+    <comment>Window Shading page: setting name, a switch.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>Rolled-up title bars stay above other windows.</value>
+    <comment>Window Shading page: below WindowShadingKeepOnTopHeader.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>Hover to roll down</value>
+    <comment>Window Shading page: setting name, a switch.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>A window rolls down while the pointer rests on its title bar, without taking the front, and rolls up again once the pointer has left it, unless you clicked it.</value>
+    <comment>Window Shading page: below WindowShadingHoverHeader.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>Roll down after</value>
+    <comment>Window Shading page: setting name, and the screen reader name of its list of delays, such as "Roll down after: 0.5 seconds".</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>Roll up again after</value>
+    <comment>Window Shading page: setting name, and the screen reader name of its list of delays.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>Plural form "one". Window Shading page: list item; {0} is a whole number of seconds.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>Plural form "other". Window Shading page: list item; {0} is a whole number of seconds.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>Window Shading page: list item; {0} is a fraction of a second in the user's number format, such as 0.25 or 0.5.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>Full-screen windows, windows with a dialog open, Window Tabs' tabs and windows without a title bar can't be rolled up. A rolled-up window is minimized, so it's always on the taskbar and in Alt + Tab.</value>
+    <comment>Window Shading page: note on the windows that can't be rolled up.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>Windows of apps running as administrator can't be rolled up while PC Companion runs without admin rights. Turn on Always run as administrator on the General page to roll them up too.</value>
+    <comment>Window Shading page: shown while PC Companion runs without admin rights. Use the setting's name as it appears on the General page.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so windows of apps running as administrator can be rolled up too.</value>
+    <comment>Window Shading page: shown instead of WindowShadingAdministratorInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>When you roll a window up, reads where its title bar ends, its place and its buttons; Windows draws the picture of the title bar, which PC Companion never reads. Minimizes, restores, moves and closes, when you ask, the windows you rolled up, and marks them so they come back after a crash. Uses no keyboard hook, runs no code in other apps, stores only its settings and makes no network connections.</value>
+    <comment>Window Shading page: below FeaturePermissionsHeader.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>Roll up</value>
+    <comment>Title Bar Actions page: an action in the click and wheel lists, which rolls the window up to its title bar, through Window Shading. Use the action name as in WindowShading strings.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>Roll up works only while Window Shading is on. Until then, Windows' warning sound plays instead.</value>
+    <comment>Title Bar Actions page: shown while a click or the wheel is set to Roll up (WindowShading feature) and Window Shading is off. Use the feature name as translated.</comment>
+  </data>
 </root>

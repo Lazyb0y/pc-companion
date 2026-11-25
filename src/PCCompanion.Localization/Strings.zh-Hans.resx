@@ -6388,4 +6388,100 @@
     <value>无标题窗口</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>窗口卷起</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>将窗口卷起到仅剩标题栏，以查看和使用其后面的内容，然后再展开。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}，已卷起</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>展开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>关闭</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>卷起最前面的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>展开最后卷起的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>展开所有窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>如何卷起窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>在“标题栏操作”中为中键单击或滚轮选择“卷起”，或在“快捷键和鼠标按钮”中为快捷键或鼠标按钮选择一个卷起操作。单击已卷起的标题栏、在其上向下滚动滚轮、使用任务栏或 Alt + Tab 都会展开窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>卷起时保持在最前面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>已卷起的标题栏会保持在其他窗口上方。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>悬停时展开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>指针停留在标题栏上时，窗口会展开但不会切换到前面；指针离开后，窗口会再次卷起，除非你单击了它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>展开前等待</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>再次卷起前等待</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>全屏窗口、打开了对话框的窗口、“窗口标签页”的标签页以及没有标题栏的窗口无法卷起。已卷起的窗口处于最小化状态，因此始终显示在任务栏和 Alt + Tab 中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>PC Companion 在没有管理员权限的情况下运行时，无法卷起以管理员身份运行的应用的窗口。在“常规”页面上打开“始终以管理员身份运行”，即可同样卷起这些窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 正以管理员身份运行，因此也可以卷起以管理员身份运行的应用的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>卷起窗口时，读取其标题栏的结束位置、窗口位置和按钮；标题栏的图像由 Windows 绘制，PC Companion 从不读取。在你要求时最小化、还原、移动和关闭你卷起的窗口，并为它们添加标记，以便在崩溃后恢复。不使用键盘挂钩，不在其他应用中运行代码，仅存储其设置，也不建立网络连接。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>卷起</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>“卷起”操作仅在“窗口卷起”功能打开时有效。在此之前，会改为播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

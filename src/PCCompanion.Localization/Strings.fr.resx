@@ -6456,4 +6456,104 @@
     <value>Fenêtre sans titre</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>Enroulement des fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>Enroulez une fenêtre jusqu’à sa barre de titre pour voir et utiliser ce qu’il y a derrière, puis déroulez-la de nouveau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}, enroulée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>Dérouler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>Enrouler la fenêtre au premier plan</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>Dérouler la dernière fenêtre enroulée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>Dérouler toutes les fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>Comment enrouler les fenêtres</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>Choisissez Enrouler pour un clic du milieu ou la roulette dans Actions de la barre de titre, ou une action d’enroulement pour un raccourci ou un bouton de souris dans Raccourcis et boutons de souris. Un clic sur une barre de titre enroulée, la roulette tournée vers le bas dessus, la barre des tâches ou Alt + Tab déroule la fenêtre.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>Garder au premier plan une fois enroulée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>Les barres de titre enroulées restent au-dessus des autres fenêtres.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>Dérouler au survol</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>Une fenêtre se déroule tant que le pointeur reste sur sa barre de titre, sans passer au premier plan, et s’enroule de nouveau une fois que le pointeur l’a quittée, sauf si vous avez cliqué dessus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>Dérouler après</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>Enrouler de nouveau après</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>{0} seconde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} secondes</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} seconde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>Les fenêtres en plein écran, les fenêtres avec une boîte de dialogue ouverte, les onglets de la fonctionnalité Onglets de fenêtres et les fenêtres sans barre de titre ne peuvent pas être enroulés. Une fenêtre enroulée est réduite : elle reste donc toujours dans la barre des tâches et dans Alt + Tab.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>Les fenêtres des applications exécutées en tant qu’administrateur ne peuvent pas être enroulées tant que PC Companion s’exécute sans droits d’administrateur. Activez Toujours exécuter en tant qu’administrateur dans la page Général pour les enrouler aussi.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion s’exécute en tant qu’administrateur : les fenêtres des applications exécutées en tant qu’administrateur peuvent donc aussi être enroulées.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>Quand vous enroulez une fenêtre, lit où se termine sa barre de titre, sa position et ses boutons ; Windows dessine l’image de la barre de titre, que PC Companion ne lit jamais. Réduit, restaure, déplace et ferme, quand vous le demandez, les fenêtres enroulées, et les marque pour qu’elles reviennent après un plantage. N’utilise aucun hook clavier, n’exécute aucun code dans d’autres applications, n’enregistre que ses paramètres et n’établit aucune connexion réseau.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>Enrouler</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>L’action Enrouler ne fonctionne que quand la fonctionnalité Enroulement des fenêtres est activée. D’ici là, le son d’avertissement de Windows retentit à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
