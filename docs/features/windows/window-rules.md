@@ -105,7 +105,7 @@ Each action has a switch in the rule; an action that's off leaves the window as 
 ### Opacity
 
 - **A fixed opacity,** from 20% to 90% in steps of 10%, or **as last set with the wheel:** the opacity Title Bar Actions' wheel last gave one of the rule's windows, kept for the app's next windows; see [With the other features](#with-the-other-features).
-- **How:** as Title Bar Actions changes opacity, with the same code (`WindowOpacity`, shared by both features): the layered style (`WS_EX_LAYERED`) and `SetLayeredWindowAttributes` with `LWA_ALPHA`. The second run of the spike faded a test window and PC Companion's own WinUI 3 window, which stayed see-through after a resize, and both went back to opaque when the style was put back. Title Bar Actions' spike faded Edge, Settings, File Explorer and Character Map.
+- **How:** as Title Bar Actions changes opacity: the layered style (`WS_EX_LAYERED`, given on the thread pool, since it waits for the app) and `SetLayeredWindowAttributes` with `LWA_ALPHA`. A window that sets its own opacity or color key keeps its color key, and gets its own opacity back. The second run of the spike faded a test window and PC Companion's own WinUI 3 window, which stayed see-through after a resize, and both went back to opaque when the style was put back. Title Bar Actions' spike faded Edge, Settings, File Explorer and Character Map.
 - **Windows that draw themselves with `UpdateLayeredWindow`** are left alone, as by Title Bar Actions, since setting their opacity breaks their drawing for good.
 
 ### Taskbar and Alt + Tab
@@ -180,7 +180,7 @@ Each action has a switch in the rule; an action that's off leaves the window as 
 - **On screen:** places are kept inside a connected display's work area, also when a display is gone; see [Place and size](#place-and-size).
 - **Never invisible:** opacity is 20% at least.
 - **Always reachable:** a window hidden from the taskbar gets its button back while it's minimized; see [Taskbar and Alt + Tab](#taskbar-and-alt--tab).
-- **The mark:** before a rule puts a window on top or removes its button, PC Companion sets a window property on it (`WindowMark`, named `PCCompanion.WindowRules`), whose value says which of the two it did. Opacity uses the opacity mark it shares with Title Bar Actions; see [Opacity](#opacity). Marks live as long as their windows.
+- **The mark:** before a rule puts a window on top or removes its button, PC Companion sets a window property on it (`WindowMark`, named `PCCompanion.WindowRules`), whose value says which it did, and, for opacity, whether it added the layered style or the opacity and color key the window had set for itself. Title Bar Actions keeps a mark of its own. Marks live as long as their windows.
 - **When PC Companion exits** for any reason it's told about (**Exit**, turning the feature off, setup closing it, Restart Manager and the end of the session), every window the rules changed gets back what it had: off the top, its own opacity and its taskbar button. Places aren't undone. Turning a rule off or deleting it does the same for its windows.
 - **When PC Companion crashes:** a handler for unhandled exceptions does the same from a list the feature keeps, as Minimize to Tray's does. A failure on the feature's thread does the same.
 - **At the next start,** on or off, the feature puts back every window that carries a mark, and then, when on, applies its rules' held actions to the open windows again.
@@ -194,10 +194,10 @@ Each action has a switch in the rule; an action that's off leaves the window as 
 ## With the other features
 
 - **Window Tabs:** **Open as a tab of** groups windows through it; see [Open as a tab](#open-as-a-tab). Window Tabs' hidden tabs are never matched, and a tab it shows isn't a new window. A window the rules placed and that Window Tabs groups again after a restart takes its group's place.
-- **Title Bar Actions:** both change opacity with the same code and one mark for each window, which keeps the window's own opacity, whichever feature changed it first.
-  - **The wheel** changes a window between 20% and its own opacity, from wherever it is, also from a rule's opacity.
-  - **As last set with the wheel:** when the wheel changes the opacity of a window whose rule has that choice, Title Bar Actions tells Window Rules (`WindowRequests`), which keeps that opacity for the rule.
-  - **When one of them stops,** a window keeps the other's opacity: when Title Bar Actions stops, the windows the wheel changed go to their rule's opacity, or their own; when Window Rules stops, its windows keep the wheel's opacity while Title Bar Actions runs, or go back to their own.
+- **Title Bar Actions:** each feature marks the windows whose opacity it changed, with what they had before it changed them.
+  - **The wheel** treats a rule's opacity as the window's own, as for a window that sets its own opacity: it changes the window between 20% and the rule's opacity, and back to the rule's.
+  - **As last set with the wheel:** when the wheel changes the opacity of a window whose rule has that choice, Title Bar Actions tells Window Rules (`WindowRequests`), which keeps that opacity for the rule's next windows.
+  - **Whichever stops first,** the window ends with its own opacity once both have put it back, also after a crash: Window Rules removes the layered style it added, and Title Bar Actions' opacity needs that style.
 - **Minimize to Tray, Hide Apps and Drop-down Apps:** windows in the tray and drop-down windows aren't matched, and a window that comes back from the tray or from Hide Apps isn't a new window.
 - **Display Profiles:** switching a profile changes the displays, which rules with **Apply again when the displays change** follow.
 - **The module's shared sets** (`HideAppsMinimized`, `DropDownWindows`, `WindowTabsWindows`) are read as Window Tabs reads them.

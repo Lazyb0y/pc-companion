@@ -18,11 +18,17 @@ public sealed class WindowRulesFeatureTests : IDisposable
 
     private readonly RecordingLogger<WindowRulesFeature> _logger = new();
     private readonly string _pipe = SnapshotPipe.ForSession($"PCCompanion.WindowRules.Tests.{Guid.NewGuid():N}");
+    private readonly FakeRulesSystem _left = new();
     private readonly WindowRulesFeature _feature;
+    private int _recoveries;
 
     public WindowRulesFeatureTests()
     {
-        _feature = new WindowRulesFeature(TimeProvider.System, _logger, new DropDownWindows(), new WindowTabsWindows(), _pipe);
+        _feature = new WindowRulesFeature(TimeProvider.System, _logger, new DropDownWindows(), new WindowTabsWindows(), _pipe, () =>
+        {
+            _recoveries++;
+            return _left;
+        });
     }
 
     public void Dispose() => _feature.Dispose();
@@ -40,6 +46,25 @@ public sealed class WindowRulesFeatureTests : IDisposable
         _feature.Apply(null);
 
         Assert.False(_feature.IsRunning);
+    }
+
+    [Fact]
+    public void WindowsLeftChangedArePutBackOnceOnOrOff()
+    {
+        var left = _left.Add(1, new System.Drawing.Rectangle(100, 100, 800, 600));
+        left.Topmost = true;
+        left.HasButton = false;
+        _left.Marks[1] = 1 | 2 | 4;
+
+        _feature.Apply(null);
+        _feature.Apply(Section("""{ "enabled": false }"""));
+
+        Assert.False(_feature.IsRunning);
+        Assert.False(left.Topmost);
+        Assert.True(left.HasButton);
+        Assert.Empty(_left.Marks);
+        Assert.Equal(1, _recoveries);
+        Assert.Contains(_logger.Entries, entry => entry.Message.Contains("put back 1 windows", StringComparison.Ordinal));
     }
 
     [Fact]

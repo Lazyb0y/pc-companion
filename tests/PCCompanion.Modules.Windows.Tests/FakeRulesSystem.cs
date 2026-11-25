@@ -30,6 +30,8 @@ internal sealed class FakeRulesSystem : IRulesSystem
 
     public Dictionary<nint, int> Followed { get; } = [];
 
+    public Dictionary<nint, nint> Marks { get; } = [];
+
     public Rectangle? MainWorkArea => MainArea;
 
     public Rectangle? PointerWorkArea => PointerArea;
@@ -103,6 +105,75 @@ internal sealed class FakeRulesSystem : IRulesSystem
         found.Visible = show == WindowState.Maximized ? AreaAt(normalBounds) : Deflate(normalBounds);
     }
 
+    public bool IsMinimized(nint window) => _windows[window].State == WindowState.Minimized;
+
+    public bool IsTopmost(nint window) => _windows.TryGetValue(window, out var found) && found.Topmost;
+
+    public bool SetTopmost(nint window, bool topmost)
+    {
+        Calls.Add($"topmost {window} {topmost}");
+        if (_windows.TryGetValue(window, out var found))
+        {
+            found.Topmost = topmost;
+        }
+
+        return true;
+    }
+
+    public void RemoveTaskbarButton(nint window)
+    {
+        Calls.Add($"remove button {window}");
+        if (_windows.TryGetValue(window, out var found))
+        {
+            found.HasButton = false;
+        }
+    }
+
+    public void AddTaskbarButton(nint window)
+    {
+        Calls.Add($"add button {window}");
+        if (_windows.TryGetValue(window, out var found))
+        {
+            found.HasButton = true;
+        }
+    }
+
+    public bool IsLayered(nint window) => _windows[window].Layered;
+
+    public LayeredAttributes? LayeredAttributes(nint window) => _windows[window].Attributes;
+
+    public void SetOpacity(nint window, LayeredAttributes attributes, bool addLayered)
+    {
+        Calls.Add($"opacity {window} {attributes.Alpha} {addLayered}");
+        if (_windows.TryGetValue(window, out var found))
+        {
+            found.Layered |= addLayered;
+            found.Attributes = attributes;
+        }
+    }
+
+    public void PutBackOpacity(nint window, bool removeLayered, LayeredAttributes? own)
+    {
+        Calls.Add($"put back opacity {window} {removeLayered}");
+        if (_windows.TryGetValue(window, out var found))
+        {
+            found.Attributes = removeLayered ? null : own;
+            found.Layered = !removeLayered;
+        }
+    }
+
+    public bool Mark(nint window, nint value)
+    {
+        Marks[window] = value;
+        return true;
+    }
+
+    public nint MarkOf(nint window) => Marks.GetValueOrDefault(window);
+
+    public void Unmark(nint window) => Marks.Remove(window);
+
+    public IReadOnlyList<nint> Marked() => [.. Marks.Keys];
+
     public void Follow(nint window) => Followed[window] = Followed.GetValueOrDefault(window) + 1;
 
     public void Unfollow(nint window) => Followed[window] = Followed.GetValueOrDefault(window) - 1;
@@ -143,4 +214,12 @@ internal sealed class FakeRuledWindow(nint handle)
     public bool FullScreen { get; set; }
 
     public RuleRefusal Refusal { get; set; }
+
+    public bool Topmost { get; set; }
+
+    public bool HasButton { get; set; } = true;
+
+    public bool Layered { get; set; }
+
+    public LayeredAttributes? Attributes { get; set; }
 }
