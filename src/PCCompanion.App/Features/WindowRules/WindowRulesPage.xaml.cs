@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,7 +95,7 @@ public sealed partial class WindowRulesPage : Page
         var dialog = new ContentDialog
         {
             XamlRoot = XamlRoot,
-            Title = string.Format(CultureInfo.CurrentCulture, DeleteTitleFormat, rule.Name.Length > 0 ? rule.Name : Strings.WindowRulesUnnamed),
+            Title = ReadingOrder.Format(DeleteTitleFormat, rule.Name.Length > 0 ? rule.Name : Strings.WindowRulesUnnamed),
             Content = Strings.WindowRulesDeleteText,
             PrimaryButtonText = Strings.WindowRulesDelete,
             CloseButtonText = Strings.WindowRulesCancel,

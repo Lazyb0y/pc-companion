@@ -144,7 +144,7 @@ public sealed class WindowRulesViewModel : FeatureViewModel<WindowRulesSettings>
 
         var request = new WindowRulesRequest { Rule = Settings.Rules[index] with { Enabled = true } };
         var answer = await Task.Run(() => WindowRulesPipe.AskAsync(WindowRulesPipe.Name, request, WindowRulesPipe.Timeout)).ConfigureAwait(true);
-        ApplyNowResult = answer is null ? Strings.WindowRulesApplyNowNoAnswer : PluralStrings.Format("WindowRulesApplyNowDone", answer.Windows);
+        ApplyNowResult = ReadingOrder.Line(answer is null ? Strings.WindowRulesApplyNowNoAnswer : PluralStrings.Format("WindowRulesApplyNowDone", answer.Windows));
     }
 
     private void Update(int index, Func<WindowRule, WindowRule> change)
@@ -190,13 +190,13 @@ public sealed class WindowRulesViewModel : FeatureViewModel<WindowRulesSettings>
     {
         if (index >= WindowRulesSettings.MaximumRules)
         {
-            return string.Format(CultureInfo.CurrentCulture, NotUsedFormat, Strings.WindowRulesProblemTooMany);
+            return ReadingOrder.Format(NotUsedFormat, Strings.WindowRulesProblemTooMany);
         }
 
         var problem = RuleMatcher.Check(rule);
         if (problem != RuleProblem.None)
         {
-            return string.Format(CultureInfo.CurrentCulture, NotUsedFormat, ProblemText(problem));
+            return ReadingOrder.Format(NotUsedFormat, ProblemText(problem));
         }
 
         var actions = new List<string>();
@@ -247,7 +247,7 @@ public sealed class WindowRulesViewModel : FeatureViewModel<WindowRulesSettings>
             actions.Add(string.Format(CultureInfo.CurrentCulture, TabFormat, tabOf.Name));
         }
 
-        return string.Format(CultureInfo.CurrentCulture, AppFormat, rule.App!.Name, string.Join(Strings.WindowRulesSummarySeparator, actions));
+        return ReadingOrder.Format(AppFormat, rule.App!.Name, string.Join(Strings.WindowRulesSummarySeparator, actions));
     }
 
     private static string PlaceName(PlaceChoice place) => place switch
