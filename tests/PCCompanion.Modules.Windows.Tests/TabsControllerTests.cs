@@ -58,6 +58,26 @@ public sealed class TabsControllerTests : IDisposable
     public void Dispose() => _controller.Dispose();
 
     [Fact]
+    public void GroupWithMakesAGroupOrJoinsOneAndRefusesQuietly()
+    {
+        _controller.GroupWith(Mail, Notes);
+        Run();
+        Assert.Equal([[Notes, Mail]], _controller.Groups);
+        Assert.Equal([Mail], _controller.Fronts);
+
+        _controller.GroupWith(Report, Mail);
+        Run();
+        Assert.Equal([[Notes, Mail, Report]], _controller.Groups);
+
+        _system[Other].Enabled = false;
+        _controller.GroupWith(Other, Report);
+        _controller.GroupWith(Report, Report);
+        Run();
+        Assert.Equal([[Notes, Mail, Report]], _controller.Groups);
+        Assert.Equal(0, _system.Warnings);
+    }
+
+    [Fact]
     public void DroppingAWindowWithCtrlOnAnothersTitleBarMakesAGroup()
     {
         Group(Notes, Mail);

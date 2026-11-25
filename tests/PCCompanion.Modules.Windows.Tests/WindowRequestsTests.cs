@@ -18,6 +18,24 @@ public sealed class WindowRequestsTests
     }
 
     [Fact]
+    public void WindowTabsGroupsAWindowWithAnotherUntilItStops()
+    {
+        var grouped = new List<(nint, nint)>();
+        Assert.False(_requests.GroupWith(1, 2));
+
+        _requests.SetGroupWith((window, target) =>
+        {
+            grouped.Add((window, target));
+            return true;
+        });
+        Assert.True(_requests.GroupWith(3, 4));
+        _requests.SetGroupWith(null);
+
+        Assert.False(_requests.GroupWith(5, 6));
+        Assert.Equal([(3, 4)], grouped);
+    }
+
+    [Fact]
     public void ARunningFeatureTakesItsWindowsUntilItStops()
     {
         var tray = new List<nint>();

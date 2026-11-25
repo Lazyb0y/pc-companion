@@ -22,6 +22,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
     private readonly ILogger _logger;
     private readonly DropDownWindows _dropDown;
     private readonly WindowTabsWindows _tabs;
+    private readonly WindowRequests _requests;
     private readonly string? _pipeName;
 
     // Set on the feature's thread while its message loop runs; read on others.
@@ -29,6 +30,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
 
     /// <param name="dropDown">Drop-down Apps' windows, which rules leave alone.</param>
     /// <param name="tabs">Window Tabs' tabs, which rules leave alone.</param>
+    /// <param name="requests">Where windows go to Window Tabs for Open as a tab of.</param>
     /// <param name="pipeName">The pipe the settings app asks through for Apply now; none in tests.</param>
     public WindowRulesThread(
         WindowRulesSettings settings,
@@ -36,6 +38,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         ILogger logger,
         DropDownWindows dropDown,
         WindowTabsWindows tabs,
+        WindowRequests requests,
         WindowRulesThread? previous = null,
         string? pipeName = null)
         : base("Window Rules", WindowClassName, settings, previous)
@@ -44,11 +47,13 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(tabs);
+        ArgumentNullException.ThrowIfNull(requests);
 
         _time = time;
         _logger = logger;
         _dropDown = dropDown;
         _tabs = tabs;
+        _requests = requests;
         _pipeName = pipeName;
         Start();
     }
@@ -122,7 +127,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             _owner = owner;
             _window = window;
             Action<Action> post = action => window.BeginInvoke(() => owner.Guard(action));
-            _system = new WindowsRulesSystem(post, owner.Guard, owner._dropDown, owner._tabs);
+            _system = new WindowsRulesSystem(post, owner.Guard, owner._dropDown, owner._tabs, owner._requests);
             Controller = new RulesController(_system, owner._time, post, owner._logger);
             _system.RefreshDisplays();
             _pipe = owner._pipeName is null ? null : Serve();

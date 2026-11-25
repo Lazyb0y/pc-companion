@@ -209,7 +209,7 @@ Group windows of different apps into one window with tabs, and switch between th
 - **Title Bar Actions** acts on a group's tab in front as on any window: Minimize minimizes the group, and Send to back sends the group back, with its strip. Minimize to tray plays the warning sound, as Minimize to Tray refuses the tab. Its click actions also offer **Add to the group behind** and **Move out of group**, which do what Windows + Ctrl + T and Windows + Ctrl + Shift + T do, for the clicked window, through `WindowRequests`; see [With the other features](title-bar-actions.md#with-the-other-features).
 - **Shortcuts & Mouse Buttons** can run **Next tab**, **Previous tab**, **Move tab forward**, **Move tab back**, **Add to the group behind** and **Move out of group** from the user's own shortcuts and mouse buttons while Window Tabs is on (`IFeatureActions`). They act on the window in front, so launchers can't run them. See [How features offer actions](../input/shortcuts-and-mouse-buttons.md#how-features-offer-actions).
 - **End App** ends a tab's app like any other; its tabs go.
-- **Window Rules** ([#26](https://github.com/Lazyb0y/pc-companion/issues/26)) can put a window in a group by rule, and **Window shading** ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) shades a group's tab in front, with its strip staying, once those features exist; their specs say how.
+- **Window Rules** opens a window as a tab of another app's window by rule, through `WindowRequests` (`GroupWith`), which groups the two as Windows + Ctrl + T does, but without the warning sound when either can't be a tab; see [Open as a tab](window-rules.md#open-as-a-tab). **Window shading** ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) shades a group's tab in front, with its strip staying, once that feature exists; its spec says how.
 - **With either feature off,** nothing changes.
 
 ## Threads
@@ -279,7 +279,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - **Keeping the tabs behind the one in front,** visible or transparent: Windows then lists every tab on the taskbar and in Alt + Tab, and every tab moves at each move of a drag. Showing every tab on the taskbar could use the transparent way later, as a choice.
 - **Hiding by cloaking:** Windows refuses it for other programs' windows, and allows it only through undocumented interfaces.
 - **Store apps in Windows' shared frame:** they could be minimized instead of hidden; later.
-- **Grouping windows by rule,** such as every window of an app: with Window Rules ([#26](https://github.com/Lazyb0y/pc-companion/issues/26)).
+- **Grouping windows by rule,** such as every window of an app: Window Rules does it; see [Open as a tab](window-rules.md#open-as-a-tab).
 - **Merging two groups,** vertical tabs, tab previews, a group's own name or color, and closing a tab with the middle button.
 - **Moving the group by its strip:** the title bar moves it, with Windows' snapping.
 - **A program that brings the tabs back when the host is ended from Task Manager:** the next start does.

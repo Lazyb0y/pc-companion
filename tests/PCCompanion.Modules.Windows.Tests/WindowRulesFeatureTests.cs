@@ -24,7 +24,7 @@ public sealed class WindowRulesFeatureTests : IDisposable
 
     public WindowRulesFeatureTests()
     {
-        _feature = new WindowRulesFeature(TimeProvider.System, _logger, new DropDownWindows(), new WindowTabsWindows(), _pipe, () =>
+        _feature = new WindowRulesFeature(TimeProvider.System, _logger, new DropDownWindows(), new WindowTabsWindows(), new WindowRequests(), _pipe, () =>
         {
             _recoveries++;
             return _left;

@@ -119,9 +119,10 @@ Each action has a switch in the rule; an action that's off leaves the window as 
 ### Open as a tab
 
 - **Open as a tab of** a window of an app, chosen as the rule's app is: the new window joins the group of that app's front-most window on the same virtual desktop, or starts a group with it, as the tab in front, at the group's place, as Window Tabs' Windows + Ctrl + T does. Choosing the rule's own app puts all its windows in one group.
-- **When no such window is open,** or either window can't be a tab, as Window Tabs decides, nothing happens; the window opens as a window of its own, with the rule's other actions. A Debug entry says why.
+- **The window it joins** is the app's front-most window that's neither minimized nor on another virtual desktop. When none is open, or Window Tabs is off, the window opens as a window of its own, with the rule's other actions.
+- **Window Tabs decides** whether either window can be a tab, on its own thread, and refuses quietly, without its warning sound. A window it refuses opens where its app put it, without the rule's other actions, since the rule asked Window Tabs for it.
 - **A window that joins a group** takes the group's place and state, so the rule's other actions don't apply to it: Window Tabs keeps every tab alike.
-- **Needs Window Tabs on;** while it's off, the action does nothing, and the page says so at the action. It goes through `WindowRequests`, as Title Bar Actions' **Add to the group behind** does.
+- **Needs Window Tabs on;** while it's off, the action does nothing, and the page says so at the action. It goes through `WindowRequests` (`GroupWith`), which Window Rules calls from its own thread and Window Tabs passes to its thread, as Title Bar Actions' **Add to the group behind** does.
 
 ## When rules apply
 
