@@ -648,6 +648,29 @@ foreach ($icon in $windowTabs) {
     Write-Drawing "window-tabs-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
+# Window Rules, in violet: a screen in the light tone with a window on its right half, Window's x, y,
+# width, height and the radius of its right corners, in the main tone with its title bar TitleBar
+# high in the deepest, and a white arrow on the screen's left half pointing at it, Line wide: where
+# an app's windows open. The one-color version cuts the arrow out, and Cut wide round the window
+# and under its title bar.
+$windowRules = @(
+    @{ Size = 32; Screen = 1, 3, 30, 26, 2.5; Window = 15, 3, 16, 26, 2.5; TitleBar = 5; Arrow = 'M4.5 16H11.5M8.5 12.5L12 16L8.5 19.5'; Line = 2.4; Cut = 1.2 }
+    @{ Size = 20; Screen = 2, 3, 16, 14, 1.5; Window = 10, 3, 8, 14, 1.5; TitleBar = 3; Arrow = 'M4 10H7.6M6 8L8 10L6 12'; Line = 1.5; Cut = 1 }
+)
+foreach ($icon in $windowRules) {
+    $x, $y, $w, $h, $r = $icon.Window
+    # The window's left corners are square where it meets the middle of the screen.
+    $window = "M$(F $x) $(F $y)H$(F ($x + $w - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F ($y + $h - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w - $r)) $(F ($y + $h))H$(F $x)Z"
+    $bar = "M$(F $x) $(F $y)H$(F ($x + $w - $r))A$(F $r) $(F $r) 0 0 1 $(F ($x + $w)) $(F ($y + $r))V$(F ($y + $icon.TitleBar))H$(F $x)Z"
+    $body = @((Get-Rect $icon.Screen ' fill="url(#violet-light)"'), "<path fill=`"url(#violet-main)`" d=`"$window`"/>", "<path fill=`"url(#violet-deepest)`" d=`"$bar`"/>",
+        (Get-SymbolPath $icon.Arrow $icon.Line))
+    Write-Drawing "window-rules-$($icon.Size)" $icon.Size (@(Get-Gradient 'violet-light') + @(Get-Gradient 'violet-main') + @(Get-Gradient 'violet-deepest')) $body
+    $screen = Remove-Shape (ConvertTo-Shape (Get-RectPath $icon.Screen)) (Get-GrownShape $window (2 * $icon.Cut))
+    $screen = Remove-Shape $screen (Get-StrokeArea $icon.Arrow $icon.Line)
+    $placed = Remove-Shape (ConvertTo-Shape $window) (Get-StrokeArea "M$(F ($x - 2)) $(F ($y + $icon.TitleBar))H$(F ($x + $w + 2))" $icon.Cut)
+    Write-Drawing "window-rules-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $screen $placed))
+}
+
 # Title Bar Actions, in sky: a window in the main tone, its title bar above paper, and a mouse at
 # its bottom right in the app icon's deep blue with an orange wheel, for the middle click and the
 # wheel the feature uses on title bars. The one-color version cuts the paper out, and Cut wide

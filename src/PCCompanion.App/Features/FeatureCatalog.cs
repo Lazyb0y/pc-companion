@@ -112,7 +112,7 @@ public static class FeatureCatalog
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps", Actions: _ => HideAppsFeature.OfferedActions(), Shortcuts: section => HideAppsFeature.Shortcuts(HideAppsSettings.Read(section))),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps", Actions: section => DropDownAppsFeature.OfferedActions(DropDownAppsSettings.Read(section)), Shortcuts: section => DropDownAppsFeature.Shortcuts(DropDownAppsSettings.Read(section))),
             new(WindowTabsFeature.Definition, WindowTabsFeature.CurrentSupport, typeof(WindowTabsPage), DrawnIcon: "window-tabs", Actions: _ => WindowTabsFeature.OfferedActions(), Shortcuts: section => WindowTabsFeature.Shortcuts(WindowTabsSettings.Read(section))),
-            new(WindowRulesFeature.Definition, WindowRulesFeature.CurrentSupport, typeof(WindowRulesPage)),
+            new(WindowRulesFeature.Definition, WindowRulesFeature.CurrentSupport, typeof(WindowRulesPage), DrawnIcon: "window-rules"),
             new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
             new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage), DrawnIcon: "end-app", Actions: _ => EndAppFeature.OfferedActions(), Shortcuts: section => EndAppFeature.Shortcuts(EndAppSettings.Read(section))),
         ]),
