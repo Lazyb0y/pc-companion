@@ -1,6 +1,6 @@
-﻿# Window Tabs: the Home switch turns it on and its page saves Group by dropping with Ctrl and the
-# switch and group shortcuts, with a note while another program has Windows + Ctrl + Page Down or
-# Windows + Ctrl + T. Test windows,
+﻿# Window Tabs: the Home switch turns it on and its page saves Group by dropping with Ctrl, the switch
+# and group shortcuts and Keep groups after a restart, with a note while another program has
+# Windows + Ctrl + Page Down or Windows + Ctrl + T. Test windows,
 # painted in solid colors and dragged by their title bars with simulated input, make groups: one
 # dropped with Ctrl on another's title bar, and one dropped on a strip without a key, while one
 # dropped without Ctrl doesn't group. The strip shows right above the group; a click on a tab and the
@@ -11,8 +11,9 @@
 # tab brings it to the front, and closing the tab in front shows the other. A window with a dialog
 # open and a fixed-size window can't be tabs, nor, with the host's file labeled Medium integrity, a
 # window running as administrator. Minimize to Tray's shortcut and Drop-down Apps leave a tab alone.
-# Exit brings hidden tabs back on the taskbar, minimized, and the next start brings back those a host
-# that was ended left.
+# Exit brings hidden tabs back on the taskbar, minimized, and keeps the group in window-tabs.json, so
+# the next start groups the windows again; the next start after a host was ended brings back the tabs
+# it left and groups them again. Turning Keep groups after a restart off deletes the file.
 [void] (Close-SettingsApp)
 
 # Detailed logging is on for the host's Debug entries.
@@ -240,7 +241,7 @@ Test-Check 'select Window Tabs' (Select-NavigationItem 'Window Tabs')
 Start-Sleep -Seconds 2
 Save-Screenshot '13a-window-tabs-english'
 $text = Get-WindowText
-Test-Check 'Window Tabs shows its settings' (($text -contains 'Making a group') -and ($text -contains 'Group by dropping with Ctrl') -and ($text -contains 'Switch tabs') -and ($text -contains 'Group from the keyboard') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'Window Tabs shows its settings' (($text -contains 'Making a group') -and ($text -contains 'Group by dropping with Ctrl') -and ($text -contains 'Switch tabs') -and ($text -contains 'Group from the keyboard') -and ($text -contains 'Keep groups after a restart') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 Test-Check 'it says which windows can''t be tabs' (@($text | Where-Object { $_ -like "Some windows can't be tabs*" }).Count -eq 1) ($text -join ' | ')
 Test-Check 'Switch tabs starts with Windows logo key + Ctrl' ((Get-ListSelection 'Switch tabs') -eq 'Windows logo key + Ctrl + Page Down / Page Up') "selected: $(Get-ListSelection 'Switch tabs')"
 Test-Check 'turn off Group by dropping with Ctrl' (Set-Toggle 'Group by dropping with Ctrl' $false)
@@ -251,6 +252,8 @@ $selected = Get-ListSelection 'Group from the keyboard'
 Test-Check 'Group from the keyboard starts with Windows logo key + Ctrl + T' ($selected -eq 'Windows logo key + Ctrl + T') "selected: $selected"
 Test-Check 'choose None for Group from the keyboard' (Select-ListItem 'Group from the keyboard' 'None')
 Test-Check 'the page saves the group shortcuts' (Wait-Until { (Get-TabsSettings).groupShortcuts -eq 'None' } 5) "saved: $(Get-TabsSettings | ConvertTo-Json -Compress)"
+Test-Check 'turn off Keep groups after a restart' (Set-Toggle 'Keep groups after a restart' $false)
+Test-Check 'the page saves that too' (Wait-Until { (Get-TabsSettings).keepGroups -eq $false } 5) "saved: $(Get-TabsSettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
 # Another program that has Windows + Ctrl + Page Down, or Windows + Ctrl + T: the page says so.
@@ -411,23 +414,47 @@ Test-Check 'Drop-down Apps leaves a tab' ((Test-Shown $a) -and (Test-SameFrame (
 Test-Check 'Drop-down Apps logs why' (Test-Logged 'app 0: "?WindowTab')
 Write-TabsSettings '{ "enabled": true }'
 
-# Exit brings a hidden tab back on the taskbar, minimized; ended, the host brings it back at its next start.
+# Exit brings a hidden tab back on the taskbar, minimized, and keeps the group in window-tabs.json:
+# each tab's app, by its program here, in the strip's order, and the tab in front, and nothing else.
+# The next start groups the windows again, and a tab made again from a minimized window shows restored.
+$keptFile = Join-Path $dataFolder 'window-tabs.json'
+function Get-KeptText { if (Test-Path $keptFile) { Get-Content $keptFile -Raw } else { '(no file)' } }
 Stop-Host
 Test-Check 'when PC Companion exits, a hidden tab comes back on the taskbar, minimized' ([Win32]::IsWindowVisible($b) -and [Win32]::IsIconic($b) -and ([TabChecks]::Mark($b) -eq 0)) (Get-States $b)
-[void] [Win32]::ShowWindow($b, 9)
-[void] [Win32]::MoveWindow($b, 600, 150, 520, 360, $true)
-[void] [Win32]::MoveWindow($a, 40, 150, 460, 300, $true)
+$kept = if (Test-Path $keptFile) { Get-Content $keptFile -Raw | ConvertFrom-Json } else { $null }
+$keptTabs = @($kept.groups | ForEach-Object { $_.tabs })
+Test-Check 'it keeps the group in window-tabs.json, with its tabs'' programs in order and the tab in front' ((@($kept.groups).Count -eq 1) -and ($keptTabs.Count -eq 2) -and ($keptTabs[0].program -like '*\tab-b.exe') -and ($keptTabs[1].program -like '*\tab-a.exe') -and ($kept.groups[0].front -eq 1)) (Get-KeptText)
+Test-Check 'and nothing else, such as titles' ((@($keptTabs | ForEach-Object { $_.PSObject.Properties.Name -join ',' } | Select-Object -Unique) -join ';') -eq 'appId,program') (Get-KeptText)
+$made = Get-MatchCount (Get-HostLog) 'made a kept group again, with 2 tabs'
 Start-Host
-Select-Window $b
-Select-Window $a
-Invoke-Drag (Get-TitlePoint $a) (New-Object System.Drawing.Point(($groupFrame.Left + 200), ($groupFrame.Top + 20))) -Control $true
-[void] (Wait-Until { (Test-Hidden $b) -and (Test-Shown $a) } 5)
+Test-Check 'at the next start, the windows are grouped again, with the same tab in front' (Wait-Until { (Test-Hidden $b) -and (Test-Shown $a) -and ((Get-Strips).Count -eq 1) } 10) "$(Get-States $a $b); strips: $((Get-Strips).Count)"
+$strip = Get-Strips | Select-Object -First 1
+Test-Check 'in their order' ((Get-TabList $strip) -eq 'ControlType.Tab "Tabs: tab-a": tab-b, [tab-a]') (Get-TabList $strip)
+Test-Check 'the host logs it' (Wait-Until { (Get-MatchCount (Get-HostLog) 'made a kept group again, with 2 tabs') -gt $made } 5)
+$frame = [TabChecks]::Visible($a)
+$point = Get-TabPoint $strip 0 2
+Invoke-Click $point.X $point.Y
+Test-Check 'the tab made again from a minimized window shows restored, in the group''s place' (Wait-Until { (Test-Shown $b) -and (Test-Hidden $a) -and (Test-SameFrame ([TabChecks]::Visible($b)) $frame) } 5) "$(Get-States $a $b); group $($frame.Left),$($frame.Top),$($frame.Right),$($frame.Bottom)"
+$saves = Get-MatchCount (Get-HostLog) 'saved 1 kept groups'
+$point = Get-TabPoint $strip 1 2
+Invoke-Click $point.X $point.Y
+[void] (Wait-Until { (Test-Shown $a) -and (Test-Hidden $b) } 5)
+Test-Check 'the host saves the change after 5 seconds' (Wait-Until { (Get-MatchCount (Get-HostLog) 'saved 1 kept groups') -gt $saves } 10)
+
+# Ended, the host leaves the tab hidden and marked; its next start brings the tab back on the
+# taskbar and groups it again.
+$brought = Get-MatchCount (Get-HostLog) 'brought back 1 windows left hidden'
+$made = Get-MatchCount (Get-HostLog) 'made a kept group again, with 2 tabs'
 Get-Processes 'PCCompanion.Host' | Stop-Process -Force
 Start-Sleep -Seconds 2
 Test-Check 'a host that''s ended leaves the tab hidden and marked' (Test-Hidden $b) (Get-States $b)
 Start-Host
-Test-Check 'at the next start, the tab comes back on the taskbar, minimized' (Wait-Until { [Win32]::IsWindowVisible($b) -and [Win32]::IsIconic($b) -and ([TabChecks]::Mark($b) -eq 0) } 10) (Get-States $b)
-Test-Check 'the host logs it' (Test-Logged 'brought back 1 windows left hidden')
+Test-Check 'at the next start, the tab comes back and is grouped again' (Wait-Until { (Test-Hidden $b) -and (Test-Shown $a) -and ((Get-Strips).Count -eq 1) } 10) "$(Get-States $a $b); strips: $((Get-Strips).Count)"
+Test-Check 'the host logs both' (Wait-Until { ((Get-MatchCount (Get-HostLog) 'brought back 1 windows left hidden') -gt $brought) -and ((Get-MatchCount (Get-HostLog) 'made a kept group again, with 2 tabs') -gt $made) } 5)
+
+# Turning Keep groups after a restart off deletes the file.
+Write-TabsSettings '{ "enabled": true, "keepGroups": false }'
+Test-Check 'turning Keep groups after a restart off deletes window-tabs.json' (Wait-Until { -not (Test-Path $keptFile) } 5) (Get-KeptText)
 
 # Everything in Windows Sandbox runs as administrator. A host whose file is labeled Medium integrity
 # runs without admin rights, as do copies of the test program labeled the same way, which it groups;
