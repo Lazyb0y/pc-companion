@@ -5965,7 +5965,7 @@
     <comment>Window Tabs page: shown instead of WindowTabsCantBeTabsInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="WindowTabsPermissions" xml:space="preserve">
-    <value>While a window is dragged, reads where the pointer is, whether Ctrl is held and which window is under the pointer. Reads each tab's title and icon to draw the tab, and which window comes to the front; titles stay in memory only. Hides, shows, moves and resizes the tabs, and marks hidden ones so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Makes no network connections and sends nothing.</value>
+    <value>While a window is dragged, reads where the pointer is, whether Ctrl is held and which window is under the pointer. Reads each tab's title and icon to draw the tab, and which window comes to the front; titles stay in memory only. Hides, shows, moves and resizes the tabs, and marks hidden ones so they come back after a crash; uses no keyboard or mouse hook and runs no code in other apps. Keeps the apps in each group, for up to 50 groups, in a file on this PC, which is deleted when the feature or Keep groups after a restart is off. Makes no network connections and sends nothing.</value>
     <comment>Window Tabs page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="WindowTabsActionNextTab" xml:space="preserve">
@@ -6003,5 +6003,13 @@
   <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
     <value>Add to the group behind and Move out of group work only while Window Tabs is on. Until then, Windows' warning sound plays instead.</value>
     <comment>Title Bar Actions page: shown while a click is set to Add to the group behind (WindowTabsActionAddToGroupBehind) or Move out of group (WindowTabsMoveOutOfGroup) and Window Tabs (WindowTabsName) is off.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsHeader" xml:space="preserve">
+    <value>Keep groups after a restart</value>
+    <comment>Window Tabs page: setting name; an on/off switch.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsDescription" xml:space="preserve">
+    <value>Remembers the apps in each group, and groups their windows again when they open after a restart, a sign-out or an update.</value>
+    <comment>Window Tabs page: below WindowTabsKeepGroupsHeader.</comment>
   </data>
 </root>

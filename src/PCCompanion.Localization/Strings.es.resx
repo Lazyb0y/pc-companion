@@ -5965,7 +5965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsPermissions" xml:space="preserve">
-    <value>Mientras se arrastra una ventana, lee dónde está el puntero, si Ctrl está presionada y qué ventana hay bajo el puntero. Lee el título y el icono de cada pestaña para dibujarla, y qué ventana pasa a primer plano; los títulos solo se guardan en memoria. Oculta, muestra, mueve y cambia el tamaño de las pestañas, y marca las ocultas para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. No establece conexiones de red y no envía nada.</value>
+    <value>Mientras se arrastra una ventana, lee dónde está el puntero, si Ctrl está presionada y qué ventana hay bajo el puntero. Lee el título y el icono de cada pestaña para dibujarla, y qué ventana pasa a primer plano; los títulos solo se guardan en memoria. Oculta, muestra, mueve y cambia el tamaño de las pestañas, y marca las ocultas para que vuelvan después de un bloqueo; no usa ningún enlace de teclado ni de mouse y no ejecuta código en otras aplicaciones. Guarda las aplicaciones de cada grupo, para un máximo de 50 grupos, en un archivo de este PC, que se elimina cuando la característica o Conservar los grupos después de reiniciar está desactivada. No establece conexiones de red y no envía nada.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsActionNextTab" xml:space="preserve">
@@ -6002,6 +6002,14 @@
   </data>
   <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
     <value>Las acciones Agregar al grupo de atrás y Sacar del grupo solo funcionan mientras la característica Pestañas de ventanas está activada. Hasta entonces, se reproduce en su lugar el sonido de advertencia de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsHeader" xml:space="preserve">
+    <value>Conservar los grupos después de reiniciar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsDescription" xml:space="preserve">
+    <value>Recuerda las aplicaciones de cada grupo y vuelve a agrupar sus ventanas cuando se abren después de reiniciar, cerrar sesión o actualizar.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

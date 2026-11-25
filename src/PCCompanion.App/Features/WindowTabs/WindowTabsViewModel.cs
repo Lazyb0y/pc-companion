@@ -104,6 +104,12 @@ public sealed class WindowTabsViewModel : FeatureViewModel<WindowTabsSettings>
     /// <summary>The note that names the group shortcuts.</summary>
     public string GroupShortcutRefusedInfo { get; } = ShortcutStatus.RefusedNote(Strings.WindowTabsGroupWindowsControlT);
 
+    public bool KeepGroups
+    {
+        get => Settings.KeepGroups;
+        set => Change(Settings.KeepGroups, value, () => Settings with { KeepGroups = value });
+    }
+
     /// <summary>Reads which shortcuts Windows refused from the host while the page shows. Call it on the page's thread.</summary>
     public void StartShortcutStatus() => _shortcutStatus.Start();
 

@@ -8,10 +8,10 @@ namespace PCCompanion.Modules.Windows.Tests;
 public sealed class WindowTabsSettingsTests
 {
     [Fact]
-    public void WithoutASectionTheFeatureIsOffWithDroppingAndTheWindowsControlShortcuts()
+    public void WithoutASectionTheFeatureIsOffWithDroppingTheWindowsControlShortcutsAndGroupsKept()
     {
         Assert.Equal(
-            new WindowTabsSettings { Enabled = false, GroupByDropping = true, SwitchShortcuts = TabSwitchShortcuts.WindowsControlPage, GroupShortcuts = TabGroupShortcuts.WindowsControlT },
+            new WindowTabsSettings { Enabled = false, GroupByDropping = true, SwitchShortcuts = TabSwitchShortcuts.WindowsControlPage, GroupShortcuts = TabGroupShortcuts.WindowsControlT, KeepGroups = true },
             WindowTabsSettings.Read(null));
     }
 
@@ -23,7 +23,8 @@ public sealed class WindowTabsSettingsTests
               "enabled": true,
               "groupByDropping": true,
               "switchShortcuts": "WindowsControlPage",
-              "groupShortcuts": "WindowsControlT"
+              "groupShortcuts": "WindowsControlT",
+              "keepGroups": true
             }
             """));
 
@@ -39,7 +40,7 @@ public sealed class WindowTabsSettingsTests
     [Fact]
     public void WriteThenReadReturnsTheSameSettings()
     {
-        var settings = new WindowTabsSettings { Enabled = true, GroupByDropping = false, SwitchShortcuts = TabSwitchShortcuts.WindowsAltPage, GroupShortcuts = TabGroupShortcuts.None };
+        var settings = new WindowTabsSettings { Enabled = true, GroupByDropping = false, SwitchShortcuts = TabSwitchShortcuts.WindowsAltPage, GroupShortcuts = TabGroupShortcuts.None, KeepGroups = false };
 
         Assert.Equal(settings, WindowTabsSettings.Read(settings.Write()));
     }

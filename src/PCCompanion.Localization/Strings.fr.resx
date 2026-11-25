@@ -5965,7 +5965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsPermissions" xml:space="preserve">
-    <value>Pendant qu’une fenêtre est déplacée, lit où se trouve le pointeur, si Ctrl est enfoncée et quelle fenêtre se trouve sous le pointeur. Lit le titre et l’icône de chaque onglet pour le dessiner, et quelle fenêtre passe au premier plan ; les titres restent uniquement en mémoire. Masque, affiche, déplace et redimensionne les onglets, et marque ceux qui sont masqués pour qu’ils reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. N’établit aucune connexion réseau et n’envoie rien.</value>
+    <value>Pendant qu’une fenêtre est déplacée, lit où se trouve le pointeur, si Ctrl est enfoncée et quelle fenêtre se trouve sous le pointeur. Lit le titre et l’icône de chaque onglet pour le dessiner, et quelle fenêtre passe au premier plan ; les titres restent uniquement en mémoire. Masque, affiche, déplace et redimensionne les onglets, et marque ceux qui sont masqués pour qu’ils reviennent après un plantage ; n’utilise aucun hook clavier ou souris et n’exécute aucun code dans d’autres applications. Conserve les applications de chaque groupe, pour 50 groupes au plus, dans un fichier sur ce PC, qui est supprimé quand la fonctionnalité ou Conserver les groupes après un redémarrage est désactivée. N’établit aucune connexion réseau et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsActionNextTab" xml:space="preserve">
@@ -6002,6 +6002,14 @@
   </data>
   <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
     <value>Les actions Ajouter au groupe derrière et Retirer du groupe ne fonctionnent que quand la fonctionnalité Onglets de fenêtres est activée. D’ici là, le son d’avertissement de Windows retentit à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsHeader" xml:space="preserve">
+    <value>Conserver les groupes après un redémarrage</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsDescription" xml:space="preserve">
+    <value>Mémorise les applications de chaque groupe et regroupe à nouveau leurs fenêtres quand elles s’ouvrent après un redémarrage, une déconnexion ou une mise à jour.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
