@@ -42,6 +42,9 @@ public interface ITrayWindowsSystem : IAppIdentityReader
     /// <summary>Whether the window is one of Window Tabs' tabs, which minimizes and hides with its group.</summary>
     bool IsTab(nint window);
 
+    /// <summary>Whether Window Shading rolled the window up, which it minimizes and brings back itself.</summary>
+    bool IsRolledUp(nint window);
+
     string ClassName(nint window);
 
     string Title(nint window);
@@ -165,6 +168,9 @@ public enum SendOutcome
 
     /// <summary>One of Window Tabs' tabs, which minimizes and hides with its group.</summary>
     WindowTab,
+
+    /// <summary>Window Shading rolled the window up, and brings it back itself.</summary>
+    RolledUp,
 }
 
 /// <summary>Why a window left the tray.</summary>
