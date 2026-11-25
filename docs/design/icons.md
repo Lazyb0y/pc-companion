@@ -64,6 +64,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Hide Apps | Two apps as rounded squares: one in front, split along its diagonal, and a hidden one behind it, a dashed outline in the deeper orange | | Violet |
 | Drop-down Apps | A screen with a panel hanging from its top edge, with a white chevron | | App blue |
 | Window Tabs | A window with a row of tabs across its top, in the deepest tone: the tab in front joined to the window's body, and an orange tab behind it | | Green |
+| Window Rules | A screen in the light tone with a window on its right half, its title bar in the deepest tone, and a white arrow on the left half pointing at it | | Violet |
 | Title Bar Actions | A window with a blue title bar | A blue mouse with an orange wheel | Sky |
 | End App | An app window | A red stop sign with a white bar | Violet |
 | System Meters | Three bars, from light and short to deep and tall | | Green |
