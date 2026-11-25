@@ -299,7 +299,8 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 - **Roll up:** window shading ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) needs its own spike, and becomes a wheel action once it exists.
 - **Move to another virtual desktop:** [#30](https://github.com/Lazyb0y/pc-companion/issues/30), which needs undocumented APIs.
 - **Different actions for the window in front and the windows behind it,** as KDE Plasma offers: one action per click keeps the page short, and Send to back already handles the window in front.
-- **Actions for each app, and remembering an app's opacity:** Window Rules ([#26](https://github.com/Lazyb0y/pc-companion/issues/26)).
+- **Actions for each app:** [#361](https://github.com/Lazyb0y/pc-companion/issues/361).
+- **An app's opacity,** set for each app or remembered from the wheel: Window Rules ([#26](https://github.com/Lazyb0y/pc-companion/issues/26)); see [Opacity](window-rules.md#opacity) in its spec.
 - **Recent results on the page:** most clicks that do nothing are on apps that don't tell Windows where their title bar is, which results couldn't show. Debug logs say why a click on a title bar did nothing.
 - **Actions anywhere in a window,** such as a key with a click: this feature covers title bars only.
 - **The title bars of windows inside an app's own window** (MDI child windows).
