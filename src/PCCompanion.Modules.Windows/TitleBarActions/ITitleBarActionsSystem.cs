@@ -64,6 +64,9 @@ public interface ITitleBarActionsSystem
     /// </summary>
     bool TakeOutOfGroup(nint window);
 
+    /// <summary>Tells Window Rules the opacity the wheel gave the window, in percent.</summary>
+    void OpacityChanged(nint window, int percent);
+
     /// <summary>Plays Windows' warning sound.</summary>
     void PlayWarningSound();
 }

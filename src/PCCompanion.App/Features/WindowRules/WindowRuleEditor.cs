@@ -34,6 +34,7 @@ public sealed partial class WindowRuleEditor : ObservableObject
 
     private readonly List<RuleDisplay> _displays = [];
     private readonly IReadOnlyList<WindowRule> _otherRules;
+    private readonly string _id;
     private IReadOnlyList<(OpenRuleWindow Window, string AppName)> _open = [];
     private string _name;
     private ListedApp? _app;
@@ -73,6 +74,9 @@ public sealed partial class WindowRuleEditor : ObservableObject
         _otherRules = otherRules;
         Title = isNew ? Strings.WindowRulesAddTitle : Strings.WindowRulesEditTitle;
         _enabled = rule.Enabled;
+
+        // A new rule, or one written by hand, gets a key that keeps what it remembers.
+        _id = rule.Id.Length > 0 ? rule.Id : Guid.NewGuid().ToString("N");
         _name = rule.Name;
         _app = rule.App;
         _titleOn = rule.Title is not null;
@@ -318,6 +322,7 @@ public sealed partial class WindowRuleEditor : ObservableObject
     public WindowRule ToRule() => new()
     {
         Name = _name.Trim(),
+        Id = _id,
         Enabled = _enabled,
         App = _app,
         Title = _titleOn ? TitleCondition() : null,

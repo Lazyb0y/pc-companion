@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PCCompanion.Platform.Windows;
@@ -18,20 +19,29 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
 {
     private const string WindowClassName = "PCCompanion.WindowRules";
 
+    // WM_QUERYENDSESSION, which Windows sends before it asks apps to close at sign-out.
+    private const uint QueryEndSession = 0x0011;
+
     private readonly TimeProvider _time;
     private readonly ILogger _logger;
     private readonly DropDownWindows _dropDown;
     private readonly WindowTabsWindows _tabs;
     private readonly WindowRequests _requests;
     private readonly string? _pipeName;
+    private readonly Action<WindowRulesThread>? _readRemembered;
+    private readonly Action<WindowRulesThread, IReadOnlyList<RememberedRule>>? _saveRemembered;
 
     // Set on the feature's thread while its message loop runs; read on others.
     private volatile Ruler? _ruler;
+    private volatile bool _keeps;
 
     /// <param name="dropDown">Drop-down Apps' windows, which rules leave alone.</param>
     /// <param name="tabs">Window Tabs' tabs, which rules leave alone.</param>
     /// <param name="requests">Where windows go to Window Tabs for Open as a tab of.</param>
     /// <param name="pipeName">The pipe the settings app asks through for Apply now; none in tests.</param>
+    /// <param name="keeps">Whether what rules remember may be read and written, as <see cref="Keeps"/>.</param>
+    /// <param name="readRemembered">Reads what rules remember off the thread as it starts, and passes it back with <see cref="LoadRemembered"/>.</param>
+    /// <param name="saveRemembered">Writes what rules remember off the thread, after a change and as it stops.</param>
     public WindowRulesThread(
         WindowRulesSettings settings,
         TimeProvider time,
@@ -40,7 +50,10 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         WindowTabsWindows tabs,
         WindowRequests requests,
         WindowRulesThread? previous = null,
-        string? pipeName = null)
+        string? pipeName = null,
+        bool keeps = false,
+        Action<WindowRulesThread>? readRemembered = null,
+        Action<WindowRulesThread, IReadOnlyList<RememberedRule>>? saveRemembered = null)
         : base("Window Rules", WindowClassName, settings, previous)
     {
         ArgumentNullException.ThrowIfNull(time);
@@ -55,8 +68,28 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         _tabs = tabs;
         _requests = requests;
         _pipeName = pipeName;
+        _keeps = keeps;
+        _readRemembered = readRemembered;
+        _saveRemembered = saveRemembered;
         Start();
     }
+
+    /// <summary>
+    /// Whether what rules remember may be written to <c>window-rules.json</c>: the host doesn't run
+    /// as administrator after a UAC prompt, and the feature is on. Set it from any thread; a write
+    /// checks it as it's done.
+    /// </summary>
+    public bool Keeps
+    {
+        get => _keeps;
+        set => _keeps = value;
+    }
+
+    /// <summary>Adds what the file kept, on the feature's thread.</summary>
+    public void LoadRemembered(IReadOnlyList<RememberedRule?> rules) => Post(() => _ruler?.Controller.Remembered.Load(rules));
+
+    /// <summary>Title Bar Actions' wheel gave a window an opacity; any thread can call it.</summary>
+    public void ReportWheelOpacity(nint window, int percent) => Post(() => _ruler?.Controller.OnWheelOpacity(window, percent));
 
     protected override IDisposable Open(MessageWindow window)
     {
@@ -115,12 +148,17 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
     // What runs on the feature's thread: the controller, its hooks and the pipe.
     private sealed class Ruler : IDisposable
     {
+        // How long after a change what rules remember is written.
+        private static readonly TimeSpan SaveDelay = TimeSpan.FromSeconds(5);
+
         private readonly WindowRulesThread _owner;
         private readonly MessageWindow _window;
         private readonly WindowsRulesSystem _system;
         private readonly List<WinEventHook> _hooks = [];
         private readonly RequestPipe? _pipe;
         private readonly uint _taskbarCreated = MessageWindow.RegisterMessage("TaskbarCreated");
+        private ITimer? _save;
+        private bool _unsaved;
 
         public Ruler(WindowRulesThread owner, MessageWindow window)
         {
@@ -131,6 +169,12 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             Controller = new RulesController(_system, owner._time, post, owner._logger);
             _system.RefreshDisplays();
             _pipe = owner._pipeName is null ? null : Serve();
+            _window.MessageReceived += OnMessageReceived;
+            Controller.Remembered.Changed += (_, _) => ScheduleSave();
+            if (owner.Keeps)
+            {
+                owner._readRemembered?.Invoke(owner);
+            }
         }
 
         public RulesController Controller { get; }
@@ -154,7 +198,10 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         public void Dispose()
         {
             _pipe?.Dispose();
+            _window.MessageReceived -= OnMessageReceived;
             Unhook();
+            SaveNow();
+            _save?.Dispose();
             var released = Controller.ReleaseNow();
             if (released > 0)
             {
@@ -175,20 +222,34 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
                 return;
             }
 
-            Add(WinEventHook.ObjectDestroyEvent, WinEventHook.ObjectShowEvent, (type, window) =>
+            Add(WinEventHook.ObjectDestroyEvent, WinEventHook.ObjectHideEvent, (type, window) =>
             {
                 if (type == WinEventHook.ObjectShowEvent)
                 {
                     Controller.OnShown(window);
                 }
-                else if (type == WinEventHook.ObjectDestroyEvent)
+                else if (type == WinEventHook.ObjectHideEvent)
+                {
+                    Controller.OnHidden(window);
+                }
+                else
                 {
                     Controller.OnDestroyed(window);
                 }
             });
             Add(WinEventHook.ObjectUncloakedEvent, WinEventHook.ObjectUncloakedEvent, (_, window) => Controller.OnUncloaked(window));
             Add(WinEventHook.ObjectNameChangeEvent, WinEventHook.ObjectNameChangeEvent, (_, window) => Controller.OnTitleChanged(window));
-            Add(WinEventHook.MoveSizeStartEvent, WinEventHook.MoveSizeStartEvent, (_, window) => Controller.OnMoveSizeStart(window));
+            Add(WinEventHook.MoveSizeStartEvent, WinEventHook.MoveSizeEndEvent, (type, window) =>
+            {
+                if (type == WinEventHook.MoveSizeStartEvent)
+                {
+                    Controller.OnMoveSizeStart(window);
+                }
+                else
+                {
+                    Controller.OnMoveSizeEnd(window);
+                }
+            });
             Add(WinEventHook.MinimizeStartEvent, WinEventHook.MinimizeEndEvent, (type, window) =>
             {
                 if (type == WinEventHook.MinimizeStartEvent)
@@ -201,7 +262,6 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
                 }
             });
             Add(WinEventHook.ForegroundEvent, WinEventHook.ForegroundEvent, (_, window) => Controller.OnForeground(window));
-            _window.MessageReceived += OnMessageReceived;
         }
 
         private void Unhook()
@@ -209,11 +269,6 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             foreach (var hook in _hooks)
             {
                 hook.Dispose();
-            }
-
-            if (_hooks.Count > 0)
-            {
-                _window.MessageReceived -= OnMessageReceived;
             }
 
             _hooks.Clear();
@@ -232,10 +287,39 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
             _hooks.Add(hook);
         }
 
-        // The displays are read again after they change, for rules with a chosen display, and
-        // buttons Explorer adds again as it restarts are removed again.
+        private void ScheduleSave()
+        {
+            _unsaved = true;
+            if (_save is null && _owner.Keeps)
+            {
+                _save = _owner._time.CreateTimer(_ => _window.BeginInvoke(() => _owner.Guard(SaveNow)), null, SaveDelay, Timeout.InfiniteTimeSpan);
+            }
+        }
+
+        private void SaveNow()
+        {
+            _save?.Dispose();
+            _save = null;
+            if (!_unsaved || !_owner.Keeps)
+            {
+                return;
+            }
+
+            _unsaved = false;
+            _owner._saveRemembered?.Invoke(_owner, Controller.Remembered.Saved);
+        }
+
+        // The displays are read again after they change, for rules with a chosen display, buttons
+        // Explorer adds again as it restarts are removed again, and what rules remember is written
+        // when the session may end.
         private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
         {
+            if (e.Message == QueryEndSession)
+            {
+                _owner.Guard(SaveNow);
+                return;
+            }
+
             if (Displays.IsChangeMessage(e.Message))
             {
                 _owner.Guard(() => _system.RefreshDisplays(Controller.OnDisplaysChanged));

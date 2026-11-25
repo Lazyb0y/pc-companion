@@ -183,6 +183,12 @@ public sealed record WindowRule
     /// <summary>The longest name, in characters.</summary>
     public const int MaximumNameLength = 60;
 
+    /// <summary>
+    /// A key the settings app gives a rule as it's added, which keeps what the rule remembers when
+    /// it's renamed or moved; empty in a hand-written rule, which is then known by its name.
+    /// </summary>
+    public string Id { get; set; } = string.Empty;
+
     public string Name { get; set; } = string.Empty;
 
     public bool Enabled { get; set; } = true;

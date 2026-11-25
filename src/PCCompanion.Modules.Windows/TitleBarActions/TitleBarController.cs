@@ -396,6 +396,7 @@ public sealed partial class TitleBarController : IDisposable
             case OpacityStep.Changed:
                 var level = _opacity.Level(window) ?? 100;
                 LogOpacity(_logger, level, path);
+                _system.OpacityChanged(window, level);
                 break;
             case OpacityStep.DrawsItself or OpacityStep.Refused:
                 if (_soundedFor != window)

@@ -334,6 +334,86 @@ public sealed class RulesControllerTests : IDisposable
     }
 
     [Fact]
+    public void WhereIlastPutItOpensTheNextWindowThereOnItsDisplay()
+    {
+        var rule = new WindowRule { Id = "mail", App = Mail, Place = Place("Remembered") };
+        Use(rule);
+        Opens(New);
+        Assert.Equal(Start, _system[New].Visible);
+
+        _system[New].Visible = new Rectangle(2000, 100, 1000, 700);
+        _controller.OnMoveSizeEnd(New);
+        _controller.OnHidden(New);
+        _controller.OnDestroyed(New);
+        _system.Remove(New);
+        Opens(3);
+
+        Assert.Equal(new Rectangle(2000, 100, 1000, 700), _system[3].Visible);
+        Assert.NotNull(_controller.Remembered.Find("mail", _system.DisplaySet));
+    }
+
+    [Fact]
+    public void AWindowThatWouldOpenOverAnotherOfTheRuleMovesDownAndRight()
+    {
+        Use(new WindowRule { Id = "mail", App = Mail, Place = Place("Remembered") });
+        Opens(New);
+        _system[New].Visible = new Rectangle(200, 100, 800, 600);
+        _controller.OnMoveSizeEnd(New);
+
+        Opens(3);
+        Opens(4);
+
+        Assert.Equal(new Rectangle(232, 132, 800, 600), _system[3].Visible);
+        Assert.Equal(new Rectangle(264, 164, 800, 600), _system[4].Visible);
+    }
+
+    [Fact]
+    public void ARememberedMaximizedWindowOpensMaximizedAndOneOnADisplayThatsGoneOnTheMainOne()
+    {
+        Use(new WindowRule { Id = "mail", App = Mail, Place = Place("Remembered") });
+        Opens(New);
+        _system[New].State = WindowState.Maximized;
+        _system[New].Normal = FakeRulesSystem.Inflate(new Rectangle(2100, 100, 1000, 700));
+        _controller.OnHidden(New);
+
+        Opens(3);
+        Assert.Equal(WindowState.Maximized, _system[3].State);
+        Assert.Equal(FakeRulesSystem.Inflate(new Rectangle(2100, 100, 1000, 700)), _system[3].Normal);
+
+        _controller.Remembered.Remember("mail", _system.DisplaySet, new RuleDisplay { Which = "Chosen", Model = "GONE" }, new Rectangle(2000, 0, 1280, 696), FakeRulesSystem.SecondArea, maximized: false);
+        Opens(4);
+        Assert.Equal(new Rectangle(60, 0, 960, 516), _system[4].Visible);
+    }
+
+    [Fact]
+    public void TheWheelsOpacityIsKeptForARuleThatSaysSoAndGivenToItsNextWindows()
+    {
+        Use(new WindowRule { Id = "mail", App = Mail, Opacity = new RuleOpacity { Which = "Wheel" } });
+        Opens(New);
+        Assert.Null(_system[New].Attributes);
+
+        _controller.OnWheelOpacity(New, 60);
+        _controller.OnWheelOpacity(99, 30);
+        Opens(3);
+
+        Assert.Equal(60, _controller.Remembered.OpacityOf("mail"));
+        Assert.Equal(153, _system[3].Attributes!.Value.Alpha);
+    }
+
+    [Fact]
+    public void WhatDeletedRulesRememberedIsForgotten()
+    {
+        Use(new WindowRule { Id = "mail", App = Mail, Opacity = new RuleOpacity { Which = "Wheel" } });
+        _controller.Remembered.RememberOpacity("mail", 50);
+
+        Use(new WindowRule { Id = "mail", App = Mail, Opacity = new RuleOpacity { Which = "Wheel" }, Enabled = false }, new WindowRule { App = Mail, OnTop = true });
+        Assert.Equal(50, _controller.Remembered.OpacityOf("mail"));
+
+        Use(new WindowRule { App = Mail, OnTop = true });
+        Assert.Null(_controller.Remembered.OpacityOf("mail"));
+    }
+
+    [Fact]
     public void RulesThatCantBeUsedAreLogged()
     {
         Use(new WindowRule { App = Mail }, new WindowRule { App = Mail, OnTop = true });

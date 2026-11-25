@@ -131,6 +131,22 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
 
     public Rectangle? WorkAreaOf(RuleDisplay display) => ConnectedDisplays.WorkAreaOf(display, _displays);
 
+    // Displays without a serial number are told apart by their connection.
+    public string DisplaySet => string.Join(";", _displays
+        .Select(display => $"{display.Display.Model}|{(display.Serial.Length > 0 ? display.Serial : display.Display.DevicePath)}")
+        .Order(StringComparer.Ordinal));
+
+    public (RuleDisplay Display, Rectangle WorkArea)? DisplayAt(Rectangle frame)
+    {
+        var center = new Point(frame.Left + (frame.Width / 2), frame.Top + (frame.Height / 2));
+        if (Displays.At(center)?.WorkArea is not { } workArea)
+        {
+            return null;
+        }
+
+        return _displays.FirstOrDefault(display => display.WorkArea == workArea) is { } found ? (found.ToRule(), workArea) : null;
+    }
+
     public IReadOnlyList<nint> TaskbarWindows() =>
         [.. TopLevelWindows.List().Where(window => !window.IsDesktop && TopLevelWindows.MayHaveTaskbarButton(window.Handle)).Select(window => window.Handle)];
 

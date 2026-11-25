@@ -183,6 +183,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 - **How:** within the module, a request carries the window to the other feature's thread (`WindowRequests`), as the features already share `HideAppsMinimized` and `DropDownWindows`. Each feature sets its part as it starts and clears it as it stops.
 - **Shift + Minimize:** when Shift + middle-click is set to **Minimize** and Minimize to Tray's **Shift + Minimize** is on, the window minimizes with Shift held, so Minimize to Tray takes it to the tray, as it does a click on the Minimize button with Shift held.
 - **Drop-down Apps' windows:** Minimize hides a shown drop-down window, as Drop-down Apps does whenever one is minimized. Minimize to tray and Hide app leave drop-down windows alone, as those features do.
+- **Window Rules:** after each notch that changes a window's opacity, the wheel tells Window Rules the opacity (`WindowRequests`), so a rule whose opacity is **As last set with the wheel** keeps it for the app's next windows. A window a rule made translucent changes between 20% and the rule's opacity, which the wheel treats as the window's own; see [Opacity](window-rules.md#opacity).
 - **Middle-Click Paste** claims plain middle-clicks on text boxes in the same pointer hook. The claims don't overlap, since title bars show an arrow and text boxes the I-beam; see [With the other features](../clipboard/middle-click-paste.md#with-the-other-features).
 
 ## Never leaving a window translucent

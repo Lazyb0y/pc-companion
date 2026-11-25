@@ -85,6 +85,15 @@ internal sealed class FakeRulesSystem : IRulesSystem
 
     public Rectangle? WorkAreaOf(RuleDisplay display) => Connected.TryGetValue(display.Model, out var area) ? area : null;
 
+    public string DisplaySet => string.Join(";", Connected.Keys.Order(StringComparer.Ordinal).Prepend("MAIN"));
+
+    public (RuleDisplay Display, Rectangle WorkArea)? DisplayAt(Rectangle frame)
+    {
+        var area = AreaAt(frame);
+        var model = area == SecondArea ? "SECOND" : "MAIN";
+        return (new RuleDisplay { Which = "Chosen", Model = model, Name = model }, area);
+    }
+
     public IReadOnlyList<nint> TaskbarWindows() => [.. _windows.Values.Where(window => window.Refusal != RuleRefusal.NotMain).Select(window => window.Handle)];
 
     public bool Place(nint window, Rectangle bounds)

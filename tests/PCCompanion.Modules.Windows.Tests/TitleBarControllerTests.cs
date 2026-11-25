@@ -415,6 +415,7 @@ public sealed class TitleBarControllerTests : IDisposable
 
         Assert.Equal(80, _opacity.OpacityOf(Window));
         Assert.Contains(_logger.Entries, entry => entry.Message.Contains("opacity to 80% (Kept)", StringComparison.Ordinal));
+        Assert.Equal([(Window, 90), (Window, 80)], _system.Opacities);
     }
 
     [Fact]
