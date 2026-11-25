@@ -348,6 +348,75 @@ public static class TopLevelWindows
     }
 
     /// <summary>
+    /// Where Windows says <paramref name="window"/>'s title bar buttons are, in its rectangle with
+    /// its invisible borders (<c>DWMWA_CAPTION_BUTTON_BOUNDS</c>), in physical pixels, or
+    /// <see langword="null"/> when it has none or has closed. It sends the window no message.
+    /// </summary>
+    public static unsafe Rectangle? CaptionButtonBounds(nint window)
+    {
+        RECT area;
+        return PInvoke.DwmGetWindowAttribute(new HWND(window), DWMWINDOWATTRIBUTE.DWMWA_CAPTION_BUTTON_BOUNDS, &area, (uint)sizeof(RECT)).Succeeded
+            && area.right > area.left && area.bottom > area.top
+            ? Rectangle.FromLTRB(area.left, area.top, area.right, area.bottom)
+            : null;
+    }
+
+    /// <summary>Whether <paramref name="window"/> is laid out right to left, with its title bar's buttons at the left (<c>WS_EX_LAYOUTRTL</c>).</summary>
+    public static bool IsLaidOutRightToLeft(nint window) => (ExtendedStyle(new HWND(window)) & WINDOW_EX_STYLE.WS_EX_LAYOUTRTL) != 0;
+
+    /// <summary>
+    /// The height of a standard title bar at <paramref name="dpi"/>, with the frame above it, from
+    /// the top of a window's visible frame: 31 pixels at 100% on Windows 11.
+    /// </summary>
+    public static int CaptionHeight(uint dpi) =>
+        PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CYCAPTION, dpi)
+        + PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CYSIZEFRAME, dpi)
+        + PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER, dpi);
+
+    /// <summary>
+    /// Moves another program's minimized <paramref name="window"/>'s normal rectangle by
+    /// <paramref name="offset"/>, keeping it minimized, so it's restored there. Returns false when
+    /// Windows refused. It waits for the window's program to handle it, so don't call it on a
+    /// thread that must not wait.
+    /// </summary>
+    public static unsafe bool MoveNormalPlace(nint window, Point offset)
+    {
+        var handle = new HWND(window);
+        var placement = new WINDOWPLACEMENT { length = (uint)sizeof(WINDOWPLACEMENT) };
+        if (!PInvoke.GetWindowPlacement(handle, ref placement))
+        {
+            return false;
+        }
+
+        placement.rcNormalPosition = new RECT(
+            placement.rcNormalPosition.left + offset.X,
+            placement.rcNormalPosition.top + offset.Y,
+            placement.rcNormalPosition.right + offset.X,
+            placement.rcNormalPosition.bottom + offset.Y);
+        placement.showCmd = SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE;
+        return PInvoke.SetWindowPlacement(handle, in placement);
+    }
+
+    /// <summary>
+    /// Whether the user is working with <paramref name="window"/> in a way a program shouldn't
+    /// interrupt: a dialog or another window of its own open, a menu open, or moving or sizing it.
+    /// It sends the window no message.
+    /// </summary>
+    public static unsafe bool IsBusy(nint window)
+    {
+        var handle = new HWND(window);
+        if (!PInvoke.IsWindowEnabled(handle) || PInvoke.GetLastActivePopup(handle) != handle)
+        {
+            return true;
+        }
+
+        var thread = PInvoke.GetWindowThreadProcessId(handle, null);
+        var info = new GUITHREADINFO { cbSize = (uint)sizeof(GUITHREADINFO) };
+        return thread != 0 && PInvoke.GetGUIThreadInfo(thread, ref info)
+            && (info.flags & (GUITHREADINFO_FLAGS.GUI_INMENUMODE | GUITHREADINFO_FLAGS.GUI_INMOVESIZE | GUITHREADINFO_FLAGS.GUI_POPUPMENUMODE | GUITHREADINFO_FLAGS.GUI_SYSTEMMENUMODE)) != 0;
+    }
+
+    /// <summary>
     /// Moves and sizes another program's <paramref name="window"/>, shown or hidden, to
     /// <paramref name="bounds"/>, a rectangle with its invisible borders, without changing its
     /// place in the order of windows or activating it. Returns false when Windows refused. It

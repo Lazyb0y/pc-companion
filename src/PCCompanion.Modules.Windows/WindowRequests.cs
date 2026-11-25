@@ -3,10 +3,11 @@ using System;
 namespace PCCompanion.Modules.Windows;
 
 /// <summary>
-/// Carries windows from Title Bar Actions to Minimize to Tray, Hide Apps and Window Tabs, as "With
-/// the other features" in docs/features/windows/title-bar-actions.md says, and from Window Rules
-/// to Window Tabs. While one of those features runs, it sets how it takes a window, which goes on
-/// to its thread. Use it on the host's UI thread, except <see cref="GroupWith"/>.
+/// Carries windows from Title Bar Actions to Minimize to Tray, Hide Apps, Window Tabs and Window
+/// Shading, as "With the other features" in docs/features/windows/title-bar-actions.md says, and
+/// from Window Rules to Window Tabs. While one of those features runs, it sets how it takes a
+/// window, which goes on to its thread. Use it on the host's UI thread, except
+/// <see cref="GroupWith"/>.
 /// </summary>
 public sealed class WindowRequests
 {
@@ -14,6 +15,7 @@ public sealed class WindowRequests
     private Func<nint, bool>? _hideApp;
     private Func<nint, bool>? _addToGroupBehind;
     private Func<nint, bool>? _takeOutOfGroup;
+    private Func<nint, bool>? _rollUp;
 
     // Read on Window Rules' thread.
     private volatile Func<nint, nint, bool>? _groupWith;
@@ -32,6 +34,9 @@ public sealed class WindowRequests
 
     /// <summary>Takes <paramref name="window"/> out of its group. Returns false while Window Tabs doesn't run.</summary>
     public bool TakeOutOfGroup(nint window) => _takeOutOfGroup?.Invoke(window) ?? false;
+
+    /// <summary>Rolls <paramref name="window"/> up to its title bar. Returns false while Window Shading doesn't run.</summary>
+    public bool RollUp(nint window) => _rollUp?.Invoke(window) ?? false;
 
     /// <summary>
     /// Adds <paramref name="window"/> to the group of <paramref name="target"/>, or starts a group
@@ -54,6 +59,9 @@ public sealed class WindowRequests
 
     /// <summary>Minimize to Tray sets how it takes a window as it starts, and null as it stops.</summary>
     public void SetTray(Func<nint, bool>? sendToTray) => _sendToTray = sendToTray;
+
+    /// <summary>Window Shading sets how it rolls a window up as it starts, and null as it stops.</summary>
+    public void SetRollUp(Func<nint, bool>? rollUp) => _rollUp = rollUp;
 
     /// <summary>Hide Apps sets how it takes a window as it starts, and null as it stops.</summary>
     public void SetHideApps(Func<nint, bool>? hideApp) => _hideApp = hideApp;
