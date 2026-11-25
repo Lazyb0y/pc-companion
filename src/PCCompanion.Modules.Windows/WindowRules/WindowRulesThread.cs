@@ -238,7 +238,7 @@ public sealed partial class WindowRulesThread : MessageLoopThread<WindowRulesSet
         {
             if (Displays.IsChangeMessage(e.Message))
             {
-                _owner.Guard(() => _system.RefreshDisplays());
+                _owner.Guard(() => _system.RefreshDisplays(Controller.OnDisplaysChanged));
             }
             else if (e.Message == _taskbarCreated)
             {
