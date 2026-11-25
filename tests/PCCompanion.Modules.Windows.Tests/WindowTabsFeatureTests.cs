@@ -1,7 +1,10 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
+using PCCompanion.Core;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Windows.DropDownApps;
 using PCCompanion.Modules.Windows.WindowTabs;
@@ -14,11 +17,13 @@ namespace PCCompanion.Modules.Windows.Tests;
 
 // Starting the feature creates its own hidden windows and hooks on a thread of its own. The tests
 // turn off grouping by dropping and the shortcuts, so no window becomes a tab and nothing is
-// registered, and windows left marked are looked for among made-up ones.
+// registered, and windows left marked are looked for among made-up ones. Kept groups are kept in a
+// folder of each test's own, and name only made-up programs, so no window is grouped again.
 public sealed class WindowTabsFeatureTests : IDisposable
 {
     private const string Quiet = """{ "enabled": true, "groupByDropping": false, "switchShortcuts": "None", "groupShortcuts": "None" }""";
 
+    private readonly TemporaryFolder _folder = new();
     private readonly RecordingLogger<WindowTabsFeature> _logger = new();
     private readonly FakeTabsSystem _left = new(action => action());
     private readonly WindowRequests _requests = new();
@@ -27,14 +32,16 @@ public sealed class WindowTabsFeatureTests : IDisposable
 
     public WindowTabsFeatureTests()
     {
-        _feature = new WindowTabsFeature(new FakeHostCommands(), TimeProvider.System, _logger, new WindowTabsWindows(), new DropDownWindows(), _requests, new ShortcutRefusals(), () =>
-        {
-            _recoveries++;
-            return _left;
-        });
+        _feature = Create(isUacElevated: false);
     }
 
-    public void Dispose() => _feature.Dispose();
+    private string FilePath => Path.Combine(_folder.FullPath, KeptGroupsStore.FileName);
+
+    public void Dispose()
+    {
+        _feature.Dispose();
+        _folder.Dispose();
+    }
 
     [Fact]
     public void TheFeatureIsInTheWindowsModule()
@@ -156,6 +163,75 @@ public sealed class WindowTabsFeatureTests : IDisposable
     }
 
     [Fact]
+    public void ItReadsTheKeptGroupsAsItStarts()
+    {
+        WriteFile();
+
+        _feature.Apply(Section(Quiet));
+
+        Assert.True(SpinWait.SpinUntil(() => _logger.Entries.Any(entry => entry.Message == "Window Tabs read 1 kept groups to make again."), TimeSpan.FromSeconds(10)));
+    }
+
+    [Fact]
+    public void AKeptGroupsFileThatCantBeReadIsLeftWithAWarning()
+    {
+        File.WriteAllText(FilePath, "not JSON");
+
+        _feature.Apply(Section(Quiet));
+
+        Assert.True(SpinWait.SpinUntil(() => _logger.Entries.Any(entry => entry.Level == LogLevel.Warning && entry.Message.Contains("kept groups can't be read", StringComparison.Ordinal)), TimeSpan.FromSeconds(10)));
+    }
+
+    [Fact]
+    public void TurningItOffDeletesTheKeptGroups()
+    {
+        WriteFile();
+
+        _feature.Apply(Section(Quiet));
+        _feature.Apply(Section("""{ "enabled": false }"""));
+        _feature.Dispose();
+
+        Assert.False(File.Exists(FilePath));
+    }
+
+    [Fact]
+    public void TurningKeepGroupsOffDeletesTheKeptGroups()
+    {
+        WriteFile();
+
+        _feature.Apply(Section("""{ "enabled": true, "groupByDropping": false, "switchShortcuts": "None", "groupShortcuts": "None", "keepGroups": false }"""));
+        _feature.Dispose();
+
+        Assert.False(File.Exists(FilePath));
+    }
+
+    [Fact]
+    public void StoppingWithoutAChangeLeavesTheKeptGroupsAsTheyAre()
+    {
+        WriteFile();
+        var written = File.ReadAllText(FilePath);
+
+        _feature.Apply(Section(Quiet));
+        _feature.Dispose();
+
+        Assert.Equal(written, File.ReadAllText(FilePath));
+    }
+
+    [Fact]
+    public void AsAdministratorAfterAUacPromptTheKeptGroupsArentTouched()
+    {
+        WriteFile();
+        var elevated = Create(isUacElevated: true);
+
+        elevated.Apply(Section(Quiet));
+        elevated.Apply(Section("""{ "enabled": false }"""));
+        elevated.Dispose();
+
+        Assert.True(File.Exists(FilePath));
+        Assert.DoesNotContain(_logger.Entries, entry => entry.Message.Contains("kept groups to make again", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void AnUnreadableSectionTurnsItOffWithAWarning()
     {
         _feature.Apply(Section(Quiet));
@@ -165,4 +241,15 @@ public sealed class WindowTabsFeatureTests : IDisposable
         Assert.False(_feature.IsRunning);
         Assert.Contains(_logger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("can't be read", StringComparison.Ordinal));
     }
+
+    private WindowTabsFeature Create(bool isUacElevated) =>
+        new(new FakeHostCommands(), TimeProvider.System, _logger, new DataFolder(_folder.FullPath), isUacElevated, new WindowTabsWindows(), new DropDownWindows(), _requests, new ShortcutRefusals(), () =>
+        {
+            _recoveries++;
+            return _left;
+        });
+
+    // A group of two made-up programs, which no window on this PC has.
+    private void WriteFile() =>
+        File.WriteAllText(FilePath, """{ "version": 1, "groups": [{ "tabs": [{ "program": "C:\\Made-up\\First.exe" }, { "program": "C:\\Made-up\\Second.exe" }], "front": 0 }] }""");
 }
