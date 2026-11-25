@@ -477,20 +477,24 @@ public sealed partial class RulesController : IDisposable
         }
     }
 
-    // Where a window of a rule that remembers is, as the user left it, maximized or not.
+    // Where a window of a rule that remembers is, as the user left it, maximized or not. A window
+    // that closes is read as its hide reaches this thread, when its app may have just destroyed it,
+    // so its placement and DPI are read first, and its frame comes from its placement when it can't
+    // be read any more.
     private void Record(nint window)
     {
         if (!_windows.TryGetValue(window, out var ruled) || ruled.Grouped
             || ruled.Outcome is not { Place.KnownWhich: PlaceChoice.Remembered, PlaceKey: { } key }
-            || _system.Placement(window) is not { } placement)
+            || _system.Placement(window) is not { } placement
+            || _system.Dpi(window) is var dpi && dpi == 0)
         {
             return;
         }
 
-        var frame = placement.State == WindowState.Normal
-            ? _system.VisibleBounds(window)
-            : RulePlacement.WithoutUsualBorders(placement.NormalBounds, _system.Dpi(window));
-        if (frame is not { } shown || _system.DisplayAt(shown) is not { } display)
+        var shown = placement.State == WindowState.Normal && _system.VisibleBounds(window) is { } visible
+            ? visible
+            : RulePlacement.WithoutUsualBorders(placement.NormalBounds, dpi);
+        if (_system.DisplayAt(shown) is not { } display)
         {
             return;
         }

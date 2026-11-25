@@ -353,6 +353,20 @@ public sealed class RulesControllerTests : IDisposable
     }
 
     [Fact]
+    public void AWindowWhoseFrameIsGoneAsItClosesIsRememberedFromItsPlacement()
+    {
+        Use(new WindowRule { Id = "mail", App = Mail, Place = Place("Remembered") });
+        Opens(New);
+        _system[New].Normal = FakeRulesSystem.Inflate(new Rectangle(300, 200, 800, 600));
+        _system[New].FrameGone = true;
+
+        _controller.OnHidden(New);
+        Opens(3);
+
+        Assert.Equal(new Rectangle(300, 200, 800, 600), _system[3].Visible);
+    }
+
+    [Fact]
     public void AWindowThatWouldOpenOverAnotherOfTheRuleMovesDownAndRight()
     {
         Use(new WindowRule { Id = "mail", App = Mail, Place = Place("Remembered") });

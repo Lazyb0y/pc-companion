@@ -234,6 +234,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 - **Apps running as administrator:** from the copy labeled Medium integrity, putting a window of an app with admin rights on top failed (error 5), removing its taskbar button reported success and left it, and reading its app and program worked.
 - **Reading a window's app:** 0.05 to 0.7 ms, after 11 to 68 ms for the first read in the process; its program, about 0.1 ms after 2 to 11 ms.
 - **Events:** about one a second while nothing opened. Opening an app made 30 to 340 events in 3 to 6 seconds, of which 1 to 3 were windows showing at the top level; Character Map also made 200 top-level location changes in 3 seconds, which is why no location hook covers every process.
+- **A window that closes,** read as its hide reached another process (`EVENT_OBJECT_HIDE`, out of context), in a later check on a PC with 40 WinForms test windows that showed off screen without taking the front and closed: every placement could still be read, and every visible frame but one, the first, whose window was destroyed as it was read. So a closing window's frame comes from its placement when it can't be read.
 - **Virtual desktops:** which desktop a window of another app is on could be read (`IVirtualDesktopManager::GetWindowDesktopId`), but moving one is refused, which is why rules don't move windows between desktops.
 - **Not checked,** by hand: several displays and scales, the foreground lock, UAC on, Windows 10, Store apps in the shared frame hidden from the taskbar, and Electron apps.
 
