@@ -171,8 +171,11 @@ Group windows of different apps into one window with tabs, and switch between th
 ## Keeping groups after a restart
 
 - **Keep groups after a restart,** a switch on the page, on by default, keeps each group's apps and groups their windows again when they show after the host starts, as after a restart, a sign-out or an update.
-- **What's kept:** for each group, its tabs' apps, as the taskbar groups them (`AppOfWindow`): the app ID or the program path, in the strip's order, and which tab was in front. Never titles. In memory, and in `window-tabs.json` in the data folder, which only the host writes, on the thread pool, 5 seconds after a change and when the feature stops, as Input Language per App keeps its file. At most 50 groups; the one changed longest ago goes.
+- **What's kept:** for each group, its tabs' apps, as the taskbar groups them (`AppOfWindow`): the app ID or the program path, in the strip's order, and which tab was in front. Never titles. In memory, and in `window-tabs.json` in the data folder, which only the host writes, on the thread pool, 5 seconds after a change, when the feature stops and when the session may end, as Input Language per App keeps its file. At most 50 groups; the one changed longest ago goes.
 - **Grouping again:** during the first 60 seconds after the host starts, a remembered group is made again as soon as each of its apps has a shown or minimized window in no group, and with the windows present then once the 60 seconds are up, when there are at least two. Each app's front-most such window is taken. The group takes the place and state of the window of its remembered tab in front: it's minimized when that window is. Each remembered group is made once.
+- **The window the user is in** stays in front: when it's one of a remembered group's windows, it's the group's tab in front, so it doesn't hide while the user works in it.
+- **Looking for the windows:** as the host starts, within 100 ms of a window showing in any app, and once a second, until no remembered group waits or the 60 seconds are up. A remembered group that isn't made again stays kept for a later start, until the limit pushes it out.
+- **A tab made again from a minimized window** comes back restored when it shows.
 - **Forgetting:** a group that ends is forgotten. Turning the switch or the feature off forgets every group and deletes the file.
 - **A file that can't be read,** as after a hand edit, is ignored with a warning in the log and replaced at the next write. An entry with neither or both an app ID and a program is left out.
 - **Running as administrator:** while the host runs as administrator after a UAC prompt, it neither reads, writes nor deletes the file, since a program without admin rights could put a link in its place; see [Always run as administrator](../general/run-as-administrator.md#between-the-host-and-other-programs). Groups are then kept for the session only.
@@ -220,6 +223,7 @@ Group windows of different apps into one window with tabs, and switch between th
   - the drop highlight;
   - the shortcuts;
   - the WinEvent hooks, following drags, and placing the strips;
+  - while remembered groups wait to be made again, a hook for windows that show in any app, and reading which app each window on the taskbar belongs to;
   - reading the pointer's position every 50 ms, only while a strip shown at its window's top edge is in front or shown, to tell when the pointer rests there;
   - showing, hiding, moving, marking and bringing windows to the front;
   - reading titles, icons and app identity;
@@ -298,6 +302,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 
 - **Reads:**
   - **For each tab:** its title and icon, to draw the tab, while it's a tab; its styles, owner, state, place, display, class name and app identity.
+  - **While remembered groups wait,** in the first minute after the host starts: the app identity, styles and state of each window the taskbar shows, to find the groups' apps.
   - **While a window is dragged,** if it could be a tab: the pointer's position and whether Ctrl is held at each move, and the shown windows' places under the pointer.
   - **Windows reports** when tabs close, show, hide, move, change titles or start to minimize, and which window comes to the front.
   - It receives no keys or clicks besides its shortcuts and clicks on its own windows: no keyboard or mouse hook.
@@ -307,9 +312,9 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - **Settings and the file** can only choose shortcuts and switches, and group windows of the listed apps that are already open, so a changed file can't make PC Companion do more.
 - **The mark:** as for Minimize to Tray, another program running as the user could mark its own hidden windows, or another app's, so that PC Companion shows them at its next start; it could show them itself just as well. Windows refuses a program without admin rights the mark on a window of an app running as administrator.
 - **Logs:**
-  - **Debug entries** when a group is made, joined, switched or left, or ends, with the number of tabs and why, when a window can't be a tab and why, and when no window behind can be grouped with.
+  - **Debug entries** when a group is made, joined, switched or left, or ends, with the number of tabs and why, when a window can't be a tab and why, when no window behind can be grouped with, and when kept groups are read, made again, saved or no longer waited for, with their number.
   - **Never** titles, app IDs, names or paths, which can name documents, profiles or users.
-  - **Warnings** when Windows refuses a shortcut, and when the settings section or the file can't be read.
+  - **Warnings** when Windows refuses a shortcut, when the settings section or the file can't be read, and when the file can't be written or deleted.
   - **An error** when a failure stops the feature.
 - **Network:** none. `PRIVACY.md` gets a line on Window Tabs.
 - **Rights:** runs with the host's rights: without admin rights unless Always run as administrator is on or UAC is off. Running as administrator, it also groups the windows of apps running as administrator, which the user can move and minimize anyway. Turning the feature off brings every hidden tab back and removes the shortcuts and hooks.
@@ -357,7 +362,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
   - **File Explorer and Edge** as tabs, switching both ways;
   - **virtual desktops:** the strip hides on another desktop and shows again on the group's;
   - **never losing a window:** **Exit** brings every hidden tab back on the taskbar, minimized; ending the host with `Stop-Process` leaves them hidden and marked, and the next start brings them back;
-  - **keeping groups:** after the host is ended and started again, the test windows are grouped again in their order;
+  - **keeping groups:** **Exit** keeps the group in `window-tabs.json`, by its tabs' programs and nothing else, and the next start groups the test windows again in their order, with the tab from a minimized window showing restored; after the host is ended and started again, too; turning Keep groups after a restart off deletes the file;
   - **with the other features:** Minimize to Tray's shortcut and Drop-down Apps refuse a tab;
   - **the strip** in light and dark, and in Arabic, with screenshots, and its UI Automation tab list and names;
   - no feature holds the host's UI thread, as every group checks.
