@@ -297,7 +297,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 - **Move to another display:** dragging the title bar and Windows + Shift + an arrow key do it.
 - **Maximize vertically or horizontally:** double-clicking the top border and Windows + Shift + Up do it.
 - **Minimize the other windows:** Windows' title-bar shake and Hide Apps' Hide others do it.
-- **Roll up:** window shading ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) needs its own spike, and becomes a wheel action once it exists.
+- **Roll up:** comes with Window Shading ([#27](https://github.com/Lazyb0y/pc-companion/issues/27)) as a click and wheel action; see [Actions](window-shading.md#actions) in its spec.
 - **Move to another virtual desktop:** [#30](https://github.com/Lazyb0y/pc-companion/issues/30), which needs undocumented APIs.
 - **Different actions for the window in front and the windows behind it,** as KDE Plasma offers: one action per click keeps the page short, and Send to back already handles the window in front.
 - **Actions for each app:** [#361](https://github.com/Lazyb0y/pc-companion/issues/361).
