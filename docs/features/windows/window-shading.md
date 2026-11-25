@@ -73,7 +73,7 @@ Roll a window up to its title bar, to see and use what's behind it without movin
   - It goes through `WindowRequests` (`RollUp`), as Title Bar Actions' other actions for other features do. While Window Shading is off, the action plays the warning sound and the page says so at the action.
 - **Shortcuts & Mouse Buttons** gets **Roll up the window in front**, **Roll down the last rolled-up window** and **Roll down all**.
 - **The PC Companion icon's menu** gets **Roll down all** while a window is rolled up.
-- **No shortcut of its own:** Window Shading's page links to Title Bar Actions and Shortcuts & Mouse Buttons, and says that one of them is needed to roll windows up.
+- **No shortcut of its own:** Window Shading's page has buttons that open Title Bar Actions and Shortcuts & Mouse Buttons, and says that one of them is needed to roll windows up.
 - **Not double-click:** Windows maximizes on a double-click of the title bar.
 
 ## Never losing a window
@@ -132,7 +132,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 
 ## Settings
 
-- **Feature page:** the on/off switch; **How to roll windows up**, a note with links to Title Bar Actions and Shortcuts & Mouse Buttons; **Keep on top while rolled up**; **Hover to roll down**, with **Roll down after** and **Roll up again after**; a note about apps running as administrator; and a **Permissions & data** card.
+- **Feature page:** the on/off switch; **How to roll windows up**, with buttons that open Title Bar Actions and Shortcuts & Mouse Buttons; **Keep on top while rolled up**; **Hover to roll down**, with **Roll down after** and **Roll up again after**, which are used only while it's on; a note about the windows that can't be rolled up, and one about apps running as administrator; and a **Permissions & data** card.
 - The switch on Home changes only `enabled` and keeps the other settings.
 - A section that can't be read, for example after a hand edit, turns Window Shading off with a warning in the log. A choice this version doesn't know is kept when the settings are saved, and the default is used.
 
