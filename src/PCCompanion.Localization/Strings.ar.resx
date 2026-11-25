@@ -6728,4 +6728,120 @@
     <value>نافذة بلا عنوان</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>طي النوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>اطوِ نافذة إلى شريط العنوان الخاص بها لرؤية ما خلفها واستخدامه، ثم افردها مجددًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}، مطوية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>فرد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>إغلاق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>طيّ النافذة في المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>فرد آخر نافذة مطوية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>فرد كل النوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>كيفية طي النوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>اختر «طيّ» لنقرة بالزر الأوسط أو للعجلة في «إجراءات شريط العنوان»، أو إجراء طيّ لاختصار أو زر ماوس في «الاختصارات وأزرار الماوس». ويؤدي النقر على شريط عنوان مطوي، أو تدوير العجلة للأسفل عليه، أو شريط المهام، أو Alt + Tab إلى فرد النافذة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>الإبقاء في المقدمة أثناء الطي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>تبقى أشرطة العناوين المطوية فوق النوافذ الأخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>التمرير لفرد النافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>تُفرد النافذة أثناء بقاء المؤشر على شريط عنوانها، دون أن تنتقل إلى المقدمة، وتُطوى مجددًا بعد أن يغادرها المؤشر، ما لم تنقر عليها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>الفرد بعد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>الطي مجددًا بعد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_zero" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>ثانية واحدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_two" xml:space="preserve">
+    <value>ثانيتان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_few" xml:space="preserve">
+    <value>{0} ثوانٍ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_many" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} ثانية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>لا يمكن طي النوافذ بملء الشاشة، والنوافذ التي فيها مربع حوار مفتوح، وعلامات تبويب «علامات تبويب النوافذ»، والنوافذ التي لا تحتوي على شريط عنوان. والنافذة المطوية مصغّرة، لذا تظهر دائمًا على شريط المهام وفي Alt + Tab.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>لا يمكن طي نوافذ التطبيقات التي تعمل كمسؤول أثناء تشغيل PC Companion بدون صلاحيات المسؤول. شغّل التشغيل دائماً كمسؤول في صفحة عام لطيّها أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا يمكن طي نوافذ التطبيقات التي تعمل كمسؤول أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>عند طي نافذة، يقرأ مكان انتهاء شريط عنوانها وموضعها وأزرارها؛ ويرسم Windows صورة شريط العنوان، ولا يقرأها PC Companion أبدًا. يصغّر النوافذ التي طويتها ويستعيدها ويحركها ويغلقها عند طلبك، ويضع عليها علامة لتعود بعد أي عطل. لا يستخدم أي خطاف لوحة مفاتيح، ولا يشغّل أي تعليمات برمجية في تطبيقات أخرى، ولا يخزّن سوى إعداداته، ولا يُجري أي اتصالات بالشبكة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>طيّ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>لا يعمل الإجراء «طيّ» إلا أثناء تشغيل الميزة «طي النوافذ». وحتى ذلك الحين، يُشغَّل صوت التحذير في Windows بدلاً منه.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

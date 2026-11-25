@@ -6456,4 +6456,104 @@
     <value>Fenster ohne Titel</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>Fenster einrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>Rollen Sie ein Fenster bis auf seine Titelleiste ein, um zu sehen und zu verwenden, was dahinter ist, und rollen Sie es wieder aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}, eingerollt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>Ausrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>Fenster im Vordergrund einrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>Zuletzt eingerolltes Fenster ausrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>Alle Fenster ausrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>So rollen Sie Fenster ein</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>Wählen Sie in „Titelleistenaktionen“ „Einrollen“ für einen Mittelklick oder das Mausrad, oder in „Tastenkombinationen und Maustasten“ eine Einroll-Aktion für eine Tastenkombination oder Maustaste. Ein Klick auf eine eingerollte Titelleiste, das Mausrad nach unten darauf, die Taskleiste oder Alt + Tab rollt das Fenster wieder aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>Eingerollt im Vordergrund halten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>Eingerollte Titelleisten bleiben über anderen Fenstern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>Beim Daraufzeigen ausrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>Ein Fenster rollt sich aus, solange der Mauszeiger auf seiner Titelleiste ruht, ohne in den Vordergrund zu kommen, und rollt sich wieder ein, sobald der Mauszeiger es verlassen hat, außer Sie haben darauf geklickt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>Ausrollen nach</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>Wieder einrollen nach</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>{0} Sekunde</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} Sekunden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} Sekunden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>Vollbildfenster, Fenster mit einem geöffneten Dialogfeld, die Tabs von „Fenster-Tabs“ und Fenster ohne Titelleiste lassen sich nicht einrollen. Ein eingerolltes Fenster ist minimiert und daher immer in der Taskleiste und in Alt + Tab zu finden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>Fenster von Apps, die als Administrator ausgeführt werden, lassen sich nicht einrollen, solange PC Companion ohne Administratorrechte läuft. Aktivieren Sie auf der Seite „Allgemein“ „Immer als Administrator ausführen“, um auch sie einzurollen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher lassen sich auch Fenster von Apps einrollen, die als Administrator ausgeführt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>Liest beim Einrollen eines Fensters, wo seine Titelleiste endet, seine Position und seine Schaltflächen; das Bild der Titelleiste zeichnet Windows, und PC Companion liest es nie. Minimiert, stellt wieder her, verschiebt und schließt die eingerollten Fenster, wenn Sie es möchten, und markiert sie, damit sie nach einem Absturz zurückkommen. Verwendet keinen Tastatur-Hook, führt keinen Code in anderen Apps aus, speichert nur seine Einstellungen und stellt keine Netzwerkverbindungen her.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>Einrollen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>Die Aktion „Einrollen“ funktioniert nur, solange die Funktion „Fenster einrollen“ eingeschaltet ist. Bis dahin erklingt stattdessen der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

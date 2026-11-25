@@ -6456,4 +6456,104 @@
     <value>Ventana sin título</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowShadingName" xml:space="preserve">
+    <value>Enrollado de ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingDescription" xml:space="preserve">
+    <value>Enrolla una ventana hasta su barra de título para ver y usar lo que hay detrás, y desenróllala de nuevo.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingStripName" xml:space="preserve">
+    <value>{0}, enrollada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDown" xml:space="preserve">
+    <value>Desenrollar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingClose" xml:space="preserve">
+    <value>Cerrar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpFront" xml:space="preserve">
+    <value>Enrollar la ventana en primer plano</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownLast" xml:space="preserve">
+    <value>Desenrollar la última ventana enrollada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAll" xml:space="preserve">
+    <value>Desenrollar todas las ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowHeader" xml:space="preserve">
+    <value>Cómo enrollar ventanas</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHowText" xml:space="preserve">
+    <value>Elige Enrollar para un clic central o la rueda en Acciones de la barra de título, o una acción de enrollar para un método abreviado o un botón del mouse en Métodos abreviados y botones del mouse. Un clic en una barra de título enrollada, la rueda hacia abajo sobre ella, la barra de tareas o Alt + Tab desenrollan la ventana.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopHeader" xml:space="preserve">
+    <value>Mantener encima mientras está enrollada</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingKeepOnTopDescription" xml:space="preserve">
+    <value>Las barras de título enrolladas permanecen encima de las demás ventanas.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverHeader" xml:space="preserve">
+    <value>Desenrollar al pasar el puntero</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingHoverDescription" xml:space="preserve">
+    <value>Una ventana se desenrolla mientras el puntero está sobre su barra de título, sin pasar a primer plano, y se vuelve a enrollar cuando el puntero sale de ella, a menos que hayas hecho clic en ella.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollDownAfter" xml:space="preserve">
+    <value>Desenrollar tras</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingRollUpAfter" xml:space="preserve">
+    <value>Volver a enrollar tras</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_one" xml:space="preserve">
+    <value>{0} segundo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSeconds_other" xml:space="preserve">
+    <value>{0} segundos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingSecondsFraction" xml:space="preserve">
+    <value>{0} segundos</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingLeftOutInfo" xml:space="preserve">
+    <value>Las ventanas en pantalla completa, las ventanas con un cuadro de diálogo abierto, las pestañas de Pestañas de ventanas y las ventanas sin barra de título no se pueden enrollar. Una ventana enrollada está minimizada, así que siempre está en la barra de tareas y en Alt + Tab.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfo" xml:space="preserve">
+    <value>Las ventanas de las aplicaciones que se ejecutan como administrador no se pueden enrollar mientras PC Companion se ejecuta sin derechos de administrador. Activa Ejecutar siempre como administrador en la página General para enrollarlas también.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion se ejecuta como administrador, así que también se pueden enrollar las ventanas de las aplicaciones que se ejecutan como administrador.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowShadingPermissions" xml:space="preserve">
+    <value>Al enrollar una ventana, lee dónde termina su barra de título, su posición y sus botones; Windows dibuja la imagen de la barra de título, que PC Companion nunca lee. Minimiza, restaura, mueve y cierra, cuando lo pides, las ventanas que enrollaste, y las marca para que vuelvan después de un bloqueo. No usa ningún enlace de teclado, no ejecuta código en otras aplicaciones, solo guarda su configuración y no establece conexiones de red.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsRollUp" xml:space="preserve">
+    <value>Enrollar</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
+    <value>La acción Enrollar solo funciona mientras la característica Enrollado de ventanas está activada. Hasta entonces, se reproduce en su lugar el sonido de advertencia de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>
