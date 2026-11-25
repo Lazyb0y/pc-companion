@@ -5909,7 +5909,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsPermissions" xml:space="preserve">
-    <value>拖动窗口时，读取指针位置、是否按住了 Ctrl 以及指针下方是哪个窗口。读取每个标签页的标题和图标以绘制标签页，并读取哪个窗口进入前台；标题仅保存在内存中。隐藏、显示、移动标签页并调整其大小，并标记隐藏的标签页，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。不建立网络连接，也不发送任何内容。</value>
+    <value>拖动窗口时，读取指针位置、是否按住了 Ctrl 以及指针下方是哪个窗口。读取每个标签页的标题和图标以绘制标签页，并读取哪个窗口进入前台；标题仅保存在内存中。隐藏、显示、移动标签页并调整其大小，并标记隐藏的标签页，以便它们在崩溃后恢复；不使用键盘或鼠标挂钩，也不在其他应用中运行代码。将每个组中的应用（最多 50 个组）保存在此电脑上的一个文件中，关闭此功能或“重启后保留组”时会删除该文件。不建立网络连接，也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsActionNextTab" xml:space="preserve">
@@ -5946,6 +5946,14 @@
   </data>
   <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
     <value>“添加到后面的组”和“移出组”操作仅在“窗口标签页”功能打开时有效。在此之前，会改为播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsHeader" xml:space="preserve">
+    <value>重启后保留组</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsDescription" xml:space="preserve">
+    <value>记住每个组中的应用，并在重启、注销或更新后这些应用的窗口打开时重新将它们分组。</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

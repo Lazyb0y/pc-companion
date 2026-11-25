@@ -53,6 +53,12 @@
                     Message="{x:Bind ViewModel.GroupShortcutRefusedInfo}"
                     Severity="Warning" />
 
+                <controls:SwitchCard
+                    Description="{app:Localized Key=WindowTabsKeepGroupsDescription}"
+                    Glyph="&#xE777;"
+                    Header="{app:Localized Key=WindowTabsKeepGroupsHeader}"
+                    IsOn="{x:Bind ViewModel.KeepGroups, Mode=TwoWay}" />
+
                 <controls:Note Margin="0,16,0,0" Message="{x:Bind ViewModel.CantBeTabsInfo}" />
 
                 <controls:PermissionsCard Description="{app:Localized Key=WindowTabsPermissions}" />

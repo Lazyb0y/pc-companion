@@ -5965,7 +5965,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsPermissions" xml:space="preserve">
-    <value>Liest beim Ziehen eines Fensters, wo der Zeiger ist, ob Strg gedrückt ist und welches Fenster unter dem Zeiger liegt. Liest Titel und Symbol jedes Tabs, um den Tab zu zeichnen, und welches Fenster in den Vordergrund kommt; Titel bleiben nur im Arbeitsspeicher. Blendet die Tabs aus und ein, verschiebt sie, ändert ihre Größe und markiert ausgeblendete, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <value>Liest beim Ziehen eines Fensters, wo der Zeiger ist, ob Strg gedrückt ist und welches Fenster unter dem Zeiger liegt. Liest Titel und Symbol jedes Tabs, um den Tab zu zeichnen, und welches Fenster in den Vordergrund kommt; Titel bleiben nur im Arbeitsspeicher. Blendet die Tabs aus und ein, verschiebt sie, ändert ihre Größe und markiert ausgeblendete, damit sie nach einem Absturz zurückkommen; verwendet keinen Tastatur- oder Maushook und führt keinen Code in anderen Apps aus. Speichert die Apps jeder Gruppe, für bis zu 50 Gruppen, in einer Datei auf diesem PC, die gelöscht wird, wenn die Funktion oder „Gruppen nach einem Neustart beibehalten“ deaktiviert ist. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="WindowTabsActionNextTab" xml:space="preserve">
@@ -6002,6 +6002,14 @@
   </data>
   <data name="TitleBarActionsNeedsWindowTabsInfo" xml:space="preserve">
     <value>Die Aktionen „Zur Gruppe dahinter hinzufügen“ und „Aus der Gruppe nehmen“ funktionieren nur, solange die Funktion „Fenster-Tabs“ eingeschaltet ist. Bis dahin erklingt stattdessen der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsHeader" xml:space="preserve">
+    <value>Gruppen nach einem Neustart beibehalten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowTabsKeepGroupsDescription" xml:space="preserve">
+    <value>Merkt sich die Apps jeder Gruppe und gruppiert ihre Fenster erneut, wenn sie nach einem Neustart, einer Abmeldung oder einem Update geöffnet werden.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

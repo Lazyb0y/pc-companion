@@ -26,6 +26,12 @@ public sealed record WindowTabsSettings : IFeatureSettings<WindowTabsSettings>
     /// </summary>
     public TabGroupShortcuts GroupShortcuts { get; set; } = TabGroupShortcuts.WindowsControlT;
 
+    /// <summary>
+    /// Whether each group's apps are kept in <c>window-tabs.json</c>, so their windows are grouped
+    /// again after the host starts, as after a restart.
+    /// </summary>
+    public bool KeepGroups { get; set; } = true;
+
     /// <summary>Reads the feature's section, or returns the defaults when there is none.</summary>
     /// <exception cref="JsonException">The section doesn't match the format.</exception>
     public static WindowTabsSettings Read(JsonElement? section) =>
