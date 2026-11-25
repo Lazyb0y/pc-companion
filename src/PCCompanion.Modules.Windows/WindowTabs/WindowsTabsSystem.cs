@@ -197,6 +197,8 @@ public sealed class WindowsTabsSystem : ITabsSystem, IDisposable
 
     public bool Activate(nint window) => TopLevelWindows.Activate(window);
 
+    public bool PutBehind(nint window, nint inFront) => TopLevelWindows.PutBehind(window, inFront);
+
     public bool AskToClose(nint window) => TopLevelWindows.AskToClose(window);
 
     public void SetHiddenPlacementLater(nint window, Rectangle normalBounds)

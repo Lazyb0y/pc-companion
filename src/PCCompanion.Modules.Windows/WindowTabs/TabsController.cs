@@ -862,12 +862,13 @@ public sealed partial class TabsController : IDisposable
 
     // After the tab in front closed or its app hid it, the next tab, or the one before the last,
     // shows in its place.
-    private void ShowAfterLoss(Group group, int removed, bool activate)
+    // Shows the tab that takes the place of the one that left, and returns it, or 0 when none was left.
+    private nint ShowAfterLoss(Group group, int removed, bool activate)
     {
         if (group.Tabs.Count == 0)
         {
             EndGroup(group, "its last tab left");
-            return;
+            return 0;
         }
 
         var index = Math.Min(removed, group.Tabs.Count - 1);
@@ -903,6 +904,8 @@ public sealed partial class TabsController : IDisposable
         {
             ShowStrip(group);
         }
+
+        return window;
     }
 
     private void TakeOut(Group group, int index, Point? at)
@@ -920,7 +923,7 @@ public sealed partial class TabsController : IDisposable
             ? new Rectangle(point.X - Math.Min(frame.Width / 2, StripLayout.Scale(100, dpi)), point.Y - StripLayout.Scale(16, dpi), frame.Width, frame.Height)
             : frame with { X = frame.X + (_rightToLeft ? -offset : offset), Y = frame.Y + offset };
 
-        Detach(group, index, "the user took it out");
+        var next = Detach(group, index, "the user took it out");
         if (!frame.IsEmpty && !_system.IsMaximized(window))
         {
             _system.Place(window, RectLike(window, place));
@@ -934,6 +937,13 @@ public sealed partial class TabsController : IDisposable
 
         ShowOwned(group, window);
         _system.Activate(window);
+
+        // The tab shown in its place comes to the top of the order of windows once its app shows
+        // it, above the window taken out even when that one is in front, so it goes behind it.
+        if (next != 0)
+        {
+            _system.PutBehind(next, window);
+        }
     }
 
     private void Reorder(Group group, int from, int insertion)
@@ -1005,7 +1015,8 @@ public sealed partial class TabsController : IDisposable
 
     // Takes a tab out of its group, as it leaves or moves to another group: when it was in front,
     // the next tab shows in its place, and a group of one ends. It doesn't show or hide the tab.
-    private void Detach(Group group, int index, string why)
+    // Returns the tab that shows in its place, or 0.
+    private nint Detach(Group group, int index, string why)
     {
         var window = group.Tabs[index];
         var wasFront = index == group.Front;
@@ -1013,12 +1024,11 @@ public sealed partial class TabsController : IDisposable
         LogLeft(_logger, why, group.Tabs.Count);
         if (wasFront)
         {
-            ShowAfterLoss(group, index, activate: false);
+            return ShowAfterLoss(group, index, activate: false);
         }
-        else
-        {
-            EndIfAlone(group);
-        }
+
+        EndIfAlone(group);
+        return 0;
     }
 
     // Takes a tab out of the group's lists and stops watching it, without showing or hiding it.
@@ -1040,8 +1050,17 @@ public sealed partial class TabsController : IDisposable
             _system.StopFollowingMoves(_system.ProcessIdOf(window));
         }
 
-        _system.Unwatch(_system.ProcessIdOf(window));
+        Unwatch(window);
         UpdateShared();
+    }
+
+    // Windows tells nothing more of the window, even of a show or hide Window Tabs just made, so
+    // what Window Tabs expected of it mustn't count for its app's own show or hide later.
+    private void Unwatch(nint window)
+    {
+        _system.Unwatch(_system.ProcessIdOf(window));
+        _expectShown.Remove(window);
+        _expectHidden.Remove(window);
     }
 
     // A group with one tab left ends, and that window stays an ordinary window.
@@ -1076,7 +1095,7 @@ public sealed partial class TabsController : IDisposable
 
         foreach (var tab in group.Tabs)
         {
-            _system.Unwatch(_system.ProcessIdOf(tab));
+            Unwatch(tab);
         }
 
         if (group.Front >= 0)

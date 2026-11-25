@@ -163,7 +163,17 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
         Activate(window);
     });
 
-    public bool ShowWithoutActivating(nint window) => Do(window, $"show without activating {window}", found => SetShown(found, true));
+    // As Windows does, a hidden window shows at the top of the order of windows.
+    public bool ShowWithoutActivating(nint window) => Do(window, $"show without activating {window}", found =>
+    {
+        if (!found.Shown)
+        {
+            _order.Remove(found);
+            _order.Insert(0, found);
+        }
+
+        SetShown(found, true);
+    });
 
     public bool Hide(nint window) => Do(window, $"hide {window}", found => SetShown(found, false));
 
@@ -173,11 +183,24 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
         SetShown(found, true);
     });
 
+    // As Windows does, the window in front stays where it is in the order of windows.
     public bool Activate(nint window) => Do(window, $"activate {window}", found =>
     {
-        _order.Remove(found);
-        _order.Insert(0, found);
-        ForegroundWindow = window;
+        if (ForegroundWindow != window)
+        {
+            _order.Remove(found);
+            _order.Insert(0, found);
+            ForegroundWindow = window;
+        }
+    });
+
+    public bool PutBehind(nint window, nint inFront) => Do(window, $"put {window} behind {inFront}", found =>
+    {
+        if (Find(inFront) is { } front && front != found)
+        {
+            _order.Remove(found);
+            _order.Insert(_order.IndexOf(front) + 1, found);
+        }
     });
 
     public bool AskToClose(nint window)
@@ -279,6 +302,13 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
         var handle = window.Handle;
         post(() =>
         {
+            // As Windows does, it tells the controller nothing of a process it stopped watching,
+            // even of a change made before.
+            if (Watched.GetValueOrDefault(ProcessIdOf(handle)) <= 0)
+            {
+                return;
+            }
+
             if (shown)
             {
                 Controller?.OnShown(handle);

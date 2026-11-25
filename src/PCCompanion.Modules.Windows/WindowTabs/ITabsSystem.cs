@@ -89,6 +89,12 @@ public interface ITabsSystem
     /// <summary>Brings a shown window, or its open dialog, to the front.</summary>
     bool Activate(nint window);
 
+    /// <summary>
+    /// Puts a window right behind <paramref name="inFront"/> in the order of windows, without
+    /// activating it, once its program has done what it was asked before, such as showing it.
+    /// </summary>
+    bool PutBehind(nint window, nint inFront);
+
     /// <summary>Asks the window to close, as its Close button does.</summary>
     bool AskToClose(nint window);
 
