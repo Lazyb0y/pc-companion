@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Windows.WindowRules;
@@ -59,6 +60,9 @@ public sealed class RuleMatcher
 {
     /// <summary>How long a title pattern may take to match before it counts as not matching.</summary>
     public static readonly TimeSpan MatchTimeout = TimeSpan.FromMilliseconds(100);
+
+    // Set once PrepareMatching has run.
+    private static int s_matchingPrepared;
 
     private readonly Regex? _pattern;
 
@@ -189,7 +193,9 @@ public sealed class RuleMatcher
     {
         try
         {
-            return new Regex(text, RegexOptions.NonBacktracking | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase, MatchTimeout);
+            var pattern = new Regex(text, RegexOptions.NonBacktracking | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase, MatchTimeout);
+            PrepareMatching();
+            return pattern;
         }
         catch (NotSupportedException)
         {
@@ -198,6 +204,18 @@ public sealed class RuleMatcher
         catch (ArgumentException)
         {
             return null;
+        }
+    }
+
+    // .NET prepares its non-backtracking matching code at the first match in a process. That takes
+    // about 10 ms, counted toward MatchTimeout, and much longer on a busy PC: a rule could run out of
+    // time on a title it matches. A match of our own, without a time limit, prepares it before any
+    // rule's match is timed, as Clipboard Actions does.
+    private static void PrepareMatching()
+    {
+        if (Interlocked.Exchange(ref s_matchingPrepared, 1) == 0)
+        {
+            _ = new Regex(@"\A(?:x)\z", RegexOptions.NonBacktracking | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase).IsMatch("x");
         }
     }
 }

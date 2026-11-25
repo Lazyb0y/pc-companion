@@ -53,7 +53,7 @@ Rules that act on an app's windows as they open: which display they open on, the
 ### Title and window class
 
 - **Title,** optional: **contains** a text, **is** a text, or **matches** a regular expression, case ignored. Read without a message (`InternalGetWindowText`).
-- **Regular expressions** use .NET's syntax, culture-invariant and case-insensitive, and give up after 100 ms, as Clipboard Actions' patterns do; a rule whose pattern takes longer doesn't match that window, with a warning in the log.
+- **Regular expressions** use .NET's syntax, culture-invariant and case-insensitive, and give up after 100 ms, as Clipboard Actions' patterns do; a rule whose pattern takes longer doesn't match that window, with a warning in the log. The first match in the process, which prepares .NET's matching and takes longer on a busy PC, is one of PC Companion's own, without a time limit.
 - **Window class,** optional, under **More matching**: the class name the app registered, such as `CabinetWClass` for File Explorer, matched exactly, case ignored. For apps whose windows all have the same app.
 - **A late title:** a title is checked when the window is ready and again each time it changes (`EVENT_OBJECT_NAMECHANGE`) during the window's first 10 seconds, until it matches. In the spike, File Explorer set its title 0.2 s after showing, and Edge 0.25 s after.
 - **Once decided, it stays:** a window that matched keeps the rule's held actions while it's open, even when its title changes later, as a browser's does at each tab; a window that didn't match by then isn't matched later. So a rule never moves a window the user is working in.
