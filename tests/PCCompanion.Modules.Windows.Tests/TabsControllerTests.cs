@@ -424,6 +424,7 @@ public sealed class TabsControllerTests : IDisposable
         Assert.True(_system[Mail].Shown);
         Assert.Equal(NotesFrame with { X = 332, Y = 232 }, _system[Report].Visible);
         Assert.Equal(Report, _system.ForegroundWindow);
+        Assert.Equal(Mail, _system.WindowsBehind(Report)[0]);
 
         _controller.TakeOutFront();
         Assert.Equal(1, _system.Warnings);
@@ -459,6 +460,24 @@ public sealed class TabsControllerTests : IDisposable
         Assert.False(_system[Mail].Shown);
         Assert.Equal(NotesFrame, _system[Notes].Visible);
         Assert.False(_system.Marks.ContainsKey(Notes));
+    }
+
+    [Fact]
+    public void AnAppShowingATabThatShowedAsItsLastGroupEndedBringsItToTheFront()
+    {
+        // Notes shows as its group ends, and Windows no longer tells Window Tabs that it did.
+        Group(Notes, Mail);
+        _controller.TakeOutFront();
+        Run();
+        Assert.Empty(_controller.Groups);
+        Assert.True(_system[Notes].Shown);
+
+        Group(Notes, Mail);
+        _system.AppShows(Notes);
+        Run();
+
+        Assert.Equal([Notes], _controller.Fronts);
+        Assert.False(_system[Mail].Shown);
     }
 
     [Fact]

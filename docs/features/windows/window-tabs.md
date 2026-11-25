@@ -334,12 +334,12 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 ## Testing
 
 - **Unit tests,** with fake windows, a fake clock, fake displays and fake Windows calls:
-  - **groups:** made by dropping on a strip and with Ctrl on a title bar, from the keyboard, a window joining between two tabs, leaving by dragging off, by the menu and by the shortcut, moving between groups and along a strip, and a group of one ending;
+  - **groups:** made by dropping on a strip and with Ctrl on a title bar, from the keyboard, a window joining between two tabs, leaving by dragging off, by the menu and by the shortcut, in front of the tab that shows in its place, moving between groups and along a strip, and a group of one ending;
   - **which windows can be tabs:** each kind in [Windows that can't be tabs](#windows-that-cant-be-tabs), with the warning sound, and no highlight while dragging;
   - **switching:** the order show, visible, two frames, hide; a hung new tab keeping the old one, and one that shows after another tab was chosen; a tab with a dialog open; next and previous going round; owned windows hidden and shown;
   - **place and state:** invisible borders, maximized groups and their normal place, a snapped tab kept snapped, another scale checked again, a minimum size, and work area coordinates;
   - **the strip:** above the window, at the top edge with the 400 ms rest, tab widths down to icons and past the window, right to left, and placing it right above the window in front;
-  - **while windows are tabs:** minimized, full screen, the app showing or hiding a tab, a tab closing, the tab in front on another virtual desktop, and Explorer restarting;
+  - **while windows are tabs:** minimized, full screen, the app showing or hiding a tab, also one that Window Tabs showed as its last group ended, a tab closing, the tab in front on another virtual desktop, and Explorer restarting;
   - **keeping groups:** the file's contents, grouping again within 60 seconds and after, minimized windows, the 50-group limit, forgetting, a file that can't be read, and no file while running as administrator after a UAC prompt;
   - **never losing a window:** marks set before hiding and removed on showing, every hidden tab back on exit and at `WM_QUERYENDSESSION`, the crash list, and recovery at the next start, on and off;
   - **the shared sets** read by Minimize to Tray and Drop-down Apps;
