@@ -31,6 +31,7 @@ using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
 using PCCompanion.App.Features.WindowRules;
+using PCCompanion.App.Features.WindowShading;
 using PCCompanion.App.Features.WindowTabs;
 using PCCompanion.App.ViewModels;
 using PCCompanion.Core;
@@ -199,6 +200,7 @@ public partial class App : Application
             .AddTransient<DropDownAppsViewModel>()
             .AddTransient<WindowTabsViewModel>()
             .AddTransient<WindowRulesViewModel>()
+            .AddTransient<WindowShadingViewModel>()
             .AddTransient<TitleBarActionsViewModel>()
             .AddTransient<EndAppViewModel>()
             .AddTransient<SystemMetersViewModel>()
