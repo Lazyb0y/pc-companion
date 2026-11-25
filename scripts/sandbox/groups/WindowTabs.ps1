@@ -1,11 +1,13 @@
 ﻿# Window Tabs: the Home switch turns it on and its page saves Group by dropping with Ctrl and the
-# switch shortcuts, with a note while another program has Windows + Ctrl + Page Down. Test windows,
+# switch and group shortcuts, with a note while another program has Windows + Ctrl + Page Down or
+# Windows + Ctrl + T. Test windows,
 # painted in solid colors and dragged by their title bars with simulated input, make groups: one
 # dropped with Ctrl on another's title bar, and one dropped on a strip without a key, while one
 # dropped without Ctrl doesn't group. The strip shows right above the group; a click on a tab and the
 # shortcuts show each tab in the group's place and in front, and with Shift a tab moves; screen
 # readers get a tab list. A tab dragged off the strip and Move out of group in a tab's menu take a
-# window out, and a group of one ends. Minimizing the group hides its strip, an app showing a hidden
+# window out, and a group of one ends. Windows + Ctrl + T adds the window in front to the group of the
+# window behind it, and with Shift takes it out again. Minimizing the group hides its strip, an app showing a hidden
 # tab brings it to the front, and closing the tab in front shows the other. A window with a dialog
 # open and a fixed-size window can't be tabs, nor, with the host's file labeled Medium integrity, a
 # window running as administrator. Minimize to Tray's shortcut and Drop-down Apps leave a tab alone.
@@ -213,7 +215,7 @@ function Get-TabPoint([IntPtr] $Strip, [int] $Index, [int] $Count) {
     return New-Object System.Drawing.Point(([int] ($rect.Left + ($Index + 0.5) * $width)), ([int] (($rect.Top + $rect.Bottom) / 2)))
 }
 
-$LeftWindows = 0x5B; $LeftControl = 0x1D; $LeftShift = 0x2A; $KeyPageDown = 0x51; $KeyPageUp = 0x49; $KeyZ = 0x2C; $KeyAboveTab = 0x29
+$LeftWindows = 0x5B; $LeftControl = 0x1D; $LeftShift = 0x2A; $KeyPageDown = 0x51; $KeyPageUp = 0x49; $KeyZ = 0x2C; $KeyAboveTab = 0x29; $KeyT = 0x14
 function Send-Keys([int[]] $Keys, [int] $Wait = 1500) {
     $extended = @($LeftWindows, $KeyPageDown, $KeyPageUp)
     foreach ($key in $Keys) { [void] [Win32]::ScanKey($key, $false, $extended -contains $key) }
@@ -238,17 +240,22 @@ Test-Check 'select Window Tabs' (Select-NavigationItem 'Window Tabs')
 Start-Sleep -Seconds 2
 Save-Screenshot '13a-window-tabs-english'
 $text = Get-WindowText
-Test-Check 'Window Tabs shows its settings' (($text -contains 'Making a group') -and ($text -contains 'Group by dropping with Ctrl') -and ($text -contains 'Switch tabs') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'Window Tabs shows its settings' (($text -contains 'Making a group') -and ($text -contains 'Group by dropping with Ctrl') -and ($text -contains 'Switch tabs') -and ($text -contains 'Group from the keyboard') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 Test-Check 'it says which windows can''t be tabs' (@($text | Where-Object { $_ -like "Some windows can't be tabs*" }).Count -eq 1) ($text -join ' | ')
 Test-Check 'Switch tabs starts with Windows logo key + Ctrl' ((Get-ListSelection 'Switch tabs') -eq 'Windows logo key + Ctrl + Page Down / Page Up') "selected: $(Get-ListSelection 'Switch tabs')"
 Test-Check 'turn off Group by dropping with Ctrl' (Set-Toggle 'Group by dropping with Ctrl' $false)
 Test-Check 'the page saves it' (Wait-Until { (Get-TabsSettings).groupByDropping -eq $false } 5) "saved: $(Get-TabsSettings | ConvertTo-Json -Compress)"
 Test-Check 'choose Windows logo key + Alt' (Select-ListItem 'Switch tabs' 'Windows logo key + Alt + Page Down / Page Up')
 Test-Check 'the page saves the shortcuts' (Wait-Until { (Get-TabsSettings).switchShortcuts -eq 'WindowsAltPage' } 5) "saved: $(Get-TabsSettings | ConvertTo-Json -Compress)"
+$selected = Get-ListSelection 'Group from the keyboard'
+Test-Check 'Group from the keyboard starts with Windows logo key + Ctrl + T' ($selected -eq 'Windows logo key + Ctrl + T') "selected: $selected"
+Test-Check 'choose None for Group from the keyboard' (Select-ListItem 'Group from the keyboard' 'None')
+Test-Check 'the page saves the group shortcuts' (Wait-Until { (Get-TabsSettings).groupShortcuts -eq 'None' } 5) "saved: $(Get-TabsSettings | ConvertTo-Json -Compress)"
 [void] (Close-SettingsApp)
 
-# Another program that has Windows + Ctrl + Page Down: the page says so.
+# Another program that has Windows + Ctrl + Page Down, or Windows + Ctrl + T: the page says so.
 Test-ShortcutTakenNote 'Windows + Ctrl + Page Down' 0xA 0x22 { Write-TabsSettings '{ "enabled": false }' } { Write-TabsSettings '{ "enabled": true }' } { Write-TabsSettings '{ "enabled": true, "groupByDropping": false }' } 'Window Tabs' 'Another program uses Windows logo key + Ctrl + Page Down / Page Up, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '13b-window-tabs-shortcut-taken'
+Test-ShortcutTakenNote 'Windows + Ctrl + T' 0xA 0x54 { Write-TabsSettings '{ "enabled": false }' } { Write-TabsSettings '{ "enabled": true }' } { Write-TabsSettings '{ "enabled": true, "groupByDropping": false }' } 'Window Tabs' 'Another program uses Windows logo key + Ctrl + T, so this shortcut does nothing here. PC Companion tries again when a setting here changes.' '13e-window-tabs-group-shortcut-taken'
 
 # A window dropped with Ctrl on another's title bar makes a group: it takes the other's place, in
 # front, with the strip right above it, and the other is hidden and marked.
@@ -325,6 +332,24 @@ Invoke-Click $point.X $point.Y -Right
 Test-Check 'Move out of group in a tab''s menu' (Select-TrayMenuItem 'Move out of group')
 Test-Check 'takes the window out, and the group of one ends' (Wait-Until { (Test-Shown $a) -and (Test-Shown $b) -and ((Get-Strips).Count -eq 0) } 5) "$(Get-States $a $b); strips: $((Get-Strips).Count)"
 Test-Check 'the host logs it' (Test-Logged 'ended a group: "?one window was left')
+
+# Windows + Ctrl + T adds the window in front to the group of the window behind it, at that window's
+# place, and with Shift takes it out again, beside the group, which ends with one window left.
+[void] [Win32]::MoveWindow($a, 40, 150, 460, 300, $true)
+[void] [Win32]::MoveWindow($b, 600, 150, 520, 360, $true)
+Start-Sleep -Seconds 1
+Select-Window $b
+Select-Window $a
+$behindFrame = [TabChecks]::Visible($b)
+Send-Keys @($LeftWindows, $LeftControl, $KeyT)
+Test-Check 'Windows + Ctrl + T adds the window in front to the group of the window behind it' (Wait-Until { (Test-Hidden $b) -and (Test-Shown $a) -and ((Get-Strips).Count -eq 1) } 5) "$(Get-States $a $b); strips: $((Get-Strips).Count)"
+Test-Check 'at that window''s place, in front' ((Test-SameFrame ([TabChecks]::Visible($a)) $behindFrame) -and ([Win32]::GetForegroundWindow() -eq $a)) (Get-States $a $b)
+$tookOut = Get-MatchCount (Get-HostLog) 'the user took it out'
+Send-Keys @($LeftWindows, $LeftControl, $LeftShift, $KeyT)
+Test-Check 'Windows + Ctrl + Shift + T takes it out again, and the group of one ends' (Wait-Until { (Test-Shown $a) -and (Test-Shown $b) -and ((Get-Strips).Count -eq 0) } 5) "$(Get-States $a $b); strips: $((Get-Strips).Count)"
+$frame = [TabChecks]::Visible($a)
+Test-Check 'it shows beside the other window, in front' (([math]::Abs($frame.Left - $behindFrame.Left - 32) -le 2) -and ([math]::Abs($frame.Top - $behindFrame.Top - 32) -le 2) -and ([Win32]::GetForegroundWindow() -eq $a) -and (Wait-Until { [Win32]::IsInFrontOf($a, $b) } 3)) "$(Get-States $a $b); frame $($frame.Left),$($frame.Top); behind $($behindFrame.Left),$($behindFrame.Top); in front of the other: $([Win32]::IsInFrontOf($a, $b))"
+Test-Check 'the host logs it' (Wait-Until { (Get-MatchCount (Get-HostLog) 'the user took it out') -gt $tookOut } 5)
 
 # Minimizing the group hides its strip, and restoring it brings the strip back.
 [void] [Win32]::MoveWindow($a, 40, 150, 460, 300, $true)

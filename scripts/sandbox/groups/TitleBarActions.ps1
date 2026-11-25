@@ -9,7 +9,8 @@
 # host that was ended leaves it translucent until the next start. A window that stopped responding,
 # a listed app and, for a host without admin rights, a program with them get no action, and the host
 # logs why. With Minimize to Tray and Hide Apps on, their actions send the window to the tray and hide
-# its app; with them off, the host logs why. The page in Arabic with the dark theme, with a
+# its app, and with Window Tabs on, its actions group the window with the one behind it and take it
+# out again; with them off, the host logs why. The page in Arabic with the dark theme, with a
 # screenshot.
 [void] (Close-SettingsApp)
 
@@ -457,6 +458,33 @@ Send-MiddleClick @($VK_SHIFT)
 Send-MiddleClick @($VK_CONTROL)
 Test-Check 'with the features off, the window stays' ([Win32]::IsWindowVisible($tba) -and -not [Win32]::IsIconic($tba) -and -not [TitleBarChecks]::IsInTray($tba)) (Get-WindowState $tba)
 Test-Check 'the host logs why' ((Get-MatchCount (Get-HostLog) 'didn''t run: "?FeatureOff') -ge 2)
+
+# With Window Tabs on, Shift + middle-click adds the window to the group of the window behind it, and
+# Ctrl + middle-click takes it out again; with Window Tabs off, the host logs why.
+$tabs = ', "windowTabs": { "enabled": true, "switchShortcuts": "None", "groupShortcuts": "None" }'
+Write-TitleBarSettings '{ "enabled": true, "shiftMiddleClick": "AddToGroupBehind", "controlMiddleClick": "TakeOutOfGroup" }' $tabs
+[void] (Wait-Until { [Win32]::FindWindow('PCCompanion.WindowTabs', $null) -ne [IntPtr]::Zero } 10)
+Start-Sleep -Seconds 1
+Restore-Window $tba
+Restore-Window $tba2
+Select-Window $tba2
+Select-Window $tba
+[void] (Move-ToTitleBar $tba)
+Send-MiddleClick @($VK_SHIFT)
+Test-Check 'Shift + middle-click adds the window to the group of the window behind it' (Wait-Until { [Win32]::IsWindowVisible($tba) -and -not [Win32]::IsWindowVisible($tba2) } 5) "first: $(Get-WindowState $tba); second: $(Get-WindowState $tba2)"
+Test-Check 'Window Tabs logs it' (Test-Logged 'Window Tabs made a group')
+[void] (Move-ToTitleBar $tba)
+Send-MiddleClick @($VK_CONTROL)
+Test-Check 'Ctrl + middle-click takes it out again, in front of the other' (Wait-Until { [Win32]::IsWindowVisible($tba) -and [Win32]::IsWindowVisible($tba2) -and [Win32]::IsInFrontOf($tba, $tba2) } 5) "first: $(Get-WindowState $tba); second: $(Get-WindowState $tba2); in front: $([Win32]::IsInFrontOf($tba, $tba2))"
+Test-Check 'Window Tabs logs that too' (Test-Logged '"?the user took it out')
+$refused = Get-MatchCount (Get-HostLog) 'didn''t run: "?FeatureOff'
+Write-TitleBarSettings '{ "enabled": true, "shiftMiddleClick": "AddToGroupBehind", "controlMiddleClick": "TakeOutOfGroup" }'
+[void] (Move-ToTitleBar $tba)
+Send-MiddleClick @($VK_SHIFT)
+Test-Check 'with Window Tabs off, the window stays alone' ([Win32]::IsWindowVisible($tba) -and [Win32]::IsWindowVisible($tba2)) "first: $(Get-WindowState $tba); second: $(Get-WindowState $tba2)"
+Test-Check 'the host logs why' (Wait-Until { (Get-MatchCount (Get-HostLog) 'didn''t run: "?FeatureOff') -gt $refused } 5)
+[void] [Win32]::MoveWindow($tba, 40, 40, 600, 300, $true)
+[void] [Win32]::MoveWindow($tba2, 680, 40, 560, 300, $true)
 
 # Everything in Windows Sandbox runs as administrator; a host whose file is labeled Medium integrity
 # runs without admin rights, and Windows refuses it the question to the test program's window, which
