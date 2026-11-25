@@ -48,6 +48,11 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
 
     public bool TabsRun { get; set; } = true;
 
+    /// <summary>The windows passed on to Window Shading to roll up, which takes them while <see cref="ShadingRuns"/>.</summary>
+    public List<nint> RolledUp { get; } = [];
+
+    public bool ShadingRuns { get; set; } = true;
+
     public int Sounds { get; private set; }
 
     public int HookSetAgain { get; private set; }
@@ -130,6 +135,16 @@ internal sealed class FakeTitleBarActionsSystem : ITitleBarActionsSystem
         }
 
         return TabsRun;
+    }
+
+    public bool RollUp(nint window)
+    {
+        if (ShadingRuns)
+        {
+            RolledUp.Add(window);
+        }
+
+        return ShadingRuns;
     }
 
     /// <summary>The opacities the wheel gave windows, as Window Rules hears of them.</summary>

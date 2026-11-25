@@ -69,6 +69,14 @@ public sealed class TitleBarActionsSettingsTests
     }
 
     [Fact]
+    public void RollUpIsReadForAClickAndForTheWheel()
+    {
+        var settings = TitleBarActionsSettings.Read(Section("""{ "enabled": true, "shiftMiddleClick": "RollUp", "wheel": "RollUp" }"""));
+
+        Assert.Equal((TitleBarClickAction.RollUp, TitleBarWheelAction.RollUp), (settings.ShiftMiddleClick, settings.Wheel));
+    }
+
+    [Fact]
     public void AnUnknownNameCantBeRead() =>
         Assert.ThrowsAny<JsonException>(() => TitleBarActionsSettings.Read(Section("""{ "middleClick": "Close" }""")));
 

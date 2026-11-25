@@ -9,6 +9,7 @@ using PCCompanion.Localization;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
+using PCCompanion.Modules.Windows.WindowShading;
 using PCCompanion.Modules.Windows.WindowTabs;
 
 namespace PCCompanion.App.Features.TitleBarActions;
@@ -40,11 +41,13 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
             new(TitleBarClickAction.HideApp, Strings.TitleBarActionsHideApp),
             new(TitleBarClickAction.AddToGroupBehind, Strings.WindowTabsActionAddToGroupBehind),
             new(TitleBarClickAction.TakeOutOfGroup, Strings.WindowTabsMoveOutOfGroup),
+            new(TitleBarClickAction.RollUp, Strings.TitleBarActionsRollUp),
         ];
         WheelActions =
         [
             new(TitleBarWheelAction.None, Strings.TitleBarActionsNone),
             new(TitleBarWheelAction.Opacity, Strings.TitleBarActionsOpacity),
+            new(TitleBarWheelAction.RollUp, Strings.TitleBarActionsRollUp),
         ];
 
         ExcludedApps = new AppListViewModel(
@@ -81,9 +84,9 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         get => WheelOption(Settings.Wheel);
         set
         {
-            if (value is not null)
+            if (value is not null && Change(Settings.Wheel, value.Action, () => Settings with { Wheel = value.Action }))
             {
-                Change(Settings.Wheel, value.Action, () => Settings with { Wheel = value.Action });
+                OnPropertyChanged(nameof(NeedsWindowShading));
             }
         }
     }
@@ -93,9 +96,9 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         get => WheelOption(Settings.ControlWheel);
         set
         {
-            if (value is not null)
+            if (value is not null && Change(Settings.ControlWheel, value.Action, () => Settings with { ControlWheel = value.Action }))
             {
-                Change(Settings.ControlWheel, value.Action, () => Settings with { ControlWheel = value.Action });
+                OnPropertyChanged(nameof(NeedsWindowShading));
             }
         }
     }
@@ -119,6 +122,14 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         (Chooses(TitleBarClickAction.AddToGroupBehind) || Chooses(TitleBarClickAction.TakeOutOfGroup))
         && !_editor.IsEnabled(WindowTabsFeature.Definition.Id);
 
+    /// <summary>
+    /// Whether a click or the wheel is set to Roll up while Window Shading is off, as it was when
+    /// the page opened.
+    /// </summary>
+    public bool NeedsWindowShading =>
+        (Chooses(TitleBarClickAction.RollUp) || Settings.Wheel == TitleBarWheelAction.RollUp || Settings.ControlWheel == TitleBarWheelAction.RollUp)
+        && !_editor.IsEnabled(WindowShadingFeature.Definition.Id);
+
     /// <summary>Which windows get no actions, with the host's rights now.</summary>
     public string LeftOutInfo => HostLauncher.RunsAsAdministrator(_appSettings.General)
         ? Strings.TitleBarActionsLeftOutInfoOn
@@ -137,6 +148,7 @@ public sealed class TitleBarActionsViewModel : FeatureViewModel<TitleBarActionsS
         {
             OnPropertyChanged(nameof(NeedsFeatures));
             OnPropertyChanged(nameof(NeedsWindowTabs));
+            OnPropertyChanged(nameof(NeedsWindowShading));
         }
     }
 

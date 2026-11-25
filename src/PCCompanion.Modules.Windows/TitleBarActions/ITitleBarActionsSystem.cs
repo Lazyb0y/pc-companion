@@ -64,6 +64,12 @@ public interface ITitleBarActionsSystem
     /// </summary>
     bool TakeOutOfGroup(nint window);
 
+    /// <summary>
+    /// Passes the window on to Window Shading, which rolls it up on its thread, or plays the
+    /// warning sound itself. Returns false while Window Shading doesn't run.
+    /// </summary>
+    bool RollUp(nint window);
+
     /// <summary>Tells Window Rules the opacity the wheel gave the window, in percent.</summary>
     void OpacityChanged(nint window, int percent);
 

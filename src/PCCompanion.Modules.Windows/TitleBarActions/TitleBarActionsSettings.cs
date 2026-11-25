@@ -114,6 +114,9 @@ public enum TitleBarClickAction
 
     /// <summary>Takes the window out of its group, through Window Tabs.</summary>
     TakeOutOfGroup,
+
+    /// <summary>Rolls the window up to its title bar, through Window Shading.</summary>
+    RollUp,
 }
 
 /// <summary>What the wheel on a title bar does.</summary>
@@ -124,4 +127,7 @@ public enum TitleBarWheelAction
 
     /// <summary>Changes the window's opacity.</summary>
     Opacity,
+
+    /// <summary>Rolls the window up to its title bar when turned up, through Window Shading; turned down, it does nothing.</summary>
+    RollUp,
 }

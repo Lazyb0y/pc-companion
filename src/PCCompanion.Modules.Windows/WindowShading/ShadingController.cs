@@ -29,6 +29,10 @@ public sealed partial class ShadingController : IDisposable
     // How often the pointer is looked at while hover shows a window.
     private static readonly TimeSpan HoverPoll = TimeSpan.FromMilliseconds(100);
 
+    // How long after the wheel rolled a window down it isn't rolled up again, so a wheel that
+    // bounces up on its title bar doesn't roll it up at once.
+    private static readonly TimeSpan WheelSettle = TimeSpan.FromSeconds(1);
+
     private static readonly CompositeFormat StripNameFormat = CompositeFormat.Parse(Strings.WindowShadingStripName);
 
     private readonly IShadingSystem _system;
@@ -40,6 +44,8 @@ public sealed partial class ShadingController : IDisposable
     private readonly HashSet<nint> _measuring = [];
     private WindowShadingSettings _settings = new();
     private int _order;
+    private nint _wheeledDown;
+    private long _wheeledDownAt;
 
     /// <param name="post">Runs work on the feature's thread later, for timers.</param>
     public ShadingController(IShadingSystem system, TimeProvider time, Action<Action> post, ILogger logger, ShadedWindows set)
@@ -104,6 +110,12 @@ public sealed partial class ShadingController : IDisposable
     {
         if (window == 0 || _shaded.ContainsKey(window) || _measuring.Contains(window))
         {
+            return;
+        }
+
+        if (window == _wheeledDown && _time.GetElapsedTime(_wheeledDownAt) < WheelSettle)
+        {
+            LogWheelSettling(_logger);
             return;
         }
 
@@ -350,6 +362,7 @@ public sealed partial class ShadingController : IDisposable
         if (IsCurrent(shaded) && delta < 0)
         {
             RollDown(shaded, activate: true, ShadeEnd.Wheel);
+            (_wheeledDown, _wheeledDownAt) = (shaded.Window, _time.GetTimestamp());
         }
     }
 
@@ -515,6 +528,9 @@ public sealed partial class ShadingController : IDisposable
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Shading didn't roll a window up: {Refusal}.")]
     private static partial void LogRefused(ILogger logger, ShadeRefusal refusal);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Shading didn't roll a window up just after the wheel rolled it down.")]
+    private static partial void LogWheelSettling(ILogger logger);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Window Shading couldn't roll a window down.")]
     private static partial void LogReleaseFailed(ILogger logger, Exception exception);
