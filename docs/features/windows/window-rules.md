@@ -280,7 +280,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 
 - `app` and `tabOf`: an app as other features' lists keep one, with an `appId` or a `program`, not both.
 - `title.match`: `Contains`, `Is` or `Pattern`.
-- `display.which`: `Main`, `Pointer` or `Chosen`, which also has the display's `name`, `model`, `serial`, `connection` and `builtIn`, as Display Profiles keeps a display.
+- `display.which`: `Main`, `UnderPointer` or `Chosen`, which also has the display's `name`, `model`, `serial`, `connection` and `builtIn`, as Display Profiles keeps a display.
 - `place.which`: `Centered`, `LeftHalf`, `RightHalf`, `TopHalf`, `BottomHalf`, `TopLeft`, `TopRight`, `BottomLeft`, `BottomRight`, `WorkArea`, `Remembered`, or `Custom` with `left`, `top`, `width` and `height` in percent.
 - `open`: `Normal`, `Maximized` or `Minimized`; left out, the app chooses.
 - `opacity.which`: `Fixed` with `percent`, from 20 to 90 in steps of 10, or `Wheel`.
