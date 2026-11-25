@@ -93,7 +93,8 @@ public sealed partial class RulesController : IDisposable
     /// Uses new rules. The first time, and whenever the rules start again after there were none,
     /// the windows open now count as not new, so they're never placed without Apply now, but they
     /// get the actions their rules hold. Windows already matched are matched again by their title
-    /// now, without being placed.
+    /// now, without being placed, and the other open windows get the actions of a rule that now
+    /// matches them, such as one just added or turned on, as at the start.
     /// </summary>
     public void Apply(WindowRulesSettings settings)
     {
@@ -131,11 +132,22 @@ public sealed partial class RulesController : IDisposable
                 _seen.Add(window);
                 Adopt(window);
             }
+
+            return;
         }
 
         foreach (var ruled in _windows.Values.ToList())
         {
             Rematch(ruled);
+        }
+
+        // Windows that showed and weren't matched; a window not seen yet is still new.
+        foreach (var window in _system.TaskbarWindows())
+        {
+            if (_seen.Contains(window) && !_windows.ContainsKey(window))
+            {
+                Adopt(window);
+            }
         }
     }
 
