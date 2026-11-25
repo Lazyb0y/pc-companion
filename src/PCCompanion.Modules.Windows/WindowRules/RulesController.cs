@@ -214,17 +214,21 @@ public sealed partial class RulesController : IDisposable
     }
 
     /// <summary>
-    /// Applies the rule at <paramref name="index"/> to the open windows it matches, placing
-    /// included, except snapped and full-screen windows. Returns how many windows it applied to.
+    /// Applies <paramref name="rule"/>, as the page shows it, to the open windows it matches,
+    /// placing included, except snapped and full-screen windows. Returns how many windows it
+    /// applied to; none when the rule can't be used.
     /// </summary>
-    public int ApplyNow(int index)
+    public int ApplyNow(WindowRule rule)
     {
-        if (index < 0 || index >= Rules.Matchers.Count || !Rules.Matchers[index].IsUsable)
+        ArgumentNullException.ThrowIfNull(rule);
+
+        var matcher = new RuleMatcher(rule);
+        if (!matcher.IsUsable)
         {
             return 0;
         }
 
-        var matcher = Rules.Matchers[index];
+        var outcome = RuleOutcome.Combine([rule], [0]);
         var applied = 0;
         foreach (var window in _system.TaskbarWindows())
         {
@@ -237,7 +241,6 @@ public sealed partial class RulesController : IDisposable
             _seen.Add(window);
             var ruled = Ruled(window);
             ruled.UserMoved = false;
-            var outcome = Rules.Combine([index]);
             if (outcome.Places && !_system.IsArranged(window) && !_system.IsFullScreen(window))
             {
                 Place(ruled, outcome);
@@ -246,7 +249,7 @@ public sealed partial class RulesController : IDisposable
             applied++;
         }
 
-        LogAppliedNow(_logger, index + 1, applied);
+        LogAppliedNow(_logger, applied);
         return applied;
     }
 
@@ -567,8 +570,8 @@ public sealed partial class RulesController : IDisposable
     [LoggerMessage(Level = LogLevel.Debug, Message = "A window's title matched {Count} more rules after it showed.")]
     private static partial void LogMatchedLate(ILogger logger, int count);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules applied rule {Rule} now to {Count} open windows.")]
-    private static partial void LogAppliedNow(ILogger logger, int rule, int count);
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules applied a rule now to {Count} open windows.")]
+    private static partial void LogAppliedNow(ILogger logger, int count);
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "A window's app moved it back, so Window Rules placed it again (time {Applies}).")]
     private static partial void LogMovedBack(ILogger logger, int applies);

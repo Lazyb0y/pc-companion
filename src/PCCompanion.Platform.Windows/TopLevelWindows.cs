@@ -511,6 +511,38 @@ public static class TopLevelWindows
     }
 
     /// <summary>
+    /// Sets another program's <paramref name="window"/>'s normal rectangle, the one it has when
+    /// neither minimized nor maximized, and shows it <paramref name="show"/>: restored or minimized
+    /// without activating it, or maximized on the display of its normal rectangle. Returns false
+    /// when Windows refused. It waits for the window's program to handle it, so don't call it on a
+    /// thread that must not wait.
+    /// </summary>
+    /// <param name="normalBounds">The normal rectangle, with its invisible borders, in screen coordinates.</param>
+    public static unsafe bool SetPlacement(nint window, Rectangle normalBounds, WindowState show)
+    {
+        var workspace = ToWorkspace(window, normalBounds);
+        var placement = new WINDOWPLACEMENT
+        {
+            length = (uint)sizeof(WINDOWPLACEMENT),
+            showCmd = show switch
+            {
+                WindowState.Maximized => SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED,
+                WindowState.Minimized => SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE,
+                _ => SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE,
+            },
+            rcNormalPosition = new RECT(workspace.Left, workspace.Top, workspace.Right, workspace.Bottom),
+        };
+        return PInvoke.SetWindowPlacement(new HWND(window), in placement);
+    }
+
+    /// <summary>
+    /// Whether Windows has <paramref name="window"/> snapped, beside other windows or to a corner
+    /// (<c>IsWindowArranged</c>, from Windows 10 version 1903). Moving a snapped window leaves it
+    /// snapped, so restoring it would jump back.
+    /// </summary>
+    public static bool IsArranged(nint window) => NativeArrangement.IsWindowArranged(window) != 0;
+
+    /// <summary>
     /// Whether a window is one that Windows may give a taskbar button: a top-level window that
     /// isn't a tool window or owned by another window, unless it asks for a button.
     /// </summary>
@@ -684,6 +716,14 @@ public static class TopLevelWindows
 /// <param name="State">Whether it's minimized or maximized now, shown or hidden.</param>
 /// <param name="RestoresMaximized">Being minimized, it comes back maximized.</param>
 public sealed record WindowPlacement(Rectangle NormalBounds, WindowState State, bool RestoresMaximized);
+
+// IsWindowArranged has no header in the Windows SDK, so the metadata the native methods are
+// generated from doesn't have it.
+internal static partial class NativeArrangement
+{
+    [System.Runtime.InteropServices.LibraryImport("user32.dll")]
+    internal static partial int IsWindowArranged(nint window);
+}
 
 /// <summary>Whether a window is minimized or maximized.</summary>
 public enum WindowState

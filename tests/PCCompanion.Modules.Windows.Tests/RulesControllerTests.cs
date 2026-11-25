@@ -46,12 +46,13 @@ public sealed class RulesControllerTests : IDisposable
     [Fact]
     public void AWindowOpenWhenTheRulesStartIsNotPlacedUntilApplyNow()
     {
-        Use(new WindowRule { App = Mail, Place = Place("RightHalf") });
+        var rule = new WindowRule { App = Mail, Place = Place("RightHalf") };
+        Use(rule);
 
         _controller.OnShown(Open);
 
         Assert.Equal(Start, _system[Open].Visible);
-        Assert.Equal(1, _controller.ApplyNow(0));
+        Assert.Equal(1, _controller.ApplyNow(rule));
         Assert.Equal(RightHalf, _system[Open].Visible);
     }
 
@@ -239,9 +240,10 @@ public sealed class RulesControllerTests : IDisposable
         _system.Add(3, Start).Arranged = true;
         _system.Add(4, Start).FullScreen = true;
         _system.Add(5, Start).State = WindowState.Minimized;
-        Use(new WindowRule { App = Mail, Place = Place("RightHalf") });
+        var rule = new WindowRule { App = Mail, Place = Place("RightHalf") };
+        Use(rule);
 
-        Assert.Equal(4, _controller.ApplyNow(0));
+        Assert.Equal(4, _controller.ApplyNow(rule));
 
         Assert.Equal(RightHalf, _system[Open].Visible);
         Assert.Equal(Start, _system[3].Visible);
@@ -253,13 +255,13 @@ public sealed class RulesControllerTests : IDisposable
     [Fact]
     public void ApplyNowAppliesOnlyThatRuleAndOnlyAUsableOne()
     {
-        Use(new WindowRule { App = Mail, Place = Place("LeftHalf") }, new WindowRule { App = Mail, Place = Place("RightHalf") }, new WindowRule { App = Mail });
+        Use(new WindowRule { App = Mail, Place = Place("LeftHalf") });
 
-        _controller.ApplyNow(1);
+        _controller.ApplyNow(new WindowRule { App = Mail, Place = Place("RightHalf") });
 
         Assert.Equal(RightHalf, _system[Open].Visible);
-        Assert.Equal(0, _controller.ApplyNow(2));
-        Assert.Equal(0, _controller.ApplyNow(9));
+        Assert.Equal(0, _controller.ApplyNow(new WindowRule { App = Mail }));
+        Assert.Equal(0, _controller.ApplyNow(new WindowRule { App = Mail, Place = Place("RightHalf"), Enabled = false }));
     }
 
     [Fact]

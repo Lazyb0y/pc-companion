@@ -138,6 +138,7 @@ Each action has a switch in the rule; an action that's off leaves the window as 
 - **Apply now,** in a rule's **More options**, applies all its actions to the matching windows that are open, placing included.
 - **Snapped windows aren't moved:** Windows keeps a moved snapped window snapped (`IsWindowArranged` stayed true in the spike after it was moved), so restoring it would jump. A minimized window gets the rule's place as its normal place and stays minimized. Full-screen windows aren't moved.
 - **Turning a rule on** or saving it doesn't place open windows: only Apply now does, so a rule never moves the window the user is working in without being asked.
+- **How the page asks:** through a pipe of the user's session (`WindowRulesPipe`), which the feature's thread serves while Window Rules is on, with the rule as the page shows it, so a change not yet saved still applies. The host answers with how many windows it applied the rule to, and the page says so. While Window Rules is off, Apply now isn't offered.
 
 ### When the displays change
 
