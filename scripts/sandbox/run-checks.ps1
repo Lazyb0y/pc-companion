@@ -57,6 +57,7 @@ $startStates = [ordered] @{
     DropDownApps = 'Installed'
     WindowTabs = 'Installed'
     TitleBarActions = 'Installed'
+    WindowRules = 'Installed'
     EndApp = 'Installed'
     SystemMeters = 'Installed'
     DynamicWallpaper = 'Installed'

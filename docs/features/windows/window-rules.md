@@ -370,13 +370,13 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
   - **apps running as administrator** skipped without admin rights;
   - **the settings:** the spec's example, unknown choices kept, limits, and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/WindowRules.ps1`), with test windows the checks start:
-  - **the page:** the Home switch turns the feature on with no rules; a rule saved from the editor with Running app, and one from Pick a window, are in the settings; Matches shows the open test windows;
-  - **placing:** a test window opens at a rule's place and display, and one that moves itself back is placed again; Edge, File Explorer and Settings open at a rule's place; maximized and minimized work, and restoring goes to the rule's place;
+  - **the page:** the Home switch turns the feature on with no rules; a rule saved from the editor with Running app, and one from Pick a window, are in the settings; Matches shows the open test windows; a window open as its rule is saved gets the rule's held actions without being moved;
+  - **placing:** a test window opens at a rule's place, and one that moves itself back is placed again; Edge, File Explorer and Settings open at a rule's place; maximized and minimized work, and restoring goes to the rule's place;
   - **held actions:** on top, opacity and taskbar hiding apply, the taskbar button comes back while minimized, and turning the rule off puts them back;
   - **Apply now** places an open test window, and leaves a snapped one;
   - **Open as a tab of** groups two test windows, with Window Tabs on;
-  - **Where I last put it:** a window moved by the checks and closed opens there next time, and the file holds no title;
-  - **never losing a window:** **Exit** puts the windows back; ending the host with `Stop-Process` leaves them marked, and the next start puts them back;
+  - **Where I last put it:** a window moved by the checks and closed opens there next time; an opacity set with Title Bar Actions' wheel is kept for the next window; and the file holds both, with no title;
+  - **never losing a window:** **Exit** puts the windows back, and the next start gives an open window its held actions without moving it; ending the host with `Stop-Process` leaves them marked, and the next start, with the feature off, puts them back and deletes the file;
   - **apps running as administrator:** with the host's file labeled Medium integrity, a window running as administrator is left alone;
   - no feature holds the host's UI thread, as every group checks.
 - The App group checks the page's layout at several window widths, and its header at the largest text size, as for every feature page.
