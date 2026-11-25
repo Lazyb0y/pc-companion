@@ -6012,4 +6012,448 @@
     <value>Merkt sich die Apps jeder Gruppe und gruppiert ihre Fenster erneut, wenn sie nach einem Neustart, einer Abmeldung oder einem Update geöffnet werden.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowRulesName" xml:space="preserve">
+    <value>Fensterregeln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDescription" xml:space="preserve">
+    <value>Öffnen Sie die Fenster einer App auf dem Bildschirm und an der Stelle Ihrer Wahl, maximiert oder minimiert, und halten Sie sie im Vordergrund, durchscheinend, außerhalb der Taskleiste oder in einer Registerkartengruppe.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesHeader" xml:space="preserve">
+    <value>Regeln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesDescription" xml:space="preserve">
+    <value>Jede Regel wirkt auf die Fenster einer App, wenn sie sich öffnen. Passen mehrere Regeln zu einem Fenster, gilt für jede Aktion die erste Regel in der Liste, die sie festlegt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddRule" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoRules" xml:space="preserve">
+    <value>Noch keine Regeln. Fügen Sie eine hinzu, und füllen Sie sie mit „Fenster auswählen“ anhand eines geöffneten Fensters aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEdit" xml:space="preserve">
+    <value>Bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditName" xml:space="preserve">
+    <value>{0} bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRuleSwitchName" xml:space="preserve">
+    <value>{0} verwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreName" xml:space="preserve">
+    <value>Weitere Optionen für {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNow" xml:space="preserve">
+    <value>Jetzt anwenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDelete" xml:space="preserve">
+    <value>Löschen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteTitle" xml:space="preserve">
+    <value>{0} löschen?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteText" xml:space="preserve">
+    <value>Die Fenster, die die Regel geändert hat, erhalten zurück, was sie ihnen gegeben hat, außer ihrer Position.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSave" xml:space="preserve">
+    <value>Speichern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesUnnamed" xml:space="preserve">
+    <value>Regel ohne Namen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPermissions" xml:space="preserve">
+    <value>Liest die App, den Titel und die Klasse jedes Fensters, das sich öffnet, und welche Bildschirme angeschlossen sind; Titel bleiben nur im Arbeitsspeicher. Verschiebt, ändert die Größe, maximiert und minimiert die Fenster der Apps in den Regeln beim Öffnen, hält sie im Vordergrund, durchscheinend oder außerhalb der Taskleiste und markiert sie, damit sie nach einem Absturz zurückerhalten, was sie hatten; verwendet keinen Tastatur- oder Maus-Hook und führt keinen Code in anderen Apps aus. Stellt keine Netzwerkverbindungen her und sendet nichts.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfo" xml:space="preserve">
+    <value>Regeln lassen die Fenster von Apps, die als Administrator ausgeführt werden, unverändert, da Windows sie von PC Companion fernhält, solange es ohne Administratorrechte läuft. Aktivieren Sie auf der Seite „Allgemein“ „Immer als Administrator ausführen“, damit Regeln auch auf sie wirken.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion wird als Administrator ausgeführt, daher wirken Regeln auch auf die Fenster von Apps, die als Administrator ausgeführt werden.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_one" xml:space="preserve">
+    <value>Die Regel wurde auf {0} geöffnetes Fenster angewendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_other" xml:space="preserve">
+    <value>Die Regel wurde auf {0} geöffnete Fenster angewendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowNoAnswer" xml:space="preserve">
+    <value>PC Companion hat nicht geantwortet, daher wurde die Regel nicht angewendet. Stellen Sie sicher, dass Fensterregeln aktiviert ist, und versuchen Sie es erneut.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryApp" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummarySeparator" xml:space="preserve">
+    <value>, </value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOnTop" xml:space="preserve">
+    <value>immer im Vordergrund</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOpacity" xml:space="preserve">
+    <value>{0} % Deckkraft</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTaskbar" xml:space="preserve">
+    <value>nicht in der Taskleiste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTab" xml:space="preserve">
+    <value>als Registerkarte von {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryNotUsed" xml:space="preserve">
+    <value>Nicht verwendet. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemTooMany" xml:space="preserve">
+    <value>Es werden nur die ersten 50 Regeln verwendet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemDisplay" xml:space="preserve">
+    <value>Der Bildschirm kann nicht erkannt werden; wählen Sie ihn erneut aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemUnknown" xml:space="preserve">
+    <value>Sie verwendet eine Auswahl aus einer neueren Version von PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddTitle" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditTitle" xml:space="preserve">
+    <value>Regel bearbeiten</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNamePlaceholder" xml:space="preserve">
+    <value>Zum Beispiel: Mail rechts</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameMissing" xml:space="preserve">
+    <value>Geben Sie der Regel einen Namen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesWindowsHeader" xml:space="preserve">
+    <value>Welche Fenster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppHeader" xml:space="preserve">
+    <value>App</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppNone" xml:space="preserve">
+    <value>Keine App ausgewählt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseApp" xml:space="preserve">
+    <value>App auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseTabApp" xml:space="preserve">
+    <value>App auswählen, als deren Registerkarte das Fenster geöffnet wird</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindow" xml:space="preserve">
+    <value>Fenster auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppMissing" xml:space="preserve">
+    <value>Wählen Sie die App aus, für die die Regel gilt.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleSwitch" xml:space="preserve">
+    <value>Nur Fenster, deren Titel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMatchName" xml:space="preserve">
+    <value>Wie der Titel verglichen wird</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleTextName" xml:space="preserve">
+    <value>Titeltext</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleContains" xml:space="preserve">
+    <value>Enthält</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleIs" xml:space="preserve">
+    <value>Ist</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitlePattern" xml:space="preserve">
+    <value>Entspricht dem regulären Ausdruck</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMissing" xml:space="preserve">
+    <value>Geben Sie den Text ein, mit dem der Titel verglichen wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleBadPattern" xml:space="preserve">
+    <value>Dies ist kein regulärer Ausdruck, den eine Regel verwenden kann.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreMatching" xml:space="preserve">
+    <value>Weitere Kriterien</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassSwitch" xml:space="preserve">
+    <value>Nur Fenster der Klasse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassNote" xml:space="preserve">
+    <value>Der Klassenname, den die App ihren Fenstern gegeben hat, etwa CabinetWClass für den Datei-Explorer, wird genau verglichen. „Fenster auswählen“ trägt ihn ein.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_one" xml:space="preserve">
+    <value>Passt zu {0} geöffneten Fenster.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_other" xml:space="preserve">
+    <value>Passt zu {0} geöffneten Fenstern.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_one" xml:space="preserve">
+    <value>{0} weitere Regel passt ebenfalls; für jede Aktion gilt die erste Regel in der Liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_other" xml:space="preserve">
+    <value>{0} weitere Regeln passen ebenfalls; für jede Aktion gilt die erste Regel in der Liste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsHeader" xml:space="preserve">
+    <value>Was die Regel tut</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsNote" xml:space="preserve">
+    <value>Bildschirm, Position und Art des Öffnens gelten einmal beim Öffnen, sodass Sie das Fenster danach verschieben können. Vordergrund, Deckkraft und das Ausblenden aus der Taskleiste bleiben, solange es geöffnet ist.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoAction" xml:space="preserve">
+    <value>Aktivieren Sie mindestens eine Aktion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplaySwitch" xml:space="preserve">
+    <value>Bildschirm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayMain" xml:space="preserve">
+    <value>Hauptbildschirm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayPointer" xml:space="preserve">
+    <value>Bildschirm mit dem Mauszeiger</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayBuiltIn" xml:space="preserve">
+    <value>Integrierter Bildschirm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayUnnamed" xml:space="preserve">
+    <value>Bildschirm</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayNotConnected" xml:space="preserve">
+    <value>{0} (nicht angeschlossen)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceSwitch" xml:space="preserve">
+    <value>Position und Größe</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCentered" xml:space="preserve">
+    <value>Zentriert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeftHalf" xml:space="preserve">
+    <value>Linke Hälfte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRightHalf" xml:space="preserve">
+    <value>Rechte Hälfte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopHalf" xml:space="preserve">
+    <value>Obere Hälfte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomHalf" xml:space="preserve">
+    <value>Untere Hälfte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopLeft" xml:space="preserve">
+    <value>Oberes linkes Viertel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopRight" xml:space="preserve">
+    <value>Oberes rechtes Viertel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomLeft" xml:space="preserve">
+    <value>Unteres linkes Viertel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomRight" xml:space="preserve">
+    <value>Unteres rechtes Viertel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWorkArea" xml:space="preserve">
+    <value>Ganzer Bildschirm, nicht maximiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRemembered" xml:space="preserve">
+    <value>Wo ich es zuletzt hatte</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCustom" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeft" xml:space="preserve">
+    <value>Links (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTop" xml:space="preserve">
+    <value>Oben (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWidth" xml:space="preserve">
+    <value>Breite (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceHeight" xml:space="preserve">
+    <value>Höhe (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceProblem" xml:space="preserve">
+    <value>Links und oben reichen von 0 bis 99,9, Breite und Höhe von 0,1 bis 100, in Prozent des Bildschirms ohne die Taskleiste.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenSwitch" xml:space="preserve">
+    <value>Öffnen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenNormal" xml:space="preserve">
+    <value>Normal</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMaximized" xml:space="preserve">
+    <value>Maximiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMinimized" xml:space="preserve">
+    <value>Minimiert</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOnTopSwitch" xml:space="preserve">
+    <value>Immer im Vordergrund</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacitySwitch" xml:space="preserve">
+    <value>Deckkraft</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityPercent" xml:space="preserve">
+    <value>{0} %</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityWheel" xml:space="preserve">
+    <value>Wie zuletzt mit dem Mausrad eingestellt</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarSwitch" xml:space="preserve">
+    <value>In Taskleiste und Alt + Tab ausblenden</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarNote" xml:space="preserve">
+    <value>Das Fenster erhält seine Taskleistenschaltfläche zurück, solange es minimiert ist, damit Sie es immer erreichen.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSwitch" xml:space="preserve">
+    <value>Als Registerkarte öffnen von</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSameApp" xml:space="preserve">
+    <value>App dieser Regel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabMissing" xml:space="preserve">
+    <value>Wählen Sie die App aus, als deren Registerkarte das Fenster geöffnet wird.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabNote" xml:space="preserve">
+    <value>Erfordert, dass Fenster-Tabs aktiviert ist. Ein Fenster, das einer Gruppe beitritt, übernimmt deren Position, daher gelten die anderen Aktionen der Regel nicht für es.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeSwitch" xml:space="preserve">
+    <value>Erneut anwenden, wenn sich die Bildschirme ändern</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeNote" xml:space="preserve">
+    <value>Platziert die geöffneten Fenster der Regel 2 Sekunden nach dem An- oder Abschließen eines Bildschirms erneut. Windows 11 verschiebt Fenster bereits zurück auf einen wieder angeschlossenen Bildschirm.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowTitle" xml:space="preserve">
+    <value>Fenster auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNote" xml:space="preserve">
+    <value>Die Regel übernimmt App, Titel, Klasse, Bildschirm und Position des Fensters, jeweils mit ausgeschaltetem Schalter, sodass Sie einschalten, was Sie möchten.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNone" xml:space="preserve">
+    <value>Es ist kein Fenster geöffnet.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowList" xml:space="preserve">
+    <value>Geöffnete Fenster</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowChoose" xml:space="preserve">
+    <value>Auswählen</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowUntitled" xml:space="preserve">
+    <value>Fenster ohne Titel</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

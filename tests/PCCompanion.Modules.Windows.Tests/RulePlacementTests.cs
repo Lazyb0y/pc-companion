@@ -83,6 +83,16 @@ public sealed class RulePlacementTests
     }
 
     [Fact]
+    public void AWindowsCustomPlaceIsInTenthsOfAPercentInsideTheWorkArea()
+    {
+        var place = OpenRuleWindows.PlaceOf(new Rectangle(480, 103, 961, 826), WorkArea);
+
+        Assert.Equal((25.0, 10.0, 50.1, 80.0), (place.Left, place.Top, place.Width, place.Height));
+        Assert.Equal(PlaceChoice.Custom, place.KnownWhich);
+        Assert.Equal((0.0, 0.0, 100.0, 100.0), (OpenRuleWindows.PlaceOf(new Rectangle(-50, -10, 2500, 1300), WorkArea) is var all ? (all.Left, all.Top, all.Width, all.Height) : default));
+    }
+
+    [Fact]
     public void TheDistanceIsTheLargestDifferenceOfAnEdge()
     {
         Assert.Equal(0, RulePlacement.Distance(Frame, Frame));

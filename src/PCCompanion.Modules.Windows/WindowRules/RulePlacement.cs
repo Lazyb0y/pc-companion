@@ -80,6 +80,16 @@ public static class RulePlacement
         return Rectangle.FromLTRB(frame.Left - border, frame.Top, frame.Right + border, frame.Bottom + border);
     }
 
+    /// <summary>
+    /// The visible frame inside a normal rectangle <paramref name="normal"/>, as for a maximized or
+    /// minimized window: without Windows 11's usual invisible borders, as <see cref="WithUsualBorders"/> adds them.
+    /// </summary>
+    public static Rectangle WithoutUsualBorders(Rectangle normal, uint dpi)
+    {
+        var border = (int)Math.Round(7 * dpi / 96.0);
+        return Rectangle.FromLTRB(normal.Left + border, normal.Top, normal.Right - border, normal.Bottom - border);
+    }
+
     /// <summary>The largest difference between two frames' edges, in pixels.</summary>
     public static int Distance(Rectangle a, Rectangle b) =>
         Math.Max(Math.Max(Math.Abs(a.Left - b.Left), Math.Abs(a.Top - b.Top)), Math.Max(Math.Abs(a.Right - b.Right), Math.Abs(a.Bottom - b.Bottom)));

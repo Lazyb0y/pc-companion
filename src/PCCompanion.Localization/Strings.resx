@@ -6012,4 +6012,448 @@
     <value>Remembers the apps in each group, and groups their windows again when they open after a restart, a sign-out or an update.</value>
     <comment>Window Tabs page: below WindowTabsKeepGroupsHeader.</comment>
   </data>
+  <data name="WindowRulesName" xml:space="preserve">
+    <value>Window Rules</value>
+    <comment>The name of the feature that acts on an app's windows as they open, by rules. Shown in the navigation, on Home and as the page title.</comment>
+  </data>
+  <data name="WindowRulesDescription" xml:space="preserve">
+    <value>Open an app's windows on the display and at the place you choose, maximized or minimized, and keep them on top, translucent, off the taskbar or in a tab group.</value>
+    <comment>Window Rules' description on Home and at the top of its page.</comment>
+  </data>
+  <data name="WindowRulesRulesHeader" xml:space="preserve">
+    <value>Rules</value>
+    <comment>Window Rules page: the header of the list of rules.</comment>
+  </data>
+  <data name="WindowRulesRulesDescription" xml:space="preserve">
+    <value>Each rule acts on an app's windows as they open. When several rules match a window, the first rule in the list that sets an action wins.</value>
+    <comment>Window Rules page: below WindowRulesRulesHeader.</comment>
+  </data>
+  <data name="WindowRulesAddRule" xml:space="preserve">
+    <value>Add rule</value>
+    <comment>Window Rules page: the button that adds a rule.</comment>
+  </data>
+  <data name="WindowRulesNoRules" xml:space="preserve">
+    <value>No rules yet. Add one, and use Pick a window to fill it in from a window that's open.</value>
+    <comment>Window Rules page: shown while there are no rules. Pick a window is WindowRulesPickWindow.</comment>
+  </data>
+  <data name="WindowRulesEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Window Rules page: the button that opens a rule in the editor.</comment>
+  </data>
+  <data name="WindowRulesEditName" xml:space="preserve">
+    <value>Edit {0}</value>
+    <comment>Window Rules page: the Edit button's name for screen readers. {0} is the rule's name.</comment>
+  </data>
+  <data name="WindowRulesRuleSwitchName" xml:space="preserve">
+    <value>Use {0}</value>
+    <comment>Window Rules page: a rule's switch, for screen readers. {0} is the rule's name.</comment>
+  </data>
+  <data name="WindowRulesMoreName" xml:space="preserve">
+    <value>More options for {0}</value>
+    <comment>Window Rules page: a rule's More options button, for screen readers and its tooltip. {0} is the rule's name.</comment>
+  </data>
+  <data name="WindowRulesApplyNow" xml:space="preserve">
+    <value>Apply now</value>
+    <comment>Window Rules page: in a rule's More options, applies the rule to the windows that are open now.</comment>
+  </data>
+  <data name="WindowRulesMoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Window Rules page: in a rule's More options, moves the rule up the list.</comment>
+  </data>
+  <data name="WindowRulesMoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Window Rules page: in a rule's More options, moves the rule down the list.</comment>
+  </data>
+  <data name="WindowRulesDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Window Rules page: in a rule's More options and in the question before, deletes the rule.</comment>
+  </data>
+  <data name="WindowRulesDeleteTitle" xml:space="preserve">
+    <value>Delete {0}?</value>
+    <comment>Window Rules page: the title of the question before a rule is deleted. {0} is the rule's name.</comment>
+  </data>
+  <data name="WindowRulesDeleteText" xml:space="preserve">
+    <value>The windows the rule changed get back what it gave them, except their place.</value>
+    <comment>Window Rules page: the text of the question before a rule is deleted.</comment>
+  </data>
+  <data name="WindowRulesCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Window Rules page: closes the rule editor, Pick a window or a question without a change.</comment>
+  </data>
+  <data name="WindowRulesSave" xml:space="preserve">
+    <value>Save</value>
+    <comment>Window Rules page: saves the rule in the rule editor.</comment>
+  </data>
+  <data name="WindowRulesUnnamed" xml:space="preserve">
+    <value>Rule without a name</value>
+    <comment>Window Rules page: the name shown for a rule without one, as after a hand edit of the settings.</comment>
+  </data>
+  <data name="WindowRulesPermissions" xml:space="preserve">
+    <value>Reads the app, title and class of each window that opens, and which displays are connected; titles stay in memory only. Moves, sizes, maximizes and minimizes the windows of the apps in its rules as they open, keeps them on top, translucent or off the taskbar, and marks them so they get back what they had after a crash; uses no keyboard or mouse hook and runs no code in other apps. Makes no network connections and sends nothing.</value>
+    <comment>Window Rules page: the Permissions &amp; data card.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfo" xml:space="preserve">
+    <value>Rules leave alone the windows of apps running as administrator, which Windows keeps away from PC Companion while it runs without admin rights. Turn on Always run as administrator on the General page to apply rules to them too.</value>
+    <comment>Window Rules page: shown while PC Companion runs without admin rights. Always run as administrator and General are named as on the General page.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion runs as administrator, so rules apply to the windows of apps running as administrator too.</value>
+    <comment>Window Rules page: shown instead of WindowRulesAdministratorInfo while PC Companion runs as administrator.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_one" xml:space="preserve">
+    <value>The rule was applied to {0} open window.</value>
+    <comment>Plural form "one". Window Rules page: after Apply now. {0} is the number of open windows the rule was applied to, which can be 0.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_other" xml:space="preserve">
+    <value>The rule was applied to {0} open windows.</value>
+    <comment>Plural form "other". Window Rules page: after Apply now. {0} is the number of open windows the rule was applied to, which can be 0.</comment>
+  </data>
+  <data name="WindowRulesApplyNowNoAnswer" xml:space="preserve">
+    <value>PC Companion didn't answer, so the rule wasn't applied. Make sure Window Rules is on, then try again.</value>
+    <comment>Window Rules page: after Apply now, when PC Companion's background part didn't answer.</comment>
+  </data>
+  <data name="WindowRulesSummaryApp" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Window Rules page: what a rule does, below its name. {0} is the app's name, {1} the rule's actions, joined with WindowRulesSummarySeparator.</comment>
+  </data>
+  <data name="WindowRulesSummarySeparator" xml:space="preserve">
+    <value>, </value>
+    <comment>Window Rules page: what goes between a rule's actions in its summary, with its space if any.</comment>
+  </data>
+  <data name="WindowRulesSummaryOnTop" xml:space="preserve">
+    <value>always on top</value>
+    <comment>Window Rules page: a rule's summary, for Always on top; it follows other actions, so it starts in lowercase where the language allows.</comment>
+  </data>
+  <data name="WindowRulesSummaryOpacity" xml:space="preserve">
+    <value>{0}% opacity</value>
+    <comment>Window Rules page: a rule's summary, for a fixed opacity. {0} is the opacity in percent.</comment>
+  </data>
+  <data name="WindowRulesSummaryTaskbar" xml:space="preserve">
+    <value>off the taskbar</value>
+    <comment>Window Rules page: a rule's summary, for Hide from the taskbar and Alt + Tab.</comment>
+  </data>
+  <data name="WindowRulesSummaryTab" xml:space="preserve">
+    <value>as a tab of {0}</value>
+    <comment>Window Rules page: a rule's summary, for Open as a tab of. {0} is the app's name.</comment>
+  </data>
+  <data name="WindowRulesSummaryNotUsed" xml:space="preserve">
+    <value>Not used. {0}</value>
+    <comment>Window Rules page: a rule's summary when it can't be used. {0} says why, as a sentence.</comment>
+  </data>
+  <data name="WindowRulesProblemTooMany" xml:space="preserve">
+    <value>Only the first 50 rules are used.</value>
+    <comment>Window Rules page: why a rule past the limit isn't used, as after a hand edit of the settings.</comment>
+  </data>
+  <data name="WindowRulesProblemDisplay" xml:space="preserve">
+    <value>Its display can't be recognized; choose it again.</value>
+    <comment>Window Rules page: why a rule whose chosen display can't be recognized isn't used.</comment>
+  </data>
+  <data name="WindowRulesProblemUnknown" xml:space="preserve">
+    <value>It uses a choice from a newer version of PC Companion.</value>
+    <comment>Window Rules page: why a rule with a choice from a newer version isn't used.</comment>
+  </data>
+  <data name="WindowRulesAddTitle" xml:space="preserve">
+    <value>Add rule</value>
+    <comment>Window Rules page: the rule editor's title for a new rule.</comment>
+  </data>
+  <data name="WindowRulesEditTitle" xml:space="preserve">
+    <value>Edit rule</value>
+    <comment>Window Rules page: the rule editor's title for a rule there already.</comment>
+  </data>
+  <data name="WindowRulesNameHeader" xml:space="preserve">
+    <value>Name</value>
+    <comment>Window Rules rule editor: the header of the rule's name.</comment>
+  </data>
+  <data name="WindowRulesNamePlaceholder" xml:space="preserve">
+    <value>For example, Mail on the right</value>
+    <comment>Window Rules rule editor: the example in the empty name box.</comment>
+  </data>
+  <data name="WindowRulesNameMissing" xml:space="preserve">
+    <value>Give the rule a name.</value>
+    <comment>Window Rules rule editor: shown while the name is empty.</comment>
+  </data>
+  <data name="WindowRulesWindowsHeader" xml:space="preserve">
+    <value>Which windows</value>
+    <comment>Window Rules rule editor: the header of what the rule matches.</comment>
+  </data>
+  <data name="WindowRulesAppHeader" xml:space="preserve">
+    <value>App</value>
+    <comment>Window Rules rule editor: above the name of the app the rule is for.</comment>
+  </data>
+  <data name="WindowRulesAppNone" xml:space="preserve">
+    <value>No app chosen</value>
+    <comment>Window Rules rule editor: shown in place of an app's name while none is chosen.</comment>
+  </data>
+  <data name="WindowRulesChooseApp" xml:space="preserve">
+    <value>Choose app</value>
+    <comment>Window Rules rule editor: the button that opens the ways to choose an app.</comment>
+  </data>
+  <data name="WindowRulesChooseTabApp" xml:space="preserve">
+    <value>Choose the app whose window it opens as a tab of</value>
+    <comment>Window Rules rule editor: the name, for screen readers, of the button that chooses the app for Open as a tab of.</comment>
+  </data>
+  <data name="WindowRulesPickWindow" xml:space="preserve">
+    <value>Pick a window</value>
+    <comment>Window Rules rule editor: fills the rule in from an open window, chosen from a list.</comment>
+  </data>
+  <data name="WindowRulesAppMissing" xml:space="preserve">
+    <value>Choose the app the rule is for.</value>
+    <comment>Window Rules rule editor: shown while no app is chosen; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesTitleSwitch" xml:space="preserve">
+    <value>Only windows whose title</value>
+    <comment>Window Rules rule editor: the switch for the title condition, followed by how the title is compared and the text.</comment>
+  </data>
+  <data name="WindowRulesTitleMatchName" xml:space="preserve">
+    <value>How the title is compared</value>
+    <comment>Window Rules rule editor: the name, for screen readers, of how the title is compared.</comment>
+  </data>
+  <data name="WindowRulesTitleTextName" xml:space="preserve">
+    <value>Title text</value>
+    <comment>Window Rules rule editor: the name, for screen readers, of the text the title is compared with.</comment>
+  </data>
+  <data name="WindowRulesTitleContains" xml:space="preserve">
+    <value>Contains</value>
+    <comment>Window Rules rule editor: the title contains the text, case ignored.</comment>
+  </data>
+  <data name="WindowRulesTitleIs" xml:space="preserve">
+    <value>Is</value>
+    <comment>Window Rules rule editor: the title is the text, case ignored.</comment>
+  </data>
+  <data name="WindowRulesTitlePattern" xml:space="preserve">
+    <value>Matches the regular expression</value>
+    <comment>Window Rules rule editor: the title matches the text as a regular expression.</comment>
+  </data>
+  <data name="WindowRulesTitleMissing" xml:space="preserve">
+    <value>Type the text the title is compared with.</value>
+    <comment>Window Rules rule editor: shown while the title condition is on without text; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesTitleBadPattern" xml:space="preserve">
+    <value>This isn't a regular expression a rule can use.</value>
+    <comment>Window Rules rule editor: shown when the regular expression can't be used; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesMoreMatching" xml:space="preserve">
+    <value>More matching</value>
+    <comment>Window Rules rule editor: the header of the less common way to match windows, by their class.</comment>
+  </data>
+  <data name="WindowRulesClassSwitch" xml:space="preserve">
+    <value>Only windows of the class</value>
+    <comment>Window Rules rule editor: the switch for matching the window class, followed by the class name.</comment>
+  </data>
+  <data name="WindowRulesClassNote" xml:space="preserve">
+    <value>The class name the app gave its windows, such as CabinetWClass for File Explorer, matched exactly. Pick a window fills it in.</value>
+    <comment>Window Rules rule editor: below the class name. CabinetWClass and File Explorer stay as they are; Pick a window is WindowRulesPickWindow.</comment>
+  </data>
+  <data name="WindowRulesMatches_one" xml:space="preserve">
+    <value>Matches {0} open window.</value>
+    <comment>Plural form "one". Window Rules rule editor: how many open windows the rule matches now, which are listed below. {0} can be 0.</comment>
+  </data>
+  <data name="WindowRulesMatches_other" xml:space="preserve">
+    <value>Matches {0} open windows.</value>
+    <comment>Plural form "other". Window Rules rule editor: how many open windows the rule matches now, which are listed below. {0} can be 0.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_one" xml:space="preserve">
+    <value>{0} other rule matches them too; for each action, the first rule in the list wins.</value>
+    <comment>Plural form "one". Window Rules rule editor: after WindowRulesMatches, how many other rules also match those windows. {0} is 1 or more.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_other" xml:space="preserve">
+    <value>{0} other rules match them too; for each action, the first rule in the list wins.</value>
+    <comment>Plural form "other". Window Rules rule editor: after WindowRulesMatches, how many other rules also match those windows. {0} is 1 or more.</comment>
+  </data>
+  <data name="WindowRulesActionsHeader" xml:space="preserve">
+    <value>What the rule does</value>
+    <comment>Window Rules rule editor: the header of the rule's actions.</comment>
+  </data>
+  <data name="WindowRulesActionsNote" xml:space="preserve">
+    <value>The display, place and how a window opens apply once, as it opens, so you can move it afterwards. On top, opacity and taskbar hiding hold while it's open.</value>
+    <comment>Window Rules rule editor: below WindowRulesActionsHeader.</comment>
+  </data>
+  <data name="WindowRulesNoAction" xml:space="preserve">
+    <value>Turn on at least one action.</value>
+    <comment>Window Rules rule editor: shown while every action is off; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesDisplaySwitch" xml:space="preserve">
+    <value>Display</value>
+    <comment>Window Rules rule editor: the switch for the display the window opens on, followed by the displays.</comment>
+  </data>
+  <data name="WindowRulesDisplayMain" xml:space="preserve">
+    <value>Main display</value>
+    <comment>Window Rules rule editor: the main display, where the taskbar's notification area is.</comment>
+  </data>
+  <data name="WindowRulesDisplayPointer" xml:space="preserve">
+    <value>Display with the pointer</value>
+    <comment>Window Rules rule editor: the display with the mouse pointer when the window opens.</comment>
+  </data>
+  <data name="WindowRulesDisplayBuiltIn" xml:space="preserve">
+    <value>Built-in display</value>
+    <comment>Window Rules rule editor: a laptop's or tablet's own screen, as Display Profiles names it.</comment>
+  </data>
+  <data name="WindowRulesDisplayUnnamed" xml:space="preserve">
+    <value>Display</value>
+    <comment>Window Rules rule editor: a display that reports no name.</comment>
+  </data>
+  <data name="WindowRulesDisplayNotConnected" xml:space="preserve">
+    <value>{0} (not connected)</value>
+    <comment>Window Rules rule editor: a rule's chosen display that isn't connected now. {0} is its name.</comment>
+  </data>
+  <data name="WindowRulesPlaceSwitch" xml:space="preserve">
+    <value>Place and size</value>
+    <comment>Window Rules rule editor: the switch for the window's place and size on its display, followed by the places.</comment>
+  </data>
+  <data name="WindowRulesPlaceCentered" xml:space="preserve">
+    <value>Centered</value>
+    <comment>Window Rules: a place, centered at the window's own size.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeftHalf" xml:space="preserve">
+    <value>Left half</value>
+    <comment>Window Rules: a place, the left half of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceRightHalf" xml:space="preserve">
+    <value>Right half</value>
+    <comment>Window Rules: a place, the right half of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopHalf" xml:space="preserve">
+    <value>Top half</value>
+    <comment>Window Rules: a place, the top half of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomHalf" xml:space="preserve">
+    <value>Bottom half</value>
+    <comment>Window Rules: a place, the bottom half of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopLeft" xml:space="preserve">
+    <value>Top-left quarter</value>
+    <comment>Window Rules: a place, the top-left quarter of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopRight" xml:space="preserve">
+    <value>Top-right quarter</value>
+    <comment>Window Rules: a place, the top-right quarter of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomLeft" xml:space="preserve">
+    <value>Bottom-left quarter</value>
+    <comment>Window Rules: a place, the bottom-left quarter of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomRight" xml:space="preserve">
+    <value>Bottom-right quarter</value>
+    <comment>Window Rules: a place, the bottom-right quarter of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceWorkArea" xml:space="preserve">
+    <value>Whole screen, not maximized</value>
+    <comment>Window Rules: a place, the whole screen without the taskbar, without maximizing the window.</comment>
+  </data>
+  <data name="WindowRulesPlaceRemembered" xml:space="preserve">
+    <value>Where I last put it</value>
+    <comment>Window Rules: a place, where the user last left one of the rule's windows.</comment>
+  </data>
+  <data name="WindowRulesPlaceCustom" xml:space="preserve">
+    <value>Custom</value>
+    <comment>Window Rules: a place given in percent of the screen without the taskbar.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeft" xml:space="preserve">
+    <value>Left (%)</value>
+    <comment>Window Rules rule editor: a custom place's left edge, in percent.</comment>
+  </data>
+  <data name="WindowRulesPlaceTop" xml:space="preserve">
+    <value>Top (%)</value>
+    <comment>Window Rules rule editor: a custom place's top edge, in percent.</comment>
+  </data>
+  <data name="WindowRulesPlaceWidth" xml:space="preserve">
+    <value>Width (%)</value>
+    <comment>Window Rules rule editor: a custom place's width, in percent.</comment>
+  </data>
+  <data name="WindowRulesPlaceHeight" xml:space="preserve">
+    <value>Height (%)</value>
+    <comment>Window Rules rule editor: a custom place's height, in percent.</comment>
+  </data>
+  <data name="WindowRulesPlaceProblem" xml:space="preserve">
+    <value>Left and top go from 0 to 99.9, and width and height from 0.1 to 100, in percent of the screen without the taskbar.</value>
+    <comment>Window Rules rule editor: shown when a custom place's numbers are outside what's allowed; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesOpenSwitch" xml:space="preserve">
+    <value>Open</value>
+    <comment>Window Rules rule editor: the switch for how the window opens, followed by Normal, Maximized and Minimized.</comment>
+  </data>
+  <data name="WindowRulesOpenNormal" xml:space="preserve">
+    <value>Normal</value>
+    <comment>Window Rules: the window opens neither maximized nor minimized.</comment>
+  </data>
+  <data name="WindowRulesOpenMaximized" xml:space="preserve">
+    <value>Maximized</value>
+    <comment>Window Rules: the window opens maximized.</comment>
+  </data>
+  <data name="WindowRulesOpenMinimized" xml:space="preserve">
+    <value>Minimized</value>
+    <comment>Window Rules: the window opens minimized.</comment>
+  </data>
+  <data name="WindowRulesOnTopSwitch" xml:space="preserve">
+    <value>Always on top</value>
+    <comment>Window Rules rule editor: the switch that keeps the window above windows that aren't on top.</comment>
+  </data>
+  <data name="WindowRulesOpacitySwitch" xml:space="preserve">
+    <value>Opacity</value>
+    <comment>Window Rules rule editor: the switch for the window's opacity, followed by the opacities.</comment>
+  </data>
+  <data name="WindowRulesOpacityPercent" xml:space="preserve">
+    <value>{0}%</value>
+    <comment>Window Rules rule editor: an opacity. {0} is the opacity in percent.</comment>
+  </data>
+  <data name="WindowRulesOpacityWheel" xml:space="preserve">
+    <value>As last set with the wheel</value>
+    <comment>Window Rules: the opacity Title Bar Actions' wheel last gave one of the rule's windows.</comment>
+  </data>
+  <data name="WindowRulesTaskbarSwitch" xml:space="preserve">
+    <value>Hide from the taskbar and Alt + Tab</value>
+    <comment>Window Rules rule editor: the switch that removes the window's taskbar button and Alt + Tab entry.</comment>
+  </data>
+  <data name="WindowRulesTaskbarNote" xml:space="preserve">
+    <value>The window gets its taskbar button back while it's minimized, so you can always reach it.</value>
+    <comment>Window Rules rule editor: below WindowRulesTaskbarSwitch while it's on.</comment>
+  </data>
+  <data name="WindowRulesTabSwitch" xml:space="preserve">
+    <value>Open as a tab of</value>
+    <comment>Window Rules rule editor: the switch that opens the window as a tab of another window, with Window Tabs, followed by the app.</comment>
+  </data>
+  <data name="WindowRulesTabSameApp" xml:space="preserve">
+    <value>This rule's app</value>
+    <comment>Window Rules rule editor: chooses the rule's own app for Open as a tab of, which puts all its windows in one group.</comment>
+  </data>
+  <data name="WindowRulesTabMissing" xml:space="preserve">
+    <value>Choose the app whose window it opens as a tab of.</value>
+    <comment>Window Rules rule editor: shown while Open as a tab of is on without an app; also why a rule isn't used.</comment>
+  </data>
+  <data name="WindowRulesTabNote" xml:space="preserve">
+    <value>Needs Window Tabs on. A window that joins a group takes the group's place, so the rule's other actions don't apply to it.</value>
+    <comment>Window Rules rule editor: below Open as a tab of. Window Tabs is WindowTabsName.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeSwitch" xml:space="preserve">
+    <value>Apply again when the displays change</value>
+    <comment>Window Rules rule editor: the switch that places the rule's open windows again after the displays change.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeNote" xml:space="preserve">
+    <value>Places the rule's open windows again 2 seconds after a display is connected or disconnected. Windows 11 already moves windows back to a display that's connected again.</value>
+    <comment>Window Rules rule editor: below WindowRulesDisplayChangeSwitch.</comment>
+  </data>
+  <data name="WindowRulesPickWindowTitle" xml:space="preserve">
+    <value>Pick a window</value>
+    <comment>Window Rules: the title of the list of open windows to fill a rule in from.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNote" xml:space="preserve">
+    <value>The rule gets the window's app, title, class, display and place, each with its switch off, so you turn on what you want.</value>
+    <comment>Window Rules: below WindowRulesPickWindowTitle.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNone" xml:space="preserve">
+    <value>No window is open.</value>
+    <comment>Window Rules: shown in Pick a window when no window is open.</comment>
+  </data>
+  <data name="WindowRulesPickWindowList" xml:space="preserve">
+    <value>Open windows</value>
+    <comment>Window Rules: the name, for screen readers, of the list in Pick a window.</comment>
+  </data>
+  <data name="WindowRulesPickWindowChoose" xml:space="preserve">
+    <value>Choose</value>
+    <comment>Window Rules: the button in Pick a window that fills the rule in from the selected window.</comment>
+  </data>
+  <data name="WindowRulesPickWindowUntitled" xml:space="preserve">
+    <value>Window without a title</value>
+    <comment>Window Rules: Pick a window's name for a window without a title.</comment>
+  </data>
 </root>

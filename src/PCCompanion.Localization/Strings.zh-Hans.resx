@@ -5956,4 +5956,436 @@
     <value>记住每个组中的应用，并在重启、注销或更新后这些应用的窗口打开时重新将它们分组。</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowRulesName" xml:space="preserve">
+    <value>窗口规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDescription" xml:space="preserve">
+    <value>在你选择的显示器和位置打开应用的窗口，最大化或最小化，并让它们置顶、半透明、不在任务栏中或位于标签组中。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesHeader" xml:space="preserve">
+    <value>规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesDescription" xml:space="preserve">
+    <value>每条规则都会在应用的窗口打开时对其起作用。当多条规则匹配同一个窗口时，列表中设置了某项操作的第一条规则优先。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddRule" xml:space="preserve">
+    <value>添加规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoRules" xml:space="preserve">
+    <value>还没有规则。添加一条，然后使用“选择窗口”根据已打开的窗口来填写。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEdit" xml:space="preserve">
+    <value>编辑</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditName" xml:space="preserve">
+    <value>编辑 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRuleSwitchName" xml:space="preserve">
+    <value>使用 {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreName" xml:space="preserve">
+    <value>{0} 的更多选项</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNow" xml:space="preserve">
+    <value>立即应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveUp" xml:space="preserve">
+    <value>上移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveDown" xml:space="preserve">
+    <value>下移</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDelete" xml:space="preserve">
+    <value>删除</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteTitle" xml:space="preserve">
+    <value>删除 {0}?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteText" xml:space="preserve">
+    <value>规则更改过的窗口会恢复原样，但位置除外。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesCancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesUnnamed" xml:space="preserve">
+    <value>未命名的规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPermissions" xml:space="preserve">
+    <value>读取每个打开的窗口的应用、标题和类，以及已连接的显示器；标题仅保留在内存中。在规则中的应用的窗口打开时移动、调整大小、最大化和最小化这些窗口，让它们置顶、半透明或不在任务栏中，并做标记，以便在崩溃后恢复原样；不使用键盘或鼠标钩子，也不在其他应用中运行代码。不进行网络连接，也不发送任何内容。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfo" xml:space="preserve">
+    <value>规则不会处理以管理员身份运行的应用的窗口，因为 PC Companion 在没有管理员权限的情况下运行时，Windows 会阻止它访问这些窗口。在“常规”页面上打开“始终以管理员身份运行”，即可让规则也作用于这些窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion 正以管理员身份运行，因此规则也会作用于以管理员身份运行的应用的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_other" xml:space="preserve">
+    <value>已将规则应用于 {0} 个打开的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowNoAnswer" xml:space="preserve">
+    <value>PC Companion 没有响应，因此未应用规则。请确认“窗口规则”已打开，然后重试。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryApp" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummarySeparator" xml:space="preserve">
+    <value>、</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOnTop" xml:space="preserve">
+    <value>始终置顶</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOpacity" xml:space="preserve">
+    <value>{0}% 不透明度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTaskbar" xml:space="preserve">
+    <value>不在任务栏中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTab" xml:space="preserve">
+    <value>作为 {0} 的标签</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryNotUsed" xml:space="preserve">
+    <value>未使用。{0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemTooMany" xml:space="preserve">
+    <value>仅使用前 50 条规则。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemDisplay" xml:space="preserve">
+    <value>无法识别其显示器，请重新选择。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemUnknown" xml:space="preserve">
+    <value>它使用了更新版本的 PC Companion 中的选项。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddTitle" xml:space="preserve">
+    <value>添加规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditTitle" xml:space="preserve">
+    <value>编辑规则</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameHeader" xml:space="preserve">
+    <value>名称</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNamePlaceholder" xml:space="preserve">
+    <value>例如：邮件在右侧</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameMissing" xml:space="preserve">
+    <value>请为规则命名。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesWindowsHeader" xml:space="preserve">
+    <value>哪些窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppHeader" xml:space="preserve">
+    <value>应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppNone" xml:space="preserve">
+    <value>未选择应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseApp" xml:space="preserve">
+    <value>选择应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseTabApp" xml:space="preserve">
+    <value>选择以其窗口的标签打开的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindow" xml:space="preserve">
+    <value>选择窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppMissing" xml:space="preserve">
+    <value>请选择规则适用的应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleSwitch" xml:space="preserve">
+    <value>仅限标题满足条件的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMatchName" xml:space="preserve">
+    <value>标题的比较方式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleTextName" xml:space="preserve">
+    <value>标题文本</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleContains" xml:space="preserve">
+    <value>包含</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleIs" xml:space="preserve">
+    <value>等于</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitlePattern" xml:space="preserve">
+    <value>匹配正则表达式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMissing" xml:space="preserve">
+    <value>请输入与标题比较的文本。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleBadPattern" xml:space="preserve">
+    <value>这不是规则可以使用的正则表达式。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreMatching" xml:space="preserve">
+    <value>更多匹配条件</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassSwitch" xml:space="preserve">
+    <value>仅限该类的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassNote" xml:space="preserve">
+    <value>应用为其窗口指定的类名，例如文件资源管理器的 CabinetWClass，需完全匹配。“选择窗口”会自动填写。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_other" xml:space="preserve">
+    <value>匹配 {0} 个打开的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_other" xml:space="preserve">
+    <value>另有 {0} 条规则也匹配；每项操作以列表中的第一条规则为准。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsHeader" xml:space="preserve">
+    <value>规则的操作</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsNote" xml:space="preserve">
+    <value>显示器、位置和打开方式只在窗口打开时应用一次，之后你可以移动它。置顶、不透明度和从任务栏隐藏在窗口打开期间一直有效。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoAction" xml:space="preserve">
+    <value>请至少打开一项操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplaySwitch" xml:space="preserve">
+    <value>显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayMain" xml:space="preserve">
+    <value>主显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayPointer" xml:space="preserve">
+    <value>指针所在的显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayBuiltIn" xml:space="preserve">
+    <value>内置显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayUnnamed" xml:space="preserve">
+    <value>显示器</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayNotConnected" xml:space="preserve">
+    <value>{0}（未连接）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceSwitch" xml:space="preserve">
+    <value>位置和大小</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCentered" xml:space="preserve">
+    <value>居中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeftHalf" xml:space="preserve">
+    <value>左半部分</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRightHalf" xml:space="preserve">
+    <value>右半部分</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopHalf" xml:space="preserve">
+    <value>上半部分</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomHalf" xml:space="preserve">
+    <value>下半部分</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopLeft" xml:space="preserve">
+    <value>左上四分之一</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopRight" xml:space="preserve">
+    <value>右上四分之一</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomLeft" xml:space="preserve">
+    <value>左下四分之一</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomRight" xml:space="preserve">
+    <value>右下四分之一</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWorkArea" xml:space="preserve">
+    <value>整个屏幕（不最大化）</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRemembered" xml:space="preserve">
+    <value>我上次放置的位置</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCustom" xml:space="preserve">
+    <value>自定义</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeft" xml:space="preserve">
+    <value>左 (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTop" xml:space="preserve">
+    <value>上 (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWidth" xml:space="preserve">
+    <value>宽度 (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceHeight" xml:space="preserve">
+    <value>高度 (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceProblem" xml:space="preserve">
+    <value>左和上的范围为 0 到 99.9，宽度和高度为 0.1 到 100，单位为不含任务栏的屏幕的百分比。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenSwitch" xml:space="preserve">
+    <value>打开方式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenNormal" xml:space="preserve">
+    <value>正常</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMaximized" xml:space="preserve">
+    <value>最大化</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMinimized" xml:space="preserve">
+    <value>最小化</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOnTopSwitch" xml:space="preserve">
+    <value>始终置顶</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacitySwitch" xml:space="preserve">
+    <value>不透明度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityPercent" xml:space="preserve">
+    <value>{0}%</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityWheel" xml:space="preserve">
+    <value>上次用滚轮设置的值</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarSwitch" xml:space="preserve">
+    <value>从任务栏和 Alt + Tab 中隐藏</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarNote" xml:space="preserve">
+    <value>窗口最小化时会恢复其任务栏按钮，因此你始终可以找到它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSwitch" xml:space="preserve">
+    <value>作为以下应用的标签打开</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSameApp" xml:space="preserve">
+    <value>此规则的应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabMissing" xml:space="preserve">
+    <value>请选择以其窗口的标签打开的应用。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabNote" xml:space="preserve">
+    <value>需要打开“窗口标签页”。加入组的窗口会占据该组的位置，因此规则的其他操作不会作用于它。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeSwitch" xml:space="preserve">
+    <value>显示器变化时重新应用</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeNote" xml:space="preserve">
+    <value>在连接或断开显示器 2 秒后，重新放置该规则的已打开窗口。Windows 11 本身已会将窗口移回重新连接的显示器。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowTitle" xml:space="preserve">
+    <value>选择窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNote" xml:space="preserve">
+    <value>规则会获取该窗口的应用、标题、类、显示器和位置，各项开关均为关闭，你可以打开需要的项。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNone" xml:space="preserve">
+    <value>没有打开的窗口。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowList" xml:space="preserve">
+    <value>打开的窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowChoose" xml:space="preserve">
+    <value>选择</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowUntitled" xml:space="preserve">
+    <value>无标题窗口</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

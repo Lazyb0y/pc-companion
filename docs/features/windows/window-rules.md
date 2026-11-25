@@ -13,7 +13,7 @@ Rules that act on an app's windows as they open: which display they open on, the
 - **Placing happens once,** as the window opens, and holds against apps that move their window back; the user can move it afterwards. **On top, opacity and taskbar hiding hold** while the window is open. See [When rules apply](#when-rules-apply).
 - **Apply now** applies a rule to the windows already open. **Apply again when the displays change** places the rule's windows again after a display is connected or disconnected.
 - **Where I last put it,** a choice for the place, opens the app's next window where the user last left one, for each set of displays.
-- **Making a rule:** **Pick a window** fills in a new rule from a window the user clicks, and the rule shows how many open windows it matches. See [Making rules](#making-rules).
+- **Making a rule:** **Pick a window** fills in a new rule from an open window the user chooses, and the rule shows how many open windows it matches. See [Making rules](#making-rules).
 - No window is ever lost or left translucent: whatever happens to PC Companion, windows come back on the taskbar, opaque and on screen; see [Never losing a window](#never-losing-a-window).
 
 ## Compared with other systems
@@ -171,7 +171,8 @@ Each action has a switch in the rule; an action that's off leaves the window as 
   - **Matches,** the open windows the rule matches now, with their apps and titles, worked out again a moment after each change, and the other rules that also match them;
   - the actions, each with its switch;
   - **Apply again when the displays change.**
-- **Pick a window,** in the editor: the settings app's window steps aside, and, as with End App's choosing, the pointer becomes a crosshair and a frame shows the window under it; a click, Enter or Space chooses it, and Esc or a right-click cancels. The rule then gets the window's app, its title as **contains**, its class under **More matching**, and its display, place as custom and state as the actions, each with its switch off, so the user turns on what they want. The settings app does this itself, with End App's code for choosing a window (`AppChooser`, made usable by both), and only reads the window.
+- **Pick a window,** in the editor, lists the open main windows, front to back, by their titles and apps, as the editor read them when it opened (`OpenRuleWindows`); a list works with the keyboard and screen readers, and shows windows behind others. The rule then gets the window's app, its title as **contains**, its class under **More matching**, and its display, place as custom and state as the actions, each with its switch off, so the user turns on what they want. The settings app reads the windows itself, and only reads them.
+- **One dialog at a time:** Windows shows one of the settings app's dialogs at a time, so **Running app** and **Pick a window** hide the editor, and it shows again, as it was, once they close.
 - **Problems** show below their box, and **Save** is available only when the rule has none. **Delete** asks first.
 
 ## Never losing a window
@@ -318,7 +319,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 - **Reads:**
   - **For each window that shows,** if it could be a main window: its app identity, class, title, styles, state and place, to match the rules, while its rules are decided, and Windows reports when it shows, is uncloaked, changes its title, moves during a settle watch, comes to the front, minimizes and closes.
   - **The displays,** by model and serial number, as Display Profiles reads them, when the displays change.
-  - **Pick a window,** in the settings app: the clicked window's app, title, class, display and place.
+  - **Pick a window,** in the settings app: the open main windows' apps, titles, classes, displays and places, and those of the window chosen.
   - It receives no keys or clicks: no keyboard or mouse hook.
 - **Titles** are compared in memory as the window opens and never written or logged. The settings app shows the titles of the windows a rule matches in its editor; any program of the user's can read a window's title anyway. A rule's title text and pattern, which the user writes, are in `settings.json`, and can name a document.
 - **Changes:** other apps' windows: places, sizes, maximizes, minimizes, puts on top, changes their opacity and layered style, removes and adds back their taskbar buttons, and adds and removes its marks. It runs no code in other apps and sends them no input.
@@ -344,7 +345,7 @@ Two runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 100%
 
 ## Accessibility and localization
 
-- **Keyboard:** the page and the rule editor work with the keyboard alone, and every box, switch and button has a label for screen readers. **Pick a window** works with the keyboard, as End App's choosing does.
+- **Keyboard:** the page and the rule editor work with the keyboard alone, and every box, switch and button has a label for screen readers. **Pick a window** is a list, which works with the keyboard and screen readers.
 - **Screen readers:** **Matches** announces how many windows a rule matches when it changes.
 - **Right to left:** the page and the editor are laid out right to left in right-to-left languages. Halves and quarters are on the screen's left and right, whatever the language, and say so.
 - **Strings:** the page, the editor and the presets are translated like the other pages', marked "Needs native review"; the count of matching windows uses plural forms.

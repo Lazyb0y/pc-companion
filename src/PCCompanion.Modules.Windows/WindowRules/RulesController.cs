@@ -386,7 +386,7 @@ public sealed partial class RulesController : IDisposable
         } ?? from;
 
         // A maximized or minimized window is placed by its normal rectangle, without its borders.
-        var visible = placement.State == WindowState.Normal ? _system.VisibleBounds(window) : WithoutUsualBorders(placement.NormalBounds, dpi);
+        var visible = placement.State == WindowState.Normal ? _system.VisibleBounds(window) : RulePlacement.WithoutUsualBorders(placement.NormalBounds, dpi);
         if (visible is not { } current)
         {
             return;
@@ -513,13 +513,6 @@ public sealed partial class RulesController : IDisposable
         {
             LogPatternTimedOut(_logger, index + 1);
         }
-    }
-
-    // The visible frame inside a normal rectangle, without Windows 11's usual invisible borders.
-    private static Rectangle WithoutUsualBorders(Rectangle normal, uint dpi)
-    {
-        var border = (int)Math.Round(7 * dpi / 96.0);
-        return Rectangle.FromLTRB(normal.Left + border, normal.Top, normal.Right - border, normal.Bottom - border);
     }
 
     // Which actions, never the app or the title.
