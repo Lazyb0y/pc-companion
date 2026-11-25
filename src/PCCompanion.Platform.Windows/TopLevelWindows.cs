@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Dwm;
@@ -15,6 +16,9 @@ namespace PCCompanion.Platform.Windows;
 public static class TopLevelWindows
 {
     private const int MaximumWindowsInFront = 500;
+
+    // How long opening a window minimized waits for its program at each step.
+    private static readonly TimeSpan StepTimeout = TimeSpan.FromSeconds(1);
 
     /// <summary>
     /// The visible top-level windows, front to back. Windows on other virtual desktops, and the
@@ -512,27 +516,72 @@ public static class TopLevelWindows
 
     /// <summary>
     /// Sets another program's <paramref name="window"/>'s normal rectangle, the one it has when
-    /// neither minimized nor maximized, and shows it <paramref name="show"/>: restored or minimized
-    /// without activating it, or maximized on the display of its normal rectangle. Returns false
-    /// when Windows refused. It waits for the window's program to handle it, so don't call it on a
-    /// thread that must not wait.
+    /// neither minimized nor maximized, and shows it <paramref name="show"/>: restored without
+    /// activating it, maximized on the display of its normal rectangle, or minimized without
+    /// taking the front; a window that has the front gives it to the window behind it, as
+    /// minimizing does, so the keys don't go to a minimized window. Returns false when Windows
+    /// refused. It waits for the window's program to handle it, up to about a second at each step
+    /// for a minimized window, so don't call it on a thread that must not wait.
     /// </summary>
     /// <param name="normalBounds">The normal rectangle, with its invisible borders, in screen coordinates.</param>
-    public static unsafe bool SetPlacement(nint window, Rectangle normalBounds, WindowState show)
+    public static bool SetPlacement(nint window, Rectangle normalBounds, WindowState show) => show switch
+    {
+        WindowState.Maximized => SetPlacement(window, normalBounds, SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED),
+        WindowState.Minimized => OpenMinimized(window, normalBounds),
+        _ => SetPlacement(window, normalBounds, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE),
+    };
+
+    private static unsafe bool SetPlacement(nint window, Rectangle normalBounds, SHOW_WINDOW_CMD show)
     {
         var workspace = ToWorkspace(window, normalBounds);
         var placement = new WINDOWPLACEMENT
         {
             length = (uint)sizeof(WINDOWPLACEMENT),
-            showCmd = show switch
-            {
-                WindowState.Maximized => SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED,
-                WindowState.Minimized => SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE,
-                _ => SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE,
-            },
+            showCmd = show,
             rcNormalPosition = new RECT(workspace.Left, workspace.Top, workspace.Right, workspace.Bottom),
         };
         return PInvoke.SetWindowPlacement(new HWND(window), in placement);
+    }
+
+    // A window that has just shown may still be getting the front from its program, so the program
+    // first finishes what it's doing. A window in front is minimized by its program, as its
+    // Minimize button does, so Windows gives the front to the window behind it; minimized without
+    // that, it would keep the front, and the keys would go to it. A minimized window that still has
+    // the front gives it up only when it's restored and minimized again. The normal rectangle is
+    // set without activating the window.
+    private static bool OpenMinimized(nint window, Rectangle normalBounds)
+    {
+        var handle = new HWND(window);
+        _ = Answers(window, StepTimeout);
+        if (PInvoke.GetForegroundWindow() == handle && PInvoke.ShowWindowAsync(handle, SHOW_WINDOW_CMD.SW_MINIMIZE))
+        {
+            WaitUntil(() => PInvoke.IsIconic(handle));
+        }
+
+        if (!SetPlacement(window, normalBounds, SHOW_WINDOW_CMD.SW_SHOWMINNOACTIVE))
+        {
+            return false;
+        }
+
+        if (PInvoke.GetForegroundWindow() == handle && PInvoke.ShowWindowAsync(handle, SHOW_WINDOW_CMD.SW_RESTORE))
+        {
+            WaitUntil(() => !PInvoke.IsIconic(handle));
+            if (PInvoke.ShowWindowAsync(handle, SHOW_WINDOW_CMD.SW_MINIMIZE))
+            {
+                WaitUntil(() => PInvoke.IsIconic(handle));
+            }
+        }
+
+        return true;
+    }
+
+    private static void WaitUntil(Func<bool> condition)
+    {
+        var until = Environment.TickCount64 + (long)StepTimeout.TotalMilliseconds;
+        while (!condition() && Environment.TickCount64 < until)
+        {
+            Thread.Sleep(10);
+        }
     }
 
     /// <summary>
