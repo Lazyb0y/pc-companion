@@ -137,6 +137,16 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
             .Where(other => other.Shown && other.Owner == 0 && !other.Minimized && !other.Cloaked)
             .Select(other => other.Handle)];
 
+    public IReadOnlyList<nint> TaskbarWindows() =>
+        [.. _order.Where(window => window.Shown && window.Owner == 0 && !window.Cloaked).Select(window => window.Handle)];
+
+    // Each window is of an app of its own, with a program and no app ID, unless a test sets its app.
+    public AppOfWindow? AppOf(nint window) =>
+        Find(window) is { } found ? found.App ?? new AppOfWindow(null, null, AppProgram(window), (uint)window) : null;
+
+    /// <summary>The program of a window's app, unless a test sets its app.</summary>
+    public static string AppProgram(nint window) => $@"C:\Apps\App{window}.exe";
+
     public DisplayDetails? DisplayOf(nint window) =>
         Find(window) is { } found ? new DisplayDetails(found.Display, found.Display == Display ? WorkArea : found.Display, found.Dpi) : null;
 
@@ -180,6 +190,18 @@ internal sealed class FakeTabsSystem(Action<Action> post) : ITabsSystem
     public bool ShowMinimized(nint window) => Do(window, $"show minimized {window}", found =>
     {
         found.Minimized = true;
+        SetShown(found, true);
+    });
+
+    public bool RestoreWithoutActivating(nint window) => Do(window, $"restore without activating {window}", found =>
+    {
+        if (!found.Shown)
+        {
+            _order.Remove(found);
+            _order.Insert(0, found);
+        }
+
+        found.Minimized = false;
         SetShown(found, true);
     });
 
@@ -356,6 +378,9 @@ internal sealed class FakeTabWindow(nint handle)
     public bool Refused { get; set; }
 
     public bool MarkRefused { get; set; }
+
+    /// <summary>The window's app, or <see langword="null"/> for an app of its own.</summary>
+    public AppOfWindow? App { get; set; }
 
     public TabRefusal Refusal { get; set; }
 
