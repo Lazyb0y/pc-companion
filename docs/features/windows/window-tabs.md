@@ -347,7 +347,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
   - **the settings:** defaults, the spec's example, unknown shortcut choices and a section that can't be read.
 - **Sandbox checks** (`scripts/sandbox/groups/WindowTabs.ps1`), with test windows the checks start, painted in solid colors:
   - **the page:** the Home switch turns the feature on with its defaults, and the page saves each setting; with a test program holding Windows + Ctrl + Page Down, and then one holding Windows + Ctrl + T, the page shows its note until the program lets it go and a setting changes;
-  - **making a group:** a test window dragged with `SendInput` and dropped with Ctrl on another's title bar makes a group: the strip shows, the other window is hidden and marked, and the taskbar lists one window; one dropped on the strip joins it; one dropped without Ctrl doesn't; Windows + Ctrl + T groups the window in front with the window behind it, at its place, and Windows + Ctrl + Shift + T takes it out again, beside the group;
+  - **making a group:** a test window dragged with `SendInput` and dropped with Ctrl on another's title bar makes a group: the strip shows, the other window is hidden and marked, and the taskbar lists one window; one dropped on the strip joins it; one dropped without Ctrl doesn't; Windows + Ctrl + T groups the window in front with the window behind it, at its place, and Windows + Ctrl + Shift + T takes it out again, beside the group and in front of it;
   - **switching:** a click on a tab and the shortcuts show each tab in the group's place, in front, and screen samples at the tab's center never show what's behind the group; with Shift, a tab moves;
   - **dragging and resizing:** the strip follows, and the hidden tabs have the new place when the drag ends; the host logs the time per move;
   - **maximized and snapped:** a maximized group shows each tab maximized and restores them to the same place; a snapped tab hidden and shown again is snapped;
@@ -366,6 +366,7 @@ Three runs of a spike in Windows Sandbox, on Windows 11 24H2 (build 26100) at 10
 - **By hand:**
   - dropping with a real mouse, with and without Ctrl, including over a maximized window at the top of the display where Windows offers its snap layouts;
   - the strip at the top edge of a maximized browser: quick clicks on its tabs aren't delayed, and resting there shows the strip;
+  - Windows + Ctrl + T and Windows + Ctrl + Shift + T with real apps and a maximized window, on a PC, where the foreground lock applies, and the tab actions on the user's own shortcuts, mouse buttons and title-bar clicks;
   - several displays at different scales, moving a group between them, and windows that aren't DPI aware;
   - the taskbar buttons as tabs switch, pinned and not, and Windows' snap groups;
   - that a tab comes to the front on a PC, where the foreground lock applies;
