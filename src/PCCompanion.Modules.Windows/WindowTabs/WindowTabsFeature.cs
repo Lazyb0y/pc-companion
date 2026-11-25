@@ -251,6 +251,7 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
             _requests.SetWindowTabs(
                 window => thread.RunFromTitleBar(controller => controller.GroupWithBehind(window)),
                 window => thread.RunFromTitleBar(controller => controller.TakeOutOf(window)));
+            _requests.SetGroupWith((window, target) => thread.RunFromTitleBar(controller => controller.GroupWith(window, target)));
         }
         else
         {
@@ -304,6 +305,7 @@ public sealed partial class WindowTabsFeature : IFeature, IFeatureActions
         }
 
         _requests.SetWindowTabs(null, null);
+        _requests.SetGroupWith(null);
         _thread.Stop();
         (_stopped, _thread) = (_thread, null);
     }

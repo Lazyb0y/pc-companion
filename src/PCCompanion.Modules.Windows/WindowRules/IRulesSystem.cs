@@ -129,6 +129,12 @@ public interface IRulesSystem
     /// <summary>The top-level windows that carry the mark.</summary>
     IReadOnlyList<nint> Marked();
 
+    /// <summary>
+    /// Asks Window Tabs to add the window to <paramref name="target"/>'s group, or start a group of
+    /// the two. Returns false while Window Tabs doesn't run; Window Tabs may still refuse either window.
+    /// </summary>
+    bool GroupWith(nint window, nint target);
+
     /// <summary>Hears of the window's moves through <see cref="WindowMoved"/>, until <see cref="Unfollow"/>.</summary>
     void Follow(nint window);
 

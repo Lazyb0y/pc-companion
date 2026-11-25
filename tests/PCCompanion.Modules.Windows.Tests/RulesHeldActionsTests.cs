@@ -187,6 +187,45 @@ public sealed class RulesHeldActionsTests : IDisposable
         Assert.False(_system[Open].HasButton);
     }
 
+    [Fact]
+    public void OpenAsATabOfGroupsWithTheFrontMostWindowOfTheAppAndSkipsTheOtherActions()
+    {
+        _system.Add(3, Start, program: @"C:\Apps\Editor.exe");
+        _system.Add(4, Start, program: @"C:\Apps\Editor.exe").Cloaked = true;
+        Use(new WindowRule { App = Mail, TabOf = new ListedApp { Program = @"C:\Apps\Editor.exe" }, OnTop = true, Place = new RulePlace { Which = "RightHalf" } });
+
+        Opens(New);
+
+        Assert.Contains("group 2 with 3", _system.Calls);
+        Assert.False(_system[New].Topmost);
+        Assert.Equal(Start, _system[New].Visible);
+    }
+
+    [Fact]
+    public void WithoutWindowTabsOrAWindowOfTheAppTheOtherActionsApply()
+    {
+        Use(new WindowRule { App = Mail, TabOf = new ListedApp { Program = @"C:\Apps\Editor.exe" }, OnTop = true });
+        Opens(New);
+        Assert.True(_system[New].Topmost);
+        Assert.DoesNotContain(_system.Calls, call => call.StartsWith("group", StringComparison.Ordinal));
+
+        _system.Add(3, Start, program: @"C:\Apps\Editor.exe");
+        _system.TabsOn = false;
+        Opens(4);
+        Assert.Contains("group 4 with 3", _system.Calls);
+        Assert.True(_system[4].Topmost);
+    }
+
+    [Fact]
+    public void TheRulesOwnAppPutsItsWindowsInOneGroup()
+    {
+        Use(new WindowRule { App = Mail, TabOf = Mail });
+
+        Opens(New);
+
+        Assert.Contains("group 2 with 1", _system.Calls);
+    }
+
     private void Use(params WindowRule[] rules) => _controller.Apply(new WindowRulesSettings { Enabled = true, Rules = rules });
 
     private void Opens(nint handle)

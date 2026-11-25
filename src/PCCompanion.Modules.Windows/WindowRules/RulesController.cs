@@ -366,6 +366,15 @@ public sealed partial class RulesController : IDisposable
             LogApplied(_logger, rules, actions);
         }
 
+        // A window that joins a group takes the group's place, so the rule's other actions don't apply.
+        if (before is null && !ruled.WasOpen && outcome.TabOf is { } tabOf && TabTarget(ruled.Window, tabOf) is var target and not 0
+            && _system.GroupWith(ruled.Window, target))
+        {
+            ruled.Grouped = true;
+            LogGrouped(_logger);
+            return;
+        }
+
         var placementChanged = before is null
             || before.Display != outcome.Display || before.Place != outcome.Place || before.Open != outcome.Open;
         if (outcome.Places && placementChanged && !ruled.UserMoved && !ruled.WasOpen)
@@ -396,8 +405,27 @@ public sealed partial class RulesController : IDisposable
         Hold(ruled);
     }
 
-    private void Hold(RuledWindow ruled) =>
-        _held.Apply(ruled.Window, ruled.Outcome.OnTop, OpacityOf(ruled.Outcome), ruled.Outcome.HideFromTaskbar);
+    private void Hold(RuledWindow ruled)
+    {
+        if (!ruled.Grouped)
+        {
+            _held.Apply(ruled.Window, ruled.Outcome.OnTop, OpacityOf(ruled.Outcome), ruled.Outcome.HideFromTaskbar);
+        }
+    }
+
+    // The front-most other window of the app, shown on the desktop that's showing.
+    private nint TabTarget(nint window, ListedApp app)
+    {
+        foreach (var other in _system.TaskbarWindows())
+        {
+            if (other != window && !_system.IsCloaked(other) && !_system.IsMinimized(other) && _system.Facts(other) is { } facts && app.Matches(facts.App))
+            {
+                return other;
+            }
+        }
+
+        return 0;
+    }
 
     // A fixed opacity; one from the wheel comes with remembered places.
     private static int? OpacityOf(RuleOutcome outcome) =>
@@ -636,6 +664,9 @@ public sealed partial class RulesController : IDisposable
     [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules applied rules {Rules} to a window: {Actions}.")]
     private static partial void LogApplied(ILogger logger, string rules, string actions);
 
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Window Rules asked Window Tabs to open a window as a tab.")]
+    private static partial void LogGrouped(ILogger logger);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "A window's title matched {Count} more rules after it showed.")]
     private static partial void LogMatchedLate(ILogger logger, int count);
 
@@ -678,6 +709,9 @@ public sealed partial class RulesController : IDisposable
         public int Applies { get; set; }
 
         public bool UserMoved { get; set; }
+
+        // Joined a group through Window Tabs, which keeps every tab alike.
+        public bool Grouped { get; set; }
 
         // Open before the rules started, or applied to with Apply now: never placed by a late title.
         public bool WasOpen { get; init; }

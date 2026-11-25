@@ -19,6 +19,7 @@ public sealed partial class WindowRulesFeature : IFeature
     private readonly ILogger<WindowRulesFeature> _logger;
     private readonly DropDownWindows _dropDown;
     private readonly WindowTabsWindows _tabs;
+    private readonly WindowRequests _requests;
     private readonly string? _pipeName;
     private readonly Func<IRulesSystem> _recoverySystem;
     private WindowRulesThread? _thread;
@@ -28,27 +29,31 @@ public sealed partial class WindowRulesFeature : IFeature
 
     /// <param name="dropDown">Drop-down Apps' windows, which rules leave alone.</param>
     /// <param name="tabs">Window Tabs' tabs, which rules leave alone.</param>
-    public WindowRulesFeature(TimeProvider time, ILogger<WindowRulesFeature> logger, DropDownWindows dropDown, WindowTabsWindows tabs)
-        : this(time, logger, dropDown, tabs, WindowRulesPipe.Name, () => new WindowsRulesSystem(action => action(), action => action(), dropDown, tabs))
+    /// <param name="requests">Where windows go to Window Tabs for Open as a tab of.</param>
+    public WindowRulesFeature(TimeProvider time, ILogger<WindowRulesFeature> logger, DropDownWindows dropDown, WindowTabsWindows tabs, WindowRequests requests)
+        : this(time, logger, dropDown, tabs, requests, WindowRulesPipe.Name, () => new WindowsRulesSystem(action => action(), action => action(), dropDown, tabs, requests))
     {
     }
 
     /// <param name="dropDown">Drop-down Apps' windows, which rules leave alone.</param>
     /// <param name="tabs">Window Tabs' tabs, which rules leave alone.</param>
+    /// <param name="requests">Where windows go to Window Tabs for Open as a tab of.</param>
     /// <param name="pipeName">The pipe the settings app asks through for Apply now; none in tests.</param>
     /// <param name="recoverySystem">Where the windows left marked are found, as tests supply it.</param>
-    public WindowRulesFeature(TimeProvider time, ILogger<WindowRulesFeature> logger, DropDownWindows dropDown, WindowTabsWindows tabs, string? pipeName, Func<IRulesSystem> recoverySystem)
+    public WindowRulesFeature(TimeProvider time, ILogger<WindowRulesFeature> logger, DropDownWindows dropDown, WindowTabsWindows tabs, WindowRequests requests, string? pipeName, Func<IRulesSystem> recoverySystem)
     {
         ArgumentNullException.ThrowIfNull(time);
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(tabs);
+        ArgumentNullException.ThrowIfNull(requests);
         ArgumentNullException.ThrowIfNull(recoverySystem);
 
         _time = time;
         _logger = logger;
         _dropDown = dropDown;
         _tabs = tabs;
+        _requests = requests;
         _pipeName = pipeName;
         _recoverySystem = recoverySystem;
 
@@ -115,7 +120,7 @@ public sealed partial class WindowRulesFeature : IFeature
 
         if (_thread is null)
         {
-            _thread = new WindowRulesThread(read, _time, _logger, _dropDown, _tabs, _stopped, _pipeName);
+            _thread = new WindowRulesThread(read, _time, _logger, _dropDown, _tabs, _requests, _stopped, _pipeName);
             _stopped = null;
         }
         else

@@ -439,6 +439,26 @@ public sealed partial class TabsController : IDisposable
     public void GroupWithBehind(nint window) => GroupWithBehind(window, keys: false);
 
     /// <summary>
+    /// Adds <paramref name="window"/> to the group of <paramref name="target"/> as its tab in front,
+    /// or starts a group of the two, as Window Rules' Open as a tab of does. Unlike the shortcuts,
+    /// it plays no sound when either window can't be a tab; it leaves them as they are.
+    /// </summary>
+    public void GroupWith(nint window, nint target)
+    {
+        if (window == target || window == 0 || target == 0 || GroupOf(window) is not null || _system.Check(window) != TabRefusal.None)
+        {
+            return;
+        }
+
+        if (GroupOfFront(target) is null && (GroupOf(target) is not null || _system.Check(target) != TabRefusal.None))
+        {
+            return;
+        }
+
+        JoinWindow(target, window, keys: false);
+    }
+
+    /// <summary>
     /// Takes <paramref name="window"/> out of its group, as Windows + Ctrl + Shift + T does for the
     /// window in front. It must be its group's tab in front.
     /// </summary>

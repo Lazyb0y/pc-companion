@@ -29,6 +29,7 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
     private readonly Action<Action> _guard;
     private readonly DropDownWindows _dropDown;
     private readonly WindowTabsWindows _tabs;
+    private readonly WindowRequests _requests;
     private readonly AppOfWindowReader _apps = new(new WindowsAppIdentityReader());
     private readonly uint _ownProcess = (uint)Environment.ProcessId;
     private readonly Dictionary<uint, (int Count, WinEventHook Moves)> _followed = [];
@@ -40,17 +41,20 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
     /// <param name="guard">Runs a report inside the feature thread's error boundary.</param>
     /// <param name="dropDown">Drop-down Apps' windows, which rules leave alone.</param>
     /// <param name="tabs">Window Tabs' tabs, which rules leave alone.</param>
-    public WindowsRulesSystem(Action<Action> post, Action<Action> guard, DropDownWindows dropDown, WindowTabsWindows tabs)
+    /// <param name="requests">Where windows go to Window Tabs for Open as a tab of.</param>
+    public WindowsRulesSystem(Action<Action> post, Action<Action> guard, DropDownWindows dropDown, WindowTabsWindows tabs, WindowRequests requests)
     {
         ArgumentNullException.ThrowIfNull(post);
         ArgumentNullException.ThrowIfNull(guard);
         ArgumentNullException.ThrowIfNull(dropDown);
         ArgumentNullException.ThrowIfNull(tabs);
+        ArgumentNullException.ThrowIfNull(requests);
 
         _post = post;
         _guard = guard;
         _dropDown = dropDown;
         _tabs = tabs;
+        _requests = requests;
     }
 
     public event EventHandler<nint>? WindowMoved;
@@ -165,6 +169,8 @@ public sealed class WindowsRulesSystem : IRulesSystem, IDisposable
             LayeredStyle.SetLayered(window, false);
         }
     });
+
+    public bool GroupWith(nint window, nint target) => _requests.GroupWith(window, target);
 
     public bool Mark(nint window, nint value) => Marks.Value.Set(window, value);
 

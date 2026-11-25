@@ -162,6 +162,15 @@ internal sealed class FakeRulesSystem : IRulesSystem
         }
     }
 
+    /// <summary>Whether Window Tabs runs and takes windows.</summary>
+    public bool TabsOn { get; set; } = true;
+
+    public bool GroupWith(nint window, nint target)
+    {
+        Calls.Add($"group {window} with {target}");
+        return TabsOn;
+    }
+
     public bool Mark(nint window, nint value)
     {
         Marks[window] = value;
