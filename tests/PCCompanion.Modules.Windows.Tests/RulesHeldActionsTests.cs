@@ -55,6 +55,22 @@ public sealed class RulesHeldActionsTests : IDisposable
     }
 
     [Fact]
+    public void ARuleTurnedOnWhileRulesRunGivesTheOpenWindowsItMatchesWhatItHoldsButDoesntPlaceThem()
+    {
+        var other = new WindowRule { App = new ListedApp { Program = @"C:\Other.exe" }, OnTop = true };
+        var mail = new WindowRule { App = Mail, OnTop = true, Opacity = new RuleOpacity { Percent = 60 }, Place = new RulePlace { Which = "RightHalf" } };
+        Use(other, mail with { Enabled = false });
+        Assert.False(_system[Open].Topmost);
+
+        Use(other, mail);
+
+        Assert.True(_system[Open].Topmost);
+        Assert.Equal(153, _system[Open].Attributes!.Value.Alpha);
+        Assert.Equal(Start, _system[Open].Visible);
+        Assert.Contains(Open, _controller.HeldWindows);
+    }
+
+    [Fact]
     public void TurningARuleOffPutsBackWhatItHeld()
     {
         Use(new WindowRule { App = Mail, OnTop = true, HideFromTaskbar = true, Opacity = new RuleOpacity { Percent = 50 } }, new WindowRule { App = new ListedApp { Program = @"C:\Other.exe" }, OnTop = true });
