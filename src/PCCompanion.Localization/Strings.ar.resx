@@ -6236,4 +6236,496 @@
     <value>يتذكر التطبيقات الموجودة في كل مجموعة، ويجمع نوافذها مرة أخرى عند فتحها بعد إعادة التشغيل أو تسجيل الخروج أو التحديث.</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowRulesName" xml:space="preserve">
+    <value>قواعد النوافذ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDescription" xml:space="preserve">
+    <value>افتح نوافذ أحد التطبيقات على الشاشة وفي المكان الذي تختاره، مكبّرة أو مصغّرة، وأبقِها في المقدمة أو شبه شفافة أو خارج شريط المهام أو في مجموعة علامات تبويب.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesHeader" xml:space="preserve">
+    <value>القواعد</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesDescription" xml:space="preserve">
+    <value>تعمل كل قاعدة على نوافذ أحد التطبيقات عند فتحها. عندما تطابق عدة قواعد نافذة واحدة، تفوز أول قاعدة في القائمة تحدد إجراءً.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddRule" xml:space="preserve">
+    <value>إضافة قاعدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoRules" xml:space="preserve">
+    <value>لا توجد قواعد بعد. أضف قاعدة، واستخدم اختيار نافذة لملئها من نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEdit" xml:space="preserve">
+    <value>تحرير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditName" xml:space="preserve">
+    <value>تحرير {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRuleSwitchName" xml:space="preserve">
+    <value>استخدام {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreName" xml:space="preserve">
+    <value>المزيد من الخيارات لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNow" xml:space="preserve">
+    <value>تطبيق الآن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveUp" xml:space="preserve">
+    <value>نقل لأعلى</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveDown" xml:space="preserve">
+    <value>نقل لأسفل</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDelete" xml:space="preserve">
+    <value>حذف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteTitle" xml:space="preserve">
+    <value>حذف {0}؟</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteText" xml:space="preserve">
+    <value>تستعيد النوافذ التي غيّرتها القاعدة ما أعطته إياها، باستثناء مكانها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesCancel" xml:space="preserve">
+    <value>إلغاء</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSave" xml:space="preserve">
+    <value>حفظ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesUnnamed" xml:space="preserve">
+    <value>قاعدة بلا اسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPermissions" xml:space="preserve">
+    <value>يقرأ التطبيق والعنوان والفئة لكل نافذة تُفتح، والشاشات المتصلة؛ وتبقى العناوين في الذاكرة فقط. ينقل نوافذ التطبيقات الموجودة في قواعده ويغيّر حجمها ويكبّرها ويصغّرها عند فتحها، ويبقيها في المقدمة أو شبه شفافة أو خارج شريط المهام، ويضع عليها علامة لتستعيد ما كان لديها بعد التعطل؛ ولا يستخدم أي خطاف للوحة المفاتيح أو الماوس ولا يشغّل أي تعليمات برمجية في التطبيقات الأخرى. لا يجري أي اتصالات بالشبكة ولا يرسل أي شيء.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfo" xml:space="preserve">
+    <value>تتجاهل القواعد نوافذ التطبيقات التي تعمل كمسؤول، والتي يُبعدها Windows عن PC Companion أثناء تشغيله بدون صلاحيات المسؤول. شغّل التشغيل دائماً كمسؤول في صفحة عام لتطبيق القواعد عليها أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfoOn" xml:space="preserve">
+    <value>يعمل PC Companion كمسؤول، لذا تنطبق القواعد على نوافذ التطبيقات التي تعمل كمسؤول أيضًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_zero" xml:space="preserve">
+    <value>لم تُطبَّق القاعدة على أي نافذة مفتوحة ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_one" xml:space="preserve">
+    <value>طُبِّقت القاعدة على نافذة مفتوحة واحدة ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_two" xml:space="preserve">
+    <value>طُبِّقت القاعدة على نافذتين مفتوحتين ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_few" xml:space="preserve">
+    <value>طُبِّقت القاعدة على {0} نوافذ مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_many" xml:space="preserve">
+    <value>طُبِّقت القاعدة على {0} نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_other" xml:space="preserve">
+    <value>طُبِّقت القاعدة على {0} نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowNoAnswer" xml:space="preserve">
+    <value>لم يستجب PC Companion، لذا لم تُطبَّق القاعدة. تأكد من تشغيل قواعد النوافذ، ثم حاول مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryApp" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummarySeparator" xml:space="preserve">
+    <value>، </value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOnTop" xml:space="preserve">
+    <value>دائمًا في المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOpacity" xml:space="preserve">
+    <value>عتامة {0}%</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTaskbar" xml:space="preserve">
+    <value>خارج شريط المهام</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTab" xml:space="preserve">
+    <value>كعلامة تبويب لـ {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryNotUsed" xml:space="preserve">
+    <value>غير مستخدمة. {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemTooMany" xml:space="preserve">
+    <value>تُستخدم أول 50 قاعدة فقط.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemDisplay" xml:space="preserve">
+    <value>تعذّر التعرّف على شاشتها؛ اخترها مرة أخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemUnknown" xml:space="preserve">
+    <value>تستخدم خيارًا من إصدار أحدث من PC Companion.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddTitle" xml:space="preserve">
+    <value>إضافة قاعدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditTitle" xml:space="preserve">
+    <value>تحرير القاعدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameHeader" xml:space="preserve">
+    <value>الاسم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNamePlaceholder" xml:space="preserve">
+    <value>مثلاً: البريد على اليمين</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameMissing" xml:space="preserve">
+    <value>أعطِ القاعدة اسمًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesWindowsHeader" xml:space="preserve">
+    <value>النوافذ المعنية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppHeader" xml:space="preserve">
+    <value>التطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppNone" xml:space="preserve">
+    <value>لم يتم اختيار تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseApp" xml:space="preserve">
+    <value>اختيار تطبيق</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseTabApp" xml:space="preserve">
+    <value>اختر التطبيق الذي تُفتح النافذة كعلامة تبويب لنافذته</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindow" xml:space="preserve">
+    <value>اختيار نافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppMissing" xml:space="preserve">
+    <value>اختر التطبيق الذي تخصه القاعدة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleSwitch" xml:space="preserve">
+    <value>النوافذ التي عنوانها فقط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMatchName" xml:space="preserve">
+    <value>طريقة مقارنة العنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleTextName" xml:space="preserve">
+    <value>نص العنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleContains" xml:space="preserve">
+    <value>يحتوي على</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleIs" xml:space="preserve">
+    <value>يساوي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitlePattern" xml:space="preserve">
+    <value>يطابق التعبير النمطي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMissing" xml:space="preserve">
+    <value>اكتب النص الذي يُقارن به العنوان.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleBadPattern" xml:space="preserve">
+    <value>هذا ليس تعبيرًا نمطيًا يمكن للقاعدة استخدامه.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreMatching" xml:space="preserve">
+    <value>مطابقة إضافية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassSwitch" xml:space="preserve">
+    <value>نوافذ الفئة التالية فقط</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassNote" xml:space="preserve">
+    <value>اسم الفئة الذي أعطاه التطبيق لنوافذه، مثل CabinetWClass لمستكشف الملفات، ويُطابق تمامًا. يملؤه اختيار نافذة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_zero" xml:space="preserve">
+    <value>لا تطابق أي نافذة مفتوحة ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_one" xml:space="preserve">
+    <value>تطابق نافذة مفتوحة واحدة ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_two" xml:space="preserve">
+    <value>تطابق نافذتين مفتوحتين ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_few" xml:space="preserve">
+    <value>تطابق {0} نوافذ مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_many" xml:space="preserve">
+    <value>تطابق {0} نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_other" xml:space="preserve">
+    <value>تطابق {0} نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_zero" xml:space="preserve">
+    <value>لا تطابقها قواعد أخرى ({0}).</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_one" xml:space="preserve">
+    <value>تطابقها قاعدة أخرى أيضًا ({0})؛ ولكل إجراء تفوز أول قاعدة في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_two" xml:space="preserve">
+    <value>تطابقها قاعدتان أخريان أيضًا ({0})؛ ولكل إجراء تفوز أول قاعدة في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_few" xml:space="preserve">
+    <value>تطابقها {0} قواعد أخرى أيضًا؛ ولكل إجراء تفوز أول قاعدة في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_many" xml:space="preserve">
+    <value>تطابقها {0} قاعدة أخرى أيضًا؛ ولكل إجراء تفوز أول قاعدة في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_other" xml:space="preserve">
+    <value>تطابقها {0} قاعدة أخرى أيضًا؛ ولكل إجراء تفوز أول قاعدة في القائمة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsHeader" xml:space="preserve">
+    <value>ما تفعله القاعدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsNote" xml:space="preserve">
+    <value>تُطبَّق الشاشة والمكان وطريقة فتح النافذة مرة واحدة عند فتحها، لذا يمكنك نقلها بعد ذلك. أما البقاء في المقدمة والعتامة والإخفاء من شريط المهام فتستمر ما دامت مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoAction" xml:space="preserve">
+    <value>شغّل إجراءً واحدًا على الأقل.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplaySwitch" xml:space="preserve">
+    <value>الشاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayMain" xml:space="preserve">
+    <value>الشاشة الرئيسية</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayPointer" xml:space="preserve">
+    <value>الشاشة التي عليها المؤشر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayBuiltIn" xml:space="preserve">
+    <value>الشاشة المدمجة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayUnnamed" xml:space="preserve">
+    <value>شاشة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayNotConnected" xml:space="preserve">
+    <value>{0} (غير متصلة)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceSwitch" xml:space="preserve">
+    <value>المكان والحجم</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCentered" xml:space="preserve">
+    <value>في المنتصف</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeftHalf" xml:space="preserve">
+    <value>النصف الأيسر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRightHalf" xml:space="preserve">
+    <value>النصف الأيمن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopHalf" xml:space="preserve">
+    <value>النصف العلوي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomHalf" xml:space="preserve">
+    <value>النصف السفلي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopLeft" xml:space="preserve">
+    <value>الربع العلوي الأيسر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopRight" xml:space="preserve">
+    <value>الربع العلوي الأيمن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomLeft" xml:space="preserve">
+    <value>الربع السفلي الأيسر</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomRight" xml:space="preserve">
+    <value>الربع السفلي الأيمن</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWorkArea" xml:space="preserve">
+    <value>الشاشة كلها دون تكبير</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRemembered" xml:space="preserve">
+    <value>حيث وضعتها آخر مرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCustom" xml:space="preserve">
+    <value>مخصص</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeft" xml:space="preserve">
+    <value>اليسار (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTop" xml:space="preserve">
+    <value>الأعلى (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWidth" xml:space="preserve">
+    <value>العرض (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceHeight" xml:space="preserve">
+    <value>الارتفاع (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceProblem" xml:space="preserve">
+    <value>تتراوح قيمتا اليسار والأعلى بين 0 و99.9، والعرض والارتفاع بين 0.1 و100، كنسبة مئوية من الشاشة دون شريط المهام.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenSwitch" xml:space="preserve">
+    <value>الفتح</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenNormal" xml:space="preserve">
+    <value>عادي</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMaximized" xml:space="preserve">
+    <value>مكبّرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMinimized" xml:space="preserve">
+    <value>مصغّرة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOnTopSwitch" xml:space="preserve">
+    <value>دائمًا في المقدمة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacitySwitch" xml:space="preserve">
+    <value>العتامة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityPercent" xml:space="preserve">
+    <value>{0}%</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityWheel" xml:space="preserve">
+    <value>كما ضُبطت آخر مرة بعجلة الماوس</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarSwitch" xml:space="preserve">
+    <value>إخفاء من شريط المهام وAlt + Tab</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarNote" xml:space="preserve">
+    <value>تستعيد النافذة زرها في شريط المهام أثناء تصغيرها، لتتمكن من الوصول إليها دائمًا.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSwitch" xml:space="preserve">
+    <value>فتح كعلامة تبويب لـ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSameApp" xml:space="preserve">
+    <value>تطبيق هذه القاعدة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabMissing" xml:space="preserve">
+    <value>اختر التطبيق الذي تُفتح النافذة كعلامة تبويب لنافذته.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabNote" xml:space="preserve">
+    <value>يتطلب تشغيل علامات تبويب النوافذ. النافذة التي تنضم إلى مجموعة تأخذ مكان المجموعة، لذا لا تنطبق عليها إجراءات القاعدة الأخرى.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeSwitch" xml:space="preserve">
+    <value>التطبيق مجددًا عند تغيّر الشاشات</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeNote" xml:space="preserve">
+    <value>يعيد وضع النوافذ المفتوحة للقاعدة بعد ثانيتين من توصيل شاشة أو فصلها. يعيد Windows 11 النوافذ تلقائيًا إلى الشاشة التي أُعيد توصيلها.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowTitle" xml:space="preserve">
+    <value>اختيار نافذة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNote" xml:space="preserve">
+    <value>تأخذ القاعدة تطبيق النافذة وعنوانها وفئتها وشاشتها ومكانها، مع إيقاف مفتاح كل منها، لتشغّل ما تريده.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNone" xml:space="preserve">
+    <value>لا توجد نافذة مفتوحة.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowList" xml:space="preserve">
+    <value>النوافذ المفتوحة</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowChoose" xml:space="preserve">
+    <value>اختيار</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowUntitled" xml:space="preserve">
+    <value>نافذة بلا عنوان</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

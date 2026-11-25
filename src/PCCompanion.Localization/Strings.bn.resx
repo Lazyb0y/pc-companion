@@ -6012,4 +6012,448 @@
     <value>প্রতিটি গ্রুপে কোন অ্যাপ আছে তা মনে রাখে, এবং রিস্টার্ট, সাইন আউট বা আপডেটের পরে সেগুলোর উইন্ডো খুললে আবার গ্রুপ করে।</value>
     <comment>Needs native review.</comment>
   </data>
+  <data name="WindowRulesName" xml:space="preserve">
+    <value>উইন্ডো রুল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDescription" xml:space="preserve">
+    <value>কোনো অ্যাপের উইন্ডো আপনার বেছে নেওয়া ডিসপ্লেতে ও জায়গায়, বড় বা ছোট করে খুলুন, এবং সেগুলোকে সবার উপরে, অর্ধস্বচ্ছ, টাস্কবারের বাইরে বা ট্যাব গ্রুপে রাখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesHeader" xml:space="preserve">
+    <value>রুল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRulesDescription" xml:space="preserve">
+    <value>প্রতিটি রুল কোনো অ্যাপের উইন্ডো খোলার সময় সেগুলোর উপর কাজ করে। একাধিক রুল কোনো উইন্ডোর সাথে মিললে, তালিকায় যে রুলটি প্রথমে কোনো অ্যাকশন সেট করে সেটিই প্রযোজ্য হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddRule" xml:space="preserve">
+    <value>রুল যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoRules" xml:space="preserve">
+    <value>এখনো কোনো রুল নেই। একটি যোগ করুন, এবং খোলা কোনো উইন্ডো থেকে পূরণ করতে উইন্ডো বেছে নিন ব্যবহার করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEdit" xml:space="preserve">
+    <value>সম্পাদনা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditName" xml:space="preserve">
+    <value>{0} সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesRuleSwitchName" xml:space="preserve">
+    <value>{0} ব্যবহার করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreName" xml:space="preserve">
+    <value>{0}-এর আরও বিকল্প</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNow" xml:space="preserve">
+    <value>এখনই প্রয়োগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveUp" xml:space="preserve">
+    <value>উপরে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoveDown" xml:space="preserve">
+    <value>নিচে সরান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDelete" xml:space="preserve">
+    <value>মুছুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteTitle" xml:space="preserve">
+    <value>{0} মুছবেন?</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDeleteText" xml:space="preserve">
+    <value>রুলটি যে উইন্ডোগুলো বদলেছে, সেগুলো তাদের জায়গা ছাড়া রুলের দেওয়া সবকিছু আগের মতো ফিরে পায়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesCancel" xml:space="preserve">
+    <value>বাতিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSave" xml:space="preserve">
+    <value>সংরক্ষণ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesUnnamed" xml:space="preserve">
+    <value>নামহীন রুল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPermissions" xml:space="preserve">
+    <value>যে প্রতিটি উইন্ডো খোলে তার অ্যাপ, শিরোনাম ও ক্লাস, এবং কোন ডিসপ্লে সংযুক্ত আছে তা পড়ে; শিরোনাম শুধু মেমরিতে থাকে। এর রুলে থাকা অ্যাপের উইন্ডো খোলার সময় সেগুলো সরায়, আকার বদলায়, বড় ও ছোট করে, সবার উপরে, অর্ধস্বচ্ছ বা টাস্কবারের বাইরে রাখে, এবং চিহ্ন দিয়ে রাখে যাতে ক্র্যাশের পরে সেগুলো আগের অবস্থা ফিরে পায়; কোনো কীবোর্ড বা মাউস হুক ব্যবহার করে না এবং অন্য অ্যাপে কোনো কোড চালায় না। কোনো নেটওয়ার্ক সংযোগ করে না এবং কিছু পাঠায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfo" xml:space="preserve">
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোতে রুলগুলো কিছু করে না, কারণ PC Companion অ্যাডমিন অধিকার ছাড়া চললে Windows সেগুলোকে এর থেকে দূরে রাখে। সেগুলোতেও রুল প্রয়োগ করতে সাধারণ পৃষ্ঠায় সবসময় অ্যাডমিনিস্ট্রেটর হিসেবে চালান চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAdministratorInfoOn" xml:space="preserve">
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা অ্যাপের উইন্ডোতেও রুল প্রযোজ্য হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_one" xml:space="preserve">
+    <value>রুলটি {0}টি খোলা উইন্ডোতে প্রয়োগ করা হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowDone_other" xml:space="preserve">
+    <value>রুলটি {0}টি খোলা উইন্ডোতে প্রয়োগ করা হয়েছে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesApplyNowNoAnswer" xml:space="preserve">
+    <value>PC Companion সাড়া দেয়নি, তাই রুলটি প্রয়োগ করা হয়নি। উইন্ডো রুল চালু আছে কি না দেখে আবার চেষ্টা করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryApp" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummarySeparator" xml:space="preserve">
+    <value>, </value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOnTop" xml:space="preserve">
+    <value>সবসময় সবার উপরে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryOpacity" xml:space="preserve">
+    <value>{0}% অস্বচ্ছতা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTaskbar" xml:space="preserve">
+    <value>টাস্কবারের বাইরে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryTab" xml:space="preserve">
+    <value>{0}-এর ট্যাব হিসেবে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesSummaryNotUsed" xml:space="preserve">
+    <value>ব্যবহৃত হচ্ছে না। {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemTooMany" xml:space="preserve">
+    <value>শুধু প্রথম ৫০টি রুল ব্যবহৃত হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemDisplay" xml:space="preserve">
+    <value>এর ডিসপ্লে চেনা যাচ্ছে না; আবার বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesProblemUnknown" xml:space="preserve">
+    <value>এটি PC Companion-এর নতুন সংস্করণের একটি পছন্দ ব্যবহার করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAddTitle" xml:space="preserve">
+    <value>রুল যোগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesEditTitle" xml:space="preserve">
+    <value>রুল সম্পাদনা করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameHeader" xml:space="preserve">
+    <value>নাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNamePlaceholder" xml:space="preserve">
+    <value>যেমন, ডানদিকে মেইল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNameMissing" xml:space="preserve">
+    <value>রুলটির একটি নাম দিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesWindowsHeader" xml:space="preserve">
+    <value>কোন উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppHeader" xml:space="preserve">
+    <value>অ্যাপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppNone" xml:space="preserve">
+    <value>কোনো অ্যাপ বেছে নেওয়া হয়নি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseApp" xml:space="preserve">
+    <value>অ্যাপ বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesChooseTabApp" xml:space="preserve">
+    <value>যে অ্যাপের উইন্ডোর ট্যাব হিসেবে এটি খুলবে তা বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindow" xml:space="preserve">
+    <value>উইন্ডো বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAppMissing" xml:space="preserve">
+    <value>রুলটি কোন অ্যাপের জন্য তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleSwitch" xml:space="preserve">
+    <value>শুধু সেই উইন্ডো যার শিরোনাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMatchName" xml:space="preserve">
+    <value>শিরোনাম কীভাবে মেলানো হয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleTextName" xml:space="preserve">
+    <value>শিরোনামের লেখা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleContains" xml:space="preserve">
+    <value>ধারণ করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleIs" xml:space="preserve">
+    <value>হুবহু এটি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitlePattern" xml:space="preserve">
+    <value>রেগুলার এক্সপ্রেশনের সাথে মেলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleMissing" xml:space="preserve">
+    <value>শিরোনামের সাথে যে লেখা মেলানো হবে তা লিখুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTitleBadPattern" xml:space="preserve">
+    <value>এটি এমন কোনো রেগুলার এক্সপ্রেশন নয় যা কোনো রুল ব্যবহার করতে পারে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMoreMatching" xml:space="preserve">
+    <value>আরও মেলানো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassSwitch" xml:space="preserve">
+    <value>শুধু এই ক্লাসের উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesClassNote" xml:space="preserve">
+    <value>অ্যাপটি তার উইন্ডোগুলোকে যে ক্লাস নাম দিয়েছে, যেমন File Explorer-এর জন্য CabinetWClass, হুবহু মেলানো হয়। উইন্ডো বেছে নিন এটি পূরণ করে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_one" xml:space="preserve">
+    <value>{0}টি খোলা উইন্ডোর সাথে মেলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesMatches_other" xml:space="preserve">
+    <value>{0}টি খোলা উইন্ডোর সাথে মেলে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_one" xml:space="preserve">
+    <value>আরও {0}টি রুল এগুলোর সাথে মেলে; প্রতিটি অ্যাকশনের জন্য তালিকার প্রথম রুলটি প্রযোজ্য হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesAlsoMatched_other" xml:space="preserve">
+    <value>আরও {0}টি রুল এগুলোর সাথে মেলে; প্রতিটি অ্যাকশনের জন্য তালিকার প্রথম রুলটি প্রযোজ্য হয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsHeader" xml:space="preserve">
+    <value>রুলটি কী করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesActionsNote" xml:space="preserve">
+    <value>ডিসপ্লে, জায়গা এবং উইন্ডো কীভাবে খোলে তা খোলার সময় একবারই প্রয়োগ হয়, তাই পরে আপনি এটি সরাতে পারেন। সবার উপরে, অস্বচ্ছতা ও টাস্কবার থেকে লুকানো খোলা থাকা পর্যন্ত বজায় থাকে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesNoAction" xml:space="preserve">
+    <value>অন্তত একটি অ্যাকশন চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplaySwitch" xml:space="preserve">
+    <value>ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayMain" xml:space="preserve">
+    <value>প্রধান ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayPointer" xml:space="preserve">
+    <value>যে ডিসপ্লেতে পয়েন্টার আছে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayBuiltIn" xml:space="preserve">
+    <value>বিল্ট-ইন ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayUnnamed" xml:space="preserve">
+    <value>ডিসপ্লে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayNotConnected" xml:space="preserve">
+    <value>{0} (সংযুক্ত নয়)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceSwitch" xml:space="preserve">
+    <value>জায়গা ও আকার</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCentered" xml:space="preserve">
+    <value>মাঝখানে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeftHalf" xml:space="preserve">
+    <value>বাঁ অর্ধেক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRightHalf" xml:space="preserve">
+    <value>ডান অর্ধেক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopHalf" xml:space="preserve">
+    <value>উপরের অর্ধেক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomHalf" xml:space="preserve">
+    <value>নিচের অর্ধেক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopLeft" xml:space="preserve">
+    <value>উপরের বাঁ চতুর্থাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTopRight" xml:space="preserve">
+    <value>উপরের ডান চতুর্থাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomLeft" xml:space="preserve">
+    <value>নিচের বাঁ চতুর্থাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceBottomRight" xml:space="preserve">
+    <value>নিচের ডান চতুর্থাংশ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWorkArea" xml:space="preserve">
+    <value>পুরো স্ক্রিন, বড় না করে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceRemembered" xml:space="preserve">
+    <value>যেখানে শেষবার রেখেছিলাম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceCustom" xml:space="preserve">
+    <value>কাস্টম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceLeft" xml:space="preserve">
+    <value>বাঁ (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceTop" xml:space="preserve">
+    <value>উপর (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceWidth" xml:space="preserve">
+    <value>প্রস্থ (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceHeight" xml:space="preserve">
+    <value>উচ্চতা (%)</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPlaceProblem" xml:space="preserve">
+    <value>বাঁ ও উপর ০ থেকে ৯৯.৯, এবং প্রস্থ ও উচ্চতা ০.১ থেকে ১০০, টাস্কবার ছাড়া স্ক্রিনের শতাংশে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenSwitch" xml:space="preserve">
+    <value>খোলা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenNormal" xml:space="preserve">
+    <value>স্বাভাবিক</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMaximized" xml:space="preserve">
+    <value>বড় করা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpenMinimized" xml:space="preserve">
+    <value>ছোট করা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOnTopSwitch" xml:space="preserve">
+    <value>সবসময় সবার উপরে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacitySwitch" xml:space="preserve">
+    <value>অস্বচ্ছতা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityPercent" xml:space="preserve">
+    <value>{0}%</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesOpacityWheel" xml:space="preserve">
+    <value>শেষবার চাকা দিয়ে যেমন সেট করা হয়েছিল</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarSwitch" xml:space="preserve">
+    <value>টাস্কবার ও Alt + Tab থেকে লুকান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTaskbarNote" xml:space="preserve">
+    <value>উইন্ডোটি ছোট থাকার সময় টাস্কবার বোতাম ফিরে পায়, তাই আপনি সবসময় এটিতে পৌঁছাতে পারেন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSwitch" xml:space="preserve">
+    <value>এর ট্যাব হিসেবে খুলুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabSameApp" xml:space="preserve">
+    <value>এই রুলের অ্যাপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabMissing" xml:space="preserve">
+    <value>যে অ্যাপের উইন্ডোর ট্যাব হিসেবে এটি খুলবে তা বেছে নিন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesTabNote" xml:space="preserve">
+    <value>উইন্ডো ট্যাব চালু থাকা দরকার। কোনো গ্রুপে যোগ দেওয়া উইন্ডো গ্রুপের জায়গা নেয়, তাই রুলের অন্য অ্যাকশন এতে প্রযোজ্য হয় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeSwitch" xml:space="preserve">
+    <value>ডিসপ্লে বদলালে আবার প্রয়োগ করুন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesDisplayChangeNote" xml:space="preserve">
+    <value>কোনো ডিসপ্লে সংযুক্ত বা বিচ্ছিন্ন হওয়ার ২ সেকেন্ড পরে রুলের খোলা উইন্ডোগুলো আবার জায়গামতো রাখে। Windows 11 আবার সংযুক্ত ডিসপ্লেতে উইন্ডো এমনিতেই ফিরিয়ে আনে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowTitle" xml:space="preserve">
+    <value>উইন্ডো বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNote" xml:space="preserve">
+    <value>রুলটি উইন্ডোর অ্যাপ, শিরোনাম, ক্লাস, ডিসপ্লে ও জায়গা পায়, প্রতিটির সুইচ বন্ধ থাকে, তাই আপনি যা চান তা চালু করুন।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowNone" xml:space="preserve">
+    <value>কোনো উইন্ডো খোলা নেই।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowList" xml:space="preserve">
+    <value>খোলা উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowChoose" xml:space="preserve">
+    <value>বেছে নিন</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="WindowRulesPickWindowUntitled" xml:space="preserve">
+    <value>শিরোনামহীন উইন্ডো</value>
+    <comment>Needs native review.</comment>
+  </data>
 </root>

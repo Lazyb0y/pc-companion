@@ -22,6 +22,7 @@ using PCCompanion.App.Features.RemoteFolders;
 using PCCompanion.App.Features.ShortcutsAndMouseButtons;
 using PCCompanion.App.Features.SystemMeters;
 using PCCompanion.App.Features.TitleBarActions;
+using PCCompanion.App.Features.WindowRules;
 using PCCompanion.App.Features.WindowTabs;
 using PCCompanion.Core.Features;
 using PCCompanion.Modules.Clipboard;
@@ -51,6 +52,7 @@ using PCCompanion.Modules.Windows.EndApp;
 using PCCompanion.Modules.Windows.HideApps;
 using PCCompanion.Modules.Windows.MinimizeToTray;
 using PCCompanion.Modules.Windows.TitleBarActions;
+using PCCompanion.Modules.Windows.WindowRules;
 using PCCompanion.Modules.Windows.WindowTabs;
 using PCCompanion.Platform.Windows;
 
@@ -110,6 +112,7 @@ public static class FeatureCatalog
             new(HideAppsFeature.Definition, HideAppsFeature.CurrentSupport, typeof(HideAppsPage), DrawnIcon: "hide-apps", Actions: _ => HideAppsFeature.OfferedActions(), Shortcuts: section => HideAppsFeature.Shortcuts(HideAppsSettings.Read(section))),
             new(DropDownAppsFeature.Definition, DropDownAppsFeature.CurrentSupport, typeof(DropDownAppsPage), DrawnIcon: "drop-down-apps", Actions: section => DropDownAppsFeature.OfferedActions(DropDownAppsSettings.Read(section)), Shortcuts: section => DropDownAppsFeature.Shortcuts(DropDownAppsSettings.Read(section))),
             new(WindowTabsFeature.Definition, WindowTabsFeature.CurrentSupport, typeof(WindowTabsPage), DrawnIcon: "window-tabs", Actions: _ => WindowTabsFeature.OfferedActions(), Shortcuts: section => WindowTabsFeature.Shortcuts(WindowTabsSettings.Read(section))),
+            new(WindowRulesFeature.Definition, WindowRulesFeature.CurrentSupport, typeof(WindowRulesPage)),
             new(TitleBarActionsFeature.Definition, TitleBarActionsFeature.CurrentSupport, typeof(TitleBarActionsPage), DrawnIcon: "title-bar-actions"),
             new(EndAppFeature.Definition, EndAppFeature.CurrentSupport, typeof(EndAppPage), DrawnIcon: "end-app", Actions: _ => EndAppFeature.OfferedActions(), Shortcuts: section => EndAppFeature.Shortcuts(EndAppSettings.Read(section))),
         ]),

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="PCCompanion.App.Features.WindowRules.WindowRuleDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:PCCompanion.App"
+    xmlns:controls="using:PCCompanion.App.Controls"
+    xmlns:local="using:PCCompanion.App.Features.WindowRules"
+    CloseButtonText="{app:Localized Key=WindowRulesCancel}"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind Editor.CanSave, Mode=OneWay}"
+    PrimaryButtonText="{app:Localized Key=WindowRulesSave}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    Title="{x:Bind Editor.Title}">
+
+    <!-- Titles, patterns and class names read left to right in every language. -->
+    <StackPanel MinWidth="440" Spacing="16">
+        <StackPanel Spacing="4">
+            <TextBox
+                x:Name="NameBox"
+                AutomationProperties.HelpText="{x:Bind Editor.NameProblem, Mode=OneWay}"
+                Header="{app:Localized Key=WindowRulesNameHeader}"
+                MaxLength="60"
+                PlaceholderText="{app:Localized Key=WindowRulesNamePlaceholder}"
+                Text="{x:Bind Editor.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.NameProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasNameProblem, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=WindowRulesWindowsHeader}" />
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{app:Localized Key=WindowRulesAppHeader}" />
+                    <TextBlock Text="{x:Bind Editor.AppName, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <DropDownButton
+                    x:Name="AppButton"
+                    Grid.Column="1"
+                    AutomationProperties.HelpText="{x:Bind Editor.AppProblem, Mode=OneWay}"
+                    AutomationProperties.Name="{app:Localized Key=WindowRulesChooseApp}"
+                    Content="{app:Localized Key=WindowRulesChooseApp}">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight">
+                            <MenuFlyoutItem Click="OnPickWindowClick" Text="{app:Localized Key=WindowRulesPickWindow}" />
+                            <MenuFlyoutItem Click="OnRunningAppClick" Text="{app:Localized Key=AppListAddRunningApp}" />
+                            <MenuFlyoutItem Click="OnProgramFileClick" Text="{app:Localized Key=AppListAddProgramFile}" />
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+            </Grid>
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.AppProblem, Mode=OneWay}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasAppProblem, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesTitleSwitch}" IsOn="{x:Bind Editor.TitleOn, Mode=TwoWay}" />
+            <StackPanel Spacing="4" Visibility="{x:Bind Editor.TitleOn, Mode=OneWay}">
+                <ComboBox
+                    AutomationProperties.Name="{app:Localized Key=WindowRulesTitleMatchName}"
+                    ItemsSource="{x:Bind Editor.TitleMatchChoices}"
+                    SelectedIndex="{x:Bind Editor.TitleMatchIndex, Mode=TwoWay}" />
+                <TextBox
+                    AutomationProperties.HelpText="{x:Bind Editor.TitleProblem, Mode=OneWay}"
+                    AutomationProperties.Name="{app:Localized Key=WindowRulesTitleTextName}"
+                    FlowDirection="LeftToRight"
+                    Text="{x:Bind Editor.TitleText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.TitleProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasTitleProblem, Mode=OneWay}" />
+            </StackPanel>
+
+            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Header="{app:Localized Key=WindowRulesMoreMatching}">
+                <StackPanel Spacing="4">
+                    <ToggleSwitch Header="{app:Localized Key=WindowRulesClassSwitch}" IsOn="{x:Bind Editor.ClassOn, Mode=TwoWay}" />
+                    <TextBox
+                        AutomationProperties.Name="{app:Localized Key=WindowRulesClassSwitch}"
+                        FlowDirection="LeftToRight"
+                        Text="{x:Bind Editor.ClassName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Visibility="{x:Bind Editor.ClassOn, Mode=OneWay}" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{app:Localized Key=WindowRulesClassNote}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Expander>
+
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Editor.Matches, Mode=OneWay}"
+                TextWrapping="Wrap" />
+            <ItemsControl IsTabStop="False" ItemsSource="{x:Bind Editor.Matched}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:MatchedWindow">
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind}"
+                            TextTrimming="CharacterEllipsis" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=WindowRulesActionsHeader}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=WindowRulesActionsNote}"
+                TextWrapping="Wrap" />
+            <TextBlock
+                controls:Announcement.IsLive="True"
+                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=WindowRulesNoAction}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HasNoAction, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesDisplaySwitch}" IsOn="{x:Bind Editor.DisplayOn, Mode=TwoWay}" />
+            <ComboBox
+                AutomationProperties.Name="{app:Localized Key=WindowRulesDisplaySwitch}"
+                ItemsSource="{x:Bind Editor.DisplayChoices}"
+                SelectedIndex="{x:Bind Editor.DisplayIndex, Mode=TwoWay}"
+                Visibility="{x:Bind Editor.DisplayOn, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesPlaceSwitch}" IsOn="{x:Bind Editor.PlaceOn, Mode=TwoWay}" />
+            <StackPanel Spacing="4" Visibility="{x:Bind Editor.PlaceOn, Mode=OneWay}">
+                <ComboBox
+                    AutomationProperties.Name="{app:Localized Key=WindowRulesPlaceSwitch}"
+                    ItemsSource="{x:Bind Editor.PlaceChoices}"
+                    SelectedIndex="{x:Bind Editor.PlaceIndex, Mode=TwoWay}" />
+                <Grid ColumnSpacing="8" RowSpacing="4" Visibility="{x:Bind Editor.IsCustomPlace, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <NumberBox Header="{app:Localized Key=WindowRulesPlaceLeft}" Maximum="99.9" Minimum="0" SmallChange="1" SpinButtonPlacementMode="Compact" Value="{x:Bind Editor.PlaceLeft, Mode=TwoWay}" />
+                    <NumberBox Grid.Column="1" Header="{app:Localized Key=WindowRulesPlaceTop}" Maximum="99.9" Minimum="0" SmallChange="1" SpinButtonPlacementMode="Compact" Value="{x:Bind Editor.PlaceTop, Mode=TwoWay}" />
+                    <NumberBox Grid.Row="1" Header="{app:Localized Key=WindowRulesPlaceWidth}" Maximum="100" Minimum="0.1" SmallChange="1" SpinButtonPlacementMode="Compact" Value="{x:Bind Editor.PlaceWidth, Mode=TwoWay}" />
+                    <NumberBox Grid.Row="1" Grid.Column="1" Header="{app:Localized Key=WindowRulesPlaceHeight}" Maximum="100" Minimum="0.1" SmallChange="1" SpinButtonPlacementMode="Compact" Value="{x:Bind Editor.PlaceHeight, Mode=TwoWay}" />
+                </Grid>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.PlaceProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasPlaceProblem, Mode=OneWay}" />
+            </StackPanel>
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesOpenSwitch}" IsOn="{x:Bind Editor.OpenOn, Mode=TwoWay}" />
+            <ComboBox
+                AutomationProperties.Name="{app:Localized Key=WindowRulesOpenSwitch}"
+                ItemsSource="{x:Bind Editor.OpenChoices}"
+                SelectedIndex="{x:Bind Editor.OpenIndex, Mode=TwoWay}"
+                Visibility="{x:Bind Editor.OpenOn, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesOnTopSwitch}" IsOn="{x:Bind Editor.OnTop, Mode=TwoWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesOpacitySwitch}" IsOn="{x:Bind Editor.OpacityOn, Mode=TwoWay}" />
+            <ComboBox
+                AutomationProperties.Name="{app:Localized Key=WindowRulesOpacitySwitch}"
+                ItemsSource="{x:Bind Editor.OpacityChoices}"
+                SelectedIndex="{x:Bind Editor.OpacityIndex, Mode=TwoWay}"
+                Visibility="{x:Bind Editor.OpacityOn, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesTaskbarSwitch}" IsOn="{x:Bind Editor.HideFromTaskbar, Mode=TwoWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=WindowRulesTaskbarNote}"
+                TextWrapping="Wrap"
+                Visibility="{x:Bind Editor.HideFromTaskbar, Mode=OneWay}" />
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesTabSwitch}" IsOn="{x:Bind Editor.TabOn, Mode=TwoWay}" />
+            <StackPanel Spacing="4" Visibility="{x:Bind Editor.TabOn, Mode=OneWay}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Editor.TabOfName, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                    <DropDownButton
+                        Grid.Column="1"
+                        AutomationProperties.HelpText="{x:Bind Editor.TabProblem, Mode=OneWay}"
+                        AutomationProperties.Name="{app:Localized Key=WindowRulesChooseTabApp}"
+                        Content="{app:Localized Key=WindowRulesChooseApp}">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                <MenuFlyoutItem Click="OnTabSameAppClick" Text="{app:Localized Key=WindowRulesTabSameApp}" />
+                                <MenuFlyoutItem Click="OnTabRunningAppClick" Text="{app:Localized Key=AppListAddRunningApp}" />
+                                <MenuFlyoutItem Click="OnTabProgramFileClick" Text="{app:Localized Key=AppListAddProgramFile}" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </Grid>
+                <TextBlock
+                    controls:Announcement.IsLive="True"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Editor.TabProblem, Mode=OneWay}"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind Editor.HasTabProblem, Mode=OneWay}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=WindowRulesTabNote}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <ToggleSwitch Header="{app:Localized Key=WindowRulesDisplayChangeSwitch}" IsOn="{x:Bind Editor.ApplyOnDisplayChange, Mode=TwoWay}" />
+            <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{app:Localized Key=WindowRulesDisplayChangeNote}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>
