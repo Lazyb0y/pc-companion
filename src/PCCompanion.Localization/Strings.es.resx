@@ -509,7 +509,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>se omitió porque el puntero salió antes de que terminara el retraso</value>
+    <value>se omitió porque el puntero salió demasiado pronto</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
@@ -6554,6 +6554,34 @@
   </data>
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>La acción Enrollar solo funciona mientras la característica Enrollado de ventanas está activada. Hasta entonces, se reproduce en su lugar el sonido de advertencia de Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>Borde superior</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>Borde inferior</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>Borde izquierdo</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>Borde derecho</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>Escritorio anterior</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>Escritorio siguiente</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>se omitió porque una barra de tareas se oculta automáticamente en este borde</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

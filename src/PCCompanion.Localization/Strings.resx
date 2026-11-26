@@ -509,8 +509,8 @@
     <comment>Recent result ({2} of HotCornersResult): the corner ran its action.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>skipped because the pointer left before the delay ended</value>
-    <comment>Recent result ({2} of HotCornersResult).</comment>
+    <value>skipped because the pointer left too soon</value>
+    <comment>Recent result ({2} of HotCornersResult): the pointer left the corner before the delay ended, or the edge before the push was enough.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
     <value>skipped because a mouse button was held</value>
@@ -6555,5 +6555,33 @@
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>Roll up works only while Window Shading is on. Until then, Windows' warning sound plays instead.</value>
     <comment>Title Bar Actions page: shown while a click or the wheel is set to Roll up (WindowShading feature) and Window Shading is off. Use the feature name as translated.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>Top edge</value>
+    <comment>Hot Corners &amp; Edges page and recent results: a physical edge of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>Bottom edge</value>
+    <comment>Hot Corners &amp; Edges page and recent results: a physical edge of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>Left edge</value>
+    <comment>Hot Corners &amp; Edges page and recent results: a physical edge of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>Right edge</value>
+    <comment>Hot Corners &amp; Edges page and recent results: a physical edge of the screen, the same in right-to-left languages.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>Previous desktop</value>
+    <comment>Hot Corners &amp; Edges action: switches to the virtual desktop on the left, as Ctrl + Windows + Left does.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>Next desktop</value>
+    <comment>Hot Corners &amp; Edges action: switches to the virtual desktop on the right, as Ctrl + Windows + Right does.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>skipped because a taskbar hides itself on this edge</value>
+    <comment>Recent result ({2} of HotCornersResult): the edge's action didn't run because the taskbar, or another bar, hides itself on that edge, and pushing there shows it.</comment>
   </data>
 </root>

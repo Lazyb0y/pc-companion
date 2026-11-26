@@ -9,7 +9,7 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// What happened when the pointer reached a corner.
+/// What happened when the pointer reached a corner or edge.
 /// </summary>
 public enum CornerResultKind
 {
@@ -34,6 +34,9 @@ public enum CornerResultKind
 
     /// <summary>Windows couldn't start the program.</summary>
     ProgramCantStart,
+
+    /// <summary>A taskbar or another bar hides itself on the edge, and pushing there shows it.</summary>
+    TaskbarHides,
 }
 
 /// <summary>
@@ -132,6 +135,7 @@ public sealed class CornerResults(TimeProvider time)
         CornerOutcome.PointerHidden => CornerResultKind.PointerHidden,
         CornerOutcome.FullScreenApp => CornerResultKind.FullScreenApp,
         CornerOutcome.AppExcluded => CornerResultKind.AppExcluded,
+        CornerOutcome.TaskbarHides => CornerResultKind.TaskbarHides,
         _ => throw new ArgumentOutOfRangeException(nameof(outcome), outcome, null),
     };
 }

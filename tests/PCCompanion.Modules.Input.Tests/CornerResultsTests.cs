@@ -21,7 +21,7 @@ public sealed class CornerResultsTests
     [Fact]
     public void TheLastFiveAreKeptNewestFirst()
     {
-        foreach (var corner in Enum.GetValues<ScreenCorner>())
+        foreach (var corner in new[] { ScreenCorner.TopLeft, ScreenCorner.TopRight, ScreenCorner.BottomLeft, ScreenCorner.BottomRight })
         {
             _results.Add(corner, HotCornerAction.TaskView, CornerResultKind.Ran);
             _results.Add(corner, HotCornerAction.TaskView, CornerResultKind.LeftEarly);
@@ -105,9 +105,19 @@ public sealed class CornerResultsTests
     [Fact]
     public void EachSkippedOutcomeHasItsKind()
     {
-        CornerOutcome[] skipped = [CornerOutcome.LeftEarly, CornerOutcome.MouseButtonHeld, CornerOutcome.KeyNotHeld, CornerOutcome.PointerConfined, CornerOutcome.PointerHidden, CornerOutcome.FullScreenApp, CornerOutcome.AppExcluded];
+        CornerOutcome[] skipped = [CornerOutcome.LeftEarly, CornerOutcome.MouseButtonHeld, CornerOutcome.KeyNotHeld, CornerOutcome.PointerConfined, CornerOutcome.PointerHidden, CornerOutcome.FullScreenApp, CornerOutcome.AppExcluded, CornerOutcome.TaskbarHides];
 
         Assert.Equal(skipped.Select(outcome => outcome.ToString()), skipped.Select(outcome => CornerResults.KindOf(outcome).ToString()));
+    }
+
+    [Fact]
+    public void AnEdgesResultReadsAsTheEdgeItsActionAndWhatHappened()
+    {
+        using var language = new Language("en-US");
+
+        Assert.Equal(
+            "Bottom edge, Next desktop: skipped because a taskbar hides itself on this edge",
+            CornerResultText.Describe(new CornerResult(_clock.GetUtcNow(), ScreenCorner.Bottom, HotCornerAction.NextDesktop, CornerResultKind.TaskbarHides, 1)));
     }
 
     [Fact]

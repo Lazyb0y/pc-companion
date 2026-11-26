@@ -509,7 +509,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>übersprungen, weil der Zeiger die Ecke vor Ablauf der Verzögerung verlassen hat</value>
+    <value>übersprungen, weil der Zeiger die Stelle zu früh verlassen hat</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
@@ -6554,6 +6554,34 @@
   </data>
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>Die Aktion „Einrollen“ funktioniert nur, solange die Funktion „Fenster einrollen“ eingeschaltet ist. Bis dahin erklingt stattdessen der Warnton von Windows.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>Oberer Rand</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>Unterer Rand</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>Linker Rand</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>Rechter Rand</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>Vorheriger Desktop</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>Nächster Desktop</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>übersprungen, weil sich an diesem Rand eine Taskleiste automatisch ausblendet</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

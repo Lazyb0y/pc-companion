@@ -1,14 +1,21 @@
 using System;
+using System.Collections.Concurrent;
 using System.Drawing;
+using System.Threading.Tasks;
 using PCCompanion.Platform.Windows;
 
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// Reads the pointer, buttons, keys, full-screen state, windows and the app in front from Windows.
+/// Reads the pointer, buttons, keys, full-screen state, windows, the app in front and the bars that
+/// hide themselves from Windows.
 /// </summary>
 internal sealed class WindowsHotCornerEnvironment : IHotCornerEnvironment
 {
+    // The last answer for each side of each display, and the questions Explorer hasn't answered yet.
+    private readonly ConcurrentDictionary<(Rectangle Display, ScreenSide Side), bool> _autoHideBars = new();
+    private readonly ConcurrentDictionary<(Rectangle Display, ScreenSide Side), bool> _asking = new();
+
     public Point? PointerPosition => InputState.PointerPosition;
 
     public bool IsMouseButtonHeld => InputState.IsMouseButtonHeld;
@@ -41,4 +48,31 @@ internal sealed class WindowsHotCornerEnvironment : IHotCornerEnvironment
     });
 
     public bool? FindWindowFrontToBack(Func<WindowPlace, bool?> decide) => TopLevelWindows.FindFrontToBack(decide);
+
+    public bool HasAutoHideBar(Rectangle display, ScreenSide side) => _autoHideBars.TryGetValue((display, side), out var hides) && hides;
+
+    /// <summary>
+    /// Asks Explorer again, on the thread pool, whether a bar hides itself on the side, as the
+    /// pointer reaches an edge there; <see cref="HasAutoHideBar"/> gives the answer once it comes.
+    /// One question at a time for each side, so an Explorer that stopped responding doesn't pile them up.
+    /// </summary>
+    public void AskAutoHideBar(Rectangle display, ScreenSide side)
+    {
+        if (!_asking.TryAdd((display, side), true))
+        {
+            return;
+        }
+
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                _autoHideBars[(display, side)] = Taskbar.HasAutoHideBar(display, side);
+            }
+            finally
+            {
+                _asking.TryRemove((display, side), out _);
+            }
+        });
+    }
 }
