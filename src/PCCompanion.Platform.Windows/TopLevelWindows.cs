@@ -434,6 +434,25 @@ public static class TopLevelWindows
             SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOOWNERZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
 
     /// <summary>
+    /// Puts another program's <paramref name="window"/> in front of every window that isn't always
+    /// on top, without activating it: it's made always on top and then not, which leaves it first
+    /// among the windows that aren't. <c>HWND_TOP</c> left a window behind the one in front in
+    /// Windows Sandbox. Windows does it only while the window's process may bring windows to the
+    /// front, as <see cref="SetTopmost"/> says, so this process passes on its right to, when it
+    /// has it. A window that's always on top already is left as it is. It doesn't wait.
+    /// </summary>
+    public static bool BringToTop(nint window)
+    {
+        if (IsTopmost(window))
+        {
+            return true;
+        }
+
+        Foreground.AllowProcess(ProcessIdOf(window));
+        return SetTopmost(window, true) && SetTopmost(window, false);
+    }
+
+    /// <summary>
     /// Moves another program's <paramref name="window"/> so its top-left corner, invisible borders
     /// included, is at <paramref name="location"/>, keeping its size, as <see cref="Place"/> does.
     /// </summary>

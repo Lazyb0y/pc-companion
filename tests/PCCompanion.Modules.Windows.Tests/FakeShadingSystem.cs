@@ -119,6 +119,8 @@ internal sealed class FakeShadingSystem : IShadingSystem
         _windows[window].Minimized = false;
     }
 
+    public void PlaceRestored(nint window, Point location) => Calls.Add($"place {window} at {location.X},{location.Y}");
+
     public void MinimizeWithoutActivating(nint window)
     {
         Calls.Add($"minimize without activating {window}");

@@ -141,8 +141,16 @@ public interface IShadingSystem
     /// <summary>Restores the window, brings it to the front and asks it to close, as its Close button does.</summary>
     void RollDownAndClose(nint window);
 
-    /// <summary>Restores the window without taking the front, for hover.</summary>
+    /// <summary>Restores the window in front of the others without taking the front, for hover.</summary>
     void ShowWithoutActivating(nint window);
+
+    /// <summary>
+    /// Moves a window that's coming back, or came back, from minimized so its top-left corner,
+    /// with its invisible borders, is at <paramref name="location"/>, unless it comes back
+    /// maximized. Some apps put back the place they had, whatever its normal place says. It
+    /// doesn't wait.
+    /// </summary>
+    void PlaceRestored(nint window, Point location);
 
     /// <summary>Minimizes the window without taking the front, for hover.</summary>
     void MinimizeWithoutActivating(nint window);

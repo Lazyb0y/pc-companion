@@ -141,7 +141,21 @@ internal sealed class WindowsShadingSystem : IShadingSystem
         TopLevelWindows.AskToClose(window);
     }
 
-    public void ShowWithoutActivating(nint window) => TopLevelWindows.RestoreWithoutActivating(window);
+    // Restoring a window without activating it leaves it where it was in the order of windows,
+    // which can be behind the window in front.
+    public void ShowWithoutActivating(nint window)
+    {
+        TopLevelWindows.RestoreWithoutActivating(window);
+        TopLevelWindows.BringToTop(window);
+    }
+
+    public void PlaceRestored(nint window, Point location)
+    {
+        if (!TopLevelWindows.IsMaximized(window) && TopLevelWindows.Placement(window) is { RestoresMaximized: false })
+        {
+            TopLevelWindows.MoveTo(window, location);
+        }
+    }
 
     public void MinimizeWithoutActivating(nint window) => TopLevelWindows.ShowMinimized(window);
 

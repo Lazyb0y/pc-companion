@@ -155,6 +155,7 @@ public sealed partial class ShadingController : IDisposable
         if (_shaded.TryGetValue(window, out var shaded) && shaded.State != HoverState.Shown)
         {
             Forget(shaded);
+            PlaceMoved(shaded);
             LogRolledDown(_logger, ShadeEnd.Restored);
         }
     }
@@ -216,6 +217,7 @@ public sealed partial class ShadingController : IDisposable
             {
                 Forget(shaded);
                 _system.RollDown(shaded.Window, activate: false);
+                PlaceMoved(shaded);
                 count++;
             }
             catch (Exception exception) when (exception is not OutOfMemoryException)
@@ -311,7 +313,7 @@ public sealed partial class ShadingController : IDisposable
         }
 
         _system.Mark(window);
-        var shaded = new Shaded(window, created, strip, close, _time.GetTimestamp(), ++_order);
+        var shaded = new Shaded(window, created, strip, bounds, close, _time.GetTimestamp(), ++_order);
         _shaded[window] = shaded;
         created.Clicked += (_, point) => OnClicked(shaded, point);
         created.Wheeled += (_, delta) => OnWheeled(shaded, delta);
@@ -394,6 +396,7 @@ public sealed partial class ShadingController : IDisposable
 
         var offset = new Point(moved.X - shaded.StripAt.X, moved.Y - shaded.StripAt.Y);
         shaded.StripAt = moved;
+        shaded.Moved = new Point(shaded.Moved.X + offset.X, shaded.Moved.Y + offset.Y);
         _system.MoveWhileMinimized(shaded.Window, offset);
     }
 
@@ -485,7 +488,17 @@ public sealed partial class ShadingController : IDisposable
     {
         Forget(shaded);
         _system.RollDown(shaded.Window, activate);
+        PlaceMoved(shaded);
         LogRolledDown(_logger, why);
+    }
+
+    // A window whose strip was dragged comes back where the strip went, whatever place its app keeps.
+    private void PlaceMoved(Shaded shaded)
+    {
+        if (shaded.Moved != Point.Empty)
+        {
+            _system.PlaceRestored(shaded.Window, new Point(shaded.Bounds.X + shaded.Moved.X, shaded.Bounds.Y + shaded.Moved.Y));
+        }
     }
 
     private void Close(Shaded shaded)
@@ -546,7 +559,7 @@ public sealed partial class ShadingController : IDisposable
         Shown,
     }
 
-    private sealed class Shaded(nint window, IShadeStrip strip, Rectangle stripAt, Rectangle? close, long rolledAt, int order)
+    private sealed class Shaded(nint window, IShadeStrip strip, Rectangle stripAt, Rectangle bounds, Rectangle? close, long rolledAt, int order)
     {
         public nint Window { get; } = window;
 
@@ -554,6 +567,12 @@ public sealed partial class ShadingController : IDisposable
 
         /// <summary>Where the strip is now; the window's normal place follows its moves.</summary>
         public Rectangle StripAt { get; set; } = stripAt;
+
+        /// <summary>The window's rectangle, with its invisible borders, as it was rolled up.</summary>
+        public Rectangle Bounds { get; } = bounds;
+
+        /// <summary>How far the strip was dragged in all.</summary>
+        public Point Moved { get; set; }
 
         /// <summary>The picture of the Close button, in the strip, or null when Windows didn't say.</summary>
         public Rectangle? Close { get; } = close;
