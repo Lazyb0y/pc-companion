@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.Json;
 using PCCompanion.Modules.Input.HotCorners;
@@ -106,6 +107,101 @@ public sealed class HotCornersSettingsTests
     public void ACornerWithAnUnknownNumberDoesNothing(string corner)
     {
         Assert.Equal(new CornerSettings(), HotCornersSettings.Read(Section($$"""{ "bottomLeft": {{corner}} }""")).BottomLeft);
+    }
+
+    [Theory]
+    [InlineData("""{ "action": "Lock", "wheel": 7 }""")]
+    [InlineData("""{ "action": "Lock", "wheel": "Volume", "wheelKey": 42 }""")]
+    public void AnEdgeWithAnUnknownNumberDoesNothing(string edge)
+    {
+        Assert.Equal(new CornerSettings(), HotCornersSettings.Read(Section($$"""{ "right": {{edge}} }""")).Right);
+    }
+
+    [Fact]
+    public void WithoutASectionEdgesAndWheelsDoNothingAndCornersTriggerAfterTheDelay()
+    {
+        var settings = HotCornersSettings.Read(null);
+
+        Assert.All([settings.Top, settings.Bottom, settings.Left, settings.Right], edge => Assert.Equal(new CornerSettings(), edge));
+        Assert.Equal(HotCornerWheelAction.None, settings.TopLeft.Wheel);
+        Assert.Equal(CornersTrigger.Delay, settings.CornersTrigger);
+        Assert.Equal(PushStrength.Medium, settings.PushStrength);
+    }
+
+    [Fact]
+    public void ReadReadsTheExampleWithEdgesAndWheelsInTheSpec()
+    {
+        var settings = HotCornersSettings.Read(Section("""
+            {
+              "enabled": true,
+              "topLeft": { "action": "TaskView", "key": "None" },
+              "topRight": { "action": "KeepDisplaysOn", "key": "None", "wheel": "Volume", "wheelKey": "None" },
+              "bottomRight": { "action": "None", "key": "Control" },
+              "top": { "action": "None", "key": "None" },
+              "bottom": { "action": "None", "key": "None" },
+              "left": { "action": "PreviousDesktop", "key": "None", "wheel": "Desktops", "wheelKey": "Control" },
+              "right": { "action": "NextDesktop", "key": "None", "wheel": "Volume", "wheelKey": "None" },
+              "activationDelayMilliseconds": 150,
+              "cornersTrigger": "Delay",
+              "pushStrength": "Medium",
+              "ignoreFullScreenApps": true
+            }
+            """));
+
+        Assert.Equal(new CornerSettings { Action = HotCornerAction.KeepDisplaysOn, Wheel = HotCornerWheelAction.Volume }, settings.TopRight);
+        Assert.Equal(new CornerSettings { Action = HotCornerAction.PreviousDesktop, Wheel = HotCornerWheelAction.Desktops, WheelKey = HotCornerKey.Control }, settings.Left);
+        Assert.Equal(new CornerSettings { Action = HotCornerAction.NextDesktop, Wheel = HotCornerWheelAction.Volume }, settings.Right);
+        Assert.Equal(new CornerSettings(), settings.Top);
+    }
+
+    [Fact]
+    public void AWheelIsWrittenOnlyWhenItHasAnAction()
+    {
+        var settings = new HotCornersSettings
+        {
+            Right = new CornerSettings { Wheel = HotCornerWheelAction.Volume },
+            Left = new CornerSettings { Action = HotCornerAction.Lock, Wheel = HotCornerWheelAction.Tracks, WheelKey = HotCornerKey.Alt },
+            CornersTrigger = CornersTrigger.Push,
+            PushStrength = PushStrength.Firm,
+        };
+
+        var section = settings.Write();
+
+        Assert.Equal(settings, HotCornersSettings.Read(section));
+        Assert.Equal("""{"action":"None","key":"None","wheel":"Volume"}""", section.GetProperty("right").GetRawText());
+        Assert.Equal("""{"action":"Lock","key":"None","wheel":"Tracks","wheelKey":"Alt"}""", section.GetProperty("left").GetRawText());
+        Assert.Equal("""{"action":"None","key":"None"}""", section.GetProperty("top").GetRawText());
+    }
+
+    [Theory]
+    [InlineData("""{ "cornersTrigger": 9 }""")]
+    [InlineData("""{ "pushStrength": 9 }""")]
+    public void AnUnknownTriggerOrPushStrengthGetsTheDefault(string json)
+    {
+        var settings = HotCornersSettings.Read(Section(json));
+
+        Assert.Equal((CornersTrigger.Delay, PushStrength.Medium), (settings.CornersTrigger, settings.PushStrength));
+    }
+
+    [Theory]
+    [InlineData(PushStrength.Light, 50)]
+    [InlineData(PushStrength.Medium, 100)]
+    [InlineData(PushStrength.Firm, 200)]
+    public void EachPushStrengthNeedsItsCounts(PushStrength strength, int counts)
+    {
+        Assert.Equal(counts, new HotCornersSettings { PushStrength = strength }.PushCounts);
+    }
+
+    [Fact]
+    public void EachCornerAndEdgeHasItsOwnSettings()
+    {
+        var settings = new HotCornersSettings();
+        foreach (var place in Enum.GetValues<ScreenCorner>())
+        {
+            settings = settings.With(place, new CornerSettings { Action = HotCornerAction.Lock, Arguments = place.ToString() });
+        }
+
+        Assert.All(Enum.GetValues<ScreenCorner>(), place => Assert.Equal(place.ToString(), settings.For(place).Arguments));
     }
 
     [Theory]

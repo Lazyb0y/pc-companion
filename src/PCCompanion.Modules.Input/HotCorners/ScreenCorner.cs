@@ -1,7 +1,7 @@
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// A physical corner of a display, the same in left-to-right and right-to-left languages.
+/// A physical corner or edge of a display, the same in left-to-right and right-to-left languages.
 /// </summary>
 public enum ScreenCorner
 {
@@ -9,4 +9,8 @@ public enum ScreenCorner
     TopRight,
     BottomLeft,
     BottomRight,
+    Top,
+    Bottom,
+    Left,
+    Right,
 }

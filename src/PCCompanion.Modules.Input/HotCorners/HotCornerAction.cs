@@ -1,7 +1,7 @@
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// What a corner does. The names are stored in the settings file, so never rename one.
+/// What a corner or edge does when the pointer reaches it. The names are stored in the settings file, so never rename one.
 /// </summary>
 public enum HotCornerAction
 {
@@ -16,4 +16,6 @@ public enum HotCornerAction
     ScreenSaver,
     RunProgram,
     KeepDisplaysOn,
+    PreviousDesktop,
+    NextDesktop,
 }
