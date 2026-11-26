@@ -29,11 +29,25 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
 
     public CornerSettings BottomRight { get; set; } = new();
 
+    public CornerSettings Top { get; set; } = new();
+
+    public CornerSettings Bottom { get; set; } = new();
+
+    public CornerSettings Left { get; set; } = new();
+
+    public CornerSettings Right { get; set; } = new();
+
     /// <summary>
     /// How long the pointer stays in a corner before it triggers, from 0 to
     /// <see cref="MaximumActivationDelayMilliseconds"/>.
     /// </summary>
     public int ActivationDelayMilliseconds { get; set; } = DefaultActivationDelayMilliseconds;
+
+    /// <summary>Whether corners trigger after the delay, as by default, or when pushed, as edges do.</summary>
+    public CornersTrigger CornersTrigger { get; set; } = CornersTrigger.Delay;
+
+    /// <summary>How hard a push must be, for edges and for corners that trigger when pushed.</summary>
+    public PushStrength PushStrength { get; set; } = PushStrength.Medium;
 
     public bool IgnoreFullScreenApps { get; set; } = true;
 
@@ -42,8 +56,9 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
 
     /// <summary>
     /// Reads the feature's section, or returns the defaults when there is none. Values a
-    /// hand-edited file can get wrong are corrected: the delay is kept in range, a corner
-    /// with an unknown action or key does nothing, a blank app ID or program counts as none, and
+    /// hand-edited file can get wrong are corrected: the delay is kept in range, a corner or edge
+    /// with an unknown action, wheel action or key does nothing, an unknown trigger or push strength
+    /// gets the default, a blank app ID or program counts as none, and
     /// a listed app without an app ID or a program, or with both, is left out, as is a null in the list.
     /// </summary>
     /// <exception cref="JsonException">The section doesn't match the format.</exception>
@@ -57,7 +72,13 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
             TopRight = settings.TopRight.Checked(),
             BottomLeft = settings.BottomLeft.Checked(),
             BottomRight = settings.BottomRight.Checked(),
+            Top = settings.Top.Checked(),
+            Bottom = settings.Bottom.Checked(),
+            Left = settings.Left.Checked(),
+            Right = settings.Right.Checked(),
             ActivationDelayMilliseconds = Math.Clamp(settings.ActivationDelayMilliseconds, 0, MaximumActivationDelayMilliseconds),
+            CornersTrigger = Enum.IsDefined(settings.CornersTrigger) ? settings.CornersTrigger : CornersTrigger.Delay,
+            PushStrength = Enum.IsDefined(settings.PushStrength) ? settings.PushStrength : PushStrength.Medium,
 
             // The JSON reader checks nullable annotations on properties but not on a list's items,
             // so a null in the file's list of apps reads as one.
@@ -95,18 +116,54 @@ public sealed record HotCornersSettings : IFeatureSettings<HotCornersSettings>
         && TopRight == other.TopRight
         && BottomLeft == other.BottomLeft
         && BottomRight == other.BottomRight
+        && Top == other.Top
+        && Bottom == other.Bottom
+        && Left == other.Left
+        && Right == other.Right
         && ActivationDelayMilliseconds == other.ActivationDelayMilliseconds
+        && CornersTrigger == other.CornersTrigger
+        && PushStrength == other.PushStrength
         && IgnoreFullScreenApps == other.IgnoreFullScreenApps
         && ExcludedApps.SequenceEqual(other.ExcludedApps);
 
-    public override int GetHashCode() => HashCode.Combine(Enabled, TopLeft, TopRight, BottomLeft, BottomRight, ActivationDelayMilliseconds, IgnoreFullScreenApps, ExcludedApps.Count);
+    public override int GetHashCode() => HashCode.Combine(
+        HashCode.Combine(Enabled, TopLeft, TopRight, BottomLeft, BottomRight),
+        HashCode.Combine(Top, Bottom, Left, Right),
+        HashCode.Combine(ActivationDelayMilliseconds, CornersTrigger, PushStrength, IgnoreFullScreenApps, ExcludedApps.Count));
 
+    /// <summary>What the corner or edge does.</summary>
     public CornerSettings For(ScreenCorner corner) => corner switch
     {
         ScreenCorner.TopLeft => TopLeft,
         ScreenCorner.TopRight => TopRight,
         ScreenCorner.BottomLeft => BottomLeft,
         ScreenCorner.BottomRight => BottomRight,
+        ScreenCorner.Top => Top,
+        ScreenCorner.Bottom => Bottom,
+        ScreenCorner.Left => Left,
+        ScreenCorner.Right => Right,
         _ => throw new ArgumentOutOfRangeException(nameof(corner), corner, null),
+    };
+
+    /// <summary>The settings with <paramref name="corner"/> doing what <paramref name="settings"/> says.</summary>
+    public HotCornersSettings With(ScreenCorner corner, CornerSettings settings) => corner switch
+    {
+        ScreenCorner.TopLeft => this with { TopLeft = settings },
+        ScreenCorner.TopRight => this with { TopRight = settings },
+        ScreenCorner.BottomLeft => this with { BottomLeft = settings },
+        ScreenCorner.BottomRight => this with { BottomRight = settings },
+        ScreenCorner.Top => this with { Top = settings },
+        ScreenCorner.Bottom => this with { Bottom = settings },
+        ScreenCorner.Left => this with { Left = settings },
+        ScreenCorner.Right => this with { Right = settings },
+        _ => throw new ArgumentOutOfRangeException(nameof(corner), corner, null),
+    };
+
+    /// <summary>How far the mouse must move, in its own units, for a push to be enough.</summary>
+    public int PushCounts => PushStrength switch
+    {
+        PushStrength.Light => 50,
+        PushStrength.Firm => 200,
+        _ => 100,
     };
 }
