@@ -233,19 +233,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersName" xml:space="preserve">
-    <value>হট কর্নার</value>
+    <value>হট কর্নার ও প্রান্ত</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDescription" xml:space="preserve">
-    <value>কোনো অ্যাকশন চালাতে পয়েন্টারটি স্ক্রিনের একটি কোণে নিয়ে যান, যেমন সব উইন্ডো দেখানো বা পিসি লক করা।</value>
+    <value>কোনো অ্যাকশন চালাতে পয়েন্টারটি স্ক্রিনের একটি কোণে নিয়ে যান বা একটি প্রান্তে ঠেলে দিন, যেমন সব উইন্ডো দেখানো, অথবা ভলিউম বদলাতে সেখানে চাকা ঘোরান।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersHeader" xml:space="preserve">
-    <value>কোণ</value>
+    <value>কোণ ও প্রান্ত</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersDescription" xml:space="preserve">
-    <value>প্রতিটি কোণ কী করবে তা বেছে নিন। ভুল করে কোনো অ্যাকশন চালানো এড়াতে, চেপে ধরে রাখার জন্য একটি কী বেছে নিন।</value>
+    <value>পয়েন্টার পৌঁছালে প্রতিটি কোণ ও প্রান্ত কী করবে, এবং সেখানে চাকা কী করবে, তা বেছে নিন। ভুল করে কোনো অ্যাকশন চালানো এড়াতে, চেপে ধরে রাখার জন্য একটি কী বেছে নিন।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersTopLeft" xml:space="preserve">
@@ -313,7 +313,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
-    <value>হট কর্নার: পয়েন্টারটি এমন একটি কোণে আছে যা ডিসপ্লে চালু রাখে।</value>
+    <value>হট কর্নার ও প্রান্ত: পয়েন্টারটি এমন একটি কোণ বা প্রান্তে আছে যা ডিসপ্লে চালু রাখে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
@@ -397,7 +397,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayDescription" xml:space="preserve">
-    <value>অ্যাকশন চালানোর আগে পয়েন্টার কতক্ষণ একটি কোণে থাকবে।</value>
+    <value>অ্যাকশন চালানোর আগে পয়েন্টার কতক্ষণ একটি কোণে থাকবে, যদি না কোণগুলো ঠেলা দিলে চালু হওয়ার জন্য সেট করা থাকে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayValue" xml:space="preserve">
@@ -417,7 +417,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
-    <value>যেমন, রিমোট ডেস্কটপ, একটি ভার্চুয়াল মেশিন বা আঁকার অ্যাপ। এগুলোর কোনোটি সামনে থাকলে কোনো ডিসপ্লেতেই কোনো কোণ চালু হয় না।</value>
+    <value>যেমন, রিমোট ডেস্কটপ, একটি ভার্চুয়াল মেশিন বা আঁকার অ্যাপ। এগুলোর কোনোটি সামনে থাকলে কোনো ডিসপ্লেতেই কোনো কোণ বা প্রান্ত চালু হয় না, এবং চাকার নড়াচড়া অ্যাপে পৌঁছায়।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppListAdd" xml:space="preserve">
@@ -473,19 +473,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsDescription" xml:space="preserve">
-    <value>পয়েন্টার সর্বশেষ যে কোণগুলোতে পৌঁছেছে, সেগুলোর প্রতিটি কেন তার অ্যাকশন চালিয়েছে বা চালায়নি, নতুনগুলো আগে।</value>
+    <value>পয়েন্টার সর্বশেষ যে কোণ ও প্রান্তগুলোতে পৌঁছেছে, সেগুলোর প্রতিটি কেন তার অ্যাকশন চালিয়েছে বা চালায়নি, নতুনগুলো আগে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNone" xml:space="preserve">
-    <value>এখনও কোনো কোণে পৌঁছানো হয়নি।</value>
+    <value>এখনও কোনো কোণ বা প্রান্তে পৌঁছানো হয়নি।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
-    <value>হট কর্নার চালু থাকলে ফলাফল দেখানো হয়।</value>
+    <value>হট কর্নার ও প্রান্ত চালু থাকলে ফলাফল দেখানো হয়।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNotAvailable" xml:space="preserve">
-    <value>সাম্প্রতিক ফলাফল এখন পাওয়া যাচ্ছে না। কোণগুলোও কাজ না করলে PC Companion আবার চালু করুন।</value>
+    <value>সাম্প্রতিক ফলাফল এখন পাওয়া যাচ্ছে না। কোণ ও প্রান্তগুলোও কাজ না করলে PC Companion আবার চালু করুন।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
@@ -557,15 +557,15 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
-    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে কোণগুলো কাজ করে না।</value>
+    <value>অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলে কোণ ও প্রান্তগুলো কাজ করে না।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও কোণগুলো কাজ করে।</value>
+    <value>PC Companion অ্যাডমিনিস্ট্রেটর হিসেবে চলছে, তাই অ্যাডমিনিস্ট্রেটর হিসেবে চলা কোনো অ্যাপ সামনে থাকলেও কোণ ও প্রান্তগুলো কাজ করে।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>হট কর্নার চালু থাকলেই কেবল পয়েন্টারের অবস্থান, এবং কোনো মাউস বোতাম বা বেছে নেওয়া কী চেপে ধরা আছে কিনা, তা পড়ে। পয়েন্টার কোনো কোণে পৌঁছালে, কোনো অ্যাপ পয়েন্টার আটকে রেখেছে বা লুকিয়েছে কিনা, এবং সেই ডিসপ্লেতে উইন্ডোগুলো কোথায় আছে, তাও পড়ে, তবে সেগুলোর শিরোনাম বা বিষয়বস্তু পড়ে না। তালিকায় অ্যাপ থাকলে, কোন অ্যাপ সামনে আছে তাও পড়ে। কেবল বেছে নেওয়া অ্যাকশনগুলোর Windows শর্টকাট পাঠায় এবং কেবল আপনার বেছে নেওয়া প্রোগ্রামগুলো চালু করে। কিছুই সংরক্ষণ বা পাঠায় না।</value>
+    <value>হট কর্নার ও প্রান্ত চালু থাকলেই কেবল পয়েন্টারের অবস্থান, মাউস কতটা নড়ে, এবং কোনো মাউস বোতাম বা বেছে নেওয়া কী চেপে ধরা আছে কিনা, তা পড়ে। পয়েন্টার কোনো কোণ বা প্রান্তে পৌঁছালে, কোনো অ্যাপ পয়েন্টার আটকে রেখেছে বা লুকিয়েছে কিনা, সেই ডিসপ্লেতে উইন্ডোগুলো কোথায় আছে, তবে সেগুলোর শিরোনাম বা বিষয়বস্তু নয়, সেই প্রান্তে কোনো টাস্কবার নিজে থেকে লুকিয়ে যায় কিনা, এবং তালিকায় অ্যাপ থাকলে কোন অ্যাপ সামনে আছে, তাও পড়ে। চাকার অ্যাকশন থাকা কোণ বা প্রান্তের একেবারে বাইরের পিক্সেলেই কেবল চাকার নড়াচড়া অ্যাপ থেকে আটকে রাখে। কেবল বেছে নেওয়া অ্যাকশনগুলোর Windows শর্টকাট ও কী পাঠায় এবং কেবল আপনার বেছে নেওয়া প্রোগ্রামগুলো চালু করে। কিছুই সংরক্ষণ বা পাঠায় না।</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="LockKeysName" xml:space="preserve">
@@ -6582,6 +6582,74 @@
   </data>
   <data name="HotCornersResultTaskbarHides" xml:space="preserve">
     <value>এড়ানো হয়েছে, কারণ এই প্রান্তে একটি টাস্কবার নিজে থেকে লুকিয়ে যায়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelHeader" xml:space="preserve">
+    <value>চাকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelName" xml:space="preserve">
+    <value>{0} চাকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelKeyName" xml:space="preserve">
+    <value>{0} চাকার কী</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelVolume" xml:space="preserve">
+    <value>ভলিউম</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelDesktops" xml:space="preserve">
+    <value>ডেস্কটপ বদলান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelTracks" xml:space="preserve">
+    <value>ট্র্যাক বদলান</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerHeader" xml:space="preserve">
+    <value>কোণ চালু হয়</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDescription" xml:space="preserve">
+    <value>প্রান্তে সবসময় ঠেলা দিতে হয়, তাই কোনো প্রান্তে শুধু রাখা পয়েন্টার কখনো তার অ্যাকশন চালায় না।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDelay" xml:space="preserve">
+    <value>বিলম্বের পরে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerPush" xml:space="preserve">
+    <value>ঠেলা দিলে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushHeader" xml:space="preserve">
+    <value>ঠেলার জোর</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushDescription" xml:space="preserve">
+    <value>পয়েন্টারকে কোনো প্রান্তে, বা ঠেলা দিলে চালু হওয়ার জন্য সেট করা কোণে, কতটা জোরে ঠেলতে হবে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushLight" xml:space="preserve">
+    <value>হালকা</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushMedium" xml:space="preserve">
+    <value>মাঝারি</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushFirm" xml:space="preserve">
+    <value>জোরে</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightWheelInfo" xml:space="preserve">
+    <value>ডান প্রান্তের চাকার অ্যাকশন সেখানে বড় করা উইন্ডোর স্ক্রোল বার থেকে চাকার নড়াচড়া নিয়ে নেয়।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopWheelInfo" xml:space="preserve">
+    <value>উপরের প্রান্তের চাকার অ্যাকশন সেখানে বড় করা উইন্ডোর টাইটেল বারে টাইটেল বারের অ্যাকশন থেকে চাকার নড়াচড়া নিয়ে নেয়।</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

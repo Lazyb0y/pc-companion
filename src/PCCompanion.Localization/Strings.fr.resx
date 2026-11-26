@@ -233,19 +233,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersName" xml:space="preserve">
-    <value>Coins actifs</value>
+    <value>Coins et bords actifs</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDescription" xml:space="preserve">
-    <value>Placez le pointeur dans un coin de l’écran pour exécuter une action, par exemple afficher toutes les fenêtres ou verrouiller le PC.</value>
+    <value>Placez le pointeur dans un coin de l’écran ou poussez-le contre un bord pour exécuter une action, par exemple afficher toutes les fenêtres, ou tournez la molette à cet endroit pour régler le volume.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersHeader" xml:space="preserve">
-    <value>Coins</value>
+    <value>Coins et bords</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersDescription" xml:space="preserve">
-    <value>Choisissez l’action de chaque coin. Pour éviter de lancer une action par erreur, choisissez une touche à maintenir enfoncée.</value>
+    <value>Choisissez l’action de chaque coin et de chaque bord quand le pointeur les atteint, et celle de la molette à cet endroit. Pour éviter de lancer une action par erreur, choisissez une touche à maintenir enfoncée.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersTopLeft" xml:space="preserve">
@@ -313,7 +313,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
-    <value>Coins actifs : le pointeur est dans un coin qui garde les écrans allumés.</value>
+    <value>Coins et bords actifs : le pointeur est sur un coin ou un bord qui garde les écrans allumés.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
@@ -397,7 +397,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayDescription" xml:space="preserve">
-    <value>Durée pendant laquelle le pointeur reste dans un coin avant que l’action s’exécute.</value>
+    <value>Durée pendant laquelle le pointeur reste dans un coin avant que son action s’exécute, sauf si les coins se déclenchent quand on pousse.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayValue" xml:space="preserve">
@@ -417,7 +417,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
-    <value>Par exemple, Bureau à distance, une machine virtuelle ou une application de dessin. Quand l’une d’elles est au premier plan, aucun coin ne se déclenche, sur aucun écran.</value>
+    <value>Par exemple, Bureau à distance, une machine virtuelle ou une application de dessin. Quand l’une d’elles est au premier plan, aucun coin ni aucun bord ne se déclenche, sur aucun écran, et la molette parvient à l’application.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppListAdd" xml:space="preserve">
@@ -473,19 +473,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsDescription" xml:space="preserve">
-    <value>Pourquoi chacun des derniers coins atteints par le pointeur a exécuté son action ou non, du plus récent au plus ancien.</value>
+    <value>Pourquoi chacun des derniers coins et bords atteints par le pointeur a exécuté son action ou non, du plus récent au plus ancien.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNone" xml:space="preserve">
-    <value>Aucun coin n’a encore été atteint.</value>
+    <value>Aucun coin ni aucun bord n’a encore été atteint.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
-    <value>Les résultats s’affichent quand Coins actifs est activé.</value>
+    <value>Les résultats s’affichent quand Coins et bords actifs est activé.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNotAvailable" xml:space="preserve">
-    <value>Les résultats récents ne sont pas disponibles pour le moment. Si les coins ne fonctionnent pas non plus, redémarrez PC Companion.</value>
+    <value>Les résultats récents ne sont pas disponibles pour le moment. Si les coins et les bords ne fonctionnent pas non plus, redémarrez PC Companion.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
@@ -557,15 +557,15 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
-    <value>Les coins ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <value>Les coins et les bords ne fonctionnent pas tant qu’une application exécutée en tant qu’administrateur est au premier plan.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion est exécuté en tant qu’administrateur : les coins fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan.</value>
+    <value>PC Companion est exécuté en tant qu’administrateur : les coins et les bords fonctionnent aussi quand une application exécutée en tant qu’administrateur est au premier plan.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Lit la position du pointeur, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins actifs est activé. Quand le pointeur atteint un coin, vérifie aussi si une application a limité ou masqué le pointeur, et lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu, et, quand des applications sont dans la liste, quelle application est au premier plan. Envoie uniquement les raccourcis Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
+    <value>Lit la position du pointeur, la distance parcourue par la souris, et vérifie si un bouton de la souris ou la touche choisie est enfoncé, uniquement quand Coins et bords actifs est activé. Quand le pointeur atteint un coin ou un bord, vérifie aussi si une application a limité ou masqué le pointeur, lit l’emplacement des fenêtres sur cet écran, mais pas leurs titres ni leur contenu, vérifie si une barre des tâches se masque automatiquement sur ce bord et, quand des applications sont dans la liste, quelle application est au premier plan. Ne retient la molette que sur les pixels extérieurs d’un coin ou d’un bord doté d’une action de molette. Envoie uniquement les raccourcis et les touches Windows des actions choisies et démarre uniquement les programmes que vous choisissez. N’enregistre et n’envoie rien.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="LockKeysName" xml:space="preserve">
@@ -6582,6 +6582,74 @@
   </data>
   <data name="HotCornersResultTaskbarHides" xml:space="preserve">
     <value>ignorée, car une barre des tâches se masque automatiquement sur ce bord</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelHeader" xml:space="preserve">
+    <value>Molette</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelName" xml:space="preserve">
+    <value>Molette : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelKeyName" xml:space="preserve">
+    <value>Touche de la molette : {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelVolume" xml:space="preserve">
+    <value>Volume</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelDesktops" xml:space="preserve">
+    <value>Changer de Bureau</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelTracks" xml:space="preserve">
+    <value>Changer de piste</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerHeader" xml:space="preserve">
+    <value>Déclenchement des coins</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDescription" xml:space="preserve">
+    <value>Les bords demandent toujours une poussée : un pointeur qui ne fait que reposer sur un bord n’exécute jamais son action.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDelay" xml:space="preserve">
+    <value>Après le délai</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerPush" xml:space="preserve">
+    <value>Quand on pousse</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushHeader" xml:space="preserve">
+    <value>Force de poussée</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushDescription" xml:space="preserve">
+    <value>La force avec laquelle pousser le pointeur contre un bord, ou dans un coin réglé pour se déclencher quand on pousse.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushLight" xml:space="preserve">
+    <value>Légère</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushMedium" xml:space="preserve">
+    <value>Moyenne</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushFirm" xml:space="preserve">
+    <value>Ferme</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightWheelInfo" xml:space="preserve">
+    <value>L’action de molette du bord droit prend la molette à la barre de défilement d’une fenêtre agrandie à cet endroit.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopWheelInfo" xml:space="preserve">
+    <value>L’action de molette du bord supérieur prend la molette à Actions de la barre de titre sur la barre de titre d’une fenêtre agrandie à cet endroit.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

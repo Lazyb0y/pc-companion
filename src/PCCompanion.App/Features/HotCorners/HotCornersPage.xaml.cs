@@ -10,8 +10,11 @@ namespace PCCompanion.App.Features.HotCorners;
 
 public sealed partial class HotCornersPage : Page
 {
-    // The width the corner picture needs: two corners and the screen between them, with the spacing.
-    private const double PictureWidth = 220 + 12 + 200 + 12 + 220;
+    // The width the picture needs: a corner, an edge and a corner, with the spacing.
+    private const double PictureWidth = 220 + 12 + 220 + 12 + 220;
+
+    // How many rows the list needs, one for each corner and edge, beside the picture's three.
+    private const int ListRows = 8;
 
     private bool _cornersListed;
 
@@ -20,12 +23,12 @@ public sealed partial class HotCornersPage : Page
         ViewModel = App.Current.Services.GetRequiredService<HotCornersViewModel>();
         InitializeComponent();
 
-        // The corner picture is always left to right; the text in each corner follows the language.
+        // The picture is always left to right; the text in each corner and edge follows the language.
         Loaded += (_, _) =>
         {
-            foreach (var corner in new[] { TopLeftCorner, TopRightCorner, BottomLeftCorner, BottomRightCorner })
+            foreach (var place in Places)
             {
-                corner.FlowDirection = FlowDirection;
+                place.FlowDirection = FlowDirection;
             }
 
             ViewModel.StartResults();
@@ -37,8 +40,11 @@ public sealed partial class HotCornersPage : Page
 
     public HotCornersViewModel ViewModel { get; }
 
-    // Without room for the picture, as in a narrow window, the corners are listed one below another,
-    // without the screen, and follow the language's direction.
+    // The corners and edges in reading order, for the list.
+    private ContentControl[] Places => [TopLeftCorner, TopEdge, TopRightCorner, LeftEdge, RightEdge, BottomLeftCorner, BottomEdge, BottomRightCorner];
+
+    // Without room for the picture, as in a narrow window, the corners and edges are listed one below
+    // another, without the screen, and follow the language's direction.
     private void OnCornersPanelSizeChanged(object sender, SizeChangedEventArgs e)
     {
         var listed = e.NewSize.Width < PictureWidth;
@@ -48,11 +54,12 @@ public sealed partial class HotCornersPage : Page
         }
 
         _cornersListed = listed;
-        if (listed)
+        while (Corners.RowDefinitions.Count < (listed ? ListRows : 3))
         {
             Corners.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         }
-        else
+
+        while (Corners.RowDefinitions.Count > (listed ? ListRows : 3))
         {
             Corners.RowDefinitions.RemoveAt(Corners.RowDefinitions.Count - 1);
         }
@@ -60,10 +67,25 @@ public sealed partial class HotCornersPage : Page
         Corners.HorizontalAlignment = listed ? HorizontalAlignment.Left : HorizontalAlignment.Center;
         Corners.FlowDirection = listed ? FlowDirection : FlowDirection.LeftToRight;
         Screen.Visibility = listed ? Visibility.Collapsed : Visibility.Visible;
+        if (listed)
+        {
+            var row = 0;
+            foreach (var place in Places)
+            {
+                Place(place, row++, 0);
+            }
+
+            return;
+        }
+
         Place(TopLeftCorner, 0, 0);
-        Place(TopRightCorner, listed ? 1 : 0, listed ? 0 : 2);
+        Place(TopEdge, 0, 1);
+        Place(TopRightCorner, 0, 2);
+        Place(LeftEdge, 1, 0);
+        Place(RightEdge, 1, 2);
         Place(BottomLeftCorner, 2, 0);
-        Place(BottomRightCorner, listed ? 3 : 2, listed ? 0 : 2);
+        Place(BottomEdge, 2, 1);
+        Place(BottomRightCorner, 2, 2);
     }
 
     private static void Place(FrameworkElement corner, int row, int column)

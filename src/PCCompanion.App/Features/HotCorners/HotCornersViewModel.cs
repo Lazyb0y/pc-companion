@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Dispatching;
 using PCCompanion.App.Controls;
+using PCCompanion.App.ViewModels;
 using PCCompanion.Core.Settings;
 using PCCompanion.Localization;
 using PCCompanion.Modules.Input.HotCorners;
@@ -20,8 +21,14 @@ public sealed record ActionOption(HotCornerAction Action, string DisplayName);
 
 public sealed record KeyOption(HotCornerKey Key, string DisplayName);
 
+public sealed record WheelOption(HotCornerWheelAction Action, string DisplayName);
+
+public sealed record TriggerOption(CornersTrigger Trigger, string DisplayName) : Choice(DisplayName);
+
+public sealed record PushOption(PushStrength Strength, string DisplayName) : Choice(DisplayName);
+
 /// <summary>
-/// The Hot Corners page. Every change is saved right away.
+/// The Hot Corners &amp; Edges page. Every change is saved right away.
 /// </summary>
 public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSettings>
 {
@@ -50,10 +57,35 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
             new(HotCornerKey.Windows, Strings.HotCornersKeyWindows),
         ];
 
-        TopLeft = new CornerViewModel(this, ScreenCorner.TopLeft, Strings.HotCornersTopLeft);
-        TopRight = new CornerViewModel(this, ScreenCorner.TopRight, Strings.HotCornersTopRight);
-        BottomLeft = new CornerViewModel(this, ScreenCorner.BottomLeft, Strings.HotCornersBottomLeft);
-        BottomRight = new CornerViewModel(this, ScreenCorner.BottomRight, Strings.HotCornersBottomRight);
+        Wheels =
+        [
+            new(HotCornerWheelAction.None, Strings.HotCornersActionNone),
+            new(HotCornerWheelAction.Volume, Strings.HotCornersWheelVolume),
+            new(HotCornerWheelAction.Desktops, Strings.HotCornersWheelDesktops),
+            new(HotCornerWheelAction.Tracks, Strings.HotCornersWheelTracks),
+        ];
+
+        Triggers =
+        [
+            new(CornersTrigger.Delay, Strings.HotCornersTriggerDelay),
+            new(CornersTrigger.Push, Strings.HotCornersTriggerPush),
+        ];
+
+        PushStrengths =
+        [
+            new(PushStrength.Light, Strings.HotCornersPushLight),
+            new(PushStrength.Medium, Strings.HotCornersPushMedium),
+            new(PushStrength.Firm, Strings.HotCornersPushFirm),
+        ];
+
+        TopLeft = new CornerViewModel(this, ScreenCorner.TopLeft, CornerResultText.CornerName(ScreenCorner.TopLeft));
+        TopRight = new CornerViewModel(this, ScreenCorner.TopRight, CornerResultText.CornerName(ScreenCorner.TopRight));
+        BottomLeft = new CornerViewModel(this, ScreenCorner.BottomLeft, CornerResultText.CornerName(ScreenCorner.BottomLeft));
+        BottomRight = new CornerViewModel(this, ScreenCorner.BottomRight, CornerResultText.CornerName(ScreenCorner.BottomRight));
+        Top = new CornerViewModel(this, ScreenCorner.Top, CornerResultText.CornerName(ScreenCorner.Top));
+        Bottom = new CornerViewModel(this, ScreenCorner.Bottom, CornerResultText.CornerName(ScreenCorner.Bottom));
+        Left = new CornerViewModel(this, ScreenCorner.Left, CornerResultText.CornerName(ScreenCorner.Left));
+        Right = new CornerViewModel(this, ScreenCorner.Right, CornerResultText.CornerName(ScreenCorner.Right));
         ExcludedApps = new AppListViewModel(
             () => Settings.ExcludedApps,
             app => SaveExcludedApps(Settings.WithExcludedApp(app)),
@@ -69,6 +101,12 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
 
     public IReadOnlyList<KeyOption> Keys { get; }
 
+    public IReadOnlyList<WheelOption> Wheels { get; }
+
+    public IReadOnlyList<TriggerOption> Triggers { get; }
+
+    public IReadOnlyList<PushOption> PushStrengths { get; }
+
     public CornerViewModel TopLeft { get; }
 
     public CornerViewModel TopRight { get; }
@@ -76,6 +114,44 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
     public CornerViewModel BottomLeft { get; }
 
     public CornerViewModel BottomRight { get; }
+
+    public CornerViewModel Top { get; }
+
+    public CornerViewModel Bottom { get; }
+
+    public CornerViewModel Left { get; }
+
+    public CornerViewModel Right { get; }
+
+    public TriggerOption? SelectedTrigger
+    {
+        get => Triggers.FirstOrDefault(option => option.Trigger == Settings.CornersTrigger);
+        set
+        {
+            if (value is not null)
+            {
+                Change(Settings.CornersTrigger, value.Trigger, () => Settings with { CornersTrigger = value.Trigger });
+            }
+        }
+    }
+
+    public PushOption? SelectedPushStrength
+    {
+        get => PushStrengths.FirstOrDefault(option => option.Strength == Settings.PushStrength);
+        set
+        {
+            if (value is not null)
+            {
+                Change(Settings.PushStrength, value.Strength, () => Settings with { PushStrength = value.Strength });
+            }
+        }
+    }
+
+    /// <summary>Whether the right edge has a wheel action, which takes the wheel from a maximized window's scroll bar there.</summary>
+    public bool IsRightWheelNoteShown => Settings.Right.Wheel != HotCornerWheelAction.None;
+
+    /// <summary>Whether the top edge has a wheel action, which takes the wheel from Title Bar Actions there.</summary>
+    public bool IsTopWheelNoteShown => Settings.Top.Wheel != HotCornerWheelAction.None;
 
     public double ActivationDelay
     {
@@ -203,17 +279,16 @@ public sealed partial class HotCornersViewModel : FeatureViewModel<HotCornersSet
 
     internal CornerSettings GetCorner(ScreenCorner corner) => Settings.For(corner);
 
-    internal void SetCorner(ScreenCorner corner, CornerSettings value) => Save(corner switch
+    internal void SetCorner(ScreenCorner corner, CornerSettings value)
     {
-        ScreenCorner.TopLeft => Settings with { TopLeft = value },
-        ScreenCorner.TopRight => Settings with { TopRight = value },
-        ScreenCorner.BottomLeft => Settings with { BottomLeft = value },
-        _ => Settings with { BottomRight = value },
-    });
+        Save(Settings.With(corner, value));
+        OnPropertyChanged(nameof(IsRightWheelNoteShown));
+        OnPropertyChanged(nameof(IsTopWheelNoteShown));
+    }
 }
 
 /// <summary>
-/// One corner on the Hot Corners page.
+/// One corner or edge on the Hot Corners &amp; Edges page.
 /// </summary>
 public sealed partial class CornerViewModel : ObservableObject
 {
@@ -222,11 +297,15 @@ public sealed partial class CornerViewModel : ObservableObject
     private static readonly CompositeFormat ProgramNameFormat = CompositeFormat.Parse(Strings.HotCornersProgramName);
     private static readonly CompositeFormat ArgumentsNameFormat = CompositeFormat.Parse(Strings.HotCornersArgumentsName);
     private static readonly CompositeFormat BrowseNameFormat = CompositeFormat.Parse(Strings.HotCornersBrowseName);
+    private static readonly CompositeFormat WheelNameFormat = CompositeFormat.Parse(Strings.HotCornersWheelName);
+    private static readonly CompositeFormat WheelKeyNameFormat = CompositeFormat.Parse(Strings.HotCornersWheelKeyName);
 
     private readonly HotCornersViewModel _page;
     private readonly ScreenCorner _corner;
     private ActionOption _selectedAction;
     private KeyOption _selectedKey;
+    private WheelOption _selectedWheel;
+    private KeyOption _selectedWheelKey;
     private string _programProblem = string.Empty;
 
     public CornerViewModel(HotCornersViewModel page, ScreenCorner corner, string name)
@@ -241,10 +320,14 @@ public sealed partial class CornerViewModel : ObservableObject
         ProgramName = string.Format(CultureInfo.CurrentCulture, ProgramNameFormat, name);
         ArgumentsName = string.Format(CultureInfo.CurrentCulture, ArgumentsNameFormat, name);
         BrowseName = string.Format(CultureInfo.CurrentCulture, BrowseNameFormat, name);
+        WheelName = string.Format(CultureInfo.CurrentCulture, WheelNameFormat, name);
+        WheelKeyName = string.Format(CultureInfo.CurrentCulture, WheelKeyNameFormat, name);
 
         var settings = page.GetCorner(corner);
         _selectedAction = page.Actions.First(option => option.Action == settings.Action);
         _selectedKey = page.Keys.First(option => option.Key == settings.Key);
+        _selectedWheel = page.Wheels.First(option => option.Action == settings.Wheel);
+        _selectedWheelKey = page.Keys.First(option => option.Key == settings.WheelKey);
         _ = CheckProgramAsync();
     }
 
@@ -265,9 +348,45 @@ public sealed partial class CornerViewModel : ObservableObject
     /// <summary>The screen reader name of the Browse button.</summary>
     public string BrowseName { get; }
 
+    /// <summary>The screen reader name of the wheel action list.</summary>
+    public string WheelName { get; }
+
+    /// <summary>The screen reader name of the wheel's key list.</summary>
+    public string WheelKeyName { get; }
+
     public IReadOnlyList<ActionOption> Actions => _page.Actions;
 
     public IReadOnlyList<KeyOption> Keys => _page.Keys;
+
+    public IReadOnlyList<WheelOption> Wheels => _page.Wheels;
+
+    public WheelOption SelectedWheel
+    {
+        get => _selectedWheel;
+        set
+        {
+            if (value is not null && SetProperty(ref _selectedWheel, value))
+            {
+                _page.SetCorner(_corner, _page.GetCorner(_corner) with { Wheel = value.Action });
+                OnPropertyChanged(nameof(IsWheelKeyShown));
+            }
+        }
+    }
+
+    public KeyOption SelectedWheelKey
+    {
+        get => _selectedWheelKey;
+        set
+        {
+            if (value is not null && SetProperty(ref _selectedWheelKey, value))
+            {
+                _page.SetCorner(_corner, _page.GetCorner(_corner) with { WheelKey = value.Key });
+            }
+        }
+    }
+
+    /// <summary>Whether the wheel's key list is shown: only while the wheel has an action.</summary>
+    public bool IsWheelKeyShown => _selectedWheel.Action != HotCornerWheelAction.None;
 
     public ActionOption SelectedAction
     {
@@ -375,7 +494,7 @@ public sealed partial class CornerViewModel : ObservableObject
 }
 
 /// <summary>
-/// A recent result on the Hot Corners page.
+/// A recent result on the Hot Corners &amp; Edges page.
 /// </summary>
 public sealed class CornerResultItem(CornerResult result)
 {
