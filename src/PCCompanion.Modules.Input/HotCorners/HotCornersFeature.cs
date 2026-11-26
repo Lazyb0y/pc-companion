@@ -24,6 +24,11 @@ public sealed partial class HotCornersFeature : IFeature
     // How long after raw input reports a wheel notch the hook has surely seen it.
     private static readonly TimeSpan WheelCheckDelay = TimeSpan.FromMilliseconds(100);
 
+    // Raw input can report a move before the pointer's position follows it, and once the pointer
+    // stops no event comes to look again, so the position is looked at once more this long after
+    // the last move, as Title Bar Actions does.
+    private static readonly TimeSpan SettleDelay = TimeSpan.FromMilliseconds(50);
+
     private readonly ILogger<HotCornersFeature> _logger;
     private readonly TimeProvider _time;
     private readonly WindowsHotCornerEnvironment _environment = new();
@@ -39,6 +44,7 @@ public sealed partial class HotCornersFeature : IFeature
     private ScreenCorner? _reached;
     private uint? _wheelToCheck;
     private ITimer? _wheelCheck;
+    private ITimer? _settle;
     private SnapshotPipe? _resultsPipe;
     private DisplayKeeper? _displays;
     private ITimer? _timer;
@@ -135,6 +141,7 @@ public sealed partial class HotCornersFeature : IFeature
         // Fire on the thread pool; the detector runs on the window's thread.
         _timer = _time.CreateTimer(_ => window.BeginInvoke(() => Update(Size.Empty, isPosition: false)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         _wheelCheck = _time.CreateTimer(_ => window.BeginInvoke(() => Guard(CheckWheel)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _settle = _time.CreateTimer(_ => window.BeginInvoke(Settle), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         _resultsPipe = ServeResults();
         LogStarted(_logger);
     }
@@ -163,11 +170,12 @@ public sealed partial class HotCornersFeature : IFeature
         _displays?.End(KeepDisplaysOnEnd.HotCornersStopped);
         _timer?.Dispose();
         _wheelCheck?.Dispose();
+        _settle?.Dispose();
         _hook?.Dispose();
         _monitor?.Dispose();
         _resultsPipe?.Dispose();
         _window.Dispose();
-        (_displays, _timer, _wheelCheck, _hook, _monitor, _resultsPipe, _window) = (null, null, null, null, null, null, null);
+        (_displays, _timer, _wheelCheck, _settle, _hook, _monitor, _resultsPipe, _window) = (null, null, null, null, null, null, null, null);
         (_claimed, _reached, _wheelToCheck) = (null, null, null);
         _timerSet = false;
         _results.Clear();
@@ -198,6 +206,20 @@ public sealed partial class HotCornersFeature : IFeature
         }
 
         Update(e.Movement, e.IsPosition);
+        if (e.Movement != Size.Empty || e.IsPosition)
+        {
+            _settle?.Change(SettleDelay, Timeout.InfiniteTimeSpan);
+        }
+    }
+
+    // A pointer that stopped where the last event didn't see it yet, such as on an edge it had just
+    // reached, is looked at once more.
+    private void Settle()
+    {
+        if (_window is not null && InputState.PointerPosition != _detector.LastPosition)
+        {
+            Update(Size.Empty, isPosition: false);
+        }
     }
 
     private void OnMessageReceived(object? sender, WindowMessageEventArgs e)

@@ -258,6 +258,7 @@ Move the pointer into a corner or push it against an edge of the screen to run a
 ## Performance
 
 - No timer runs while the pointer is away from the corners and edges; each pointer event costs a few comparisons. While the pointer is on one, each event adds its movement to the push; a timer runs only for a corner's delay, and for an edge reached by pen, touch or a remote session.
+- **Once the pointer stops,** its position is read once more, 50 ms after the last move, as Title Bar Actions does: raw input can report a move before the pointer's position follows it, so the move onto an edge can be read too early, and no other event would come before the wheel turns.
 - The full-screen and captured-pointer checks run once per trigger, and once as the pointer reaches a corner or edge with a wheel action. They read windows only until one decides and send no messages to other apps' windows, so an app that stopped responding can't hold them. The app check reads only the window in front, at the same moments and only while apps are listed.
 - **The pointer hook** is set only while the pointer is on a corner or edge with a wheel action, unless another feature claims. While it's set, every pointer event in every program passes through its thread, which only compares it with the claims.
 - **The taskbar question** runs on the thread pool, once each time the pointer reaches an edge with a push action.

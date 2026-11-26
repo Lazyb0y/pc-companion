@@ -51,6 +51,9 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
     /// </summary>
     public ScreenCorner? CurrentCorner => _current?.Position;
 
+    /// <summary>Where the pointer was at the last call to <see cref="Update(Size, bool)"/>.</summary>
+    public Point? LastPosition { get; private set; }
+
     /// <summary>The area of the display of the corner or edge the pointer is on.</summary>
     public Rectangle? CurrentDisplay => _current?.Display;
 
@@ -102,6 +105,7 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
     public CornerDecision Update(Size movement, bool isPosition)
     {
         var position = environment.PointerPosition;
+        LastPosition = position;
         var spot = Find(position);
         var arrived = spot != _current;
         if (arrived)
