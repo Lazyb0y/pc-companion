@@ -368,6 +368,14 @@ public sealed class EdgeDetectorTests
         Assert.Null(_detector.Wheel);
     }
 
+    [Fact]
+    public void TheDetectorRemembersWhereItLastSawThePointer()
+    {
+        MoveTo(new Point(100, 200));
+
+        Assert.Equal(new Point(100, 200), _detector.LastPosition);
+    }
+
     // A borderless window that isn't an overlay, the shell's or out of sight, unless the test says so.
     private static WindowPlace Window(Rectangle bounds, bool isShell = false) =>
         new(0, bounds, IsCloaked: false, IsMinimized: false, IsClickThrough: false, IsNoActivate: false, IsToolWindow: false, false, false, isShell);
