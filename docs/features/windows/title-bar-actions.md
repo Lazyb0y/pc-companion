@@ -101,7 +101,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
   - **Its thread:** its own, since Windows waits for a low-level hook at every pointer event in every program; see [Threads and processes](../../architecture/features.md#threads-and-processes).
   - **Claims:** features add claims, each saying which events to keep and where. It's set while any feature has a claim, and removed when none has.
   - **What its thread does:** it only compares each event with the claims, and posts a kept one to its feature's thread. It calls no other program and waits for nothing.
-  - **For #37 and #39:** screen edges and mouse buttons as triggers would add claims of their own ([#37](https://github.com/Lazyb0y/pc-companion/issues/37), [#39](https://github.com/Lazyb0y/pc-companion/issues/39)). Their specs decide when.
+  - **Other features' claims:** Shortcuts & Mouse Buttons claims mouse buttons, and Hot Corners & Edges the wheel on the outermost pixels of corners and edges; see [Keeping the click](../input/shortcuts-and-mouse-buttons.md#keeping-the-click) and [The wheel](../input/hot-corners.md#the-wheel). Where two claims overlap, the earlier one wins, unless one is marked `First`, as Hot Corners & Edges' are.
 - **A click before the window answers,** as right after the pointer reaches a title bar, reaches the app. The action still runs once the window answers `HTCAPTION` for that point, so the window may come to the front first.
 - **Checking what the hook did:**
   - Raw input reports kept clicks too, and often before the hook has seen them (spike). So 60 ms after raw input reports a middle-click or a wheel notch, the host looks up, by the input's time, what the hook did with it.
@@ -189,6 +189,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 - **Drop-down Apps' windows:** Minimize hides a shown drop-down window, as Drop-down Apps does whenever one is minimized. Minimize to tray and Hide app leave drop-down windows alone, as those features do.
 - **Window Rules:** after each notch that changes a window's opacity, the wheel tells Window Rules the opacity (`WindowRequests`), so a rule whose opacity is **As last set with the wheel** keeps it for the app's next windows. A window a rule made translucent changes between 20% and the rule's opacity, which the wheel treats as the window's own; see [Opacity](window-rules.md#opacity).
 - **Middle-Click Paste** claims plain middle-clicks on text boxes in the same pointer hook. The claims don't overlap, since title bars show an arrow and text boxes the I-beam; see [With the other features](../clipboard/middle-click-paste.md#with-the-other-features).
+- **Hot Corners & Edges** claims the wheel on the top edge's outermost pixels when the top edge has a wheel action. On a maximized window's title bar there, its action runs instead of Title Bar Actions' wheel action, and its page says so; one pixel lower, Title Bar Actions' runs. See [The wheel](../input/hot-corners.md#the-wheel).
 
 ## Never leaving a window translucent
 
