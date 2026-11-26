@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -12,23 +14,46 @@ using PCCompanion.Platform.Windows;
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// Runs an action when the pointer reaches a corner of a display. See docs/features/input/hot-corners.md.
+/// Hot Corners &amp; Edges: runs an action when the pointer reaches a corner or pushes against an
+/// edge of a display, and another when the wheel turns there. See docs/features/input/hot-corners.md.
 /// </summary>
-public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger, TimeProvider time, IHostCommands commands) : IFeature
+public sealed partial class HotCornersFeature : IFeature
 {
     private const string WindowClassName = "PCCompanion.HotCorners";
 
-    private readonly CornerDetector _detector = new(new WindowsHotCornerEnvironment(), time);
-    private readonly ProgramRunner _programs = new(logger, File.Exists, commands, action => Task.Run(action));
-    private readonly CornerResults _results = new(time);
+    // How long after raw input reports a wheel notch the hook has surely seen it.
+    private static readonly TimeSpan WheelCheckDelay = TimeSpan.FromMilliseconds(100);
+
+    private readonly ILogger<HotCornersFeature> _logger;
+    private readonly TimeProvider _time;
+    private readonly WindowsHotCornerEnvironment _environment = new();
+    private readonly CornerDetector _detector;
+    private readonly WheelSteps _wheelSteps;
+    private readonly ProgramRunner _programs;
+    private readonly CornerResults _results;
     private HotCornersSettings _settings = new();
     private MessageWindow? _window;
     private RawPointerMonitor? _monitor;
+    private PointerHook? _hook;
+    private WheelSpot? _claimed;
+    private ScreenCorner? _reached;
+    private uint? _wheelToCheck;
+    private ITimer? _wheelCheck;
     private SnapshotPipe? _resultsPipe;
     private DisplayKeeper? _displays;
     private ITimer? _timer;
     private bool _timerSet;
     private bool _failed;
+
+    public HotCornersFeature(ILogger<HotCornersFeature> logger, TimeProvider time, IHostCommands commands)
+    {
+        _logger = logger;
+        _time = time;
+        _detector = new CornerDetector(_environment, time);
+        _wheelSteps = new WheelSteps(time);
+        _programs = new ProgramRunner(_logger, File.Exists, commands, action => Task.Run(action));
+        _results = new CornerResults(time);
+    }
 
     public static FeatureInfo Definition { get; } = new("hotCorners", InputModule.Id, "HotCornersName", "HotCornersDescription", "");
 
@@ -57,7 +82,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         }
         catch (JsonException exception)
         {
-            LogUnreadableSettings(logger, exception);
+            LogUnreadableSettings(_logger, exception);
             read = new HotCornersSettings();
         }
 
@@ -102,12 +127,16 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         _window = window;
         _window.MessageReceived += OnMessageReceived;
         _monitor.InputReceived += OnInputReceived;
-        _displays = new DisplayKeeper(logger, () => KeepDisplaysOn(window));
+        _displays = new DisplayKeeper(_logger, () => KeepDisplaysOn(window));
+        _hook = new PointerHook(window);
+        _hook.Kept += (_, input) => Guard(() => OnWheelKept(input));
+        _hook.Failed += (_, e) => Guard(() => OnHookFailed(e.Exception));
 
-        // Fires on the thread pool; the detector runs on the window's thread.
-        _timer = time.CreateTimer(_ => window.BeginInvoke(Update), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        // Fire on the thread pool; the detector runs on the window's thread.
+        _timer = _time.CreateTimer(_ => window.BeginInvoke(() => Update(Size.Empty, isPosition: false)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        _wheelCheck = _time.CreateTimer(_ => window.BeginInvoke(() => Guard(CheckWheel)), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         _resultsPipe = ServeResults();
-        LogStarted(logger);
+        LogStarted(_logger);
     }
 
     // The settings app shows the results while Hot Corners runs; without the pipe, corners still work.
@@ -115,11 +144,11 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
     {
         try
         {
-            return SnapshotPipe.Serve(CornerResults.PipeName, _results.ToJson, exception => LogResultsFailed(logger, exception));
+            return SnapshotPipe.Serve(CornerResults.PipeName, _results.ToJson, exception => LogResultsFailed(_logger, exception));
         }
         catch (Win32Exception exception)
         {
-            LogResultsFailed(logger, exception);
+            LogResultsFailed(_logger, exception);
             return null;
         }
     }
@@ -133,27 +162,43 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
         _displays?.End(KeepDisplaysOnEnd.HotCornersStopped);
         _timer?.Dispose();
+        _wheelCheck?.Dispose();
+        _hook?.Dispose();
         _monitor?.Dispose();
         _resultsPipe?.Dispose();
         _window.Dispose();
-        (_displays, _timer, _monitor, _resultsPipe, _window) = (null, null, null, null, null);
+        (_displays, _timer, _wheelCheck, _hook, _monitor, _resultsPipe, _window) = (null, null, null, null, null, null, null);
+        (_claimed, _reached, _wheelToCheck) = (null, null, null);
         _timerSet = false;
         _results.Clear();
-        LogStopped(logger);
+        LogStopped(_logger);
     }
 
     private void Configure()
     {
-        var displays = Displays.GetAreas();
+        var displays = Displays.GetDetails();
         _detector.Configure(_settings, displays);
 
-        // Configuring ends any wait: a corner the pointer is in counts as decided.
+        // Configuring ends any wait: a corner or edge the pointer is on counts as decided, and its
+        // wheel waits until the pointer comes back.
         CancelTimer();
+        _reached = _detector.CurrentCorner;
+        ClaimWheel();
         _displays?.Check(_detector.CurrentCorner, _settings);
-        LogConfigured(logger, displays.Count, _settings.ActivationDelayMilliseconds);
+        LogConfigured(_logger, displays.Count, _settings.ActivationDelayMilliseconds);
     }
 
-    private void OnInputReceived(object? sender, EventArgs e) => Update();
+    private void OnInputReceived(object? sender, PointerInputEventArgs e)
+    {
+        // A wheel notch the hook never saw while it was set means Windows removed the hook.
+        if ((e.Changes & PointerButtonChanges.Wheel) != 0 && _claimed is not null && _wheelToCheck is null)
+        {
+            _wheelToCheck = e.Time;
+            _wheelCheck?.Change(WheelCheckDelay, Timeout.InfiniteTimeSpan);
+        }
+
+        Update(e.Movement, e.IsPosition);
+    }
 
     private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
     {
@@ -163,7 +208,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         }
     }
 
-    private void Update() => Guard(() =>
+    private void Update(Size movement, bool isPosition) => Guard(() =>
     {
         // A timer can fire after the feature stopped.
         if (_window is not { } window)
@@ -171,7 +216,9 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
             return;
         }
 
-        var decision = _detector.Update();
+        var decision = _detector.Update(movement, isPosition);
+        Reached();
+        ClaimWheel();
         _displays?.Check(_detector.CurrentCorner, _settings);
 
         // Once the pointer has left the corner or the corner was decided, the timer has nothing to wait for.
@@ -187,11 +234,11 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 _timerSet = true;
                 break;
             case CornerOutcome.Triggered:
-                LogTriggered(logger, decision.Corner, decision.Action);
+                LogRan(decision);
                 var ran = Run(decision, window);
                 if (!ran)
                 {
-                    LogActionRefused(logger, decision.Action);
+                    LogActionRefused(_logger, decision.Action);
                 }
 
                 // Run a program adds its own result once the program has started or not.
@@ -201,12 +248,137 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
                 }
 
                 break;
-            case CornerOutcome.LeftEarly or CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.PointerConfined or CornerOutcome.PointerHidden or CornerOutcome.FullScreenApp or CornerOutcome.AppExcluded:
-                LogSkipped(logger, decision.Corner, decision.Action, decision.Outcome);
+            case CornerOutcome.LeftEarly or CornerOutcome.MouseButtonHeld or CornerOutcome.KeyNotHeld or CornerOutcome.PointerConfined or CornerOutcome.PointerHidden or CornerOutcome.FullScreenApp or CornerOutcome.AppExcluded or CornerOutcome.TaskbarHides:
+                LogNotRun(decision);
                 _results.Add(decision.Corner, decision.Action, CornerResults.KindOf(decision.Outcome));
                 break;
         }
     });
+
+    private void LogRan(CornerDecision decision)
+    {
+        if (CornerDetector.IsEdge(decision.Corner))
+        {
+            LogEdgeRan(_logger, decision.Corner, decision.Action);
+        }
+        else
+        {
+            LogTriggered(_logger, decision.Corner, decision.Action);
+        }
+    }
+
+    private void LogNotRun(CornerDecision decision)
+    {
+        if (CornerDetector.IsEdge(decision.Corner))
+        {
+            LogEdgeSkipped(_logger, decision.Corner, decision.Action, decision.Outcome);
+        }
+        else
+        {
+            LogSkipped(_logger, decision.Corner, decision.Action, decision.Outcome);
+        }
+    }
+
+    // Once as the pointer reaches an edge with a push action, Explorer is asked on the thread pool
+    // whether a bar hides itself there, so the answer is ready, or nearly, when the push is enough.
+    private void Reached()
+    {
+        var place = _detector.CurrentCorner;
+        if (place == _reached)
+        {
+            return;
+        }
+
+        _reached = place;
+        if (place is { } edge && CornerDetector.IsEdge(edge) && _settings.For(edge).Action != HotCornerAction.None && _detector.CurrentDisplay is { } display)
+        {
+            _environment.AskAutoHideBar(display, CornerDetector.SideOf(edge));
+        }
+    }
+
+    // The wheel is claimed only while the pointer is on a corner or edge whose wheel action applies,
+    // ahead of other features' claims there, and never while an app has captured the pointer.
+    private void ClaimWheel()
+    {
+        var wheel = _detector.Wheel;
+        if (wheel == _claimed)
+        {
+            return;
+        }
+
+        _claimed = wheel;
+        _wheelSteps.Reset();
+        _hook?.Claim(wheel is { } spot
+            ? new PointerClaim(spot.Area, new HashSet<PointerTrigger> { new(PointerButton.Wheel, KeysOf(spot.Key)) }) { NotWhileCaptured = true, First = true }
+            : null);
+    }
+
+    private static PointerKeys KeysOf(HotCornerKey key) => key switch
+    {
+        HotCornerKey.Control => PointerKeys.Control,
+        HotCornerKey.Alt => PointerKeys.Alt,
+        HotCornerKey.Shift => PointerKeys.Shift,
+        HotCornerKey.Windows => PointerKeys.Windows,
+        _ => PointerKeys.None,
+    };
+
+    private void OnWheelKept(KeptPointerInputEventArgs input)
+    {
+        // The claim can have gone while the notch was on its way.
+        if (_claimed is not { } spot)
+        {
+            return;
+        }
+
+        var steps = _wheelSteps.Add(spot.Action, input.WheelDelta);
+        var keepKeys = spot.Key != HotCornerKey.None;
+        for (var step = 0; step < Math.Abs(steps); step++)
+        {
+            var up = steps > 0;
+            var ran = spot.Action switch
+            {
+                HotCornerWheelAction.Volume => ShellActions.ChangeVolume(louder: up, keepKeys),
+                HotCornerWheelAction.Desktops => ShellActions.SwitchDesktop(next: !up, keepKeys),
+                HotCornerWheelAction.Tracks => ShellActions.SwitchTrack(next: !up, keepKeys),
+                _ => true,
+            };
+            LogWheel(_logger, spot.Position, spot.Action, up ? "up" : "down");
+            if (!ran)
+            {
+                LogWheelRefused(_logger, spot.Action);
+            }
+        }
+
+        // Releasing the Windows key after a turn that sent nothing would open Start.
+        if (steps == 0 && spot.Key == HotCornerKey.Windows)
+        {
+            ShellActions.PressMaskKey();
+        }
+    }
+
+    // A notch on a claimed corner or edge that the hook never saw while it was set means Windows
+    // removed the hook, as it does with one it finds slow.
+    private void CheckWheel()
+    {
+        if (_wheelToCheck is not { } notch)
+        {
+            return;
+        }
+
+        _wheelToCheck = null;
+        if (_claimed is not null && PointerHook.Outcome(notch) == PointerInputOutcome.NotSeen)
+        {
+            LogHookRemoved(_logger);
+            PointerHook.SetAgain();
+        }
+    }
+
+    // The hook drops every claim when its thread fails; the next pointer event claims again.
+    private void OnHookFailed(Exception exception)
+    {
+        LogHookFailed(_logger, exception);
+        _claimed = null;
+    }
 
     // Only while it's set: most pointer events come while no corner waits.
     private void CancelTimer()
@@ -225,6 +397,8 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         HotCornerAction.Start => ShellActions.OpenStart(),
         HotCornerAction.Search => ShellActions.OpenSearch(),
         HotCornerAction.Notifications => ShellActions.OpenNotifications(),
+        HotCornerAction.PreviousDesktop => ShellActions.SwitchDesktop(next: false),
+        HotCornerAction.NextDesktop => ShellActions.SwitchDesktop(next: true),
         HotCornerAction.Lock => ShellActions.Lock(),
         HotCornerAction.TurnOffDisplays => ShellActions.TurnOffDisplays(window),
         HotCornerAction.ScreenSaver => ShellActions.StartScreenSaver(window),
@@ -273,7 +447,7 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
         }
         catch (Exception exception)
         {
-            LogFailed(logger, exception);
+            LogFailed(_logger, exception);
             _failed = true;
             Stop();
         }
@@ -302,6 +476,24 @@ public sealed partial class HotCornersFeature(ILogger<HotCornersFeature> logger,
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "The {Corner} corner didn't run {Action}: {Reason}.")]
     private static partial void LogSkipped(ILogger logger, ScreenCorner corner, HotCornerAction action, CornerOutcome reason);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The {Edge} edge ran {Action}.")]
+    private static partial void LogEdgeRan(ILogger logger, ScreenCorner edge, HotCornerAction action);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The {Edge} edge didn't run {Action}: {Reason}.")]
+    private static partial void LogEdgeSkipped(ILogger logger, ScreenCorner edge, HotCornerAction action, CornerOutcome reason);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "The wheel on {Place} ran {Action}, turned {Direction}.")]
+    private static partial void LogWheel(ILogger logger, ScreenCorner place, HotCornerWheelAction action, string direction);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't run the wheel's {Action}.")]
+    private static partial void LogWheelRefused(ILogger logger, HotCornerWheelAction action);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Windows removed the pointer hook, so Hot Corners & Edges set it again.")]
+    private static partial void LogHookRemoved(ILogger logger);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The pointer hook failed, so the wheel reaches the apps until the pointer comes back to a corner or edge.")]
+    private static partial void LogHookFailed(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Windows didn't run {Action}.")]
     private static partial void LogActionRefused(ILogger logger, HotCornerAction action);
