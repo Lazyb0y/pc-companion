@@ -65,6 +65,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 | Drop-down Apps | A screen with a panel hanging from its top edge, with a white chevron | | App blue |
 | Window Tabs | A window with a row of tabs across its top, in the deepest tone: the tab in front joined to the window's body, and an orange tab behind it | | Green |
 | Window Rules | A screen in the light tone with a window on its right half, its title bar in the deepest tone, and a white arrow on the left half pointing at it | | Violet |
+| Window Shading | A window's title bar alone, in the deep tone, over the rest of the window as a dashed outline in the deeper orange, with a chevron in the main tone pointing up at it | | Green |
 | Title Bar Actions | A window with a blue title bar | A blue mouse with an orange wheel | Sky |
 | End App | An app window | A red stop sign with a white bar | Violet |
 | System Meters | Three bars, from light and short to deep and tall | | Green |
@@ -94,7 +95,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 |---|---|---|
 | Paper | Paper, plastic and a window's content | `#F8FAFF` → `#DCE6FF` |
 | Orange | Second objects, and the tab behind in Window Tabs; it's the app icon's amber | `#FFD25E` → `#FF8A3C` |
-| Yellow | Folders: the front, then the back; the back's deeper orange is also the hidden app of Hide Apps | `#FFE06B` → `#FAB500`, `#FFA43D` → `#E67505` |
+| Yellow | Folders: the front, then the back; the back's deeper orange is also the hidden app of Hide Apps and the rolled-up window of Window Shading | `#FFE06B` → `#FAB500`, `#FFA43D` → `#E67505` |
 | Red | Stop signs | `#F83F54` → `#CA2134` |
 | White | Symbols on an object | `#FFFFFF` |
 

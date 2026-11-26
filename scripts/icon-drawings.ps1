@@ -252,15 +252,16 @@ function Get-BubbleShape([double[]] $Box, [object[]] $Tail) {
     Join-Shape (ConvertTo-Shape (Get-RectPath $Box)) (ConvertTo-Shape (Get-PolygonPath $Tail))
 }
 
-# The outline of something hidden: a rounded square's outline, $Width wide and inside the square
-# $Box (x, y, side, side and corner radius), as $Count dashes $Dash long with round ends, one
+# The outline of something hidden: a rounded rectangle's outline, $Width wide and inside $Box (x,
+# y, width, height and corner radius), as $Count dashes $Dash long with round ends, spaced evenly
+# from one centered on the top-left corner: on a square, with a multiple of four dashes, one is
 # centered on each corner.
 function Get-DashedOutline([double[]] $Box, [double] $Width, [int] $Count, [double] $Dash) {
-    $x, $y, $side, $null, $radius = $Box
+    $x, $y, $w, $h, $radius = $Box
     $half = $Width / 2
     $inner = [math]::Max($radius - $half, 0.01)
-    $path = Get-RectPath @(($x + $half), ($y + $half), ($side - $Width), ($side - $Width), $inner)
-    $length = 4 * ($side - $Width - 2 * $inner) + 2 * [math]::PI * $inner
+    $path = Get-RectPath @(($x + $half), ($y + $half), ($w - $Width), ($h - $Width), $inner)
+    $length = 2 * ($w - $Width - 2 * $inner) + 2 * ($h - $Width - 2 * $inner) + 2 * [math]::PI * $inner
     $period = $length / $Count
     $on = $Dash - $Width
     # The path starts where the top-left corner ends, so the dashes start half a dash before that
@@ -669,6 +670,22 @@ foreach ($icon in $windowRules) {
     $screen = Remove-Shape $screen (Get-StrokeArea $icon.Arrow $icon.Line)
     $placed = Remove-Shape (ConvertTo-Shape $window) (Get-StrokeArea "M$(F ($x - 2)) $(F ($y + $icon.TitleBar))H$(F ($x + $w + 2))" $icon.Cut)
     Write-Drawing "window-rules-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath (Join-Shape $screen $placed))
+}
+
+# Window Shading, in green: a window's title bar alone, in the deep tone, over the rest of the
+# window, Body, as a dashed outline in the deeper orange of Hide Apps' hidden app, Width wide, of
+# Count dashes Dash long, with a chevron in the main tone pointing up at the title bar: the
+# window rolled up into its title bar.
+$windowShading = @(
+    @{ Size = 32; TitleBar = 1, 4, 30, 7, 2.5; Body = 1, 13, 30, 16, 2.5; Width = 1.8; Count = 12; Dash = 3.6; Chevron = 'M10 24.5L16 18.5L22 24.5'; Line = 3 }
+    @{ Size = 20; TitleBar = 2, 2.5, 16, 4.5, 1.5; Body = 2, 8.5, 16, 9, 1.5; Width = 1.2; Count = 8; Dash = 2.8; Chevron = 'M6.5 15L10 11.5L13.5 15'; Line = 2 }
+)
+foreach ($icon in $windowShading) {
+    $hidden = Get-DashedOutline $icon.Body $icon.Width $icon.Count $icon.Dash
+    $body = @((Get-ShapePath $hidden 'url(#yellow-back)'), (Get-Rect $icon.TitleBar ' fill="url(#green-deep)"'), (Get-SymbolPath $icon.Chevron $icon.Line 'url(#green-main)'))
+    Write-Drawing "window-shading-$($icon.Size)" $icon.Size (@('yellow-back', 'green-deep', 'green-main') | ForEach-Object { Get-Gradient $_ }) $body
+    $shape = Join-Shape (Join-Shape $hidden (ConvertTo-Shape (Get-RectPath $icon.TitleBar))) (Get-StrokeArea $icon.Chevron $icon.Line)
+    Write-Drawing "window-shading-$($icon.Size)-mono" $icon.Size @() @(Get-MonoPath $shape)
 }
 
 # Title Bar Actions, in sky: a window in the main tone, its title bar above paper, and a mouse at
