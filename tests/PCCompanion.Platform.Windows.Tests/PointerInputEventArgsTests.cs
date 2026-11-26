@@ -1,3 +1,4 @@
+using System.Drawing;
 using Xunit;
 
 namespace PCCompanion.Platform.Windows.Tests;
@@ -49,6 +50,34 @@ public sealed class PointerInputEventArgsTests
 
         Assert.Equal(PointerButtonChanges.LeftDown, input.Changes);
         Assert.Equal(0, input.WheelDelta);
+    }
+
+    [Fact]
+    public void AMoveReportsHowFarTheMouseMoved()
+    {
+        var input = PointerInputEventArgs.FromRawMouse(0, 0, 1, 0, -5, 3);
+
+        Assert.Equal(new Size(-5, 3), input.Movement);
+        Assert.False(input.IsPosition);
+    }
+
+    [Fact]
+    public void APositionIsNoMovement()
+    {
+        // Pen, touch, remote sessions and many virtual machines report positions from 0 to 65535.
+        var input = PointerInputEventArgs.FromRawMouse(0, 0, 1, 0x0001 | 0x0002, 0, 32768);
+
+        Assert.True(input.IsPosition);
+        Assert.Equal(Size.Empty, input.Movement);
+    }
+
+    [Fact]
+    public void AnEventWithoutItsMovementHasNone()
+    {
+        var input = PointerInputEventArgs.FromRawMouse(0x0400, 120, 1);
+
+        Assert.Equal(Size.Empty, input.Movement);
+        Assert.False(input.IsPosition);
     }
 
     [Fact]

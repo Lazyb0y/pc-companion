@@ -50,6 +50,37 @@ public static class Taskbar
         var data = new APPBARDATA { cbSize = (uint)sizeof(APPBARDATA) };
         return (PInvoke.SHAppBarMessage(PInvoke.ABM_GETSTATE, ref data) & PInvoke.ABS_AUTOHIDE) != 0;
     }
+
+    /// <summary>
+    /// Whether a bar hides itself on <paramref name="side"/> of the display with
+    /// <paramref name="area"/>, in physical pixels: the taskbar, or another program's bar. Explorer
+    /// answers, so it waits for Explorer: ask on the thread pool.
+    /// </summary>
+    public static unsafe bool HasAutoHideBar(Rectangle area, ScreenSide side)
+    {
+        var data = new APPBARDATA
+        {
+            cbSize = (uint)sizeof(APPBARDATA),
+            uEdge = side switch
+            {
+                ScreenSide.Left => PInvoke.ABE_LEFT,
+                ScreenSide.Top => PInvoke.ABE_TOP,
+                ScreenSide.Right => PInvoke.ABE_RIGHT,
+                _ => PInvoke.ABE_BOTTOM,
+            },
+            rc = new RECT(area.Left, area.Top, area.Right, area.Bottom),
+        };
+        return PInvoke.SHAppBarMessage(PInvoke.ABM_GETAUTOHIDEBAREX, ref data) != 0;
+    }
+}
+
+/// <summary>A side of a display.</summary>
+public enum ScreenSide
+{
+    Left,
+    Top,
+    Right,
+    Bottom,
 }
 
 /// <summary>The taskbar as <see cref="Taskbar.Read"/> found it, in physical pixels.</summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 namespace PCCompanion.Platform.Windows;
 
@@ -11,6 +12,8 @@ namespace PCCompanion.Platform.Windows;
 /// <param name="time">When the input happened, in milliseconds since Windows started.</param>
 public sealed class PointerInputEventArgs(PointerButtonChanges changes, short wheelDelta, uint time) : EventArgs
 {
+    private const ushort MoveAbsolute = 0x0001;
+
     /// <summary>Which buttons went down or up, and whether a wheel turned; none for a move.</summary>
     public PointerButtonChanges Changes { get; } = changes;
 
@@ -28,14 +31,41 @@ public sealed class PointerInputEventArgs(PointerButtonChanges changes, short wh
     public uint Time { get; } = time;
 
     /// <summary>
+    /// How far the mouse moved, in its own units, which depend on its resolution and not on the
+    /// pointer speed: positive to the right and down. A mouse keeps reporting it while the pointer
+    /// can't move further, as against the edge of the screen. Empty for a device that reports
+    /// positions, and for a button or the wheel without a move.
+    /// </summary>
+    public Size Movement { get; init; }
+
+    /// <summary>
+    /// Whether the device reported a position instead of movement (<c>MOUSE_MOVE_ABSOLUTE</c>), as
+    /// pen, touch, remote sessions and many virtual machines do.
+    /// </summary>
+    public bool IsPosition { get; init; }
+
+    /// <summary>
     /// The event raw input reports for the mouse: its button flags (<c>usButtonFlags</c>) and their
     /// data (<c>usButtonData</c>), which holds the wheel's delta when the vertical wheel turned.
     /// </summary>
-    public static PointerInputEventArgs FromRawMouse(ushort buttonFlags, ushort buttonData, uint time)
+    public static PointerInputEventArgs FromRawMouse(ushort buttonFlags, ushort buttonData, uint time) =>
+        FromRawMouse(buttonFlags, buttonData, time, 0, 0, 0);
+
+    /// <summary>
+    /// The event raw input reports for the mouse, with its movement: its flags (<c>usFlags</c>) and
+    /// how far it moved (<c>lLastX</c>, <c>lLastY</c>), which is a position instead when the flags
+    /// say so.
+    /// </summary>
+    public static PointerInputEventArgs FromRawMouse(ushort buttonFlags, ushort buttonData, uint time, ushort moveFlags, int lastX, int lastY)
     {
         var changes = (PointerButtonChanges)buttonFlags & PointerButtonChanges.All;
         var wheelDelta = (changes & PointerButtonChanges.Wheel) != 0 ? unchecked((short)buttonData) : (short)0;
-        return new PointerInputEventArgs(changes, wheelDelta, time);
+        var isPosition = (moveFlags & MoveAbsolute) != 0;
+        return new PointerInputEventArgs(changes, wheelDelta, time)
+        {
+            Movement = isPosition ? Size.Empty : new Size(lastX, lastY),
+            IsPosition = isPosition,
+        };
     }
 }
 
