@@ -219,6 +219,33 @@ public sealed class ShadingControllerTests : IDisposable
     }
 
     [Fact]
+    public void ADraggedWindowComesBackWhereItsStripWent()
+    {
+        _controller.RollUp(Mail);
+        _controller.RollUp(Notes);
+        _system.Strips[0].DragTo(new Point(301, 151));
+        _system.Strips[0].DragTo(new Point(311, 161));
+
+        _system.Strips[0].Click(new Point(5, 5));
+        _controller.OnRestored(Notes);
+
+        // Mail's rectangle, with its invisible borders, was (93, 200), and its strip moved by 210, -40.
+        Assert.Contains("place 1 at 303,160", _system.Calls);
+        Assert.DoesNotContain(_system.Calls, call => call.StartsWith("place 2", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ADraggedWindowRestoredByAnythingElseComesBackWhereItsStripWent()
+    {
+        _controller.RollUp(Mail);
+        _system.Strips[0].DragTo(new Point(101, 301));
+
+        _controller.OnRestored(Mail);
+
+        Assert.Contains("place 1 at 93,300", _system.Calls);
+    }
+
+    [Fact]
     public void AWindowRestoredByAnythingElseLosesItsStrip()
     {
         _controller.RollUp(Mail);

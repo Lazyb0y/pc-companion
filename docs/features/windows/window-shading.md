@@ -52,13 +52,13 @@ Roll a window up to its title bar, to see and use what's behind it without movin
   - **a click on the picture of the Close button** closes the window instead, where Windows says where the title bar's buttons are (`DWMWA_CAPTION_BUTTON_BOUNDS`): Close is the last of them, at the right, or at the left in a window laid out right to left. The window is rolled down first and then asked to close (`WM_SYSCOMMAND` with `SC_CLOSE`), so a question about unsaved changes shows with it;
   - **the wheel turned down** rolls it down; turned up, it does nothing;
   - **a right-click** opens a menu with **Roll down** and **Close**;
-  - **a drag** moves the strip; the window rolls down where the strip is, at its size, on that display (`SetWindowPlacement`, keeping it minimized until it's restored).
+  - **a drag** moves the strip; the window rolls down where the strip is, at its size, on that display (`SetWindowPlacement`, keeping it minimized until it's restored). Some apps put back the place they had as they're restored, as Windows Forms apps do (Sandbox checks), so a dragged window is also moved there as it comes back, by any way, unless it comes back maximized.
 - **Elsewhere:** the window is rolled down, and its strip goes, whenever it's restored by anything else: its taskbar button, Alt + Tab, Task View, its app or another feature (`EVENT_SYSTEM_MINIMIZEEND`). When the window closes (`EVENT_OBJECT_DESTROY`) or is hidden (`EVENT_OBJECT_HIDE`), the strip goes.
 - **Roll down all,** in the PC Companion icon's menu while a window is rolled up, and as an action for Shortcuts & Mouse Buttons, rolls every rolled-up window down without giving any the front (`SW_SHOWNOACTIVATE`).
 
 ## Hover to roll down
 
-- **Off by default.** When on, a window rolls down while the pointer rests on its strip for **Roll down after**, 0.5 seconds by default, without taking the front (`SW_SHOWNOACTIVATE`).
+- **Off by default.** When on, a window rolls down while the pointer rests on its strip for **Roll down after**, 0.5 seconds by default, without taking the front (`SW_SHOWNOACTIVATE`), and in front of the other windows: restored without being activated, a window stays where it was in the order of windows, which can be behind the window in front (Sandbox checks).
 - **It rolls up again** when the pointer has been off the window for **Roll up again after**, 1 second by default, unless:
   - the window was clicked meanwhile and is in front, which keeps it rolled down;
   - a menu or another window of its app is open, such as a dialog or a list, which keeps it rolled down until they close;
