@@ -225,19 +225,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersName" xml:space="preserve">
-    <value>触发角</value>
+    <value>触发角和边缘</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDescription" xml:space="preserve">
-    <value>将指针移到屏幕的一角即可运行操作，例如显示所有窗口或锁定电脑。</value>
+    <value>将指针移到屏幕的一角或推向屏幕边缘即可运行操作，例如显示所有窗口；也可以在那里滚动滚轮来调节音量。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersHeader" xml:space="preserve">
-    <value>角</value>
+    <value>角和边缘</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersDescription" xml:space="preserve">
-    <value>选择每个角的操作。为避免误操作，可以选择需要按住的键。</value>
+    <value>选择指针到达每个角和边缘时的操作，以及在那里滚动滚轮时的操作。为避免误操作，可以选择需要按住的键。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersTopLeft" xml:space="preserve">
@@ -305,7 +305,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
-    <value>触发角：指针位于保持显示器开启的角落。</value>
+    <value>触发角和边缘：指针位于保持显示器开启的角或边缘。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
@@ -389,7 +389,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayDescription" xml:space="preserve">
-    <value>指针在角落停留多长时间后运行操作。</value>
+    <value>指针在角落停留多长时间后运行其操作，除非设置为推动时触发。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayValue" xml:space="preserve">
@@ -409,7 +409,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
-    <value>例如远程桌面、虚拟机或绘图应用。其中任何一个位于前台时，所有显示器上的触发角都不会触发。</value>
+    <value>例如远程桌面、虚拟机或绘图应用。其中任何一个位于前台时，所有显示器上的角和边缘都不会触发，滚轮也会照常作用于应用。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppListAdd" xml:space="preserve">
@@ -465,19 +465,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsDescription" xml:space="preserve">
-    <value>指针最近到达的每个角是否运行了其操作及原因，最新的在前。</value>
+    <value>指针最近到达的每个角和边缘是否运行了其操作及原因，最新的在前。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNone" xml:space="preserve">
-    <value>指针尚未到达任何角。</value>
+    <value>指针尚未到达任何角或边缘。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
-    <value>触发角打开时显示结果。</value>
+    <value>触发角和边缘打开时显示结果。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNotAvailable" xml:space="preserve">
-    <value>最近的结果暂时不可用。如果触发角也不起作用，请重启 PC Companion。</value>
+    <value>最近的结果暂时不可用。如果角和边缘也不起作用，请重启 PC Companion。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
@@ -545,15 +545,15 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
-    <value>以管理员身份运行的应用位于前台时，触发角不起作用。</value>
+    <value>以管理员身份运行的应用位于前台时，角和边缘不起作用。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，触发角也能工作。</value>
+    <value>PC Companion 以管理员身份运行，因此以管理员身份运行的应用位于前台时，角和边缘也能工作。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>仅在触发角打开时读取指针位置，以及是否按住了鼠标按钮或所选按键。指针到达某个角时，还会读取是否有应用限制或隐藏了指针，以及该显示器上窗口的位置，但不读取窗口标题或内容；列出了应用时，还会读取位于前台的应用。仅发送所选操作的 Windows 快捷键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
+    <value>仅在触发角和边缘打开时读取指针位置、鼠标移动的距离，以及是否按住了鼠标按钮或所选按键。指针到达某个角或边缘时，还会读取是否有应用限制或隐藏了指针、该显示器上窗口的位置(但不读取窗口标题或内容)、该边缘是否有自动隐藏的任务栏；列出了应用时，还会读取位于前台的应用。仅在有滚轮操作的角或边缘最外侧的像素上拦截滚轮。仅发送所选操作的 Windows 快捷键和按键，并且仅启动你选择的程序。不存储也不发送任何内容。</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="LockKeysName" xml:space="preserve">
@@ -6510,6 +6510,74 @@
   </data>
   <data name="HotCornersResultTaskbarHides" xml:space="preserve">
     <value>已跳过，因为任务栏在此边缘自动隐藏</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelHeader" xml:space="preserve">
+    <value>滚轮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelName" xml:space="preserve">
+    <value>{0}滚轮</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelKeyName" xml:space="preserve">
+    <value>{0}滚轮按键</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelVolume" xml:space="preserve">
+    <value>音量</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelDesktops" xml:space="preserve">
+    <value>切换桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelTracks" xml:space="preserve">
+    <value>切换曲目</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerHeader" xml:space="preserve">
+    <value>角的触发方式</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDescription" xml:space="preserve">
+    <value>边缘始终需要推动才能触发，因此仅停在边缘上的指针不会运行其操作。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDelay" xml:space="preserve">
+    <value>延迟之后</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerPush" xml:space="preserve">
+    <value>推动时</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushHeader" xml:space="preserve">
+    <value>推动力度</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushDescription" xml:space="preserve">
+    <value>将指针推向边缘或推入设置为推动时触发的角所需的力度。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushLight" xml:space="preserve">
+    <value>轻</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushMedium" xml:space="preserve">
+    <value>中</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushFirm" xml:space="preserve">
+    <value>重</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightWheelInfo" xml:space="preserve">
+    <value>右边缘的滚轮操作会在那里拦截最大化窗口滚动条的滚轮。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopWheelInfo" xml:space="preserve">
+    <value>上边缘的滚轮操作会在那里拦截最大化窗口标题栏上标题栏操作的滚轮。</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

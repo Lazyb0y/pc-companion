@@ -65,6 +65,34 @@
                         Text="{app:Localized Key=HotCornersProgramNote}"
                         TextWrapping="Wrap" />
                 </StackPanel>
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{app:Localized Key=HotCornersWheelHeader}" />
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind WheelName}"
+                    ItemsSource="{x:Bind Wheels}"
+                    SelectedItem="{x:Bind SelectedWheel, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:WheelOption">
+                            <TextBlock Text="{x:Bind DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="{x:Bind WheelKeyName}"
+                    ItemsSource="{x:Bind Keys}"
+                    SelectedItem="{x:Bind SelectedWheelKey, Mode=TwoWay}"
+                    Visibility="{x:Bind IsWheelKeyShown, Mode=OneWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:KeyOption">
+                            <TextBlock Text="{x:Bind DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -98,8 +126,8 @@
                         </StackPanel>
 
                         <!--
-                            Physical corners: the picture isn't mirrored for right-to-left languages, the text in it is.
-                            Without room for it, the corners are listed one below another instead; see the code.
+                            Physical corners and edges: the picture isn't mirrored for right-to-left languages, the
+                            text in it is. Without room for it, they're listed one below another instead; see the code.
                         -->
                         <Grid
                             x:Name="Corners"
@@ -124,9 +152,30 @@
                                 ContentTemplate="{StaticResource CornerTemplate}"
                                 IsTabStop="False" />
                             <ContentControl
+                                x:Name="TopEdge"
+                                Grid.Column="1"
+                                Content="{x:Bind ViewModel.Top}"
+                                ContentTemplate="{StaticResource CornerTemplate}"
+                                IsTabStop="False" />
+                            <ContentControl
                                 x:Name="TopRightCorner"
                                 Grid.Column="2"
                                 Content="{x:Bind ViewModel.TopRight}"
+                                ContentTemplate="{StaticResource CornerTemplate}"
+                                IsTabStop="False" />
+                            <ContentControl
+                                x:Name="LeftEdge"
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Content="{x:Bind ViewModel.Left}"
+                                ContentTemplate="{StaticResource CornerTemplate}"
+                                IsTabStop="False" />
+                            <ContentControl
+                                x:Name="RightEdge"
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Content="{x:Bind ViewModel.Right}"
                                 ContentTemplate="{StaticResource CornerTemplate}"
                                 IsTabStop="False" />
                             <Border
@@ -135,6 +184,8 @@
                                 Grid.Column="1"
                                 Width="200"
                                 Height="112"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
                                 AutomationProperties.AccessibilityView="Raw"
                                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                                 BorderBrush="{ThemeResource TextFillColorSecondaryBrush}"
@@ -144,6 +195,13 @@
                                 x:Name="BottomLeftCorner"
                                 Grid.Row="2"
                                 Content="{x:Bind ViewModel.BottomLeft}"
+                                ContentTemplate="{StaticResource CornerTemplate}"
+                                IsTabStop="False" />
+                            <ContentControl
+                                x:Name="BottomEdge"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Content="{x:Bind ViewModel.Bottom}"
                                 ContentTemplate="{StaticResource CornerTemplate}"
                                 IsTabStop="False" />
                             <ContentControl
@@ -157,6 +215,17 @@
                     </StackPanel>
                 </Border>
 
+                <controls:Note IsOpen="{x:Bind ViewModel.IsRightWheelNoteShown, Mode=OneWay}" Message="{app:Localized Key=HotCornersRightWheelInfo}" />
+
+                <controls:Note IsOpen="{x:Bind ViewModel.IsTopWheelNoteShown, Mode=OneWay}" Message="{app:Localized Key=HotCornersTopWheelInfo}" />
+
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=HotCornersTriggerDescription}"
+                    Glyph="&#xE7C9;"
+                    Header="{app:Localized Key=HotCornersTriggerHeader}"
+                    ItemsSource="{x:Bind ViewModel.Triggers}"
+                    SelectedItem="{x:Bind ViewModel.SelectedTrigger, Mode=TwoWay}" />
+
                 <controls:SliderCard
                     Description="{app:Localized Key=HotCornersDelayDescription}"
                     Glyph="&#xE916;"
@@ -166,6 +235,13 @@
                     StepFrequency="50"
                     Value="{x:Bind ViewModel.ActivationDelay, Mode=TwoWay}"
                     ValueText="{x:Bind ViewModel.ActivationDelayText, Mode=OneWay}" />
+
+                <controls:ChoiceCard
+                    Description="{app:Localized Key=HotCornersPushDescription}"
+                    Glyph="&#xE962;"
+                    Header="{app:Localized Key=HotCornersPushHeader}"
+                    ItemsSource="{x:Bind ViewModel.PushStrengths}"
+                    SelectedItem="{x:Bind ViewModel.SelectedPushStrength, Mode=TwoWay}" />
 
                 <controls:SwitchCard
                     Description="{app:Localized Key=HotCornersFullScreenDescription}"

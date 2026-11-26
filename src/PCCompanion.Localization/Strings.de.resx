@@ -233,19 +233,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersName" xml:space="preserve">
-    <value>Aktive Ecken</value>
+    <value>Aktive Ecken und Ränder</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDescription" xml:space="preserve">
-    <value>Bewegen Sie den Mauszeiger in eine Bildschirmecke, um eine Aktion auszuführen, z. B. alle Fenster anzuzeigen oder den PC zu sperren.</value>
+    <value>Bewegen Sie den Mauszeiger in eine Bildschirmecke oder drücken Sie ihn gegen einen Bildschirmrand, um eine Aktion auszuführen, z. B. alle Fenster anzuzeigen, oder drehen Sie dort das Mausrad, um die Lautstärke zu ändern.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersHeader" xml:space="preserve">
-    <value>Ecken</value>
+    <value>Ecken und Ränder</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersCornersDescription" xml:space="preserve">
-    <value>Wählen Sie, was jede Ecke tut. Um eine Aktion nicht versehentlich auszuführen, wählen Sie eine Taste, die gedrückt gehalten werden muss.</value>
+    <value>Wählen Sie, was jede Ecke und jeder Rand tut, wenn der Zeiger sie erreicht, und was das Mausrad dort tut. Um eine Aktion nicht versehentlich auszuführen, wählen Sie eine Taste, die gedrückt gehalten werden muss.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersTopLeft" xml:space="preserve">
@@ -313,7 +313,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
-    <value>Aktive Ecken: Der Mauszeiger befindet sich in einer Ecke, die die Bildschirme eingeschaltet lässt.</value>
+    <value>Aktive Ecken und Ränder: Der Mauszeiger befindet sich an einer Stelle, die die Bildschirme eingeschaltet lässt.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
@@ -397,7 +397,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayDescription" xml:space="preserve">
-    <value>Wie lange der Mauszeiger in einer Ecke bleibt, bevor die Aktion ausgeführt wird.</value>
+    <value>Wie lange der Mauszeiger in einer Ecke bleibt, bevor ihre Aktion ausgeführt wird, außer Ecken lösen beim Drücken aus.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersDelayValue" xml:space="preserve">
@@ -417,7 +417,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
-    <value>Zum Beispiel Remotedesktop, ein virtueller Computer oder eine Zeichen-App. Solange eine davon im Vordergrund ist, löst keine Ecke auf einem Bildschirm aus.</value>
+    <value>Zum Beispiel Remotedesktop, ein virtueller Computer oder eine Zeichen-App. Solange eine davon im Vordergrund ist, löst keine Ecke und kein Rand auf einem Bildschirm aus, und das Mausrad erreicht die App.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="AppListAdd" xml:space="preserve">
@@ -473,19 +473,19 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsDescription" xml:space="preserve">
-    <value>Warum die letzten Ecken, die der Zeiger erreicht hat, ihre Aktion ausgeführt haben oder nicht, die neuesten zuerst.</value>
+    <value>Warum die letzten Ecken und Ränder, die der Zeiger erreicht hat, ihre Aktion ausgeführt haben oder nicht, die neuesten zuerst.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNone" xml:space="preserve">
-    <value>Es wurde noch keine Ecke erreicht.</value>
+    <value>Es wurde noch keine Ecke und kein Rand erreicht.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
-    <value>Ergebnisse werden angezeigt, solange Aktive Ecken eingeschaltet ist.</value>
+    <value>Ergebnisse werden angezeigt, solange Aktive Ecken und Ränder eingeschaltet ist.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultsNotAvailable" xml:space="preserve">
-    <value>Die letzten Ergebnisse sind gerade nicht verfügbar. Wenn auch die Ecken nicht funktionieren, starten Sie PC Companion neu.</value>
+    <value>Die letzten Ergebnisse sind gerade nicht verfügbar. Wenn auch Ecken und Ränder nicht funktionieren, starten Sie PC Companion neu.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
@@ -557,15 +557,15 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
-    <value>Die Ecken funktionieren nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <value>Ecken und Ränder funktionieren nicht, solange eine als Administrator ausgeführte App im Vordergrund ist.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren die Ecken auch, wenn eine als Administrator ausgeführte App im Vordergrund ist.</value>
+    <value>PC Companion wird als Administrator ausgeführt, daher funktionieren Ecken und Ränder auch, wenn eine als Administrator ausgeführte App im Vordergrund ist.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Liest die Zeigerposition und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken eingeschaltet ist. Erreicht der Zeiger eine Ecke, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat und wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte, und solange Apps aufgeführt sind, welche App im Vordergrund ist. Sendet nur die Windows-Tastenkombinationen der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
+    <value>Liest die Zeigerposition, wie weit sich die Maus bewegt und ob eine Maustaste oder die gewählte Taste gedrückt ist, nur solange Aktive Ecken und Ränder eingeschaltet ist. Erreicht der Zeiger eine Ecke oder einen Rand, wird außerdem gelesen, ob eine App den Zeiger eingeschränkt oder ausgeblendet hat, wo sich Fenster auf diesem Bildschirm befinden, aber nicht deren Titel oder Inhalte, ob sich an diesem Rand eine Taskleiste automatisch ausblendet, und solange Apps aufgeführt sind, welche App im Vordergrund ist. Hält das Mausrad nur auf den äußersten Pixeln einer Ecke oder eines Rands mit einer Mausradaktion von Apps fern. Sendet nur die Windows-Tastenkombinationen und Tasten der gewählten Aktionen und startet nur die von Ihnen gewählten Programme. Speichert und sendet nichts.</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="LockKeysName" xml:space="preserve">
@@ -6582,6 +6582,74 @@
   </data>
   <data name="HotCornersResultTaskbarHides" xml:space="preserve">
     <value>übersprungen, weil sich an diesem Rand eine Taskleiste automatisch ausblendet</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelHeader" xml:space="preserve">
+    <value>Mausrad</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelName" xml:space="preserve">
+    <value>Mausrad: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelKeyName" xml:space="preserve">
+    <value>Mausradtaste: {0}</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelVolume" xml:space="preserve">
+    <value>Lautstärke</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelDesktops" xml:space="preserve">
+    <value>Desktops wechseln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersWheelTracks" xml:space="preserve">
+    <value>Titel wechseln</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerHeader" xml:space="preserve">
+    <value>Ecken lösen aus</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDescription" xml:space="preserve">
+    <value>Ränder brauchen immer einen Druck, daher führt ein Zeiger, der nur auf einem Rand liegt, nie dessen Aktion aus.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerDelay" xml:space="preserve">
+    <value>Nach der Verzögerung</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTriggerPush" xml:space="preserve">
+    <value>Beim Drücken</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushHeader" xml:space="preserve">
+    <value>Druckstärke</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushDescription" xml:space="preserve">
+    <value>Wie stark der Zeiger gegen einen Rand gedrückt werden muss, oder in eine Ecke, die beim Drücken auslöst.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushLight" xml:space="preserve">
+    <value>Leicht</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushMedium" xml:space="preserve">
+    <value>Mittel</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersPushFirm" xml:space="preserve">
+    <value>Kräftig</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightWheelInfo" xml:space="preserve">
+    <value>Die Mausradaktion des rechten Rands nimmt dort der Bildlaufleiste eines maximierten Fensters das Mausrad weg.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopWheelInfo" xml:space="preserve">
+    <value>Die Mausradaktion des oberen Rands nimmt dort Titelleistenaktionen auf der Titelleiste eines maximierten Fensters das Mausrad weg.</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

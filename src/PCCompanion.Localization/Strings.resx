@@ -233,19 +233,19 @@
     <comment>Feature pages: card that says what the feature reads and changes.</comment>
   </data>
   <data name="HotCornersName" xml:space="preserve">
-    <value>Hot Corners</value>
-    <comment>Feature name: navigation pane, Home and the Hot Corners page.</comment>
+    <value>Hot Corners &amp; Edges</value>
+    <comment>Feature name: navigation pane, Home and the Hot Corners &amp; Edges page. It was Hot Corners before it had edges.</comment>
   </data>
   <data name="HotCornersDescription" xml:space="preserve">
-    <value>Move the pointer into a corner of the screen to run an action, such as showing all windows or locking the PC.</value>
-    <comment>Hot Corners: one-sentence description below the feature name.</comment>
+    <value>Move the pointer into a corner or push it against an edge of the screen to run an action, such as showing all windows, or turn the wheel there to change the volume.</value>
+    <comment>Hot Corners &amp; Edges: one-sentence description below the feature name.</comment>
   </data>
   <data name="HotCornersCornersHeader" xml:space="preserve">
-    <value>Corners</value>
-    <comment>Hot Corners page: card with a picture of a screen and a list of actions for each of its corners.</comment>
+    <value>Corners and edges</value>
+    <comment>Hot Corners &amp; Edges page: card with a picture of a screen and lists of actions for each of its corners and edges.</comment>
   </data>
   <data name="HotCornersCornersDescription" xml:space="preserve">
-    <value>Choose what each corner does. To avoid running an action by accident, choose a key to hold.</value>
+    <value>Choose what each corner and edge does when the pointer reaches it, and what the wheel does there. To avoid running an action by accident, choose a key to hold.</value>
     <comment>Hot Corners page: below HotCornersCornersHeader.</comment>
   </data>
   <data name="HotCornersTopLeft" xml:space="preserve">
@@ -313,8 +313,8 @@
     <comment>Hot Corners action: while the pointer stays in the corner, the screen saver doesn't start and the displays don't turn off.</comment>
   </data>
   <data name="HotCornersKeepDisplaysOnReason" xml:space="preserve">
-    <value>Hot Corners: the pointer is in a corner that keeps the displays on.</value>
-    <comment>Reason shown by powercfg /requests while a Hot Corners corner keeps the displays on.</comment>
+    <value>Hot Corners &amp; Edges: the pointer is on a corner or edge that keeps the displays on.</value>
+    <comment>Reason shown by powercfg /requests while a corner or edge of Hot Corners &amp; Edges keeps the displays on.</comment>
   </data>
   <data name="HotCornersActionRunProgram" xml:space="preserve">
     <value>Run a program</value>
@@ -397,7 +397,7 @@
     <comment>Hot Corners page: setting name.</comment>
   </data>
   <data name="HotCornersDelayDescription" xml:space="preserve">
-    <value>How long the pointer stays in a corner before the action runs.</value>
+    <value>How long the pointer stays in a corner before its action runs, unless corners trigger when pushed.</value>
     <comment>Hot Corners page: below HotCornersDelayHeader.</comment>
   </data>
   <data name="HotCornersDelayValue" xml:space="preserve">
@@ -417,7 +417,7 @@
     <comment>Hot Corners page: header of the list of apps that turn corners off.</comment>
   </data>
   <data name="HotCornersExcludedAppsDescription" xml:space="preserve">
-    <value>For example, remote desktop, a virtual machine or a drawing app. While one of them is in front, no corner triggers on any display.</value>
+    <value>For example, remote desktop, a virtual machine or a drawing app. While one of them is in front, no corner or edge triggers on any display, and the wheel reaches the app.</value>
     <comment>Hot Corners page: below HotCornersExcludedAppsHeader.</comment>
   </data>
   <data name="AppListAdd" xml:space="preserve">
@@ -473,19 +473,19 @@
     <comment>Hot Corners page: header of the list of recent results.</comment>
   </data>
   <data name="HotCornersResultsDescription" xml:space="preserve">
-    <value>Why each of the last corners the pointer reached ran its action or not, newest first.</value>
+    <value>Why each of the last corners and edges the pointer reached ran its action or not, newest first.</value>
     <comment>Hot Corners page: below HotCornersResultsHeader.</comment>
   </data>
   <data name="HotCornersResultsNone" xml:space="preserve">
-    <value>No corner has been reached yet.</value>
+    <value>No corner or edge has been reached yet.</value>
     <comment>Hot Corners page: shown instead of the recent results while there are none.</comment>
   </data>
   <data name="HotCornersResultsUnavailable" xml:space="preserve">
-    <value>Results show while Hot Corners is on.</value>
+    <value>Results show while Hot Corners &amp; Edges is on.</value>
     <comment>Hot Corners page: shown instead of the recent results while Hot Corners is off.</comment>
   </data>
   <data name="HotCornersResultsNotAvailable" xml:space="preserve">
-    <value>Recent results aren't available right now. If corners don't work either, restart PC Companion.</value>
+    <value>Recent results aren't available right now. If corners and edges don't work either, restart PC Companion.</value>
     <comment>Hot Corners page: shown instead of the recent results while Hot Corners is on but PC Companion hasn't given them for a few seconds, for example because it stopped.</comment>
   </data>
   <data name="HotCornersResult" xml:space="preserve">
@@ -557,15 +557,15 @@
     <comment>Recent result ({2} of HotCornersResult) for Run a program.</comment>
   </data>
   <data name="HotCornersAdministratorInfo" xml:space="preserve">
-    <value>Corners don't work while an app running as administrator is in front.</value>
+    <value>Corners and edges don't work while an app running as administrator is in front.</value>
     <comment>Hot Corners page: a limitation of Windows, shown while PC Companion runs without admin rights.</comment>
   </data>
   <data name="HotCornersAdministratorInfoOn" xml:space="preserve">
-    <value>PC Companion runs as administrator, so corners also work while an app running as administrator is in front.</value>
+    <value>PC Companion runs as administrator, so corners and edges also work while an app running as administrator is in front.</value>
     <comment>Hot Corners page: replaces HotCornersAdministratorInfo while PC Companion runs as administrator.</comment>
   </data>
   <data name="HotCornersPermissions" xml:space="preserve">
-    <value>Reads the pointer position, and whether a mouse button or the chosen key is held, only while Hot Corners is on. When the pointer reaches a corner, also reads whether an app has confined or hidden the pointer, and where windows are on that display, but not their titles or contents, and while apps are listed, which app is in front. Sends only the Windows shortcuts of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
+    <value>Reads the pointer position, how far the mouse moves, and whether a mouse button or the chosen key is held, only while Hot Corners &amp; Edges is on. When the pointer reaches a corner or edge, also reads whether an app has confined or hidden the pointer, where windows are on that display, but not their titles or contents, whether a taskbar hides itself on that edge, and while apps are listed, which app is in front. Keeps the wheel from apps only on the outermost pixels of a corner or edge with a wheel action. Sends only the Windows shortcuts and keys of the chosen actions, and starts only the programs you choose. Stores and sends nothing.</value>
     <comment>Hot Corners page: below FeaturePermissionsHeader.</comment>
   </data>
   <data name="LockKeysName" xml:space="preserve">
@@ -6583,5 +6583,73 @@
   <data name="HotCornersResultTaskbarHides" xml:space="preserve">
     <value>skipped because a taskbar hides itself on this edge</value>
     <comment>Recent result ({2} of HotCornersResult): the edge's action didn't run because the taskbar, or another bar, hides itself on that edge, and pushing there shows it.</comment>
+  </data>
+  <data name="HotCornersWheelHeader" xml:space="preserve">
+    <value>Wheel</value>
+    <comment>Hot Corners &amp; Edges page: label above a corner's or edge's list of wheel actions, what turning the mouse wheel there does.</comment>
+  </data>
+  <data name="HotCornersWheelName" xml:space="preserve">
+    <value>{0} wheel</value>
+    <comment>Hot Corners &amp; Edges page: screen reader name of a corner's or edge's list of wheel actions. {0} is a corner or edge, such as HotCornersRightEdge.</comment>
+  </data>
+  <data name="HotCornersWheelKeyName" xml:space="preserve">
+    <value>{0} wheel key</value>
+    <comment>Hot Corners &amp; Edges page: screen reader name of a corner's or edge's list of keys to hold while turning the wheel. {0} is a corner or edge, such as HotCornersRightEdge.</comment>
+  </data>
+  <data name="HotCornersWheelVolume" xml:space="preserve">
+    <value>Volume</value>
+    <comment>Hot Corners &amp; Edges page, wheel action: the wheel turned up makes the volume louder, turned down quieter.</comment>
+  </data>
+  <data name="HotCornersWheelDesktops" xml:space="preserve">
+    <value>Switch desktops</value>
+    <comment>Hot Corners &amp; Edges page, wheel action: the wheel turned up switches to the previous virtual desktop, turned down to the next.</comment>
+  </data>
+  <data name="HotCornersWheelTracks" xml:space="preserve">
+    <value>Switch tracks</value>
+    <comment>Hot Corners &amp; Edges page, wheel action: the wheel turned up goes to the previous track of the music or video playing, turned down to the next.</comment>
+  </data>
+  <data name="HotCornersTriggerHeader" xml:space="preserve">
+    <value>Corners trigger</value>
+    <comment>Hot Corners &amp; Edges page: setting name, when corners run their action, with the choices HotCornersTriggerDelay and HotCornersTriggerPush.</comment>
+  </data>
+  <data name="HotCornersTriggerDescription" xml:space="preserve">
+    <value>Edges always need a push, so a pointer resting on one never runs its action.</value>
+    <comment>Hot Corners &amp; Edges page: below HotCornersTriggerHeader.</comment>
+  </data>
+  <data name="HotCornersTriggerDelay" xml:space="preserve">
+    <value>After the delay</value>
+    <comment>Hot Corners &amp; Edges page, a choice of HotCornersTriggerHeader: a corner runs its action once the pointer has stayed there for the activation delay.</comment>
+  </data>
+  <data name="HotCornersTriggerPush" xml:space="preserve">
+    <value>When pushed</value>
+    <comment>Hot Corners &amp; Edges page, a choice of HotCornersTriggerHeader: a corner runs its action once the pointer is pushed into it, as edges do.</comment>
+  </data>
+  <data name="HotCornersPushHeader" xml:space="preserve">
+    <value>Push strength</value>
+    <comment>Hot Corners &amp; Edges page: setting name, how hard the mouse must push against an edge, with the choices HotCornersPushLight, HotCornersPushMedium and HotCornersPushFirm.</comment>
+  </data>
+  <data name="HotCornersPushDescription" xml:space="preserve">
+    <value>How hard to push the pointer against an edge, or into a corner set to trigger when pushed.</value>
+    <comment>Hot Corners &amp; Edges page: below HotCornersPushHeader.</comment>
+  </data>
+  <data name="HotCornersPushLight" xml:space="preserve">
+    <value>Light</value>
+    <comment>Hot Corners &amp; Edges page, a choice of HotCornersPushHeader: a light push is enough.</comment>
+  </data>
+  <data name="HotCornersPushMedium" xml:space="preserve">
+    <value>Medium</value>
+    <comment>Hot Corners &amp; Edges page, a choice of HotCornersPushHeader: the default.</comment>
+  </data>
+  <data name="HotCornersPushFirm" xml:space="preserve">
+    <value>Firm</value>
+    <comment>Hot Corners &amp; Edges page, a choice of HotCornersPushHeader: a firm push is needed.</comment>
+  </data>
+  <data name="HotCornersRightWheelInfo" xml:space="preserve">
+    <value>The right edge's wheel action takes the wheel from a maximized window's scroll bar there.</value>
+    <comment>Hot Corners &amp; Edges page: shown while the right edge has a wheel action. A maximized window's scroll bar is at the right edge of the screen.</comment>
+  </data>
+  <data name="HotCornersTopWheelInfo" xml:space="preserve">
+    <value>The top edge's wheel action takes the wheel from Title Bar Actions on a maximized window's title bar there.</value>
+    <comment>Hot Corners &amp; Edges page: shown while the top edge has a wheel action. A maximized window's title bar is at the top edge of the screen. Use the feature name Title Bar Actions as translated.</comment>
   </data>
 </root>
