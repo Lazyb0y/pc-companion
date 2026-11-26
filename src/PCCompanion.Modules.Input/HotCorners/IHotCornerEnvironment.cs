@@ -30,4 +30,10 @@ public interface IHotCornerEnvironment : IFullScreenEnvironment
     AppOfWindow? AppInFront { get; }
 
     bool IsKeyHeld(HotCornerKey key);
+
+    /// <summary>
+    /// Whether a bar hides itself on <paramref name="side"/> of the display with
+    /// <paramref name="display"/>, as last asked: it doesn't wait for Explorer to answer.
+    /// </summary>
+    bool HasAutoHideBar(Rectangle display, ScreenSide side);
 }

@@ -4,7 +4,7 @@ using PCCompanion.Localization;
 namespace PCCompanion.Modules.Input.HotCorners;
 
 /// <summary>
-/// The actions in the order the Hot Corners page lists them, and their names in the user interface
+/// The actions in the order the Hot Corners &amp; Edges page lists them, and their names in the user interface
 /// language, for the page and its recent results.
 /// </summary>
 public static class HotCornerActionNames
@@ -15,6 +15,8 @@ public static class HotCornerActionNames
         HotCornerAction.None,
         HotCornerAction.TaskView,
         HotCornerAction.ShowDesktop,
+        HotCornerAction.PreviousDesktop,
+        HotCornerAction.NextDesktop,
         HotCornerAction.Start,
         HotCornerAction.Search,
         HotCornerAction.Notifications,
@@ -29,6 +31,8 @@ public static class HotCornerActionNames
     {
         HotCornerAction.TaskView => Strings.HotCornersActionTaskView,
         HotCornerAction.ShowDesktop => Strings.HotCornersActionShowDesktop,
+        HotCornerAction.PreviousDesktop => Strings.HotCornersActionPreviousDesktop,
+        HotCornerAction.NextDesktop => Strings.HotCornersActionNextDesktop,
         HotCornerAction.Start => Strings.HotCornersActionStart,
         HotCornerAction.Search => Strings.HotCornersActionSearch,
         HotCornerAction.Notifications => Strings.HotCornersActionNotifications,

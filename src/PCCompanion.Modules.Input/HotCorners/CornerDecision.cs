@@ -29,7 +29,7 @@ public enum CornerOutcome
     Triggered,
 
     /// <summary>
-    /// The pointer left the corner before the delay ended.
+    /// The pointer left the corner or edge before the delay ended or the push was enough.
     /// </summary>
     LeftEarly,
 
@@ -56,4 +56,9 @@ public enum CornerOutcome
     /// An app the user listed is in front.
     /// </summary>
     AppExcluded,
+
+    /// <summary>
+    /// A taskbar or another bar hides itself on the edge, and pushing there shows it.
+    /// </summary>
+    TaskbarHides,
 }

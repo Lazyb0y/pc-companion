@@ -51,6 +51,11 @@ internal sealed class FakeHotCornerEnvironment : IHotCornerEnvironment
 
     public bool IsKeyHeld(HotCornerKey key) => key == HeldKey;
 
+    /// <summary>The sides of displays where a bar hides itself.</summary>
+    public HashSet<(Rectangle Display, ScreenSide Side)> AutoHideBars { get; } = [];
+
+    public bool HasAutoHideBar(Rectangle display, ScreenSide side) => AutoHideBars.Contains((display, side));
+
     public bool? FindWindowFrontToBack(Func<WindowPlace, bool?> decide)
     {
         WindowSearches++;

@@ -497,7 +497,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>已跳过，因为指针在延迟结束前离开了</value>
+    <value>已跳过，因为指针离开得太早</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
@@ -6482,6 +6482,34 @@
   </data>
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>“卷起”操作仅在“窗口卷起”功能打开时有效。在此之前，会改为播放 Windows 警告声音。</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>上边缘</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>下边缘</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>左边缘</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>右边缘</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>上一个桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>下一个桌面</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>已跳过，因为任务栏在此边缘自动隐藏</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

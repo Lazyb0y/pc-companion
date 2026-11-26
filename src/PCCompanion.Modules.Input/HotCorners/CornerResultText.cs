@@ -32,12 +32,17 @@ public static class CornerResultText
             : time;
     }
 
-    private static string CornerName(ScreenCorner corner) => corner switch
+    /// <summary>The name of a corner or edge, such as "Top left" or "Right edge".</summary>
+    public static string CornerName(ScreenCorner corner) => corner switch
     {
         ScreenCorner.TopLeft => Strings.HotCornersTopLeft,
         ScreenCorner.TopRight => Strings.HotCornersTopRight,
         ScreenCorner.BottomLeft => Strings.HotCornersBottomLeft,
-        _ => Strings.HotCornersBottomRight,
+        ScreenCorner.BottomRight => Strings.HotCornersBottomRight,
+        ScreenCorner.Top => Strings.HotCornersTopEdge,
+        ScreenCorner.Bottom => Strings.HotCornersBottomEdge,
+        ScreenCorner.Left => Strings.HotCornersLeftEdge,
+        _ => Strings.HotCornersRightEdge,
     };
 
     private static string Outcome(CornerResultKind kind) => kind switch
@@ -54,6 +59,7 @@ public static class CornerResultText
         CornerResultKind.ProgramNotChosen => Strings.HotCornersResultProgramNotChosen,
         CornerResultKind.ProgramNotFound => Strings.HotCornersResultProgramNotFound,
         CornerResultKind.ProgramNotExe => Strings.HotCornersResultProgramNotExe,
+        CornerResultKind.TaskbarHides => Strings.HotCornersResultTaskbarHides,
         _ => Strings.HotCornersResultProgramCantStart,
     };
 }

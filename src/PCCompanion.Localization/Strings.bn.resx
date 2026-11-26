@@ -509,7 +509,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>এড়ানো হয়েছে, কারণ বিলম্ব শেষ হওয়ার আগেই পয়েন্টার সরে গেছে</value>
+    <value>এড়ানো হয়েছে, কারণ পয়েন্টার খুব তাড়াতাড়ি সরে গেছে</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
@@ -6554,6 +6554,34 @@
   </data>
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>গুটিয়ে নিন অ্যাকশন শুধু তখনই কাজ করে যখন উইন্ডো গোটানো বৈশিষ্ট্যটি চালু থাকে। ততক্ষণ এর বদলে Windows-এর সতর্কতা শব্দ বাজে।</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>উপরের প্রান্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>নিচের প্রান্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>বাঁ প্রান্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>ডান প্রান্ত</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>আগের ডেস্কটপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>পরের ডেস্কটপ</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>এড়ানো হয়েছে, কারণ এই প্রান্তে একটি টাস্কবার নিজে থেকে লুকিয়ে যায়</value>
     <comment>Needs native review.</comment>
   </data>
 </root>

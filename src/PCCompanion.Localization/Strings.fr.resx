@@ -509,7 +509,7 @@
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultLeftEarly" xml:space="preserve">
-    <value>ignorée, car le pointeur est parti avant la fin du délai</value>
+    <value>ignorée, car le pointeur est parti trop tôt</value>
     <comment>Needs native review.</comment>
   </data>
   <data name="HotCornersResultMouseButtonHeld" xml:space="preserve">
@@ -6554,6 +6554,34 @@
   </data>
   <data name="TitleBarActionsNeedsWindowShadingInfo" xml:space="preserve">
     <value>L’action Enrouler ne fonctionne que quand la fonctionnalité Enroulement des fenêtres est activée. D’ici là, le son d’avertissement de Windows retentit à la place.</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersTopEdge" xml:space="preserve">
+    <value>Bord supérieur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersBottomEdge" xml:space="preserve">
+    <value>Bord inférieur</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersLeftEdge" xml:space="preserve">
+    <value>Bord gauche</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersRightEdge" xml:space="preserve">
+    <value>Bord droit</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionPreviousDesktop" xml:space="preserve">
+    <value>Bureau précédent</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersActionNextDesktop" xml:space="preserve">
+    <value>Bureau suivant</value>
+    <comment>Needs native review.</comment>
+  </data>
+  <data name="HotCornersResultTaskbarHides" xml:space="preserve">
+    <value>ignorée, car une barre des tâches se masque automatiquement sur ce bord</value>
     <comment>Needs native review.</comment>
   </data>
 </root>
