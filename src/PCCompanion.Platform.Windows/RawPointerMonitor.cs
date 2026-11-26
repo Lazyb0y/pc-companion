@@ -30,6 +30,8 @@ public sealed class RawPointerMonitor : IDisposable
     /// Raised on the monitors' thread for each mouse event: movement, a button or the wheel.
     /// Read the position with <see cref="InputState.PointerPosition"/>. Raw input can report an
     /// event before the pointer's position follows it, and before low-level mouse hooks see it.
+    /// It reports a mouse's movement also while the pointer can't move further, as against the
+    /// edge of the screen.
     /// </summary>
     public event EventHandler<PointerInputEventArgs>? InputReceived;
 
@@ -141,8 +143,9 @@ public sealed class RawPointerMonitor : IDisposable
                 return new PointerInputEventArgs(PointerButtonChanges.None, 0, time);
             }
 
-            var buttons = data.data.mouse.Anonymous.Anonymous;
-            return PointerInputEventArgs.FromRawMouse(buttons.usButtonFlags, buttons.usButtonData, time);
+            var mouse = data.data.mouse;
+            var buttons = mouse.Anonymous.Anonymous;
+            return PointerInputEventArgs.FromRawMouse(buttons.usButtonFlags, buttons.usButtonData, time, (ushort)mouse.usFlags, mouse.lLastX, mouse.lLastY);
         }
 
         private static unsafe bool Register(RAWINPUTDEVICE_FLAGS flags, HWND target)

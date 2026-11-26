@@ -28,7 +28,10 @@ public sealed class PointerKeeper
     /// <summary>
     /// Decides whether to keep one event from the apps.
     /// </summary>
-    /// <param name="claims">The claims to keep input for; the first that keeps it wins.</param>
+    /// <param name="claims">
+    /// The claims to keep input for; the first that keeps it wins, among those marked
+    /// <see cref="PointerClaim.First"/> before the others.
+    /// </param>
     /// <param name="input">What happened: a button going down or up, or a wheel notch.</param>
     /// <param name="point">Where the pointer was.</param>
     /// <param name="keys">The keys held at the time.</param>
@@ -53,18 +56,25 @@ public sealed class PointerKeeper
         var claim = -1;
         bool? captured = null;
         nint? window = null;
-        for (var index = 0; index < claims.Count; index++)
-        {
-            var candidate = claims[index];
-            if (!candidate.Keeps(trigger, point)
-                || (candidate.NotWhileCaptured && (captured ??= place?.IsPointerCaptured() ?? false))
-                || (candidate.ExceptIn.TryGetValue(trigger, out var windows) && windows.Count > 0 && windows.Contains(window ??= place?.WindowAt(point) ?? 0)))
-            {
-                continue;
-            }
 
-            claim = index;
-            break;
+        // Claims marked First in one pass, then the others.
+        for (var pass = 0; pass < 2 && claim < 0; pass++)
+        {
+            var first = pass == 0;
+            for (var index = 0; index < claims.Count; index++)
+            {
+                var candidate = claims[index];
+                if (candidate.First != first
+                    || !candidate.Keeps(trigger, point)
+                    || (candidate.NotWhileCaptured && (captured ??= place?.IsPointerCaptured() ?? false))
+                    || (candidate.ExceptIn.TryGetValue(trigger, out var windows) && windows.Count > 0 && windows.Contains(window ??= place?.WindowAt(point) ?? 0)))
+                {
+                    continue;
+                }
+
+                claim = index;
+                break;
+            }
         }
 
         if (button != PointerButton.Wheel)
@@ -134,6 +144,13 @@ public sealed record PointerClaim(Rectangle Area, IReadOnlySet<PointerTrigger> T
 
     /// <summary>Whether the claim keeps nothing while an app has hidden the pointer or confined it, as games do.</summary>
     public bool NotWhileCaptured { get; init; }
+
+    /// <summary>
+    /// Whether the claim is compared before the claims without it, so it wins where they overlap
+    /// whichever came first, as Hot Corners &amp; Edges' wheel on the screen's outermost pixels wins
+    /// over Title Bar Actions' wheel on a maximized window's title bar there.
+    /// </summary>
+    public bool First { get; init; }
 
     /// <summary>Whether this claim's area and triggers keep <paramref name="trigger"/> with the pointer at <paramref name="point"/>.</summary>
     public bool Keeps(PointerTrigger trigger, Point point) => Area.Contains(point) && Triggers.Contains(trigger);

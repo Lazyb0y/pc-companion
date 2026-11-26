@@ -67,6 +67,17 @@ public sealed class PointerKeeperTests
     }
 
     [Fact]
+    public void AClaimMarkedFirstWinsOverEarlierClaimsWhereTheyOverlap()
+    {
+        var keeper = new PointerKeeper();
+        var first = new PointerClaim(new Rectangle(100, 200, 10, 1), new HashSet<PointerTrigger> { Wheel }) { First = true };
+        PointerClaim[] claims = [Claim(Wheel), first];
+
+        Assert.Equal(1, keeper.Decide(claims, PointerInput.Wheel, new Point(105, 200), PointerKeys.None, 1).Claim);
+        Assert.Equal(0, keeper.Decide(claims, PointerInput.Wheel, new Point(105, 201), PointerKeys.None, 2).Claim);
+    }
+
+    [Fact]
     public void AKeptPressKeepsItsReleaseAfterTheClaimIsGone()
     {
         var keeper = new PointerKeeper();

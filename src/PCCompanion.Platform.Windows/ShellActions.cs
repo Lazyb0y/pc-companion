@@ -48,6 +48,33 @@ public static class ShellActions
     public static bool Lock() => PInvoke.LockWorkStation();
 
     /// <summary>
+    /// Switches to the virtual desktop on the right, or on the left, with Ctrl + Windows + Right or
+    /// Left: Windows has no documented API for it. Past the last or first desktop, nothing happens.
+    /// </summary>
+    /// <param name="keepHeldKeys">
+    /// Whether keys the user is holding, which are released for the shortcut, are pressed again
+    /// afterwards, as for a wheel turned with a key held, so the next notch still finds the key.
+    /// </param>
+    public static bool SwitchDesktop(bool next, bool keepHeldKeys = false) =>
+        SendShortcut(keepHeldKeys, VIRTUAL_KEY.VK_LCONTROL, VIRTUAL_KEY.VK_LWIN, next ? VIRTUAL_KEY.VK_RIGHT : VIRTUAL_KEY.VK_LEFT);
+
+    /// <summary>
+    /// Makes the volume louder or quieter by one step, 2%, with the Volume Up or Volume Down key,
+    /// which shows Windows' volume display; the audio API changes the volume without it.
+    /// </summary>
+    /// <param name="keepHeldKeys">As for <see cref="SwitchDesktop"/>.</param>
+    public static bool ChangeVolume(bool louder, bool keepHeldKeys = false) =>
+        SendShortcut(keepHeldKeys, louder ? VIRTUAL_KEY.VK_VOLUME_UP : VIRTUAL_KEY.VK_VOLUME_DOWN);
+
+    /// <summary>
+    /// Goes to the next or previous track with the Next Track or Previous Track key, which Windows
+    /// passes to the app playing media.
+    /// </summary>
+    /// <param name="keepHeldKeys">As for <see cref="SwitchDesktop"/>.</param>
+    public static bool SwitchTrack(bool next, bool keepHeldKeys = false) =>
+        SendShortcut(keepHeldKeys, next ? VIRTUAL_KEY.VK_MEDIA_NEXT_TRACK : VIRTUAL_KEY.VK_MEDIA_PREV_TRACK);
+
+    /// <summary>
     /// Presses and releases a key that does nothing, so that releasing a held Windows key or Alt
     /// opens neither Start nor a menu bar. Windows also lets the process that sent it bring a
     /// window to the front afterwards, which isn't documented.
@@ -225,13 +252,17 @@ public static class ShellActions
         }
     }
 
+    private static bool SendShortcut(params ReadOnlySpan<VIRTUAL_KEY> keys) => SendShortcut(keepHeldKeys: false, keys);
+
     // A modifier the user is holding, such as the key a hot corner requires, would change the
     // shortcut: Ctrl + Windows + D adds a virtual desktop. Those keys are released first, after a
     // key that does nothing, because releasing the Windows key or Alt on its own opens Start or
-    // the menu bar.
-    private static bool SendShortcut(params ReadOnlySpan<VIRTUAL_KEY> keys)
+    // the menu bar. Kept, they're pressed again after the shortcut, followed by the key that does
+    // nothing, so the user releasing them opens neither.
+    private static bool SendShortcut(bool keepHeldKeys, params ReadOnlySpan<VIRTUAL_KEY> keys)
     {
         var inputs = new List<INPUT>();
+        var released = new List<VIRTUAL_KEY>();
 
         foreach (var modifier in Modifiers)
         {
@@ -244,6 +275,7 @@ public static class ShellActions
                 }
 
                 inputs.Add(Key(modifier, up: true));
+                released.Add(modifier);
             }
         }
 
@@ -257,13 +289,26 @@ public static class ShellActions
             inputs.Add(Key(keys[index], up: true));
         }
 
+        if (keepHeldKeys && released.Count > 0)
+        {
+            foreach (var modifier in released)
+            {
+                inputs.Add(Key(modifier, up: false));
+            }
+
+            inputs.Add(Key(MaskKey, up: false));
+            inputs.Add(Key(MaskKey, up: true));
+        }
+
         return PInvoke.SendInput(CollectionsMarshal.AsSpan(inputs), Marshal.SizeOf<INPUT>()) == inputs.Count;
     }
 
     private static INPUT Key(VIRTUAL_KEY key, bool up)
     {
         var flags = up ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
-        if (key is VIRTUAL_KEY.VK_RCONTROL or VIRTUAL_KEY.VK_RMENU or VIRTUAL_KEY.VK_LWIN or VIRTUAL_KEY.VK_RWIN)
+        if (key is VIRTUAL_KEY.VK_RCONTROL or VIRTUAL_KEY.VK_RMENU or VIRTUAL_KEY.VK_LWIN or VIRTUAL_KEY.VK_RWIN
+            or VIRTUAL_KEY.VK_LEFT or VIRTUAL_KEY.VK_RIGHT
+            or VIRTUAL_KEY.VK_VOLUME_UP or VIRTUAL_KEY.VK_VOLUME_DOWN or VIRTUAL_KEY.VK_MEDIA_NEXT_TRACK or VIRTUAL_KEY.VK_MEDIA_PREV_TRACK)
         {
             flags |= KEYBD_EVENT_FLAGS.KEYEVENTF_EXTENDEDKEY;
         }

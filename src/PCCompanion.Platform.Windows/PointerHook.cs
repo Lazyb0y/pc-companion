@@ -390,7 +390,8 @@ public sealed class PointerHook : IDisposable
             public bool IsPointerCaptured() => InputState.IsPointerCaptured;
         }
 
-        // Each hook's claim, in the order they came, so an earlier claim wins where two overlap.
+        // Each hook's claim, in the order they came, so an earlier claim wins where two overlap,
+        // unless only the later one is marked First.
         private sealed class Claims(PointerHook[] owners, PointerClaim[] list)
         {
             public static readonly Claims None = new([], []);
