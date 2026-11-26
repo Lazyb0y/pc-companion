@@ -45,9 +45,9 @@ Switch the keyboard language automatically for the app in front: a fixed languag
 ## Apps and rules
 
 - **The app in front** is the app of the window in front, or of the window that owns it (`TopLevelWindows.RootOwner`), such as a dialog's main window, when the taskbar shows that window (`TopLevelWindows.MayHaveTaskbarButton`).
-- **What counts as one app:** the windows the taskbar groups as one app, with the same code as App Windows, Minimize to Tray, Hide Apps and Hot Corners (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file. So each browser profile and each installed web app has its own language, and every File Explorer window shares one.
+- **What counts as one app:** the windows the taskbar groups as one app, with the same code as App Windows, Minimize to Tray, Hide Apps and Hot Corners & Edges (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file. So each browser profile and each installed web app has its own language, and every File Explorer window shares one.
 - **Not an app:** windows the taskbar doesn't show and that no such window owns, such as the desktop, the taskbar, Start, Search, Alt + Tab, the emoji panel, notification-area pop-ups and the lock screen. They're never switched, and going from an app to one of them and back is staying in that app.
-- **Listed apps** are added as in Hot Corners and Minimize to Tray: **Running app** lists the apps with windows on the taskbar, and **Program file** picks a program with the Open dialog. Each has an input method. **Remove** takes one out.
+- **Listed apps** are added as in Hot Corners & Edges and Minimize to Tray: **Running app** lists the apps with windows on the taskbar, and **Program file** picks a program with the Open dialog. Each has an input method. **Remove** takes one out.
 - An app that moves its program file when it updates, as some apps installed in a folder named after their version do, must be added again.
 - PC Companion's settings window counts as any other app's window.
 
@@ -110,7 +110,7 @@ Switch the keyboard language automatically for the app in front: a fixed languag
 - It's Lock Keys' notice: the same box, colors, fade, high contrast and right-to-left layout, at the bottom center of the display of the window in front, for 2 seconds. Its icon is Keyboard (`E765`) from Segoe Fluent Icons on Windows 11 and Segoe MDL2 Assets on Windows 10.
 - **Text:** the language's name, and for a keyboard layout the layout's name on a second line, as Windows' switcher shows them, such as "English (United States)" and "US-International". A language with IMEs shows its name only, since which IME it got can't be read from another process.
 - The notice code is in the module's `Notice` folder, which both features use; the full-screen check is `FullScreenCheck` in `PCCompanion.Platform.Windows`. `SharedNotice` owns the one notice window, of class `PCCompanion.Notice`, so a notice from either feature replaces the other's, and keeps it clear of Lock Keys' Caps Lock badge at the same position, as Lock Keys' own notices do.
-- It doesn't show while an app is full screen on that display, with Hot Corners' rules, as Lock Keys' notice doesn't. A skipped notice logs why at Debug level.
+- It doesn't show while an app is full screen on that display, with Hot Corners & Edges' rules, as Lock Keys' notice doesn't. A skipped notice logs why at Debug level.
 - Names for the notice are read on the thread pool with the input methods, when the feature starts and when the user's list of layouts changes, and kept; nothing switches before they're read.
 
 ## Apps running as administrator
@@ -161,10 +161,10 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with English (Unite
 ## Settings
 
 - **Feature page:** the on/off switch; a note when the user has fewer than two input methods, with **Open** for **Language & region** (`ms-settings:regionlanguage`); **Apps**, the app list with **Running app**, **Program file** and, in each row, an input method list and **Remove**; **Other apps**, with **Remember each app's language**, **Keep the language in use** and **Use one language**, which shows its own input method list; **Show a notice when the language changes**; **Windows' own setting**, with its state and **Open**; a note about apps running as administrator; and a **Permissions & data** card.
-- The app list is the one Hot Corners and Minimize to Tray use, with an input method list in each row, named "Language for <app>" for screen readers, before **Remove**. After **Add**, the focus goes to the new row's list, which starts with the first input method in the user's list.
+- The app list is the one Hot Corners & Edges and Minimize to Tray use, with an input method list in each row, named "Language for <app>" for screen readers, before **Remove**. After **Add**, the focus goes to the new row's list, which starts with the first input method in the user's list.
 - The input method lists show Windows' names, a keyboard layout with its language's name and its own, such as "German (Germany) – German", and are read when the page opens. A rule whose input method isn't in the user's list shows "Not in your languages" in its row.
 - The switch on Home changes only `enabled` and keeps the other settings.
-- A section that can't be read, for example after a hand edit, turns the feature off with a warning in the log. Listed apps are read as Hot Corners reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out. An input method identifier that doesn't parse leaves its rule out, with a warning. An unknown behavior for other apps is Remember.
+- A section that can't be read, for example after a hand edit, turns the feature off with a warning in the log. Listed apps are read as Hot Corners & Edges reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out. An input method identifier that doesn't parse leaves its rule out, with a warning. An unknown behavior for other apps is Remember.
 
 ```json
 "features": {
@@ -198,7 +198,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with English (Unite
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11.
-- The APIs are documented and in every supported version: `GetGUIThreadInfo`, `GetKeyboardLayout`, `GetKeyboardLayoutList`, `ActivateKeyboardLayout`, `GetKeyboardLayoutName`, `PostMessage` with `WM_INPUTLANGCHANGEREQUEST`, `SetWinEventHook` with `EVENT_SYSTEM_FOREGROUND`, `CreateToolhelp32Snapshot`, `EnumThreadWindows`, `GetLocaleInfoEx`, `SHLoadIndirectString`, `SystemParametersInfo` with `SPI_GETTHREADLOCALINPUTSETTINGS` and `ITfInputProcessorProfileMgr`, plus those of Lock Keys' notice and Hot Corners' full-screen check.
+- The APIs are documented and in every supported version: `GetGUIThreadInfo`, `GetKeyboardLayout`, `GetKeyboardLayoutList`, `ActivateKeyboardLayout`, `GetKeyboardLayoutName`, `PostMessage` with `WM_INPUTLANGCHANGEREQUEST`, `SetWinEventHook` with `EVENT_SYSTEM_FOREGROUND`, `CreateToolhelp32Snapshot`, `EnumThreadWindows`, `GetLocaleInfoEx`, `SHLoadIndirectString`, `SystemParametersInfo` with `SPI_GETTHREADLOCALINPUTSETTINGS` and `ITfInputProcessorProfileMgr`, plus those of Lock Keys' notice and Hot Corners & Edges' full-screen check.
 - Keyboard layouts' names come from the registry's list of keyboard layouts, whose values Microsoft doesn't document. They're only shown: a layout whose name can't be read shows its language's name, and what a rule means never depends on them.
 - Reading a console's input method from the console host's threads relies on how the console host works, not on what Microsoft documents. When the console host isn't found, as it wouldn't be if a later Windows changed how it's started, consoles are switched without the reads before and after, so without a notice, and Remember skips them.
 - The spike ran on Windows 11 only, so Windows 10 is tested by hand.

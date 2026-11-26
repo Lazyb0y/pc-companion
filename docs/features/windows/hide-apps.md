@@ -41,7 +41,7 @@ Put away every window of the app in front, or of every other app, with one short
 
 ### What counts as one app
 
-- The windows the taskbar groups as one app, with the same code as App Windows, Minimize to Tray and Hot Corners (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file.
+- The windows the taskbar groups as one app, with the same code as App Windows, Minimize to Tray and Hot Corners & Edges (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file.
 - So each browser profile and each installed web app is an app of its own, and every File Explorer window belongs to File Explorer, while the desktop and the taskbar never count.
 
 ### Windows that stay
@@ -179,7 +179,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), with test windows i
 - **Hiding windows off the taskbar,** as macOS hides apps: the app would look closed, Windows shows Store apps in its shared app frame again, and windows could be lost. Minimize to Tray does it for one window, with an icon to bring it back.
 - **A list of apps that Hide others leaves alone,** such as a music player: later.
 - **Hide app and Hide others in the PC Companion icon's menu:** once the menu opens, the taskbar is in front, so there's no app in front to act on.
-- **A Hot Corners action:** Hot Corners is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
+- **A Hot Corners & Edges action:** Hot Corners & Edges is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
 - **Hiding apps automatically after a time without use, muting hidden apps, or hiding their notification icons,** as some tools do.
 - **Windows on other virtual desktops,** which aren't in sight.
 - **Staying on the virtual desktop that's showing when Show all brings back windows from another one:** in the Sandbox checks, about 35 ms after Show all was chosen from the PC Companion icon's menu, Windows sometimes gave the front to a window minimized on another virtual desktop, before Hide Apps brought it back, and switched to that desktop. Hide Apps gives the front to a window on the desktop that's showing first, which helped some of the time; the cause is still to be found.

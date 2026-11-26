@@ -3,11 +3,11 @@
 ## Terms
 
 - **Module:** a group of related features, with one project and one section in the settings app's navigation pane. Example: **Input & Triggers**.
-- **Feature:** something the user turns on or off, with its own settings, settings page and Home card. Example: **Hot Corners**, in Input & Triggers.
+- **Feature:** something the user turns on or off, with its own settings, settings page and Home card. Example: **Hot Corners & Edges**, in Input & Triggers.
 
 ## Projects
 
-- `PCCompanion.Modules.<Module>` holds the module's features: the logic that runs in the host, each feature's settings type and its JSON format. It references only Core, Platform.Windows and Localization, never another module, and has no UI framework. Hot Corners goes in `PCCompanion.Modules.Input`.
+- `PCCompanion.Modules.<Module>` holds the module's features: the logic that runs in the host, each feature's settings type and its JSON format. It references only Core, Platform.Windows and Localization, never another module, and has no UI framework. Hot Corners & Edges goes in `PCCompanion.Modules.Input`.
 - Feature pages are in the settings app, under `src/PCCompanion.App/Features/<Feature>/`, so the host never loads WinUI and modules need no UI projects.
 - The host and the settings app reference every module project.
 

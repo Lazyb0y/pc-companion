@@ -2,7 +2,7 @@
 
 How PC Companion's own icons look: the app icon, and the icon that names each feature. A new icon starts from the drawings in [`icons/`](icons/), follows this page, and is shown to the maintainer before it's used.
 
-![App icon](icons/app-48.svg) ![Hot Corners](icons/hot-corners-32.svg) ![Clipboard Actions](icons/clipboard-actions-32.svg) ![System Meters](icons/system-meters-32.svg)
+![App icon](icons/app-48.svg) ![Hot Corners & Edges](icons/hot-corners-32.svg) ![Clipboard Actions](icons/clipboard-actions-32.svg) ![System Meters](icons/system-meters-32.svg)
 
 ## Where icons appear
 
@@ -54,7 +54,7 @@ How PC Companion's own icons look: the app icon, and the icon that names each fe
 
 | Feature | Object | Second object | Color |
 |---|---|---|---|
-| Hot Corners | A screen, its top-left corner lit, with a white pointer heading for it | | Green |
+| Hot Corners & Edges | A screen, its top-left corner lit, with a white pointer heading for it | | Green |
 | Lock Keys | A keycap with the white Caps Lock arrow and bar | | Violet |
 | Input Language per App | An app window | Three speech bubbles round it, with a white 文, A and ع: the 文 bubble orange, the A bubble in the main tone and the ع bubble in the deepest | App blue |
 | Shortcuts & Mouse Buttons | A keycap at the top left, its sides in the deepest tone | A violet mouse lit from the left, with an orange wheel | Green |

@@ -51,8 +51,8 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 
 ### The apps
 
-- **Apps that drop down,** a list on the page, as Hot Corners and Minimize to Tray list apps: **Running app** lists the apps with windows on the taskbar, **Program file** picks a program with the Open dialog, and **Remove** takes one out.
-- **What counts as one app,** as the taskbar groups them, with the same code as Hide Apps, Minimize to Tray and Hot Corners (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file. So each browser profile and installed web app can drop down on its own.
+- **Apps that drop down,** a list on the page, as Hot Corners & Edges and Minimize to Tray list apps: **Running app** lists the apps with windows on the taskbar, **Program file** picks a program with the Open dialog, and **Remove** takes one out.
+- **What counts as one app,** as the taskbar groups them, with the same code as Hide Apps, Minimize to Tray and Hot Corners & Edges (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile and installed web app; otherwise its Store app package's app ID; otherwise its program file. So each browser profile and installed web app can drop down on its own.
 
 ### Finding the window
 
@@ -63,7 +63,7 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
 
 ### Starting the app
 
-- When the app has no such window, the shortcut starts it, with the user's rights, never with admin rights, as Hot Corners starts programs:
+- When the app has no such window, the shortcut starts it, with the user's rights, never with admin rights, as Hot Corners & Edges starts programs:
   - **A program file** starts in its own folder, without arguments (`IHostCommands.StartProgram`). A program that's missing, or isn't an `.exe`, isn't started.
   - **An app ID** opens through Start's Apps folder (`shell:AppsFolder\<app ID>`), with a new `IHostCommands.StartApp`. It never runs with admin rights either: a host running as administrator has its copy without them open it, as for programs. The app ID is first looked up in the Apps folder (`SHCreateItemFromParsingName`): Windows opens File Explorer at Documents, without an error, for an app ID that isn't there, as the spike showed. One that isn't found isn't opened.
 - The first window of the app that the taskbar shows and that isn't cloaked, within 30 seconds, drops down. A Store app's frame first shows cloaked and small, as the spike showed. The window can show at its own place for a moment before it's taken.
@@ -261,10 +261,10 @@ Slide a chosen app's window down from the top of the screen with a shortcut, and
   - the window stayed on another desktop;
   - another program has the shortcut.
 
-  The same result again right after itself is counted, with its latest time, instead of pushing the others out, as on the Hot Corners page.
+  The same result again right after itself is counted, with its latest time, instead of pushing the others out, as on the Hot Corners & Edges page.
 - **Results name no app:** they hold only its place in the list, which the page shows with the name the list keeps. They aren't written to disk, and they're gone when the feature is turned off or the host exits.
-- **On the page:** a **Recent results** card lists them, newest first, such as "Notes: runs as administrator, so it can't drop down while PC Companion doesn't", with the time in the user's format. It works as Hot Corners' card does: it updates while the page is shown, and says when results aren't available.
-- **How they get there:** through a named pipe that only the user's own account and the system can open, named `PCCompanion.DropDownApps.Results.<session ID>`, which rejects remote clients and reads nothing (`SnapshotPipe`), as for Hot Corners.
+- **On the page:** a **Recent results** card lists them, newest first, such as "Notes: runs as administrator, so it can't drop down while PC Companion doesn't", with the time in the user's format. It works as Hot Corners & Edges' card does: it updates while the page is shown, and says when results aren't available.
+- **How they get there:** through a named pipe that only the user's own account and the system can open, named `PCCompanion.DropDownApps.Results.<session ID>`, which rejects remote clients and reads nothing (`SnapshotPipe`), as for Hot Corners & Edges.
 
 ## Threads
 
@@ -381,12 +381,12 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
   - **Recent results**;
   - a note about the windows that can't drop down;
   - a **Permissions & data** card.
-- **The app list** is the one Hot Corners, Minimize to Tray and Input Language per App use. Each row has a shortcut list named "Shortcut for <app>" for screen readers, before **Remove**. After **Add**, the focus goes to the new row's list.
+- **The app list** is the one Hot Corners & Edges, Minimize to Tray and Input Language per App use. Each row has a shortcut list named "Shortcut for <app>" for screen readers, before **Remove**. After **Add**, the focus goes to the new row's list.
 - **Slide in and out** says that it follows Windows' animation effects. Width runs from 30% to 100% and Height from 20% to 100%, in steps of 5%.
 - **When the feature is first turned on:** no app is listed, the display is the one with the pointer, the width is 100% and the height 50%, the slide is on, the window hides when another app comes to the front on any display, and Keep on top is off.
 - **The switch on Home** changes only `enabled` and keeps the other settings.
 - **A section that can't be read,** for example after a hand edit, turns the feature off with a warning in the log.
-- **Listed apps** are read as Hot Corners reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out, as is an app listed a second time.
+- **Listed apps** are read as Hot Corners & Edges reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out, as is an app listed a second time.
 - **Unknown or out-of-range values:**
   - An unknown shortcut is None, with a warning.
   - A shortcut that a listed app earlier in the list has is None for the later one, with a warning.
@@ -429,7 +429,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100) confirmed the follow
 - **Hiding the other drop-down windows when one shows:** hiding when another app comes to the front already does it.
 - **Sliding across a display above:** the window shows at once instead.
 - **Turning off Windows' own show and hide transitions for the window** (`DWMWA_TRANSITIONS_FORCEDISABLED`): Windows accepted it in the spike, but whether those transitions get in the way of the slide is checked by hand first.
-- **A Hot Corners action:** Hot Corners is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
+- **A Hot Corners & Edges action:** Hot Corners & Edges is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
 
 ## Compatibility
 

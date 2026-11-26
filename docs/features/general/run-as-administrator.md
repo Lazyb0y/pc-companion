@@ -3,7 +3,7 @@
 Runs the background host as administrator, so features also work while an app running as administrator is in front.
 
 - Setting on the General page. Off by default. Issue: [#16](https://github.com/Lazyb0y/pc-companion/issues/16).
-- Windows keeps the input and windows of apps running as administrator away from programs that don't. Without this setting, Hot Corners don't trigger while such an app is in front.
+- Windows keeps the input and windows of apps running as administrator away from programs that don't. Without this setting, Hot Corners & Edges don't trigger while such an app is in front.
 
 ## Availability
 
@@ -26,7 +26,7 @@ Runs the background host as administrator, so features also work while an app ru
 
 - Windows blocks messages from programs without admin rights to windows of programs with them. The host allows only its own messages through: the tray icon's events, the taskbar's restart message, and "open the settings app" from a second host launch.
 - The host's single-instance lock must stay checkable by the settings app without admin rights. The lock only says whether a host runs: programs without admin rights can open it whether or not the host runs as administrator. Whether it does, the settings app reads from the token of the process that owns the host's window, which programs of the same user may read without admin rights.
-- The settings file is written by the settings app without admin rights, and any program running as the user can change it. The host treats it as untrusted. No setting may make the host run code, or read or write files, as administrator. So the programs that Hot Corners and Clipboard Actions start never get admin rights, as below.
+- The settings file is written by the settings app without admin rights, and any program running as the user can change it. The host treats it as untrusted. No setting may make the host run code, or read or write files, as administrator. So the programs that Hot Corners & Edges and Clipboard Actions start never get admin rights, as below.
 - A browser started by the host would get its admin rights, so a host elevated through UAC opens the web pages features ask for, such as Clipboard Actions' links, in a copy of itself without admin rights, with the token of the Windows shell: `--open-web-page` followed by the name of a one-time pipe, as for programs below, through which it hands over the address, so that long addresses fit too, such as a Clipboard Actions rule's with the copied text in it. The copy opens only `http` and `https` addresses, and nothing when started with admin rights; the host waits for it up to 30 seconds.
 - The programs features start for the user, through `IHostCommands.StartProgram`, never get admin rights. A host elevated through UAC starts a copy of itself without them, with the token of the Windows shell: `--run-program` followed by the name of a one-time pipe, for the user's account and the system only, through which it hands over the program and its arguments, since Windows starts a process with another's token from a command line of 1,024 characters at most. The copy checks the program again, starts it without a shell, and exits with Windows' answer, which the host waits for up to 30 seconds. Started with admin rights, the copy starts nothing. With UAC off, every program of the user's runs with admin rights anyway, so the host starts the program itself.
 - The apps features open by their app ID, such as Drop-down Apps', through `IHostCommands.StartApp`, never get admin rights either. The host opens them through Start's Apps folder only when the app ID names an app there, with no slash or backslash. Windows would open File Explorer for one that isn't there. A host elevated through UAC hands the app ID to a copy of itself without them, as for programs: `--open-app` followed by the name of a one-time pipe. The copy checks the app ID again and opens it.
@@ -36,7 +36,7 @@ Runs the background host as administrator, so features also work while an app ru
 ## Settings
 
 - General page: **Always run as administrator**, with the description "Lets features work while an app running as administrator is in front. Windows asks for permission when you turn it on or off."
-- While the host runs as administrator, the Hot Corners page's note says that corners work in front of apps running as administrator, and the App Windows page's note says that App Windows works there too. The pages read this from the host's process when they open, as the General page does, so the notes are also right with UAC off, where the host runs as administrator without this setting, and after a failed hand-off. When no host runs, or its rights can't be read, they follow the setting.
+- While the host runs as administrator, the Hot Corners & Edges page's note says that corners work in front of apps running as administrator, and the App Windows page's note says that App Windows works there too. The pages read this from the host's process when they open, as the General page does, so the notes are also right with UAC off, where the host runs as administrator without this setting, and after a failed hand-off. When no host runs, or its rights can't be read, they follow the setting.
 - If the user cancels the UAC prompt, the switch goes back and nothing changes. If the change fails, the page says so.
 - While it's on and UAC is on, if the host runs without admin rights, a warning above the switch says so: features don't work while an app running as administrator is in front; to fix it, turn the setting off and on again, or sign out and back in. The page checks when it opens and after the switch changes. With UAC off, every program runs with the user's full rights, so the page shows no warning. When no host runs, or its rights can't be read, the page shows no warning either.
 - While it's on, and UAC is on, the Logs card also has **Open host logs**, unless the warning shows. With UAC off, or while the host runs without admin rights, the host's logs are in the user's logs folder, which **Open logs folder** opens.
@@ -55,7 +55,7 @@ Runs the background host as administrator, so features also work while an app ru
 
 ## Testing
 
-- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task), when the General page warns that the host runs without admin rights, which note the Hot Corners and App Windows pages show, reading a process's elevation, finding the process that owns a window, and the web page and program hand-offs' arguments and what they carry.
+- **Unit tests:** the protected-folder check behind the setting's availability, the task definitions, the start decisions (which copy of the host exits at sign-in, and when it runs the on-request task), when the General page warns that the host runs without admin rights, which note the Hot Corners & Edges and App Windows pages show, reading a process's elevation, finding the process that owns a window, and the web page and program hand-offs' arguments and what they carry.
 - **Sandbox checks:** UAC is off in Windows Sandbox and everything runs as administrator, so the checks cover:
   - creating and deleting the tasks, and their definitions;
   - the host started through the on-request task;
@@ -66,6 +66,6 @@ Runs the background host as administrator, so features also work while an app ru
   - the prompt when turning it on and off, and cancelling it;
   - signing out and in, and the host starting as administrator from the settings app;
   - the tray icon opening the settings app without admin rights;
-  - Hot Corners in front of an app running as administrator;
+  - Hot Corners & Edges in front of an app running as administrator;
   - the host's logs in the protected folder, and **Open host logs**;
-  - a failed hand-off, forced by deleting the on-request task: the General page warning, with **Open host logs** hidden, the Hot Corners and App Windows pages' notes saying that corners and App Windows don't work in front of apps running as administrator, and no warning once the host runs as administrator.
+  - a failed hand-off, forced by deleting the on-request task: the General page warning, with **Open host logs** hidden, the Hot Corners & Edges and App Windows pages' notes saying that corners and App Windows don't work in front of apps running as administrator, and no warning once the host runs as administrator.

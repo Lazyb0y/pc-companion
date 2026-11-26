@@ -41,14 +41,14 @@ Give PC Companion's actions keyboard shortcuts and mouse buttons of your own, su
 | Clipboard Actions | Actions for the copied text, Actions for the selected text | Opens the menu, as Windows + Alt + V and Windows + Alt + S; the second needs Selected text on |
 | Display Profiles | Use *profile*, for each profile | Switches, with the same question and revert as the menu |
 | Network Profiles | Use *profile*, for each profile | Switches, with the same checks as the menu |
-| Shortcuts & Mouse Buttons | Lock, Turn off displays, Start the screen saver | As Hot Corners' actions (`ShellActions`) |
+| Shortcuts & Mouse Buttons | Lock, Turn off displays, Start the screen saver | As Hot Corners & Edges' actions (`ShellActions`) |
 
 - **Each action does what its feature does** from its own shortcut or menu, with its settings, its checks and its notes: Display Profiles asks whether to keep the new setup, and Hide Apps plays the warning sound for a window that stays.
 - **Actions that act on a window** act on the window in front, also for a mouse button.
 - **Turn off displays and Start the screen saver** wait until the shortcut's keys or the button are released, then half a second, since any input turns the displays back on and ends the screen saver.
 - **Available only while the action's feature is on,** supported on this PC, and has what the action names: a profile with that name, or that app in Drop-down Apps' list. Otherwise its shortcut isn't registered and its button isn't claimed, so they reach the apps, and the page says why at the trigger.
 - **Not offered:**
-  - Windows' shortcuts, other keys, text and programs: this isn't a key remapper. Hot Corners and Clipboard Actions run programs, and Start's shortcuts have shortcut keys.
+  - Windows' shortcuts, other keys, text and programs: this isn't a key remapper. Hot Corners & Edges and Clipboard Actions run programs, and Start's shortcuts have shortcut keys.
   - Keep displays on, which lasts while the pointer stays in a corner.
   - Title Bar Actions' and Middle-Click Paste's actions, which act on the title bar or text box under the pointer.
 - **Profiles and apps are named** as their features store them: a profile by its name, which is unique in its list, and a Drop-down app by its app ID or program. Renaming a profile leaves its triggers without one; the page says so at each.
@@ -115,7 +115,7 @@ public interface IHostActions
 
 - **`RegisterHotKey` with `MOD_NOREPEAT`,** on the feature's thread, so holding the keys runs the action once. No keyboard hook.
 - **With an app running as administrator in front,** Windows still reports the shortcut (as for Hide Apps and End App).
-- **Alt and the app's menu bar:** the app in front gets the modifiers but not the key, so releasing Alt could open its menu bar. After a shortcut with Alt, the feature sends the unassigned key while Alt is still held, as Hot Corners does; see [The unassigned key](#the-unassigned-key).
+- **Alt and the app's menu bar:** the app in front gets the modifiers but not the key, so releasing Alt could open its menu bar. After a shortcut with Alt, the feature sends the unassigned key while Alt is still held, as Hot Corners & Edges does; see [The unassigned key](#the-unassigned-key).
 - **Windows refuses a shortcut** that another program or Windows has (error 1409): a warning is logged, the page shows it at the trigger, and PC Companion tries again after any change to the settings or the layout.
 - **Two of PC Companion's shortcuts on the same keys:** the editor refuses that; see [The editor](#the-editor). When it happens anyway, after a hand edit or when a feature is turned on from Home with its default shortcut, the one registered first keeps the keys, and the other's page shows which feature has them.
 
@@ -151,13 +151,13 @@ public interface IHostActions
 ### The unassigned key
 
 - **At each kept press,** the feature's thread sends the unassigned key `0xE8` (`ShellActions`' mask key) with `SendInput`. Apps ignore it, and it types nothing. It does two things:
-  - **Start and the menu bar:** with the Windows key held, Start opens when the key is released, whether the click was kept or not. The unassigned key stops it (spike), and stops Alt from opening the menu bar, as for Hot Corners.
+  - **Start and the menu bar:** with the Windows key held, Start opens when the key is released, whether the click was kept or not. The unassigned key stops it (spike), and stops Alt from opening the menu bar, as for Hot Corners & Edges.
   - **The front:** after a kept press alone, Windows refused to let PC Companion bring a window to the front, which End App, Drop-down Apps, the Clipboard Actions menu and Display Profiles' question need. After the unassigned key, Windows allowed it (spike).
 - **The second effect isn't documented.** If a Windows version changes it, actions still run after a mouse button, but a window they bring forward may flash on the taskbar instead of coming to the front; shortcuts are unaffected. A hand test on a real PC confirms it, and the Sandbox checks look for it on each run.
 
 ### Full screen and a captured pointer
 
-- **While the window in front is full screen on its display,** mouse-button triggers pause: their claims are removed, so the buttons reach the app, and the hook isn't set at all unless another feature claims. The check is the one Hot Corners uses (`FullScreenCheck` in `PCCompanion.Platform.Windows`), for the display of the window in front.
+- **While the window in front is full screen on its display,** mouse-button triggers pause: their claims are removed, so the buttons reach the app, and the hook isn't set at all unless another feature claims. The check is the one Hot Corners & Edges uses (`FullScreenCheck` in `PCCompanion.Platform.Windows`), for the display of the window in front.
 - **When it's checked:** each time another window comes to the front, and when the window in front changes its place or size, which an out-of-context WinEvent hook (`EVENT_OBJECT_LOCATIONCHANGE`) reports for that window's process only, set again at each change of the window in front.
 - **While an app confines the pointer to part of the screen, or hides it,** as games and virtual machines do, the hook lets the buttons through. It checks at each press (`GetClipCursor`, `GetCursorInfo`), which calls no other program.
 - **The setting:** **Pause mouse buttons while an app is full screen**, on by default. The captured pointer check always applies.
@@ -165,7 +165,7 @@ public interface IHostActions
 
 ## Not in these apps
 
-- **Each trigger has its own list,** empty by default, with **Running app**, **Program file** and **Remove**, as Hot Corners' list. What counts as one app is `AppOfWindow`'s: the window's own app ID, its package's or its program.
+- **Each trigger has its own list,** empty by default, with **Running app**, **Program file** and **Remove**, as Hot Corners & Edges' list. What counts as one app is `AppOfWindow`'s: the window's own app ID, its package's or its program.
 - **Shortcuts:** while a listed app is in front, the shortcut isn't registered, so the app gets the keys itself; it's registered again when another app comes to the front. The app of the window in front is read at each change of the window in front, only while some shortcut has a list; reading it waits for no program. The shortcuts are registered again only when which of them are left to the app changes.
 - **Mouse buttons:** the app under the pointer decides, in the hook, at each press. The hook finds the top-level window under the pointer (`WindowFromPoint`, then `GetAncestor` with `GA_ROOT`) and compares it with the claim's windows of listed apps.
   - **How long:** 20 to 130 µs per press, and 28 µs over a window that stopped responding: it sends the window nothing (spike).
@@ -196,7 +196,7 @@ public interface IHostActions
 - **Display Profiles and Network Profiles** get a shortcut for each profile through this feature ([#237](https://github.com/Lazyb0y/pc-companion/issues/237), [#209](https://github.com/Lazyb0y/pc-companion/issues/209), the shortcut parts; the command lines stay there).
 - **Drop-down Apps'** apps can have any shortcut here, besides the choices on its page.
 - **Middle-Click Paste and Title Bar Actions** share the pointer hook. Their claims never overlap with these, which need the Windows key for the middle button; if they did, the claim made first would win, as for any two claims.
-- **Hot Corners** keeps its own actions; sharing the other features' actions with corners is [#152](https://github.com/Lazyb0y/pc-companion/issues/152)'s.
+- **Hot Corners & Edges** keeps its own actions; sharing the other features' actions with corners is [#152](https://github.com/Lazyb0y/pc-companion/issues/152)'s.
 - **App Windows' exceptions** ([#123](https://github.com/Lazyb0y/pc-companion/issues/123)) can reuse how a shortcut is left to a listed app in front.
 
 ## Threads
@@ -274,13 +274,13 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
   - a test registration on the settings app's own window, removed at once, and the key release with no press: "Windows or another program uses this shortcut.";
   - the short list in [Windows' own shortcuts](#windows-own-shortcuts): a warning, "Windows or apps use this shortcut. This action takes its place.", which allows **Save**.
 - **Mouse button:** a list with Back, Forward and Middle, and check boxes for Ctrl, Alt, Shift and the Windows key; Middle checks the Windows key and keeps it checked. The same check for duplicates applies, and Back or Forward alone shows the note about apps.
-- **Not in these apps:** the app list, as on Hot Corners' page.
+- **Not in these apps:** the app list, as on Hot Corners & Edges' page.
 
 ### The format
 
 - **A section that can't be read,** for example after a hand edit, turns the feature off with a warning in the log.
 - **A trigger that can't be used** is skipped with a warning: an unknown action or key, a shortcut against the rules, a trigger with both or neither of `shortcut` and `mouseButton`, a middle button without the Windows key, or the same keys or button as a trigger earlier in the list. The page shows it with the problem, so it can be fixed or deleted.
-- **Listed apps** are read as Hot Corners reads its list.
+- **Listed apps** are read as Hot Corners & Edges reads its list.
 
 ```json
 "features": {
@@ -316,7 +316,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
 - `modifiers`: any of `Control`, `Alt`, `Shift` and `Windows`.
 - `key`: a `KeyboardEvent.code` name from [Which shortcuts](#which-shortcuts), such as `KeyA`, `Digit1`, `Semicolon`, `F13`, `Escape`, `ArrowLeft` or `ContextMenu`.
 - `button`: `Back`, `Forward` or `Middle`.
-- `excludedApps`: as Hot Corners' list; optional.
+- `excludedApps`: as Hot Corners & Edges' list; optional.
 
 ## Not included
 
@@ -350,7 +350,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), on one display, wit
   - only the shortcuts it registered, when they're pressed, through `WM_HOTKEY`: no keyboard hook;
   - the Back, Forward and middle buttons and the keys held then, in the shared pointer hook; other pointer input is passed on without being read;
   - with listed apps, the top-level window under the pointer at a press, and the app of the window in front and of the windows the taskbar shows: their app ID, package and program;
-  - for the full-screen pause, the places and styles of the windows in front, as Hot Corners does;
+  - for the full-screen pause, the places and styles of the windows in front, as Hot Corners & Edges does;
   - the user's keyboard layouts, for the AltGr check;
   - the settings app's editor reads keys only while its box listens, in its own window.
 - **Changes:** it registers shortcuts, keeps the chosen buttons from the apps, sends the unassigned key, which types nothing, and runs the chosen actions of other features, which have their own reviews. It writes no file and starts no program.
