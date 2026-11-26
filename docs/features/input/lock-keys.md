@@ -42,7 +42,7 @@ Show a short notice on screen when Caps Lock, Num Lock or Scroll Lock turns on o
   - **Bottom center**, by default, 24 effective pixels above the bottom of the work area, where Windows 11 shows its own indicators;
   - **Top center**, 24 effective pixels below its top;
   - **Top left**, 24 effective pixels from its top and left edges.
-- The positions are physical, the same in every language, as Hot Corners' corners are.
+- The positions are physical, the same in every language, as Hot Corners & Edges' corners are.
 - A notice that's showing stays where it is when the window in front moves to another display; a change that replaces its text moves it there.
 - A change of the displays while it shows (`WM_DISPLAYCHANGE`) hides it.
 - **How long:** 2 seconds by default, from 1 to 5 seconds in half seconds. When Windows' animation effects are on (`SPI_GETCLIENTAREAANIMATION`), it fades in over 100 ms and out over 200 ms; otherwise it shows and hides at once.
@@ -72,9 +72,9 @@ Show a short notice on screen when Caps Lock, Num Lock or Scroll Lock turns on o
 ## Full screen
 
 - **Don't show while an app is full screen**, on by default: the notice and the badge don't show while an app is full screen on the display where they would. An app that's full screen on another display doesn't stop them.
-- Full screen is decided with Hot Corners' rules, by the same code: a borderless window covering the display, ignoring overlays and always-on-top windows that don't cover it; exclusive full screen on the display of the window in front; and presentation mode on every display. See [Full screen and a captured pointer](hot-corners.md#full-screen-and-a-captured-pointer). The code is `FullScreenCheck` in `PCCompanion.Platform.Windows`, which Hot Corners and other features use too.
+- Full screen is decided with Hot Corners & Edges' rules, by the same code: a borderless window covering the display, ignoring overlays and always-on-top windows that don't cover it; exclusive full screen on the display of the window in front; and presentation mode on every display. See [Full screen and a captured pointer](hot-corners.md#full-screen-and-a-captured-pointer). The code is `FullScreenCheck` in `PCCompanion.Platform.Windows`, which Hot Corners & Edges and other features use too.
 - Exclusive full screen skips the notice even with this setting off: a window can't show over it, and trying can take a game out of full screen.
-- Like Hot Corners, the check reads the windows front to back until one decides, once for each notice, and sends no messages to other apps' windows.
+- Like Hot Corners & Edges, the check reads the windows front to back until one decides, once for each notice, and sends no messages to other apps' windows.
 - A skipped notice logs why at Debug level.
 
 ## Changes made elsewhere
@@ -152,13 +152,13 @@ In a Remote Desktop session, the PC the user connects from sets the session's lo
 ## Compatibility
 
 - Windows 10 version 2004 and later, and Windows 11.
-- The APIs are documented and in every supported version: `GetKeyState`, `SetCoalescableTimer`, `UpdateLayeredWindow`, `GetDpiForMonitor`, `MonitorFromWindow`, `WTSRegisterSessionNotification`, `RegisterPowerSettingNotification` with `GUID_CONSOLE_DISPLAY_STATE`, `SetWinEventHook` with `EVENT_SYSTEM_FOREGROUND` and `EVENT_SYSTEM_DESKTOPSWITCH`, `OpenInputDesktop` and `SystemParametersInfo`, plus those of Hot Corners' full-screen check.
+- The APIs are documented and in every supported version: `GetKeyState`, `SetCoalescableTimer`, `UpdateLayeredWindow`, `GetDpiForMonitor`, `MonitorFromWindow`, `WTSRegisterSessionNotification`, `RegisterPowerSettingNotification` with `GUID_CONSOLE_DISPLAY_STATE`, `SetWinEventHook` with `EVENT_SYSTEM_FOREGROUND` and `EVENT_SYSTEM_DESKTOPSWITCH`, `OpenInputDesktop` and `SystemParametersInfo`, plus those of Hot Corners & Edges' full-screen check.
 - Rounded corners and Segoe Fluent Icons on Windows 11 (build 22000 and later), square corners and Segoe MDL2 Assets on Windows 10.
 - Reading the current state from a thread without the keyboard focus relies on how `GetKeyState` behaves, not on what Microsoft documents for it; see [Detecting a change](#detecting-a-change). .NET and most lock key tools rely on it too. The spike confirmed it on Windows 11; Windows 10 is tested by hand.
 
 ## Security and privacy
 
-- **Reads:** the on or off state of Caps Lock, Num Lock and Scroll Lock, about 10 times a second while the feature is on. It never receives the keys the user types: no keyboard hook, no raw keyboard input, no shortcut. When a notice shows, and once a second while the badge is on, it reads which display the window in front is on, whether the pointer can be read, and, for the full-screen check, the windows' positions, style flags and whether they're cloaked or minimized, as Hot Corners does. It reads no window titles, class names, process names or contents.
+- **Reads:** the on or off state of Caps Lock, Num Lock and Scroll Lock, about 10 times a second while the feature is on. It never receives the keys the user types: no keyboard hook, no raw keyboard input, no shortcut. When a notice shows, and once a second while the badge is on, it reads which display the window in front is on, whether the pointer can be read, and, for the full-screen check, the windows' positions, style flags and whether they're cloaked or minimized, as Hot Corners & Edges does. It reads no window titles, class names, process names or contents.
 - **Changes:** nothing. It never changes a lock key, and sends no input.
 - **Logs:** Debug entries when a chosen key turns on or off, with whether the notice showed or why it was skipped, and when the state is read again after the user was away, and why. Debug entries are written only while detailed logging is on. Never anything else about the keyboard.
 - **Settings:** the choices in `settings.json`, which can only turn notices on or off, so a changed file can't make Lock Keys do more.

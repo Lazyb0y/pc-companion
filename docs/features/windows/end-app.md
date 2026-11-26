@@ -212,7 +212,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale on on
 - **Asking the app to close first, or a Wait button:** closing as usual asks the app, and Cancel waits.
 - **Skipping the confirmation.**
 - **Starting the app again** after ending it.
-- **A Hot Corners action:** Hot Corners is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
+- **A Hot Corners & Edges action:** Hot Corners & Edges is in another module; see [#152](https://github.com/Lazyb0y/pc-companion/issues/152).
 - **Telling apart two frozen windows at the same place,** which only the undocumented `HungWindowFromGhostWindow` could do. End App says it can't tell which.
 - **A frame with rounded corners.**
 - **Apps of other users or other sessions.**

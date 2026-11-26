@@ -88,7 +88,7 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 
 ## Keeping the click from the app
 
-- **Why:** the pointer is watched with raw input, as for Hot Corners, which sees a click but can't stop it. Letting it through would cause trouble:
+- **Why:** the pointer is watched with raw input, as for Hot Corners & Edges, which sees a click but can't stop it. Letting it through would cause trouble:
   - a middle-click activates a window behind before it minimizes or goes to the back;
   - the wheel and Ctrl + wheel also scroll or zoom the app;
   - Firefox opens a tab on a middle-click on its tab bar (spike, and Firefox's source).
@@ -164,8 +164,8 @@ Middle-click a window's title bar to minimize it or send it to the back, or turn
 ## Apps that keep their title-bar clicks
 
 - **Apps that keep their title-bar clicks,** a list on the page: a listed app's title bars get no actions, and their clicks reach the app as usual. It's for apps that use a middle-click or the wheel on their title bars themselves, such as Firefox, which opens a tab on a middle-click on its tab bar.
-- **Adding apps:** as to Hot Corners' list. **Running app** lists the apps with windows on the taskbar, **Program file** picks a program with the Open dialog, and **Remove** takes one out. No app is listed when the feature is first turned on.
-- **What counts as one app,** as the taskbar groups them, with the same code as App Windows, Minimize to Tray, Hide Apps and Hot Corners (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile; otherwise its Store app package's app ID; otherwise its program file.
+- **Adding apps:** as to Hot Corners & Edges' list. **Running app** lists the apps with windows on the taskbar, **Program file** picks a program with the Open dialog, and **Remove** takes one out. No app is listed when the feature is first turned on.
+- **What counts as one app,** as the taskbar groups them, with the same code as App Windows, Minimize to Tray, Hide Apps and Hot Corners & Edges (`AppOfWindow`): the app ID the window sets for itself, as browsers do for each profile; otherwise its Store app package's app ID; otherwise its program file.
 - **When the app is read:** only while the list has apps, once for each top-level window the pointer comes to, and kept until that window closes. Reading it waits for no program.
 
 ## Apps running as administrator
@@ -269,7 +269,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 - **The switch on Home** changes only `enabled` and keeps the other settings.
 - **A section that can't be read,** for example after a hand edit, turns the feature off with a warning in the log.
 - **Unknown values:** an unknown action is None, with a warning.
-- **Listed apps** are read as Hot Corners reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out, as is an app listed a second time.
+- **Listed apps** are read as Hot Corners & Edges reads its list: a blank app ID or program counts as none, and an app with neither or both, or a `null`, is left out, as is an app listed a second time.
 
 ```json
 "features": {
@@ -323,7 +323,7 @@ A spike in Windows Sandbox on Windows 11 24H2 (build 26100), at 100% scale, with
 ## Security and privacy
 
 - **Reads:**
-  - the pointer's position and its buttons and wheel, by raw input, as Hot Corners does, only while the feature is on;
+  - the pointer's position and its buttons and wheel, by raw input, as Hot Corners & Edges does, only while the feature is on;
   - for the window under the pointer: its styles, owner, state, frame, DPI and process, and, while the pointer is in its top band, its answer to `WM_NCHITTEST`, which Windows asks it at every pointer move anyway;
   - at a click on a title bar, whether Shift or Ctrl is held;
   - the app of the windows the pointer comes to, only while apps are listed.

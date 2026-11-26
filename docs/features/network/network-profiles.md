@@ -92,7 +92,7 @@ A profile holds a name and the same proxy settings as Windows' own page, Setting
 
 - **Feature page:** the on/off switch; **Profiles**, a list with **Add profile** and **Add from current settings**, and for each profile **In use** or **Use**, **Edit**, and **More options** with **Move up**, **Move down** and **Delete**; a note on VPN connections and the programs that don't follow the settings; **Windows proxy settings**, whose **Open** opens Windows' Proxy page (`ms-settings:network-proxy`); and a **Permissions & data** card.
 - **The profile editor** is a dialog laid out like Windows' Proxy page: **Name**; **Automatically detect settings**; **Use setup script** and **Script address**; **Use a proxy server**, **Proxy server**, **Exceptions** and **Don't use the proxy server for local (intranet) addresses**.
-- Problems show below their box, as in Hot Corners, and **Save** is available only when the profile has none. **Delete** asks first.
+- Problems show below their box, as in Hot Corners & Edges, and **Save** is available only when the profile has none. **Delete** asks first.
 - A profile keeps its values when a part is turned off, so turning it on again brings them back.
 - The switch on Home changes only `enabled` and keeps the profiles. Turning the feature on for the first time adds Original settings.
 - A section that can't be read, for example after a hand edit, turns Network Profiles off with a warning in the log.
