@@ -109,22 +109,16 @@
                     SaveFailed="{x:Bind ViewModel.SaveFailed, Mode=OneWay}"
                     Title="{app:Localized Key=HotCornersName}" />
 
-                <Border
-                    Padding="16"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{ThemeResource OverlayCornerRadius}">
-                    <StackPanel SizeChanged="OnCornersPanelSizeChanged" Spacing="16">
-                        <StackPanel Spacing="2">
-                            <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{app:Localized Key=HotCornersCornersHeader}" />
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{app:Localized Key=HotCornersCornersDescription}"
-                                TextWrapping="Wrap" />
-                        </StackPanel>
-
+                <!--
+                    A settings card with its content below the header, so screen readers and UI
+                    Automation see the card itself, at the width of the other cards.
+                -->
+                <toolkit:SettingsCard
+                    HorizontalContentAlignment="Stretch"
+                    ContentAlignment="Vertical"
+                    Description="{app:Localized Key=HotCornersCornersDescription}"
+                    Header="{app:Localized Key=HotCornersCornersHeader}">
+                    <StackPanel SizeChanged="OnCornersPanelSizeChanged">
                         <!--
                             Physical corners and edges: the picture isn't mirrored for right-to-left languages, the
                             text in it is. Without room for it, they're listed one below another instead; see the code.
@@ -213,7 +207,7 @@
                                 IsTabStop="False" />
                         </Grid>
                     </StackPanel>
-                </Border>
+                </toolkit:SettingsCard>
 
                 <controls:Note IsOpen="{x:Bind ViewModel.IsRightWheelNoteShown, Mode=OneWay}" Message="{app:Localized Key=HotCornersRightWheelInfo}" />
 
