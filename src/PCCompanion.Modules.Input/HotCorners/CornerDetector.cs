@@ -240,10 +240,11 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
     }
 
     // Resting on an edge is ordinary use, so leaving one is a result only when a push had got
-    // halfway, or a device that reports positions had stayed half the delay.
+    // halfway, or a device that reports positions had stayed half the delay. A corner that waits for
+    // the delay does so whatever the device, so leaving it early is always a result.
     private bool HadBegun(Spot spot)
     {
-        if (!spot.IsEdge && _settings.CornersTrigger == CornersTrigger.Delay && !_byPosition)
+        if (!spot.IsEdge && _settings.CornersTrigger == CornersTrigger.Delay)
         {
             return true;
         }
