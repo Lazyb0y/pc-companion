@@ -192,6 +192,50 @@ public sealed class EdgeDetectorTests
     }
 
     [Fact]
+    public void AnEdgeAMouseRestedOnWaitsHalfASecondFromTheFirstPosition()
+    {
+        Arrive(RightEdge);
+        _clock.Advance(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(TimeSpan.FromMilliseconds(500), _detector.Update(Size.Empty, isPosition: true).Wait);
+        _clock.Advance(TimeSpan.FromMilliseconds(200));
+        Assert.Equal(TimeSpan.FromMilliseconds(300), _detector.Update(Size.Empty, isPosition: true).Wait);
+        _clock.Advance(TimeSpan.FromMilliseconds(300));
+        Assert.Equal(Decision(CornerOutcome.Triggered), _detector.Update());
+    }
+
+    [Fact]
+    public void LeavingAnEdgeAMouseRestedOnRightAfterAPositionIsNotLeavingEarly()
+    {
+        Arrive(RightEdge);
+        _clock.Advance(TimeSpan.FromSeconds(2));
+        _detector.Update(Size.Empty, isPosition: true);
+        _clock.Advance(TimeSpan.FromMilliseconds(100));
+
+        Assert.Equal(CornerDecision.Nothing, MoveTo(Middle));
+    }
+
+    [Fact]
+    public void ACornerSetToTriggerWhenPushedThatAMouseRestedInWaitsTheDelayFromTheFirstPosition()
+    {
+        Configure(new HotCornersSettings { CornersTrigger = CornersTrigger.Push, ActivationDelayMilliseconds = 300 });
+        Arrive(new Point(0, 0));
+        _clock.Advance(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(TimeSpan.FromMilliseconds(300), _detector.Update(Size.Empty, isPosition: true).Wait);
+    }
+
+    [Fact]
+    public void ACornerThatWaitsForTheDelayKeepsWaitingFromArrivalAfterAPosition()
+    {
+        Configure(new HotCornersSettings { ActivationDelayMilliseconds = 300 });
+        Arrive(new Point(0, 0));
+        _clock.Advance(TimeSpan.FromMilliseconds(200));
+
+        Assert.Equal(TimeSpan.FromMilliseconds(100), _detector.Update(Size.Empty, isPosition: true).Wait);
+    }
+
+    [Fact]
     public void LeavingAnEdgeAfterHalfAPushIsLeavingEarly()
     {
         Arrive(RightEdge);

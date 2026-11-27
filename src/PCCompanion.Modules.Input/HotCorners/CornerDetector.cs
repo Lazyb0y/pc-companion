@@ -147,9 +147,16 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
         }
 
         // The move that brought the pointer here isn't a push: a quick flick to a scroll bar can
-        // move the mouse as far in one event.
+        // move the mouse as far in one event. A mouse resting here before a position isn't a stay,
+        // so a place that waited for a push waits from the first position.
+        var now = time.GetTimestamp();
         if (isPosition)
         {
+            if (!UsesDelay(current))
+            {
+                _enteredAt = now;
+            }
+
             _byPosition = true;
         }
         else if (!arrived && movement != Size.Empty && position is { } at)
@@ -157,7 +164,6 @@ public sealed class CornerDetector(IHotCornerEnvironment environment, TimeProvid
             AddPush(current, movement, at);
         }
 
-        var now = time.GetTimestamp();
         var wait = TimeSpan.Zero;
         if (UsesDelay(current))
         {

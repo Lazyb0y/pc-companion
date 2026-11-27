@@ -54,7 +54,7 @@ Move the pointer into a corner or push it against an edge of the screen to run a
 - **Moving along the edge:** when the pointer has moved more than 16 effective pixels along the edge from where the push began, the push starts again from there, as in XFCE. So a pointer sliding along an edge doesn't trigger it.
 - **Getting there isn't a push:** the move that brings the pointer to an edge doesn't count, since a quick flick to a scroll bar can move the mouse as far in one event.
 - **Corners, when pushed** ([#120](https://github.com/Lazyb0y/pc-companion/issues/120)): movement outward on either side adds up, with the same strength. The delay stays the default, since some people can't push steadily.
-- **Pen, touch, remote sessions and many virtual machines** report positions, not movement (spike), so nothing adds up. For them, a corner waits for the activation delay, and an edge for 500 ms, or the activation delay if that's longer.
+- **Pen, touch, remote sessions and many virtual machines** report positions, not movement (spike), so nothing adds up. For them, a corner waits for the activation delay, and an edge for 500 ms, or the activation delay if that's longer. A place that waits for a push counts that wait from the first position there, so a mouse resting on an edge before doesn't count towards it.
 - **The checks** in [Behavior](#behavior), such as the key and full screen, run once, when the push is enough or the delay ends, as before.
 
 ## The wheel
