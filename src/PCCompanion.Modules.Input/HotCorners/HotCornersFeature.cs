@@ -45,6 +45,7 @@ public sealed partial class HotCornersFeature : IFeature
     private uint? _wheelToCheck;
     private ITimer? _wheelCheck;
     private ITimer? _settle;
+    private bool _settleIsPosition;
     private SnapshotPipe? _resultsPipe;
     private DisplayKeeper? _displays;
     private ITimer? _timer;
@@ -208,17 +209,19 @@ public sealed partial class HotCornersFeature : IFeature
         Update(e.Movement, e.IsPosition);
         if (e.Movement != Size.Empty || e.IsPosition)
         {
+            _settleIsPosition = e.IsPosition;
             _settle?.Change(SettleDelay, Timeout.InfiniteTimeSpan);
         }
     }
 
     // A pointer that stopped where the last event didn't see it yet, such as on an edge it had just
-    // reached, is looked at once more.
+    // reached, is looked at once more, as that event: a position from a pen or a remote session
+    // must still make the edge wait for the delay rather than a push.
     private void Settle()
     {
         if (_window is not null && InputState.PointerPosition != _detector.LastPosition)
         {
-            Update(Size.Empty, isPosition: false);
+            Update(Size.Empty, _settleIsPosition);
         }
     }
 
