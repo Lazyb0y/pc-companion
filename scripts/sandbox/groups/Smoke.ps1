@@ -36,5 +36,5 @@ Test-Check 'settings app starts the host' (($null -ne $process) -and (Wait-Until
 Start-Sleep -Seconds 3
 Save-Screenshot '01-home-english'
 $text = Get-WindowText
-Test-Check 'Home shows the feature cards' (($text -contains 'Home') -and ($text -contains 'Input & Triggers') -and ($text -contains 'Hot Corners')) ($text -join ' | ')
+Test-Check 'Home shows the feature cards' (($text -contains 'Home') -and ($text -contains 'Input & Triggers') -and ($text -contains 'Hot Corners & Edges')) ($text -join ' | ')
 Test-Check 'settings app and host logs written' (Wait-Until { (Test-Path (Join-Path $logs 'app-*.log')) -and (Test-Path (Join-Path $logs 'host-*.log')) } 10)

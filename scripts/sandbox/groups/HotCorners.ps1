@@ -1,21 +1,22 @@
-﻿# Hot Corners: the Home switch turns it on; a corner shows the desktop when the pointer reaches
-# it, not while a mouse button is held, an app is full screen or has captured the pointer, or a
-# listed app is in front, and only with the key it requires.
+﻿# Hot Corners & Edges: the Home switch turns it on; a corner shows the desktop when the pointer
+# reaches it, not while a mouse button is held, an app is full screen or has captured the pointer,
+# or a listed app is in front, and only with the key it requires; edges trigger when pushed, and
+# their wheel changes the volume or switches desktops.
 [void] (Close-SettingsApp)
 Write-Settings '{ "schemaVersion": 1, "general": { "theme": "Light" } }'
 Start-Sleep -Seconds 2
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
-Test-Check 'turn on Hot Corners on Home' (Set-Toggle 'Hot Corners' $true)
+Test-Check 'turn on Hot Corners on Home' (Set-Toggle 'Hot Corners & Edges' $true)
 Start-Sleep -Seconds 2
 $saved = (Get-Content (Join-Path $dataFolder 'settings.json') -Raw | ConvertFrom-Json).features.hotCorners
 Test-Check 'the Home switch saves Hot Corners as on' ($saved.enabled -eq $true) "saved: $($saved | ConvertTo-Json -Compress)"
-Test-Check 'select Hot Corners' (Select-NavigationItem 'Hot Corners')
+Test-Check 'select Hot Corners' (Select-NavigationItem 'Hot Corners & Edges')
 Start-Sleep -Seconds 2
 Save-Screenshot '09-hot-corners-english'
 $text = Get-WindowText
-Test-Check 'Hot Corners shows its settings' (($text -contains 'Top left') -and ($text -contains 'Activation delay') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
+Test-Check 'Hot Corners shows its settings' (($text -contains 'Top left') -and ($text -contains 'Right edge') -and ($text -contains 'Activation delay') -and ($text -contains 'Corners trigger') -and ($text -contains 'Push strength') -and ($text -contains 'Permissions & data')) ($text -join ' | ')
 $selected = Get-SelectedItemName 'Top left action'
 Test-Check 'the top-left corner shows Task View when first turned on' ($selected -eq 'Task View') "selected: $selected"
 
@@ -85,7 +86,7 @@ function Get-HostPowerRequests {
         if ($line -match '^([A-Z]+):$') { $section = $Matches[1]; $requests[$section] = '' }
         elseif ($section) { $requests[$section] += "$line`n" }
     }
-    $reason = [regex]::Escape('Hot Corners: the pointer is in a corner that keeps the displays on.')
+    $reason = [regex]::Escape('Hot Corners & Edges: the pointer is on a corner or edge that keeps the displays on.')
     return @{
         Display = $requests['DISPLAY'] -match "PCCompanion\.Host\.exe\s*\n$reason"
         System = $requests['SYSTEM'] -match "PCCompanion\.Host\.exe\s*\n$reason"
@@ -174,8 +175,7 @@ Start-Sleep -Seconds 3
 $characterMap = Start-Process $charmap -PassThru
 [void] (Wait-Until { $characterMap.Refresh(); $characterMap.MainWindowHandle -ne [IntPtr]::Zero } 15)
 [void] [Win32]::SetForegroundWindow($characterMap.MainWindowHandle)
-Start-Sleep -Seconds 1
-Test-Check 'Character Map is in front' ([Win32]::GetForegroundWindow() -eq $characterMap.MainWindowHandle)
+Test-Check 'Character Map is in front' (Wait-Until { [Win32]::GetForegroundWindow() -eq $characterMap.MainWindowHandle } 5) "front: $([Win32]::GetForegroundWindow()); Character Map: $($characterMap.MainWindowHandle)"
 [void] (Move-Pointer $middleX $middleY)
 [void] (Move-IntoTopLeftCorner)
 Test-Check 'a listed app in front skips the corner' (Wait-Until { (Get-HostLog) -match (Get-SkippedPattern 'AppExcluded') } 5) (Get-PointerText)
@@ -185,7 +185,7 @@ Test-Check 'a listed app in front skips the corner' (Wait-Until { (Get-HostLog) 
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
-Test-Check 'select Hot Corners for its apps' (Select-NavigationItem 'Hot Corners')
+Test-Check 'select Hot Corners for its apps' (Select-NavigationItem 'Hot Corners & Edges')
 Start-Sleep -Seconds 2
 Test-Check 'the page lists Character Map' ($null -ne (Find-AppElement 'Remove Character Map'))
 Save-Screenshot '10b-hot-corners-apps'
@@ -240,17 +240,17 @@ Start-Sleep -Seconds 3
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
-Test-Check 'select Hot Corners for its recent results' (Select-NavigationItem 'Hot Corners')
+Test-Check 'select Hot Corners for its recent results' (Select-NavigationItem 'Hot Corners & Edges')
 Start-Sleep -Seconds 2
-Test-Check 'the page says that no corner has been reached yet' (Wait-Until { (Get-WindowText) -contains 'No corner has been reached yet.' } 5)
+Test-Check 'the page says that no corner has been reached yet' (Wait-Until { (Get-WindowText) -contains 'No corner or edge has been reached yet.' } 5)
 # In and out of the corner at once, as when the pointer passes through it.
 [void] (Move-Pointer $middleX $middleY)
 [void] [Win32]::MovePointer(0, 0, $screen.Width, $screen.Height)
 [void] [Win32]::PushPointer(-10, -10)
 Start-Sleep -Milliseconds 100
 [void] [Win32]::MovePointer($middleX, $middleY, $screen.Width, $screen.Height)
-$leftEarly = 'Top left, Show desktop: skipped because the pointer left before the delay ended'
-Test-Check 'the page shows that the pointer left before the delay ended' (Wait-Until { (Get-WindowText) -contains $leftEarly } 5) (Get-PointerText)
+$leftEarly = 'Top left, Show desktop: skipped because the pointer left too soon'
+Test-Check 'the page shows that the pointer left too soon' (Wait-Until { (Get-WindowText) -contains $leftEarly } 5) (Get-PointerText)
 $window = Start-TestWindow 'FullScreen'
 [void] (Move-IntoTopLeftCorner)
 $fullScreen = 'Top left, Show desktop: skipped because an app was full screen'
@@ -266,6 +266,264 @@ while ($scroller -and -not [bool] $scroller.GetCurrentPropertyValue([System.Wind
 if ($scroller) { $scroller.GetCurrentPattern([System.Windows.Automation.ScrollPattern]::Pattern).SetScrollPercent([System.Windows.Automation.ScrollPattern]::NoScroll, 100); Start-Sleep -Seconds 1 }
 Save-Screenshot '10e-hot-corners-recent-results'
 [void] (Close-SettingsApp)
+
+# Edges and the wheel. A push against the right edge runs its action, while reaching it, resting
+# there or moving along it doesn't, and a device that reports positions, as pen or a remote session
+# does, triggers it after half a second. The wheel on the right edge's outermost pixels changes the
+# volume and doesn't scroll the maximized window there; one pixel inside, the window scrolls. The
+# wheel on the left edge switches desktops, one for two quick notches, and an edge where the taskbar
+# hides itself is skipped. Windows Sandbox has a speaker of its own, so the PC's volume stays.
+# Move-Pointer moves by positions, so the checks reach edges with pushes, as a mouse does.
+Add-Type @'
+using System;
+using System.Runtime.InteropServices;
+public static class EdgeChecks {
+    [StructLayout(LayoutKind.Sequential)] private struct MOUSEINPUT { public int dx, dy; public uint mouseData, dwFlags, time; public IntPtr extra; }
+    [StructLayout(LayoutKind.Sequential)] private struct KEYBDINPUT { public ushort wVk, wScan; public uint dwFlags, time; public IntPtr extra; }
+    [StructLayout(LayoutKind.Explicit)] private struct INPUT { [FieldOffset(0)] public uint type; [FieldOffset(8)] public MOUSEINPUT mi; [FieldOffset(8)] public KEYBDINPUT ki; }
+    [StructLayout(LayoutKind.Sequential)] private struct RECT { public int Left, Top, Right, Bottom; }
+    [StructLayout(LayoutKind.Sequential)] private struct APPBARDATA { public uint cbSize; public IntPtr hWnd; public uint uCallbackMessage, uEdge; public RECT rc; public IntPtr lParam; }
+    [DllImport("user32.dll")] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr after, string className, string title);
+    [DllImport("user32.dll")] private static extern IntPtr SendMessage(IntPtr window, uint message, IntPtr wParam, IntPtr lParam);
+    [DllImport("shell32.dll")] private static extern IntPtr SHAppBarMessage(uint message, ref APPBARDATA data);
+
+    // A notch of the wheel, or part of one, as a mouse sends it.
+    public static bool Wheel(int delta) {
+        var input = new INPUT { type = 0 };
+        input.mi.mouseData = unchecked((uint)delta);
+        input.mi.dwFlags = 0x0800; // MOUSEEVENTF_WHEEL
+        return SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT))) == 1;
+    }
+
+    // Presses keys together, such as Ctrl + Windows + D; the Windows key and arrows are extended keys.
+    public static bool Chord(ushort[] keys) {
+        var inputs = new INPUT[keys.Length * 2];
+        for (var i = 0; i < keys.Length; i++) {
+            inputs[i] = Key(keys[i], false);
+            inputs[inputs.Length - 1 - i] = Key(keys[i], true);
+        }
+        return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT))) == inputs.Length;
+    }
+
+    private static INPUT Key(ushort key, bool up) {
+        var input = new INPUT { type = 1 };
+        input.ki.wVk = key;
+        var extended = key == 0x5B || key == 0x25 || key == 0x27;
+        input.ki.dwFlags = (extended ? 1u : 0u) | (up ? 2u : 0u);
+        return input;
+    }
+
+    // The first line the window's text box shows, by EM_GETFIRSTVISIBLELINE, or -1.
+    public static int FirstLine(IntPtr window) {
+        var box = FindWindowEx(window, IntPtr.Zero, null, null);
+        return box == IntPtr.Zero ? -1 : (int)SendMessage(box, 0x00CE, IntPtr.Zero, IntPtr.Zero);
+    }
+
+    // Sets the taskbar to hide itself, or not, as its settings do (ABM_SETSTATE).
+    public static void SetTaskbarAutoHide(IntPtr taskbar, bool hide) {
+        var data = new APPBARDATA();
+        data.cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA));
+        data.hWnd = taskbar;
+        data.lParam = (IntPtr)(hide ? 1 : 2);
+        SHAppBarMessage(0xA, ref data);
+    }
+
+    // The default speaker's volume, from 0 to 1, or -1 without one.
+    public static float Volume() {
+        try {
+            var enumerator = (IMMDeviceEnumerator)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")));
+            IMMDevice device;
+            if (enumerator.GetDefaultAudioEndpoint(0, 1, out device) != 0) { return -1; }
+            var id = typeof(IAudioEndpointVolume).GUID;
+            object endpoint;
+            if (device.Activate(ref id, 23, IntPtr.Zero, out endpoint) != 0) { return -1; }
+            float level;
+            return ((IAudioEndpointVolume)endpoint).GetMasterVolumeLevelScalar(out level) == 0 ? level : -1;
+        } catch (Exception) {
+            return -1;
+        }
+    }
+
+    // Whether the window is on the virtual desktop shown now.
+    public static bool IsOnCurrentDesktop(IntPtr window) {
+        var manager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("aa509086-5ca9-4c25-8f95-589d3c07b48a")));
+        int current;
+        return manager.IsWindowOnCurrentVirtualDesktop(window, out current) == 0 && current != 0;
+    }
+
+    [ComImport, Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IMMDeviceEnumerator {
+        [PreserveSig] int EnumAudioEndpoints(int flow, int mask, out IntPtr devices);
+        [PreserveSig] int GetDefaultAudioEndpoint(int flow, int role, out IMMDevice device);
+    }
+
+    [ComImport, Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IMMDevice {
+        [PreserveSig] int Activate(ref Guid id, int context, IntPtr parameters, [MarshalAs(UnmanagedType.IUnknown)] out object instance);
+    }
+
+    [ComImport, Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IAudioEndpointVolume {
+        [PreserveSig] int RegisterControlChangeNotify(IntPtr notify);
+        [PreserveSig] int UnregisterControlChangeNotify(IntPtr notify);
+        [PreserveSig] int GetChannelCount(out uint count);
+        [PreserveSig] int SetMasterVolumeLevel(float level, ref Guid context);
+        [PreserveSig] int SetMasterVolumeLevelScalar(float level, ref Guid context);
+        [PreserveSig] int GetMasterVolumeLevel(out float level);
+        [PreserveSig] int GetMasterVolumeLevelScalar(out float level);
+    }
+
+    [ComImport, Guid("a5cd92ff-29be-454c-8d04-d82879fb3f1b"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IVirtualDesktopManager {
+        [PreserveSig] int IsWindowOnCurrentVirtualDesktop(IntPtr window, out int current);
+    }
+}
+'@
+$right = $screen.Width - 1
+$bottom = $screen.Height - 1
+$edgeRan = 'The "?Right"? edge ran "?Start"?\.'
+function Push-Pointer([int] $Times, [int] $Dx, [int] $Dy) {
+    for ($push = 0; $push -lt $Times; $push++) {
+        [void] [Win32]::PushPointer($Dx, $Dy)
+        Start-Sleep -Milliseconds 40
+    }
+}
+# Gets near an edge by a position, then onto it with a push, as a mouse does.
+function Move-OntoEdge([int] $NearX, [int] $NearY, [int] $Dx, [int] $Dy) {
+    [void] (Move-Pointer $NearX $NearY)
+    [void] [Win32]::PushPointer($Dx, $Dy)
+    Start-Sleep -Milliseconds 500
+}
+function Close-Start { Send-Key 0x1B; Start-Sleep -Milliseconds 500 }
+
+Write-Settings "{ ""schemaVersion"": 1, ""general"": { ""theme"": ""Light"" }, ""diagnostics"": { ""detailedLoggingUntil"": ""$detailedUntil"" }, ""features"": { ""hotCorners"": { ""enabled"": true, ""topLeft"": { ""action"": ""None"", ""key"": ""None"" }, ""right"": { ""action"": ""Start"", ""key"": ""None"", ""wheel"": ""Volume"" }, ""left"": { ""action"": ""None"", ""key"": ""None"", ""wheel"": ""Desktops"" }, ""bottom"": { ""action"": ""Start"", ""key"": ""None"" } } } }"
+Start-Sleep -Seconds 3
+Start-Process $appExe
+[void] (Wait-Until { Get-AppWindow })
+Start-Sleep -Seconds 3
+Test-Check 'select Hot Corners for its edges' (Select-NavigationItem 'Hot Corners & Edges')
+Start-Sleep -Seconds 2
+$selected = Get-SelectedItemName 'Right edge action'
+Test-Check 'the right edge shows its action' ($selected -eq 'Start') "selected: $selected"
+$selected = Get-SelectedItemName 'Right edge wheel'
+Test-Check 'the right edge shows its wheel action' ($selected -eq 'Volume') "selected: $selected"
+$rightNote = 'The right edge''s wheel action takes the wheel from a maximized window''s scroll bar there.'
+Test-Check 'the page says what the right edge''s wheel takes' ((Get-WindowText) -contains $rightNote)
+Test-Check 'the page doesn''t show the top edge''s note without a wheel action there' (-not ((Get-WindowText) -contains 'The top edge''s wheel action takes the wheel from Title Bar Actions on a maximized window''s title bar there.'))
+Save-Screenshot '14-hot-corners-edges'
+[void] (Close-SettingsApp)
+
+Move-OntoEdge ($screen.Width - 40) $middleY 60 0
+Start-Sleep -Seconds 2
+Test-Check 'reaching and resting on an edge doesn''t trigger it' ((Get-MatchCount (Get-HostLog) $edgeRan) -eq 0) (Get-PointerText)
+Push-Pointer 5 30 0
+Test-Check 'pushing against the right edge runs its action' (Wait-Until { (Get-MatchCount (Get-HostLog) $edgeRan) -eq 1 } 5) (Get-PointerText)
+Close-Start
+Move-OntoEdge ($screen.Width - 40) ($middleY - 200) 60 0
+Push-Pointer 10 20 25
+Start-Sleep -Seconds 1
+Test-Check 'pushing while moving along the edge doesn''t trigger it' ((Get-MatchCount (Get-HostLog) $edgeRan) -eq 1) (Get-PointerText)
+[void] (Move-Pointer $middleX $middleY)
+[void] (Move-Pointer $right $middleY)
+Test-Check 'a position on the edge, as from pen or a remote session, triggers it after half a second' (Wait-Until { (Get-MatchCount (Get-HostLog) $edgeRan) -eq 2 } 5) (Get-PointerText)
+Close-Start
+
+# A maximized window with a long text, in a process of its own, as another app's.
+$scrollWindowScript = Join-Path $env:TEMP 'PCCompanion-scroll-window.ps1'
+Set-Content -Path $scrollWindowScript -Encoding utf8 -Value @'
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -Namespace ScrollWindow -Name Native -MemberDefinition @"
+[DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+"@
+[void] [ScrollWindow.Native]::SetProcessDPIAware()
+$form = New-Object System.Windows.Forms.Form
+$form.Text = 'PCCompanionTestWindow-Scroll'
+$form.WindowState = 'Maximized'
+$box = New-Object System.Windows.Forms.TextBox
+$box.Multiline = $true
+$box.ScrollBars = 'Vertical'
+$box.Dock = 'Fill'
+$box.Text = (1..600 | ForEach-Object { "line $_" }) -join "`r`n"
+$form.Controls.Add($box)
+# Started hidden, the process would hide the first window it shows; this uses that up.
+[void] [ScrollWindow.Native]::ShowWindow($form.Handle, 0)
+[System.Windows.Forms.Application]::Run($form)
+'@
+$scrollProcess = Start-Process powershell.exe -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $scrollWindowScript -WindowStyle Hidden -PassThru
+[void] (Wait-Until { (Find-TestWindow 'Scroll') -ne [IntPtr]::Zero } 30)
+$scrollWindow = Find-TestWindow 'Scroll'
+[void] [Win32]::SetForegroundWindow($scrollWindow)
+Start-Sleep -Seconds 2
+$volume = [EdgeChecks]::Volume()
+Test-Check 'the Sandbox has a speaker volume to change' ($volume -ge 0.1) "volume: $volume"
+Move-OntoEdge ($screen.Width - 40) $middleY 60 0
+$firstLine = [EdgeChecks]::FirstLine($scrollWindow)
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Milliseconds 400
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Seconds 1
+$quieter = [EdgeChecks]::Volume()
+Test-Check 'the wheel turned down on the right edge makes the volume quieter by two steps' ([math]::Abs(($volume - $quieter) - 0.04) -lt 0.011) "volume $volume -> $quieter"
+Test-Check 'the wheel on the right edge doesn''t scroll the maximized window there' (([EdgeChecks]::FirstLine($scrollWindow) -eq $firstLine) -and ($firstLine -ge 0)) "first line $firstLine -> $([EdgeChecks]::FirstLine($scrollWindow))"
+Test-Check 'the host logs the wheel''s action' ((Get-HostLog) -match 'The wheel on "?Right"? ran "?Volume"?, turned "?down"?\.')
+Save-Screenshot '14b-hot-corners-edge-volume'
+[void] (Move-Pointer ($screen.Width - 2) $middleY)
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Seconds 1
+Test-Check 'one pixel inside the edge, the wheel scrolls the window' ([EdgeChecks]::FirstLine($scrollWindow) -gt $firstLine) "first line $firstLine -> $([EdgeChecks]::FirstLine($scrollWindow))"
+Test-Check 'one pixel inside the edge, the volume stays' ([EdgeChecks]::Volume() -eq $quieter) "volume $quieter -> $([EdgeChecks]::Volume())"
+# Move-Pointer's first positions were still on the edge, where the mouse had rested for seconds.
+Test-Check 'positions on an edge the mouse rested on don''t trigger it at once' ((Get-MatchCount (Get-HostLog) $edgeRan) -eq 2) (Get-PointerText)
+
+# Desktops: two more, then back to the first, where the scroll window is.
+$desktops = Get-VirtualDesktopCount
+[void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x44))
+Start-Sleep -Seconds 2
+[void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x44))
+Start-Sleep -Seconds 2
+[void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x25))
+Start-Sleep -Seconds 2
+[void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x25))
+Start-Sleep -Seconds 2
+Test-Check 'two desktops are added and the first is shown' (((Get-VirtualDesktopCount) -eq $desktops + 2) -and [EdgeChecks]::IsOnCurrentDesktop($scrollWindow)) "desktops: $desktops -> $(Get-VirtualDesktopCount)"
+Move-OntoEdge 40 $middleY -60 0
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Seconds 2
+Test-Check 'the wheel turned down on the left edge goes to the next desktop' (-not [EdgeChecks]::IsOnCurrentDesktop($scrollWindow))
+[void] [EdgeChecks]::Wheel(120)
+Start-Sleep -Seconds 2
+Test-Check 'the wheel turned up on the left edge goes back to the previous desktop' ([EdgeChecks]::IsOnCurrentDesktop($scrollWindow))
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Milliseconds 100
+[void] [EdgeChecks]::Wheel(-120)
+Start-Sleep -Seconds 2
+[void] [EdgeChecks]::Wheel(120)
+Start-Sleep -Seconds 2
+Test-Check 'two quick notches switch one desktop' ([EdgeChecks]::IsOnCurrentDesktop($scrollWindow)) (Get-PointerText)
+Save-Screenshot '14c-hot-corners-edge-desktops'
+# The added desktops close again, each from the one before, back to the first.
+foreach ($closing in 1, 2) {
+    [void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x27))
+    Start-Sleep -Seconds 2
+    [void] [EdgeChecks]::Chord(@(0x11, 0x5B, 0x73))
+    Start-Sleep -Seconds 2
+}
+Test-Check 'the added desktops close again' ((Get-VirtualDesktopCount) -eq $desktops) "desktops: $(Get-VirtualDesktopCount)"
+[void] (Move-Pointer $middleX $middleY)
+Stop-Process -Id $scrollProcess.Id -Force -ErrorAction SilentlyContinue
+
+# The taskbar set to hide itself: pushing against the bottom edge shows it, so the edge is skipped.
+$taskbar = [Win32]::FindWindow('Shell_TrayWnd', [NullString]::Value)
+[EdgeChecks]::SetTaskbarAutoHide($taskbar, $true)
+Start-Sleep -Seconds 2
+Move-OntoEdge $middleX ($screen.Height - 40) 0 60
+Push-Pointer 5 0 30
+Test-Check 'an edge where the taskbar hides itself is skipped' (Wait-Until { (Get-HostLog) -match 'The "?Bottom"? edge didn''t run "?Start"?: "?TaskbarHides"?\.' } 5) (Get-PointerText)
+[void] (Move-Pointer $middleX $middleY)
+[EdgeChecks]::SetTaskbarAutoHide($taskbar, $false)
+Start-Sleep -Seconds 2
 
 # Turned off, Hot Corners stops reading the pointer.
 Write-HotCornersSettings $false 'None'
@@ -288,7 +546,7 @@ Start-Sleep -Seconds 3
 Start-Process $appExe
 [void] (Wait-Until { Get-AppWindow })
 Start-Sleep -Seconds 3
-Test-Check 'select Hot Corners for Run a program' (Select-NavigationItem 'Hot Corners')
+Test-Check 'select Hot Corners for Run a program' (Select-NavigationItem 'Hot Corners & Edges')
 Start-Sleep -Seconds 2
 $selected = Get-SelectedItemName 'Top left action'
 Test-Check 'the top-left corner shows Run a program' ($selected -eq 'Run a program') "selected: $selected"
@@ -351,6 +609,6 @@ Save-Screenshot '12d2-hot-corners-program-found-again'
 # With Hot Corners on and the page open, a host that no longer answers makes the page say, after a
 # few reads, that recent results aren't available. It's the last check, since it ends the host.
 Get-Processes 'PCCompanion.Host' | Stop-Process -Force -ErrorAction SilentlyContinue
-$notAvailable = 'Recent results aren''t available right now. If corners don''t work either, restart PC Companion.'
+$notAvailable = 'Recent results aren''t available right now. If corners and edges don''t work either, restart PC Companion.'
 Test-Check 'without the host, the page says that recent results aren''t available' (Wait-Until { (Get-WindowText) -contains $notAvailable } 10)
 Save-Screenshot '12e-hot-corners-results-not-available'
