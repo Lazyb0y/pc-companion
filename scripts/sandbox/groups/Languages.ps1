@@ -16,13 +16,13 @@ Test-Check 'Home in Arabic' ($text -contains 'الصفحة الرئيسية') ($
 Test-Check 'select General in Arabic' (Select-NavigationItem 'عام')
 Start-Sleep -Seconds 2
 Save-Screenshot '05-general-arabic-dark'
-Test-Check 'select Hot Corners in Arabic' (Select-NavigationItem 'الزوايا النشطة')
+Test-Check 'select Hot Corners in Arabic' (Select-NavigationItem 'الزوايا والحواف النشطة')
 Start-Sleep -Seconds 2
 Save-Screenshot '05b-hot-corners-arabic-dark'
 $windowBounds = (Get-AppWindow).Current.BoundingRectangle
 foreach ($width in 1000, $screen.Width) {
     [void] (Set-AppWindowWidth $width)
-    foreach ($page in 'الصفحة الرئيسية', 'الزوايا النشطة', 'نوافذ التطبيق', 'مقاييس النظام', 'خلفية ديناميكية', 'إجراءات الحافظة', 'ملفات تعريف الشبكة', 'قواعد المجلدات', 'ملفات تعريف العرض', 'عام') {
+    foreach ($page in 'الصفحة الرئيسية', 'الزوايا والحواف النشطة', 'نوافذ التطبيق', 'مقاييس النظام', 'خلفية ديناميكية', 'إجراءات الحافظة', 'ملفات تعريف الشبكة', 'قواعد المجلدات', 'ملفات تعريف العرض', 'عام') {
         [void] (Show-Page $page)
         Start-Sleep -Milliseconds 1500
         Test-PageLayout "$page (right to left)" $page $width
