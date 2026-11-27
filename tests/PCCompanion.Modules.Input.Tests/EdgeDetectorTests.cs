@@ -369,6 +369,21 @@ public sealed class EdgeDetectorTests
     }
 
     [Fact]
+    public void LeavingACornerThatWaitsForTheDelayIsLeavingEarlyAlsoAfterAPosition()
+    {
+        // A position read before the pointer followed it, as when it leaves by a jump.
+        Configure(new HotCornersSettings { ActivationDelayMilliseconds = 500 });
+        var corner = new Point(0, 0);
+        Arrive(corner);
+        _detector.Update(Size.Empty, isPosition: true);
+        _clock.Advance(TimeSpan.FromMilliseconds(100));
+
+        var decision = MoveTo(Middle);
+
+        Assert.Equal((CornerOutcome.LeftEarly, ScreenCorner.TopLeft), (decision.Outcome, decision.Corner));
+    }
+
+    [Fact]
     public void TheDetectorRemembersWhereItLastSawThePointer()
     {
         MoveTo(new Point(100, 200));
