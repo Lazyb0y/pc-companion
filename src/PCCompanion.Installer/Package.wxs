@@ -170,14 +170,25 @@
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.exe" />
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Host.exe" />
           <Exclude Files="!(bindpath.InstallFiles)\PCCompanion.Elevated.exe" />
+          <Exclude Files="!(bindpath.InstallFiles)\Microsoft.WinUI.dll" />
+          <Exclude Files="!(bindpath.InstallFiles)\Microsoft.InteractiveExperiences.Projection.dll" />
         </Files>
 
         <!--
           Named, so the last page can open it. Uninstalling it also removes the all-users data
           folder; see MachineDataFolder below.
+          Two of the settings app's files are its companions: Windows Installer installs them
+          whenever it installs the settings app, whatever their own versions. Windows App SDK 2.6
+          gives them lower file versions than 2.3 did, without its build number (3.0.0.0 after
+          3.0.0.2609, 10.0.0.0 after 10.0.27200.1054). Windows Installer doesn't install a file
+          over one with a higher version, and removing the installed version then deletes it, so
+          an upgrade left the settings app without them, and it didn't start. The GUID is fixed, as
+          WiX makes one only for a component with one versioned file.
         -->
-        <Component Id="SettingsApp">
+        <Component Id="SettingsApp" Guid="7E80CEFB-969D-4A27-B8D0-B30D099D608F">
           <File Id="SettingsApp" Source="!(bindpath.InstallFiles)\PCCompanion.exe" KeyPath="yes" />
+          <File Source="!(bindpath.InstallFiles)\Microsoft.WinUI.dll" CompanionFile="SettingsApp" />
+          <File Source="!(bindpath.InstallFiles)\Microsoft.InteractiveExperiences.Projection.dll" CompanionFile="SettingsApp" />
           <util:RemoveFolderEx Property="MachineDataFolder" On="uninstall" Condition="MachineDataFolder" />
         </Component>
 
